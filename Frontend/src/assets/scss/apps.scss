@@ -1,0 +1,126 @@
+@import "friday";
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 900;
+  src: url("../fonts/poppins/SVN-Poppins-Black.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 900;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-BlackItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 800;
+  src: url("../fonts/poppins/SVN-Poppins-ExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 800;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-ExtraBoldItalic.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 700;
+  src: url("../fonts/poppins/SVN-Poppins-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 700;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  src: url("../fonts/poppins/SVN-Poppins-SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-SemiBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 500;
+  src: url("../fonts/poppins/SVN-Poppins-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 500;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-MediumItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 400;
+  src: url("../fonts/poppins/SVN-Poppins-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 400;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-RegularItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 300;
+  src: url("../fonts/poppins/SVN-Poppins-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 300;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 200;
+  src: url("../fonts/poppins/SVN-Poppins-ExtraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 200;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-ExtraLightItalic.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 100;
+  src: url("../fonts/poppins/SVN-Poppins-Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-weight: 100;
+  font-style: italic;
+  src: url("../fonts/poppins/SVN-Poppins-ThinItalic.ttf") format("truetype");
+}
+@import "apps/custominput.scss";
+@import "apps/erp.scss";
+@import "apps/button.scss";
+@import "apps/layout.scss";
+@import "apps/tables.scss";
+@import "apps/form.scss";
+@import "apps/ultility.scss";
+@import "apps/settings.scss";
+@import "apps/modal.scss";
+@import "apps/calendar.scss";
+@import "apps/notification.scss";
+@import "auto-modules-bundle.scss";
+@import "../plugins/iconly/css/style.css";
+@import "../plugins/pegasus/style.css";

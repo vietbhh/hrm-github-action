@@ -1,0 +1,348 @@
+@function color-function($color, $type) {
+  @if map-has-key($colors, $color) {
+    $curr_color: map-get($colors, $color);
+    @if map-has-key($curr_color, $type) {
+      @return map-get($curr_color, $type);
+    }
+  }
+
+  // @warn "Unknown `#{name}` in $colors.";
+  @return null;
+}
+
+@each $color_name, $color in $colors {
+  @each $color_type, $color_value in $color {
+    @if $color_type== "base" {
+      // Custom Checkbox & Radio
+      @if (
+        $color_name !=
+          "light" and
+          $color_name !=
+          "black" and
+          $color_name !=
+          "white"
+      ) {
+        .custom-control-#{$color_name} {
+          .custom-control-input:checked ~ .custom-control-label::before,
+          .custom-control-input:active ~ .custom-control-label::before {
+            border-color: $color_value;
+            background-color: $color_value;
+          }
+          &.custom-checkbox,
+          &.custom-radio {
+            .custom-control-input:checked ~ .custom-control-label::before,
+            .custom-control-input:active ~ .custom-control-label::before,
+            .custom-control-input:focus ~ .custom-control-label::before {
+              box-shadow: 0 2px 4px 0 rgba($color_value, 0.4) !important;
+            }
+          }
+          .custom-control-input:disabled:checked
+            ~ .custom-control-label::before {
+            background-color: rgba($color_value, 0.65) !important;
+            border: none;
+            box-shadow: none !important;
+          }
+          .custom-control-input:focus ~ .custom-control-label::before {
+            border-color: $color_value;
+          }
+        }
+      }
+
+      // Bootstrap Custom Switches
+      @if (
+        $color_name !=
+          "light" and
+          $color_name !=
+          "black" and
+          $color_name !=
+          "white"
+      ) {
+        .custom-switch-#{$color-name} {
+          .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: $color_value !important;
+            color: $white;
+            transition: all 0.2s ease-out;
+          }
+        }
+      }
+    }
+  }
+}
+
+// For customs-select remove double arrow
+.custom-select {
+  -moz-appearance: none; // For firefox
+  -webkit-appearance: none; // for chrome
+}
+
+// Custom Checkbox
+.custom-checkbox {
+  .custom-control-label::before,
+  .custom-control-label::after {
+    top: 0.07rem;
+  }
+
+  .custom-control-label::after {
+    background-size: 57%;
+  }
+}
+
+// Custom Radio
+.custom-radio {
+  .custom-control-label::before {
+    top: 0.1rem;
+  }
+}
+
+// Custom checkbox and radio in common
+.custom-checkbox,
+.custom-radio {
+  /* &.custom-control {
+    padding-left: 1.8rem;
+
+    .input-group & {
+      padding-left: 1.3rem;
+    }
+  } */
+
+  .custom-control-input {
+    background-color: $primary;
+    width: 1.285rem;
+    height: 1.285rem;
+  }
+
+  .custom-control-label {
+    font-size: $font-size-base;
+    position: static;
+
+    // vertical-align: middle;
+    &::before,
+    &::after {
+      width: 18px;
+      height: 18px;
+      left: 0;
+    }
+  }
+  .custom-control-input:checked ~ .custom-control-label::before {
+    box-shadow: 0 2px 4px 0 rgba($custom-control-indicator-checked-bg, 0.4) !important;
+  }
+
+  .custom-control-input:disabled ~ .custom-control-label::before {
+    border: none;
+    box-shadow: none !important;
+  }
+
+  .custom-control-input:focus ~ .custom-control-label::before {
+    border-color: none;
+    box-shadow: 0 2px 4px 0 rgba($custom-control-indicator-checked-bg, 0.4) !important;
+  }
+
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+    border-radius: 8px;
+    margin-right: 6px;
+
+    &:not(:checked) {
+      background: #cfd2d5;
+    }
+  }
+}
+
+// Custom-checkbox when not disabled and active
+.custom-control-input:not(:disabled) {
+  &:active ~ .custom-control-label {
+    &::before {
+      background-color: $primary;
+      border-color: $primary;
+    }
+  }
+}
+
+/* Switches */
+
+.custom-switch {
+  padding-left: 0;
+  line-height: 1.7rem;
+
+  .custom-control-label {
+    padding-left: 3.5rem;
+    line-height: 1.7rem;
+
+    /* For bg color of switch*/
+    &::before {
+      border: none;
+      background-color: $switch-bg-color;
+      height: 1.7rem;
+      box-shadow: none !important;
+      transition: opacity 0.25s ease, background-color 0.1s ease;
+      cursor: pointer;
+      user-select: none;
+      top: 0;
+      left: 0;
+    }
+    /*For Switch handle*/
+    &:after {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      box-shadow: -1px 2px 3px 0 rgba($black, 0.2);
+      background-color: $switch-indicator-color;
+      transition: all 0.15s ease-out;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /*For Switch text*/
+    .switch-text-left,
+    .switch-text-right,
+    .switch-icon-left,
+    .switch-icon-right {
+      position: absolute;
+      cursor: pointer;
+      user-select: none;
+      line-height: 1.8;
+      i,
+      svg {
+        height: 13px;
+        width: 13px;
+        font-size: 13px;
+      }
+    }
+    .switch-text-left,
+    .switch-icon-left {
+      left: 6px;
+      color: $white;
+      opacity: 0;
+      transform: translateX(8px);
+      transition: opacity 0.1s ease, transform 0.15s ease;
+    }
+    .switch-text-right,
+    .switch-icon-right {
+      right: 13px;
+      opacity: 1;
+      transform: translateX(0px);
+      transition: opacity 0.08s ease, transform 0.15s ease;
+    }
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  /*For Switch label*/
+
+  .switch-label {
+    padding-left: 1rem;
+  }
+
+  // after its checked
+
+  .custom-control-input:checked ~ .custom-control-label::before {
+    box-shadow: none;
+  }
+
+  /*For Switch Handle Animation*/
+  .custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(1.4rem);
+  }
+
+  .custom-control-input:checked ~ .custom-control-label {
+    .switch-text-left,
+    .switch-icon-left {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .switch-text-right,
+    .switch-icon-right {
+      transform: translateX(-8px);
+      opacity: 0;
+    }
+  }
+  .custom-control-input:not(:checked) ~ .custom-control-label {
+    .switch-text-left {
+      opacity: 0;
+    }
+    .switch-text-right {
+      opacity: 1;
+    }
+  }
+  .custom-control-input:checked ~ .custom-control-label {
+    .switch-text-right {
+      opacity: 0;
+    }
+    .switch-text-left {
+      opacity: 1;
+    }
+  }
+}
+/* 
+.dark-layout {
+  // file uploader default
+  .custom-file-label {
+    &:after {
+      background-color: $theme-dark-body-bg;
+      border-left: 1px solid $theme-dark-border-color;
+      color: $theme-dark-body-color;
+    }
+  }
+
+  // custom control like checkbox, radio and switch
+  .custom-control-input {
+    &:not(:checked) {
+      ~ .custom-control-label:before {
+        background-color: $theme-dark-card-bg;
+        border-color: $theme-dark-input-border-color;
+      }
+    }
+    &:disabled {
+      ~ .custom-control-label:before {
+        background-color: $theme-dark-input-disabled-border-color;
+        border-color: $theme-dark-input-disabled-border-color;
+      }
+    }
+  }
+
+  .custom-switch {
+    .custom-control-input:not(:checked) {
+      ~ .custom-control-label:before {
+        background-color: $theme-dark-switch-bg;
+      }
+    }
+    .custom-control-input:disabled {
+      ~ .custom-control-label:before {
+        background-color: $theme-dark-switch-bg-disabled;
+      }
+    }
+  }
+
+  // select
+  select.form-control,
+  .custom-select {
+    background-color: $theme-dark-input-bg;
+    color: $theme-dark-body-color;
+    border-color: $theme-dark-border-color;
+
+    option:checked {
+      background-color: $theme-dark-card-bg;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+    &:focus {
+      border-color: $primary;
+    }
+  }
+
+  select.form-control {
+    &:not([multiple="multiple"]) {
+      background-image: url(str-replace(
+        str-replace($chevron-down, "currentColor", $theme-dark-body-color),
+        "#",
+        "%23"
+      ));
+    }
+  }
+}
+ */

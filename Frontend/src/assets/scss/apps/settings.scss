@@ -1,0 +1,73 @@
+.setting-wrapper {
+  .setting-frm {
+    .setting-row {
+      margin-bottom: 0.72rem;
+    }
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .setting-wrapper {
+    padding-left: 1.6rem;
+  }
+  .setting-frm {
+    padding-left: 2.1rem;
+    padding-top: 1.2rem;
+  }
+}
+
+.setting-offices-wrapper {
+  @include media-breakpoint-up(xl) {
+    padding-left: 40px;
+    padding-right: 25px;
+  }
+  .offices-row {
+    padding: 22px 45px;
+    .offices-title {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 1.5rem;
+      color: #130f26;
+    }
+    .is_headquarter {
+      border: 0.5px solid $primary;
+      border-radius: 7px;
+      padding: 2px 14px;
+      margin-left: 20px;
+      font-weight: 300;
+      font-size: 11px;
+      align-items: center;
+      color: #b38181;
+    }
+    .form-group {
+      margin-bottom: 0 !important;
+    }
+    .offices-detail-row {
+      padding-bottom: 20px;
+    }
+    .offices-label {
+      font-weight: normal;
+      font-size: 0.98rem;
+      color: #000000;
+      @include media-breakpoint-up(xl) {
+        padding-left: 30px;
+      }
+    }
+  }
+}
+
+.permissions-modules-list {
+  .card {
+    box-shadow: none;
+    margin-left: 1.5rem;
+    .card-header {
+      padding: 0.5rem 0;
+      font-weight: 500;
+      text-transform: capitalize !important;
+      font-style: italic;
+    }
+    .card-body {
+      padding: 0 0 .8rem 0;
+    }
+  }
+}

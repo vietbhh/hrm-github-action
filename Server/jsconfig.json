@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "paths": {
+      "#app/*": ["./src/app/*"],
+      "#modules/*": ["./src/modules/*"],
+      "#utility/*": [ "./src/utility/*"]
+    }
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}

@@ -1,0 +1,103 @@
+.modal {
+  .modal-dialog {
+    &.modal-sm {
+      @include media-breakpoint-up(xl) {
+        .modal-content {
+          padding: 20px 30px 20px 30px;
+          /*  .modal-header {
+            padding: 20px 30px 15px 30px;
+          }
+          .modal-body {
+            padding: 10px 30px 0px 30px;
+          }
+          .modal-footer {
+            padding: 10px 30px 20px 30px;
+          } */
+        }
+      }
+    }
+    .modal-content {
+      .modal-header {
+        background: none !important;
+        border-bottom: 0.5px solid $primary;
+        .modal-title {
+          font-weight: 500;
+          font-size: 17px;
+          color: #130f26;
+        }
+        .close {
+          transform: none;
+          padding: 0.2rem 0.62rem;
+          box-shadow: none;
+          border-radius: none;
+          background: none;
+        }
+      }
+      .modal-body {
+        @include media-breakpoint-up(md) {
+          //max-height: 70vh;
+          //overflow-y: scroll;
+          //overflow-x: auto;
+        }
+      }
+      .modal-body,
+      .modal-footer {
+        justify-content: normal;
+        border-top: none;
+      }
+      @include media-breakpoint-up(xl) {
+        padding: 30px 40px 30px 40px;
+        .modal-header {
+          //padding: 30px 40px 15px 40px;
+          padding: 0 0 15px 0;
+        }
+        .modal-body {
+          //padding: 10px 40px 0px 40px;
+          padding: 10px 0 0 0;
+        }
+        .modal-footer {
+          //padding: 10px 40px 30px 40px;
+          padding: 10px 0 0 0;
+        }
+      }
+    }
+  }
+}
+
+.modal {
+  .modal-dialog.modal-add {
+    @include media-breakpoint-up(xl) {
+      max-width: 530px;
+    }
+    .modal-content {
+      @include media-breakpoint-up(xl) {
+        max-width: 530px;
+        //padding: 28px 40px;
+      }
+    }
+  }
+}
+
+.modal-slide-in {
+  .close {
+    right: 0;
+    top: 0.4rem;
+  }
+  .modal-dialog-scrollable {
+    @include media-breakpoint-up(md) {
+      max-height: 100%;
+    }
+    .modal-content {
+      @include media-breakpoint-up(md) {
+        max-height: 100%;
+      }
+      .modal-body {
+        overflow-x: hidden !important;
+      }
+    }
+  }
+}
+
+.modal-ps-scrollbar {
+  max-height: 77vh;
+}

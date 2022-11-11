@@ -1,0 +1,43 @@
+{
+  "name": "mufidjamaluddin/codeigniter4-hmvc",
+  "type": "project",
+  "description": "CodeIgniter4 HMVC starter app",
+  "homepage": "https://codeigniter.com",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.4",
+    "codeigniter4/framework": "^4",
+    "monken/cli-create": "^0.3.1",
+    "firebase/php-jwt": "^5.2",
+    "rncryptor/rncryptor": "^4.3",
+    "ext-json": "*",
+    "codeigniter4/translations": "^4.1",
+    "dragonmantank/cron-expression": "^3.2",
+    "smalot/pdfparser": "^2.0",
+    "codeigniter4/settings": "dev-develop",
+    "phpoffice/phpspreadsheet": "^1.23",
+    "google/apiclient": "^2.12.1",
+    "google/cloud-storage": "dev-main"
+  },
+  "require-dev": {
+    "mikey179/vfsstream": "1.6.*",
+    "phpunit/phpunit": "8.5.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Support\\": "tests/_support"
+    }
+  },
+  "minimum-stability": "dev",
+  "scripts": {
+    "test": "phpunit",
+    "post-update-cmd": [
+      "@composer dump-autoload"
+    ]
+  },
+  "support": {
+    "forum": "http://forum.codeigniter.com/",
+    "source": "https://github.com/codeigniter4/CodeIgniter4",
+    "slack": "https://codeigniterchat.slack.com"
+  }
+}

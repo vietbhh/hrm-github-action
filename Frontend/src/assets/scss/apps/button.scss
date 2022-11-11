@@ -1,0 +1,84 @@
+.btn-add {
+  background: $primary !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  color: $primary-text-color !important;
+  height: 40px;
+  font-style: normal;
+  font-weight: normal;
+  border: none !important;
+  display: flex;
+  i {
+    font-size: 15px;
+    margin-right: 12px;
+  }
+  &:hover {
+    box-shadow: none !important;
+  }
+  svg {
+    padding-bottom: 0.2rem;
+  }
+}
+
+.btn-edit {
+  color: #727070;
+  font-size: 15px;
+}
+.btn-delete {
+  color: #f17676;
+  font-size: 15px;
+}
+
+.btn-shadow {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.14) !important;
+  border-radius: 0.5rem !important;
+}
+
+.btn-action {
+  border-top-right-radius: 1.5rem !important;
+  border-bottom-right-radius: 1.5rem !important;
+}
+
+.btn-life {
+  background-color: #ffffff !important;
+  color: black !important;
+  font-weight: 600;
+  font-size: 1rem;
+  &:hover {
+    color: $primary !important;
+  }
+}
+
+.btn-base {
+  border-radius: 9px;
+  height: 36px;
+}
+
+.btn-cancel {
+  background: #e0e6ea !important;
+  border-color: #e0e6ea !important;
+  color: #4f5e71 !important;
+  &:hover {
+    box-shadow: none !important;
+  }
+}
+
+.btn-table-more {
+  font-size: 20px;
+  margin-left: 20px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.btn-with-radius {
+  border-radius: 10px !important;
+}
+
+.btn-blue {
+  border-color: $color-blue !important;
+  background-color: $color-blue !important;
+}
+
+.btn-primary {
+  color: $primary-text-color !important;
+}

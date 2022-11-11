@@ -1,0 +1,182 @@
+{
+  "auth": {
+    "authentication": "Đăng nhập",
+    "login": "Vui lòng nhập thông tin để truy cập hệ thống",
+    "loginPlaceholder": "Tên đăng nhập hoặc email",
+    "loginLabel": "Tên đăng nhập hoặc email",
+    "passwordPlaceholder": "Mật khẩu",
+    "passwordLabel": "Mật khẩu",
+    "forgotPassword": "Quên mật khẩu ?",
+    "remember": "Ghi nhớ",
+    "loginBtn": "Đăng nhập",
+    "loginBtn2": "Đăng nhập",
+    "loginFailed": "Không thể đăng nhập,vui lòng kiểm tra lại thông tin đăng nhập",
+    "logout": "Thoát",
+    "welcomeMessage": "Chúc bạn vui vẻ và hạnh phúc,làm việc thật hiệu quả cùng với Life.",
+    "setNewPasswordBtn": "Tạo mật khẩu mới"
+  },
+  "themeCustomizer": {
+    "title": "Cài đặt giao diện",
+    "subtitle": "Tuỳ chỉnh giao diện theo sở thích của bạn",
+    "menuColor": "Màu menu",
+    "menuLayout": "Kiểu menu",
+    "menuLayout.vertical": "Dọc",
+    "menuLayout.horizontal": "Ngang",
+    "themeMode": "Chế độ giao diện",
+    "themeMode.light": "Light",
+    "themeMode.dark": "Dark",
+    "themeMode.semidark": "Semi-Dark",
+    "collapseSiderbar": "Tự động ẩn sidebar",
+    "navbar.color": "Màu navbar",
+    "navbar.type": "Kiểu navbar",
+    "hideScrollToTop": "Ẩn Scroll To Top",
+    "footer": "Footer",
+    "rlt": "RTL"
+  },
+  "app": {
+    "create": "Thêm mới",
+    "update": "Cập nhật",
+    "save": "Lưu",
+    "delete": "Xoá",
+    "list": "Danh sách",
+    "filter": "Bộ lọc",
+    "search": "Tìm kiếm",
+    "action": "Hành động",
+    "print": "In",
+    "export": "Xuất dữ liệu",
+    "import": "Nhập dữ liệu",
+    "all": "Tất cả",
+    "refresh": "Làm mới",
+    "open": "Mở",
+    "setting": "Cài đặt",
+    "close": "Đóng",
+    "status": "Trạng thái",
+    "roles": "Vai trò",
+    "permissions": "Phân quyền",
+    "groups": "Nhóm",
+    "users": "Người dùng",
+    "profiles": "Hồ sơ",
+    "task": "Tasks",
+    "changePassword": "Thay đổi mật khẩu",
+    "back": "Quay lại",
+    "cancel": "Huỷ"
+  },
+  "file": {
+    "upload": "Upload",
+    "select": "Lựa chọn",
+    "fileSelect": "Chọn tệp tin",
+    "fileAllowed": "Cho phép định dạng {fileType}"
+  },
+  "common": {
+    "orgName": "Tên công ty",
+    "name": "Tên",
+    "title": "Tiêu đề",
+    "keyword": "Từ khoá",
+    "tag": "Tag",
+    "website": "Website",
+    "address": "Địa chỉ",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "description": "Mô tả",
+    "information": "Thông tin",
+    "introduce": "Giới thiệu",
+    "employee": "Nhân viên",
+    "hidden": "Ẩn",
+    "static": "Mặc định",
+    "sticky": "Sticky",
+    "floating": "Floating",
+    "launch": "Khởi chạy",
+    "initial": "Khởi tạo"
+  },
+  "notification": {
+    "alert": "Chú ý!",
+    "success": "Thành công!",
+    "error": "Lỗi!",
+    "warning": "Cảnh báo!",
+    "info": "Thông tin!",
+    "confirm": "Bạn có chắc chắn ?",
+    "create": {
+      "success": "Thêm mới thành công",
+      "error": "Không thể thêm mới dữ liệu",
+      "confirm": "Bạn có chắc chắn thêm mới ?"
+    },
+    "update": {
+      "success": "Dữ liệu đã được cập nhật",
+      "error": "Không thể cập nhật dữ liệu",
+      "confirm": "Bạn có chắc chắn cập nhật ?"
+    },
+    "delete": {
+      "success": "Đã xoá dữ liệu",
+      "error": "Không thể xoá dữ liệu",
+      "confirm": "Bạn có chắc chắn xoá dữ liệu ?",
+      "warning": "Tất cả dữ liệu đã xoá không thể khôi phục"
+    }
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "organizationalStructure": "Cơ cấu tổ chức",
+    "about": "Thông tin công ty",
+    "department": "Danh sách phòng ban",
+    "position": "Danh sách chức vụ",
+    "group": "Danh sách nhóm",
+    "hrm": "Nhân sự",
+    "hrlist": "Hồ sơ nhân sự",
+    "contract": "Hợp đồng",
+    "insurance": "Bảo hiểm",
+    "absence": "Quản lý phép",
+    "timekeeping": "Quản lý chấm công",
+    "recruitment": "Tuyển dụng",
+    "candidatelist": "Danh sách ứng viên",
+    "recruitmentProposal": "Đề xuất tuyển dụng",
+    "recruitmentRequest": "Gửi đề xuất",
+    "recruitments": "Danh sách đề xuất",
+    "interview": "Phỏng vấn/Đánh giá",
+    "interviewSchedule": "Lịch phỏng vấn",
+    "disc": "DISC",
+    "askform": "ASK Form",
+    "questionlib": "Thư viện câu hỏi",
+    "integration": "Hội nhập",
+    "kpis": "KPIs",
+    "training": "Đào tạo",
+    "data": "Dữ liệu"
+  },
+  "about": {
+    "title": "Thông tin công ty"
+  },
+  "module": {
+    "department": {
+      "name": "Tên bộ phận",
+      "description": "Mô tả"
+    }
+  },
+  "modules": {
+    "tasks": {
+      "title": "Tasks",
+      "buttons": {
+        "addtask": "Tạo việc",
+        "add": "Tạo",
+        "update": "Cập nhật",
+        "cancel": "Hủy"
+      },
+      "tabs": {
+        "mytasks": "Việc của tôi",
+        "important": "Quan trọng",
+        "completed": "Đã hoàn thành",
+        "deleted": "Đã xóa"
+      },
+      "fields": {
+        "title": "Tiêu đề",
+        "assignee": "Người thực hiện",
+        "date": "Ngày giao",
+        "tags": "Tags",
+        "description": "Mô tả",
+        "files": "Đính kèm",
+        "search": "Tìm kiếm",
+        "no_item": "Không có công việc nào"
+      }
+    }
+  },
+  "layout": {
+    "overview": "Trang chủ"
+  }
+}

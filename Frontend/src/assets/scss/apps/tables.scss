@@ -1,0 +1,283 @@
+.erpTable {
+  overflow-x: visible !important;
+
+  &::-webkit-scrollbar {
+    width: 0.5em;
+    height: 0.5em;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+.rdt_Table {
+  .rdt_TableHead {
+    .rdt_TableHeadRow {
+      background: #f4f4f4;
+      border-radius: 6px;
+      border: none !important;
+      min-height: 45px !important;
+      .rdt_TableCol {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 0.966rem;
+        color: #130f26;
+        span {
+          font-size: 0.7rem;
+          margin-left: 0.4rem;
+        }
+      }
+    }
+  }
+
+  .rdt_TableBody {
+    padding: 0 0.1rem;
+    .rdt_TableRow {
+      border: none !important;
+    }
+    .rdt_TableCell {
+      font-weight: 300;
+      font-size: 0.966rem;
+      letter-spacing: -0.02em;
+      color: #130f26;
+    }
+  }
+}
+
+table.canDrag {
+  tbody {
+    .drag-icon {
+      cursor: move;
+      padding: 0 5px;
+    }
+  }
+}
+
+.rs-table {
+  border: none;
+  .rs-table-header-row-wrapper {
+    .rs-table-row-header {
+      border-radius: 6px;
+      border: none !important;
+      background: #f4f4f4;
+      .rs-table-cell-header {
+        .rs-table-cell {
+          background: #f4f4f4;
+          .rs-table-cell-content {
+            font-weight: 500;
+            font-size: 0.966rem;
+            font-family: $table-font-family;
+            .rs-table-cell-header-icon-sort {
+              color: $primary;
+            }
+            .rs-table-cell-header-icon-sort-asc::after,
+            .rs-table-cell-header-icon-sort-desc::after {
+              color: $primary;
+            }
+          }
+        }
+        .rs-table-column-resize-spanner {
+          border-left: none;
+        }
+      }
+    }
+  }
+  .rs-table-body-row-wrapper {
+    .table-loading {
+      position: inherit;
+      background: white;
+    }
+    .rs-table-body-wheel-area {
+      .rs-table-row {
+        border: none;
+        /*  &:last-child {
+          .rs-table-cell-content {
+            //padding: 8px 16px 20px 16px;
+            //padding-bottom: 20px;
+          }
+        } */
+
+        .rs-table-cell {
+          font-weight: 300;
+          font-family: $table-font-family;
+        }
+      }
+    }
+    .rs-table-scrollbar-horizontal {
+      height: 5px;
+      .rs-table-scrollbar-handle {
+        height: 5px;
+        top: unset;
+        bottom: 0;
+      }
+    }
+    .rs-table-scrollbar-horizontal:hover,
+    .rs-table-scrollbar-pressed.rs-table-scrollbar-horizontal:hover {
+      -webkit-transform-origin: center bottom;
+      transform-origin: center bottom;
+      -webkit-transform: scaleY(1.3) !important;
+      transform: scaleY(1.3) !important;
+      .rs-table-scrollbar-handle {
+        height: 9px;
+      }
+    }
+  }
+
+  .rs-table-cell {
+    font-style: normal;
+    font-size: 14px;
+    color: #130f26;
+    .rs-table-cell-content {
+      padding: 8px 16px;
+      overflow: visible !important;
+      text-overflow: unset !important;
+    }
+
+    &.table_cell_text,
+    &.table_cell_textarea {
+      .rs-table-cell-content {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+    }
+    &.link-group.rs-table-cell-last {
+      .rs-table-cell-content {
+        padding: 8px;
+        .btn {
+          padding: 0.3rem 0.6rem;
+        }
+      }
+    }
+  }
+}
+
+.rs-table-body-wheel-area {
+  width: 100%;
+  .rs-table-row {
+    width: 100%;
+  }
+}
+
+.pagination {
+  .page-item {
+    .pagination-more {
+      margin-left: 5px;
+    }
+    &:first-child:not(.prev-item),
+    &:last-child:not(.next-item) {
+      .page-link {
+        border-radius: 10px;
+      }
+    }
+    &:first-child:not(.prev-item) {
+      .page-link {
+        border-radius: 10px;
+      }
+    }
+    &.active {
+      .page-link {
+        border-radius: 10px;
+        background-image: linear-gradient(
+          47deg,
+          lighten($primary, 20),
+          $primary
+        ) !important;
+        color: $primary-text-color !important;
+      }
+    }
+    &.disabled {
+      .page-link {
+        color: #bdbdbd !important;
+      }
+    }
+    background: none;
+    .page-link {
+      padding: 0.55rem;
+      border-radius: 10px;
+      margin-left: 5px;
+      background-image: linear-gradient(47deg, #eaebec, #dadada) !important;
+      color: #4e2f2f;
+      background-repeat: repeat !important;
+      transition: all 0.2s ease !important;
+      &:hover {
+        background: $primary-text-color !important;
+        color: $primary !important;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+.rs-table:not(.rs-table-column-resizing)
+  .rs-table-cell-header
+  .rs-table-cell:hover
+  ~ .rs-table-column-resize-spanner,
+.rs-table:not(.rs-table-column-resizing) .rs-table-column-resize-spanner:hover {
+  background-color: $primary;
+}
+
+.rs-table-column-resize-spanner::before {
+  border-color: transparent $primary transparent transparent;
+}
+.rs-table-column-resize-spanner::after {
+  border-color: transparent transparent transparent $primary;
+}
+
+.rs-picker-select-menu-item.rs-picker-select-menu-item-active,
+.rs-picker-select-menu-item.rs-picker-select-menu-item-active:hover {
+  background-color: lighten($primary, 40);
+}
+
+.rs-picker-select-menu-item.rs-picker-select-menu-item-active,
+.rs-picker-select-menu-item.rs-picker-select-menu-item-active:hover {
+  color: #6e6b7b;
+}
+
+.rs-picker-has-value .rs-btn .rs-picker-toggle-value,
+.rs-picker-has-value .rs-picker-toggle .rs-picker-toggle-value {
+  color: #6e6b7b;
+}
+
+.rs-pagination > li.rs-pagination-btn-active > a {
+  color: #6e6b7b;
+}
+
+.rs-picker-menu {
+  opacity: 1 !important;
+}
+
+.rs-pagination {
+  li {
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.55rem !important;
+      border-radius: 10px !important;
+      margin-left: 5px !important;
+      background-image: linear-gradient(47deg, #eaebec, #dadada) !important;
+      color: #4e2f2f !important;
+      background-repeat: repeat !important;
+      transition: background-image 0.2s ease !important;
+      line-height: 1;
+      font-size: 0.857rem;
+      min-width: 2rem;
+      &:hover {
+        background-image: linear-gradient(47deg, #3ac779, $primary) !important;
+        color: white !important;
+        transform: translateY(-2px);
+      }
+    }
+    &.rs-pagination-btn-active {
+      a {
+        background-image: linear-gradient(47deg, #3ac779, $primary) !important;
+        color: white !important;
+      }
+    }
+  }
+}
