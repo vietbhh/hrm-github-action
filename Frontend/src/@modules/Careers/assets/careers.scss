@@ -1,0 +1,135 @@
+html, body {
+    height: 100% !important;
+  }
+.blank-page{
+    height: 100%;
+    position: relative;
+}
+.div-header{
+    background-color: #0e223d;
+    color: #FFFFFF !important;
+    min-height: 300px;
+    text-align: center;
+    .name{
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+}
+.card-jobs{
+  position: absolute; 
+  top: 12rem;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  width: 35%;
+  .hearder-jobs{
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+  .job-info {
+    margin-bottom: 2rem;
+    align-items: center!important;
+    .info {
+        .job-name {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+   }
+  }
+}
+
+.bread-crumbs{
+  position: absolute; 
+  top: 10rem;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  width: 35%;
+  color: #FFFFFF;
+  .title{
+    cursor: pointer;
+  }
+}
+.footer{
+  position: absolute; 
+  bottom: 0;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  background-color: #0e223d;
+  .title{
+    cursor: pointer;
+  }
+}
+.card-applied {
+  display: flex;
+    height: 100%;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 30rem;
+    font-weight: bold;
+    padding: 5rem 5rem;
+    span{
+      font-size: 1.5rem;
+    }
+    div{
+      cursor: pointer;
+    }
+}
+.content-job{
+  overflow-y: scroll;
+  height: 55vh;
+}
+@media screen and (min-width: 2560px) {
+  .card-jobs{
+    width: 30% !important;
+  }
+  .bread-crumbs{
+    width: 30% !important;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .card-jobs{
+    width: 80% !important;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .bread-crumbs{
+    width: 80% !important;
+  }
+}
+@media screen and (max-width: 790px) {
+  .card-jobs{
+    width: 90% !important;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  .bread-crumbs{
+    width: 90% !important;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d0cfd4; 
+  border-radius: 10px;
+}

@@ -19,7 +19,7 @@ const settingMenu = {
     navLink: "/settings/offices",
     order: 2
   },
-  departments: {
+  /*departments: {
     id: "departments",
     title: "modules.departments.title",
     type: "item",
@@ -28,7 +28,7 @@ const settingMenu = {
     icon: "iconly-Category icli",
     navLink: "/settings/departments",
     order: 3
-  },
+  },*/
   "job-titles": {
     id: "job-titles",
     title: "modules.job_titles.title",

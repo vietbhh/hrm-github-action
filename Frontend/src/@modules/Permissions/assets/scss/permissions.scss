@@ -1,0 +1,67 @@
+@import "@scss/friday";
+.permissions {
+  .permission-box {
+    border: 1px solid rgb(227, 235, 241);
+    padding: 16px 24px;
+
+    img {
+      height: 55px;
+    }
+
+    .flex-direction-row {
+      flex-direction: row;
+    }
+
+    .flex-direction-column {
+      flex-direction: column;
+    }
+
+    .ant-checkbox:not(.ant-checkbox-indeterminate):not(.ant-checkbox-checked) {
+      .ant-checkbox-inner {
+        background: #cfd2d5;
+      }
+    }
+
+    .ant-checkbox-inner {
+      width: 20px;
+      height: 20px;
+      border-radius: 8px;
+    }
+
+    .ant-checkbox-checked::after {
+      border: unset !important;
+    }
+
+    .ant-checkbox-inner::after {
+      left: 25%;
+    }
+
+    .ant-checkbox-indeterminate .ant-checkbox-inner::after {
+      left: 50%;
+    }
+
+    .form-check-input {
+      cursor: pointer;
+    }
+
+    .custom-control-label {
+      cursor: pointer;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  .form-group > label {
+    display: none;
+  }
+
+  hr {
+    margin: 20px 0;
+  }
+
+  .ant-table-cell {
+    padding: 10px 16px;
+  }
+}

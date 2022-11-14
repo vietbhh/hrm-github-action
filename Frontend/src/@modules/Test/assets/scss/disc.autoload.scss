@@ -1,0 +1,126 @@
+@import "@scss/friday";
+.disc {
+    padding: 0px 100px;
+    .avatar-disc {
+        img {
+            width: 208px !important;
+            height: 208px !important;
+        }
+    }
+    .time-left {
+        font-size: 30px;
+    }
+    .bg-green {
+        background-color: #f9dd5e6e;
+    }
+    .cl-green {
+        color: $primary;
+    }
+    .text-name {
+        font-weight: 600;
+        color: #130f26;
+        font-size: 35px;
+    }
+    .text-let {
+        line-height: 3rem;
+    }
+
+    .radio-test {
+        font-size: 30px;
+    }
+    .radio-test-custom {
+        position: relative;
+        .custom-control-label{
+            position: absolute;
+            top: 3.9px;
+            left: 10px;
+            font-weight : bold !important;
+        }
+        .form-check-input {
+            width: 2rem;
+            height: 2rem;
+            background-color: #fcf0bad9;
+            border: 1px solid #fcf0bad9;
+        }
+        .form-check-input:checked {
+            background-color: $primary;
+            border-color: $primary;
+        }
+    }
+    .title-disc {
+        background: #f9dd5e6e;
+        border-radius: 9px;
+        color: #000000;
+        padding: 5px 10px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 15px;
+        width: 500px;
+        padding: 10px 20px;
+    }
+
+    .custom-radios input[type="radio"] + label {
+        color: #333;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+    .custom-radios input[type="radio"] + label span {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin: -1px 4px 0 0;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+        line-height: 44px;
+    }
+    .custom-radios input[type="radio"] + label span img {
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    .custom-radios input[type="radio"]#color-1 + label span {
+        background-color: $primary;
+    }
+    .custom-radios input[type="radio"]#color-2 + label span {
+        background-color: #3498db;
+    }
+    .custom-radios input[type="radio"]#color-3 + label span {
+        background-color: #f1c40f;
+    }
+    .custom-radios input[type="radio"]#color-4 + label span {
+        background-color: #e74c3c;
+    }
+    .custom-radios input[type="radio"]:checked + label span img {
+        opacity: 1;
+    }
+    .question-num {
+        font-size: 15px;
+        font-weight: 500;
+        color: #130f26;
+        i {
+            font-size: 26px;
+            color: $primary;
+        }
+        span {
+            font-size: 15px;
+            border-bottom: 2px solid $primary;
+        }
+    }
+    .form-check-input{
+        border-radius: 50% !important;
+    }
+}
+.disc-modal {
+    .result-disc {
+        font-size: 100px !important;
+        color: #130f26 !important;
+        p {
+            font-size: 10px;
+        }
+    }
+}

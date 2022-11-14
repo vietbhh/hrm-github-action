@@ -1,0 +1,23 @@
+.time-off-balance-report {
+    .filter-container {
+        .filter-item {
+            min-width: 180px;
+        }
+    }
+
+    .rs-table-row-header {
+        .rs-table-cell {
+            background-color: #ffffff !important;
+        }
+    }
+
+    .rs-table-body-wheel-area {
+        .rs-table-cell {
+            font-weight: 400 !important;
+        }
+    }
+
+    .table-pagination {
+        padding: 20px;
+    }
+}

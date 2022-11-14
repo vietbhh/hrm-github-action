@@ -1,0 +1,46 @@
+.pay-cycles{
+    .card-paycycles{
+        border: 1px solid rgb(227, 235, 241);
+        padding: 0.5rem;
+    }
+    .div-use-ot{
+        padding: 10px 20px;
+        border: 1px solid rgb(227, 235, 241);
+        width: 50%;
+    }
+    .size-rem{
+        font-size: 1.5rem;
+    }
+    .ant-picker-focused {
+        box-shadow : none
+    }
+    .ant-picker{
+        padding:  0.7rem 1rem;  
+    }
+    .btn-icon{
+        padding: 0.5rem
+    }
+    .title-card{
+        margin-left: 15px;
+        font-size : 1.2rem;
+        color: "#130f26";
+    }
+    .select-css{
+        .select__menu {
+                .select__menu-list{
+                    .select__group {
+                        .select__group-heading{
+                            color: #b4b7bd;
+                            text-transform: none;
+                            font-weight: 500;
+                            font-size: 0.8rem;
+                        }
+                    }
+                }
+        }
+    }
+
+    .fs-8{
+        font-size: 0.8rem;
+    }
+}

@@ -1,0 +1,109 @@
+@import "@scss/friday";
+
+.dnd {
+  .layout {
+    .widget-left > div {
+      margin-right: 15px;
+    }
+
+    .widget-right {
+      > div {
+        margin-left: 15px;
+      }
+
+      .dnd-btn-delete {
+        right: 0 !important;
+      }
+    }
+
+    .widget-center > div {
+      margin-left: 15px;
+      margin-right: 15px;
+    }
+
+    .react-grid-item {
+      cursor: grab;
+      //border: 1px solid;
+
+      > div {
+        height: 100%;
+        overflow: hidden;
+        border-radius: 20px;
+      }
+
+      .react-resizable-handle {
+        opacity: 0;
+      }
+
+      .dnd-btn-delete {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        padding: 0.25rem 0.5rem;
+        font-size: 12px;
+        transition: all 300ms;
+        opacity: 0;
+      }
+
+      &:hover {
+        .dnd-btn-delete {
+          opacity: 1;
+        }
+      }
+    }
+
+    .static {
+      cursor: unset !important;
+    }
+  }
+
+  .react-grid-item.react-grid-placeholder {
+    background: lighten($primary-bg, 25%);
+  }
+
+  .ant-drawer-body {
+    padding: 24px 30px;
+  }
+
+  .droppable-element {
+    width: 300px;
+    cursor: grab;
+    box-shadow: 0 0 0 1px #edeae9, 0 1px 4px 0 rgba(109, 110, 111, 0.08);
+    border-color: #fff;
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+    border: 1px solid #edeae9;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+
+    .img {
+      width: 100%;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .span {
+      left: 12px;
+      position: relative;
+      top: 12px;
+      font-size: 14px;
+      line-height: 22px;
+      pointer-events: none;
+      user-select: none;
+      font-weight: 600;
+    }
+
+    &:hover {
+      border: 1px solid rgb(153, 150, 150);
+    }
+  }
+
+  .isDragging {
+    .droppable-element {
+      border-color: $primary;
+    }
+  }
+}

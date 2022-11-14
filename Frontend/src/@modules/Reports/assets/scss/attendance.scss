@@ -1,0 +1,40 @@
+.attendance-report {
+    .filter-container {
+        .filter-item {
+            min-width: 180px;
+        }
+    }
+
+    .table-attendance-report {
+        .ant-table-cell {
+            font-weight: 500 !important;
+        }
+        .ant-table-thead {
+            .ant-table-cell {
+                &:before {
+                    background-color: unset !important;
+                }
+                font-weight: 600 !important;
+                background-color: #ffffff;
+                padding-bottom: 10px !important;
+                padding-top: 10px !important;
+            }
+        }
+
+        .ant-table-expanded-row {
+            .ant-table-cell {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                background-color: rgba(0, 0, 0, 0.01) !important;
+            }
+
+            .expand-container-time-off {
+                height: 265px;
+            }
+        }
+
+        .time-off-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+    }
+}

@@ -1,0 +1,168 @@
+@import "@scss/friday";
+.team-attendance-breadcrumbs {
+  margin-bottom: 2rem !important;
+}
+
+.team-attendance {
+  .team-attendance-body {
+    padding: 1rem 1.5rem;
+
+    .icon-bell {
+      margin-right: 7px;
+      position: relative;
+      bottom: 2px;
+    }
+  }
+
+  .attendance-body {
+    min-height: 200px;
+  }
+
+  .icon-circle {
+    text-align: center;
+    line-height: 1em;
+    box-sizing: content-box;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    padding: 7px;
+    margin-right: 10px;
+    position: relative;
+    bottom: 1px;
+    font-size: 17px;
+  }
+
+  .bg-icon-green {
+    color: $primary-text-color;
+    background: $primary-bg;
+  }
+
+  .instruction-bold {
+    color: rgb(35, 54, 78);
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .team-attendance-filter {
+    min-width: 300px !important;
+  }
+
+  .ant-progress-inner {
+    height: 25px;
+    background-color: rgb(238, 243, 246);
+    border-radius: 4px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    vertical-align: middle;
+  }
+
+  .ant-progress-bg {
+    height: 25px !important;
+    border-radius: 4px !important;
+    background-color: #d9dee3 !important;
+  }
+
+  .progress-span {
+    position: absolute;
+    top: 19px;
+    left: 20px;
+  }
+
+  .cell-employee-name {
+    cursor: pointer;
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td,
+  .ant-table tfoot > tr > th,
+  .ant-table tfoot > tr > td {
+    padding: 13px 16px;
+  }
+
+  .select-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 4px;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+  }
+
+  .all_status {
+    background-color: rgb(112, 42, 126);
+  }
+
+  .count-status {
+    margin-right: 13px;
+  }
+
+  .btn-secondary:focus,
+  .btn-secondary:active,
+  .btn-secondary.active {
+    border-color: #f5f5f5 !important;
+    background-color: #e5e5ea !important;
+  }
+
+  .btn-secondary-table {
+    padding: 7px;
+    border-color: #f5f5f5 !important;
+    background-color: #e5e5ea !important;
+    color: #6e6b7b !important;
+  }
+
+  .btn-secondary-edit {
+    color: rgb(79, 94, 113) !important;
+    background-color: rgb(224, 230, 234) !important;
+  }
+
+  .notify {
+    border: none;
+    border-radius: 12px;
+    background: rgb(238, 243, 246);
+    color: rgb(14, 34, 61);
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    font-size: 14px;
+    height: 30px;
+    width: fit-content;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 2px 7px;
+    transition: all 0.3s ease 0s;
+    cursor: auto;
+    --antd-wave-shadow-color: none;
+  }
+
+  .btn-header {
+    .btn:disabled {
+      cursor: not-allowed;
+      color: #4b4b4b !important;
+      background-color: #d9d9d9 !important;
+      border: none;
+    }
+
+    .btn {
+      border: none;
+    }
+  }
+
+  .filter-dropdown {
+    margin-right: 17px;
+  }
+
+  .department-filter {
+    min-width: 180px;
+  }
+
+  .anticon {
+    vertical-align: middle;
+  }
+
+  .ms-10 {
+    margin-left: 10px;
+  }
+}

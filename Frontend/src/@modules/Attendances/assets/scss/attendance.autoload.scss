@@ -1,0 +1,109 @@
+@import "@scss/friday";
+.attendance_setting {
+    .select_address{
+        padding-top: 0.5rem;
+    }
+    .card-offices {
+        border: 1px solid rgb(227, 235, 241);
+        .form-group{
+            margin-bottom : 0px;
+        }
+    }
+    .card-offices-title {
+        i {
+            color: $primary;
+        }
+    }
+    .info-offices {
+        display: grid;
+        grid-template-columns: auto;
+        gap: 10px;
+        padding: 10px;
+        .info-row {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: 30% auto;
+        }
+    }
+
+    .allow_clocking {
+        border: 1px solid rgb(227, 235, 241);
+        padding: 20px;
+        width: 30%;
+    }
+    .map_attendance {
+        border: 1px solid rgb(227, 235, 241);
+        width: 100%;
+        height: auto;
+    }
+    .title-attendance-setting {
+        font-weight: 600;
+    }
+
+    .perSon_charge {
+        padding: 8px;
+        border-radius: 2px;
+        align-items: center;
+        margin-top: 2px;
+    }
+    .perSon_charge:hover {
+        background-color: #f8f8f8;
+    }
+    .guide_setting {
+        padding: 0 1rem;
+        .content {
+            line-height: 2rem;
+        }
+    }
+    .select_address {
+        .address_prefix__control {
+            background-color: #f2f7fb;
+            border: none;
+        }
+        .address_prefix__control--is-focused {
+            border: none !important;
+            box-shadow: none;
+        }
+    }
+
+    .attendance-start-date {
+        .ant-picker {
+            border: none !important;
+            padding: 10px;
+            background-color: #f2f7fb;
+            border-radius: 5px;
+            width: 100%;
+        }
+    }
+
+    .general-tab {
+        .ant-tabs {
+            .ant-tabs-tab-active {
+                .ant-tabs-tab-btn {
+                    color: $primary;
+                }
+            }
+
+            .ant-tabs-tab-btn {
+                font-size: 90%;
+                font-weight: 500;
+            }
+
+            .ant-tabs-ink-bar {
+                position: absolute;
+                background: $primary;
+                pointer-events: none;
+            }
+        }
+
+        .ant-tabs-tab:hover {
+            color: unset !important;
+        }
+
+        .input-select {
+            .form-group {
+                width: 100% !important;
+            }
+        }
+    }
+}

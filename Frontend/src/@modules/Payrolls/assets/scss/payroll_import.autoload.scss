@@ -1,0 +1,33 @@
+.size-h6 {
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  color: rgb(35, 54, 78);
+}
+
+.payroll-import {
+  .box-import {
+    border-radius: 4px;
+    padding: 34px;
+    border: 1px solid rgb(227, 235, 241);
+    background-color: rgb(255, 255, 255);
+
+    label > input {
+      cursor: pointer;
+    }
+  }
+
+  .margin-row {
+    margin: 0;
+  }
+
+  .mb-1-5 {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.import-skipped {
+  .ant-collapse-header-text {
+    width: 100%;
+  }
+}

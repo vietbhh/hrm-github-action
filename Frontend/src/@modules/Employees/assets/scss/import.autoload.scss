@@ -1,0 +1,217 @@
+@import "@scss/friday";
+.step-div {
+  margin-right: 60px;
+}
+
+.step-i {
+  color: $primary;
+}
+
+.icon-circle {
+  text-align: center;
+  line-height: 1em;
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  padding: 7px;
+  margin-right: 10px;
+  position: relative;
+  bottom: 1px;
+}
+
+.step-span {
+  margin-left: 20px;
+}
+
+.step-div {
+  .active-i {
+    background-color: lighten($primary-bg, 35%);
+    font-weight: 400;
+    color: darken($primary, 15%);
+  }
+
+  .active-text {
+    color: $primary;
+    font-weight: 400;
+  }
+}
+
+.border-box {
+  border: 1px solid $primary;
+}
+
+.icon-instruction {
+  color: $primary;
+  font-size: 24px;
+  margin-right: 13px;
+}
+
+.instruction-bold {
+  color: $primary-text-color;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.bg-icon-green {
+  color: $primary-text-color;
+  background: $primary-bg;
+}
+
+.btn-download-template {
+  padding: 5px;
+  font-size: 13px;
+}
+
+.text_file_format {
+  color: rgb(165, 165, 165);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.text_span_mapfield {
+  color: rgb(95, 125, 149);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.uppy_edit {
+  border-radius: 7px;
+
+  .uppy-DragDrop-inner {
+    padding: 30px 20px !important;
+  }
+
+  .uppy-DragDrop-arrow {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .uppy-DragDrop--isDragDropSupported {
+    border: none;
+  }
+}
+
+.map_table {
+  .ant-table {
+    color: $primary-text-color;
+  }
+
+  .ant-table-tbody > tr > td {
+    padding: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+
+    label {
+      display: none;
+    }
+
+    .select__control {
+      border-style: solid;
+      border-width: 1px;
+      border-color: hsl(0, 0%, 80%);
+    }
+  }
+}
+
+.import-mailto {
+  color: $primary;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.import-mailto:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.collapse-edit {
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 0;
+  }
+
+  .collapse-title {
+    color: $primary-text-color;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  .collapse-title-green {
+    color: rgb(14, 198, 72);
+  }
+
+  .collapse-title-orange {
+    color: rgb(242, 145, 50);
+  }
+
+  .collapse-row {
+    position: relative;
+    top: 2px;
+  }
+
+  .collapse-border-header {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .text-field {
+    color: rgb(95, 125, 149);
+    font-weight: 400;
+  }
+
+  .div-duplicated {
+    padding: 7px 15px;
+    background-color: rgb(249, 250, 251);
+  }
+
+  .span-duplicated {
+    font-weight: 600;
+  }
+
+  .alert-edit {
+    padding: 10px 15px;
+  }
+}
+
+.spinner-edit {
+  color: $primary;
+}
+
+.mb-7 {
+  margin-bottom: 7px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
+}
+
+.mb-40 {
+  margin-bottom: 40px;
+}
+
+.me-7 {
+  margin-right: 7px;
+}
+
+.me-10 {
+  margin-right: 10px;
+}
+
+.ms-7 {
+  margin-left: 7px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}

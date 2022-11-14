@@ -1,0 +1,137 @@
+.work_schedule{
+    .form-switch {
+        margin-bottom: 0px;
+    }
+    .active-schedule .form-group{
+        margin-bottom: 0px;
+    }
+    .schedule-type{
+        padding: 20px;
+        .custom-control-label{
+            margin-left: 0.5rem;
+        }
+    }
+    .type_description{
+        margin-left: 25px;
+    }
+    .table {
+        tr{
+            th{
+                background-color: #ffffff !important;
+                border-bottom: 1px solid #ebe9f1!important;
+                border-top :none !important;
+            }
+        }
+    }
+    .timepicker_fri {
+        background: #f2f7fb;
+        border-radius: 6px;
+        border: none; 
+        padding: 6px 12px 6px;
+        border: 0.5px solid #f2f7fb;
+        
+    }
+    .ant-picker-status-error{
+        border-color : #f7020447  !important;
+        border: 0.5px solid;
+    }
+    .error_time {
+       color: rgb(226, 87, 76); 
+       font-size: 12px;
+       margin-top: 5px;
+   }
+     [data-theme='compact'] .site-collapse-custom-collapse .site-collapse-custom-panel,
+.site-collapse-custom-collapse .site-collapse-custom-panel {
+    margin-bottom: 1.5rem;
+    background: #ffffff;
+    border: 1px solid rgb(227, 235, 241);
+    border-radius: 5px;
+}
+    .site-collapse-custom-collapse{
+        background-color: #ffffff;
+    }
+   
+    .total_Time{
+        background-color: rgb(255, 255, 255);
+        padding: 1rem;
+    }
+
+    .no_break {
+        max-height: 35px;
+    }
+    /*Witdh*/
+    .w-17 {
+        width: 17%;
+    }
+
+    .w-20{
+        width: 20%;
+    }
+
+    .w-40{
+        width: 40%;
+    }
+
+    .w-10{
+        width: 10%;
+    }
+    .title-panel {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .field-locked{
+        margin-bottom :0;
+    }
+}
+.timepicker_popup {
+    .ant-picker-panel-container{
+        padding: 1.5rem;
+    }
+}
+.ant-picker-focused{
+    .ant-picker-panel-container{
+        .ant-picker-content{
+            .ant-picker-time-panel-column{
+                .ant-picker-time-panel-column::after {
+                    display: block;
+                    height: 0px;
+                    content: '';
+                }
+            }
+        }
+    }
+
+}
+.drop_workschedule{
+    ul{
+        padding: 1rem;
+    }
+}
+.info_workSchedule{
+    display: grid;
+    grid-template-columns: 25% auto;
+    gap: 10px;
+    padding: 10px;
+    .title{
+        color: rgb(95, 125, 149);
+        div{
+            margin-bottom: 10px;
+        }
+}
+.result{
+    div{
+        margin-bottom: 10px;
+    }
+}
+.daily_working {
+    display: grid;
+    grid-template-columns: auto auto auto auto ;
+    gap: 10px;
+        div{
+            margin-bottom: 0px;
+        }
+        div:after {
+            border: 0.5px solid red;
+        }
+    }
+}

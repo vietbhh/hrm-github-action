@@ -1,0 +1,78 @@
+.employee-setting {
+    ul.module-menu {
+        margin-bottom: 0 !important;
+        li.nav-item a.nav-link.active {
+            text-decoration: none;
+        }
+    }
+
+    .collapse-custom-field {
+        .ant-collapse {
+            background-color: transparent !important;
+
+            .ant-collapse-item {
+                border: 1px solid rgb(227, 235, 241);
+                border-radius: 5px;
+            }
+
+            .ant-collapse-header {
+                padding: 14px 18px !important;
+                .ant-collapse-expand-icon {
+                    .ant-collapse-arrow {
+                        margin-right: 10px !important;
+                        width: 20px;
+                        vertical-align: -2px !important;
+                    }
+                }
+                .ant-collapse-header-text {
+                    width: 100% !important;
+                }
+            }
+
+            .ant-collapse-content {
+                border-top: 1px solid rgb(227, 235, 241);
+            }
+        }
+    }
+
+    .no-action {
+        .ant-collapse {
+            .ant-collapse-header {
+                .ant-collapse-expand-icon {
+                    .ant-collapse-arrow {
+                        vertical-align: 1px !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .sideBarColumn {
+        padding-left: 25px !important;
+        padding-right: 20px !important;
+        ul.module-menu li.nav-item a.nav-link {
+            span {
+                font-size: 1rem !important;
+                white-space: nowrap;
+            }
+
+            i {
+                font-size: 1rem !important;
+            }
+        }
+    }
+
+    .preview-code {
+        background-color: #f2f7fb;
+        padding: 12px;
+        border-radius: 5px;
+    }
+}
+
+.employee-setting-modal {
+    .list-option-value {
+        .form-group {
+            margin-bottom: 0 !important;
+        }
+    }
+}

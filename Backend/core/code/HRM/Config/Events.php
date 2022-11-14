@@ -23,4 +23,70 @@ use CodeIgniter\Events\Events;
 
 });*/
 
+Events::on('time_off_on_request', function ($params) {
+	$event = new \HRM\Modules\TimeOff\Config\Events();
+	$event->SendMailRequest($params);
+});
+
+Events::on('time_off_on_mail_notification', function ($params) {
+	$event = new \HRM\Modules\TimeOff\Config\Events();
+	$event->SendMailRequestNotification($params);
+});
+
+Events::on('attendance_on_update_total_log', function ($params) {
+	$event = new \HRM\Modules\Attendances\Config\Events();
+	$event->updateTotalLog($params);
+});
+
+Events::on('send_mail_notification_manager', function ($params) {
+	$event = new \HRM\Modules\Attendances\Config\Events();
+	$event->sendMailNotificationManager($params);
+});
+
+Events::on('send_mail_notification_employee', function ($params) {
+	$event = new \HRM\Modules\Attendances\Config\Events();
+	$event->sendMailNotificationEmployee($params);
+});
+
+Events::on('send_payslip', function ($params) {
+	$event = new \HRM\Modules\Payrolls\Config\Events();
+	$event->sendPayslip($params);
+});
+
+Events::on('after_insert_employee_event', function ($params) {
+	$event = new \HRM\Modules\Employees\Config\Events();
+	$event->afterInsertEmployeeEvent($params);
+
+});
+
+Events::on('on_update_employee_event', function ($params) {
+	$event = new \HRM\Modules\Employees\Config\Events();
+	$event->onUpdateEmployeeEvent($params);
+});
+
+Events::on('send_mail_assign_checklist', function ($data) {
+	$event = new \HRM\Modules\Checklist\Config\Events();
+	$event->sendMailAssignChecklist($data);
+});
+
+Events::on('send_mail_update_checklist', function ($data) {
+	$event = new \HRM\Modules\Checklist\Config\Events();
+	$event->sendMailUpdateChecklist($data);
+});
+
+Events::on('send_mail_off_track_checklist', function ($data) {
+	$event = new \HRM\Modules\Checklist\Config\Events();
+	$event->sendMailOffTrack($data);
+});
+
+Events::on('send_mail_off_boarding_checklist', function ($data) {
+	$event = new \HRM\Modules\Checklist\Config\Events();
+	$event->sendMailOffBoarding($data);
+});
+
+Events::on('update_line_manager_employee', function ($data) {
+	$event = new \HRM\Modules\Employees\Config\Events();
+	$event->updateLineManager($data);
+});
+
 ?>

@@ -1,0 +1,125 @@
+@import "@scss/friday";
+.my-attendance-page {
+    .my-attendance-header {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .right-content {
+        width: 55%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .int-out-info {
+            width: 41%;
+            display: flex;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            div {
+                width: 50%;
+            }
+        }
+
+        .break-time-info {
+            display: inline-flex;
+            width: 25%;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            justify-content: center;
+            .icon,
+            .label {
+                padding-right: 5px;
+            }
+        }
+
+        .break-time-access {
+            color: orange;
+        }
+
+        .clock-info {
+            width: 30%;
+            text-align: center;
+        }
+    }
+
+    .app-loading-attendance {
+        height: 120px;
+        width: 100%;
+
+        .component-loader {
+            margin-top: 60px !important;
+        }
+    }
+}
+
+.attendance-note-log-modal {
+    .attendance-note-log-item {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        display: flex;
+        font-weight: 400;
+
+        .left-content {
+            width: 15%;
+        }
+
+        .right-content {
+            width: 85%;
+            font-size: 85%;
+        }
+    }
+
+    .modal-header {
+        padding: 15px !important;
+        display: flex;
+        justify-content: space-between;
+
+        .modal-title {
+            display: block;
+        }
+    }
+}
+
+.edit-time-modal {
+    .time-picker {
+        display: flex;
+        flex-direction: column;
+
+        label {
+            margin-bottom: 0.2857rem;
+            font-size: 0.857rem !important;
+            color: #000000 !important;
+            font-style: normal !important;
+            font-weight: normal !important;
+            display: inline-block;
+        }
+
+        input {
+            cursor: pointer;
+            opacity: 1 !important;
+            padding: 0.438rem 1rem;
+        }
+
+        .ant-picker {
+            background-color: #f2f7fb !important;
+            border-radius: 6px;
+            border: none !important;
+        }
+
+        .ant-picker-ok {
+            float: unset;
+            margin-left: unset;
+            background: $primary;
+        }
+    }
+}
+
+.jobActivity {
+    .modal-body {
+      flex-grow: 1 !important;
+    }
+  }

@@ -91,6 +91,179 @@
     "menuHidden": "Menu Hidden",
     "language": "Language"
   },
+  "layout": {
+    "overview": "Overview",
+    "quick_access": "Quick access",
+    "admin_tools": "Admin tools",
+    "tools": "Tools",
+    "quick": "Quick",
+    "notification": {
+      "title": "Notification",
+      "recent_notification": "Recent Notification",
+      "see_all_incoming_activity": "See all incoming activity"
+    },
+    "message": "Message",
+    "read_all_message": "Read all Message",
+    "chat": "Chat",
+    "calendar": "Calendar",
+    "setting": "Setting",
+    "header": {
+      "welcome": {
+        "morning": {
+          "title": "Good morning",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“Have a happy and lucky new day”",
+          "content_3": "“This message of mine will help me send you a little luck, a little more fun and a lot of my love”",
+          "content_4": "“The leaves are green, my heart is red. Have a nice morning”",
+          "content_5": "“Absolutely focus to have a productive day”",
+          "content_6": "“Wishing you a new day full of energy for a productive day”",
+          "content_7": "“Your spirit is good today. Have a great working day”",
+          "content_8": "“You look energetic today. I think today will be a great day for you. Wish your job favorable and successful”",
+          "content_9": "“You were the first person I met this morning. Have a good morning and a productive day”",
+          "content_10": "“Looks like you have something unhappy. Forget it to start a productive day”",
+          "content_11": "“Did you sleep well yesterday? Wishing you a new day of luck and fruitfulness”",
+          "content_12": "“You were the first person I met this morning. Have a good morning and a productive day”",
+          "content_13": "“Good luck to you today”",
+          "content_14": "“Wishing you a brilliant and happy morning”",
+          "content_15": "“This life is a surprise when there are friends. Have a happy and exciting new day”",
+          "content_16": "“Hope this message will bring you happiness and luck from my place”",
+          "content_17": "“When I get up early and don’t know what to do. I miss you. Have a nice day”",
+          "content_18": "“Do not be sad because something is old. Live for today and tomorrow. Have a nice day”",
+          "content_19": "“Each new day will come and contain many new things. Live your best and enjoy your day”",
+          "content_20": "“Think about the good things you want and live energetically every day. Good morning”",
+          "content_21": "“Live like a free bird flying into the air it wants. Today is for you. Do the things that are comfortable for you”",
+          "content_22": "“There is nothing more precious than you treasure your life. Wish you a new day filled with optimism”",
+          "content_23": "“By miles, you are far from me. By thoughts, you are close to me. By hearts, you are in me. Have a great time”",
+          "content_24": "“Try to take advantage of every opportunity that comes you way”",
+          "content_25": "“Change will never happen when people lack the ability and courage to see themselves for who they are”",
+          "content_26": "“Never settle to be better”",
+          "content_27": "“Change your thoughts and you change your world”",
+          "content_28": "“They always say time changes things, but you actually have to change them yourself”",
+          "content_29": "“There are no secret to success. It is the result of preparation, hard word and learning from failure”",
+          "content_30": "“The beginning is the most important part of the work”",
+          "content_31": "“When you like your work every day is a holiday”",
+          "content_32": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_33": "“As a cure for worrying, work is better than whiskey”",
+          "content_34": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
+          "content_35": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_36": "“Rule: It is the quality of time at work that counts and the quantity of time at home that matters”",
+          "content_37": "“No challenge shall never know all its capabilities”",
+          "content_38": "“Success is a journey not a destination”",
+          "content_39": "“Have a beautiful and productive day”"
+        },
+        "afternoon": {
+          "title": "Good afternoon",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“This afternoon, I hope everything will be all right”",
+          "content_3": "“Absolutely focus to have a productive day”",
+          "content_4": "“Hope this message will bring you happiness and luck from my place”",
+          "content_5": "“Live like a free bird flying into the air it wants. Today is for you. Do the things that are comfortable for you”",
+          "content_6": "“Good luck to you today”",
+          "content_7": "“Your spirit is good today. Have a great working day”",
+          "content_8": "“By miles, you are far from me. By thoughts, you are close to me. By hearts, you are in me. Have a great time”",
+          "content_9": "“Try to take advantage of every opportunity that comes you way”",
+          "content_10": "“Change will never happen when people lack the ability and courage to see themselves for who they are”",
+          "content_11": "“Never settle to be better”",
+          "content_12": "“Change your thoughts and you change your world”",
+          "content_13": "“They always say time changes things, but you actually have to change them yourself”",
+          "content_14": "“There are no secret to success. It is the result of preparation, hard word and learning from failure”",
+          "content_15": "“The beginning is the most important part of the work”",
+          "content_16": "“When you like your work every day is a holiday”",
+          "content_17": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_18": "“As a cure for worrying, work is better than whiskey”",
+          "content_19": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
+          "content_20": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_21": "“Rule: It is the quality of time at work that counts and the quantity of time at home that matters”",
+          "content_22": "“No challenge shall never know all its capabilities”",
+          "content_23": "“Success is a journey not a destination”"
+        },
+        "evening": {
+          "title": "Good evening",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“By miles, you are far from me. By thoughts, you are close to me. By hearts, you are in me. Have a great time”",
+          "content_3": "“Try to take advantage of every opportunity that comes you way”",
+          "content_4": "“Change will never happen when people lack the ability and courage to see themselves for who they are”",
+          "content_5": "“Never settle to be better”",
+          "content_6": "“Change your thoughts and you change your world”",
+          "content_7": "“They always say time changes things, but you actually have to change them yourself”",
+          "content_8": "“There are no secret to success. It is the result of preparation, hard word and learning from failure”",
+          "content_9": "“The beginning is the most important part of the work”",
+          "content_10": "“When you like your work every day is a holiday”",
+          "content_11": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_12": "“As a cure for worrying, work is better than whiskey”",
+          "content_13": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
+          "content_14": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_15": "“Rule: It is the quality of time at work that counts and the quantity of time at home that matters”",
+          "content_16": "“No challenge shall never know all its capabilities”",
+          "content_17": "“Success is a journey not a destination”"
+        }
+      },
+      "birthday": {
+        "title": "Happy Birthday",
+        "content_1": "“Count your life by smiles, not tears. Count your age by friends, not years. Happy birthday!”",
+        "content_2": "“Your birthday is the first day of another 365-day journey. Be the shining thread in the beautiful tapestry of the world to make this year the best ever”",
+        "content_3": "“It’s your birthday today, so I hope all your wishes come true. But you already have me, what more could you wish for??”",
+        "content_4": "“A wish for you on your birthday, whatever you ask may you receive, whatever you seek may you find, whatever you wish may it be fulfilled on your birthday and always. Happy birthday!”",
+        "content_5": "“May the joy that you have spread in the past come back to you on this day. Wishing you a very happy birthday!”",
+        "content_6": "“Your life is just about to pick up speed and blast off into the stratosphere. Wear a seat belt and be sure to enjoy the journey. Happy birthday!”",
+        "content_7": "“You’re older today than yesterday but younger than tomorrow, happy birthday!”",
+        "content_8": "“Happy birthday to one of the few people whose birthday I can remember without a Facebook reminder”",
+        "content_9": "“Happy Birthday! You know, you don’t look that old. But then, you don’t look that young, either”",
+        "content_10": "“If your birthday is half as amazing as you are, it gonna to be epic. Happy birthday to the best friend and colleague that a person could ask for!”",
+        "content_11": "“Hey, thanks for just being you. You are one of a kind and my best friend. Happy birthday and I hope with can have more chances to work together”",
+        "content_12": "“The best gift is the gift of friendship. So, now no know what I got you for your birthday! Don’t worry… I got you a real present too”",
+        "content_13": "“Forget about the past, you can not change it. Forget about the future, you can not predict it. Forget about the present, I did not get you one. Happy birthday!”",
+        "content_14": "“Congratulations on another year of skillful death evasion!”"
+      },
+      "weather": {
+        "thunderstorm": {
+          "title": "Thunderstorm",
+          "content_1": "“It's thundering today, you'd better not go out”",
+          "content_2": "“The weather is bad, let's stay in the room”"
+        },
+        "drizzle": {
+          "title": "Drizzle",
+          "content_1": "“It's drizzling, don't forget to bring an umbrella when you go out”"
+        },
+        "rain": {
+          "title": "Rain",
+          "content_1": "“It's raining, don't forget to bring a raincoat”",
+          "content_2": "“It's raining, don't forget to bring an umbrella”"
+        },
+        "snow": {
+          "title": "Snow",
+          "content_1": "“It's snowing, don't forget to wear warm clothes”"
+        },
+        "atmosphere": {
+          "title": "Atmosphere",
+          "content_1": "“The air outside is not so good, you'd better stay in your room”"
+        },
+        "clear": {
+          "title": "Clear",
+          "content_1": "“It's sunny and not cloudy, wear sunscreen when going out”"
+        },
+        "clouds": {
+          "title": "Clouds",
+          "content_1": "“Today is a beautiful day, let's go out and enjoy”"
+        }
+      },
+      "header_assistant": {
+        "title": "Header assistant",
+        "sure_to_delete": "Sure to delete?",
+        "add": "Add header assistant",
+        "fields": {
+          "title": "Title",
+          "content": "Content",
+          "image": "Image",
+          "image_position": "Image position",
+          "date_from": "Date from",
+          "date_to": "Date to",
+          "date": "Date",
+          "to": "To"
+        }
+      }
+    }
+  },
   "manage": {
     "module": {
       "name": "Module name",
@@ -153,8 +326,6 @@
       "customPath": "Custom Path",
       "isPublic": "Public",
       "redirectPath": "Redirect Path",
-      "permitAction": "Permit Action",
-      "permitResource": "Permit Resource",
       "meta": "Meta"
     },
     "permit": {
@@ -174,8 +345,9 @@
     "exists": "{name} already exists",
     "notValid": "{name} is not valid",
     "notValidOrExists": "{name} is not valid or already exists",
-    "passwordNotMatch": "Password do not match",
-    "currentPwdIncorrect": "Your current password is incorrect"
+    "passwordNotMatch": "The passwords do not match",
+    "currentPwdIncorrect": "Your current password is incorrect",
+    "phoneNumber": "Please input a valid phone number"
   },
   "breadcumbs": {
     "add": "Create",
@@ -328,7 +500,9 @@
     "cancel_approve": "Cancel approve",
     "cancel_decline": "Cancel decline",
     "view": "View",
-    "edit": "Edit"
+    "edit": "Edit",
+    "started": "Started",
+    "remove": "Remove"
   },
   "errors": {
     "common": {
@@ -394,16 +568,20 @@
     },
     "under_contruction": {
       "title": "Oops!...",
-      "text": "This section is under contuction,please comback later."
+      "text": "This section is under construction, please come back later."
     },
     "approve": "Approve has been success",
-    "decline": "Decline has been success"
+    "decline": "Decline has been success",
+    "template": {
+      "not_found": "Template not found"
+    }
   },
   "menu": {
     "dashboard": "Dashboard",
     "organizationalStructure": "Organizational",
     "directory": "Directory",
     "organizationalChart": "Org Chart",
+    "insurance": "Insurance",
     "about": "Informations",
     "departments": "Departments",
     "positions": "Positions",
@@ -413,7 +591,10 @@
     "contracts": "Contracts",
     "insurances": "Insurrances",
     "absents": "Time Off",
-    "timekeeping": "Attendance",
+    "attendance": "Attendance",
+    "myAttendance": "My Attendance",
+    "teamAttendance": "Team Attendance",
+    "employeeAttendance": "Employee Attendance",
     "recruitments": "Recruitment",
     "recruitmentsList": "Jobs",
     "candidates": "Candidates",
@@ -428,11 +609,42 @@
     "kpis": "KPIs",
     "training": "Training",
     "data": "Data",
-    "employees": "Manage employees",
+    "employees": "Manage Employees",
     "request": "Request",
     "jobs": "Jobs",
     "setting": "Setting",
-    "approve": "Approve"
+    "approval": "Approval",
+    "checklist": "Checklist",
+    "checklistToDo": "Todos",
+    "checklistOnboarding": "Onboarding",
+    "checklistOffboarding": "Offboarding",
+    "checklistSetting": "Setting",
+    "news": "News",
+    "documents": "Documents",
+    "timeOff": "Time Off",
+    "myTimeOff": "My Time Off",
+    "teamTimeOff": "Team Time Off",
+    "employeesTimeOff": "Employees Time Off",
+    "approvalTimeOff": "Approval Time Off",
+    "timeOffSetting": "Setting",
+    "document": "Documents",
+    "pay_cycles": "Pay Cycles",
+    "attendance_setting": "Attendance",
+    "payrolls": "Payroll",
+    "employeePayrolls": "Employee Payroll",
+    "settings": "Settings",
+    "reports": "Reports",
+    "reportsEmployees": "Employees",
+    "reportsOnboarding": "Onboarding",
+    "reportsOffboarding": "Offboarding",
+    "reportsTimeOffSchedule": "Time Off Schedule",
+    "reportsTimeOffBalance": "Time Off Balance",
+    "reportsAttendance": "Attendance",
+    "reportsRecruitment": "Recruitment",
+    "employee_setting": "Settings",
+    "overtime": "Overtime",
+    "manage_overtime": "Manage Overtime",
+    "request_overtime": "Request Overtime"
   },
   "settings": {
     "apps": {
@@ -541,6 +753,48 @@
     "title": "Company Info"
   },
   "modules": {
+    "dashboard": {
+      "title": "Dashboard",
+      "empty": "Drag and drop widgets here. Open the Customize pane to get started",
+      "attendance_to_day": "Attendance to day",
+      "attendance_to_day_empty": "No attendance to day",
+      "birthday_this_month": "Birthday this month",
+      "birthday_this_month_empty": "No one has birthday this month",
+      "who_off_today": "Who's off today",
+      "who_off_today_empty": "No one is absent today",
+      "my_time_off": "My Time Off",
+      "my_time_off_empty": "You have no time off schedule",
+      "day": "day",
+      "days": "days",
+      "pending": "pending",
+      "pending_approval": "Pending approval",
+      "pending_approval_empty": "No one has pending approval",
+      "pending_approval_time_off_empty": "No one has time-off",
+      "pending_approval_time_attendance_empty": "No one has time attendance",
+      "time_off": "Time-off",
+      "time_attendance": "Time Attendance",
+      "widget": "Widget",
+      "remove_widget": "Remove widget",
+      "no_widget": "No widget",
+      "today": "Today",
+      "employees": "Employees",
+      "employees_total": "Total member",
+      "employees_empty": "No Employees",
+      "upcoming_events": "Upcoming Events",
+      "announcement": {
+        "title": "Announcement",
+        "empty": "No announcements yet",
+        "empty_text": "Follow to stay up to date with all company news",
+        "view_all": "View All"
+      },
+      "notepad": {
+        "title": "Notepad",
+        "add": "Add notepad",
+        "placeholder_input": "Notepad Title",
+        "pin": "Pin",
+        "un_pin": "Un pin"
+      }
+    },
     "users": {
       "buttons": {
         "add": "New User"
@@ -604,84 +858,171 @@
         "features": "Features",
         "custom": "Other",
         "modules": "Modules"
-      }
-    },
-    "departments": {
-      "title": "Departments",
-      "buttons": {
-        "add": "New Dept"
       },
-      "fields": {
-        "name": "Department name",
-        "description": "Description",
-        "is_active": "Active"
-      }
-    },
-    "offices": {
-      "title": "Offices",
-      "buttons": {
-        "add": "New Office"
-      },
-      "display": {
-        "num_of_employees": "Number of Employees",
-        "employees": "employees"
-      },
-      "fields": {
-        "name": "Office name",
-        "address": "Address",
-        "email": "Contact email",
-        "phone": "Contact number",
-        "is_active": "Active",
-        "is_headquarter": "Headquarter"
-      }
-    },
-    "tasks": {
-      "title": "Tasks",
-      "buttons": {
-        "addtask": "Add Task",
-        "add": "Add",
-        "update": "Update",
-        "cancel": "Cancel"
-      },
-      "tabs": {
-        "mytasks": "My Tasks",
-        "important": "Important",
-        "completed": "Completed",
-        "added": "Added",
-        "deleted": "Deleted"
-      },
-      "fields": {
-        "title": "Title",
-        "assignee": "Assignee",
-        "date": "Due Date",
-        "tags": "Tags",
-        "description": "Description",
-        "files": "Files",
-        "search": "Search task",
-        "no_item": "No Items Found"
-      }
-    },
-    "gender": {
-      "formatLabel": {
-        "male": "Male",
-        "female": "Female",
-        "other": "Other"
-      }
-    },
-    "tasks_tags": {
-      "fields": {
-        "value": "Value",
-        "color": "Color"
-      }
-    },
-    "tags": {
-      "fields": {
-        "title": "Tags",
-        "newtag": "New Tag"
-      },
-      "button": {
-        "add": "Add",
-        "cancel": "Cancel"
+      "text": {
+        "permissions": "Permissions",
+        "members": "Members",
+        "import": "Import",
+        "settings": "Settings",
+        "no_access": "No access",
+        "view_only": "View only",
+        "view_and_edit": "View and edit",
+        "section": "Section",
+        "permission": "Permission",
+        "profile_data": "Profile Data",
+        "employee_data": {
+          "employee_data": "Employee Data",
+          "employee_data_des": "Users with this role can access the information of",
+          "all_employees_including_resigned_ones": "All employees including resigned ones",
+          "all_employees": "All employees",
+          "direct_and_indirect_reports": "Direct & indirect reports",
+          "direct_reports": "Direct reports",
+          "personal_info": "Personal Info",
+          "address": "Address",
+          "bank_info": "Bank Info",
+          "social_network": "Social Network",
+          "other": "Other",
+          "job_information": "Job Information",
+          "work_schedule": "Work Schedule",
+          "activity": "Activity",
+          "contracts": "Contracts",
+          "documents": "Documents",
+          "payrolls": "Payrolls",
+          "dependents": "Dependents",
+          "educations": "Educations"
+        },
+        "features": {
+          "features": "Features",
+          "employees": {
+            "employees": "Employees",
+            "manage_employees": "Manage Employees",
+            "hiring": "Hiring",
+            "hiring_des": "Create a new employee profile, rehire a resigned one and send/resend invite",
+            "import_des": "Upload and import employee profiles",
+            "termination": "Termination",
+            "termination_des": "Offboard an employee and cancel offboard",
+            "settings_des": "View, edit employee settings templates"
+          },
+          "checklist": {
+            "checklist": "Checklist",
+            "onboarding": "On/Offboarding",
+            "onboarding_des": "View on/offboarding employees and assign, edit checklists",
+            "settings_des": "View, edit, delete on/offboarding templates"
+          },
+          "time_off": {
+            "time_off": "Time Off",
+            "employee_time_off": "Employee Time Off",
+            "employee_time_off_des": "Access employee time off",
+            "team_time_off": "Team Time Off",
+            "team_time_off_des": "Access team time off",
+            "approval_time_off": "Approval Time Off",
+            "approval_time_off_des": "Access approval time off",
+            "holidays": "Holidays",
+            "holidays_des": "View, create, edit, copy, delete holidays",
+            "types": "Types",
+            "types_des": "View, create, edit, activate, deactivate, delete types",
+            "import_des": "Upload and import employee's time off"
+          },
+          "attendance": {
+            "attendance": "Attendance",
+            "employee_attendance": "Employee Attendance",
+            "employee_attendance_des": "Access employee attendance",
+            "team_attendance": "Team Attendance",
+            "team_attendance_des": "Access team attendance",
+            "settings_des": "View, edit attendance cycle, configure clock in/out, generate QR code and geofencing rule"
+          },
+          "payroll": {
+            "payroll": "Payroll",
+            "employee_payroll": "Employee Payroll",
+            "employee_payroll_des": "View, edit, close, download payroll of all employees",
+            "import_des": "Upload and import employee's payroll",
+            "settings_des": "View, edit payroll settings"
+          },
+          "recruitment": {
+            "recruitment": "Recruitment",
+            "recruitment_management": "Recruitment Management",
+            "approval": "Approval",
+            "approval_des": "Approval jobs",
+            "request": "Request",
+            "request_des": "Request jobs",
+            "jobs": "Jobs",
+            "jobs_des": "View jobs",
+            "candidates": "Candidates",
+            "candidates_des": "View, create, edit, delete candidates",
+            "settings_des": "View, edit recruitment settings templates"
+          },
+          "news": {
+            "news": "News",
+            "news_des": "View, create, edit, publish, delete news"
+          },
+          "reports": {
+            "reports": "Reports",
+            "report_view_des": "View report",
+            "employees": "employees",
+            "onboarding": "Onboarding",
+            "offboarding": "Offboarding",
+            "time_off_schedule": "Time Off schedule",
+            "time_off_balance": "Time Off Balance",
+            "attendance": "Attendance",
+            "recruitment": "Recruitment"
+          },
+          "settings": {
+            "superpower": "Superpower",
+            "superpower_des": "Superpower,access to all module and function",
+            "developer_mode": "Developer mode",
+            "developer_mode_des": "Access developer mode",
+            "download": "Download",
+            "download_des": "Allow user access download route",
+            "modules": "Modules",
+            "modules_des": "Management modules",
+            "app": "App",
+            "app_des": "Update default application setting",
+            "users": "Users",
+            "users_des": "Management users",
+            "permits": "Permits",
+            "permits_des": "Management permission of users",
+            "offices": "Offices",
+            "offices_des": "View, create, edit, activate, deactivate, delete offices",
+            "departments": "Departments",
+            "departments_des": "View, create, edit, activate, deactivate, delete departments",
+            "job_titles": "Job Titles",
+            "job_titles_des": "View, create, edit, activate, deactivate, delete job titles",
+            "groups": "Groups",
+            "groups_des": "View, create, edit, activate, deactivate, delete groups",
+            "work_schedules": "Work Schedules",
+            "work_schedules_des": "View, create, activate, deactivate work schedules",
+            "employee_groups": "Employee Groups",
+            "employee_groups_des": "View, create, and update employee groups",
+            "employee_level": "Employee Level",
+            "employee_level_des": "View, create, and update employee level"
+          }
+        },
+        "other": {
+          "other": "Other",
+          "dashboard": {
+            "dashboard": "Dashboard",
+            "dashboard_des": "Allow user access dashboard"
+          },
+          "widget": {
+            "title": "Widget",
+            "follow_up": {
+              "title": "Follow Up",
+              "des": "Allow user access widget Follow Up"
+            },
+            "employees": {
+              "title": "Employees",
+              "des": "Allow user access widget Employees"
+            },
+            "attendance_to_day": {
+              "title": "Attendance to day",
+              "des": "Allow user access widget Attendance to day"
+            },
+            "who_off_today": {
+              "title": "Who off today",
+              "des": "Allow user access widget Who off today"
+            }
+          }
+        }
       }
     },
     "calendar": {
@@ -691,7 +1032,8 @@
         "birthday": "Birthday",
         "holiday": "Holiday",
         "time_off": "Time Off",
-        "all_day_event": "All day events"
+        "all_day_event": "All day events",
+        "checklist": "Checklist"
       },
       "fields": {
         "title": "Title",
@@ -765,6 +1107,589 @@
         }
       }
     },
+    "departments": {
+      "title": "Departments",
+      "text": {
+        "title_org_chart": "Department Organizational Chart",
+        "new_department": "New Department",
+        "edit_department": "Edit Department",
+        "new_department_sub": "New subordinate department",
+        "error_line_manager": "Can't move Line manager to child department",
+        "delete_department": "Delete Department",
+        "delete_all_department": "Delete all child department",
+        "profile": "Profile",
+        "note_delete_deparment" : "* All employees must be transferred to another department"
+      },
+      "buttons": {
+        "new_employee": "New Employee"
+      },
+      "fields": {
+        "name": "Department name",
+        "description": "Description",
+        "is_active": "Active",
+        "line_manage": "Line Manage",
+        "parent": "Parent"
+      }
+    },
+    "offices": {
+      "title": "Offices",
+      "buttons": {
+        "add": "New Office"
+      },
+      "display": {
+        "num_of_employees": "Number of Employees",
+        "employees": "employees"
+      },
+      "fields": {
+        "name": "Office name",
+        "address": "Address",
+        "email": "Contact email",
+        "phone": "Contact number",
+        "is_active": "Active",
+        "is_headquarter": "Headquarter"
+      }
+    },
+    "tasks": {
+      "title": "Tasks",
+      "buttons": {
+        "addtask": "Add Task",
+        "add": "Add",
+        "update": "Update",
+        "cancel": "Cancel"
+      },
+      "tabs": {
+        "mytasks": "My Tasks",
+        "important": "Important",
+        "completed": "Completed",
+        "added": "Added",
+        "deleted": "Deleted"
+      },
+      "fields": {
+        "title": "Title",
+        "assignee": "Assignee",
+        "date": "Due Date",
+        "tags": "Tags",
+        "description": "Description",
+        "files": "Files",
+        "search": "Search task",
+        "no_item": "No Items Found"
+      }
+    },
+    "gender": {
+      "formatLabel": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      }
+    },
+    "employees": {
+      "title": "Employees",
+      "buttons": {
+        "add": "New Profile",
+        "invite": "Invite",
+        "reinvite": "Re-Invite",
+        "onboarding": "Onboarding",
+        "offboarding": "Offboarding",
+        "cancel_offboarding": "Cancel Offboarding",
+        "rehire": "Rehire",
+        "delete": "Delete employee"
+      },
+      "org_chart": {
+        "title": "Organizational Chart"
+      },
+      "offboarding": {
+        "cancel_offboarding_title": "Cancel Offboarding",
+        "keep_offboarding_title": "Keep Offboarding",
+        "cancel_offboarding_text": "This employee will no longer be scheduled for offboarding. All information relate to offboarding will be deleted.",
+        "cancel_offboarding_success": "Cancelled successfully",
+        "manager_reassignment_text": "This employee are direct supervisor of some other employees,you need assign other manager for them."
+      },
+      "rehire": {
+        "title": "Rehire Employee"
+      },
+      "notifications": {
+        "sendInviteSuccess": "The invitation has been sent",
+        "sendInvitesendInviteError": "The invitation has been sent",
+        "deleteWarning": "All data relate to this employee (personal data, file upload, contracts, job, tasks) will be delete and unable to restore. <hr/> <small>We recommend not to delete employee data unless you are testing data or this data is not related to any module.</small>"
+      },
+      "display": {
+        "department": "DEPARTMENT",
+        "office": "OFFICE",
+        "line_manager": "LINE MANAGER",
+        "offboard_employee": "Offboard Employee"
+      },
+      "tabs": {
+        "general": {
+          "title": "General",
+          "subtitle": "Basic informations.",
+          "description": "Enter basic informations.",
+          "personal_info": "Personal Info",
+          "address": "Address",
+          "bank_information": "Bank Infomation",
+          "social_network": "Social Network",
+          "other": "Other"
+        },
+        "job": {
+          "title": "Job",
+          "job_informations": "Job information",
+          "contracts": "Contracts",
+          "offboarding": "Offboarding",
+          "work_schedule": "Work schedule",
+          "error_date": "Do not equal with the existing effective dates"
+        },
+        "payroll": {
+          "title": "Payroll",
+          "payroll_informations": "Payroll information",
+          "card_title": {
+            "recurring": "Recurring Payments",
+            "salary": "Salary Information",
+            "payroll": "Payroll Details",
+            "payroll_setup": "Setup Payroll"
+          },
+          "text": {
+            "set_up_for": "Setup payroll for {name}",
+            "enter_salary": "Enter a fixed salary, assign a Recurring Schedule."
+          },
+          "modals": {
+            "title_salary": "Add Salary",
+            "title_update_salary": "Update Salary",
+            "update_paycycle": "Update Pay Cycle"
+          }
+        },
+        "insurance": {
+          "title": "Insurance"
+        },
+        "documents": {
+          "title": "Documents",
+          "section_title": "Personal Documents"
+        },
+        "dependents": {
+          "title": "Dependents"
+        },
+        "educations": {
+          "title": "Educations"
+        },
+        "activity": {
+          "title": "Activity",
+          "joining": "Joining",
+          "as_a(n)": "as a(n)",
+          "at": "at",
+          "on": "on",
+          "was_changed_from": "was changed from",
+          "to": "to"
+        },
+        "tabId": {
+          "general": "Personal Info",
+          "job": "Job Information",
+          "bankaccount": "Bank Infomation",
+          "contact": "Address",
+          "offboarding": "Offboarding",
+          "other": "Other",
+          "payroll": "Payroll",
+          "social": "Social Network"
+        },
+        "connection": {
+          "title": "Connections",
+          "google_service": {
+            "title": "Google Services",
+            "buttons": {
+              "login_with_google": "Sign in with Google",
+              "logout": "Unlink"
+            },
+            "text": {
+              "services": {
+                "calendar": {
+                  "title": "Calendar Service",
+                  "description": "Synchronous your Calendar Events, Time Off Request with Google Calendar"
+                },
+                "drive": {
+                  "title": "Drive Service",
+                  "description": "Synchronous documents from your Google Drive with Friday OS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "fields": {
+        "invite": "Send an email invitation to the employee to activate her/his Life account",
+        "employee_code": "ID",
+        "avatar": "Avatar",
+        "tax_code": "Personal Tax ID",
+        "relationship_status": "Relationship Status",
+        "identity_card": "Identity",
+        "identity_card_date_issue": "Identity Date Issue",
+        "identity_card_date_valid": "Identity Date Valid",
+        "identity_card_location_issue": "Identity Location Issue",
+        "nationality": "Nationality",
+        "ethnic": "Ethnic",
+        "religion": "Religion",
+        "domicile": "Domicile",
+        "manager_reassignment": "Manager Reassignment",
+        "temp_address": "Temporary Address",
+        "temp_province": "Temporary Province",
+        "temp_district": "Temporary District",
+        "temp_ward": "Temporary Ward",
+        "per_address": "Permanent Address",
+        "per_province": "Permanent Province",
+        "per_district": "Permanent District",
+        "per_ward": "Permanent Ward",
+        "social_facebook": "Facebook",
+        "social_twitter": "Twitter",
+        "social_instagram": "Instagram",
+        "social_linkedin": "Linkedin",
+        "social_skype": "Skype",
+        "social_telegram": "Telegram",
+        "social_youtube": "Youtube",
+        "social_website": "Website",
+        "social_reddit": "Reddit",
+        "bank_owner": "Bank Owner",
+        "bank_number": "Bank Number",
+        "bank_name": "Bank Name",
+        "bank_address": "Bank Address",
+        "bank_branch": "Bank Branch",
+        "join_date": "Join Date",
+        "insurance_book_number": "Health Insurance",
+        "insurance_card_number": "Insurance Card Number",
+        "insurance_province_code": "Insurance Province Code",
+        "insurance_address_register": "Insurance Address Register",
+        "insurance_from": "Insurance From",
+        "insurance_sync": "Insurance Sync",
+        "insurance_status": "Insurance Status",
+        "blood": "Blood",
+        "recruitment_reason": "Recruitment Reason",
+        "hobby": "Hobby",
+        "day_quit": "Day Quit",
+        "reason_quit": "Reason Quit",
+        "household_registration_owner": "Household Registration Owner",
+        "household_registration_type": "Household Registration Type",
+        "household_registration_num": "Household Registration Number",
+        "household_registration_address": "Household Registration  Address",
+        "household_registration_province": "Household Registration Province",
+        "household_registration_district": "Household Registration District",
+        "household_registration_ward": "Household Registration Ward",
+        "pob": "Place Of Birth",
+        "group_id": "Group",
+        "job_title_id": "Job title",
+        "department_id": "Department",
+        "status": "Status",
+        "disc": "Disc",
+        "email": "Email",
+        "phone": "Phone",
+        "username": "Username",
+        "full_name": "Full Name",
+        "dob": "Birthday",
+        "address": "Address",
+        "gender": "Gender",
+        "office": "Office Location",
+        "probation_start_date": "Probation Start Date",
+        "probation_end_date": "Probation End Date",
+        "line_manager": "Line Manager",
+        "account_status": "Account",
+        "last_working_date": "Last Working Date",
+        "reason_of_leaving": "Reason Of Leaving",
+        "note_of_leaving": "Note Of Leaving",
+        "work_schedule": "Work Schedule",
+        "pay_cycle": "Pay Cycles",
+        "employee_type": "Employment Type",
+        "vakad": "Vakad",
+        "is_insurance_compulsory": "Is insurance compulsory",
+        "probationary_salary_percent": "Probationary salary percent",
+        "salary_paid_for_social_insurance": "Salary paid for social insurance",
+        "level": "Level",
+        "id_time_machine": "ID attendance"
+      },
+      "app_options": {
+        "account_status": {
+          "uninvited": "Uninvited",
+          "invited": "Invited",
+          "activated": "Activated",
+          "deactivated": "Deactivated"
+        },
+        "relationship_status": {
+          "none": "None",
+          "fa": "FA",
+          "inarelationship": "In a relationship",
+          "married": "Married",
+          "divorce": "Divorce"
+        },
+        "religion": {
+          "yes": "Yes",
+          "no": "No"
+        },
+        "insurance_sync": {
+          "no": "No",
+          "yes": "Yes"
+        },
+        "gender": {
+          "none": "None",
+          "male": "Male",
+          "female": "Female"
+        },
+        "status": {
+          "onboarding": "Onboarding",
+          "probationary": "Probationary",
+          "active": "Active",
+          "on_leave": "On Leave",
+          "offboarding": "Offboarding",
+          "resigned": "Resigned"
+        },
+        "reason_of_leaving": {
+          "contract_finished": "Contract finished",
+          "offer_declined": "Offer declined",
+          "resignation": "Resignation",
+          "retirement": "Retirement",
+          "termination": "Termination",
+          "other": "Other"
+        }
+      },
+      "import": {
+        "step_1": "UPLOAD FILE",
+        "step_2": "MAP FIELDS",
+        "step_3": "PREVIEW & IMPORT",
+        "instructions_1": "Instructions to import successfully",
+        "instructions_2": "Download the template and fill it in with your employee data. Employees will be automatically assigned to your head office (you can change that later).",
+        "instructions_3": "The import will automatically create the job titles and departments you input in the template.",
+        "download_template_title": "Download Employee Template",
+        "download_template_text": "Download a template file and input your data into the template to ensure you have the perfect file for the import.",
+        "upload_template_title": "Upload Template",
+        "file_format": "File format",
+        "max_file_size": "Max file size",
+        "button": {
+          "employee_template": "Employee Template.xlsx",
+          "mapping_fields": "Mapping fields",
+          "back": "Back",
+          "preview": "Preview",
+          "import": "Import"
+        },
+        "notification": {
+          "errorFileType": "You can only upload .xlsx",
+          "errorMapField": "Some fields are error, please review your data!"
+        },
+        "map_fields": {
+          "almost_there_title": "Almost there!",
+          "almost_there_text": "Before clicking on Review, please review how the data fields will be mapped to the columns in your Excel file.",
+          "default_fields_mapping_title": "Default Fields Mapping",
+          "default_fields_mapping_text": "Mapping your uploaded file headers with fields.",
+          "grove_field": "Field",
+          "mapping": "Mapping",
+          "upload_file_header": "Upload File Header",
+          "dropdown": "Dropdown"
+        },
+        "preview": {
+          "preview_title": "Last step! Here's a summary of what can / cannot be imported",
+          "preview_text_1": "Please review it before clicking on Import.",
+          "preview_text_2": "If you need additional supporting importing your data, please send us your file at ",
+          "record": "Record",
+          "records": "Records",
+          "ready_to_created": "ready to be created",
+          "duplicated": "duplicated",
+          "duplicate": "duplicate",
+          "duplicated_text": "Duplicate record has been found. Select the records that you want to import.",
+          "skipped": "skipped",
+          "skipped_text": "The record does not allow for import. The following is a list of errors, details for the error that help you check the data.",
+          "unmapped": "Unmapped",
+          "unmapped_text": "These fields in your uploaded file have not been mapped to any field. The data in these fields will be ignored during the import.",
+          "fields": "fields",
+          "row": "Row",
+          "errors": "errors",
+          "error": "error",
+          "field": "Field",
+          "uploaded_file_header": "Uploaded file header",
+          "value": "Value",
+          "warning_duplicated": "There are some records have multiple duplicate, please manually validate your data again before import.",
+          "importing": "Importing...",
+          "imported": "Imported successfully.",
+          "error_email_missing": "If continue import, this record will not be added",
+          "payroll_error_email": "Sheet Payroll missing Email.",
+          "contract_error_email": "Sheet Contract missing Email.",
+          "education_error_email": "Sheet Education missing Email.",
+          "dependents_error_email": "Sheet Dependents missing Email.",
+          "contract_error_date": "Sheet Contract has an invalid date."
+        }
+      },
+      "settings": {
+        "text": {
+          "select_all": "Select all",
+          "clear_all": "Clear all"
+        }
+      },
+      "text": {
+        "additional_information": "Additional Information"
+      }
+    },
+    "tasks_tags": {
+      "fields": {
+        "value": "Value",
+        "color": "Color"
+      }
+    },
+    "tags": {
+      "fields": {
+        "title": "Tags",
+        "newtag": "New Tag"
+      },
+      "button": {
+        "add": "Add",
+        "cancel": "Cancel"
+      }
+    },
+    "dependents": {
+      "app_options": {
+        "relationship": {
+          "father": "Father",
+          "mother": "Mother",
+          "father-in-law": "Father in law",
+          "mother-in-law": "Mother in law",
+          "son": "Son",
+          "daughter": "Daughter",
+          "sister": "Sister",
+          "brother": "Brother",
+          "spouse": "Spouse",
+          "other": "Other"
+        }
+      },
+      "fields": {
+        "employee": "Employee",
+        "relationship": "Relationship",
+        "fullname": "Name",
+        "dob": "Date of birth",
+        "phone": "Phone",
+        "identity_card": "Identity",
+        "tax_code": "Tax personal ID"
+      }
+    },
+    "contracts": {
+      "title": "Contracts",
+      "description": "Contracts information",
+      "no_end_date": "No End Date",
+      "buttons": {
+        "add": "New Contract",
+        "update": "Update Contract"
+      },
+      "fields": {
+        "employee": "Employee",
+        "contract_code": "Contract code",
+        "contract_type": "Contract type",
+        "employee_type": "Employment Type",
+        "contract_date_start": "Contract start date",
+        "contract_date_end": "Contract end date",
+        "contract_job_title": "Job title",
+        "contract_department": "Department",
+        "contract_group": "Group",
+        "salary": "Contract salary",
+        "insurance_salary": "Insurance salary",
+        "insurance_salary_percentage": "Insurance salary percentage"
+      },
+      "app_options": {
+        "contract_type": {
+          "official": "Official",
+          "probation": "Probation"
+        },
+        "employee_type": {
+          "fulltime": "Full-time",
+          "parttime": "Part-time",
+          "all_type": "All Employment Type"
+        }
+      }
+    },
+    "recurring": {
+      "title": "Recurring Payment",
+      "description": "Recurring Payment",
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "payment_type": "Payment type",
+        "amount": "Amount",
+        "repeat_amount": "Repeat amount",
+        "repeat_type": "Repeat type",
+        "valid_from": "Valid from",
+        "valid_to": "Valid to",
+        "end_date": "End Date",
+        "repeat_every": "Repeat Every",
+        "repeat_number": "1",
+        "repeat_on": "Repeat On",
+        "prorate_payment": "Prorate Payment",
+        "enough_working_hours": "Enough working hours",
+        "month": "Month(s)",
+        "no_end_date": "No End Date",
+        "eligibility": "Eligibility",
+        "calculate_base_on_last": "Calculate Base On Last"
+      },
+      "button": {
+        "add": "Add Recurring Payment",
+        "edit": "Edit Recurring Payment"
+      },
+      "text": {
+        "yes": "Yes",
+        "no": "No",
+        "week": "Week(s)",
+        "month": "Month(s)",
+        "year": "Year(s)",
+        "on": "On",
+        "no_end_date": "No End Date",
+        "effective_date": "Effective Date",
+        "day": "Day"
+      },
+      "app_options": {
+        "payment_type": {
+          "fixed": "Fixed Amount",
+          "custom": "100% of Employee Monthly Salary"
+        },
+        "repeat_type": {
+          "day": "Day",
+          "week": "Week",
+          "month": "Month",
+          "year": "Year"
+        },
+        "end_date": {
+          "no_end_date": "No End Date"
+        }
+      }
+    },
+    "insurances": {
+      "title": "Insurances",
+      "app_options": {
+        "insurance_type": {
+          "increase": "Increase",
+          "decrease": "Decrease"
+        }
+      },
+      "fields": {
+        "employee": "Employee",
+        "insurance_from": "Insurance from",
+        "insurance_type": "Insurance type",
+        "insurance_company": "Company pay",
+        "insurance_personal": "Employee pay",
+        "insurance_total": "Total",
+        "insurance_note": "Note"
+      }
+    },
+    "educations": {
+      "app_options": {
+        "edu_level": {
+          "highschool": "Highschool",
+          "college": "College",
+          "university": "University",
+          "master": "Master",
+          "doctor": "Dr",
+          "other": "Other"
+        },
+        "edu_type": {
+          "formal": "Formal",
+          "complementary": "Complementary",
+          "other": "Other"
+        }
+      },
+      "fields": {
+        "edu_school": "School",
+        "edu_level": "Literacy",
+        "edu_from": "From",
+        "edu_to": "To",
+        "edu_major": "Major",
+        "edu_type": "Type"
+      }
+    },
     "positions": {
       "title": "Job titles",
       "buttons": {
@@ -788,7 +1713,7 @@
       }
     },
     "groups": {
-      "title": "Groups",
+      "title": "Employee groups",
       "buttons": {
         "add": "New Group"
       },
@@ -798,212 +1723,2145 @@
         "is_active": "Active"
       }
     },
-    "test": {
+    "absents": {
+      "fields": {
+        "employee": "Employee",
+        "absent_from": "From",
+        "absent_to": "To",
+        "absent_num": "Num of day",
+        "absent_reason": "Reason"
+      }
+    },
+    "candidates": {
+      "button": {
+        "new_candidate": "New Candidate",
+        "upload_cv": "Upload CV",
+        "select_file": "Select Files",
+        "preview_cv": "Preview",
+        "moveTo": "Move To",
+        "assign": "Assign",
+        "another_job": "Assign to another Job",
+        "copy_job": "Copy to another Job",
+        "remove_job": "Remove from Job",
+        "delete_candidate": "Delete candidate",
+        "export": "Export Candidates"
+      },
+      "title": {
+        "detail": "Candidate Details",
+        "addnew": "Create New Candidate Profile",
+        "upload_cv": "Upload CV"
+      },
+      "fields": {
+        "candidate_code": "Code",
+        "candidate_name": "Full Name",
+        "candidate_phone": "Phone Number",
+        "candidate_email": "Email",
+        "candidate_dob": "Date of birth",
+        "candidate_address": "Address",
+        "candidate_note": "Notes",
+        "job_titles": "Job title",
+        "upload": "Files Upload",
+        "candidate_department": "Department",
+        "source": "Source",
+        "recruitment_proposal": "Job",
+        "employment_type": "Employment type",
+        "experience": "Experience",
+        "salary_from": "Salary from",
+        "salary_to": "Salary to",
+        "gender": "Gender",
+        "job_title": "Job Title",
+        "upload_test": "Upload test",
+        "age": "Age",
+        "skills": "Skills",
+        "cv": "CV",
+        "status": "Status",
+        "tags": "Tags",
+        "personal": "Personal Info",
+        "candidate_avatar": "Avatar",
+        "stage": "Stage",
+        "stage_order": "Stage order",
+        "rejection_reason": "Rejection reason",
+        "is_employed": "is_employed",
+        "disc": "DISC",
+        "vakad": "VAKAD"
+      },
       "app_options": {
-        "checkbox": {
-          "checkval1": "Check box 1",
-          "checkval2": "Check box 2"
+        "employment_type": {
+          "full-time": "Full-time",
+          "part-time": "Part-time"
         },
-        "radio": {
-          "radiooption1": "Radio option 1"
+        "gender": {
+          "male": "Male",
+          "female": "Female",
+          "none": "None"
+        },
+        "experience": {
+          "1 years": "1 years",
+          "2 years": "2 years",
+          "3 years": "3 years"
+        },
+        "status": {
+          "applied": "Applied",
+          "1st": "1st interview",
+          "2st": "2st interview",
+          "offered": "Offered",
+          "hired": "Hired",
+          "rejected": "Rejected"
+        },
+        "rejection_reason": {
+          "hired_elsewhere": "Hired elsewhere",
+          "lack_of_interpersonal_skills": "Lack of interpersonal skills",
+          "lack_of_knowledge_experience": "Lack of knowledge/experience",
+          "no_response": "No response",
+          "not_a_cultural_fit": "Not a cultural fit",
+          "overpriced": "Overpriced",
+          "spam": "Spam"
+        }
+      },
+      "actions": {
+        "interview": {
+          "title": "Interview Candidates",
+          "fields": {
+            "interview_schedule": "Create an interview schedule",
+            "interviewer": "Interviewer",
+            "interview_date": "Interview date",
+            "send_mail": "Send mail interview schedule to candidate",
+            "template": "Template",
+            "to": "To",
+            "subject": "Subject"
+          },
+          "text": {
+            "note_create_interview_schedule": "An interview schedule will add to calendar for interviewer",
+            "warning_candidate_interview_schedule": "This candidate have a interview schedule <br/> at <span class='fw-bold'>{date}</span> <br/>by interviewer <span class='font-weight-bold'>{interviewer}</span> <br/>Do you want remove this schedule ?",
+            "remove_interview_schedule": "Remove this schedule"
+          }
+        },
+        "offered": {
+          "title": "Offered Candidates",
+          "fields": {
+            "send_mail": "Send offer mail to candidate",
+            "template": "Template",
+            "to": "To",
+            "subject": "Subject"
+          }
+        },
+        "rejected": {
+          "title": "Rejected Candidates",
+          "fields": {
+            "send_mail": "Send rejection mail to candidate",
+            "template": "Template",
+            "to": "To",
+            "subject": "Subject"
+          }
+        },
+        "hired": {
+          "text": {
+            "add_as_employee_button": "Add As Employee",
+            "add_as_employee_title": "Add this candidate as an employee",
+            "add_as_employee_text": "Do you want to add this candidate as an employee",
+            "can_change_stage": "You can't change stage of this candidate because this candidate has been added as an employee."
+          }
+        }
+      },
+      "text": {
+        "infomations": "Infomations",
+        "reviews": "Reviews",
+        "reviews_candi": "Reviews Candidate",
+        "personal": "Personal",
+        "file_format": "File format: .png, .jpg, .jpeg   Max file size: 2MB",
+        "drop_file": "Drog CV here ( Max file size: 2MB )",
+        "drag_and_drop_cv": "Drag and drop here to upload",
+        "or": "Or",
+        "file": "file",
+        "files": "files",
+        "selected": "selected",
+        "error": "error",
+        "empty_email": "Email is required",
+        "duplicate_email": "This email already exists",
+        "empty_phone": "Phone is required",
+        "empty_name": "Name is required",
+        "required_job": "Job is required",
+        "fail_import": "Please recheck the data",
+        "assign_job": "Assign Job",
+        "job_exist_email": "This email has already applied for this job.",
+        "not_jobs": "This candidate is not assigned to any jobs."
+      }
+    },
+    "recruitments": {
+      "button": {
+        "new_request": "New Request",
+        "view_detail": "View Details",
+        "publisher": "Publisher",
+        "manage": "Manage",
+        "close_job": "Close Job"
+      },
+      "title": {
+        "mainTitle": "Recruitment.",
+        "title": "Recruitment.",
+        "detail": "Details",
+        "newrequest": "Add New Recruitment Request",
+        "updaterequest": "Update Recruitment Request",
+        "preview_cv": "Preview CV",
+        "basic_information": "Basic Information",
+        "cover_letter": "Cover Letter",
+        "add_source": "Add Source"
+      },
+      "fields": {
+        "recruitment_code": "Recruitment Name",
+        "quantity": "Quantity",
+        "job_title": "Job Titles",
+        "department": "Department",
+        "amount": "Amount",
+        "recruiment_position": "Position",
+        "recruiment_group": "Group",
+        "recruitment_to": "Expected Closing Date",
+        "recruiment_from": "recruiment_from",
+        "employment_type": "Employment Type",
+        "experience": "Experience",
+        "status": "Status",
+        "priority": "Priority",
+        "job_description": "Job description",
+        "requirements": "Requirements",
+        "benefits": "Benefits",
+        "skills": "Skills",
+        "descriptions": "Recruiment descriptions",
+        "salary_from": "Salary from",
+        "salary_to": "Salary to",
+        "salary": "Salary",
+        "age_from": "Age from",
+        "age_to": " Age to",
+        "age": "Age",
+        "gender": "Gender",
+        "send_to": "Send to",
+        "group": "Group",
+        "created_at": "Create date",
+        "due_date": "Due date",
+        "owner": "Owner",
+        "search": "Search",
+        "slug": "Slug",
+        "publish_status": "Publish status",
+        "json_approve": "json_approve",
+        "office": "Office"
+      },
+      "app_options": {
+        "priority": {
+          "low": "Low",
+          "high": "High"
+        },
+        "gender": {
+          "male": "Male",
+          "female": "Female",
+          "none": "None"
+        },
+        "experience": {
+          "2 years": "2 years",
+          "3 years": "3 years"
+        },
+        "employment_type": {
+          "part_time": "Part-time",
+          "full_time": "Full-time"
+        },
+        "status": {
+          "approve": "Approve",
+          "decline": "Decline",
+          "pending": "Pending",
+          "closed": "Closed"
+        },
+        "publish_status": {
+          "off": "Draft",
+          "private": "Private",
+          "published": "Published"
+        }
+      },
+      "kanban": {
+        "breadcumb": {
+          "recruitments": "Recruitments",
+          "jobs": "Jobs"
+        },
+        "stages": {
+          "applied": "Applied",
+          "screening": "Screening",
+          "interview": "Interview",
+          "offered": "Offered",
+          "hired": "Hired",
+          "rejected": "Rejected"
+        }
+      },
+      "text": {
+        "candidates_apply": "Candidates apply",
+        "none": "None",
+        "note_publish": "Only hiring team can edit. Candidate can view and apply the job on your career site.",
+        "note_private": "Only hiring team can edit. The job won't show on careers site. Candidates can view and apply job with direct link.",
+        "note_off": "Only hiring team can edit. Candidates can not view or apply the job.",
+        "whosee": "Who should see this?",
+        "candidates": "Candidates",
+        "view_detail": "View Detail",
+        "applied": "Applied",
+        "cv_info_form": {
+          "name": "Name",
+          "phone_number": "Phone Number",
+          "email": "Email Address"
+        },
+        "source": "Source",
+        "general": "General",
+        "tag_n_soure": "Tags and Sources",
+        "email_template": "Email Template",
+        "tags": "TAGS",
+        "sources": "SOURCES",
+        "add_new_tag": "Add new tag",
+        "add_new_source": "Add new source",
+        "new_tag": "New Tag",
+        "edit_tag": "Edit Tag",
+        "new_source": "New Source",
+        "edit_source": "Edit Source",
+        "tag_name": "Tag Name",
+        "source_name": "Source Name",
+        "new_template": "New Template",
+        "placeholders": "Placeholders",
+        "email_templates": "Email Templates",
+        "subject": "Subject",
+        "select_stage": "Select Stage",
+        "stage": "Stage",
+        "this_job_closed": "This job has been closed"
+      },
+      "activity": {
+        "title": "Job Activity",
+        "log": {
+          "jobCreated": "created",
+          "assignedCandidate": "assigned candidate",
+          "toThisJob": "to this job.",
+          "movedCandidate": "moved candidate",
+          "fromStage": "from stage",
+          "to": "to",
+          "and": "and",
+          "by": "by",
+          "byInterviewer": "by interviewer",
+          "changeJobStatusFrom": "changed job status from",
+          "andSetAnInterviewScheduleAt": "and set an interview schedule at",
+          "andRemoveInterviewSchedule": "and remove interview schedule at",
+          "rejectReason": ". Reject reason :",
+          "hasBeenAddedAsEmployee": "and has been added as an official employee",
+          "sendAnEmailToCandidate": "send an email to the candidate",
+          "closed_job": "closed Job"
         }
       }
     },
-    "dashboard": {
-      "upcoming_events": "Upcoming Events",
-      "title": "Dashboard",
-      "empty": "Drag and drop widgets here. Open the Customize pane to get started",
-      "widget": "Widget",
-      "remove_widget": "Remove widget",
-      "no_widget": "No widget",
+    "candidate_reviews": {
+      "fields": {
+        "reviews": "Reviews",
+        "rating": "Rating",
+        "files": "Files"
+      },
+      "buttons": {
+        "files": "Files"
+      },
+      "notification": {
+        "not_rating": "Please give a star rating"
+      }
+    },
+    "test": {
+      "title": {
+        "test_setting": "Test Setting",
+        "new_test": "Add New Test",
+        "test_board": "Test board"
+      },
+      "fields": {
+        "question": "Question",
+        "title": "Title",
+        "active": "Active",
+        "actions": "Actions",
+        "type": "Type"
+      },
+      "buttons": {
+        "files": "Files",
+        "make_test": "Make a Test",
+        "new": "New Test"
+      },
+      "notification": {
+        "notchosse": "Please answer all the questions"
+      },
+      "text": {
+        "hi": "Hi",
+        "let": "Let's",
+        "_let": "take some test",
+        "none": "none",
+        "import": "Test Template",
+        "not_question": "Not Question",
+        "end": "End",
+        "timeout": "Time out",
+        "edit_test": "Edit Test",
+        "template_current": "Download Template Current",
+        "drop_file": "Drop File here",
+        "1": "Least descriptive of you",
+        "2": "Next best",
+        "3": "Next best description of you",
+        "4": "Closest to describing you",
+        "instructions": "Instructions",
+        "instructions_des": "Please place a number next to every phrase. No numbers should be used more than once for each statement ( forced ranking ). Use the following system to indicate your preferences :",
+        "i_make": "I make important decisions based on:",
+        "choose_test": "Choose test",
+        "history": "History Test"
+      },
+      "app_options": {
+        "type": {
+          "disc": "DISC",
+          "vakad": "VAKAD"
+        }
+      }
+    },
+    "hiring_workflow": {
+      "title": "Hiring Workflow",
+      "fields": {
+        "stage": "Stage",
+        "locked": "Locked",
+        "order": "Order"
+      }
+    },
+    "skills": {
+      "title": "Skills",
+      "fields": {
+        "skill": "Skill Name"
+      }
+    },
+    "checklist_template": {
+      "title": {
+        "main_title": "Checklist Setting",
+        "setting": "Settings",
+        "onboarding": "Onboarding Template",
+        "offboarding": "Offboarding Template"
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "type": "Type"
+      },
+      "buttons": {
+        "add": "Add Checklist",
+        "edit": "Edit",
+        "duplicate": "Duplicate",
+        "delete": "Delete",
+        "add_detail": "Add Task"
+      },
+      "app_options": {
+        "type": {
+          "onboarding": "Onboarding",
+          "offboarding": "Offboarding"
+        }
+      },
+      "modal": {
+        "duplicate": "Duplicate Template"
+      }
+    },
+    "checklist_template_detail": {
+      "fields": {
+        "task_name": "Task name",
+        "task_type": "Task type",
+        "assignee": "Assignee",
+        "description": "Description",
+        "due_date_day": "Due date",
+        "due_date_type": "Type",
+        "task_type_content": "Content",
+        "assignee_content": "Content",
+        "employee_id": "Employee"
+      },
+      "buttons": {
+        "add": "Add Task",
+        "edit": "Edit Task"
+      },
+      "app_options": {
+        "task_type": {
+          "checkbox": "Checkbox",
+          "fileupload": "File upload",
+          "employeeinformation": "Employee information"
+        },
+        "assignee": {
+          "employee": "@ Employee",
+          "hrincharge": "@ Hr-in-charge",
+          "linemanager": "@ Line Manager",
+          "employeegroup": "Employee Group",
+          "specificemployee": "Specific Employee"
+        },
+        "due_date_type": {
+          "before": "Before",
+          "after": "After"
+        }
+      }
+    },
+    "documents": {
+      "title": {
+        "index": "Documents",
+        "detail": "Document Details"
+      },
+      "fields": {
+        "name": "Name",
+        "create_by": "Create By",
+        "created_at": "Create date",
+        "description": "Description",
+        "share": "Share",
+        "shared_with": "Shared With",
+        "number_of_files": "Number Of Files",
+        "size": "Size",
+        "employee_groups": "Employee Groups",
+        "office": "Office",
+        "department": "Department",
+        "employee": "Employee",
+        "sharing_permission_recursively": "Set sharing permission recursively"
+      },
+      "app_options": {
+        "share_type": {
+          "everyone": "Everyone",
+          "department": "Department",
+          "offices": "Offices",
+          "employeegroups": "Employee Groups",
+          "employee": "Employee"
+        },
+        "employee_groups": {
+          "allemployees": "All Employees (non-resigned employee)",
+          "fulltimeemployees": "Full-time Employees (non-resigned employee)",
+          "offboardinggroups": "Offboarding Groups",
+          "onboardinggroups": "Onboarding Groups",
+          "other": "Other",
+          "probationarygroups": "Probationary groups"
+        }
+      },
+      "buttons": {
+        "new_folder": "New Folder",
+        "edit_folder": "Edit Folder",
+        "copy_link": "Copy Link",
+        "delete_folder": "Delete Folder",
+        "share": "Share",
+        "upload_file_from_computer": "Upload files from Computer",
+        "upload_file_from_google_drive": "Upload files from Google Drive",
+        "replace_file": "Replace File",
+        "delete_file": "Delete file",
+        "download": "Download",
+        "upload": "Upload",
+        "setting": "Setting",
+        "add_folder": "Add Folder"
+      },
+      "modal": {
+        "title": {
+          "new_folder": "New Folder",
+          "edit_folder": "Edit Folder",
+          "share": "Share with"
+        }
+      },
+      "text": {
+        "confirm_delete_document": "This is an empty folder. Are you sure to delete this folder?",
+        "confirm_delete_file": "This file is shared with {share_with_content}. Are you sure to delete this file?",
+        "share_with": "Shared with {share_with_content}",
+        "files": "files",
+        "not_support_file": "This file extension is not supported!s",
+        "upload_success": "Upload Successfully!",
+        "upload_fail": "Upload Fail!",
+        "warning_sync": "You aren't sync with Google Drive",
+        "warning_sync_text": "Press \"Setting\" and switch Drive Service!"
+      }
+    },
+    "checklist": {
+      "title": {
+        "checklist": "Checklist",
+        "onboarding": "Onboarding",
+        "offboarding": "Offboarding",
+        "other": "Other",
+        "my_task": "My task",
+        "follow_up": "Follow-up"
+      },
+      "fields": {
+        "name": "name",
+        "status": "Status",
+        "employee_id": "Employee",
+        "checklist_template_id": "Checklist template",
+        "hr_in_charge": "HR in charge",
+        "type": "Type",
+        "description": "Description"
+      },
+      "app_options": {
+        "status": {
+          "inprogress": "In progress",
+          "completed": "Completed"
+        },
+        "type": {
+          "onboarding": "Onboarding",
+          "offboarding": "Offboarding"
+        }
+      },
+      "buttons": {
+        "assign_checklist": "Assign checklist",
+        "assign": "Assign",
+        "edit_checklist": "Edit Checklist",
+        "ok": "OK",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "select_all": "Select all",
+        "clear_all": "Clear all",
+        "revert_to_inprogres": "Revert to inprogress",
+        "mark_as_completed": "Mark as Completed",
+        "complete_task": "Complete Task"
+      },
+      "modal": {
+        "text": {
+          "confirmUpdateChecklist": "All tasks, progress, information and files of the current checklist will be deleted."
+        },
+        "title": {
+          "edit": "Edit Checklist"
+        }
+      },
+      "text": {
+        "completed": "Completed",
+        "completed_by": "completed by",
+        "employee_tag_header": "{employee_number} employee records created waiting for the checklist assignment.",
+        "system_field": "System Field",
+        "on": "on",
+        "complete_task_warning": "All chosen task will be completed."
+      }
+    },
+    "checklist_detail": {
+      "fields": {
+        "task_name": "Task name",
+        "task_type": "Task type",
+        "description": "Description",
+        "due_date": "Due date",
+        "assignee": "Assignee",
+        "task_type_content": "Content",
+        "status": "Status",
+        "checklist_id": "Checklist"
+      },
+      "app_options": {
+        "task_type": {
+          "checkbox": "Checkbox",
+          "fileupload": "File upload",
+          "employeeinformation": "Employee information"
+        },
+        "due_date_type": {
+          "before": "Before",
+          "after": "After"
+        },
+        "status": {
+          "inprogress": "In progress",
+          "completed": "Completed"
+        }
+      },
+      "button": {
+        "ok": "OK",
+        "delete": "Delete",
+        "upload_document": "Upload Document"
+      },
+      "text": {
+        "for": "for",
+        "warning_remove_task": {
+          "title": "Delete task?",
+          "message": "All employee information/file in this task will be deleted."
+        },
+        "day": "Day",
+        "join_date": "Join Date",
+        "last_working_date": "Last Working Date",
+        "complete_by": "Complete by",
+        "on": "on",
+        "employee_response": "Employee Response",
+        "file_rule": "Maximum {max_file} file. Max file size :5MB. File format : pdf, doc, docx...",
+        "line_manger_not_exist": "Onboarding template include task(s) assigned to Line Manager. Select a line manager for him/her before assigning a checklist.",
+        "view_template_detail": "View tempalte details"
+      },
+      "modal": {
+        "text": {
+          "completeAllTask": "In progress tasks will be marked as completed (if any). All information provided and files uploaded will also be synced to {full_name}'s profile"
+        }
+      }
+    },
+    "news": {
+      "title": "News",
+      "load_more": "Load More",
+      "load_more_comments": "Load more comments",
+      "by": "by",
+      "edit_comment": "Edit Comment",
+      "buttons": {
+        "add": "Create News",
+        "edit": "Edit News",
+        "delete": "Delete News",
+        "published": "Published",
+        "draft": "Save as Draft"
+      },
+      "fields": {
+        "title": "Title",
+        "content": "Content",
+        "important": "Mark as important",
+        "status": "Status",
+        "important_test": "Important",
+        "important_end_date": "Important end date"
+      },
+      "app_options": {
+        "status": {
+          "draft": "Draft",
+          "published": "Published"
+        }
+      },
+      "notifications": {},
+      "share": {
+        "modal_title": "Share to Department",
+        "button": {
+          "share_to_everyone": "Share to Everyone",
+          "share_to_employees": "Shared with specific employees",
+          "remove": "Remove"
+        },
+        "item": {
+          "title": "Who should see this?",
+          "department": "Department...",
+          "everyone": "Everyone"
+        }
+      },
       "announcement": {
-        "title": "Announcement",
-        "empty": "No announcements yet",
-        "empty_text": "Follow to stay up to date with all company news",
+        "title": "No announcements yet",
+        "text": "Follow to stay up to date with all company news",
         "view_all": "View All"
       },
-      "notepad": {
-        "title": "Notepad",
-        "add": "Add notepad",
-        "placeholder_input": "Notepad Title",
-        "pin": "Pin",
-        "un_pin": "Un pin"
+      "comment": {
+        "title": "Comment",
+        "add_comment": "Add comment",
+        "post_comment": "Post comment"
+      }
+    },
+    "work_schedules": {
+      "title": "Work Schedule",
+      "fields": {
+        "name": "Schedule Name",
+        "effective": "Effective from",
+        "standard_hours": "Standard working hours/day",
+        "type": "Schedule type",
+        "status": "Status",
+        "total_hours": "Total working hours/week",
+        "daily_hours": "Daily working hours",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday",
+        "default": "DEFAULT",
+        "break": "Break"
+      },
+      "text_note": {
+        "duration": "Schedule based on a duration without a start and end time. Any time clocked will be counted as paid time.",
+        "clock": "Schedule with a fixed start and end time. Only time clocked during the schedule will be counted as paid time.",
+        "wk_time": "Working time",
+        "none_work": "Non-working day",
+        "can_not_del_default": "Can't delete Work Schedule Default !",
+        "copy_time_all": "Coppy time to all",
+        "maximum_time_per_day": "The maximum working hours per day is {time}",
+        "break_time_must": "The break time must be within the working time.",
+        "advance": "Advance",
+        "note_delete_workschedule" : "All employees on this schedule will switch to the default work schedule"
+      },
+      "buttons": {
+        "add_new": "New Schedule",
+        "duplicate": "Duplicate",
+        "set_default" : "Set Default"
+      },
+      "app_options": {
+        "type": {
+          "duration": "Duration-based",
+          "clock": "Clock-based"
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive"
+        }
+      },
+      "text": {
+        "interleaved": "Interleaved",
+        "working_on": "Working on next weekday from effective date",
+        "interleaved_date": "Interleaved date",
+        "every": "Every",
+        "week": "week",
+        "error_interleaved": "Number of week must be a number greater than 0 and smaller than or equal to 10.",
+        "interleaved_description": "Interleaved every {number} week",
+        "change_work_schedule" : "Change work schedule?",
+        "note_edit_work_schedule" : "This action cannot be reverted and will affect the employee's past data (if any) in Time Off, Time Attendance and Payroll.<br/>We highly recommend you <b>back up the employee's data</b> before changing the work schedule.<br/>Are you sure you want to apply the new schedule to all data?",
+        "setdefault_work_schedule" : "Set default work schedule?",
+        "working_day" :"Working Day",
+        "time":"Time",
+        "break_time":"Break Time",
+        "total":"Total"
+      }
+    },
+    "team_attendance": {
+      "attendance": "Attendance",
+      "title": "Team Attendance",
+      "noti": "You can only update the attendance record within the last 31 days.",
+      "fields": {
+        "all_status": "All Status",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "pending": "Pending",
+        "all_records": "All Records",
+        "missing_clock": "Missing clock in/out",
+        "edit_paid_time": "Edit Paid Time",
+        "edit_ot": "Edit OT",
+        "clocking": "Clocking on Holidays/Leave/Non-working days",
+        "search": "Search",
+        "note": "Note"
+      },
+      "button": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "revert": "Revert",
+        "confirm": "Confirm"
+      },
+      "table": {
+        "employee_name": "Employee Name",
+        "emp_type": "Emp. Type",
+        "paid_time": "Paid Time / Work Schedule",
+        "overtime": "Overtime",
+        "status": "Status"
+      },
+      "modal": {
+        "text_body": "Are you sure to {team_attendance_status} the attendance records from {team_attendance_date_from} to {team_attendance_date_to}?"
+      }
+    },
+    "employee_attendance": {
+      "title": "Employee Attendance",
+      "button": {
+        "confirm": "Confirm",
+        "revert": "Revert"
+      }
+    },
+    "time_off": {
+      "title": {
+        "index": "Time Off",
+        "holiday": "Holidays",
+        "type_and_policy": "Types and Policies",
+        "create_type": "Create Type",
+        "edit_type": "Edit Type",
+        "create_policy": "Create Policy",
+        "holidays": "Holidays",
+        "import": "Import Time Off"
+      },
+      "buttons": {
+        "add_type": "New Type",
+        "add_policy": "New Policy",
+        "add_holidays": "Add Holidays"
+      }
+    },
+    "time_off_requests": {
+      "time_off": "Time Off",
+      "my_time_off": "My Time Off",
+      "team_time_off": "Team Time Off",
+      "approval_time_off": "Approval Time Off",
+      "my_requests": "My Requests",
+      "balance_history": "Balance History",
+      "days": "days",
+      "day": "day",
+      "carry_over_balance": "carry over balance",
+      "balance": "balance",
+      "advanced_leave": "can be taken in advance",
+      "advanced_leave_icon": "Create separate request for advanced leave. It can only be used after the remaining days have been used up.",
+      "fields": {
+        "type": "All Types",
+        "status": "All Status",
+        "date_from": "Date From",
+        "date_to": "Date To",
+        "note": "Note",
+        "attachment": "Attachment",
+        "entitlement": "Yearly Entitlement",
+        "requested": "Requested",
+        "balance": "Balance",
+        "carryover": "Carry Over",
+        "carryover_balance": "Carry Over Balance",
+        "type_settings": "Type Settings",
+        "paid": "Paid Time-off",
+        "accrual_frequency": "Accrual Frequency",
+        "prorate_accrual": "Prorate Accrual",
+        "maximum_carry_over": "Maximum Carry Over",
+        "carry_over_expiration": "Carry Over Expiration",
+        "advanced_leave": "Allow Advanced Leave"
+      },
+      "app_options": {
+        "status": {
+          "approved": "Approved",
+          "pending": "Pending",
+          "cancelled": "Cancelled",
+          "rejected": "Rejected"
+        }
+      },
+      "button": {
+        "add": "New Request",
+        "submit": "Submit",
+        "cancel": "Cancel this request",
+        "replace": "Replace",
+        "keep_previous": "Keep previous",
+        "approve": "Approve",
+        "reject": "Reject",
+        "add_adjustment": "New Adjustment",
+        "sync_with_google_calendar": "Sync with Google Calendar",
+        "synced": "Synced",
+        "sync": "Sync"
+      },
+      "name": "Name",
+      "from": "From",
+      "to": "To",
+      "total": "Total",
+      "type": "Type",
+      "attachment": "Attachment",
+      "status": "Status",
+      "upload_attachment": "Upload Attachment",
+      "note": "Note",
+      "sent_to_your_line_manager": "Sent to your line manager",
+      "line_manager": "Line manager",
+      "add_approver": "Add approver",
+      "submitted_on": "Submitted on",
+      "by": "by",
+      "on": "on",
+      "notify_to": "Notify To",
+      "select_type": "Select Type",
+      "days_remaining": "days remaining",
+      "optional": "Optional",
+      "modal_request_manager": "This request will be sent to your line manager",
+      "single_day": "Single day",
+      "multiple_days": "Multiple days",
+      "select_date": "Select Date",
+      "select_time": "Select Time",
+      "add_members_to_notify_them": "Add members to notify them",
+      "add_members_to_approve": "Add members to approve",
+      "approver": "Approver",
+      "error_date": "Time off must be within your work schedule",
+      "error_date_2": "You can request up to {days_remaining} days",
+      "error_date_3": "You already submitted the date. Please request another date",
+      "error_date_4": "You can't request any more days",
+      "fullday": "Full day",
+      "1st_half_day": "1st Half day",
+      "2nd_half_day": "2nd Half day",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "yes": "Yes",
+      "no": "No",
+      "requested_tooltip": "Only pending and approved requests are counted",
+      "file": "file",
+      "replace_the_attachment": "Replace the attachment?",
+      "replace_the_attachment_body": "The previous attachment will be removed.",
+      "date": "Date",
+      "event": "Event",
+      "change_by": "Change By",
+      "change_day": "Change (days)",
+      "system": "System",
+      "mail": {
+        "text": {
+          "approve": "approved",
+          "reject": "rejected"
+        },
+        "request_has_been": "Request has been",
+        "approve": "approve",
+        "reject": "reject",
+        "fail_to": "Fail to",
+        "request": "request",
+        "text_request": "This request has already been",
+        "action": "action"
+      },
+      "modal_approve": {
+        "title": "Approve this request?",
+        "body": "The employee will be notified about your approval."
+      },
+      "modal_reject": {
+        "title": "Reject this request?",
+        "body": "This action cannot be undone and the employee will be notified."
+      },
+      "employee_time_off": {
+        "title": "Employee Time Off",
+        "employee_request": "Employee Requests",
+        "type_to_search_employee": "Type to search Employee",
+        "adjustment": "Adjustment",
+        "add": "Add",
+        "subtract": "Subtract",
+        "current_balance": "Current balance",
+        "day": "Day",
+        "validate_number": "Must be a number greater than 0.",
+        "carry_over_balance": "Carry Over Balance"
+      },
+      "text": {
+        "notification": {
+          "sync_google_calendar": {
+            "sync": "Synchronized successfully",
+            "un_sync": "Unsynchronized successfully",
+            "fail": "Synchronized successfully failed"
+          }
+        }
+      }
+    },
+    "time_off_types": {
+      "fields": {
+        "name": "Type name",
+        "paid": "Paid",
+        "unit": "Unit",
+        "active": "Active"
+      },
+      "app_options": {
+        "unit": {
+          "day": "Day",
+          "hour": "Hour"
+        },
+        "paid": {
+          "paid": "Paid",
+          "unpaid": "Unpaid"
+        },
+        "system_type": "System"
+      },
+      "text": {
+        "confirm_delete_type": "Delete \"{type_name}\" type",
+        "warning_delete_type": "All time off requests and balances of this type will be permanently deleted and cannot be restored."
+      },
+      "buttons": {
+        "edit_type": "Edit Type",
+        "delete_type": "Delete Type",
+        "add_policy": "New Policy"
+      }
+    },
+    "time_off_policies": {
+      "fields": {
+        "name": "Policy name",
+        "description": "Description",
+        "assign_date": "Assign date",
+        "maximum_carry_over": "Maximum carry over",
+        "carry_over_expiration": "Expiration Month",
+        "carry_over_expiration_date": "Expiration Date",
+        "accrual_frequency": "Accural Frequency",
+        "entitlement": "Entitlement",
+        "type": "Type",
+        "eligibility": "Eligibility",
+        "eligibility_applicable": "Eligibility applicable for *",
+        "eligibility_employee": "Employee",
+        "effective_date": "Effective Date *",
+        "prorate_accrual": "Prorate Accrual",
+        "rounding_rule": "Rounding rule",
+        "rounding_unit": "Rounding unit",
+        "advanced_leave": "Advanced leave",
+        "waiting_period": "Waiting period",
+        "waiting_period_type": "Waiting period type",
+        "waiting_period_unit": "Waiting period unit"
+      },
+      "title": {
+        "accrual": "Accrual",
+        "carry_over": "Carry Over",
+        "duration_allowed": "Duration Allowed",
+        "assign_eligibility": "Assign Employees to {policy_name}",
+        "eligibility": "Eligibility",
+        "employee_changes": "Changes",
+        "review_changes_modal": "Review changes",
+        "header_employee_add": "employees will be added to this policy",
+        "header_employee_remove": "employees will be removed to this policy"
+      },
+      "app_options": {
+        "duration_allowed": {
+          "hourly": "Hourly",
+          "halfday": "Half day",
+          "morningafternoon": "Morning/Afternoon"
+        },
+        "assign_date": {
+          "joindate": "Join date",
+          "probationenddate": "Probation end date"
+        },
+        "accrual_frequency": {
+          "monthly": "Monthly",
+          "yearly": "Yearly"
+        },
+        "eligibility_applicable": {
+          "allemployees": "All Employees",
+          "fulltimeemployeesonly": "Full-time Employees only",
+          "employeegroup": "Employee Group",
+          "specificemployees": "Specific Employee"
+        },
+        "keep_balance": {
+          "keepbalance": "Keep Balance",
+          "removebalance": "Remove Balance"
+        },
+        "rounding_rule": {
+          "none": "None",
+          "roundtonearest": "Round to nearest",
+          "roundupto": "Round up to",
+          "rounddownto": "Round down to"
+        },
+        "rounding_unit": {
+          "oneday": "1 day",
+          "halfofday": "0.5 days",
+          "quaterofday": "0.25 days"
+        },
+        "waiting_period_type": {
+          "upon_join_date": "Upon join date",
+          "probation_end_date": "Probation End Date"
+        },
+        "waiting_period_unit": {
+          "day": "Days",
+          "month": "Months"
+        }
+      },
+      "text": {
+        "duration_allowed_description": {
+          "hourly": "Employee can book time off by hours which will be calculated to days based on standard working hours.<br>Ex: Standard working hours = 8 hours/day, 3 hours off = 0.375 days",
+          "halfday": "Employee can book time off by 1st Half day or 2nd Half day, both are calculated as 0.5 days regardless of standard working hours.",
+          "caution_halfday": "🔥 Once this option is selected and saved, it cannot be switched to another option when edit later.",
+          "morningafternoon": "Employee can book time off by Morning or Afternoon which will be calculated based on standard working hours.<br>Ex: Standard working hours = 8 hours/day, Morning = 3 hours off = 0.375 days"
+        },
+        "choose_month": "Choose month",
+        "choose_date": "Choose Date",
+        "select_option": "Select options",
+        "employees_will_be_added": "Employees will be added",
+        "employees_will_be_removed": "Employee will be removed",
+        "view_list_employee": "Click view_button to see the list",
+        "view": "view",
+        "employee_name": "Employee Name",
+        "warning_effective_date": "You're editing current eligibility. All changes made will be applied on the effective date.",
+        "keep_balance_description": {
+          "keepbalance": "Removed employees will still be able to keep their balance. All time off requests will remain unchanged.",
+          "removebalance": "Removed employees will lose their balance. All time off requests will remain unchanged."
+        },
+        "field_description": {
+          "assign_date": "The date which the policy is applicable to employees.",
+          "accrual_frequency": "Yearly: entire entitlement accrued on the first of every year. Monthly: 1/12 of entitlement accrued on the first of every month.",
+          "prorate_accrual": "Entitlement for each employee will be proportional to their actual working days.",
+          "maximum_carry_over": "Maximum number of days employees can carry from one year to the next."
+        },
+        "days": "Days"
+      },
+      "buttons": {
+        "edit_policy": "Edit Policy",
+        "edit_eligibility": "Edit Eligibility",
+        "assign_eligibility": "Assign Eligibility",
+        "close": "Close"
+      }
+    },
+    "time_off_holidays": {
+      "fields": {
+        "name": "Holiday name",
+        "from_date": "From",
+        "to_date": "To",
+        "office_id": "Office",
+        "year": "Year"
+      },
+      "title": {
+        "add_holiday": "New Holiday",
+        "edit_holiday": "Edit Holiday",
+        "date": "Date",
+        "add_from_country": "Add from country"
+      },
+      "buttons": {
+        "delete_holiday": "Delete",
+        "cancel": "Cancel",
+        "add_from_country": "Add from country",
+        "add_manually": "Add manually",
+        "apply": "Apply"
+      },
+      "text": {
+        "warning_delete_holiday": "Delete {holiday_name}?",
+        "warning_change_duration_allowed": "Be aware of important changes",
+        "text_warning_duration_allowed": {
+          "ul": "After you change the <b>Duration Allowed</b> to {duration_allowed_change}",
+          "row_1": "Employees can start booking time off by {duration_allowed_change}",
+          "row_2": "All historical data will stay unchanged."
+        },
+        "wish_change": "Do you wish to change it?"
+      },
+      "errors": {
+        "from_date": "From must be a date prior or equal to To",
+        "to_date": "To must be a date greater or equal to From"
+      }
+    },
+    "time_off_balances": {
+      "fields": {
+        "type": "Type"
+      }
+    },
+    "time_off_balance_events": {
+      "app_options": {
+        "event": {
+          "accrual": "Accrual",
+          "take_time_off": "Take time off",
+          "balanceadjustment": "Balance Adjustment"
+        }
+      }
+    },
+    "payrolls": {
+      "title": "Payroll",
+      "noti": "Review your payroll data carefully before closing it.",
+      "button": {
+        "close_payroll": "Close Payroll",
+        "send_payslip": "Send Payslip"
+      },
+      "fields": {
+        "employee_name": "Employee Name",
+        "total_comp": "Total Comp.",
+        "total_comp_title": "Total = Actual + Recurring + One-off + Offset + OT + Off Cycle",
+        "salary": "Salary",
+        "actual": "Actual",
+        "recurring": "Recurring",
+        "one_off": "One-off",
+        "offset": "Offset",
+        "ot": "OT",
+        "off_cycle": "Off Cycle",
+        "unpaid": "Unpaid",
+        "time_off": "Time-off",
+        "overtime": "Overtime",
+        "deficit": "Deficit",
+        "attendance": "Attendance",
+        "carry_over_of_overtime": "Carry Over of Overtime",
+        "dependents": "Dependents",
+        "dependents2": "dependents",
+        "bank_info": "Bank Informarion",
+        "total_compensation": "Total Compensation",
+        "description": "Description",
+        "amount": "Amount",
+        "note": "Note",
+        "type": "Type",
+        "day_type": "Day Type",
+        "period": "Period",
+        "actual_work_hours": "Actual_work_hours",
+        "name": "Name",
+        "relationship": "Relationship",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "phone": "Phone Number",
+        "dob": "Date Of Birth"
+      },
+      "modal": {
+        "employee_status": "Employee Status",
+        "employee_type": "Employment Type",
+        "contract_end_date": "Contract End Date",
+        "job_title": "Job Title",
+        "join_date": "Join Date",
+        "last_working_date": "Last Working Date",
+        "bank_name": "Bank Name",
+        "bank_address": "Bank Address",
+        "branch": "Branch",
+        "swift_bic": "SWIFT / BIC",
+        "account_name": "Account Name",
+        "account_number": "Account Number",
+        "iban": "IBAN",
+        "total": "Total",
+        "delete": "Delete",
+        "sure_to_delete": "Sure to delete?",
+        "please_input": "Please Input",
+        "regular": "Regular",
+        "non_working_day": "Non-working day",
+        "holiday": "Holiday",
+        "previous_regular": "Regular",
+        "previous_non_working_day": "Non-working day",
+        "previous_holiday": "Holiday",
+        "confirmation": "Confirmation",
+        "modal_close_body": "You cannot undo this action. Closing the payroll too early may result in inaccurate info between the day you close your pay cycle and the pay cut off date. Are you sure you want to close this pay cycle now?",
+        "modal_send_payslip_confirm": "Please check the payroll carefully before sending it to the employees.",
+        "payslip": "Payslip",
+        "email": "Email",
+        "subject": "Subject",
+        "noti": {
+          "success": "Send payslip success",
+          "error": "Cannot send payslip"
+        }
+      },
+      "off_cycle": {
+        "attendance": "Attendance",
+        "deficit": "Deficit",
+        "time_off": "Time off",
+        "overtime": "Overtime",
+        "previous_overtime": "Previous Overtime",
+        "recurring": "Recurring"
+      },
+      "need_setup": "NEED SETUP",
+      "results": "results",
+      "import": {
+        "title": "Import",
+        "title_salary": "Import Salary",
+        "title_recurring": "Import Recurring payments",
+        "select_data_to_import": "Select data to import",
+        "fixed_salary": "Fixed salary",
+        "fixed_salary_text": "Import salary information of employees",
+        "recurring_payments": "Recurring payments",
+        "recurring_payments_text": "Import all the data that are required to build an employees Recurring Payment Schedules",
+        "download_template": "Download Template",
+        "download_template_text": "This template spreadsheet has been configured to help you fill out information easily and works best with Excel",
+        "upload_your_completed_spreadsheet": "Upload your completed spreadsheet",
+        "instructions_2": "Download the template and fill it in with your data.",
+        "username": "Username",
+        "amount": "Amount",
+        "payment_name": "Payment name",
+        "valid_from": "Valid from",
+        "valid_to": "Valid to",
+        "empty": "Empty",
+        "button": {
+          "next": "Next",
+          "back": "Back",
+          "template": "Template.xlsx",
+          "preview": "Preview",
+          "import": "Import"
+        },
+        "error": {
+          "invalid_value": "Invalid value",
+          "invalid_username": "Invalid Username",
+          "date_join_date": "Date must be after or equal to join date",
+          "from_date_start_end_date": "Start date must be less than start/end date of next scheduled record",
+          "to_date_start_end_date": "End date must be less than start/end date of next scheduled record",
+          "invalid_payment_name": "Invalid Payment name",
+          "invalid_payment_repeat_type": "Invalid Payment repeat type",
+          "recurring_error_date_range": "Must be in Setting's time range",
+          "recurring_error_week_start": "Must be the start of week",
+          "recurring_error_week_end": "Must be the end of week",
+          "recurring_error_month_start": "Must be the start of month",
+          "recurring_error_month_end": "Must be the end of month",
+          "recurring_error_year_start": "Must be the start of year",
+          "recurring_error_year_end": "Must be the end of year"
+        }
+      }
+    },
+    "pay_cycles": {
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "effective": "Effective from",
+        "cut_off_date": "Cut-off Date",
+        "person_in_charge": "Person In Charge",
+        "rw_before_cut_off_date": "Review Before Cut-off Date",
+        "use_time_attendance": "Use Time Attendance",
+        "calculate_ot": "Use OT From Time Attendance",
+        "repeat_every_type": "Repeat Every Type",
+        "repeat_every": "Repeat Every",
+        "repeat_every_num": "Repeat Every Numb",
+        "startfrom": "Start From",
+        "frequency": "Frequency",
+        "frequency_every": "Every {number}",
+        "currency": "Currency"
+      },
+      "button": {
+        "add": "New Pay Cycle"
+      },
+      "text": {
+        "pay_cycles": "Pay Cycles",
+        "compensation": "Compensation Settings",
+        "general": "General",
+        "yes": "Yes",
+        "no": "No",
+        "settings": "Settings",
+        "who_charge": "Who’s In Charge",
+        "day": "Day",
+        "days": "Days",
+        "bf_end_date": "Before End Date",
+        "can_not_delete": "Can not delete",
+        "employee_in_cycle": "There are {number_employee} employees in this cycle ."
+      },
+      "note": {
+        "general_note": "You can only set the data at the first initialization, can not change the settings because it affects the existing data, if you need to change or contact Friday for better support.",
+        "effective_from_note": "Choose the day after 30 Jun 2022",
+        "cut_off_date_note": "This is the latest date that payroll information should be submitted to calculate payroll",
+        "before_cut_off_date_note": "Your person in charge will receive a reminder on that day",
+        "last_note": "Your person in charge in attendance setting will receive a reminder to approve the attendance cycle"
+      },
+      "app_options": {
+        "cut_off_date": {
+          "1": "1 day",
+          "2": "2 days",
+          "3": "3 days",
+          "4": "4 days"
+        },
+        "rw_before_cut_off_date": {
+          "1": "1 day",
+          "2": "2 days"
+        },
+        "repeat_every_type": {
+          "week": "Week",
+          "month": "Month",
+          "year": "Year"
+        }
+      }
+    },
+    "attendance": {
+      "title": {
+        "my": "My Attendance",
+        "work_schedule": "Work schedule",
+        "logged_time": "Logged Time",
+        "paid_time": "Paid Time",
+        "deficit": "Deficit",
+        "overtime": "Overtime",
+        "clock_in_out": "Clock In/Out"
+      },
+      "modals": {
+        "title": {
+          "clock_in": "Clock in at",
+          "clock_out": "Clock out at"
+        }
+      },
+      "buttons": {
+        "clock_in": "Clock in",
+        "clock_out": "Clock out"
+      },
+      "text": {
+        "warning_my_attendance": "You can only update the attendance record within the last {expire_day} days.",
+        "first_in": "First in",
+        "last_out": "Last out",
+        "last_check": "Last check",
+        "break": "Break",
+        "office_break": "Office Break",
+        "target_working_hours": "Target working hours",
+        "days": "days",
+        "no_break_time": "No break time",
+        "total_working_time": "Total working time"
+      }
+    },
+    "attendance_details": {
+      "fields": {
+        "attendance": "Attendance",
+        "date": "Date",
+        "clock_in": "Clock In",
+        "clock_in_location": "Clock In Location",
+        "clock_in_location_type": "Clock In Location",
+        "clock_out": "Clock Out",
+        "clock_out_location": "Clock Out Location",
+        "clock_out_location_type": "Clock Out Location",
+        "logged_time": "Logged Time",
+        "paid_time": "Paid Time",
+        "overtime": "Overtime",
+        "status": "Status",
+        "note": "Note"
+      },
+      "table": {
+        "work_schedule": "Work Schedule",
+        "break_time": "Break Time",
+        "deficit": "Deficit",
+        "note": "note",
+        "notes": "notes",
+        "last_edited": "Last edited"
+      },
+      "app_options": {
+        "status": {
+          "all_status": "All Status",
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "clock_in_location_type": {
+          "na": "N/A",
+          "inside": "Inside",
+          "outside": "Outside"
+        },
+        "clock_out_location_type": {
+          "na": "N/A",
+          "inside": "Inside",
+          "outside": "Outside"
+        }
+      },
+      "filters": {
+        "location": {
+          "all_location": "All location",
+          "na": "N/A",
+          "outside": "Outside",
+          "inside": "Inside"
+        },
+        "records": {
+          "all_records": "All records",
+          "missing": "Missing clock in/out",
+          "edit_paid_time": "Edit Paid Time",
+          "edit_overtime": "Edit Overtime",
+          "non_working_days": "Clocking on Holidays/Leave/Non-working days"
+        }
+      },
+      "modals": {
+        "title": {
+          "edit_paid_time": "Edit Paid Time",
+          "edit_overtime": "Edit Overtime"
+        }
+      },
+      "text": {
+        "non_working_day": "None working day",
+        "time_off": "Time off",
+        "holiday": "Holiday",
+        "location": "Location",
+        "records": "Records",
+        "edited": "Edited",
+        "default_note_clock_in": "clock in inside",
+        "not_found": "Attendance is not setting up yet",
+        "confirm": "Confirm"
+      },
+      "buttons": {
+        "back_to_employee": "Back to Employee attendance",
+        "back_to_team": "Back to Team attendance"
+      }
+    },
+    "attendance_logs": {
+      "fields": {
+        "note": "Note"
+      },
+      "title": {
+        "list_note": "Notes"
+      },
+      "buttons": {
+        "clock_in": "Clock in",
+        "clock_out": "Clock out",
+        "edit_paid_time": "Edit Paid Time",
+        "edit_overtime": "Edit Overtime",
+        "ok": "Ok",
+        "load_more": "Load More",
+        "revert": "Revert",
+        "approve": "Approve",
+        "reject": "Reject",
+        "confirm": "Confirm"
+      },
+      "text": {
+        "at": "at",
+        "at_upper": "At",
+        "edited": "edited",
+        "from": "from",
+        "to": "to",
+        "outside_clock": "Outside the designated area",
+        "na_clock": "N/A location",
+        "warning": {
+          "location_not_found": {
+            "title": "Location is not found!",
+            "message": "Please check the location permission on this device again."
+          },
+          "outside": {
+            "title": "You're outside the designated area!",
+            "message": "Please make sure you're within the designated area to clock in / clock out successfully."
+          },
+          "web_app": {
+            "title": "Clock-in on website is not enable",
+            "message": "you are not allowed to clock-in through website"
+          }
+        }
+      },
+      "app_options": {
+        "type": {
+          "attendance": "attendance"
+        },
+        "clock_type": {
+          "clockin": "clock in",
+          "clockout": "clock out"
+        }
+      }
+    },
+    "attendance_setting": {
+      "title": "Attendance setting",
+      "fields": {
+        "offices": "Offices",
+        "webapp": "Web app",
+        "geofencing": "Geofencing",
+        "clock_outside": "Clock outside",
+        "allow_clock_outside": "Allow clock in/out outside the office",
+        "not_allow_clock_outside": "Not allow clock in/out outside the office",
+        "allow_clock_on": "Allow clocking in/out on",
+        "address": "Accurate Address",
+        "radius": "Radius",
+        "clock_from": "Clocking in/out from",
+        "person_in_charge": "Person in charge *",
+        "locations": "Locations *",
+        "attendance_approval_cycle": "Attendance Approval Cycle *",
+        "start_date": "Attendance Start Date *",
+        "repeat_on": "Repeat On *",
+        "id_devices": "ID Device Machine",
+        "policy": "Policy",
+        "allow_overtime": "Enable Overtime"
+      },
+      "app_options": {
+        "radius": {
+          "10": "10 (meters)",
+          "25": "25 (meters)",
+          "50": "50 (meters)",
+          "100": "100 (meters)",
+          "200": "200 (meters)",
+          "500": "500 (meters)"
+        },
+        "repeat_on": {
+          "date": "Monthly on day {date}",
+          "day_in_week": "Monthly on {num_order} {day_in_week}"
+        }
+      },
+      "text": {
+        "manager_notification": "Managers will receive notifications {attendance_managers_notifications_day} day before the end of the attendance cycle",
+        "settings": "Settings",
+        "general": "General",
+        "locations_menu": "Locations and Policies",
+        "tabs": {
+          "other": "Other",
+          "general": "General",
+          "person_in_charge": "Person in charge "
+        },
+        "machine": "Attendance Machine",
+        "num_order": {
+          "1": "first",
+          "2": "seconds",
+          "3": "third",
+          "4": "fourth",
+          "5": "last"
+        },
+        "warning": {
+          "attendance_start_date": "Attendance Start Date must be greater than Today"
+        },
+        "desktop": "Desktop",
+        "active": "Active",
+        "inactive": "Inactive",
+        "attendance_door_integrate": "Attendance Door Integrate"
+      }
+    },
+    "employee_salary": {
+      "fields": {
+        "employee": "Employee",
+        "salary": "Salary",
+        "actual_salary": "Actual Salary",
+        "basic_salary": "Basic Salary",
+        "salary_percentage": "Salary Percentage",
+        "date_from": "Date From",
+        "date_to": "Date To",
+        "reason": "Reason",
+        "effective_start": "Effective Start",
+        "effective_end": "Effective End",
+        "effective_date": "Effective Date",
+        "salary_fix": "Fixed Salary"
+      }
+    },
+    "employee_groups": {
+      "title": {
+        "criteria": "Criteria",
+        "edit_group": "Edit Group"
+      },
+      "buttons": {
+        "add": "New Group",
+        "save": "Save",
+        "preview": "Preview",
+        "cancel": "Cancel"
+      },
+      "text": {
+        "option_match": {
+          "match_criteria": {
+            "option": "Match all of the Criteria",
+            "description": "When using the ALL, the ANY and the EXCEPT FOR condition sets in conjunction, an employee must match every condition in the ALL section, plus at least one of the conditions in the ANY section, plus the EXCEPT FOR condition to be added to the group."
+          },
+          "specific_employee": {
+            "option": "Specific employees",
+            "description": ""
+          }
+        },
+        "match_criterial_filter": {
+          "header": {
+            "type": "Type",
+            "field": "Field",
+            "operator": "Operator",
+            "value": "Value"
+          },
+          "column": {
+            "meet_all": "Meet ALL",
+            "meet_any": "Meet ANY",
+            "except_for": "Except for"
+          },
+          "columns_description": {
+            "meet_all": "All conditions in this section must be true for an employee to be added to the group.",
+            "meet_any": "At least one condition in this section must be true for an employee to be added to the group. If there is only a single condition in this section, it must be true."
+          },
+          "auto_add_remove_employee": "Automatically add or remove employees that match these criteria, except for Resigned employees."
+        },
+        "list_employee": {
+          "employee_name": "Employee Name",
+          "employee_address": "Employee Address"
+        }
+      },
+      "filters": {
+        "operator": {
+          "date": {
+            "after": "After",
+            "after_or_euqal": "After Or Equal",
+            "before": "Before",
+            "before_or_equal": "Before Or Equal",
+            "is": "Is",
+            "is_not": "Is Not"
+          },
+          "text": {
+            "contain": "Contain",
+            "does_not_contain": "Does Not Contain",
+            "is": "Is",
+            "is_not": "Is Not",
+            "start_with": "Start With"
+          },
+          "select_module": {
+            "is": "Is",
+            "is_not": "Is Not"
+          },
+          "select_option": {
+            "is": "Is",
+            "is_not": "Is Not"
+          }
+        }
+      }
+    },
+    "employee_view": {
+      "text": {
+        "saved_views": "Saved views",
+        "note_*": "This is system view, system won't save your config"
+      },
+      "buttons": {
+        "create_a_view": "Create a View",
+        "manage_views": "Manage Views",
+        "create": "Create"
+      },
+      "modal": {
+        "manage_views": "Manage Views",
+        "new_view": "New View",
+        "title": "Title",
+        "description": "Description"
+      }
+    },
+    "reports": {
+      "title": "Report",
+      "employee": {
+        "text": {
+          "employee": "Employees",
+          "total_employee": "Total employee",
+          "current_employee": "Current employee",
+          "former_employee": "Former employee",
+          "total_employees": "Total employees",
+          "current_employees": "Current employees",
+          "former_employees": "Former employees",
+          "gender": "Gender",
+          "office": "Office",
+          "department": "Department",
+          "job_title": "Job Title",
+          "pie_empty_title": "No info to show.",
+          "pie_empty_des": "Please apply a different filter."
+        }
+      },
+      "onboarding": {
+        "text": {
+          "onboarding": "Onboarding",
+          "des": "Onboarding employees by month of their Join Date.",
+          "employee_id": "Employee ID",
+          "office": "Office"
+        }
+      },
+      "offboarding": {
+        "text": {
+          "offboarding": "Offboarding",
+          "des": "Offboarding and inactive employees by month of their Last Working Date."
+        }
+      },
+      "employee_turnover_rate": {
+        "text": {
+          "employee_turnover_rate": "Employee Turnover Rate",
+          "des": "An overview of the resigned employees over the active employees in the company.",
+          "length_of_service": "Length of Service",
+          "year": "year",
+          "years": "years",
+          "month": "month",
+          "months": "months",
+          "day": "day",
+          "days": "days"
+        }
+      },
+      "time_off_balance": {
+        "title": "Time Off Balance",
+        "buttons": {
+          "export": "Export"
+        },
+        "text": {
+          "description": "An overview of employees' time off balances.",
+          "table": {
+            "employee_name": "Employee Name",
+            "department": "Department",
+            "office": "Office",
+            "type": "Type",
+            "entitlement": "Entitlement",
+            "carry_over": "Carry Over",
+            "requested": "Requested",
+            "balance": "Balance"
+          }
+        }
+      },
+      "attendance": {
+        "title": "Attendance",
+        "text": {
+          "description": "An overview of employees' attendance.",
+          "filters": {
+            "from_date": "From date",
+            "to_date": "To date",
+            "search": "Search"
+          },
+          "table": {
+            "employee_name": "Employee Name",
+            "department": "Department",
+            "employee_type": "Employment Type",
+            "paid_day_off": "Paid Days Off",
+            "unpaid_day_off": "Unpaid Days Off",
+            "working_day": "Working Days",
+            "actual_working_day": "Actual Working Days"
+          }
+        },
+        "buttons": {
+          "export": "Export"
+        }
+      },
+      "time_off_schedule": {
+        "title": "Time Off schedule",
+        "text": {
+          "description": "An overview of employees' time off schedules.",
+          "filters": {
+            "employee_status": "Employee Status",
+            "from_date": "From date",
+            "to_date": "To date"
+          },
+          "table": {
+            "employee_name": "Employee Name",
+            "email": "Email Address",
+            "job_title": "Job Title",
+            "from": "From",
+            "to": "To",
+            "type": "Type",
+            "status": "Status"
+          }
+        },
+        "buttons": {
+          "export": "Export"
+        }
+      },
+      "recruitment": {
+        "title": "Recruitment",
+        "text": {
+          "description": "An overview of the hiring progress during a period of time.",
+          "filter": {
+            "publish_status": "Status"
+          },
+          "table": {
+            "recruitment_code": "Job",
+            "created_at": "Crated Date",
+            "process": "Total process"
+          }
+        },
+        "buttons": {
+          "export": "Export"
+        }
+      }
+    },
+    "candidate_test": {
+      "fields": {
+        "performer_type": "Performer type"
+      },
+      "app_options": {
+        "performer_type": {
+          "candidate": "Candidate",
+          "employees": "Employees"
+        }
+      }
+    },
+    "careers": {
+      "text": {
+        "apply_now": "Apply now",
+        "join_us": "JOIN WITH US",
+        "employment_info": "EMPLOYMENT INFORMATION",
+        "job_description": "JOB DESCRIPTION",
+        "requirement": "REQUIREMENTS",
+        "benefits": "BENEFITS",
+        "jobs": "Jobs",
+        "application_form": "Application Form",
+        "jobs_board": "JOBS BOARD",
+        "view_job": "View Job",
+        "back_job": "Back to Jobs",
+        "open_positions": "OPEN POSITIONS",
+        "salary": "Salary",
+        "experience": "Experience",
+        "job_title": "Job Title",
+        "work_location": "Work location",
+        "quantity": "Quantity",
+        "employment_type": "Employment Type",
+        "degree": "Degree"
+      },
+      "notification": {
+        "exist": "You have already applied to this job",
+        "applid_ss": "Your application for the {job_name} has been submitted successfully."
+      }
+    },
+    "employee_setting": {
+      "title": {
+        "employee": "Employee",
+        "setting": "Settings",
+        "custom_fields": "Custom Fields",
+        "contract": "Contracts",
+        "tabs": {
+          "general": "Personal Info",
+          "address": "Address",
+          "bank": "Bank Information",
+          "educations": "Educations",
+          "social": "Social Network",
+          "other": "Other",
+          "contract": "Contract Type",
+          "employee": "Employee",
+          "employee_code": "Employee",
+          "contract_code": "Contract",
+          "job": "Job",
+          "payroll": "Payroll",
+          "offboarding": "Offboarding"
+        },
+        "options": "Options",
+        "auto_generate_code": "Auto Generate Code",
+        "id_pattern": "ID Pattern"
+      },
+      "buttons": {
+        "new_field": "New Field",
+        "add": "Add",
+        "save": "Save",
+        "cancel": "Cancel",
+        "add_option": "Add Option",
+        "remove": "Remove",
+        "delete": "Delete",
+        "new_contract": "New Contract Type",
+        "edit": "Edit"
+      },
+      "fields": {
+        "autogenerate_id": "Autogenerate ID",
+        "text_code": "Prefix",
+        "decimal": "Minimum Digit of Suffix",
+        "current_num": "Start From",
+        "preview": "Preview"
+      },
+      "modal": {
+        "title": {
+          "add_custom_field": "Add Custom Field",
+          "edit_custom_field": "Edit Custom Field",
+          "add_contract": "New Contract",
+          "edit_contract": "Edit Contract"
+        },
+        "description": {
+          "add_custom_field": "You are about to create a new custom field in Personal Info section.",
+          "edit_custom_field": "You are about to edit a custom field in Personal Info section. This may impact the field display of employee profiles."
+        },
+        "fields": {
+          "type": "Type",
+          "name": "Name",
+          "required_field": "Required field",
+          "show_in_hiring": "Employer can fill in the field during Hiring",
+          "show_in_onboarding": "Employee can fill in the field during Onboarding"
+        },
+        "field_options": {
+          "type": {
+            "single_line_text": "Single-line text",
+            "multi_line_text": "Multi-line text",
+            "dropdown": "Dropdown",
+            "multiple_selection": "Multiple Selection",
+            "number": "Number",
+            "yes_no": "Yes/No",
+            "date": "Date"
+          }
+        },
+        "text": {
+          "select_type_placeholder": "Select Type"
+        }
+      },
+      "text": {
+        "type": "Type",
+        "options": "Options",
+        "warning_delete_custom_field": {
+          "title": "Delete Custom Field",
+          "body": "This will also delete all the data stored for this custom field for all your employees which CANNOT be recovered."
+        },
+        "description": "Description",
+        "warning_delete_contract_type": {
+          "title": "Delete Contract Type",
+          "body": "This Contract Type will be deleted!"
+        },
+        "autogenerate_id_description": {
+          "employee_code": "• Once turned on, autogenerated ID will start to apply from the next created employee.",
+          "contract_code": "• Once turned on, autogenerated ID will start to apply from the next created contract."
+        },
+        "error_decimals": "Must be a number smaller than or equal to 10.",
+        "employee_code": "Employee Code",
+        "contract_code": "Contract Code"
+      }
+    },
+    "contract_type": {
+      "fields": {
+        "name": "Name",
+        "no_end_date": "No End Date",
+        "description": "Description"
+      }
+    },
+    "employee_level": {
+      "fields": {
+        "level_name": "Level name",
+        "description": "Description"
+      }
+    },
+    "time_off_import": {
+      "title": {
+        "import_type": "How do you want to import your data?",
+        "upload_file_step": {
+          "select_data": "Select data to import",
+          "upload": "Upload your completed spreadsheet"
+        },
+        "map_fields_step": {
+          "default_fields_mapping": "Default Fields Mapping"
+        }
+      },
+      "options": {
+        "set_new_balance": {
+          "title": "Set new balance",
+          "sub_titlte": "Set a new time-off balance value",
+          "content": "The time off balance from the imported file will overwrite the employee's existing balance."
+        },
+        "adjust_existing_balance": {
+          "title": "Adjust existing balance",
+          "sub_titlte": "Sum up imported and existing balance",
+          "content": "The time off adjustment from the imported file will be added to the employee's existing balance."
+        }
+      },
+      "buttons": {
+        "next": "Next",
+        "back": "Back",
+        "preview": "Preview",
+        "import": "Import",
+        "timeoff_balance_template": "Timeoff Balance Template"
+      },
+      "text": {
+        "upload_file_step": {
+          "message": "This template spreadsheet has been configured to help you fill out information easily and works best with Excel",
+          "upload_file": "Upload File",
+          "file_format": "File format: xlsx. Max file size: 2MB."
+        },
+        "map_fields_step": {
+          "field": "Field",
+          "mapping": "Mapping",
+          "upload_file_header": "Upload File Headers",
+          "mapping_fields_header": "Mapping your uploaded file headers"
+        },
+        "preview_and_import": {
+          "record": "Record",
+          "records": "Records",
+          "ready_to_create": "ready to created",
+          "duplicated": "duplicated",
+          "duplicate": "Duplicat",
+          "skipped": "skipped",
+          "unmapped": "Unmapped",
+          "fields": "fields",
+          "descriptions": {
+            "duplicated": "Duplicate record has been found. Select the records that you want to import.",
+            "skipped": "The record does not allow for import. The following is a list of errors, details for the error that help you check the data.",
+            "unmapped": "These fields in your uploaded file have not been mapped to any Grove field. The data in these fields will be ignored during the import."
+          },
+          "row": "Row",
+          "error": "errors",
+          "field": "Field",
+          "upload_file_header": "Upload File Header",
+          "value": "Value",
+          "employee_does_not_have_type": "Employee does not have this time-off type.",
+          "timeoff_type_not_exist": "Time-off Type does not exist.",
+          "email_not_exist": "Employee email does not exist.",
+          "required_field": "Missing value in required fields.",
+          "duplicate_data_for": "Duplicate data for",
+          "chosen": "Chosen",
+          "import_success": "Import Success",
+          "import_fail": "Import Fail"
+        }
       }
     },
     "notification": {
       "title": "Notification"
-    }
-  },
-  "layout": {
-    "overview": "Overview",
-    "quick_access": "Quick access",
-    "admin_tools": "Admin tools",
-    "tools": "Tools",
-    "quick": "Quick",
-    "notification": {
-      "title": "Notification",
-      "recent_notification": "Recent Notification",
-      "see_all_incoming_activity": "See all incoming activity"
     },
-    "message": "Message",
-    "read_all_message": "Read all Message",
-    "chat": "Chat",
-    "calendar": "Calendar",
-    "setting": "Setting",
-    "header": {
-      "welcome": {
-        "morning": {
-          "title": "Good morning",
-          "content_1": "“Either you run the day or the day runs you”",
-          "content_2": "“Have a happy and lucky new day”",
-          "content_3": "“Opportunities don't happen, you create them”",
-          "content_4": "“The leaves are green, my heart is red. Have a nice morning”",
-          "content_5": "“Absolutely focus to have a productive day”",
-          "content_6": "“Wishing you a new day full of energy for a productive day”",
-          "content_7": "“Your spirit is good today. Have a great working day”",
-          "content_8": "“Learn as if you will live forever, live like you will die tomorrow”",
-          "content_9": "“I have not failed. I've just found 10,000 ways that won't work”",
-          "content_10": "“Worry is a misuse of imagination”",
-          "content_11": "“I never look back, darling. It distracts from the now”",
-          "content_12": "“Ideation without execution is delusion”",
-          "content_13": "“Good luck to you today”",
-          "content_14": "“Wishing you a brilliant and happy morning”",
-          "content_15": "“A year from now you will wish you had started today”",
-          "content_16": "“Hope this message will bring you happiness and luck from my place”",
-          "content_17": "“Don't let someone else's opinion of you become your reality”",
-          "content_18": "“Hustle beats talent when talent doesn’t hustle”",
-          "content_19": "“Set your goals high, and don’t stop till you get there”",
-          "content_20": "“I have stood on a mountain of no’s for one yes”",
-          "content_21": "“Inspiration does exist, but it must find you working”",
-          "content_22": "“Don’t let yesterday take up too much of today”",
-          "content_23": "“It is better to fail in originality than to succeed in imitation”",
-          "content_24": "“Try to take advantage of every opportunity that comes you way”",
-          "content_25": "“Don't wait. The time will never be just right”",
-          "content_26": "“Never setter to be better”",
-          "content_27": "“Change your thoughts and you change your world”",
-          "content_28": "“Every strike brings me closer to the next home run”",
-          "content_29": "“Talent wins games, but teamwork and intelligence win championships”",
-          "content_30": "“The beginning is the most important part of the work”",
-          "content_31": "“When you like your work every day is a holiday”",
-          "content_32": "“Doing what you like is freedom. Liking what you do is happiness”",
-          "content_33": "“As a cure for worrying, work is better than whiskey”",
-          "content_34": "“If you don’t risk anything, you risk even more”",
-          "content_35": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
-          "content_36": "“Success is getting what you want, happiness is wanting what you get”",
-          "content_37": "“No challenge shall never know all its capabilities”",
-          "content_38": "“Success is a journey not a destination”"
-        },
-        "afternoon": {
-          "title": "Good afternoon",
-          "content_1": "“Either you run the day or the day runs you”",
-          "content_2": "“This afternoon, I hope everything will be all right”",
-          "content_3": "“Absolutely focus to have a productive day”",
-          "content_4": "“Hope this message will bring you happiness and luck from my place”",
-          "content_5": "“Setting goals is the first step in turning the invisible into the visible”",
-          "content_6": "“Good luck to you today”",
-          "content_7": "“Your spirit is good today. Have a great working day”",
-          "content_8": "“It is never too late to be what you might have been”",
-          "content_9": "“Try to take advantage of every opportunity that comes you way”",
-          "content_10": "“If you’re not positive energy, you’re negative energy.”",
-          "content_11": "“Never setter to be better”",
-          "content_12": "“Change your thoughts and you change your world”",
-          "content_13": "“Alone we can do so little, together we can do so much”",
-          "content_14": "“Talent wins games, but teamwork and intelligence win championships”",
-          "content_15": "“The beginning is the most important part of the work”",
-          "content_16": "“When you like your work every day is a holiday”",
-          "content_17": "“Doing what you like is freedom. Liking what you do is happiness”",
-          "content_18": "“As a cure for worrying, work is better than whiskey”",
-          "content_19": "“You don’t have to see the whole staircase, just take the first step”",
-          "content_20": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
-          "content_21": "“Work until your bank account looks like a phone number”",
-          "content_22": "“No challenge shall never know all its capabilities”",
-          "content_23": "“Success is a journey not a destination”"
-        },
-        "evening": {
-          "title": "Good evening",
-          "content_1": "“Either you run the day or the day runs you”",
-          "content_2": "“It is never too late to be what you might have been”",
-          "content_3": "“Try to take advantage of every opportunity that comes you way”",
-          "content_4": "“People rarely succeed unless they have fun in what they are doing”",
-          "content_5": "“Never setter to be better”",
-          "content_6": "“Change your thoughts and you change your world”",
-          "content_7": "“They always say time changes things, but you actually have to change them yourself”",
-          "content_8": "“Talent wins games, but teamwork and intelligence win championships”",
-          "content_9": "“The beginning is the most important part of the work”",
-          "content_10": "“When you like your work every day is a holiday”",
-          "content_11": "“Doing what you like is freedom. Liking what you do is happiness”",
-          "content_12": "“As a cure for worrying, work is better than whiskey”",
-          "content_13": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
-          "content_14": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
-          "content_15": "“Work until your bank account looks like a phone number”",
-          "content_16": "“No challenge shall never know all its capabilities”",
-          "content_17": "“Success is a journey not a destination”"
+    "overtimes": {
+      "title": {
+        "index": "Overtime",
+        "manage_overtime": "Manage Overtime",
+        "request_overtime": "Request Overtime",
+        "manage": "Manage",
+        "request": "Request",
+        "approve_overtime": "Approve Overtime",
+        "reject_overtime": "Reject Overtime",
+        "cancel_overtime": "Cancel Overtime"
+      },
+      "buttons": {
+        "new_overtime": "New Overtime",
+        "approved": "Approve",
+        "rejected": "Reject",
+        "cancelled": "Cancel"
+      },
+      "fields": {
+        "date": "Date",
+        "total_time": "Total time",
+        "employee": "Employee",
+        "send_to": "Send to",
+        "note": "Note",
+        "action_note": "Note",
+        "status": "Status",
+        "from_time": "From",
+        "to_time": "To"
+      },
+      "app_options": {
+        "status": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected",
+          "cancelled": "Cancelled"
         }
       },
-      "birthday": {
-        "title": "Happy Birthday",
-        "content_1": "“Hope all your birthday wishes come true!”",
-        "content_2": "“It’s your special day — get out there and celebrate!”",
-        "content_3": "“The day is all yours — have fun!”",
-        "content_4": "“Wishing you the biggest slice of happy today.”",
-        "content_5": "“I hope your celebration gives you many happy memories!”",
-        "content_6": "“Enjoy your special day.”",
-        "content_7": "“You’re older today than yesterday but younger than tomorrow, HPBD!”",
-        "content_8": "“Have the best birthday ever!”",
-        "content_9": "“oday is about you. I can’t wait to celebrate you all day long!”",
-        "content_10": "“Wherever the year ahead takes you, I hope it’s happy.”",
-        "content_11": "“Thinking of you on your birthday and wishing you everything happy”",
-        "content_12": "“Best wishes on your birthday – may you have many, many more”",
-        "content_13": "“Cheers to you for another trip around the sun!”",
-        "content_14": "“Congratulations on another year of skillful death evasion!”"
-      },
-      "weather": {
-        "thunderstorm": {
-          "title": "Thunderstorm",
-          "content_1": "“It's thundering today, you'd better not go out”",
-          "content_2": "“The weather is bad, let's stay in the room”"
-        },
-        "drizzle": {
-          "title": "Drizzle",
-          "content_1": "“It's drizzling, don't forget to bring an umbrella when you go out”"
-        },
-        "rain": {
-          "title": "Rain",
-          "content_1": "“It's raining, don't forget to bring a raincoat”",
-          "content_2": "“It's raining, don't forget to bring an umbrella”"
-        },
-        "snow": {
-          "title": "Snow",
-          "content_1": "“It's snowing, don't forget to wear warm clothes”"
-        },
-        "atmosphere": {
-          "title": "Atmosphere",
-          "content_1": "“The air outside is not so good, you'd better stay in your room”"
-        },
-        "clear": {
-          "title": "Clear",
-          "content_1": "“It's sunny and not cloudy, wear sunscreen when going out”"
-        },
-        "clouds": {
-          "title": "Clouds",
-          "content_1": "“Today is a beautiful day, let's go out and enjoy”"
-        }
-      },
-      "header_assistant": {
-        "title": "Header assistant",
-        "sure_to_delete": "Sure to delete?",
-        "add": "Add header assistant",
-        "fields": {
-          "title": "Title",
-          "content": "Content",
-          "image": "Image",
-          "image_position": "Image position",
-          "date_from": "Date from",
-          "date_to": "Date to",
-          "date": "Date",
-          "to": "To"
-        }
+      "text": {
+        "to": "To",
+        "from": "From",
+        "name": "Name",
+        "email": "Email",
+        "username": "username",
+        "on": "on",
+        "requested_on": "requested on",
+        "hours": "hours",
+        "from_date": "From date",
+        "to_date": "To date"
+      }
+    },
+    "insurance": {
+      "title": "Insurance",
+      "fields": {
+        "name": "Name",
+        "date_from": "Date From",
+        "date_to": "Date To",
+        "employee_name": "Employee Name",
+        "insurance_salary": "Insurance salary",
+        "insurance_salary_percentage": "Insurance salary percentage",
+        "insurance_fee": "Insurance fee",
+        "employee_pays": "Employee pays",
+        "company_pays": "Company pays",
+        "insurance_status": "Insurance Status",
+        "yes": "Yes",
+        "no": "No",
+        "period": "Period"
       }
     }
+  },
+  "announcement": {
+    "title": "Announcements"
+  },
+  "month": {
+    "1": "Jan",
+    "2": "Feb",
+    "3": "Mar",
+    "4": "Apr",
+    "5": "May",
+    "6": "Jun",
+    "7": "Jul",
+    "8": "Aug",
+    "9": "Sep",
+    "10": "Oct",
+    "11": "Nov",
+    "12": "Dec"
+  },
+  "day_in_week": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
+  "calculate_monthly": {
+    "text": "Calculate Monthly Salary Based On",
+    "1": "Actual calendar days",
+    "2": "Actual working days",
+    "21": "21 working days",
+    "22": "22 working days",
+    "23": "23 working days",
+    "24": "24 working days",
+    "25": "25 working days",
+    "26": "26 working days"
+  },
+  "search": {
+    "pages": "Pages",
+    "users": "Users",
+    "employees_import": "Import Employee"
   }
 }

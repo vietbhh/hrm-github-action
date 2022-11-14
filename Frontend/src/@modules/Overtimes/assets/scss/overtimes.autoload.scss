@@ -1,0 +1,98 @@
+@import "@scss/friday";
+
+.overtime-page {
+    .w-35 {
+        width: 35%;
+    }
+
+    .overtime-content {
+        width: 75%;
+        margin: auto;
+    }
+
+    .collapse-overtime {
+        .ant-collapse {
+            background-color: transparent !important;
+
+            .ant-collapse-item {
+                border: 1px solid rgb(227, 235, 241);
+                border-radius: 5px;
+            }
+
+            .ant-collapse-header {
+                padding: 14px 18px !important;
+                .ant-collapse-expand-icon {
+                    .ant-collapse-arrow {
+                        margin-right: 10px !important;
+                        width: 20px;
+                        vertical-align: -3px !important;
+                    }
+                }
+                .ant-collapse-header-text {
+                    width: 100% !important;
+                }
+
+                .overtime-item-title {
+                    font-weight: 500;
+                }
+            }
+
+            .ant-collapse-content {
+                border-top: 1px solid rgb(227, 235, 241);
+
+                .rs-table {
+                    .rs-table-row-header {
+                        background-color: #ffffff !important;
+
+                        .rs-table-cell-header {
+                            .rs-table-cell-content {
+                                font-weight: 700 !important;
+                                font-size: 90% !important;
+                            }
+                        }
+                    }
+                    .rs-table-row {
+                        .rs-table-cell {
+                            background-color: #ffffff !important;
+                        }
+                    }
+
+                    .rs-table-body-row-wrapper {
+                        .rs-table-cell-content {
+                            font-weight: 400 !important;
+
+                            .note-icon {
+                                color: $primary;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+
+                .overtime-action-by {
+                    font-size: 95%;
+                }
+            }
+        }
+    }
+}
+
+.popover-overtime-action {
+    button {
+        padding: 7px;
+        margin: 3px 0;
+        text-align: left;
+        width: 100%;
+        display: block;
+    }
+
+    .ant-popover-inner-content {
+        padding: 7px;
+        display: grid;
+    }
+
+    hr {
+        margin: 0;
+        width: 100%;
+    }
+}

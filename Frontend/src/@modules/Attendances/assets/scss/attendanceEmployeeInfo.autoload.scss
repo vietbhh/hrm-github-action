@@ -1,0 +1,179 @@
+@import "@scss/friday";
+.my-attendance-body {
+    .total-time-container {
+        display: flex;
+
+        .total-time-item {
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            margin-right: 15px;
+            width: 180px;
+
+            .card-header {
+                padding: 10px 21px 0px 21px;
+                h6 {
+                    color: $primary;
+                }
+            }
+
+            .card-body {
+                padding-bottom: 10px;
+
+                p {
+                    font-size: 90%;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+    .rs-table {
+        .rs-table-cell-header {
+            .rs-table-cell-content {
+                font-weight: 700 !important;
+                font-size: 90% !important;
+            }
+        }
+        .rs-table-row {
+            .rs-table-cell {
+                background-color: #ffffff !important;
+            }
+        }
+
+        .rs-table-body-row-wrapper {
+            .rs-table-cell-content {
+                font-weight: 500 !important;
+
+                .note-icon {
+                    color: $primary;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .expand-btn {
+            background-color: #ffffff !important;
+            border: none;
+            color: #000000 !important;
+        }
+
+        .rs-table-row-expanded {
+            overflow-y: scroll;
+        }
+
+        .list-attendance-log {
+            margin-left: 180px;
+
+            .row-attendance-log {
+                display: flex;
+
+                .expand-cell {
+                    padding-top: 8px;
+                    padding-right: 27px;
+                    padding-bottom: 8px;
+                    padding-left: 5px;
+                }
+
+                .rs-table-cell-content {
+                    input {
+                        background-color: rgba(0, 0, 0, 0.1) !important;
+                    }
+                }
+            }
+        }
+
+        .cell-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+            .attendance-detail-status {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-right: 5px;
+            }
+
+            .attendance-detail-pending {
+                background-color: rgb(242, 145, 50);
+            }
+
+            .attendance-detail-approved {
+                background-color: rgb(42, 210, 95);
+            }
+
+            .attendance-detail-rejected {
+                background-color: rgb(226, 87, 76);
+            }
+        }
+
+        .cell-note {
+            .btn-icon {
+                padding: 0.2rem;
+            }
+        }
+
+        .attendance-clock {
+            width: 140px !important;
+            background-color: #f2f7fb;
+            padding: 8px 15px;
+            border-radius: 3px;
+        }
+    }
+
+    .edit-paid-icon {
+        font-size: 85%;
+        padding: 3px;
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .day-off-icon {
+        font-size: 90%;
+        padding-left: 5px;
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    .day-off-icon-success {
+        font-size: 90%;
+        padding-left: 5px;
+        color: $primary;
+    }
+
+    .btn-secondary {
+        border-color: #f5f5f5 !important;
+        background-color: #e5e5ea !important;
+        color: #6e6b7b !important;
+    }
+}
+
+.attendance-popover {
+    width: 170px !important;
+
+    .popover-btn-cancel {
+        padding: 7px;
+        margin: 3px 0;
+        text-align: left;
+        width: 100%;
+    }
+
+    .ant-popover-inner-content {
+        padding: 7px;
+        display: grid;
+    }
+
+    .btn:disabled {
+        cursor: not-allowed;
+        color: #999999 !important;
+        border: none;
+    }
+
+    .table-icon {
+        width: 35px;
+        padding: 0 7px;
+    }
+
+    hr {
+        margin: 0;
+        width: 100%;
+    }
+}

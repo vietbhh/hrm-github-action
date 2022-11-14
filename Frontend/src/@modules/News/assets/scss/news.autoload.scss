@@ -1,0 +1,206 @@
+@import "@scss/friday";
+.news {
+  .color-primary {
+    color: $primary;
+  }
+
+  .add-new {
+    @include media-breakpoint-down(md) {
+      margin-bottom: 1rem;
+      width: 100% !important;
+    }
+  }
+
+  .filter-dropdown {
+    margin-right: 17px;
+
+    @include media-breakpoint-down(md) {
+      margin-right: 0px;
+      margin-bottom: 1rem;
+      width: 100% !important;
+    }
+
+    .select__control {
+      border-radius: 10px;
+    }
+
+    .select__placeholder {
+      font-size: 12px;
+    }
+  }
+
+  .title-filter {
+    width: 150px;
+  }
+
+  .department-filter {
+    width: 180px;
+  }
+
+  .group-filter {
+    width: 150px;
+  }
+
+  .fliter-input {
+    margin-right: 17px;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .inline-block {
+    display: inline-block;
+  }
+
+  .bg-status {
+    display: inline-block;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 7px;
+    font-size: 13px;
+    height: 25px;
+    font-weight: 500;
+  }
+
+  .bg-status-published {
+    background: rgb(216, 246, 226);
+    color: rgb(31, 153, 70);
+  }
+
+  .bg-status-draft {
+    color: rgb(57, 74, 96);
+    background: rgb(238, 243, 246);
+  }
+
+  .span-date {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 20px;
+  }
+
+  .button-action {
+    width: 34px;
+    font-size: 19px;
+    height: 34px;
+    margin: 0px 3px;
+    font-weight: 600;
+    line-height: 18px;
+    padding: 0px 7px;
+    color: rgb(79, 94, 113);
+    background-color: unset;
+  }
+
+  .button-action-edit:hover {
+    background-color: #ccc !important;
+  }
+
+  .button-action-delete:hover {
+    background-color: rgb(236, 159, 159) !important;
+  }
+
+  .button-action-view:hover {
+    background-color: #ccc;
+  }
+
+  .button-action-view {
+    padding-left: 5px;
+  }
+
+  .icon-share {
+    margin-right: 7px;
+    font-weight: 400;
+  }
+
+  .icon-share-down {
+    margin-left: 10px;
+    font-size: 15px;
+    position: relative;
+    top: 2px;
+    font-weight: 400;
+  }
+
+  .btn-share {
+    font-size: 14px;
+    border: 1px solid rgb(79, 94, 113);
+    margin-top: 10px;
+  }
+
+  .ant-dropdown-menu-item-group-title {
+    color: rgb(35, 54, 78);
+    font-weight: 500;
+  }
+
+  .menu-share {
+    padding: 8px 10px 3px 14px;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 25px 110px auto;
+    align-items: center;
+  }
+
+  .share-department {
+    padding: 7px 30px 0 30px;
+    height: 45px;
+  }
+
+  .share-department:hover {
+    background: rgb(249, 250, 251);
+    .share-department-btn {
+      display: inline-block;
+    }
+  }
+
+  .share-department-name {
+    margin-left: 10px;
+  }
+
+  .share-department-email {
+    margin-left: 10px;
+  }
+
+  .share-department-btn {
+    padding: 5px;
+    float: right;
+    display: none;
+  }
+
+  .news-flag {
+    color: #ff5454;
+    font-size: 18px;
+    margin-right: 10px;
+  }
+
+  .img img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .p-add-comment {
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+
+  .text-load-more-comments {
+    cursor: pointer;
+  }
+
+  .div-action-comment {
+    .btn-action-comment {
+      border: none !important;
+      padding: 7px;
+    }
+
+    .btn-outline-warning:hover {
+      background-color: rgba(255, 159, 67, 0.2);
+    }
+
+    .btn-outline-danger:hover {
+      background-color: rgba(234, 84, 85, 0.2);
+    }
+  }
+}
+
+.card-mb-10 {
+  margin-bottom: 10px !important;
+}
