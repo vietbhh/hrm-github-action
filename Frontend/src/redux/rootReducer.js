@@ -3,6 +3,7 @@ import navbar from "./navbar"
 import layout from "./layout"
 import auth from "./authentication"
 import notification from "./notification"
+import chat from "./chat"
 /* import todo from '@src/views/apps/todo/store'
 import chat from '@src/views/apps/chat/store'
 import users from '@src/views/apps/user/store'
@@ -30,6 +31,7 @@ const rootReducer = {
   navbar,
   layout,
   calendar,
+  chat,
   ...modules
 }
 

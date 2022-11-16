@@ -1,5 +1,6 @@
 import { useFormatMessage } from "@apps/utility/common"
 import React from "react"
+import { Link } from "react-router-dom"
 
 // ** Reactstrap Imports
 import { UncontrolledTooltip } from "reactstrap"
@@ -7,9 +8,8 @@ import { UncontrolledTooltip } from "reactstrap"
 const NavbarChat = () => {
   return (
     <li className="nav-item">
-      <a
-        href="/"
-        onClick={(e) => e.preventDefault()}
+      <Link
+        to="/chat"
         aria-haspopup="true"
         className="nav-link"
         aria-expanded="false"
@@ -68,7 +68,7 @@ const NavbarChat = () => {
         <UncontrolledTooltip target="chat">
           {useFormatMessage("layout.chat")}
         </UncontrolledTooltip>
-      </a>
+      </Link>
     </li>
   )
 }

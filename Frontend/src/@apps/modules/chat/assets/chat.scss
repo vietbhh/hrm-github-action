@@ -1,0 +1,80 @@
+@import "@scss/friday";
+
+html .navbar-sticky.footer-hidden .app-content .content-area-wrapper,
+html .navbar-sticky.footer-hidden .app-content .kanban-wrapper {
+  height: calc(
+    var(--vh, 1vh) * 100 - (calc(2.75rem * 2) + 4.45rem + 0rem + 0rem + 0rem)
+  );
+}
+
+.content-area-wrapper {
+  margin: 1.75rem;
+
+  .content-wrapper {
+    padding: 0;
+
+    .class-default-spinner {
+      height: 100%;
+      align-items: center;
+    }
+
+    .chat-app-form {
+      li {
+        list-style: none;
+      }
+
+      .dropdown-menu {
+        padding: 0;
+      }
+
+      .epr-main {
+        .epr-category-nav {
+          display: none;
+        }
+      }
+
+      .emotions {
+        .ant-tabs {
+          .ant-tabs-nav-wrap {
+            justify-content: center;
+
+            .ant-tabs-tab {
+              margin: 0 20px;
+            }
+          }
+
+          .ant-tabs-tabpane {
+            min-width: 350px;
+          }
+        }
+      }
+    }
+
+    .chat-img {
+      max-width: 130px;
+      max-height: 120px;
+    }
+
+    .rs-placeholder-paragraph-graph-image {
+      height: 120px;
+    }
+  }
+}
+
+.input-group-merge {
+  input {
+    border: 1px solid #d8d6de;
+  }
+
+  &:hover {
+    .input-group-text {
+      border-color: $primary;
+    }
+  }
+}
+
+.form-send-message {
+  input {
+    height: auto;
+  }
+}

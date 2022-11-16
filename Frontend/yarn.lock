@@ -4633,6 +4633,13 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
+bricks.js@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/bricks.js/-/bricks.js-1.8.0.tgz#8fdeb3c0226af251f4d5727a7df7f9ac0092b4b2"
+  integrity sha512-XJsIGxoixpMDo/KoLXR+uQizFVGWNAQy1lLoIwXKxm6/Zpd9QQLSUd0otybbK7wjqX23ZvCXFxnIw+uCXJHo0A==
+  dependencies:
+    knot.js "^1.1.5"
+
 brorand@^1.0.1, brorand@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
@@ -5293,6 +5300,11 @@ clsx@^1.0.4, clsx@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
+
+clsx@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
 
 co@^4.6.0:
   version "4.6.0"
@@ -6729,6 +6741,13 @@ emittery@^0.7.1:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.7.2.tgz#25595908e13af0f5674ab419396e2fb394cdfa82"
   integrity sha512-A8OG5SR/ij3SsJdWDJdkkSYUjQdCUx6APQXem0SaEePBSRg4eymGYwBkKo1Y6DU+af/Jn2dBQqDBvjnr9Vi8nQ==
+
+emoji-picker-react@^4.4.5:
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-4.4.5.tgz#c4999a180e785e8c36b368449ca528d784a32a36"
+  integrity sha512-0iwtqg2WyNIQ+uCUUlEQ/UlJ8uOLbAo7jZ5MX0VEYe/NXsrphIQHZhuwC1h85REsCI9eYj60yuGIdvzFRnOkmQ==
+  dependencies:
+    clsx "^1.2.1"
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -10712,6 +10731,11 @@ klona@^2.0.4:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
 
+knot.js@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/knot.js/-/knot.js-1.1.5.tgz#28e72522f703f50fe98812fde224dd72728fef5d"
+  integrity sha512-ptGtvTrgLNtQj9ilUR+tSyHWTCPp2xu/EHkeo3OvpczzNqBSwjQKz8G7vUhzlRbasXVULBWSejsj6QRQb1pakw==
+
 kuler@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/kuler/-/kuler-2.0.0.tgz#e2c570a3800388fb44407e851531c1d670b061b3"
@@ -14289,6 +14313,14 @@ react-flatpickr@^3.10.12:
     flatpickr "^4.6.2"
     prop-types "^15.5.10"
 
+react-giphy-searchbox@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/react-giphy-searchbox/-/react-giphy-searchbox-1.5.4.tgz#49c6f98bf1afefbbd3a9ab3c5f79709cb32f399b"
+  integrity sha512-5SCiT3Y/0aeJcFfd3yXwJ1LShmDTTSL/aKJUXu9t0eBvwUU5DSev/JvMx3ijedsWpHuMtkwHLy5jV3pBDdzPQw==
+  dependencies:
+    bricks.js "^1.8.0"
+    react-infinite-scroller "^1.2.4"
+
 react-grid-layout@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/react-grid-layout/-/react-grid-layout-1.3.4.tgz#4fa819be24a1ba9268aa11b82d63afc4762a32ff"
@@ -14337,6 +14369,13 @@ react-i18next@^11.16.9:
     "@babel/runtime" "^7.14.5"
     html-escaper "^2.0.2"
     html-parse-stringify "^3.0.1"
+
+react-infinite-scroller@^1.2.4:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.6.tgz#8b80233226dc753a597a0eb52621247f49b15f18"
+  integrity sha512-mGdMyOD00YArJ1S1F3TVU9y4fGSfVVl6p5gh/Vt4u99CJOptfVu/q5V/Wlle72TMgYlBwIhbxK5wF0C/R33PXQ==
+  dependencies:
+    prop-types "^15.5.8"
 
 react-is-mounted-hook@^1.1.2:
   version "1.1.2"

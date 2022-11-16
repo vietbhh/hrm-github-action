@@ -1,20 +1,22 @@
-import firebase from "firebase/compat/app"
-import { getMessaging, getToken, onMessage } from "firebase/messaging"
 import { usersApi } from "@apps/modules/settings/common/api"
+import firebase from "firebase/compat/app"
+import { getFirestore } from "firebase/firestore"
+import { getMessaging, getToken, onMessage } from "firebase/messaging"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC2Qp4HLnOWTQZ9xMZAqqfGNbfsUO1SOA0",
-  authDomain: "fir-messaging-f94fd.firebaseapp.com",
-  projectId: "fir-messaging-f94fd",
-  storageBucket: "fir-messaging-f94fd.appspot.com",
-  messagingSenderId: "672698124875",
-  appId: "1:672698124875:web:adf97a7830afbe4c3d9bce",
-  measurementId: "G-BR7054YN0Z"
+  apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
+  authDomain: "friday-351410.firebaseapp.com",
+  projectId: "friday-351410",
+  storageBucket: "friday-351410.appspot.com",
+  messagingSenderId: "802894112425",
+  appId: "1:802894112425:web:bb905d1836b787e7bcebb8",
+  measurementId: "G-2LBDCCGXJP"
 }
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 
 export const messaging = getMessaging(firebaseApp)
+export const db = getFirestore(firebaseApp)
 
 export const requestPermission = () => {
   if (!("Notification" in window)) {
@@ -41,7 +43,7 @@ export const requestPermission = () => {
 const getRegistrationToken = async () => {
   return await getToken(messaging, {
     vapidKey:
-      "BETECJAEphx67h2DnHm0FVazaEPNtmhkh5GblAEBoymtkB8YTF5nvRSm3abN39wkNsoXOzLe5mt-um5TD6z0e4o"
+      "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
   })
     .then((currentToken) => {
       if (currentToken) {

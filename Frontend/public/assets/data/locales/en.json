@@ -832,6 +832,19 @@
     },
     "notification": {
       "title": "Notification"
+    },
+    "chat": {
+      "text": {
+        "you": "You",
+        "picture": "Picture",
+        "send": "Send",
+        "sending": "Sending",
+        "sent_error": "sent error",
+        "create_new_group": "Create new group",
+        "group_name": "Group name",
+        "group_member": "Group member",
+        "recent": "Recent"
+      }
     }
   },
   "layout": {
