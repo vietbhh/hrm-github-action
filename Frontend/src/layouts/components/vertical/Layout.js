@@ -47,7 +47,14 @@ import "./scss/vertical.scss"
 
 const Layout = (props) => {
   // ** Props
-  const { children, menuData } = props
+  const {
+    children,
+    menuData,
+    navbar,
+    className,
+    fixedSidebar,
+    customMenuComponent
+  } = props
 
   // ** Hooks
   const { skin, setSkin } = useSkin()
@@ -82,7 +89,8 @@ const Layout = (props) => {
   const location = useLocation()
   const isHidden = layoutStore.menuHidden
   const contentWidth = layoutStore.contentWidth
-  const menuCollapsed = layoutStore.menuCollapsed
+  const menuCollapsed =
+    fixedSidebar === true ? false : layoutStore.menuCollapsed
 
   //** Friday */
   const customSettingMenu =
@@ -217,7 +225,9 @@ const Layout = (props) => {
       className={classnames(
         `wrapper vertical-layout ${
           navbarWrapperClasses[navbarType] || "navbar-floating"
-        } ${footerClasses[footerType] || "footer-static"}`,
+        } ${footerClasses[footerType] || "footer-static"} ${
+          className ? className : ""
+        }`,
         {
           // Modern Menu
           "vertical-menu-modern": windowWidth >= windowWidthMin,
@@ -244,6 +254,8 @@ const Layout = (props) => {
         saveQuickAccess={saveQuickAccess}
         defaultMenuNav={defaultMenuNav}
         settingPermits={settingPermits}
+        fixedSidebar={fixedSidebar}
+        customMenuComponent={customMenuComponent}
       />
 
       <Navbar
@@ -256,17 +268,31 @@ const Layout = (props) => {
           } navbar-shadow navbar-height`
         )}>
         <div className="navbar-container d-flex content">
-          <NavbarComponent
-            skin={skin}
-            setSkin={setSkin}
-            setMenuVisibility={setMenuVisibility}
-            windowWidth={windowWidth}
-            windowWidthMin={windowWidthMin}
-            full_name={full_name}
-            saveQuickAccess={saveQuickAccess}
-            defaultMenuNav={defaultMenuNav}
-            settingPermits={settingPermits}
-          />
+          {navbar ? (
+            navbar({
+              skin: skin,
+              setSkin: setSkin,
+              setMenuVisibility: setMenuVisibility,
+              windowWidth: windowWidth,
+              windowWidthMin: windowWidthMin,
+              full_name: full_name,
+              saveQuickAccess: saveQuickAccess,
+              defaultMenuNav: defaultMenuNav,
+              settingPermits: settingPermits
+            })
+          ) : (
+            <NavbarComponent
+              skin={skin}
+              setSkin={setSkin}
+              setMenuVisibility={setMenuVisibility}
+              windowWidth={windowWidth}
+              windowWidthMin={windowWidthMin}
+              full_name={full_name}
+              saveQuickAccess={saveQuickAccess}
+              defaultMenuNav={defaultMenuNav}
+              settingPermits={settingPermits}
+            />
+          )}
         </div>
       </Navbar>
 

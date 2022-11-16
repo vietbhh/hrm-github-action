@@ -20,7 +20,8 @@ const Sidebar = (props) => {
     toogleCustomizer,
     saveQuickAccess,
     defaultMenuNav,
-    settingPermits
+    settingPermits,
+    customMenuComponent
   } = props
 
   // ** States
@@ -79,6 +80,17 @@ const Sidebar = (props) => {
             options={{ wheelPropagation: false }}
             onScrollY={(container) => scrollMenu(container)}>
             <ul className="navigation navigation-main">
+              {customMenuComponent && (
+                <li className="">
+                  <a
+                    href=""
+                    onClick={(e) => e.preventDefault()}
+                    className="nav-item-component">
+                    {customMenuComponent(props)}
+                  </a>
+                </li>
+              )}
+
               <VerticalNavMenuItems
                 items={menuData}
                 menuData={menuData}

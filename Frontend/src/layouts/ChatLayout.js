@@ -8,9 +8,20 @@ import Layout from "./components/vertical/Layout"
 // ** Menu Items Array
 import navigation from "@src/navigation/menuChat"
 
+// ** import component
+import Navbar2 from "./components/custom/Navbar2"
+
 const ChatLayout = (props) => {
   return (
-    <Layout menuData={navigation} {...props}>
+    <Layout
+      menuData={navigation}
+      navbar={(navProps) => <Navbar2 {...navProps} />}
+      /* customMenuComponent={(customProps) => (
+        <CustomMenuComponent {...customProps} />
+      )} */
+      className="navbar-2"
+      fixedSidebar={true}
+      {...props}>
       <Outlet />
     </Layout>
   )

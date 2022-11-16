@@ -24,7 +24,8 @@ import { useFormatMessage } from "@apps/utility/common"
 
 const NavbarUser = (props) => {
   // ** Props
-  const { saveQuickAccess, defaultMenuNav, settingPermits } = props
+  const { saveQuickAccess, defaultMenuNav, settingPermits, removeSearch } =
+    props
 
   // ** Store Vars
   const ability = useContext(AbilityContext)
@@ -79,7 +80,13 @@ const NavbarUser = (props) => {
 
   return (
     <ul className="nav navbar-nav align-items-center ms-auto">
-      <NavbarSearch checkLayout="vertical" saveQuickAccess={saveQuickAccess} />
+      {removeSearch !== true && (
+        <NavbarSearch
+          checkLayout="vertical"
+          saveQuickAccess={saveQuickAccess}
+        />
+      )}
+
       {!_.isEmpty(settingPermits) && (
         <UncontrolledDropdown
           tag="li"
