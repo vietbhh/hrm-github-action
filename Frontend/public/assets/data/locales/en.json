@@ -843,7 +843,10 @@
         "create_new_group": "Create new group",
         "group_name": "Group name",
         "group_member": "Group member",
-        "recent": "Recent"
+        "recent": "Recent",
+        "pinned": "Pinned",
+        "pin": "Pin",
+        "un_pin": "Un pin"
       }
     }
   },

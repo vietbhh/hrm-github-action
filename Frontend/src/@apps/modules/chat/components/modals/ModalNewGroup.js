@@ -46,7 +46,7 @@ const ModalNewGroup = (props) => {
       type: "group",
       user: member,
       new: 0,
-      pin: 0,
+      pin: [],
       avatar: "",
       background: ""
     }

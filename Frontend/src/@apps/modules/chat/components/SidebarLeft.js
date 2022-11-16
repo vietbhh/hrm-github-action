@@ -26,6 +26,8 @@ import {
   InputGroupText,
   Label
 } from "reactstrap"
+import { Dropdown, Menu } from "antd"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 
 const SidebarLeft = (props) => {
   // ** Props & Store
@@ -42,7 +44,8 @@ const SidebarLeft = (props) => {
     setHasMoreHistory,
     handleAddNewGroup,
     userId,
-    setSelectedUser
+    setSelectedUser,
+    handleUpdateGroup
   } = props
   const { groups, contacts, userProfile } = store
   const [state, setState] = useMergedState({
@@ -72,9 +75,9 @@ const SidebarLeft = (props) => {
   }
 
   // ** Renders Chat
-  const renderChats = () => {
+  const renderChats = (pin = false) => {
     if (groups && groups.length) {
-      if (query.length && !filteredChat.length) {
+      if (query.length && !filteredChat.length && pin === false) {
         return (
           <li className="no-results show">
             <h6 className="mb-0">No Chats Found</h6>
@@ -83,58 +86,135 @@ const SidebarLeft = (props) => {
       } else {
         const arrToMap =
           query.length && filteredChat.length ? filteredChat : groups
+        const index = arrToMap.findIndex(
+          (item) =>
+            (pin === true && item.pin === 1) ||
+            (pin === false && item.pin === 0)
+        )
 
-        return arrToMap.map((item) => {
-          const time = formatDateToMonthShort(
-            item.chat.lastMessage ? item.chat.lastMessage.time : new Date()
+        return (
+          index > -1 && (
+            <>
+              <h4 className="chat-list-title">
+                {useFormatMessage(
+                  `modules.chat.text.${pin ? "pinned" : "recent"}`
+                )}
+              </h4>
+              <ul className="chat-users-list chat-list media-list">
+                {_.map(
+                  _.filter(arrToMap, (val) => {
+                    return (
+                      (pin === true && val.pin === 1) ||
+                      (pin === false && val.pin === 0)
+                    )
+                  }),
+                  (item) => {
+                    const time = formatDateToMonthShort(
+                      item.chat.lastMessage
+                        ? item.chat.lastMessage.time
+                        : new Date()
+                    )
+                    return (
+                      <div className="div-li-chat">
+                        <li
+                          key={item.id}
+                          onClick={() =>
+                            handleUserClick(item.id, item.fullName)
+                          }
+                          className={classnames({
+                            active: active === item.id
+                          })}>
+                          <Avatar
+                            img={item.avatar}
+                            imgHeight="42"
+                            imgWidth="42"
+                            status={item.status}
+                          />
+                          <div className="chat-info flex-grow-1">
+                            <h5 className="mb-0">{item.fullName}</h5>
+                            <CardText className="text-truncate">
+                              {!_.isEmpty(item.chat.lastUser)
+                                ? item.chat.lastUser + ": "
+                                : ""}
+                              {item.chat.lastMessage
+                                ? item.chat.lastMessage.message
+                                : groups[groups.length - 1].message}
+                            </CardText>
+                          </div>
+                          <div className="chat-meta text-nowrap">
+                            <small className="float-end mb-25 chat-time ms-25">
+                              {time}
+                            </small>
+                            {item.chat.unseenMsgs >= 1 ? (
+                              <Badge className="float-end" color="danger" pill>
+                                {item.chat.unseenMsgs &&
+                                item.chat.unseenMsgs > 9 ? (
+                                  <>
+                                    9
+                                    <sup
+                                      style={{
+                                        fontSize: "1rem",
+                                        top: "-0.1rem"
+                                      }}>
+                                      +
+                                    </sup>
+                                  </>
+                                ) : (
+                                  item.chat.unseenMsgs
+                                )}
+                              </Badge>
+                            ) : null}
+                          </div>
+                        </li>
+                        <Dropdown
+                          overlay={
+                            <Menu
+                              items={[
+                                {
+                                  key: "1",
+                                  label: (
+                                    <a
+                                      href="/"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        let dataUPdate = {
+                                          pin: arrayUnion(userId)
+                                        }
+                                        if (pin === true) {
+                                          dataUPdate = {
+                                            pin: arrayRemove(userId)
+                                          }
+                                        }
+                                        handleUpdateGroup(item.id, dataUPdate)
+                                      }}>
+                                      <i className="fa-regular fa-thumbtack me-75"></i>
+                                      {useFormatMessage(
+                                        `modules.chat.text.${
+                                          pin === true ? "un_pin" : "pin"
+                                        }`
+                                      )}
+                                    </a>
+                                  )
+                                }
+                              ]}
+                            />
+                          }
+                          placement="bottomRight"
+                          arrow={{ pointAtCenter: true }}
+                          trigger={["click"]}
+                          overlayClassName="group-option-dropdown-menu">
+                          <div className="group-option">
+                            <i className="fa-light fa-ellipsis"></i>
+                          </div>
+                        </Dropdown>
+                      </div>
+                    )
+                  }
+                )}
+              </ul>
+            </>
           )
-
-          return (
-            <li
-              key={item.id}
-              onClick={() => handleUserClick(item.id, item.fullName)}
-              className={classnames({
-                active: active === item.id
-              })}>
-              <Avatar
-                img={item.avatar}
-                imgHeight="42"
-                imgWidth="42"
-                status={item.status}
-              />
-              <div className="chat-info flex-grow-1">
-                <h5 className="mb-0">{item.fullName}</h5>
-                <CardText className="text-truncate">
-                  {!_.isEmpty(item.chat.lastUser)
-                    ? item.chat.lastUser + ": "
-                    : ""}
-                  {item.chat.lastMessage
-                    ? item.chat.lastMessage.message
-                    : groups[groups.length - 1].message}
-                </CardText>
-              </div>
-              <div className="chat-meta text-nowrap">
-                <small className="float-end mb-25 chat-time ms-25">
-                  {time}
-                </small>
-                {item.chat.unseenMsgs >= 1 ? (
-                  <Badge className="float-end" color="danger" pill>
-                    {item.chat.unseenMsgs && item.chat.unseenMsgs > 9 ? (
-                      <>
-                        9
-                        <sup style={{ fontSize: "1rem", top: "-0.1rem" }}>
-                          +
-                        </sup>
-                      </>
-                    ) : (
-                      item.chat.unseenMsgs
-                    )}
-                  </Badge>
-                ) : null}
-              </div>
-            </li>
-          )
-        })
+        )
       }
     } else {
       return null
@@ -348,12 +428,8 @@ const SidebarLeft = (props) => {
               {loadingGroup && <DefaultSpinner />}
               {!loadingGroup && (
                 <>
-                  <h4 className="chat-list-title">
-                    {useFormatMessage("modules.chat.text.recent")}
-                  </h4>
-                  <ul className="chat-users-list chat-list media-list">
-                    {renderChats()}
-                  </ul>
+                  {renderChats(true)}
+                  {renderChats()}
                   {!_.isEmpty(query) && (
                     <>
                       <h4 className="chat-list-title">Contacts</h4>

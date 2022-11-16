@@ -1,19 +1,18 @@
 // ** React Imports
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 
 // ** Custom Components
 import Avatar from "@apps/modules/download/pages/Avatar"
 import DownloadFile from "@apps/modules/download/pages/DownloadFile"
-import Photo from "./Photo"
 import AudioComponent from "./Audio"
+import EmotionsComponent from "./emotions/index"
+import Photo from "./Photo"
 import UpFile from "./UpFile"
 import VideoComponent from "./Video"
-import EmotionsComponent from "./emotions/index"
 
 // ** Third Party Components
 import classnames from "classnames"
-import EmojiPicker, { Categories, EmojiStyle, Theme } from "emoji-picker-react"
 import {
   Link2,
   Menu,
@@ -22,7 +21,6 @@ import {
   PhoneCall,
   Search,
   Send,
-  Smile,
   Video
 } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -30,6 +28,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage } from "@apps/utility/common"
+import { Image } from "antd"
 import {
   Badge,
   Button,
@@ -43,7 +42,6 @@ import {
   Spinner,
   UncontrolledDropdown
 } from "reactstrap"
-import { Image } from "antd"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -73,6 +71,11 @@ const ChatLog = (props) => {
 
   // ** State
   const [msg, setMsg] = useState("")
+  const msgRef = useRef(null)
+
+  const focusInputMsg = () => {
+    msgRef.current.focus()
+  }
 
   const scrollToMessage = () => {
     const chatContainer = ReactDOM.findDOMNode(chatArea.current)
@@ -254,17 +257,19 @@ const ChatLog = (props) => {
         } else {
           if (data.type === "image" || data.type === "image_gif") {
             return (
-              <Image.PreviewGroup>
-                {_.map(data.file, (val, index) => {
-                  return (
-                    <Photo
-                      key={index}
-                      className="chat-img"
-                      src={`/modules/chat/${selectedUser.chat.id}/other/${val.file}`}
-                    />
-                  )
-                })}
-              </Image.PreviewGroup>
+              <div style={{ minHeight: "120px" }}>
+                <Image.PreviewGroup>
+                  {_.map(data.file, (val, index) => {
+                    return (
+                      <Photo
+                        key={index}
+                        className="chat-img"
+                        src={`/modules/chat/${selectedUser.chat.id}/other/${val.file}`}
+                      />
+                    )
+                  })}
+                </Image.PreviewGroup>
+              </div>
             )
           }
         }
@@ -511,35 +516,17 @@ const ChatLog = (props) => {
             <Form className="chat-app-form" onSubmit={(e) => handleSendMsg(e)}>
               <InputGroup className="input-group-merge me-1 form-send-message">
                 <InputGroupText>
-                  <UncontrolledDropdown tag="li" className="emotions">
-                    <DropdownToggle
-                      tag="a"
-                      className="nav-link"
-                      href="/"
-                      onClick={(e) => {
-                        e.preventDefault()
-                      }}>
-                      <Smile
-                        className="cursor-pointer text-secondary"
-                        size={14}
-                      />
-                    </DropdownToggle>
-                    <DropdownMenu
-                      tag="ul"
-                      end
-                      className="dropdown-menu-media mt-0">
-                      <li className="dropdown-menu-header">
-                        <EmotionsComponent
-                          setMsg={setMsg}
-                          msg={msg}
-                          sendMessage={sendMessage}
-                          selectedUser={selectedUser}
-                        />
-                      </li>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                  <EmotionsComponent
+                    setMsg={setMsg}
+                    msg={msg}
+                    sendMessage={sendMessage}
+                    selectedUser={selectedUser}
+                    focusInputMsg={focusInputMsg}
+                  />
                 </InputGroupText>
-                <Input
+                <input
+                  className="form-control"
+                  ref={msgRef}
                   value={msg}
                   onChange={(e) => setMsg(e.target.value)}
                   placeholder="Type your message or use speech to text"

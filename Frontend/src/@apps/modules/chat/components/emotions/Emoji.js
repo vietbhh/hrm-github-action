@@ -8,17 +8,22 @@ import EmojiPicker, { Categories, EmojiStyle, Theme } from "emoji-picker-react"
 // ** Reactstrap Imports
 
 const Emoji = (props) => {
-  const { setMsg, msg } = props
+  const { setMsg, msg, focusInputMsg } = props
   return (
     <EmojiPicker
       onEmojiClick={(emojiData) => {
         setMsg(msg + emojiData.emoji)
+        focusInputMsg()
       }}
       autoFocusSearch={false}
       theme={Theme.AUTO}
       emojiStyle={EmojiStyle.NATIVE}
       emojiVersion="5.0"
       searchDisabled={false}
+      skinTonesDisabled
+      previewConfig={{
+        showPreview: false
+      }}
       categories={[
         {
           category: "suggested",

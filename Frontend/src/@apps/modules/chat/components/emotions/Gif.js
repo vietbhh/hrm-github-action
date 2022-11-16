@@ -1,16 +1,16 @@
 import ReactGiphySearchBox from "react-giphy-searchbox"
 
 const Gif = (props) => {
-  const { sendMessage, selectedUser } = props
+  const { sendMessage, selectedUser, focusInputMsg } = props
 
   return (
     <ReactGiphySearchBox
       apiKey="rvUhAQyj80vEsaA4laeRiB6Fx5WDM4Bk"
       onSelect={(item) => {
-        console.log(item)
         sendMessage(selectedUser.chat.id, item.images.fixed_width.url, {
           type: "gif"
         })
+        focusInputMsg()
       }}
       masonryConfig={[
         { columns: 2, imageWidth: 110, gutter: 5 },

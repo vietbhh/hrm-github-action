@@ -204,7 +204,7 @@ const AppChat = () => {
         type: "employee",
         user: [userId, contact.idEmployee],
         new: 1,
-        pin: 0,
+        pin: [],
         avatar: "",
         background: ""
       }
@@ -350,6 +350,10 @@ const AppChat = () => {
     }
   }
 
+  const handleUpdateGroup = async (groupId, dataUpdate) => {
+    await updateDoc(doc(db, "groups", groupId), dataUpdate)
+  }
+
   useEffect(() => {
     if (loadingEmployee === true) {
       getListEmployees()
@@ -367,6 +371,11 @@ const AppChat = () => {
           const data = docData.data()
           const id = docData.id
           let dataGroupEmployee = {}
+          let pin = 0
+          const findPin = data.pin.findIndex((item) => item === userId)
+          if (findPin > -1) {
+            pin = 1
+          }
           if (data.type === "employee") {
             const index = data.user.findIndex((item) => item !== userId)
             const employeeId = data.user[index] ? data.user[index] : 0
@@ -386,7 +395,8 @@ const AppChat = () => {
               about: "",
               avatar: employee.avatar ? employee.avatar : "",
               status: "online",
-              user: data.user
+              user: data.user,
+              pin: pin
             }
           } else {
             dataGroupEmployee = {
@@ -397,7 +407,8 @@ const AppChat = () => {
               about: "",
               avatar: "",
               status: "online",
-              user: data.user
+              user: data.user,
+              pin: pin
             }
           }
 
@@ -704,6 +715,7 @@ const AppChat = () => {
         handleAddNewGroup={handleAddNewGroup}
         userId={userId}
         setSelectedUser={setSelectedUser}
+        handleUpdateGroup={handleUpdateGroup}
       />
       <div className="content-right">
         <div className="content-wrapper">
