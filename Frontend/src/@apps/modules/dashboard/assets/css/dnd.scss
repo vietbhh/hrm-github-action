@@ -1,5 +1,11 @@
 @import "@scss/friday";
 
+.react-draggable-transparent-selection {
+  .dnd .layout .react-grid-item {
+    cursor: grabbing;
+  }
+}
+
 .dnd {
   .layout {
     min-height: 200px;
