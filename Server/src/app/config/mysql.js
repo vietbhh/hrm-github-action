@@ -1,6 +1,4 @@
-import Sequelize from "sequelize"
-
-//const Sequelize = require("sequelize").Sequelize
+import { Sequelize } from "sequelize"
 
 const mysql = new Sequelize(
   process.env.MYSQL_DATABASE,

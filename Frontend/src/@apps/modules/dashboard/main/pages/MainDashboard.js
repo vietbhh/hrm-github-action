@@ -47,7 +47,7 @@ const MainDashboard = ({ listComponent }) => {
   const loadingDashboard = useSelector((state) => state.layout.loadingDashboard)
   const dispatch = useDispatch()
   const ability = useContext(AbilityContext)
-
+  const customizeDashboard = true
   const [state, setState] = useMergedState({
     windowWidthDefault: window.innerWidth,
 
@@ -118,7 +118,9 @@ const MainDashboard = ({ listComponent }) => {
                   maxW: data[index]["data_grid"]["maxW"],
                   maxH: data[index]["data_grid"]["maxH"],
                   static: data[index]["data_grid"]["static"],
-                  isDraggable: data[index]["data_grid"]["isDraggable"]
+                  isDraggable: customizeDashboard
+                    ? data[index]["data_grid"]["isDraggable"]
+                    : false
                 },
                 show: true
               }
@@ -223,7 +225,9 @@ const MainDashboard = ({ listComponent }) => {
                 maxW: dataComponent[index]["data_grid"]["maxW"],
                 maxH: dataComponent[index]["data_grid"]["maxH"],
                 static: dataComponent[index]["data_grid"]["static"],
-                isDraggable: dataComponent[index]["data_grid"]["isDraggable"]
+                isDraggable: customizeDashboard
+                  ? dataComponent[index]["data_grid"]["isDraggable"]
+                  : false
               },
               show: true
             }
@@ -383,7 +387,10 @@ const MainDashboard = ({ listComponent }) => {
                 rowHeight={10}
                 onLayoutChange={onLayoutChange}
                 onDrop={onDrop}
-                isDroppable={true}
+                isDraggable={customizeDashboard}
+                isResizable={customizeDashboard}
+                isBounded={customizeDashboard}
+                isDroppable={customizeDashboard}
                 droppingItem={state.data_drop}>
                 {_.map(
                   _.filter(state.data, (item) => {
@@ -427,6 +434,7 @@ const MainDashboard = ({ listComponent }) => {
           mask={false}
           onClose={() => setState({ visible: !state.visible })}
           visible={state.visible}>
+            
           {_.map(
             _.filter(state.data, (item) => {
               return (

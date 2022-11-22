@@ -5,10 +5,7 @@ import { cloneElement, Fragment, lazy } from "react"
 import CoreRoutes from "./Core"
 
 // ** Layouts
-import BlankLayout from "@layouts/BlankLayout"
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
-import HorizontalLayout from "@src/layouts/HorizontalLayout"
-import VerticalLayout from "@src/layouts/VerticalLayout"
 
 // ** Route Components
 import PrivateRoute from "@components/routes/PrivateRoute"
@@ -16,13 +13,13 @@ import PublicRoute from "@components/routes/PublicRoute"
 
 // ** Utils
 import { isUndefined } from "@apps/utility/handleData"
+import {
+  defaultLayout as defaultLayoutConfig,
+  layoutConfig,
+  layoutList
+} from "@src/layouts/config"
 import { isObjEmpty } from "@utils"
 import { Navigate } from "react-router-dom"
-import {
-  layoutConfig,
-  layoutList,
-  defaultLayout as defaultLayoutConfig
-} from "@src/layouts/config"
 const getLayout = layoutConfig
 
 // ** Document title
@@ -33,7 +30,6 @@ const DefaultRoute = "/dashboard"
 
 // ** Merge Routes
 const Routes = [...CoreRoutes]
-
 const getRouteMeta = (route) => {
   if (isObjEmpty(route.element.props)) {
     if (route.meta) {
@@ -74,7 +70,6 @@ const handleRouteParams = (route) => {
 // ** Return Filtered Array of Routes & Paths
 const MergeLayoutRoutes = (layout, defaultLayout, listRoutes) => {
   const LayoutRoutes = []
-
   if (listRoutes) {
     listRoutes.filter((route) => {
       let isBlank = false

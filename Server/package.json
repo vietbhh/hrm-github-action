@@ -14,14 +14,11 @@
   "license": "MIT",
   "imports": {
     "#app/*": "./src/app/*",
-    "#modules/*": "./src/modules/*",
-    "#utility/*": "./src/utility/*"
-  },
-  "aliases": {
-    "@app": "src/app",
-    "@modules": "src/modules"
+    "#code/*": "./src/code/*",
+    "#utility/*": "./src/app/utility/*"
   },
   "dependencies": {
+    "@thream/socketio-jwt": "^3.0.1",
     "axios": "^1.1.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
@@ -35,7 +32,9 @@
     "mongoose-paginate-v2": "^1.7.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.0.0-rc.1",
-    "sequelize": "^6.25.3"
+    "sequelize": "^6.25.3",
+    "socket.io": "^4.5.3",
+    "xtend": "^4.0.2"
   },
   "devDependencies": {}
 }

@@ -6,7 +6,7 @@ import NavbarChat from "./NavbarChat"
 import NavbarInbox from "./NavbarInbox"
 import NavbarSearch from "../../navbar/NavbarSearch"
 import NotificationDropdown from "./NotificationDropdown"
-
+import AppDrawer from "../../navbar/AppDrawer"
 // ** Reactstrap Imports
 import {
   NavItem,
@@ -86,7 +86,8 @@ const NavbarUser = (props) => {
           saveQuickAccess={saveQuickAccess}
         />
       )}
-
+      <AppDrawer />
+      {renderBookmarks()}
       {!_.isEmpty(settingPermits) && (
         <UncontrolledDropdown
           tag="li"
@@ -122,7 +123,6 @@ const NavbarUser = (props) => {
           </DropdownMenu>
         </UncontrolledDropdown>
       )}
-      {renderBookmarks()}
     </ul>
   )
 }
