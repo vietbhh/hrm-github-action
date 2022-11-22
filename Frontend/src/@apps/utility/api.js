@@ -140,3 +140,15 @@ export const axiosApi = new API({
     }
   }
 })
+
+export const axiosNodeApi = new API({
+  url: process.env.REACT_APP_NODE_API_URL,
+  onErrors: {
+    invalid_auth_token: () => {
+      localStorage.clear()
+    },
+    other: (resError) => {
+      console(resError)
+    }
+  }
+})

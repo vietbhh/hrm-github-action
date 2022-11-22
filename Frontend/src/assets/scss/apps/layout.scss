@@ -132,7 +132,11 @@ body.modal-open {
                 &::after {
                   left: 0.4rem;
                   background-image: url(str-replace(
-                    str-replace($chevron-down, "currentColor", $primary-text-color),
+                    str-replace(
+                      $chevron-down,
+                      "currentColor",
+                      $primary-text-color
+                    ),
                     "#",
                     "%23"
                   ));
@@ -156,7 +160,11 @@ body.modal-open {
               &::after {
                 left: 0.4rem;
                 background-image: url(str-replace(
-                  str-replace($chevron-down, "currentColor", $primary-text-color),
+                  str-replace(
+                    $chevron-down,
+                    "currentColor",
+                    $primary-text-color
+                  ),
                   "#",
                   "%23"
                 ));
@@ -222,7 +230,7 @@ ul.module-menu {
     }
   }
 }
-ul.nav-left-newStyle{
+ul.nav-left-newStyle {
   li.nav-item {
     margin-bottom: 0.6rem !important;
     a.nav-link {
@@ -233,7 +241,7 @@ ul.nav-left-newStyle{
         content: none;
       }
       &.active {
-        background-color: #FFF194;
+        background-color: #fff194;
         border-radius: 12px;
         &:after {
           content: none;
@@ -259,7 +267,12 @@ ul.nav-left-newStyle{
     }
   }
 }
-.horizontal-menu .header-navbar.navbar-brand-center .navbar-header .navbar-brand .brand-logo img {
+.horizontal-menu
+  .header-navbar.navbar-brand-center
+  .navbar-header
+  .navbar-brand
+  .brand-logo
+  img {
   max-width: 90px !important;
 }
 
@@ -268,7 +281,7 @@ ul.nav-left-newStyle{
   .erp-box-nav {
     border-right: 1px solid RGB(191, 191, 191, 0.4);
     padding-right: 2rem;
-    
+
     h1.box-title {
       font-style: normal;
       font-weight: 600;
@@ -462,5 +475,23 @@ div {
   img {
     height: 60px;
     width: 60px;
+  }
+}
+
+.app-drawer-menu {
+  background: #ffffff;
+  box-shadow: 0px 4px 24px rgba(221, 218, 235, 0.65);
+  border-radius: 12px;
+  border: none;
+  padding: 32px 25px;
+  width: 300px !important;
+  .app-drawer-item {
+    p {
+      font-weight: 400;
+      font-size: 9px;
+      color: $primary-text-color;
+      white-space: nowrap;
+      padding-bottom: 15px;
+    }
   }
 }

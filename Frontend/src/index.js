@@ -39,10 +39,10 @@ import { store } from "./redux/store"
 import * as serviceWorker from "./serviceWorker"
 import { AbilityContext } from "./utility/context/Can"
 import { ThemeContext } from "./utility/context/ThemeColors"
+import { SocketContextWrap } from "utility/context/Socket"
 
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"))
-
 if (isUserLoggedIn()) {
   store.dispatch(handleAppLoading(true))
   fetchProfile().then(({ permits, settings }) => {
@@ -59,18 +59,19 @@ if (isUserLoggedIn()) {
 }
 const container = document.getElementById("root")
 const root = createRoot(container)
-
 root.render(
   <BrowserRouter>
     <Provider store={store}>
       <Suspense fallback={<AppSpinner />}>
         <AbilityContext.Provider value={ability}>
           <ThemeContext>
-            <LazyApp />
-            <Toaster
-              position={themeConfig.layout.toastPosition}
-              toastOptions={{ className: "react-hot-toast" }}
-            />
+            <SocketContextWrap>
+              <LazyApp />
+              <Toaster
+                position={themeConfig.layout.toastPosition}
+                toastOptions={{ className: "react-hot-toast" }}
+              />
+            </SocketContextWrap>
           </ThemeContext>
         </AbilityContext.Provider>
       </Suspense>
