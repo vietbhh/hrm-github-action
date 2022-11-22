@@ -358,11 +358,15 @@
                     .has-reaction-react {
                       position: absolute;
                       bottom: -15px;
-                      right: 20px;
+                      right: 5px;
                       background: #fff;
                       border-radius: 12px;
                       padding: 1px;
                       cursor: pointer;
+
+                      small {
+                        color: #82868b;
+                      }
                     }
                   }
 
@@ -381,6 +385,7 @@
                     box-shadow: unset;
                     margin-bottom: 3px;
                     padding: 0.4rem 1rem;
+                    position: relative;
 
                     p {
                       font-size: 12px;

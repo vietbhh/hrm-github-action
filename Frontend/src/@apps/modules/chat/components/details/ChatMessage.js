@@ -125,7 +125,85 @@ const ChatMessage = (props) => {
 
   // ** Renders user chat
   const renderChats = () => {
-    const renderFile = (data, className, time) => {
+    const renderHasReaction = (chat) => {
+      const renderItemReactionDropdown = (react, time) => {
+        const items = []
+        if (react) {
+          _.forEach(react, (val_react, index_react) => {
+            _.forEach(val_react, (val, index) => {
+              const index_employee = dataEmployees.findIndex(
+                (item_employee) => item_employee.id === index
+              )
+              if (index_employee > -1) {
+                items.push({
+                  key: index,
+                  label: (
+                    <>
+                      <Avatar
+                        imgWidth={38}
+                        imgHeight={38}
+                        className="box-shadow-1 cursor-pointer"
+                        src={dataEmployees[index_employee].avatar}
+                      />
+                      <div
+                        className="react-dropdown-name ms-1 me-2"
+                        onClick={() => {
+                          if (index === userId) {
+                            updateMessage(selectedUser.chat.id, time, {
+                              react: arrayRemove({ [userId]: val })
+                            })
+                          }
+                        }}>
+                        <span>{dataEmployees[index_employee].full_name}</span>
+                        {index === userId && (
+                          <small>
+                            {useFormatMessage(
+                              "modules.chat.text.click_to_remove"
+                            )}
+                          </small>
+                        )}
+                      </div>
+                      <span className="ms-auto">{handleGetReaction(val)}</span>
+                    </>
+                  )
+                })
+              }
+            })
+          })
+        }
+        return items
+      }
+
+      let data_react = {}
+      _.forEach(chat.react, (val_react, index_react) => {
+        _.forEach(val_react, (val) => {
+          data_react = { ...data_react, [val]: val }
+        })
+      })
+
+      return (
+        <Dropdown
+          overlay={
+            <Menu items={renderItemReactionDropdown(chat.react, chat.time)} />
+          }
+          placement="top"
+          overlayClassName="chat-content-reaction-dropdown-more dropdown-react"
+          arrow={{
+            pointAtCenter: true
+          }}>
+          <div className="has-reaction-react">
+            {_.map(data_react, (val_react) => {
+              return handleGetReaction(val_react)
+            })}
+            {chat.react.length > 1 && (
+              <small className="ms-25 me-25">{chat.react.length}</small>
+            )}
+          </div>
+        </Dropdown>
+      )
+    }
+
+    const renderFile = (data, className, chat, index2) => {
       if (data.type === "image" || data.type === "image_gif") {
         return (
           <div className="chat-content chat-content-img">
@@ -133,6 +211,9 @@ const ChatMessage = (props) => {
               className="chat-img"
               src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
             />
+            {!_.isEmpty(chat.react) &&
+              index2 === chat.file.length - 1 &&
+              renderHasReaction(chat)}
           </div>
         )
       } else if (data.type === "video") {
@@ -141,6 +222,9 @@ const ChatMessage = (props) => {
             <VideoComponent
               src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
             />
+            {!_.isEmpty(chat.react) &&
+              index2 === chat.file.length - 1 &&
+              renderHasReaction(chat)}
           </div>
         )
       } else if (data.type === "audio") {
@@ -149,6 +233,9 @@ const ChatMessage = (props) => {
             <AudioComponent
               src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
             />
+            {!_.isEmpty(chat.react) &&
+              index2 === chat.file.length - 1 &&
+              renderHasReaction(chat)}
           </div>
         )
       } else {
@@ -163,7 +250,10 @@ const ChatMessage = (props) => {
                 <span className="align-middle ms-50">{data.file}</span>
               </Badge>
             </DownloadFile>
-            <p className="time">{formatTime(time)}</p>
+            <p className="time">{formatTime(chat.time)}</p>
+            {!_.isEmpty(chat.react) &&
+              index2 === chat.file.length - 1 &&
+              renderHasReaction(chat)}
           </div>
         )
       }
@@ -257,12 +347,14 @@ const ChatMessage = (props) => {
           return (
             <div className={`chat-content ${className}`}>
               {renderMessage(chat)}
+              {!_.isEmpty(chat.react) && renderHasReaction(chat)}
             </div>
           )
         } else if (chat.type === "gif") {
           return (
             <div key={index} className={`chat-content chat-content-gif`}>
               <img src={chat.msg} />
+              {!_.isEmpty(chat.react) && renderHasReaction(chat)}
             </div>
           )
         } else if (chat.type === "image" || chat.type === "image_gif") {
@@ -278,13 +370,14 @@ const ChatMessage = (props) => {
                   )
                 })}
               </Image.PreviewGroup>
+              {!_.isEmpty(chat.react) && renderHasReaction(chat)}
             </div>
           )
         } else {
           return _.map(chat.file, (val, index2) => {
             return (
               <Fragment key={index2}>
-                {renderFile(val, className, chat.time)}
+                {renderFile(val, className, chat, index2)}
               </Fragment>
             )
           })
@@ -571,55 +664,6 @@ const ChatMessage = (props) => {
         _avatar = dataEmployees[index_avatar].avatar
       }
 
-      const renderItemReactionDropdown = (react, time) => {
-        const items = []
-
-        if (react) {
-          _.forEach(react, (val_react, index_react) => {
-            _.forEach(val_react, (val, index) => {
-              const index_employee = dataEmployees.findIndex(
-                (item_employee) => item_employee.id === index
-              )
-              if (index_employee > -1) {
-                items.push({
-                  key: index,
-                  label: (
-                    <>
-                      <Avatar
-                        imgWidth={38}
-                        imgHeight={38}
-                        className="box-shadow-1 cursor-pointer"
-                        src={dataEmployees[index_employee].avatar}
-                      />
-                      <div
-                        className="react-dropdown-name ms-1 me-2"
-                        onClick={() => {
-                          if (index === userId) {
-                            updateMessage(selectedUser.chat.id, time, {
-                              react: arrayRemove({ [userId]: val })
-                            })
-                          }
-                        }}>
-                        <span>{dataEmployees[index_employee].full_name}</span>
-                        {index === userId && (
-                          <small>
-                            {useFormatMessage(
-                              "modules.chat.text.click_to_remove"
-                            )}
-                          </small>
-                        )}
-                      </div>
-                      <span className="ms-auto">{handleGetReaction(val)}</span>
-                    </>
-                  )
-                })
-              }
-            })
-          })
-        }
-        return items
-      }
-
       return (
         <div
           key={index}
@@ -654,36 +698,6 @@ const ChatMessage = (props) => {
                         : "chat-content-middle"
                       : "chat-content-one"
                   )}
-                  {!_.isEmpty(chat.react) && (
-                    <Dropdown
-                      overlay={
-                        <Menu
-                          items={renderItemReactionDropdown(
-                            chat.react,
-                            chat.time
-                          )}
-                        />
-                      }
-                      placement="top"
-                      overlayClassName="chat-content-reaction-dropdown-more dropdown-react"
-                      arrow={{
-                        pointAtCenter: true
-                      }}>
-                      <div className="has-reaction-react">
-                        {_.map(chat.react, (val_react, index_react) => {
-                          return _.map(val_react, (val) => {
-                            return handleGetReaction(val)
-                          })
-                        })}
-                        {chat.react.length > 1 && (
-                          <small className="ms-25 me-25">
-                            {chat.react.length}
-                          </small>
-                        )}
-                      </div>
-                    </Dropdown>
-                  )}
-
                   {item.senderId !== userId && renderReaction(chat)}
                 </div>
               )
