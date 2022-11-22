@@ -89,6 +89,13 @@ export default class JwtService {
     this.subscribers.push(callback)
   }
 
+  getIsAlreadyFetchingAccessToken() {
+    return this.isAlreadyFetchingAccessToken
+  }
+  setIsAlreadyFetchingAccessToken(value = true) {
+    this.isAlreadyFetchingAccessToken = value
+  }
+
   getToken() {
     return localStorage.getItem(this.jwtConfig.storageTokenKeyName)
   }

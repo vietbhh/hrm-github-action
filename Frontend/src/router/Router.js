@@ -15,10 +15,10 @@ import { getHomeRouteForLoggedInUser, getUserData } from "../utility/Utils"
 
 // ** GetRoutes
 import { getRoutes } from "./routes"
+import Error from "@apps/modules/misc/Error"
+import NotAuthorized from "@apps/modules/misc/NotAuthorized"
 
 // ** Components
-const Error = lazy(() => import("../views/pages/misc/Error"))
-const NotAuthorized = lazy(() => import("../views/pages/misc/NotAuthorized"))
 
 const Router = (props) => {
   // ** Hooks

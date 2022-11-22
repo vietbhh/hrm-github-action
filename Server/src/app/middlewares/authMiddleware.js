@@ -11,23 +11,9 @@ export const isAuth = (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET)
   } catch (error) {
-    const newError = new Error("invalid_auth_token")
+    const newError = new Error(error.name) // JsonWebTokenError | TokenExpiredError | NotBeforeError
     newError.statusCode = 401
     throw newError
-  }
-  if (!decodedToken) {
-    const error = new Error("invalid_auth_token")
-    error.statusCode = 401
-    throw error
-  }
-  var current_time = Date.now() / 1000
-  if (
-    typeof decodedToken.exp !== "undefined" &&
-    decodedToken.exp < current_time
-  ) {
-    const error = new Error("invalid_auth_token")
-    error.statusCode = 401
-    throw error
   }
   req.userId = decodedToken.userId
   next()

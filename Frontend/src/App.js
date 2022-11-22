@@ -1,11 +1,10 @@
 import AppLoadingBar from "@apps/components/common/AppLoadingBar"
+import Notification from "@apps/components/notification/Notification"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import React, { Suspense, useEffect } from "react"
 import { Helmet } from "react-helmet"
 import { useSelector } from "react-redux"
 import { requestPermission } from "./firebase"
-import Notification from "@apps/components/notification/Notification"
-
 // ** Router Import
 import Router from "./router/Router"
 

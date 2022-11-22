@@ -39,8 +39,8 @@ class Notepad extends ErpController
 
 	public function get_all_get()
 	{
-		$dataPin = $this->model->where("user_id", user_id())->where("pin", 1)->orderBy("id", "desc")->findAll();
-		$dataUnPin = $this->model->where("user_id", user_id())->where("pin", 0)->orderBy("id", "desc")->findAll();
+		$dataPin = $this->model->where("user_id", user_id())->where("pin", 1)->orderBy("updated_at", "desc")->findAll();
+		$dataUnPin = $this->model->where("user_id", user_id())->where("pin", 0)->orderBy("updated_at", "desc")->findAll();
 
 		return $this->respond(["dataPin" => $dataPin, "dataUnPin" => $dataUnPin]);
 	}

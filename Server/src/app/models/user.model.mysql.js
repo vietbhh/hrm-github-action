@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize"
-import { mysql } from "../config/mysql"
-
+import { mysql } from "../config/mysql.js"
 
 const Users = mysql.define("users", {
   username: {
