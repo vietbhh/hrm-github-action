@@ -367,6 +367,14 @@ ul.nav-left-newStyle {
     }
   }
 }
+.vertical-layout
+  .header-navbar:not(.navbar-horizontal)
+  .navbar-container
+  ul.navbar-nav
+  li.dropdown
+  .dropdown-menu {
+  top: 2.5rem !important;
+}
 .header-navbar {
   .navbar-container {
     ul.navbar-nav {
@@ -374,6 +382,10 @@ ul.nav-left-newStyle {
         .badge-up {
           background-color: $primary !important;
           color: $primary-text-color !important;
+        }
+      }
+      li {
+        .dropdown-menu {
         }
       }
       li.dropdown-user {
@@ -385,6 +397,7 @@ ul.nav-left-newStyle {
         }
         .dropdown-menu {
           width: 14rem;
+
           .dropdown-item {
             width: 100% !important;
           }
@@ -486,6 +499,9 @@ div {
   padding: 32px 25px;
   width: 300px !important;
   .app-drawer-item {
+    svg {
+      height: 37px;
+    }
     p {
       font-weight: 400;
       font-size: 9px;
