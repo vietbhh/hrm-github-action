@@ -1,4 +1,5 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import { ErpSwitch } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import "@styles/react/libs/charts/apex-charts.scss"
 import { Drawer, Skeleton } from "antd"
@@ -6,6 +7,7 @@ import classNames from "classnames"
 import { Fragment, useContext, useEffect, useState } from "react"
 import { Responsive, WidthProvider } from "react-grid-layout"
 import { useDispatch, useSelector } from "react-redux"
+import { updateLoadingDashboard } from "@store/layout"
 import { Col, Row } from "reactstrap"
 import { handleFetchProfile } from "redux/authentication"
 import { AbilityContext } from "utility/context/Can"
@@ -41,13 +43,17 @@ const LoadingComponent = () => {
   )
 }
 
-const MainDashboard = ({ listComponent }) => {
+const MainDashboard = ({
+  listComponent,
+  key_dashboard_widget = "dashboard_widget_default"
+}) => {
   const auth = useSelector((state) => state.auth)
-  const settingWidget = auth.settings.dashboard_widget
+  const dataDashboardWidget = { ...auth.settings.dashboard_widget }
+  const settingWidget = auth.settings.dashboard_widget[key_dashboard_widget]
   const loadingDashboard = useSelector((state) => state.layout.loadingDashboard)
   const dispatch = useDispatch()
   const ability = useContext(AbilityContext)
-  const customizeDashboard = true
+  const customizeDashboard = auth.settings.widget_dnd
   const [state, setState] = useMergedState({
     windowWidthDefault: window.innerWidth,
 
@@ -117,10 +123,8 @@ const MainDashboard = ({ listComponent }) => {
                   minH: data[index]["data_grid"]["minH"],
                   maxW: data[index]["data_grid"]["maxW"],
                   maxH: data[index]["data_grid"]["maxH"],
-                  static: data[index]["data_grid"]["static"],
+                  static: !customizeDashboard,
                   isDraggable: customizeDashboard
-                    ? data[index]["data_grid"]["isDraggable"]
-                    : false
                 },
                 show: true
               }
@@ -224,10 +228,8 @@ const MainDashboard = ({ listComponent }) => {
                 minH: dataComponent[index]["data_grid"]["minH"],
                 maxW: dataComponent[index]["data_grid"]["maxW"],
                 maxH: dataComponent[index]["data_grid"]["maxH"],
-                static: dataComponent[index]["data_grid"]["static"],
+                static: !customizeDashboard,
                 isDraggable: customizeDashboard
-                  ? dataComponent[index]["data_grid"]["isDraggable"]
-                  : false
               },
               show: true
             }
@@ -284,10 +286,11 @@ const MainDashboard = ({ listComponent }) => {
   }
 
   const saveWidget = (data) => {
-    const param = { data: JSON.stringify(data) }
+    dataDashboardWidget[key_dashboard_widget] = data
+    const param = { data: JSON.stringify(dataDashboardWidget) }
     DashboardApi.postSaveWidget(param).then((res) => {
       setReduxAuth(res.data)
-      localStorage.setItem("dashboard_widget", JSON.stringify(res.data))
+      localStorage.setItem("dashboard_widget", JSON.stringify(data))
       setState({ loadingOnChange: false, loadingRemove: false })
     })
   }
@@ -307,9 +310,6 @@ const MainDashboard = ({ listComponent }) => {
       const newData = [...state.data]
       const _settingWidget = { lg: layout }
       handleDataLayout(newData, _settingWidget)
-
-      //saveWidget(layout)
-      //setState({ loading_drop: false })
     }
   }
 
@@ -434,7 +434,31 @@ const MainDashboard = ({ listComponent }) => {
           mask={false}
           onClose={() => setState({ visible: !state.visible })}
           visible={state.visible}>
-            
+          <Row>
+            <Col sm="12">
+              <ErpSwitch
+                defaultValue={customizeDashboard}
+                label="On/Off Widget"
+                className="mb-1"
+                onChange={(e) => {
+                  dispatch(updateLoadingDashboard(true))
+                  setTimeout(() => {
+                    dispatch(
+                      handleFetchProfile({
+                        userData: auth.userData,
+                        permits: auth.permits,
+                        settings: {
+                          ...auth.settings,
+                          widget_dnd: e.target.checked
+                        }
+                      })
+                    )
+                    dispatch(updateLoadingDashboard(false))
+                  }, 300)
+                }}
+              />
+            </Col>
+          </Row>
           {_.map(
             _.filter(state.data, (item) => {
               return (
@@ -447,12 +471,6 @@ const MainDashboard = ({ listComponent }) => {
                   key={index}
                   draggable={true}
                   onDragStart={(e) => {
-                    // const crt = e.target.cloneNode(true)
-                    // crt.classList.add("dnd")
-                    // crt.classList.add("isDndHold")
-                    // document.body.appendChild(crt)
-                    // e.dataTransfer.setDragImage(crt, 0, 0)
-
                     e.target.classList.add("isDragging")
                     setState({
                       data_drop: { ...state.data_drop, ...value.data_grid },
@@ -461,10 +479,6 @@ const MainDashboard = ({ listComponent }) => {
                   }}
                   onDragEnd={(e) => {
                     e.target.classList.remove("isDragging")
-                    // const elements = document.getElementsByClassName("isDndHold")
-                    // while (elements.length > 0) {
-                    //   elements[0].parentNode.removeChild(elements[0])
-                    // }
                     setState({
                       data_drop: { i: "", w: 4, h: 2 },
                       loading_drop: false
