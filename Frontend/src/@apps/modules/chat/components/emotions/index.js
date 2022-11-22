@@ -56,7 +56,7 @@ const index = (props) => {
       <Smile
         ref={emotionIconRef}
         className="cursor-pointer text-secondary"
-        size={14}
+        size={20}
         onClick={() => {
           if (showEmotion === false) {
             setShowEmotion(true)

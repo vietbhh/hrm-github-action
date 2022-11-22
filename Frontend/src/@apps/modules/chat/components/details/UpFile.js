@@ -18,7 +18,7 @@ import {
   ModalFooter,
   Row
 } from "reactstrap"
-import { ChatApi } from "../common/api"
+import { ChatApi } from "../../common/api"
 
 const UpFile = (props) => {
   const { updateMessage, selectedUser } = props
@@ -136,7 +136,7 @@ const UpFile = (props) => {
         className="attachment-icon mb-0"
         for="attach-doc"
         style={{ width: "30px" }}>
-        <Paperclip className="cursor-pointer text-secondary" size={14} />
+        <Paperclip className="cursor-pointer text-secondary" size={20} />
         <input
           type="file"
           id="attach-doc"

@@ -245,7 +245,7 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: "erp-fullWidth",
-      layout: "chat"
+      layout: "drive"
     }
   },
   {
@@ -282,7 +282,8 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       appLayout: true,
-      className: "chat-application"
+      className: "chat-application",
+      layout: "chat"
     }
   }
 ]

@@ -38,9 +38,9 @@ import {
 // ** style
 import "@styles/base/pages/app-chat.scss"
 import "@styles/base/pages/app-chat-list.scss"
-import "../assets/chat.scss"
+import "../assets/scss/chat.scss"
 
-const AppChat = () => {
+const AppChat = (props) => {
   const [state, setState] = useMergedState({
     groups: [],
     contacts: [],
@@ -92,6 +92,26 @@ const AppChat = () => {
   const [loadingGroup, setLoadingGroup] = useState(true)
   const [loadingMessage, setLoadingMessage] = useState(true)
   const [hasMoreHistory, setHasMoreHistory] = useState(true)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  // ** Update Window Width
+  const handleWindowWidth = () => {
+    setWindowWidth(window.innerWidth)
+  }
+  //** Sets Window Size & Layout Props
+  useEffect(() => {
+    if (window !== undefined) {
+      window.addEventListener("resize", handleWindowWidth)
+    }
+
+    if (!_.isEmpty(state.selectedUser)) {
+      if (windowWidth > 1366) {
+        setUserSidebarRight(true)
+      } else {
+        setUserSidebarRight(false)
+      }
+    }
+  }, [windowWidth])
 
   // ** Sidebar & overlay toggle functions
   const handleSidebar = () => setSidebar(!sidebar)
@@ -117,7 +137,10 @@ const AppChat = () => {
 
   // ** handle state
   const setGroups = (data) => setState({ groups: data })
-  const setSelectedUser = (data) => setState({ selectedUser: data })
+  const setSelectedUser = (data) => {
+    setState({ selectedUser: data })
+    handleUser(data.contact)
+  }
   const setContacts = (data) => setState({ contacts: data })
   const setUserProfile = (data) => setState({ userProfile: data })
 
@@ -396,7 +419,27 @@ const AppChat = () => {
               avatar: employee.avatar ? employee.avatar : "",
               status: "online",
               user: data.user,
-              pin: pin
+              pin: pin,
+              type: data.type,
+              personalInfo: {
+                email: employee.email ? employee.email : "",
+                phone: employee.phone ? employee.phone : "",
+                social_facebook: employee.social_facebook
+                  ? employee.social_facebook
+                  : "",
+                social_instagram: employee.social_instagram
+                  ? employee.social_instagram
+                  : "",
+                social_telegram: employee.social_telegram
+                  ? employee.social_telegram
+                  : "",
+                social_twitter: employee.social_twitter
+                  ? employee.social_twitter
+                  : "",
+                social_youtube: employee.social_youtube
+                  ? employee.social_youtube
+                  : ""
+              }
             }
           } else {
             dataGroupEmployee = {
@@ -408,7 +451,17 @@ const AppChat = () => {
               avatar: "",
               status: "online",
               user: data.user,
-              pin: pin
+              pin: pin,
+              type: data.type,
+              personalInfo: {
+                email: "",
+                phone: "",
+                social_facebook: "",
+                social_instagram: "",
+                social_telegram: "",
+                social_twitter: "",
+                social_youtube: ""
+              }
             }
           }
 
@@ -569,7 +622,9 @@ const AppChat = () => {
           about: employee.about,
           avatar: employee.avatar,
           status: employee.status,
-          user: employee.user
+          user: employee.user,
+          type: employee.type,
+          personalInfo: employee.personalInfo
         }
       }
       setSelectedUser(selectedUser)
@@ -616,7 +671,8 @@ const AppChat = () => {
                 senderId: data.sender_id,
                 type: data.type,
                 status: data.status,
-                file: data.file
+                file: data.file,
+                react: data.react
               }
             ]
           }
@@ -636,7 +692,8 @@ const AppChat = () => {
                 senderId: data.sender_id,
                 type: data.type,
                 status: data.status,
-                file: data.file
+                file: data.file,
+                react: data.react
               }
               chat = chat_new
               dispatch(
@@ -691,7 +748,9 @@ const AppChat = () => {
           about: employee.about,
           avatar: employee.avatar,
           status: employee.status,
-          user: employee.user
+          user: employee.user,
+          type: employee.type,
+          personalInfo: employee.personalInfo
         }
       }
       setSelectedUser(selectedUser)
@@ -719,18 +778,17 @@ const AppChat = () => {
       />
       <div className="content-right">
         <div className="content-wrapper">
-          <div className="content-body">
+          <div
+            className={`content-body ${
+              userSidebarRight === true ? "sidebar-right-show" : ""
+            }`}>
             <div
               className={classnames("body-content-overlay", {
-                show:
-                  userSidebarRight === true ||
-                  sidebar === true ||
-                  userSidebarLeft === true
+                show: sidebar === true || userSidebarLeft === true
               })}
               onClick={handleOverlayClick}></div>
             <Chat
               store={state}
-              handleUser={handleUser}
               handleSidebar={handleSidebar}
               userSidebarLeft={userSidebarLeft}
               handleUserSidebarRight={handleUserSidebarRight}
@@ -749,11 +807,16 @@ const AppChat = () => {
               handleSeenMessage={handleSeenMessage}
               handleUnSeenMessage={handleUnSeenMessage}
               updateMessage={updateMessage}
+              userSidebarRight={userSidebarRight}
+              windowWidth={windowWidth}
+              setUserSidebarRight={setUserSidebarRight}
+              dataEmployees={dataEmployees}
             />
             <UserProfileSidebar
               user={user}
               userSidebarRight={userSidebarRight}
               handleUserSidebarRight={handleUserSidebarRight}
+              dataEmployees={dataEmployees}
             />
           </div>
         </div>

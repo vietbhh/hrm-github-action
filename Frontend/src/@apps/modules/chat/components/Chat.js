@@ -4,49 +4,22 @@ import ReactDOM from "react-dom"
 
 // ** Custom Components
 import Avatar from "@apps/modules/download/pages/Avatar"
-import DownloadFile from "@apps/modules/download/pages/DownloadFile"
-import AudioComponent from "./Audio"
+import ChatMessage from "./details/ChatMessage"
+import UpFile from "./details/UpFile"
 import EmotionsComponent from "./emotions/index"
-import Photo from "./Photo"
-import UpFile from "./UpFile"
-import VideoComponent from "./Video"
 
 // ** Third Party Components
 import classnames from "classnames"
-import {
-  Link2,
-  Menu,
-  MessageSquare,
-  MoreVertical,
-  PhoneCall,
-  Search,
-  Send,
-  Video
-} from "react-feather"
+import { Menu as MenuIcon, MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { useFormatMessage } from "@apps/utility/common"
-import { Image } from "antd"
-import {
-  Badge,
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Form,
-  Input,
-  InputGroup,
-  InputGroupText,
-  Spinner,
-  UncontrolledDropdown
-} from "reactstrap"
+import { Badge, Form, InputGroup, InputGroupText } from "reactstrap"
 
 const ChatLog = (props) => {
   // ** Props & Store
   const {
-    handleUser,
     handleUserSidebarRight,
     handleSidebar,
     store,
@@ -65,7 +38,10 @@ const ChatLog = (props) => {
     unread,
     handleSeenMessage,
     handleUnSeenMessage,
-    updateMessage
+    updateMessage,
+    userSidebarRight,
+    windowWidth,
+    setUserSidebarRight
   } = props
   const { userProfile, selectedUser } = store
 
@@ -101,235 +77,38 @@ const ChatLog = (props) => {
         } else {
           handleUnSeenMessage(selectedUser.chat.id)
         }
+
+        setTimeout(() => {
+          if (
+            chatContainer.scrollHeight -
+              chatContainer.scrollTop -
+              chatContainer.clientHeight <=
+              200 ||
+            chatContainer.scrollTop === 0 ||
+            senderId === userId
+          ) {
+            scrollToBottom()
+          }
+        }, 700)
       }
     }
     setMsg("")
   }, [selectedUser, loadingMessage, chats])
 
-  // ** Formats chat data based on sender
-  const formattedChatData = () => {
-    let chatLog = []
-    if (!_.isEmpty(chats)) {
-      chatLog = chats
-      if (!_.isEmpty(chatHistory)) {
-        const _chatHistory = [...chatHistory]
-        _chatHistory.pop()
-        chatLog = [..._chatHistory, ...chats]
-      }
-    }
-
-    const formattedChatLog = []
-    let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : undefined
-    let msgGroup = {
-      senderId: chatMessageSenderId,
-      messages: []
-    }
-    chatLog.forEach((msg, index) => {
-      if (chatMessageSenderId === msg.senderId) {
-        msgGroup.messages.push({
-          msg: msg.message,
-          time: msg.time,
-          ...msg
-        })
+  useEffect(() => {
+    const selectedUserLen = Object.keys(selectedUser).length
+    if (selectedUserLen) {
+      if (windowWidth > 1366) {
+        setUserSidebarRight(true)
       } else {
-        chatMessageSenderId = msg.senderId
-        formattedChatLog.push(msgGroup)
-        msgGroup = {
-          senderId: msg.senderId,
-          messages: [
-            {
-              msg: msg.message,
-              time: msg.time,
-              ...msg
-            }
-          ]
-        }
-      }
-      if (index === chatLog.length - 1) formattedChatLog.push(msgGroup)
-    })
-    return formattedChatLog
-  }
-
-  // ** Renders user chat
-  const renderChats = () => {
-    const renderFile = (data) => {
-      if (data.type === "image" || data.type === "image_gif") {
-        return (
-          <Photo
-            className="chat-img"
-            src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-          />
-        )
-      } else if (data.type === "video") {
-        return (
-          <VideoComponent
-            src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-          />
-        )
-      } else if (data.type === "audio") {
-        return (
-          <AudioComponent
-            src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-          />
-        )
-      } else {
-        return (
-          <DownloadFile
-            className="align-items-center"
-            src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-            fileName={data.file}>
-            <Badge color="light-secondary" pill>
-              <Link2 size={12} />
-              <span className="align-middle ms-50">{data.file}</span>
-            </Badge>
-          </DownloadFile>
-        )
+        setUserSidebarRight(false)
       }
     }
-
-    const renderMessage = (data) => {
-      if (data.type === "text") {
-        return <p>{data.msg}</p>
-      } else if (data.type === "gif") {
-        return <img className="chat-img" src={data.msg} />
-      } else {
-        if (data.status === "loading") {
-          if (data.type === "image" || data.type === "image_gif") {
-            return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} image...{" "}
-                <Spinner size="sm" />
-              </>
-            )
-          }
-          if (data.type === "video") {
-            return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} video...{" "}
-                <Spinner size="sm" />
-              </>
-            )
-          }
-          if (data.type === "audio") {
-            return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} audio...{" "}
-                <Spinner size="sm" />
-              </>
-            )
-          }
-          if (data.type === "file") {
-            return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} file...{" "}
-                <Spinner size="sm" />
-              </>
-            )
-          }
-          return (
-            <>
-              {useFormatMessage("modules.chat.text.sending")}...{" "}
-              <Spinner size="sm" />
-            </>
-          )
-        } else if (data.status === "error") {
-          if (data.type === "image" || data.type === "image_gif") {
-            return (
-              <p>Image {useFormatMessage("modules.chat.text.sent_error")}</p>
-            )
-          }
-          if (data.type === "video") {
-            return (
-              <p>Video {useFormatMessage("modules.chat.text.sent_error")}</p>
-            )
-          }
-          if (data.type === "audio") {
-            return (
-              <p>Audio {useFormatMessage("modules.chat.text.sent_error")}</p>
-            )
-          }
-          if (data.type === "file") {
-            return (
-              <p>File {useFormatMessage("modules.chat.text.sent_error")}</p>
-            )
-          }
-          return <p>{useFormatMessage("modules.chat.text.sent_error")}</p>
-        } else {
-          if (data.type === "image" || data.type === "image_gif") {
-            return (
-              <div style={{ minHeight: "120px" }}>
-                <Image.PreviewGroup>
-                  {_.map(data.file, (val, index) => {
-                    return (
-                      <Photo
-                        key={index}
-                        className="chat-img"
-                        src={`/modules/chat/${selectedUser.chat.id}/other/${val.file}`}
-                      />
-                    )
-                  })}
-                </Image.PreviewGroup>
-              </div>
-            )
-          }
-        }
-      }
-    }
-
-    return formattedChatData().map((item, index) => {
-      return (
-        <div
-          key={index}
-          className={classnames("chat", {
-            "chat-left": item.senderId !== userId
-          })}>
-          <div className="chat-avatar">
-            <Avatar
-              imgWidth={36}
-              imgHeight={36}
-              className="box-shadow-1 cursor-pointer"
-              img={
-                item.senderId === 11
-                  ? userProfile.avatar
-                  : selectedUser.contact.avatar
-              }
-            />
-          </div>
-
-          <div className="chat-body">
-            {item.messages.map((chat, index) => {
-              if (
-                chat.type === "text" ||
-                chat.type === "image" ||
-                chat.type === "gif" ||
-                chat.status === "loading" ||
-                chat.status === "error"
-              ) {
-                return (
-                  <div key={index} className="chat-content">
-                    {renderMessage(chat)}
-                  </div>
-                )
-              } else {
-                return _.map(chat.file, (val, index2) => {
-                  return (
-                    <div key={index2} className="chat-content">
-                      {renderFile(val)}
-                    </div>
-                  )
-                })
-              }
-            })}
-          </div>
-        </div>
-      )
-    })
-  }
+  }, [selectedUser])
 
   // ** Opens right sidebar & handles its data
   const handleAvatarClick = (obj) => {
     handleUserSidebarRight()
-    handleUser(obj)
   }
 
   // ** On mobile screen open left sidebar on Start Conversation Click
@@ -384,66 +163,83 @@ const ChatLog = (props) => {
                   <div
                     className="sidebar-toggle d-block d-lg-none me-1"
                     onClick={handleSidebar}>
-                    <Menu size={21} />
+                    <MenuIcon size={21} />
                   </div>
                   <Avatar
                     imgHeight="36"
                     imgWidth="36"
-                    img={selectedUser.contact.avatar}
+                    src={selectedUser.contact.avatar}
                     status={selectedUser.contact.status}
                     className="avatar-border user-profile-toggle m-0 me-1"
                     onClick={() => handleAvatarClick(selectedUser.contact)}
                   />
-                  <h6 className="mb-0">{selectedUser.contact.fullName}</h6>
+                  <div className="chat-header-name">
+                    <h6
+                      className="mb-0 cursor-pointer"
+                      onClick={() => handleAvatarClick(selectedUser.contact)}>
+                      {selectedUser.contact.fullName}
+                    </h6>
+                    <span className="chat-header-name-status">
+                      {selectedUser.contact.status}
+                    </span>
+                  </div>
                 </div>
                 <div className="d-flex align-items-center">
-                  <PhoneCall
-                    size={18}
-                    className="cursor-pointer d-sm-block d-none me-1"
-                  />
-                  <Video
-                    size={18}
-                    className="cursor-pointer d-sm-block d-none me-1"
-                  />
-                  <Search
-                    size={18}
-                    className="cursor-pointer d-sm-block d-none"
-                  />
-                  <UncontrolledDropdown className="more-options-dropdown">
-                    <DropdownToggle
-                      className="btn-icon"
-                      color="transparent"
-                      size="sm">
-                      <MoreVertical size="18" />
-                    </DropdownToggle>
-                    <DropdownMenu end>
-                      <DropdownItem
-                        href="/"
-                        onClick={(e) => e.preventDefault()}>
-                        View Contact
-                      </DropdownItem>
-                      <DropdownItem
-                        href="/"
-                        onClick={(e) => e.preventDefault()}>
-                        Mute Notifications
-                      </DropdownItem>
-                      <DropdownItem
-                        href="/"
-                        onClick={(e) => e.preventDefault()}>
-                        Block Contact
-                      </DropdownItem>
-                      <DropdownItem
-                        href="/"
-                        onClick={(e) => e.preventDefault()}>
-                        Clear Chat
-                      </DropdownItem>
-                      <DropdownItem
-                        href="/"
-                        onClick={(e) => e.preventDefault()}>
-                        Report
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                  <svg
+                    className="me-2 cursor-pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19"
+                    height="19"
+                    viewBox="0 0 19 19"
+                    fill="none">
+                    <path
+                      d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
+                      stroke="#377DFF"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M17.4167 17.4167L15.8334 15.8334"
+                      stroke="#377DFF"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <button className="chat-header-btn-border left">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none">
+                      <path
+                        d="M6.90625 9.34375L5.75 10.5C5.50625 10.7438 5.11875 10.7438 4.86875 10.5063C4.8 10.4375 4.73125 10.375 4.6625 10.3063C4.01875 9.65625 3.4375 8.975 2.91875 8.2625C2.40625 7.55 1.99375 6.8375 1.69375 6.13125C1.4 5.41875 1.25 4.7375 1.25 4.0875C1.25 3.6625 1.325 3.25625 1.475 2.88125C1.625 2.5 1.8625 2.15 2.19375 1.8375C2.59375 1.44375 3.03125 1.25 3.49375 1.25C3.66875 1.25 3.84375 1.2875 4 1.3625C4.1625 1.4375 4.30625 1.55 4.41875 1.7125L5.86875 3.75625C5.98125 3.9125 6.0625 4.05625 6.11875 4.19375C6.175 4.325 6.20625 4.45625 6.20625 4.575C6.20625 4.725 6.1625 4.875 6.075 5.01875C5.99375 5.1625 5.875 5.3125 5.725 5.4625L5.25 5.95625C5.18125 6.025 5.15 6.10625 5.15 6.20625C5.15 6.25625 5.15625 6.3 5.16875 6.35C5.1875 6.4 5.20625 6.4375 5.21875 6.475C5.33125 6.68125 5.525 6.95 5.8 7.275C6.08125 7.6 6.38125 7.93125 6.70625 8.2625C6.76875 8.325 6.8375 8.3875 6.9 8.45C7.15 8.69375 7.15625 9.09375 6.90625 9.34375Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M13.7312 11.4563C13.7312 11.6313 13.7 11.8125 13.6375 11.9875C13.6187 12.0375 13.6 12.0875 13.575 12.1375C13.4687 12.3625 13.3313 12.575 13.15 12.775C12.8438 13.1125 12.5062 13.3563 12.125 13.5125C12.1187 13.5125 12.1125 13.5188 12.1063 13.5188C11.7375 13.6688 11.3375 13.75 10.9062 13.75C10.2688 13.75 9.5875 13.6 8.86875 13.2938C8.15 12.9875 7.43125 12.575 6.71875 12.0563C6.475 11.875 6.23125 11.6938 6 11.5L8.04375 9.45627C8.21875 9.58752 8.375 9.68752 8.50625 9.75627C8.5375 9.76877 8.575 9.78752 8.61875 9.80627C8.66875 9.82502 8.71875 9.83127 8.775 9.83127C8.88125 9.83127 8.9625 9.79377 9.03125 9.72502L9.50625 9.25627C9.6625 9.10002 9.8125 8.98127 9.95625 8.90627C10.1 8.81877 10.2437 8.77502 10.4 8.77502C10.5187 8.77502 10.6437 8.80002 10.7812 8.85627C10.9187 8.91252 11.0625 8.99377 11.2188 9.10002L13.2875 10.5688C13.45 10.6813 13.5625 10.8125 13.6312 10.9688C13.6937 11.125 13.7312 11.2813 13.7312 11.4563Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </button>
+                  <button className="chat-header-btn-border right">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none">
+                      <path
+                        d="M13.2188 3.85625C12.9625 3.71875 12.425 3.575 11.6937 4.0875L10.775 4.7375C10.7063 2.79375 9.8625 2.03125 7.8125 2.03125H4.0625C1.925 2.03125 1.09375 2.8625 1.09375 5V10C1.09375 11.4375 1.875 12.9688 4.0625 12.9688H7.8125C9.8625 12.9688 10.7063 12.2063 10.775 10.2625L11.6937 10.9125C12.0812 11.1875 12.4187 11.275 12.6875 11.275C12.9187 11.275 13.1 11.2063 13.2188 11.1438C13.475 11.0125 13.9062 10.6562 13.9062 9.7625V5.2375C13.9062 4.34375 13.475 3.9875 13.2188 3.85625ZM6.875 7.1125C6.23125 7.1125 5.7 6.5875 5.7 5.9375C5.7 5.2875 6.23125 4.7625 6.875 4.7625C7.51875 4.7625 8.05 5.2875 8.05 5.9375C8.05 6.5875 7.51875 7.1125 6.875 7.1125Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </button>
+                  <button className={`btn-icon-more`}>
+                    <MoreVertical size="28" className="icon-more" />
+                  </button>
                 </div>
               </header>
             </div>
@@ -475,7 +271,9 @@ const ChatLog = (props) => {
                 <DefaultSpinner className="class-default-spinner" />
               )}
               {!loadingMessage && selectedUser.chat ? (
-                <div className="chats">{renderChats()}</div>
+                <div className="chats">
+                  <ChatMessage {...props} />
+                </div>
               ) : null}
               {unread > 0 && (
                 <div
@@ -514,7 +312,7 @@ const ChatLog = (props) => {
             </ChatWrapper>
 
             <Form className="chat-app-form" onSubmit={(e) => handleSendMsg(e)}>
-              <InputGroup className="input-group-merge me-1 form-send-message">
+              <InputGroup className="input-group-merge form-send-message">
                 <InputGroupText>
                   <EmotionsComponent
                     setMsg={setMsg}
@@ -529,7 +327,7 @@ const ChatLog = (props) => {
                   ref={msgRef}
                   value={msg}
                   onChange={(e) => setMsg(e.target.value)}
-                  placeholder="Type your message or use speech to text"
+                  placeholder="Type a message ..."
                 />
                 <InputGroupText>
                   <UpFile
@@ -539,10 +337,19 @@ const ChatLog = (props) => {
                 </InputGroupText>
               </InputGroup>
 
-              <Button className="send" color="primary">
-                <Send size={14} className="d-lg-none" />
-                <span className="d-none d-lg-block">Send</span>
-              </Button>
+              <button className="send">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path
+                    d="M16.586 5.09924L8.76251 6.3913C3.50182 7.27084 3.07032 9.99521 7.80305 12.4491L9.89286 13.531L10.276 15.8529C11.1473 21.1123 13.8799 21.5451 16.3339 16.8123L19.9872 9.78061C21.6181 6.62185 20.0954 4.51606 16.586 5.09924ZM16.148 9.5691L12.5223 12.2179C12.3793 12.3218 12.2138 12.3546 12.0574 12.3298C11.901 12.3051 11.7538 12.2227 11.6499 12.0797C11.449 11.8032 11.5116 11.4081 11.7881 11.2072L15.4137 8.55845C15.6902 8.35757 16.0853 8.42014 16.2862 8.69664C16.4871 8.97313 16.4245 9.36821 16.148 9.5691Z"
+                    fill="white"
+                  />
+                </svg>
+              </button>
             </Form>
           </div>
         ) : null}

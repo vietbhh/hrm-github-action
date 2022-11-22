@@ -43,7 +43,7 @@ const Audio = (props) => {
     delete newProps.src
     delete newProps.alt
     return (
-      <audio style={{ height: "35px", marginBottom: "-5px" }} controls>
+      <audio controls>
         <source src={audio} />
       </audio>
     )

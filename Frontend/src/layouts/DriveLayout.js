@@ -6,13 +6,12 @@ import { Outlet } from "react-router-dom"
 import Layout from "./components/vertical/Layout"
 
 // ** Menu Items Array
-//import navigation from "@src/navigation/menuChat"
-import navigation from "@src/navigation/menuConfig"
+import navigation from "@src/navigation/menuChat"
 
 // ** import component
 import Navbar2 from "./components/custom/Navbar2"
 
-const ChatLayout = (props) => {
+const DriveLayout = (props) => {
   return (
     <Layout
       menuData={navigation}
@@ -20,12 +19,12 @@ const ChatLayout = (props) => {
       /* customMenuComponent={(customProps) => (
         <CustomMenuComponent {...customProps} />
       )} */
-      className="navbar-2 chat"
-      fixedSidebarCollapsed={true}
+      className="navbar-2"
+      fixedSidebarCollapsed={false}
       {...props}>
       <Outlet />
     </Layout>
   )
 }
 
-export default ChatLayout
+export default DriveLayout

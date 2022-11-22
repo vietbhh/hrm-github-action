@@ -846,7 +846,12 @@
         "recent": "Recent",
         "pinned": "Pinned",
         "pin": "Pin",
-        "un_pin": "Un pin"
+        "un_pin": "Un pin",
+        "reply": "Reply",
+        "forward": "Forward",
+        "copy_text": "Copy text",
+        "click_to_remove": "Click to remove",
+        "reacts_about_message": "Reacts about message"
       }
     }
   },

@@ -1,6 +1,5 @@
 // ** React Imports
 import { useState } from "react"
-import { useDispatch } from "react-redux"
 
 // ** Custom Components
 import Avatar from "@apps/modules/download/pages/Avatar"
@@ -17,17 +16,16 @@ import ModalNewGroup from "./modals/ModalNewGroup"
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { Dropdown, Menu } from "antd"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 import {
   Badge,
-  Button,
   CardText,
   Input,
   InputGroup,
   InputGroupText,
   Label
 } from "reactstrap"
-import { Dropdown, Menu } from "antd"
-import { arrayRemove, arrayUnion } from "firebase/firestore"
 
 const SidebarLeft = (props) => {
   // ** Props & Store
@@ -51,9 +49,6 @@ const SidebarLeft = (props) => {
   const [state, setState] = useMergedState({
     modalNewGroup: false
   })
-
-  // ** redux
-  const dispatch = useDispatch()
 
   // ** State
   const [query, setQuery] = useState("")
@@ -115,9 +110,8 @@ const SidebarLeft = (props) => {
                         : new Date()
                     )
                     return (
-                      <div className="div-li-chat">
+                      <div className="div-li-chat" key={item.id}>
                         <li
-                          key={item.id}
                           onClick={() =>
                             handleUserClick(item.id, item.fullName)
                           }
@@ -125,9 +119,9 @@ const SidebarLeft = (props) => {
                             active: active === item.id
                           })}>
                           <Avatar
-                            img={item.avatar}
-                            imgHeight="42"
-                            imgWidth="42"
+                            src={item.avatar}
+                            imgHeight="50"
+                            imgWidth="50"
                             status={item.status}
                           />
                           <div className="chat-info flex-grow-1">
@@ -142,28 +136,23 @@ const SidebarLeft = (props) => {
                             </CardText>
                           </div>
                           <div className="chat-meta text-nowrap">
-                            <small className="float-end mb-25 chat-time ms-25">
-                              {time}
-                            </small>
                             {item.chat.unseenMsgs >= 1 ? (
                               <Badge className="float-end" color="danger" pill>
                                 {item.chat.unseenMsgs &&
                                 item.chat.unseenMsgs > 9 ? (
                                   <>
-                                    9
-                                    <sup
-                                      style={{
-                                        fontSize: "1rem",
-                                        top: "-0.1rem"
-                                      }}>
-                                      +
-                                    </sup>
+                                    9<span style={{ fontSize: "12px" }}>+</span>
                                   </>
                                 ) : (
                                   item.chat.unseenMsgs
                                 )}
                               </Badge>
-                            ) : null}
+                            ) : (
+                              <span></span>
+                            )}
+                            <small className="float-end mb-25 chat-time ms-25">
+                              {time}
+                            </small>
                           </div>
                         </li>
                         <Dropdown
@@ -238,7 +227,7 @@ const SidebarLeft = (props) => {
             <li
               key={item.fullName}
               onClick={() => handleUserClick(item.id, item.fullName)}>
-              <Avatar img={item.avatar} imgHeight="42" imgWidth="42" />
+              <Avatar src={item.avatar} imgHeight="42" imgWidth="42" />
               <div
                 className="chat-info flex-grow-1"
                 style={{ display: "flex", alignItems: "center" }}>
@@ -297,7 +286,7 @@ const SidebarLeft = (props) => {
               <div className="header-profile-sidebar">
                 <Avatar
                   className="box-shadow-1 avatar-border"
-                  img={userProfile.avatar}
+                  src={userProfile.avatar}
                   status={status}
                   size="xl"
                 />
@@ -388,32 +377,36 @@ const SidebarLeft = (props) => {
             className={classnames("sidebar-content", {
               show: sidebar === true
             })}>
-            <div className="sidebar-close-icon" onClick={handleSidebar}>
+            {/* <div className="sidebar-close-icon" onClick={handleSidebar}>
               <X size={14} />
+            </div> */}
+            <div className="div-chat-logo">
+              <span className="chat-title">Chat</span>
+              <span className="chat-title chat-dot">.</span>
             </div>
             <div className="chat-fixed-search">
               <div className="d-flex align-items-center w-100">
-                <div
+                {/*                 <div
                   className="sidebar-profile-toggle"
                   onClick={handleUserSidebarLeft}>
                   {Object.keys(userProfile).length ? (
                     <Avatar
                       className="avatar-border"
-                      img={userProfile.avatar}
+                      src={userProfile.avatar}
                       status={status}
                       imgHeight="42"
                       imgWidth="42"
                     />
                   ) : null}
-                </div>
-                <InputGroup className="input-group-merge ms-1 w-100">
+                </div> */}
+                <InputGroup className="input-group-merge w-100 chat-input-search">
                   <InputGroupText className="round">
-                    <Search className="text-muted" size={14} />
+                    <Search className="text-muted" size={16} />
                   </InputGroupText>
                   <Input
                     value={query}
                     className="round"
-                    placeholder="Search or start a new chat"
+                    placeholder="Search"
                     onChange={handleFilter}
                   />
                 </InputGroup>
@@ -422,9 +415,9 @@ const SidebarLeft = (props) => {
             <PerfectScrollbar
               className="chat-user-list-wrapper list-group"
               options={{ wheelPropagation: false }}>
-              <Button color="primary" onClick={() => toggleModalNewGroup()}>
+              {/*  <Button color="primary" onClick={() => toggleModalNewGroup()}>
                 New Group
-              </Button>
+              </Button> */}
               {loadingGroup && <DefaultSpinner />}
               {!loadingGroup && (
                 <>
