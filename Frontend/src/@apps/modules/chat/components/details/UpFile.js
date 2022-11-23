@@ -21,7 +21,7 @@ import {
 import { ChatApi } from "../../common/api"
 
 const UpFile = (props) => {
-  const { updateMessage, selectedUser } = props
+  const { updateMessage, selectedUser, setReplyingDefault } = props
 
   const [state, setState] = useMergedState({
     linkPreview: "",
@@ -71,17 +71,28 @@ const UpFile = (props) => {
 
   const handleSaveFile = (file) => {
     const _file = handleFile(file)
+    if (_file.file_type === "image") {
+      handleSubmitSaveFile(_file.arr_file)
+    } else {
+      _.forEach(_file.arr_file, (val) => {
+        handleSubmitSaveFile([val])
+      })
+    }
+    setReplyingDefault()
+  }
+
+  const handleSubmitSaveFile = (file) => {
     const data = {
       groupId: selectedUser.chat.id,
-      file: _file.arr_file,
+      file: file,
       compress_images: state.compress_images,
-      file_type: _file.file_type
+      file_type: file[0].type
     }
     const timestamp = Date.now()
     updateMessage(selectedUser.chat.id, timestamp, {
       message: "",
       status: "loading",
-      type: _file.file_type,
+      type: file[0].type,
       timestamp: timestamp,
       file: []
     })
@@ -91,7 +102,7 @@ const UpFile = (props) => {
         updateMessage(selectedUser.chat.id, timestamp, {
           message: "",
           status: "success",
-          type: _file.file_type,
+          type: file[0].type,
           timestamp: timestamp,
           file: res.data
         })
@@ -101,7 +112,7 @@ const UpFile = (props) => {
         updateMessage(selectedUser.chat.id, timestamp, {
           message: "",
           status: "error",
-          type: _file.file_type,
+          type: file[0].type,
           timestamp: timestamp,
           file: []
         })

@@ -851,7 +851,9 @@
         "forward": "Forward",
         "copy_text": "Copy text",
         "click_to_remove": "Click to remove",
-        "reacts_about_message": "Reacts about message"
+        "reacts_about_message": "Reacts about message",
+        "replying_to": "Replying to",
+        "my_self": "my self"
       }
     }
   },

@@ -5,7 +5,14 @@ import EmojiComponent from "./Emoji"
 import GifComponent from "./Gif"
 
 const index = (props) => {
-  const { setMsg, msg, sendMessage, selectedUser, focusInputMsg } = props
+  const {
+    setMsg,
+    msg,
+    sendMessage,
+    selectedUser,
+    focusInputMsg,
+    setReplyingDefault
+  } = props
   const [showEmotion, setShowEmotion] = useState(false)
   const emotionRef = useRef(null)
   const emotionIconRef = useRef(null)
@@ -49,6 +56,7 @@ const index = (props) => {
               sendMessage={sendMessage}
               selectedUser={selectedUser}
               focusInputMsg={focusInputMsg}
+              setReplyingDefault={setReplyingDefault}
             />
           </Tabs.TabPane>
         </Tabs>

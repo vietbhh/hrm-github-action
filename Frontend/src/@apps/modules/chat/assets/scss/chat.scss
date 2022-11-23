@@ -546,6 +546,7 @@
                 .input-group-text,
                 .form-control {
                   border-color: #ffffff;
+                  z-index: 9;
                 }
 
                 .input-group-text:first-child {
@@ -680,6 +681,16 @@
                       }
                     }
                   }
+                }
+
+                .form-reply {
+                  position: absolute;
+                  width: 100%;
+                  border-radius: 16px 16px 0px 0px;
+                  bottom: 40px;
+                  background: #f0f0f0;
+                  left: 2px;
+                  padding-bottom: 20px;
                 }
               }
 

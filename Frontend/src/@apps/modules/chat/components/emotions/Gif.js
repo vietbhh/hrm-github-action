@@ -11,6 +11,7 @@ const Gif = (props) => {
           type: "gif"
         })
         focusInputMsg()
+        setReplyingDefault()
       }}
       masonryConfig={[
         { columns: 2, imageWidth: 110, gutter: 5 },

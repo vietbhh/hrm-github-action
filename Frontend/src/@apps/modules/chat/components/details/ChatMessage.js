@@ -39,7 +39,9 @@ const ChatMessage = (props) => {
     userSidebarRight,
     windowWidth,
     setUserSidebarRight,
-    dataEmployees
+    dataEmployees,
+    setReplying,
+    focusInputMsg
   } = props
   const { userProfile, selectedUser } = store
 
@@ -271,41 +273,41 @@ const ChatMessage = (props) => {
         if (data.status === "loading") {
           if (data.type === "image" || data.type === "image_gif") {
             return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} image...{" "}
-                <Spinner size="sm" />
-              </>
+              <span>
+                {useFormatMessage("modules.chat.text.sending")} image...
+                <Spinner size="sm" className="ms-50" />
+              </span>
             )
           }
           if (data.type === "video") {
             return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} video...{" "}
-                <Spinner size="sm" />
-              </>
+              <span>
+                {useFormatMessage("modules.chat.text.sending")} video...
+                <Spinner size="sm" className="ms-50" />
+              </span>
             )
           }
           if (data.type === "audio") {
             return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} audio...{" "}
-                <Spinner size="sm" />
-              </>
+              <span>
+                {useFormatMessage("modules.chat.text.sending")} audio...
+                <Spinner size="sm" className="ms-50" />
+              </span>
             )
           }
           if (data.type === "file") {
             return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")} file...{" "}
-                <Spinner size="sm" />
-              </>
+              <span>
+                {useFormatMessage("modules.chat.text.sending")} file...
+                <Spinner size="sm" className="ms-50" />
+              </span>
             )
           } else {
             return (
-              <>
-                {useFormatMessage("modules.chat.text.sending")}...{" "}
-                <Spinner size="sm" />
-              </>
+              <span>
+                {useFormatMessage("modules.chat.text.sending")}...
+                <Spinner size="sm" className="ms-50" />
+              </span>
             )
           }
         } else if (data.status === "error") {
@@ -610,6 +612,19 @@ const ChatMessage = (props) => {
 
             <Tooltip title={useFormatMessage("modules.chat.text.reply")}>
               <svg
+                onClick={() => {
+                  setReplying({
+                    replying: true,
+                    replying_message: chat.message,
+                    replying_type: chat.type,
+                    replying_timestamp: chat.time,
+                    replying_file: !_.isEmpty(chat.file)
+                      ? chat.file[0].file
+                      : [],
+                    replying_user_id: chat.senderId
+                  })
+                  focusInputMsg()
+                }}
                 className="reaction"
                 xmlns="http://www.w3.org/2000/svg"
                 width="22"

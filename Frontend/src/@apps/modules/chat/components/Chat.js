@@ -16,6 +16,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { Badge, Form, InputGroup, InputGroupText } from "reactstrap"
+import { useMergedState } from "@apps/utility/common"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -46,6 +47,28 @@ const ChatLog = (props) => {
   const { userProfile, selectedUser } = store
 
   // ** State
+  const [state, setState] = useMergedState({
+    replying: false,
+    replying_message: "",
+    replying_type: "",
+    replying_timestamp: 0,
+    replying_file: "",
+    replying_user_id: ""
+  })
+  console.log(state)
+  const setReplying = (data) => {
+    setState(data)
+  }
+  const setReplyingDefault = () => {
+    setState({
+      replying: false,
+      replying_message: "",
+      replying_type: "",
+      replying_timestamp: 0,
+      replying_file: "",
+      replying_user_id: ""
+    })
+  }
   const [msg, setMsg] = useState("")
   const msgRef = useRef(null)
 
@@ -104,6 +127,8 @@ const ChatLog = (props) => {
         setUserSidebarRight(false)
       }
     }
+
+    setReplyingDefault()
   }, [selectedUser])
 
   // ** Opens right sidebar & handles its data
@@ -127,6 +152,7 @@ const ChatLog = (props) => {
     if (msg.trim().length) {
       sendMessage(selectedUser.chat.id, msg)
       setMsg("")
+      setReplyingDefault()
     }
   }
 
@@ -272,7 +298,11 @@ const ChatLog = (props) => {
               )}
               {!loadingMessage && selectedUser.chat ? (
                 <div className="chats">
-                  <ChatMessage {...props} />
+                  <ChatMessage
+                    {...props}
+                    setReplying={setReplying}
+                    focusInputMsg={focusInputMsg}
+                  />
                 </div>
               ) : null}
               {unread > 0 && (
@@ -320,8 +350,10 @@ const ChatLog = (props) => {
                     sendMessage={sendMessage}
                     selectedUser={selectedUser}
                     focusInputMsg={focusInputMsg}
+                    setReplyingDefault={setReplyingDefault}
                   />
                 </InputGroupText>
+                {state.replying && <div className="form-reply">zxc</div>}
                 <input
                   className="form-control"
                   ref={msgRef}
@@ -333,6 +365,7 @@ const ChatLog = (props) => {
                   <UpFile
                     updateMessage={updateMessage}
                     selectedUser={selectedUser}
+                    setReplyingDefault={setReplyingDefault}
                   />
                 </InputGroupText>
               </InputGroup>

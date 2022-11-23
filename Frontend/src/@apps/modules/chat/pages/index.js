@@ -672,7 +672,8 @@ const AppChat = (props) => {
                 type: data.type,
                 status: data.status,
                 file: data.file,
-                react: data.react
+                react: data.react,
+                reply: data.reply
               }
             ]
           }
@@ -693,7 +694,8 @@ const AppChat = (props) => {
                 type: data.type,
                 status: data.status,
                 file: data.file,
-                react: data.react
+                react: data.react,
+                reply: data.reply
               }
               chat = chat_new
               dispatch(
