@@ -776,6 +776,8 @@
       "widget": "Widget",
       "remove_widget": "Remove widget",
       "no_widget": "No widget",
+      "lock_homepage_layout": "Lock homepage layout",
+      "add_widget": "Add Widget",
       "today": "Today",
       "employees": "Employees",
       "employees_total": "Total member",
@@ -1118,7 +1120,7 @@
         "delete_department": "Delete Department",
         "delete_all_department": "Delete all child department",
         "profile": "Profile",
-        "note_delete_deparment" : "* All employees must be transferred to another department"
+        "note_delete_deparment": "* All employees must be transferred to another department"
       },
       "buttons": {
         "new_employee": "New Employee"
@@ -2451,12 +2453,12 @@
         "maximum_time_per_day": "The maximum working hours per day is {time}",
         "break_time_must": "The break time must be within the working time.",
         "advance": "Advance",
-        "note_delete_workschedule" : "All employees on this schedule will switch to the default work schedule"
+        "note_delete_workschedule": "All employees on this schedule will switch to the default work schedule"
       },
       "buttons": {
         "add_new": "New Schedule",
         "duplicate": "Duplicate",
-        "set_default" : "Set Default"
+        "set_default": "Set Default"
       },
       "app_options": {
         "type": {
@@ -2476,13 +2478,13 @@
         "week": "week",
         "error_interleaved": "Number of week must be a number greater than 0 and smaller than or equal to 10.",
         "interleaved_description": "Interleaved every {number} week",
-        "change_work_schedule" : "Change work schedule?",
-        "note_edit_work_schedule" : "This action cannot be reverted and will affect the employee's past data (if any) in Time Off, Time Attendance and Payroll.<br/>We highly recommend you <b>back up the employee's data</b> before changing the work schedule.<br/>Are you sure you want to apply the new schedule to all data?",
-        "setdefault_work_schedule" : "Set default work schedule?",
-        "working_day" :"Working Day",
-        "time":"Time",
-        "break_time":"Break Time",
-        "total":"Total"
+        "change_work_schedule": "Change work schedule?",
+        "note_edit_work_schedule": "This action cannot be reverted and will affect the employee's past data (if any) in Time Off, Time Attendance and Payroll.<br/>We highly recommend you <b>back up the employee's data</b> before changing the work schedule.<br/>Are you sure you want to apply the new schedule to all data?",
+        "setdefault_work_schedule": "Set default work schedule?",
+        "working_day": "Working Day",
+        "time": "Time",
+        "break_time": "Break Time",
+        "total": "Total"
       }
     },
     "team_attendance": {
