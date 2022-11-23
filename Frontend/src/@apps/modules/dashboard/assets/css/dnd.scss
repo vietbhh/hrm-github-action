@@ -69,10 +69,6 @@
     background: lighten($primary-bg, 25%);
   }
 
-  .ant-drawer-body {
-    padding: 24px 30px;
-  }
-
   .droppable-element {
     width: 300px;
     cursor: grab;
@@ -112,6 +108,70 @@
   .isDragging {
     .droppable-element {
       border-color: $primary;
+    }
+  }
+}
+
+.dnd.widget-drawer {
+  .ant-drawer-header {
+    .ant-drawer-header-title {
+      flex-direction: row-reverse;
+
+      .ant-drawer-close {
+        color: #0087ff;
+        margin-right: 0;
+      }
+
+      .ant-drawer-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .widget-drawer-icon {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background-color: $primary;
+        }
+
+        .widget-drawer-title {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          color: #32434f;
+        }
+      }
+    }
+  }
+
+  .ant-drawer-body {
+    padding: 24px 30px;
+  }
+
+  .ant-drawer-footer {
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    .form-group {
+      margin-bottom: 0;
+      cursor: pointer;
+
+      .form-check-input {
+        cursor: pointer;
+      }
+
+      .form-check-input:checked {
+        background-color: #246bfd;
+      }
+    }
+
+    span {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 140%;
+      color: #212121;
     }
   }
 }

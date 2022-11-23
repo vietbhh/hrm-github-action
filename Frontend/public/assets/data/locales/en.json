@@ -814,8 +814,10 @@
       "title": "Dashboard",
       "empty": "Drag and drop widgets here. Open the Customize pane to get started",
       "widget": "Widget",
+      "add_widget": "Add Widget",
       "remove_widget": "Remove widget",
       "no_widget": "No widget",
+      "lock_homepage_layout": "Lock homepage layout",
       "announcement": {
         "title": "Announcement",
         "empty": "No announcements yet",
