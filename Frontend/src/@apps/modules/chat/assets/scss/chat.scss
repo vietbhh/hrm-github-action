@@ -689,8 +689,33 @@
                   border-radius: 16px 16px 0px 0px;
                   bottom: 40px;
                   background: #f0f0f0;
-                  left: 2px;
-                  padding-bottom: 20px;
+                  left: 1px;
+                  padding: 10px 10px 22px 10px;
+                  display: flex;
+                  justify-content: space-between;
+
+                  .form-reply-left {
+                    .form-reply-title {
+                      font-style: italic;
+                      font-size: 12px;
+                      display: flex;
+                      align-items: center;
+                    }
+
+                    .form-reply-content {
+                      margin: 5px 0 0 10px;
+                      font-size: 14px;
+                    }
+                  }
+
+                  .form-reply-right {
+                    .form-reply-right-icon {
+                      cursor: pointer;
+                      width: 20px;
+                      height: 20px;
+                      text-align: center;
+                    }
+                  }
                 }
               }
 

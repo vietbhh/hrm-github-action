@@ -12,11 +12,11 @@ import EmotionsComponent from "./emotions/index"
 import classnames from "classnames"
 import { Menu as MenuIcon, MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { Badge, Form, InputGroup, InputGroupText } from "reactstrap"
-import { useMergedState } from "@apps/utility/common"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -42,7 +42,8 @@ const ChatLog = (props) => {
     updateMessage,
     userSidebarRight,
     windowWidth,
-    setUserSidebarRight
+    setUserSidebarRight,
+    dataEmployees
   } = props
   const { userProfile, selectedUser } = store
 
@@ -150,7 +151,7 @@ const ChatLog = (props) => {
   const handleSendMsg = (e) => {
     e.preventDefault()
     if (msg.trim().length) {
-      sendMessage(selectedUser.chat.id, msg)
+      sendMessage(selectedUser.chat.id, msg, { reply: { ...state } })
       setMsg("")
       setReplyingDefault()
     }
@@ -161,6 +162,46 @@ const ChatLog = (props) => {
     Object.keys(selectedUser).length && selectedUser.chat
       ? PerfectScrollbar
       : "div"
+
+  const renderFormReply = () => {
+    let replying_to = useFormatMessage("modules.chat.text.my_self")
+    if (state.replying_user_id !== userId) {
+      const index_employee = dataEmployees.findIndex(
+        (item_employee) => item_employee.id === state.replying_user_id
+      )
+      if (index_employee > -1) {
+        replying_to = dataEmployees[index_employee].full_name
+      } else {
+        replying_to = ""
+      }
+    }
+
+    let replying_content = state.replying_message
+    if (state.replying_type !== "text") {
+      replying_content = state.replying_type
+    }
+
+    return (
+      <>
+        <div className="form-reply-title">
+          <svg
+            className="me-50"
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 22 22"
+            fill="none">
+            <path
+              d="M8.97989 7.14725V5.68975C8.97989 4.87392 7.98989 4.46142 7.41239 5.03892L3.20489 9.24642C2.84739 9.60392 2.84739 10.1814 3.20489 10.5389L7.41239 14.7464C7.98989 15.3239 8.97989 14.9206 8.97989 14.1048V12.5556C13.5632 12.5556 16.7716 14.0223 19.0632 17.2306C18.1466 12.6473 15.3966 8.06392 8.97989 7.14725Z"
+              fill="#C3C3C6"
+            />
+          </svg>
+          {useFormatMessage("modules.chat.text.replying_to")} {replying_to}
+        </div>
+        <div className="form-reply-content">{replying_content}</div>
+      </>
+    )
+  }
 
   return (
     <>
@@ -353,7 +394,19 @@ const ChatLog = (props) => {
                     setReplyingDefault={setReplyingDefault}
                   />
                 </InputGroupText>
-                {state.replying && <div className="form-reply">zxc</div>}
+                {state.replying && (
+                  <div className="form-reply">
+                    <div className="form-reply-left">{renderFormReply()}</div>
+                    <div className="form-reply-right">
+                      <i
+                        className="far fa-times form-reply-right-icon"
+                        onClick={() => {
+                          setReplyingDefault()
+                          focusInputMsg()
+                        }}></i>
+                    </div>
+                  </div>
+                )}
                 <input
                   className="form-control"
                   ref={msgRef}
