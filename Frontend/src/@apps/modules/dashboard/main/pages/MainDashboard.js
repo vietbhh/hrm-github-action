@@ -260,7 +260,7 @@ const MainDashboard = ({
       setState({ data: data, layouts: { lg: _settingWidget } })
       localStorage.setItem("dashboard_widget", JSON.stringify(_settingWidget))
     }
-  }, [])
+  }, [customizeDashboard])
 
   useEffect(() => {
     let count = 0
