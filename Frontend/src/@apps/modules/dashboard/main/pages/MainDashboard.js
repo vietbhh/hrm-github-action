@@ -427,19 +427,29 @@ const MainDashboard = ({
         </div>
 
         <Drawer
-          title={useFormatMessage("modules.dashboard.widget")}
+          title={
+            <>
+              <div className="widget-drawer-icon"></div>
+              <span className="widget-drawer-title">
+                {useFormatMessage("modules.dashboard.add_widget")}
+              </span>
+            </>
+          }
           placement="right"
           width={360}
-          className="dnd"
+          className="dnd widget-drawer"
           mask={false}
           onClose={() => setState({ visible: !state.visible })}
-          visible={state.visible}>
-          <Row>
-            <Col sm="12">
+          visible={state.visible}
+          footer={
+            <>
+              <span>
+                {useFormatMessage("modules.dashboard.lock_homepage_layout")}
+              </span>
               <ErpSwitch
-                defaultValue={customizeDashboard}
-                label="On/Off Widget"
-                className="mb-1"
+                defaultValue={!customizeDashboard}
+                nolabel
+                className=""
                 onChange={(e) => {
                   dispatch(updateLoadingDashboard(true))
                   setTimeout(() => {
@@ -449,7 +459,7 @@ const MainDashboard = ({
                         permits: auth.permits,
                         settings: {
                           ...auth.settings,
-                          widget_dnd: e.target.checked
+                          widget_dnd: !e.target.checked
                         }
                       })
                     )
@@ -457,8 +467,8 @@ const MainDashboard = ({
                   }, 300)
                 }}
               />
-            </Col>
-          </Row>
+            </>
+          }>
           {_.map(
             _.filter(state.data, (item) => {
               return (
