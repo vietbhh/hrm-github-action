@@ -24,7 +24,6 @@ import ViewFileModal from "../components/modals/ViewFileModal"
 import { ErpInput } from "@apps/components/common/ErpField"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import ListDocumentDetail from "../components/detail/ListDocumentDetail"
-import Error from "views/pages/misc/Error"
 
 const DocumentDetail = (props) => {
   const [state, setState] = useMergedState({
