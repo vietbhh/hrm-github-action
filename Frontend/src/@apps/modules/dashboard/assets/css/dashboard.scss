@@ -580,42 +580,6 @@
     }
   }
 
-  .dashboard-clock-in-out {
-    .content-body {
-      div {
-        width: 95%;
-        padding: 3px;
-        margin: auto;
-      }
-
-      .clock-time {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-radius: 5px;
-        .int-out-info {
-          display: flex;
-        }
-      }
-
-      .break-time {
-        background: rgba(0, 0, 0, 0.05);
-        border-radius: 5px;
-
-        .break-time-info {
-          display: flex;
-          justify-content: center;
-
-          .icon,
-          .label {
-            padding-right: 5px;
-          }
-        }
-
-        .break-time-access {
-          color: orange;
-        }
-      }
-    }
-  }
 
   .dashboard-card-calendar {
     .w-80 {
