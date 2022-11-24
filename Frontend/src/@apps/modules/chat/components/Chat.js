@@ -56,7 +56,7 @@ const ChatLog = (props) => {
     replying_file: "",
     replying_user_id: ""
   })
-  console.log(state)
+
   const setReplying = (data) => {
     setState(data)
   }
@@ -151,7 +151,18 @@ const ChatLog = (props) => {
   const handleSendMsg = (e) => {
     e.preventDefault()
     if (msg.trim().length) {
-      sendMessage(selectedUser.chat.id, msg, { reply: { ...state } })
+      const reply = state.replying
+        ? {
+            reply: {
+              replying_message: state.replying_message,
+              replying_type: state.replying_type,
+              replying_timestamp: state.replying_timestamp,
+              replying_file: state.replying_file,
+              replying_user_id: state.replying_user_id
+            }
+          }
+        : {}
+      sendMessage(selectedUser.chat.id, msg, reply)
       setMsg("")
       setReplyingDefault()
     }
@@ -164,7 +175,7 @@ const ChatLog = (props) => {
       : "div"
 
   const renderFormReply = () => {
-    let replying_to = useFormatMessage("modules.chat.text.my_self")
+    let replying_to = useFormatMessage("modules.chat.text.your_self")
     if (state.replying_user_id !== userId) {
       const index_employee = dataEmployees.findIndex(
         (item_employee) => item_employee.id === state.replying_user_id
@@ -202,6 +213,13 @@ const ChatLog = (props) => {
       </>
     )
   }
+
+  // ** scroll to bottom when replying
+  useEffect(() => {
+    if (state.replying) {
+      scrollToBottom()
+    }
+  }, [state.replying])
 
   return (
     <>
@@ -332,7 +350,7 @@ const ChatLog = (props) => {
                 }
               }}
               ref={chatArea}
-              className="user-chats"
+              className={`user-chats ${state.replying ? "replying" : ""}`}
               options={{ wheelPropagation: false }}>
               {loadingMessage && (
                 <DefaultSpinner className="class-default-spinner" />
@@ -382,7 +400,9 @@ const ChatLog = (props) => {
               )}
             </ChatWrapper>
 
-            <Form className="chat-app-form" onSubmit={(e) => handleSendMsg(e)}>
+            <Form
+              className={`chat-app-form ${state.replying ? "replying" : ""}`}
+              onSubmit={(e) => handleSendMsg(e)}>
               <InputGroup className="input-group-merge form-send-message">
                 <InputGroupText>
                   <EmotionsComponent

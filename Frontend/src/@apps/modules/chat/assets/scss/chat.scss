@@ -297,6 +297,14 @@
               }
             }
 
+            #div-chats.replying {
+              height: calc(100% - 85px - 95px - 55px);
+            }
+
+            .chat-app-form.replying {
+              margin-top: 55px;
+            }
+
             #div-chats {
               height: calc(100% - 85px - 95px);
               background: unset;
@@ -334,9 +342,7 @@
                   .chat-content-parent {
                     width: 100%;
                     display: flex;
-                    justify-content: flex-end;
-                    align-items: center;
-                    gap: 1rem;
+                    flex-direction: column;
                     position: relative;
 
                     &:hover {
@@ -355,6 +361,13 @@
                       }
                     }
 
+                    .chat-content-message {
+                      display: flex;
+                      justify-content: flex-end;
+                      align-items: center;
+                      gap: 1rem;
+                    }
+
                     .has-reaction-react {
                       position: absolute;
                       bottom: -15px;
@@ -366,6 +379,31 @@
 
                       small {
                         color: #82868b;
+                      }
+                    }
+
+                    .chat-content-reply {
+                      display: flex;
+                      justify-content: flex-end;
+
+                      .chat-content-reply-content {
+                        display: flex;
+                        background: #f0f0f0;
+                        flex-direction: column;
+                        margin-right: 1rem;
+                        margin-left: 0;
+                        margin-top: 3px;
+                        border-radius: 20px;
+                        padding: 0.4rem 1rem 27px 1rem;
+                        margin-bottom: -20px;
+
+                        .chat-content-reply-title {
+                          margin-left: -5px;
+                        }
+
+                        .chat-content-reply-text .ant-image {
+                          left: 0;
+                        }
                       }
                     }
                   }
@@ -484,6 +522,18 @@
                 .chat-left {
                   .chat-body {
                     .chat-content-parent {
+                    }
+
+                    .chat-content-reply {
+                      justify-content: flex-start;
+
+                      .chat-content-reply-content {
+                        margin-right: 0;
+                        margin-left: calc(1rem - 1px);
+                      }
+                    }
+
+                    .chat-content-message {
                       justify-content: flex-start;
                     }
 

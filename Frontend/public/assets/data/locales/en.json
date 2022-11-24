@@ -838,6 +838,7 @@
     "chat": {
       "text": {
         "you": "You",
+        "you_": "you",
         "picture": "Picture",
         "send": "Send",
         "sending": "Sending",
@@ -855,8 +856,10 @@
         "click_to_remove": "Click to remove",
         "reacts_about_message": "Reacts about message",
         "replying_to": "Replying to",
-        "my_self": "my self",
-        "file_attachment": "File attachment"
+        "your_self": "yourself",
+        "file_attachment": "File attachment",
+        "no_chats_found": "No Chats Found",
+        "replied_to": "replied to"
       }
     }
   },

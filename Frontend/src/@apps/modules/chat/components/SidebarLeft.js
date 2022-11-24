@@ -72,11 +72,26 @@ const SidebarLeft = (props) => {
   // ** Renders Chat
   const renderChats = (pin = false) => {
     if (groups && groups.length) {
-      if (query.length && !filteredChat.length && pin === false) {
+      const index_search = filteredChat.findIndex(
+        (item) =>
+          (pin === true && item.pin === 1) || (pin === false && item.pin === 0)
+      )
+      if (query.length && index_search === -1) {
         return (
-          <li className="no-results show">
-            <h6 className="mb-0">No Chats Found</h6>
-          </li>
+          <>
+            <h4 className="chat-list-title">
+              {useFormatMessage(
+                `modules.chat.text.${pin ? "pinned" : "recent"}`
+              )}
+            </h4>
+            <ul className="chat-users-list contact-list media-list">
+              <li className="no-results show">
+                <h6 className="mb-0">
+                  {useFormatMessage("modules.chat.text.no_chats_found")}
+                </h6>
+              </li>
+            </ul>
+          </>
         )
       } else {
         const arrToMap =
