@@ -41,7 +41,8 @@ const ChatMessage = (props) => {
     setUserSidebarRight,
     dataEmployees,
     setReplying,
-    focusInputMsg
+    focusInputMsg,
+    toggleModalForward
   } = props
   const { userProfile, selectedUser } = store
 
@@ -300,6 +301,26 @@ const ChatMessage = (props) => {
       return ""
     }
 
+    const renderSenderName = (chat, index_message) => {
+      if (
+        selectedUser.contact.type === "group" &&
+        chat.senderId !== userId &&
+        index_message === 0
+      ) {
+        const index_employee = dataEmployees.findIndex(
+          (item_employee) => item_employee.id === chat.senderId
+        )
+        let senderName = ""
+        if (index_employee > -1) {
+          senderName = dataEmployees[index_employee].full_name
+        }
+
+        return <p className="text-sender-name">{senderName}</p>
+      }
+
+      return ""
+    }
+
     const renderFile = (data, className, chat, index2) => {
       if (data.type === "image" || data.type === "image_gif") {
         return (
@@ -427,7 +448,7 @@ const ChatMessage = (props) => {
     }
 
     return formattedChatData().map((item, index) => {
-      const renderChatContent = (chat, className) => {
+      const renderChatContent = (chat, className, index_message) => {
         if (
           chat.type === "text" ||
           chat.status === "loading" ||
@@ -435,6 +456,7 @@ const ChatMessage = (props) => {
         ) {
           return (
             <div className={`chat-content ${className}`}>
+              {renderSenderName(chat, index_message)}
               {renderMessage(chat)}
               {renderHasReaction(chat)}
             </div>
@@ -549,6 +571,7 @@ const ChatMessage = (props) => {
                   className="react_more"
                   onClick={(e) => {
                     e.preventDefault()
+                    toggleModalForward()
                   }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -585,6 +608,8 @@ const ChatMessage = (props) => {
                   className="react_more"
                   onClick={(e) => {
                     e.preventDefault()
+                    navigator.clipboard.writeText(chat.msg)
+                    focusInputMsg()
                   }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -772,14 +797,16 @@ const ChatMessage = (props) => {
           className={classnames("chat", {
             "chat-left": item.senderId !== userId
           })}>
-          <div className="chat-avatar">
-            <Avatar
-              imgWidth={36}
-              imgHeight={36}
-              className="box-shadow-1 cursor-pointer"
-              src={_avatar}
-            />
-          </div>
+          {item.senderId !== userId && (
+            <div className="chat-avatar">
+              <Avatar
+                imgWidth={36}
+                imgHeight={36}
+                className="box-shadow-1 cursor-pointer"
+                src={_avatar}
+              />
+            </div>
+          )}
 
           <div className="chat-body">
             {item.messages.map((chat, index) => {
@@ -800,7 +827,8 @@ const ChatMessage = (props) => {
                           : index === item.messages.length - 1
                           ? "chat-content-last"
                           : "chat-content-middle"
-                        : "chat-content-one"
+                        : "chat-content-one",
+                      index
                     )}
                     {item.senderId !== userId && renderReaction(chat)}
                   </div>

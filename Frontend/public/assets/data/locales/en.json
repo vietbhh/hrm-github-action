@@ -859,7 +859,9 @@
         "your_self": "yourself",
         "file_attachment": "File attachment",
         "no_chats_found": "No Chats Found",
-        "replied_to": "replied to"
+        "replied_to": "replied to",
+        "start_conversation": "Start Conversation",
+        "contacts": "Contacts"
       }
     }
   },

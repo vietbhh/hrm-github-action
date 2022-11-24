@@ -228,12 +228,16 @@
           transition: 0.5s;
 
           .chat-app-window {
+            .start-chat-area {
+              border-radius: 12px;
+            }
+
             .chat-navbar {
               .chat-header {
                 background: #ffffff;
                 box-shadow: 0px 2px 24px rgba(153, 155, 168, 0.12);
                 border-radius: 12px;
-                margin: 10px 20px;
+                margin: 10px 25px;
                 padding: 10px;
 
                 .avatar img {
@@ -308,7 +312,7 @@
             #div-chats {
               height: calc(100% - 85px - 95px);
               background: unset;
-              padding: 0 20px;
+              padding: 0 25px;
 
               .class-default-spinner {
                 height: 100%;
@@ -339,6 +343,8 @@
                 }
 
                 .chat-body {
+                  margin: 10px 0px 0 0;
+
                   .chat-content-parent {
                     width: 100%;
                     display: flex;
@@ -390,7 +396,7 @@
                         display: flex;
                         background: #f0f0f0;
                         flex-direction: column;
-                        margin-right: 1rem;
+                        margin-right: 0;
                         margin-left: 0;
                         margin-top: 3px;
                         border-radius: 20px;
@@ -413,7 +419,7 @@
                   }
 
                   .chat-content {
-                    max-width: 85%;
+                    max-width: 75%;
                     background: #246bfd;
                     min-height: 37px;
                     border-radius: 20px;
@@ -424,6 +430,7 @@
                     margin-bottom: 3px;
                     padding: 0.4rem 1rem;
                     position: relative;
+                    margin-right: 0;
 
                     p {
                       font-size: 12px;
@@ -441,6 +448,13 @@
                       margin-top: -17px;
                       font-weight: 0;
                       font-weight: 200;
+                    }
+
+                    p.text-sender-name {
+                      font-weight: 500 !important;
+                      font-size: 12px;
+                      color: #246bfd;
+                      margin-right: auto;
                     }
                   }
 
@@ -521,9 +535,6 @@
 
                 .chat-left {
                   .chat-body {
-                    .chat-content-parent {
-                    }
-
                     .chat-content-reply {
                       justify-content: flex-start;
 
@@ -580,7 +591,7 @@
 
             .chat-app-form {
               background: unset;
-              padding: 20px 20px;
+              padding: 20px 25px;
               height: auto;
               border-top: unset;
               gap: 25px;

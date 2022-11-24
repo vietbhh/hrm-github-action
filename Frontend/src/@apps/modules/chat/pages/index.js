@@ -561,6 +561,9 @@ const AppChat = (props) => {
             }
           }
           if (change.type === "removed") {
+            const group_new = [...listGroup]
+            listGroup = group_new.filter((item) => item.id !== id)
+            setGroups(listGroup)
           }
         }
 
@@ -706,6 +709,16 @@ const AppChat = (props) => {
             }
           }
           if (change.type === "removed") {
+            const docData = change.doc
+            const data = docData.data()
+            const timestamp = data.timestamp
+            const chat_new = [...chat]
+            chat = chat_new.filter((item) => item.time !== timestamp)
+            dispatch(
+              handleChats({
+                chats: chat
+              })
+            )
           }
         })
 
@@ -813,6 +826,7 @@ const AppChat = (props) => {
               windowWidth={windowWidth}
               setUserSidebarRight={setUserSidebarRight}
               dataEmployees={dataEmployees}
+              queryLimit={queryLimit}
             />
             <UserProfileSidebar
               user={user}

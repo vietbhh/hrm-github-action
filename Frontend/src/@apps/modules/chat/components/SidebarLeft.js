@@ -231,7 +231,9 @@ const SidebarLeft = (props) => {
       if (query.length && !filteredContacts.length) {
         return (
           <li className="no-results show">
-            <h6 className="mb-0">No Chats Found</h6>
+            <h6 className="mb-0">
+              {useFormatMessage("modules.chat.text.no_chats_found")}
+            </h6>
           </li>
         )
       } else {
@@ -440,7 +442,9 @@ const SidebarLeft = (props) => {
                   {renderChats()}
                   {!_.isEmpty(query) && (
                     <>
-                      <h4 className="chat-list-title">Contacts</h4>
+                      <h4 className="chat-list-title">
+                        {useFormatMessage("modules.chat.text.contacts")}
+                      </h4>
                       <ul className="chat-users-list contact-list media-list">
                         {renderContacts()}
                       </ul>

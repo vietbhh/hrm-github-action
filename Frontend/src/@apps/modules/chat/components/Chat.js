@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 
 // ** Custom Components
@@ -7,6 +7,7 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import ChatMessage from "./details/ChatMessage"
 import UpFile from "./details/UpFile"
 import EmotionsComponent from "./emotions/index"
+import ModalForward from "./modals/ModalForward"
 
 // ** Third Party Components
 import classnames from "classnames"
@@ -43,7 +44,8 @@ const ChatLog = (props) => {
     userSidebarRight,
     windowWidth,
     setUserSidebarRight,
-    dataEmployees
+    dataEmployees,
+    queryLimit
   } = props
   const { userProfile, selectedUser } = store
 
@@ -54,7 +56,8 @@ const ChatLog = (props) => {
     replying_type: "",
     replying_timestamp: 0,
     replying_file: "",
-    replying_user_id: ""
+    replying_user_id: "",
+    modal_forward: false
   })
 
   const setReplying = (data) => {
@@ -221,8 +224,13 @@ const ChatLog = (props) => {
     }
   }, [state.replying])
 
+  // ** toggle modal forward
+  const toggleModalForward = () => {
+    setState({ modal_forward: !state.modal_forward })
+  }
+
   return (
-    <>
+    <Fragment>
       <div className="chat-app-window">
         <div
           className={classnames("start-chat-area", {
@@ -234,7 +242,7 @@ const ChatLog = (props) => {
           <h4
             className="sidebar-toggle start-chat-text"
             onClick={handleStartConversation}>
-            Start Conversation
+            {useFormatMessage("modules.chat.text.start_conversation")}
           </h4>
         </div>
         {Object.keys(selectedUser).length ? (
@@ -338,14 +346,17 @@ const ChatLog = (props) => {
                     scrollToMessage()
                   }
                 }
-                if (
-                  container.scrollHeight -
-                    container.scrollTop -
-                    container.clientHeight ===
-                  0
-                ) {
-                  if (unread > 0) {
-                    handleSeenMessage(selectedUser.chat.id)
+
+                if (chats.length > queryLimit) {
+                  if (
+                    container.scrollHeight -
+                      container.scrollTop -
+                      container.clientHeight ===
+                    0
+                  ) {
+                    if (unread > 0) {
+                      handleSeenMessage(selectedUser.chat.id)
+                    }
                   }
                 }
               }}
@@ -361,6 +372,7 @@ const ChatLog = (props) => {
                     {...props}
                     setReplying={setReplying}
                     focusInputMsg={focusInputMsg}
+                    toggleModalForward={toggleModalForward}
                   />
                 </div>
               ) : null}
@@ -460,7 +472,12 @@ const ChatLog = (props) => {
           </div>
         ) : null}
       </div>
-    </>
+
+      <ModalForward
+        modal={state.modal_forward}
+        toggleModal={toggleModalForward}
+      />
+    </Fragment>
   )
 }
 
