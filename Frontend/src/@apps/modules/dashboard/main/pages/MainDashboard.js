@@ -255,8 +255,13 @@ const MainDashboard = ({
       const _settingWidget = []
       _.forEach(data, (value, index) => {
         data[index] = { ...data[index], show: true }
-        _settingWidget.push(value.data_grid)
+        _settingWidget.push({
+          ...value.data_grid,
+          static: true,
+          isDraggable: false
+        })
       })
+      saveWidget({ lg: _settingWidget })
       setState({ data: data, layouts: { lg: _settingWidget } })
       localStorage.setItem("dashboard_widget", JSON.stringify(_settingWidget))
     }
