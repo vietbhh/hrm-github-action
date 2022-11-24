@@ -47,7 +47,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "announcement",
         x: 0,
-        y: 0,
+        y: 14,
         w: 8,
         h: 13,
         minW: 4,
@@ -69,7 +69,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "notepad",
         x: 0,
-        y: 0,
+        y: 27,
         w: 8,
         h: 11,
         minW: 4,
@@ -91,7 +91,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "pending_approval",
         x: 0,
-        y: 0,
+        y: 38,
         w: 8,
         h: 11,
         minW: 4,
@@ -113,7 +113,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "follow_up",
         x: 0,
-        y: 0,
+        y: 49,
         w: 8,
         h: 11,
         minW: 4,
@@ -157,7 +157,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "employees",
         x: 8,
-        y: 0,
+        y: 10,
         w: 4,
         h: 8,
         minW: 4,
@@ -179,7 +179,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "attendance_to_day",
         x: 8,
-        y: 0,
+        y: 18,
         w: 4,
         h: 9,
         minW: 4,
@@ -201,7 +201,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "who_off_today",
         x: 8,
-        y: 0,
+        y: 27,
         w: 4,
         h: 6,
         minW: 4,
@@ -223,7 +223,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "birthday_this_month",
         x: 8,
-        y: 0,
+        y: 33,
         w: 4,
         h: 6,
         minW: 4,
@@ -245,7 +245,7 @@ export const ListComponentConfig = (props) => {
       data_grid: {
         i: "my_time_off",
         x: 8,
-        y: 0,
+        y: 39,
         w: 4,
         h: 6,
         minW: 4,
