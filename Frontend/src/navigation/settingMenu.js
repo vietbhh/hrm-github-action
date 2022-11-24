@@ -53,8 +53,8 @@ const settingMenu = {
     id: "users",
     title: "app.users",
     type: "item",
-    action: "manage_permit",
-    resource: "sys",
+    action: "manage",
+    resource: "permits",
     icon: "iconly-User3 icli",
     navLink: "/settings/users",
     order: 6
@@ -63,8 +63,8 @@ const settingMenu = {
     id: "permissions",
     title: "app.permissions",
     type: "item",
-    action: "manage_permit",
-    resource: "sys",
+    action: "manage",
+    resource: "permits",
     icon: "iconly-Unlock icli",
     navLink: "/settings/permissions",
     order: 7

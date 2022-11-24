@@ -1,4 +1,5 @@
 import { ErpInput } from "@apps/components/common/ErpField"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 import TableLoader from "@apps/components/spinner/TableLoader"
 import SettingLayout from "@apps/modules/settings/components/SettingLayout"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
@@ -7,11 +8,11 @@ import SwAlert from "@apps/utility/SwAlert"
 import { debounce } from "lodash"
 import React, { Fragment, useEffect, useRef } from "react"
 import { Copy, Trash } from "react-feather"
+import { Navigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import { Cell, Column, HeaderCell, Table } from "rsuite-table"
 import { permissionApi, permissionApiEdit } from "../common/permissionApi"
 import PermitFormModal from "../components/PermitFormModal"
-
 const Permission = (props) => {
   const [state, setState] = useMergedState({
     data: [],
@@ -21,6 +22,15 @@ const Permission = (props) => {
     updateData: {},
     searchVal: ""
   })
+
+  if (ability.can("manage", "permits") === false) {
+    return (
+      <>
+        <Navigate to="/not-found" replace={true} />
+        <AppSpinner />
+      </>
+    )
+  }
 
   const handleFormModal = () => {
     const updateState = {

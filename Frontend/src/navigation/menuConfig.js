@@ -62,8 +62,8 @@ const menuConfig = [
         id: "employee-setting",
         title: "menu.employee_setting",
         type: "item",
-        action: "login",
-        resource: "app",
+        action: "accessEmployeeSettings",
+        resource: "employees",
         icon: <Icon.Circle size={6} />,
         navLink: "/employees/setting"
       }
@@ -176,8 +176,8 @@ const menuConfig = [
         id: "my-time-off",
         title: "menu.myTimeOff",
         type: "item",
-        action: "accessMyTimeOff",
-        resource: "time-off",
+        action: "login",
+        resource: "app",
         icon: <Icon.Circle size={6} />,
         navLink: "/time-off/my-time-off"
       },
@@ -186,7 +186,7 @@ const menuConfig = [
         title: "menu.teamTimeOff",
         type: "item",
         action: "accessTeamTimeOff",
-        resource: "time-off",
+        resource: "time_off",
         icon: <Icon.Circle size={6} />,
         navLink: "/time-off/team-time-off"
       },
@@ -195,7 +195,7 @@ const menuConfig = [
         title: "menu.employeesTimeOff",
         type: "item",
         action: "accessEmployeeTimeOff",
-        resource: "time-off",
+        resource: "time_off",
         icon: <Icon.Circle size={6} />,
         navLink: "/time-off/employee-time-off"
       },
@@ -204,7 +204,7 @@ const menuConfig = [
         title: "menu.approvalTimeOff",
         type: "item",
         action: "accessApprovalTimeOff",
-        resource: "time-off",
+        resource: "time_off",
         icon: <Icon.Circle size={6} />,
         navLink: "/time-off/approval-time-off"
       },
@@ -256,7 +256,7 @@ const menuConfig = [
         id: "attendance-setting",
         title: "menu.settings",
         type: "item",
-        action: "accessEmployeeAttendance",
+        action: "manage",
         resource: "attendances",
         icon: <Icon.Circle size={6} />,
         navLink: "/attendances/settings"
@@ -308,8 +308,8 @@ const menuConfig = [
         id: "overtimes-manage",
         title: "menu.manage_overtime",
         type: "item",
-        action: "login",
-        resource: "app",
+        action: "accessManageOvertime",
+        resource: "overtimes",
         icon: <Icon.Circle size={6} />,
         navLink: "/overtimes/manage"
       },
@@ -317,8 +317,8 @@ const menuConfig = [
         id: "overtimes-request",
         title: "menu.request_overtime",
         type: "item",
-        action: "login",
-        resource: "app",
+        action: "accessOvertimeRequest",
+        resource: "overtimes",
         icon: <Icon.Circle size={6} />,
         navLink: "/overtimes/request"
       }

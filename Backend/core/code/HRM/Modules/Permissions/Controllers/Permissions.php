@@ -246,7 +246,7 @@ class Permissions extends ErpController
 		],
 		[
 			'name' => 'time_off_settings',
-			'value' => ['modules.time_off_types.manage', 'modules.time_off_holidays.manage']
+			'value' => ['modules.time_off_types.manage', 'modules.time_off_holidays.manage','modules.time_off.accessSettingTimeOff']
 		],
 		[
 			'name' => 'time_off_settings_holidays',

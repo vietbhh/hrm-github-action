@@ -135,7 +135,7 @@ const appDrawerList = {
   drive: {
     enable: true,
     order: 11,
-    navLink: "drive",
+    navLink: "/drive",
     title: "Drive",
     icon: (
       <svg
@@ -166,7 +166,7 @@ const appDrawerList = {
         </defs>
       </svg>
     ),
-    permissions: ["app.login"]
+    permissions: ["documents.accessDrive"]
   }
 }
 export default appDrawerList
