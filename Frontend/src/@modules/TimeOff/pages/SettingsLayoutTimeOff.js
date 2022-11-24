@@ -17,7 +17,7 @@ const SettingsLayoutTimeOff = (props) => {
   const pathname = window.location.pathname
   const [windowWidth, setWindowWidth] = useState(null)
   const ability = useContext(AbilityContext)
-  const canSetting = ability.can("timeoffSettingAccess", "time-off")
+  const canSetting = ability.can("timeoffSettingAccess", "time_off")
   if (canSetting === false) {
     return (
       <Fragment>

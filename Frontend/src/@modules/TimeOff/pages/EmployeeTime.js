@@ -36,7 +36,7 @@ const lastDayOfyearYMD = `${lastDayOfyear.getFullYear()}-${
 const EmployeeTime = () => {
   const ability = useContext(AbilityContext)
 
-  if (ability.can("accessEmployeeTimeOff", "time-off") === false) {
+  if (ability.can("accessEmployeeTimeOff", "time_off") === false) {
     return (
       <>
         <Navigate to="/not-found" replace={true} />

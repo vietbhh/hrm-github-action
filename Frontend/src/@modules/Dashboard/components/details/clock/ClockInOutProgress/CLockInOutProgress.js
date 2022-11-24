@@ -58,7 +58,7 @@ const ClockInOutProgress = (props) => {
     return (
       <div>
         <div
-          className="ant-spin ant-spin-spinning"
+          className="ant-spin ant-spin-spinning text-center d-flex align-items-center justify-content-center"
           aria-live="polite"
           aria-busy="true">
           <span className="ant-spin-dot ant-spin-dot-spin">

@@ -925,6 +925,13 @@
             "types_des": "View, create, edit, activate, deactivate, delete types",
             "import_des": "Upload and import employee's time off"
           },
+          "overtimes": {
+            "title": "Overtimes",
+            "manage_overtime": "Manage Overtime",
+            "manage_overtime_des": "Allow user access and approve manage overtime",
+            "request_overtime": "Request Overtime",
+            "request_overtime_des": "Allow user access and create overtime request"
+          },
           "attendance": {
             "attendance": "Attendance",
             "employee_attendance": "Employee Attendance",

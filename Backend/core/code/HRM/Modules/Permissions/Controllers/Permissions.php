@@ -233,6 +233,14 @@ class Permissions extends ErpController
 			'value' => ['modules.checklist_template.manage', 'modules.checklist_template_detail.manage']
 		],
 		[
+			'name' => 'overtime_manage',
+			'value' => ['modules.overtimes.accessManageOvertime', 'modules.overtimes.manage']
+		],
+		[
+			'name' => 'overtime_request',
+			'value' => ['modules.overtimes.accessOvertimeRequest']
+		],
+		[
 			'name' => 'employee_time_off',
 			'value' => ['modules.time_off.accessEmployeeTimeOff']
 		],
@@ -246,7 +254,7 @@ class Permissions extends ErpController
 		],
 		[
 			'name' => 'time_off_settings',
-			'value' => ['modules.time_off_types.manage', 'modules.time_off_holidays.manage','modules.time_off.accessSettingTimeOff']
+			'value' => ['modules.time_off_types.manage', 'modules.time_off_holidays.manage', 'modules.time_off.accessSettingTimeOff']
 		],
 		[
 			'name' => 'time_off_settings_holidays',

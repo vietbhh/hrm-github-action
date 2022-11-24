@@ -6,11 +6,12 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import SwAlert from "@apps/utility/SwAlert"
 import { debounce } from "lodash"
-import React, { Fragment, useEffect, useRef } from "react"
+import React, { Fragment, useContext, useEffect, useRef } from "react"
 import { Copy, Trash } from "react-feather"
 import { Navigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import { Cell, Column, HeaderCell, Table } from "rsuite-table"
+import { AbilityContext } from "utility/context/Can"
 import { permissionApi, permissionApiEdit } from "../common/permissionApi"
 import PermitFormModal from "../components/PermitFormModal"
 const Permission = (props) => {
@@ -22,7 +23,7 @@ const Permission = (props) => {
     updateData: {},
     searchVal: ""
   })
-
+  const ability = useContext(AbilityContext)
   if (ability.can("manage", "permits") === false) {
     return (
       <>

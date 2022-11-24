@@ -1,13 +1,14 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Tooltip } from "antd"
 import { map } from "lodash"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Card, CardBody, CardHeader, CardTitle } from "reactstrap"
+import { CardBody } from "reactstrap"
+import { AbilityContext } from "utility/context/Can"
 import { DashboardApi } from "../common/api"
-import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 
 const PendingApproval = (props) => {
   const [state, setState] = useMergedState({
@@ -18,7 +19,7 @@ const PendingApproval = (props) => {
     count_data_time_attendance: 0,
     count_pending_approval: 0
   })
-
+  const ability = useContext(AbilityContext)
   const loadData = () => {
     setState({ loading: true })
     DashboardApi.getDataPendingApproval()
@@ -96,7 +97,14 @@ const PendingApproval = (props) => {
                       <h6 className="Title-z88fub-0 dhrebC size-h6">
                         {useFormatMessage("modules.dashboard.time_off")}
                       </h6>
-                      <Link to="/time-off/employee-time-off">
+                      <Link
+                        to={
+                          ability.can("accessEmployeeTimeOff", "time_off")
+                            ? "/time-off/employee-time-off"
+                            : ability.can("accessTeamTimeOff", "time_off")
+                            ? "/time-off/team-time-off"
+                            : "/time-off/my-time-off"
+                        }>
                         {state.count_data_time_off}{" "}
                         {useFormatMessage("modules.dashboard.pending")}
                       </Link>
@@ -178,7 +186,14 @@ const PendingApproval = (props) => {
                       <h6 className="Title-z88fub-0 dhrebC size-h6">
                         {useFormatMessage("modules.dashboard.time_attendance")}
                       </h6>
-                      <Link to="/attendances/employee-attendance">
+                      <Link
+                        to={
+                          ability.can("accessEmployeeAttendance", "attendances")
+                            ? "/attendances/employee-attendance"
+                            : ability.can("accessTeamAttendance", "attendances")
+                            ? "/attendances/team-attendance"
+                            : "/attendances/my-attendance"
+                        }>
                         {state.count_data_time_attendance}{" "}
                         {useFormatMessage("modules.dashboard.pending")}
                       </Link>

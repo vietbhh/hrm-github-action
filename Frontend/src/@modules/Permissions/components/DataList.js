@@ -153,6 +153,33 @@ export const features_list = [
   },
   {
     title: useFormatMessage(
+      `modules.permissions.text.features.overtimes.title`
+    ),
+    content: [
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.overtimes.manage_overtime`
+        ),
+        name: "overtime_manage",
+        des: useFormatMessage(
+          `modules.permissions.text.features.overtimes.manage_overtime_des`
+        ),
+        child: []
+      },
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.overtimes.request_overtime`
+        ),
+        name: "overtime_request",
+        des: useFormatMessage(
+          `modules.permissions.text.features.overtimes.request_overtime_des`
+        ),
+        child: []
+      }
+    ]
+  },
+  {
+    title: useFormatMessage(
       `modules.permissions.text.features.attendance.attendance`
     ),
     content: [

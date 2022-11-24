@@ -28,7 +28,7 @@ const ApprovalTimeOff = (props) => {
   const options = moduleData.options
   const ability = useContext(AbilityContext)
 
-  if (ability.can("accessApprovalTimeOff", "time-off") === false) {
+  if (ability.can("accessApprovalTimeOff", "time_off") === false) {
     return (
       <>
         <Navigate to="/not-found" replace={true} />

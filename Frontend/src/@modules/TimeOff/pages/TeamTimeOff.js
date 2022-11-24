@@ -23,7 +23,7 @@ const lastDayYMD = `${lastDay.getFullYear()}-${
 const TeamTimeOff = (props) => {
   const ability = useContext(AbilityContext)
 
-  if (ability.can("accessMyTimeOff", "time-off") === false) {
+  if (ability.can("accessTeamTimeOff", "time_off") === false) {
     return (
       <>
         <Navigate to="/not-found" replace={true} />
