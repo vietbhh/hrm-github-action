@@ -57,7 +57,9 @@ const ChatLog = (props) => {
     replying_timestamp: 0,
     replying_file: "",
     replying_user_id: "",
-    modal_forward: false
+    replying_forward_id: "",
+    modal_forward: false,
+    data_forward: {}
   })
 
   const setReplying = (data) => {
@@ -70,8 +72,12 @@ const ChatLog = (props) => {
       replying_type: "",
       replying_timestamp: 0,
       replying_file: "",
-      replying_user_id: ""
+      replying_user_id: "",
+      replying_forward_id: ""
     })
+  }
+  const setDataForward = (data) => {
+    setState({ data_forward: data })
   }
   const [msg, setMsg] = useState("")
   const msgRef = useRef(null)
@@ -161,7 +167,8 @@ const ChatLog = (props) => {
               replying_type: state.replying_type,
               replying_timestamp: state.replying_timestamp,
               replying_file: state.replying_file,
-              replying_user_id: state.replying_user_id
+              replying_user_id: state.replying_user_id,
+              replying_forward_id: state.replying_forward_id
             }
           }
         : {}
@@ -373,6 +380,7 @@ const ChatLog = (props) => {
                     setReplying={setReplying}
                     focusInputMsg={focusInputMsg}
                     toggleModalForward={toggleModalForward}
+                    setDataForward={setDataForward}
                   />
                 </div>
               ) : null}
@@ -476,6 +484,10 @@ const ChatLog = (props) => {
       <ModalForward
         modal={state.modal_forward}
         toggleModal={toggleModalForward}
+        store={store}
+        sendMessage={sendMessage}
+        setDataForward={setDataForward}
+        data_forward={state.data_forward}
       />
     </Fragment>
   )

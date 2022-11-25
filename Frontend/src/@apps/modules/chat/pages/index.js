@@ -218,6 +218,22 @@ const AppChat = (props) => {
       })
     } else {
       const contact = state.selectedUser.contact
+      let idEmployee = contact.idEmployee
+      let checkSetActive = true
+
+      if (dataAddFile.forward) {
+        if (
+          !_.isUndefined(dataAddFile.contact_id) &&
+          dataAddFile.contact_id !== ""
+        ) {
+          idEmployee = dataAddFile.contact_id
+          delete dataAddFile.contact_id
+          checkSetActive = false
+        } else {
+          return
+        }
+      }
+
       const type = dataAddFile.type ? dataAddFile.type : "text"
       const docData = {
         last_message: handleLastMessage(type, msg),
@@ -225,7 +241,7 @@ const AppChat = (props) => {
         name: "",
         timestamp: Date.now(),
         type: "employee",
-        user: [userId, contact.idEmployee],
+        user: [userId, idEmployee],
         new: 1,
         pin: [],
         avatar: "",
@@ -233,7 +249,9 @@ const AppChat = (props) => {
       }
       handleAddNewGroup(docData).then((res) => {
         const newGroupId = res.id
-        setActive(newGroupId)
+        if (checkSetActive) {
+          setActive(newGroupId)
+        }
         const docDataMessage = {
           message: msg,
           seen: [userId],
@@ -676,7 +694,8 @@ const AppChat = (props) => {
                 status: data.status,
                 file: data.file,
                 react: data.react,
-                reply: data.reply
+                reply: data.reply,
+                forward: data.forward
               }
             ]
           }
@@ -698,7 +717,8 @@ const AppChat = (props) => {
                 status: data.status,
                 file: data.file,
                 react: data.react,
-                reply: data.reply
+                reply: data.reply,
+                forward: data.forward
               }
               chat = chat_new
               dispatch(

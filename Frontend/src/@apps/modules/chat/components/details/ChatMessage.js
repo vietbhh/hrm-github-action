@@ -42,7 +42,8 @@ const ChatMessage = (props) => {
     dataEmployees,
     setReplying,
     focusInputMsg,
-    toggleModalForward
+    toggleModalForward,
+    setDataForward
   } = props
   const { userProfile, selectedUser } = store
 
@@ -260,7 +261,11 @@ const ChatMessage = (props) => {
           reply_content = (
             <Photo
               className="chat-img"
-              src={`/modules/chat/${selectedUser.chat.id}/other/${chat.reply.replying_file}`}
+              src={`/modules/chat/${
+                chat.reply.replying_forward_id !== ""
+                  ? chat.reply.replying_forward_id
+                  : selectedUser.chat.id
+              }/other/${chat.reply.replying_file}`}
             />
           )
         } else if (
@@ -321,41 +326,69 @@ const ChatMessage = (props) => {
       return ""
     }
 
-    const renderFile = (data, className, chat, index2) => {
+    const renderFile = (data, className, chat, index2, index_message) => {
       if (data.type === "image" || data.type === "image_gif") {
         return (
-          <div className="chat-content chat-content-img">
-            <Photo
-              className="chat-img"
-              src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-            />
-            {index2 === chat.file.length - 1 && renderHasReaction(chat)}
-          </div>
+          <>
+            <div className="chat-content-sender-name">
+              {renderSenderName(chat, index_message)}
+              <div className="chat-content chat-content-img">
+                <Photo
+                  className="chat-img"
+                  src={`/modules/chat/${
+                    data?.forward?.forward_id_from
+                      ? data?.forward?.forward_id_from
+                      : selectedUser.chat.id
+                  }/other/${data.file}`}
+                />
+                {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+              </div>
+            </div>
+          </>
         )
       } else if (data.type === "video") {
         return (
-          <div className="chat-content chat-content-video">
-            <VideoComponent
-              src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-            />
-            {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+          <div className="chat-content-sender-name">
+            {renderSenderName(chat, index_message)}
+            <div className="chat-content chat-content-video">
+              <VideoComponent
+                src={`/modules/chat/${
+                  data?.forward?.forward_id_from
+                    ? data?.forward?.forward_id_from
+                    : selectedUser.chat.id
+                }/other/${data.file}`}
+              />
+              {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+            </div>
           </div>
         )
       } else if (data.type === "audio") {
         return (
-          <div className="chat-content chat-content-audio">
-            <AudioComponent
-              src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
-            />
-            {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+          <div className="chat-content-sender-name">
+            {renderSenderName(chat, index_message)}
+            <div className="chat-content chat-content-audio">
+              <AudioComponent
+                src={`/modules/chat/${
+                  data?.forward?.forward_id_from
+                    ? data?.forward?.forward_id_from
+                    : selectedUser.chat.id
+                }/other/${data.file}`}
+              />
+              {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+            </div>
           </div>
         )
       } else {
         return (
           <div className={`chat-content chat-content-file ${className}`}>
+            {renderSenderName(chat, index_message)}
             <DownloadFile
               className="align-items-center"
-              src={`/modules/chat/${selectedUser.chat.id}/other/${data.file}`}
+              src={`/modules/chat/${
+                data?.forward?.forward_id_from
+                  ? data?.forward?.forward_id_from
+                  : selectedUser.chat.id
+              }/other/${data.file}`}
               fileName={data.file}>
               <Badge color="light-secondary" pill>
                 <Link2 size={12} />
@@ -463,32 +496,44 @@ const ChatMessage = (props) => {
           )
         } else if (chat.type === "gif") {
           return (
-            <div key={index} className={`chat-content chat-content-gif`}>
-              <img src={chat.msg} />
-              {renderHasReaction(chat)}
+            <div key={index} className="chat-content-sender-name">
+              {renderSenderName(chat, index_message)}
+              <div className={`chat-content chat-content-gif`}>
+                <img src={chat.msg} />
+                {renderHasReaction(chat)}
+              </div>
             </div>
           )
         } else if (chat.type === "image" || chat.type === "image_gif") {
           return (
-            <div key={index} className={`chat-content chat-content-img`}>
-              <Image.PreviewGroup>
-                {_.map(chat.file, (val, index2) => {
-                  return (
-                    <Photo
-                      key={index2}
-                      src={`/modules/chat/${selectedUser.chat.id}/other/${val.file}`}
-                    />
-                  )
-                })}
-              </Image.PreviewGroup>
-              {renderHasReaction(chat)}
-            </div>
+            <Fragment key={index}>
+              <div className="chat-content-sender-name">
+                {renderSenderName(chat, index_message)}
+                <div className={`chat-content chat-content-img`}>
+                  <Image.PreviewGroup>
+                    {_.map(chat.file, (val, index2) => {
+                      return (
+                        <Photo
+                          key={index2}
+                          src={`/modules/chat/${
+                            chat?.forward?.forward_id_from
+                              ? chat?.forward?.forward_id_from
+                              : selectedUser.chat.id
+                          }/other/${val.file}`}
+                        />
+                      )
+                    })}
+                  </Image.PreviewGroup>
+                  {renderHasReaction(chat)}
+                </div>
+              </div>
+            </Fragment>
           )
         } else {
           return _.map(chat.file, (val, index2) => {
             return (
               <Fragment key={index2}>
-                {renderFile(val, className, chat, index2)}
+                {renderFile(val, className, chat, index2, index_message)}
               </Fragment>
             )
           })
@@ -572,6 +617,22 @@ const ChatMessage = (props) => {
                   onClick={(e) => {
                     e.preventDefault()
                     toggleModalForward()
+                    setDataForward({
+                      message: chat.message,
+                      type: chat.type,
+                      status: "success",
+                      contact_id: "",
+                      file:
+                        chat.type === "text" || chat.type === "gif"
+                          ? []
+                          : chat.file,
+                      forward: {
+                        forward_user_id_from: chat.senderId,
+                        forward_id_from: chat?.forward?.forward_id_from
+                          ? chat?.forward?.forward_id_from
+                          : selectedUser.chat.id
+                      }
+                    })
                   }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -733,7 +794,10 @@ const ChatMessage = (props) => {
                     replying_file: !_.isEmpty(chat.file)
                       ? chat.file[0].file
                       : "",
-                    replying_user_id: chat.senderId
+                    replying_user_id: chat.senderId,
+                    replying_forward_id: chat?.forward?.forward_id_from
+                      ? chat?.forward?.forward_id_from
+                      : ""
                   })
                   focusInputMsg()
                 }}

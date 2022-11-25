@@ -232,7 +232,7 @@ const SidebarLeft = (props) => {
         return (
           <li className="no-results show">
             <h6 className="mb-0">
-              {useFormatMessage("modules.chat.text.no_chats_found")}
+              {useFormatMessage("modules.chat.text.no_contacts_found")}
             </h6>
           </li>
         )
@@ -244,7 +244,7 @@ const SidebarLeft = (props) => {
             <li
               key={item.fullName}
               onClick={() => handleUserClick(item.id, item.fullName)}>
-              <Avatar src={item.avatar} imgHeight="42" imgWidth="42" />
+              <Avatar src={item.avatar} imgHeight="50" imgWidth="50" />
               <div
                 className="chat-info flex-grow-1"
                 style={{ display: "flex", alignItems: "center" }}>
