@@ -877,3 +877,29 @@
     }
   }
 }
+
+@media screen and (max-width: 1700px) {
+  .dashboard-card-calendar {
+    .card-body {
+      padding-left: 15px !important;
+      .calendar-sidebar {
+        .card-body {
+          padding-right: 5px;
+          padding-left: 0px !important;
+        }
+        .sidebar-header {
+          padding-left: 0px !important;
+          .calendar-year-container {
+            margin-right: 0 !important;
+            .calendar-year {
+              padding-right: 0 !important;
+            }
+          }
+        }
+        .filter-calendar-container {
+          font-size: 80%;
+        }
+      }
+    }
+  }
+}
