@@ -326,6 +326,8 @@
       "customPath": "Custom Path",
       "isPublic": "Public",
       "redirectPath": "Redirect Path",
+      "permitAction": "Permit Action",
+      "permitResource": "Permit Resource",
       "meta": "Meta"
     },
     "permit": {
