@@ -73,28 +73,13 @@ const AttendanceWorkingTime = (props) => {
   const renderIcon = () => {
     if (canRunTimer) {
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="40"
-          height="30"
-          viewBox="0 0 15 22"
-          fill="none">
-          <path
-            d="M8.875 17.5175V4.4825C8.875 3.245 8.4 2.75 7.2 2.75H4.175C2.975 2.75 2.5 3.245 2.5 4.4825V17.5175C2.5 18.755 2.975 19.25 4.175 19.25H7.2C8.4 19.25 8.875 18.755 8.875 17.5175Z"
-            fill="white"
-          />
-          <path
-            d="M17.5 17.5175V4.4825C17.5 3.245 17.025 2.75 15.825 2.75H12.8C11.6083 2.75 11.125 3.245 11.125 4.4825V17.5175C11.125 18.755 11.6 19.25 12.8 19.25H15.825C17.025 19.25 17.5 18.755 17.5 17.5175Z"
-            fill="white"
-          />
-        </svg>
+        <i className="fal fa-pause" />
       )
     }
 
     return (
-      <div>
-        <i className="far fa-play" />
-      </div>
+      <i className="far fa-play" />
+
     )
   }
 
@@ -114,8 +99,10 @@ const AttendanceWorkingTime = (props) => {
           </small>
         </div>
         <div>
-          <div className="attendance-status d-flex align-items-center">
+          <div className="attendance-status d-flex">
+            <div className="w-100 d-flex justify-content-center align-items-center">
             <Fragment>{renderIcon()}</Fragment>
+            </div>
           </div>
         </div>
       </div>

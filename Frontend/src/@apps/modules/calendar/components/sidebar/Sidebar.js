@@ -58,7 +58,7 @@ const Sidebar = (props) => {
       <div className="calendar-sidebar mt-2">
         <CardBody className="pb-0 mb-1 sidebar-header">
           <div className="d-flex align-items-center mt-50">
-            <div className="me-1">
+            <div className="">
               <h1 className="mb-0 calendar-year ">{calendarYear}</h1>
             </div>
             <div className="d-flex flex-column">

@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux"
 import { Card, CardBody } from "reactstrap"
 // ** Components
 import Calendar from "./details/calendar/Calendar"
-import AddEventModal from "@apps/modules/calendar/components/modal/AddEventModal"
+import AddEventModal from "@modules/Calendar/components/modal/AddEventModal"
 import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import Sidebar from "@apps/modules/calendar/components/sidebar/Sidebar"
 
