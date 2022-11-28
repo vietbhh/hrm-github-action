@@ -784,7 +784,8 @@
           border-radius: 15px;
 
           i {
-            font-size: 28px;
+            font-size: 35px;
+            font-weight: 700;
             color: #ffffff;
           }
         }
@@ -970,6 +971,56 @@
 
     .card-body {
       padding: 5px !important;
+      .attendance-progress {
+        margin-top: 0 !important;
+        .attendance-time {
+          h4 {
+            font-size: 95%;
+          }
+
+          small {
+            font-size: 80%;
+          }
+        }
+
+        .attendance-status {
+          height: 45px !important;
+          width: 45px !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1700px) {
+  .dashboard-card-calendar {
+    .card-body {
+      padding-left: 15px !important;
+      .calendar-sidebar {
+        .card-body {
+          padding-right: 5px;
+          padding-left: 0px !important;
+        }
+        .sidebar-header {
+          padding-left: 0px !important;
+          .calendar-year-container {
+            margin-right: 0 !important;
+            .calendar-year {
+              padding-right: 0 !important;
+            }
+          }
+        }
+        .filter-calendar-container {
+          font-size: 80%;
+        }
+      }
+    }
+  }
+
+  .dashboard-clock-in-out {
+    font-size: 90%;
+
+    .card-body {
       .attendance-progress {
         margin-top: 0 !important;
         .attendance-time {
