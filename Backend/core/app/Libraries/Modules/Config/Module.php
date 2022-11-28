@@ -837,8 +837,8 @@ class Module extends BaseConfig
 					"moduleName" => "departments",
 					"module" => "departments",
 				],
-				'line_manage' => [
-					'field' => 'line_manage',
+				'line_manager' => [
+					'field' => 'line_manager',
 					'field_type' => 'select_module',
 					"field_default_value" => "",
 					"field_detail_order" => "0",
