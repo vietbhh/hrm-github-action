@@ -1,7 +1,7 @@
 import ReactGiphySearchBox from "react-giphy-searchbox"
 
 const Gif = (props) => {
-  const { sendMessage, selectedUser, focusInputMsg } = props
+  const { sendMessage, selectedUser, focusInputMsg, setReplyingDefault } = props
 
   return (
     <ReactGiphySearchBox

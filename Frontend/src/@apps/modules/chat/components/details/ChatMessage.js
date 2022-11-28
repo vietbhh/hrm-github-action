@@ -43,7 +43,8 @@ const ChatMessage = (props) => {
     setReplying,
     focusInputMsg,
     toggleModalForward,
-    setDataForward
+    setDataForward,
+    scrollToTopOffset
   } = props
   const { userProfile, selectedUser } = store
 
@@ -277,7 +278,20 @@ const ChatMessage = (props) => {
           reply_content = chat.reply.replying_type
         }
         return (
-          <div className="chat-content-reply">
+          <div
+            className="chat-content-reply"
+            onClick={() => {
+              const section = document.getElementById(
+                chat.reply.replying_timestamp
+              )
+              if (section) {
+                scrollToTopOffset(section.offsetTop - 150)
+                section.classList.add("highlight")
+                setTimeout(() => {
+                  section.classList.remove("highlight")
+                }, 1000)
+              }
+            }}>
             <div className="chat-content-reply-content">
               <div className="chat-content-reply-title">
                 <svg
@@ -380,7 +394,10 @@ const ChatMessage = (props) => {
         )
       } else {
         return (
-          <div className={`chat-content chat-content-file ${className}`}>
+          <div
+            className={`chat-content chat-content-file ${className} ${
+              chat.seen.length > 1 ? "has-seen" : ""
+            }`}>
             {renderSenderName(chat, index_message)}
             <DownloadFile
               className="align-items-center"
@@ -395,7 +412,27 @@ const ChatMessage = (props) => {
                 <span className="align-middle ms-50">{data.file}</span>
               </Badge>
             </DownloadFile>
-            <p className="time">{formatTime(chat.time)}</p>
+            <p className="time">
+              {formatTime(chat.time)}
+              {chat.seen.length > 1 && (
+                <svg
+                  className="ms-25"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none">
+                  <path
+                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
+                    fill="white"
+                  />
+                </svg>
+              )}
+            </p>
             {index2 === chat.file.length - 1 && renderHasReaction(chat)}
           </div>
         )
@@ -406,8 +443,30 @@ const ChatMessage = (props) => {
       if (data.type === "text") {
         return (
           <>
-            <p className="text">{data.msg}</p>
-            <p className="time">{formatTime(data.time)}</p>
+            <p className={`text ${data.seen.length > 1 ? "has-seen" : ""}`}>
+              {data.msg}
+            </p>
+            <p className="time">
+              {formatTime(data.time)}
+              {data.seen.length > 1 && (
+                <svg
+                  className="ms-25"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none">
+                  <path
+                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
+                    fill="white"
+                  />
+                </svg>
+              )}
+            </p>
           </>
         )
       } else {
@@ -606,6 +665,39 @@ const ChatMessage = (props) => {
           }
         ]
 
+        const items_seen = [
+          ..._.map(
+            _.filter(chat.seen, (val_filter) => {
+              return val_filter !== userId
+            }),
+            (val_map, index_map) => {
+              const index_employee = dataEmployees.findIndex(
+                (item_employee) => item_employee.id === val_map
+              )
+              let avatar = ""
+              let fullName = ""
+              if (index_employee > -1) {
+                avatar = dataEmployees[index_employee].avatar
+                fullName = dataEmployees[index_employee].full_name
+              }
+              return {
+                key: `more-${index_map}`,
+                label: (
+                  <Fragment>
+                    <Avatar
+                      imgWidth={24}
+                      imgHeight={24}
+                      className="box-shadow-1 cursor-pointer"
+                      src={avatar}
+                    />
+                    <span className="ms-1 me-1">{fullName}</span>
+                  </Fragment>
+                )
+              }
+            }
+          )
+        ]
+
         const items_more = [
           {
             key: "1",
@@ -637,8 +729,8 @@ const ChatMessage = (props) => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="17"
-                    height="16"
-                    viewBox="0 0 17 16"
+                    height="17"
+                    viewBox="0 0 17 17"
                     fill="none">
                     <path
                       d="M10.9463 10.6667L15.4243 6.00008L10.9463 1.33341"
@@ -674,9 +766,9 @@ const ChatMessage = (props) => {
                   }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="19"
-                    height="18"
-                    viewBox="0 0 19 18"
+                    width="17"
+                    height="17"
+                    viewBox="0 0 17 17"
                     fill="none">
                     <path
                       d="M13.5077 10.05V12.3C13.5077 15.3 12.3077 16.5 9.30769 16.5H6.45769C3.45769 16.5 2.25769 15.3 2.25769 12.3V9.45C2.25769 6.45 3.45769 5.25 6.45769 5.25H8.70769"
@@ -725,6 +817,36 @@ const ChatMessage = (props) => {
                 </a>
               </>
             )
+          },
+          {
+            type: "divider"
+          },
+          {
+            key: "3",
+            label: (
+              <div className="react_more">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 17 17"
+                  fill="none">
+                  <path
+                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
+                    fill="#292D32"
+                  />
+                  <path
+                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
+                    fill="#292D32"
+                  />
+                </svg>
+                <span>
+                  {chat.seen.length - 1}{" "}
+                  {useFormatMessage("modules.chat.text.seen")}
+                </span>
+              </div>
+            ),
+            children: items_seen
           }
         ]
 
@@ -733,7 +855,7 @@ const ChatMessage = (props) => {
             <Dropdown
               overlay={<Menu items={items_react} />}
               placement="top"
-              trigger={["click"]}
+              trigger={["hover"]}
               overlayClassName="chat-content-reaction-dropdown-react"
               arrow={{
                 pointAtCenter: true
@@ -817,7 +939,7 @@ const ChatMessage = (props) => {
             <Dropdown
               overlay={<Menu items={items_more} />}
               placement="top"
-              trigger={["click"]}
+              trigger={["hover"]}
               overlayClassName="chat-content-reaction-dropdown-more"
               arrow={{
                 pointAtCenter: true
@@ -877,11 +999,15 @@ const ChatMessage = (props) => {
               return (
                 <div
                   key={index}
+                  id={chat.time}
                   className={`chat-content-parent ${
                     !_.isEmpty(chat.react) ? "has-reaction" : ""
                   }`}>
                   {renderReply(chat)}
-                  <div className="chat-content-message">
+                  <div
+                    className={`chat-content-message ${
+                      !_.isEmpty(chat.reply) ? "has-reply" : ""
+                    }`}>
                     {item.senderId === userId && renderReaction(chat)}
                     {renderChatContent(
                       chat,

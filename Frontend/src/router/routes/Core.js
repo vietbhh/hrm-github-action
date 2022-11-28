@@ -244,8 +244,7 @@ const CoreRoutes = [
     meta: {
       action: "login",
       resource: "app",
-      className: "erp-fullWidth",
-      layout: "drive"
+      className: "erp-fullWidth"
     }
   },
   {

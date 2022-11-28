@@ -91,6 +91,20 @@ const ChatLog = (props) => {
     chatContainer.scrollTop = 1000
   }
 
+  // ** listen esc
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.keyCode === 27) {
+        setReplyingDefault()
+      }
+    }
+    window.addEventListener("keydown", handleEsc)
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc)
+    }
+  }, [])
+
   // ** If user chat is not empty scrollToBottom
   useEffect(() => {
     const selectedUserLen = Object.keys(selectedUser).length
@@ -125,7 +139,6 @@ const ChatLog = (props) => {
         }, 700)
       }
     }
-    setMsg("")
   }, [selectedUser, loadingMessage, chats])
 
   useEffect(() => {
@@ -138,6 +151,7 @@ const ChatLog = (props) => {
       }
     }
 
+    setMsg("")
     setReplyingDefault()
   }, [selectedUser])
 
@@ -347,23 +361,23 @@ const ChatLog = (props) => {
             <ChatWrapper
               id="div-chats"
               onScrollY={(container) => {
-                if (container.scrollTop === 0) {
-                  getChatHistory(active)
-                  if (hasMoreHistory === true) {
-                    scrollToMessage()
+                if (chats.length >= queryLimit) {
+                  if (container.scrollTop === 0) {
+                    getChatHistory(active)
+                    if (hasMoreHistory === true) {
+                      scrollToMessage()
+                    }
                   }
                 }
 
-                if (chats.length > queryLimit) {
-                  if (
-                    container.scrollHeight -
-                      container.scrollTop -
-                      container.clientHeight ===
-                    0
-                  ) {
-                    if (unread > 0) {
-                      handleSeenMessage(selectedUser.chat.id)
-                    }
+                if (
+                  container.scrollHeight -
+                    container.scrollTop -
+                    container.clientHeight ===
+                  0
+                ) {
+                  if (unread > 0) {
+                    handleSeenMessage(selectedUser.chat.id)
                   }
                 }
               }}
@@ -385,9 +399,7 @@ const ChatLog = (props) => {
                 </div>
               ) : null}
               {unread > 0 && (
-                <div
-                  className="scroll-top d-block"
-                  style={{ right: "60px", bottom: "100px" }}>
+                <div className="scroll-top-chat">
                   <button
                     className="btn-icon btn btn-primary"
                     onClick={() => {

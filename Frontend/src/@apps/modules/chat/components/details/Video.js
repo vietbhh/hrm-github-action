@@ -37,7 +37,7 @@ const Video = (props) => {
     delete newProps.src
     delete newProps.alt
     return (
-      <video width="300" height="150" controls autoPlay loop muted>
+      <video width="300" height="150" controls loop muted>
         <source src={video}></source>
       </video>
     )

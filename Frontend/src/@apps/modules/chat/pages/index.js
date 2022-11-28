@@ -76,7 +76,7 @@ const AppChat = (props) => {
   const lastTimeMessage = chat.lastTimeMessage
   const chatHistory = chat.chatHistory
   const unreadStore = chat.unread
-  const queryLimit = 50
+  const queryLimit = 100
 
   const setUnread = (num) => {
     dispatch(handleUnread({ unread: num }))
@@ -130,6 +130,11 @@ const AppChat = (props) => {
   const scrollToBottom = () => {
     const chatContainer = ReactDOM.findDOMNode(chatArea.current)
     chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
+  }
+  // ** Scroll to chat top offset
+  const scrollToTopOffset = (number) => {
+    const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+    chatContainer.scrollTop = number
   }
 
   // ** Set user function for Right Sidebar
@@ -847,6 +852,7 @@ const AppChat = (props) => {
               setUserSidebarRight={setUserSidebarRight}
               dataEmployees={dataEmployees}
               queryLimit={queryLimit}
+              scrollToTopOffset={scrollToTopOffset}
             />
             <UserProfileSidebar
               user={user}

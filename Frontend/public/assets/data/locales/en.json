@@ -862,7 +862,8 @@
         "no_contacts_found": "No Contacts Found",
         "replied_to": "replied to",
         "start_conversation": "Start Conversation",
-        "contacts": "Contacts"
+        "contacts": "Contacts",
+        "seen": "Seen"
       }
     }
   },
