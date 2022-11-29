@@ -76,7 +76,7 @@ const AppChat = (props) => {
   const lastTimeMessage = chat.lastTimeMessage
   const chatHistory = chat.chatHistory
   const unreadStore = chat.unread
-  const queryLimit = 100
+  const queryLimit = 70
 
   const setUnread = (num) => {
     dispatch(handleUnread({ unread: num }))
@@ -206,6 +206,7 @@ const AppChat = (props) => {
 
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
     if (!_.isEmpty(groupId)) {
+      delete dataAddFile.contact_id
       const docData = {
         message: msg,
         seen: [userId],
@@ -317,9 +318,16 @@ const AppChat = (props) => {
           chat = [
             ...chat,
             {
-              message: data.message + " - " + data.timestamp,
+              message: data.message,
               time: data.timestamp,
-              senderId: data.sender_id
+              seen: data.seen,
+              senderId: data.sender_id,
+              type: data.type,
+              status: data.status,
+              file: data.file,
+              react: data.react,
+              reply: data.reply,
+              forward: data.forward
             }
           ]
         })

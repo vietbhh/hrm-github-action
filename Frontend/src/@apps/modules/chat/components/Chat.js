@@ -17,7 +17,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { Badge, Form, InputGroup, InputGroupText } from "reactstrap"
+import { Badge, Form, InputGroup, InputGroupText, Input } from "reactstrap"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -59,7 +59,8 @@ const ChatLog = (props) => {
     replying_user_id: "",
     replying_forward_id: "",
     modal_forward: false,
-    data_forward: {}
+    data_forward: {},
+    show_btn_to_bottom: false
   })
 
   const setReplying = (data) => {
@@ -83,7 +84,9 @@ const ChatLog = (props) => {
   const msgRef = useRef(null)
 
   const focusInputMsg = () => {
-    msgRef.current.focus()
+    if (msgRef.current) {
+      msgRef.current.focus()
+    }
   }
 
   const scrollToMessage = () => {
@@ -141,6 +144,13 @@ const ChatLog = (props) => {
     }
   }, [selectedUser, loadingMessage, chats])
 
+  // ** check show btn to bottom
+  useEffect(() => {
+    if (unread > 0) {
+      setState({ show_btn_to_bottom: true })
+    }
+  }, [unread])
+
   useEffect(() => {
     const selectedUserLen = Object.keys(selectedUser).length
     if (selectedUserLen) {
@@ -153,6 +163,7 @@ const ChatLog = (props) => {
 
     setMsg("")
     setReplyingDefault()
+    focusInputMsg()
   }, [selectedUser])
 
   // ** Opens right sidebar & handles its data
@@ -186,7 +197,19 @@ const ChatLog = (props) => {
             }
           }
         : {}
-      sendMessage(selectedUser.chat.id, msg, reply)
+
+      // ** check message type link
+      let dataAddLink = {}
+      const arr_link = []
+      msg.replace(/(?:https?|ftp):\/\/[\n\S]+/g, function (url) {
+        arr_link.push({ file: url, type: "link" })
+      })
+      if (!_.isEmpty(arr_link)) {
+        dataAddLink = { type: "link", file: arr_link }
+      }
+      const dataAdd = { ...reply, ...dataAddLink }
+
+      sendMessage(selectedUser.chat.id, msg, dataAdd)
       setMsg("")
       setReplyingDefault()
     }
@@ -241,7 +264,16 @@ const ChatLog = (props) => {
   // ** scroll to bottom when replying
   useEffect(() => {
     if (state.replying) {
-      scrollToBottom()
+      const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+      if (
+        chatContainer.scrollHeight -
+          chatContainer.scrollTop -
+          chatContainer.clientHeight <=
+          150 ||
+        chatContainer.scrollTop === 0
+      ) {
+        scrollToBottom()
+      }
     }
   }, [state.replying])
 
@@ -380,6 +412,18 @@ const ChatLog = (props) => {
                     handleSeenMessage(selectedUser.chat.id)
                   }
                 }
+
+                // ** check show btn to bottom
+                if (
+                  container.scrollHeight -
+                    container.scrollTop -
+                    container.clientHeight >
+                  300
+                ) {
+                  setState({ show_btn_to_bottom: true })
+                } else {
+                  setState({ show_btn_to_bottom: false })
+                }
               }}
               ref={chatArea}
               className={`user-chats ${state.replying ? "replying" : ""}`}
@@ -398,7 +442,7 @@ const ChatLog = (props) => {
                   />
                 </div>
               ) : null}
-              {unread > 0 && (
+              {state.show_btn_to_bottom && (
                 <div className="scroll-top-chat">
                   <button
                     className="btn-icon btn btn-primary"
@@ -412,29 +456,34 @@ const ChatLog = (props) => {
                     }}>
                     <i className="fa-sharp fa-solid fa-arrow-down"></i>
                   </button>
-                  <Badge
-                    pill
-                    color="success"
-                    className="badge-up"
-                    style={{ right: "0.4rem" }}>
-                    {unread && unread > 9 ? (
-                      <>
-                        9
-                        <sup style={{ fontSize: "1rem", top: "-0.1rem" }}>
-                          +
-                        </sup>
-                      </>
-                    ) : (
-                      unread
-                    )}
-                  </Badge>
+                  {unread && unread > 0 ? (
+                    <Badge
+                      pill
+                      color="success"
+                      className="badge-up"
+                      style={{ right: "0.4rem" }}>
+                      {unread && unread > 9 ? (
+                        <>
+                          9
+                          <sup style={{ fontSize: "1rem", top: "-0.1rem" }}>
+                            +
+                          </sup>
+                        </>
+                      ) : (
+                        unread
+                      )}
+                    </Badge>
+                  ) : (
+                    ""
+                  )}
                 </div>
               )}
             </ChatWrapper>
 
-            <Form
+            <div
               className={`chat-app-form ${state.replying ? "replying" : ""}`}
-              onSubmit={(e) => handleSendMsg(e)}>
+              /* onSubmit={(e) => handleSendMsg(e)} */
+            >
               <InputGroup className="input-group-merge form-send-message">
                 <InputGroupText>
                   <EmotionsComponent
@@ -459,12 +508,16 @@ const ChatLog = (props) => {
                     </div>
                   </div>
                 )}
-                <input
-                  className="form-control"
-                  ref={msgRef}
+                <Input
+                  innerRef={msgRef}
                   value={msg}
                   onChange={(e) => setMsg(e.target.value)}
                   placeholder="Type a message ..."
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      handleSendMsg(event)
+                    }
+                  }}
                 />
                 <InputGroupText>
                   <UpFile
@@ -475,7 +528,10 @@ const ChatLog = (props) => {
                 </InputGroupText>
               </InputGroup>
 
-              <button className="send">
+              <button
+                type="button"
+                className="send"
+                onClick={(e) => handleSendMsg(e)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -488,7 +544,7 @@ const ChatLog = (props) => {
                   />
                 </svg>
               </button>
-            </Form>
+            </div>
           </div>
         ) : null}
       </div>

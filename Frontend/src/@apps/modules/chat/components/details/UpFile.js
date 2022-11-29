@@ -144,7 +144,9 @@ const UpFile = (props) => {
   return (
     <>
       <Label
-        className="attachment-icon mb-0"
+        className={`attachment-icon mb-0 ${
+          _.isEmpty(selectedUser.chat.id) ? "disabled" : ""
+        }`}
         for="attach-doc"
         style={{ width: "30px" }}>
         <Paperclip className="cursor-pointer text-secondary" size={20} />
@@ -156,6 +158,7 @@ const UpFile = (props) => {
           onChange={(e) => {
             changeFile(e)
           }}
+          disabled={_.isEmpty(selectedUser.chat.id)}
         />
       </Label>
 

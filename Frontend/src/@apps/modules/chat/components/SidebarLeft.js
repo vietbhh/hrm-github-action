@@ -4,14 +4,12 @@ import { useState } from "react"
 // ** Custom Components
 import Avatar from "@apps/modules/download/pages/Avatar"
 
-// ** Utils
-import { formatDateToMonthShort } from "@utils"
-
 // ** Third Party Components
 import classnames from "classnames"
 import { Search, X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import ModalNewGroup from "./modals/ModalNewGroup"
+import { formatTime } from "../common/common"
 
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
@@ -119,7 +117,7 @@ const SidebarLeft = (props) => {
                     )
                   }),
                   (item) => {
-                    const time = formatDateToMonthShort(
+                    const time = formatTime(
                       item.chat.lastMessage
                         ? item.chat.lastMessage.time
                         : new Date()
