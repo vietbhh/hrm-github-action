@@ -689,9 +689,18 @@
               .form-send-message {
                 height: 55px;
 
+                .form-group {
+                  margin: 0;
+                  width: calc(100% - 120px);
+                }
+
                 .form-control {
-                  height: auto;
+                  height: 55px;
                   font-size: 14px !important;
+                  border-radius: 0;
+                  border-left: 0;
+                  padding-left: 0;
+                  padding-right: 0;
                 }
 
                 .input-group-text,
@@ -710,6 +719,8 @@
 
                 .input-group-text:first-child {
                   border-radius: 16px 0 0 16px;
+                  width: 60px;
+                  justify-content: center;
                 }
 
                 .input-group-text:last-child {

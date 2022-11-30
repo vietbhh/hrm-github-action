@@ -7,7 +7,7 @@ import GifComponent from "./Gif"
 const index = (props) => {
   const {
     setMsg,
-    msg,
+    getValues,
     sendMessage,
     selectedUser,
     focusInputMsg,
@@ -44,7 +44,7 @@ const index = (props) => {
           <Tabs.TabPane tab="Emoji" key="1">
             <EmojiComponent
               setMsg={setMsg}
-              msg={msg}
+              getValues={getValues}
               focusInputMsg={focusInputMsg}
             />
           </Tabs.TabPane>
@@ -64,7 +64,7 @@ const index = (props) => {
       <Smile
         ref={emotionIconRef}
         className="cursor-pointer text-secondary"
-        size={20}
+        size={22}
         onClick={() => {
           if (showEmotion === false) {
             setShowEmotion(true)

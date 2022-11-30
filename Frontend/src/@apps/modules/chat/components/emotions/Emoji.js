@@ -1,17 +1,11 @@
-// ** React Imports
-
-// ** Custom Components
-
-// ** Third Party Components
 import EmojiPicker, { Categories, EmojiStyle, Theme } from "emoji-picker-react"
 
-// ** Reactstrap Imports
-
 const Emoji = (props) => {
-  const { setMsg, msg, focusInputMsg } = props
+  const { setMsg, getValues, focusInputMsg } = props
   return (
     <EmojiPicker
       onEmojiClick={(emojiData) => {
+        const msg = getValues("message")
         setMsg(msg + emojiData.emoji)
         focusInputMsg()
       }}

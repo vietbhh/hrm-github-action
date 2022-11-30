@@ -76,7 +76,7 @@ const AppChat = (props) => {
   const lastTimeMessage = chat.lastTimeMessage
   const chatHistory = chat.chatHistory
   const unreadStore = chat.unread
-  const queryLimit = 70
+  const queryLimit = 50
 
   const setUnread = (num) => {
     dispatch(handleUnread({ unread: num }))
@@ -273,6 +273,8 @@ const AppChat = (props) => {
         setLoadingMessage(false)
       })
     }
+
+    dispatch(handleChatHistory({ chatHistory: [] }))
   }
 
   const updateMessage = (groupId, timestamp, dataUpdate) => {
@@ -678,10 +680,11 @@ const AppChat = (props) => {
         let _chat = []
         let check_add = false
         querySnapshot.docChanges().forEach((change) => {
+          const docData = change.doc
+          const data = docData.data()
+
           if (change.type === "added") {
             check_add = true
-            const docData = change.doc
-            const data = docData.data()
 
             // ** seen message
             const chatContainer = ReactDOM.findDOMNode(chatArea.current)
@@ -718,8 +721,6 @@ const AppChat = (props) => {
             ]
           }
           if (change.type === "modified") {
-            const docData = change.doc
-            const data = docData.data()
             const timestamp = data.timestamp
             const chat_new = [...chat]
             const index_chat = chat_new.findIndex(
@@ -747,8 +748,6 @@ const AppChat = (props) => {
             }
           }
           if (change.type === "removed") {
-            const docData = change.doc
-            const data = docData.data()
             const timestamp = data.timestamp
             const chat_new = [...chat]
             chat = chat_new.filter((item) => item.time !== timestamp)

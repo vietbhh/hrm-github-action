@@ -10,14 +10,15 @@ import EmotionsComponent from "./emotions/index"
 import ModalForward from "./modals/ModalForward"
 
 // ** Third Party Components
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classnames from "classnames"
 import { Menu as MenuIcon, MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
 
-// ** Reactstrap Imports
+import { ErpInput } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { Badge, Form, InputGroup, InputGroupText, Input } from "reactstrap"
+import { FormProvider, useForm } from "react-hook-form"
+import { Badge, InputGroup, InputGroupText } from "reactstrap"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -82,7 +83,7 @@ const ChatLog = (props) => {
   const setDataForward = (data) => {
     setState({ data_forward: data })
   }
-  const [msg, setMsg] = useState("")
+
   const msgRef = useRef(null)
 
   const focusInputMsg = () => {
@@ -94,6 +95,15 @@ const ChatLog = (props) => {
   const scrollToMessage = () => {
     const chatContainer = ReactDOM.findDOMNode(chatArea.current)
     chatContainer.scrollTop = 1000
+  }
+
+  const methods = useForm({
+    mode: "onSubmit"
+  })
+  const { handleSubmit, setValue, getValues } = methods
+
+  const setMsg = (msg) => {
+    setValue("message", msg)
   }
 
   // ** listen esc
@@ -183,8 +193,8 @@ const ChatLog = (props) => {
     }
   }
   // ** Sends New Msg
-  const handleSendMsg = (e) => {
-    e.preventDefault()
+  const handleSendMsg = (values) => {
+    const msg = values.message
     if (loadingMessage) return
     if (msg.trim().length) {
       const reply = state.replying
@@ -482,69 +492,67 @@ const ChatLog = (props) => {
               )}
             </ChatWrapper>
 
-            <div
-              className={`chat-app-form ${state.replying ? "replying" : ""}`}>
-              <InputGroup className="input-group-merge form-send-message">
-                <InputGroupText>
-                  <EmotionsComponent
-                    setMsg={setMsg}
-                    msg={msg}
-                    sendMessage={sendMessage}
-                    selectedUser={selectedUser}
-                    focusInputMsg={focusInputMsg}
-                    setReplyingDefault={setReplyingDefault}
-                  />
-                </InputGroupText>
-                {state.replying && (
-                  <div className="form-reply">
-                    <div className="form-reply-left">{renderFormReply()}</div>
-                    <div className="form-reply-right">
-                      <i
-                        className="far fa-times form-reply-right-icon"
-                        onClick={() => {
-                          setReplyingDefault()
-                          focusInputMsg()
-                        }}></i>
+            <FormProvider {...methods}>
+              <form
+                onSubmit={handleSubmit(handleSendMsg)}
+                className={`chat-app-form ${state.replying ? "replying" : ""}`}>
+                <InputGroup className="input-group-merge form-send-message">
+                  <InputGroupText>
+                    <EmotionsComponent
+                      setMsg={setMsg}
+                      getValues={getValues}
+                      sendMessage={sendMessage}
+                      selectedUser={selectedUser}
+                      focusInputMsg={focusInputMsg}
+                      setReplyingDefault={setReplyingDefault}
+                    />
+                  </InputGroupText>
+                  {state.replying && (
+                    <div className="form-reply">
+                      <div className="form-reply-left">{renderFormReply()}</div>
+                      <div className="form-reply-right">
+                        <i
+                          className="far fa-times form-reply-right-icon"
+                          onClick={() => {
+                            setReplyingDefault()
+                            focusInputMsg()
+                          }}></i>
+                      </div>
                     </div>
-                  </div>
-                )}
-                <Input
-                  innerRef={msgRef}
-                  value={msg}
-                  onChange={(e) => setMsg(e.target.value)}
-                  placeholder="Type a message ..."
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      handleSendMsg(event)
-                    }
-                  }}
-                />
-                <InputGroupText>
-                  <UpFile
-                    updateMessage={updateMessage}
-                    selectedUser={selectedUser}
-                    setReplyingDefault={setReplyingDefault}
+                  )}
+                  <ErpInput
+                    innerRef={msgRef}
+                    useForm={methods}
+                    name="message"
+                    defaultValue=""
+                    placeholder="Type a message ..."
+                    nolabel
+                    autoComplete="off"
                   />
-                </InputGroupText>
-              </InputGroup>
+                  <InputGroupText>
+                    <UpFile
+                      updateMessage={updateMessage}
+                      selectedUser={selectedUser}
+                      setReplyingDefault={setReplyingDefault}
+                    />
+                  </InputGroupText>
+                </InputGroup>
 
-              <button
-                type="button"
-                className="send"
-                onClick={(e) => handleSendMsg(e)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none">
-                  <path
-                    d="M16.586 5.09924L8.76251 6.3913C3.50182 7.27084 3.07032 9.99521 7.80305 12.4491L9.89286 13.531L10.276 15.8529C11.1473 21.1123 13.8799 21.5451 16.3339 16.8123L19.9872 9.78061C21.6181 6.62185 20.0954 4.51606 16.586 5.09924ZM16.148 9.5691L12.5223 12.2179C12.3793 12.3218 12.2138 12.3546 12.0574 12.3298C11.901 12.3051 11.7538 12.2227 11.6499 12.0797C11.449 11.8032 11.5116 11.4081 11.7881 11.2072L15.4137 8.55845C15.6902 8.35757 16.0853 8.42014 16.2862 8.69664C16.4871 8.97313 16.4245 9.36821 16.148 9.5691Z"
-                    fill="white"
-                  />
-                </svg>
-              </button>
-            </div>
+                <button type="submit" className="send">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none">
+                    <path
+                      d="M16.586 5.09924L8.76251 6.3913C3.50182 7.27084 3.07032 9.99521 7.80305 12.4491L9.89286 13.531L10.276 15.8529C11.1473 21.1123 13.8799 21.5451 16.3339 16.8123L19.9872 9.78061C21.6181 6.62185 20.0954 4.51606 16.586 5.09924ZM16.148 9.5691L12.5223 12.2179C12.3793 12.3218 12.2138 12.3546 12.0574 12.3298C11.901 12.3051 11.7538 12.2227 11.6499 12.0797C11.449 11.8032 11.5116 11.4081 11.7881 11.2072L15.4137 8.55845C15.6902 8.35757 16.0853 8.42014 16.2862 8.69664C16.4871 8.97313 16.4245 9.36821 16.148 9.5691Z"
+                      fill="white"
+                    />
+                  </svg>
+                </button>
+              </form>
+            </FormProvider>
           </div>
         ) : null}
       </div>
