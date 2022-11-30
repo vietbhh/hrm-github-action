@@ -373,7 +373,7 @@
                     display: flex;
                     flex-direction: column;
                     position: relative;
-                    transition: all 0.5s ease, background 0.5s;
+                    transition: padding 0.5s ease, background 0.5s ease;
 
                     &:hover {
                       .chat-content-reaction {

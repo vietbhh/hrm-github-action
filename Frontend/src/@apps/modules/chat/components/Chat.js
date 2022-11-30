@@ -45,7 +45,9 @@ const ChatLog = (props) => {
     windowWidth,
     setUserSidebarRight,
     dataEmployees,
-    queryLimit
+    queryLimit,
+    checkAddMessage,
+    setCheckAddMessage
   } = props
   const { userProfile, selectedUser } = store
 
@@ -111,36 +113,35 @@ const ChatLog = (props) => {
   // ** If user chat is not empty scrollToBottom
   useEffect(() => {
     const selectedUserLen = Object.keys(selectedUser).length
-    if (selectedUserLen) {
-      if (!_.isEmpty(chats)) {
-        const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-        const senderId = chats.length > 0 ? chats[chats.length - 1].senderId : 0
+    if (selectedUserLen && !_.isEmpty(chats)) {
+      const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+      const senderId = chats.length > 0 ? chats[chats.length - 1].senderId : 0
+      if (
+        chatContainer.scrollHeight -
+          chatContainer.scrollTop -
+          chatContainer.clientHeight <=
+          200 ||
+        chatContainer.scrollTop === 0 ||
+        (senderId === userId && checkAddMessage === true)
+      ) {
+        scrollToBottom()
+        setCheckAddMessage(false)
+      } else {
+        handleUnSeenMessage(selectedUser.chat.id)
+      }
+
+      setTimeout(() => {
         if (
           chatContainer.scrollHeight -
             chatContainer.scrollTop -
             chatContainer.clientHeight <=
             200 ||
           chatContainer.scrollTop === 0 ||
-          senderId === userId
+          (senderId === userId && checkAddMessage === true)
         ) {
           scrollToBottom()
-        } else {
-          handleUnSeenMessage(selectedUser.chat.id)
         }
-
-        setTimeout(() => {
-          if (
-            chatContainer.scrollHeight -
-              chatContainer.scrollTop -
-              chatContainer.clientHeight <=
-              200 ||
-            chatContainer.scrollTop === 0 ||
-            senderId === userId
-          ) {
-            scrollToBottom()
-          }
-        }, 700)
-      }
+      }, 700)
     }
   }, [selectedUser, loadingMessage, chats])
 
@@ -184,6 +185,7 @@ const ChatLog = (props) => {
   // ** Sends New Msg
   const handleSendMsg = (e) => {
     e.preventDefault()
+    if (loadingMessage) return
     if (msg.trim().length) {
       const reply = state.replying
         ? {
@@ -481,9 +483,7 @@ const ChatLog = (props) => {
             </ChatWrapper>
 
             <div
-              className={`chat-app-form ${state.replying ? "replying" : ""}`}
-              /* onSubmit={(e) => handleSendMsg(e)} */
-            >
+              className={`chat-app-form ${state.replying ? "replying" : ""}`}>
               <InputGroup className="input-group-merge form-send-message">
                 <InputGroupText>
                   <EmotionsComponent

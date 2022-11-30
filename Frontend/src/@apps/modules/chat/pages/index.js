@@ -93,6 +93,7 @@ const AppChat = (props) => {
   const [loadingMessage, setLoadingMessage] = useState(true)
   const [hasMoreHistory, setHasMoreHistory] = useState(true)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [checkAddMessage, setCheckAddMessage] = useState(false)
 
   // ** Update Window Width
   const handleWindowWidth = () => {
@@ -205,6 +206,7 @@ const AppChat = (props) => {
   }
 
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
+    setCheckAddMessage(true)
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id
       const docData = {
@@ -240,6 +242,7 @@ const AppChat = (props) => {
         }
       }
 
+      setLoadingMessage(true)
       const type = dataAddFile.type ? dataAddFile.type : "text"
       const docData = {
         last_message: handleLastMessage(type, msg),
@@ -267,6 +270,7 @@ const AppChat = (props) => {
           ...dataAddFile
         }
         setDoc(doc(collection(db, newGroupId)), docDataMessage)
+        setLoadingMessage(false)
       })
     }
   }
@@ -623,6 +627,7 @@ const AppChat = (props) => {
     dispatch(handleChatHistory({ chatHistory: [] }))
     setUnread(0)
     if (!_.isEmpty(active)) {
+      setCheckAddMessage(true)
       setLoadingMessage(true)
       const _listGroup = [...state.groups]
       _.forEach(_listGroup, (value, index) => {
@@ -861,6 +866,8 @@ const AppChat = (props) => {
               dataEmployees={dataEmployees}
               queryLimit={queryLimit}
               scrollToTopOffset={scrollToTopOffset}
+              checkAddMessage={checkAddMessage}
+              setCheckAddMessage={setCheckAddMessage}
             />
             <UserProfileSidebar
               user={user}
