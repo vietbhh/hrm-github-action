@@ -1,5 +1,4 @@
 import { ErpCheckbox } from "@apps/components/common/ErpField"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import TableLoader from "@apps/components/spinner/TableLoader"
 import { fieldLabel, useMergedState } from "@apps/utility/common"
 import DragAndDrop from "@apps/utility/DragAndDrop"

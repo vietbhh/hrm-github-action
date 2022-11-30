@@ -416,8 +416,9 @@ const ModalPayroll = (props) => {
       title={titleModal()}
       placement="right"
       onClose={toggleAddModal}
-      visible={modal}
+      open={modal}
       width={850}
+      zIndex={9999}
       className="employee-payroll-modal">
       <div className="ant-spin-nested-loading">
         {state.loading && (

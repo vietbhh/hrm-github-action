@@ -71,11 +71,11 @@ const TabPayRoll = (props) => {
   const loadData = (props) => {
     employeesApi.getPayroll(employeeData.id).then((res) => {
       setState({
-        dataRecurring: res.data.employees_recurring,
-        dataSalary: res.data.employees_salary,
+        dataRecurring: res.data?.employees_recurring || [],
+        dataSalary: res.data?.employees_salary || [],
         loading: false,
-        dataPayroll: res.data.employees_payroll.data_payroll,
-        payrollTotalRow: res.data.employees_payroll.total_row,
+        dataPayroll: res.data?.employees_payroll?.data_payroll,
+        payrollTotalRow: res.data?.employees_payroll?.total_row,
         effective_end_salary: res.data.effective_end_salary
       })
     })

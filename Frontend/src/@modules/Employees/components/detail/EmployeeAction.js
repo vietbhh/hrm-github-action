@@ -6,7 +6,7 @@ import { employeesApi } from "@modules/Employees/common/api"
 import { showOffboardingModal } from "@modules/Employees/common/offboardingReducer"
 import { showOnboardingModal } from "@modules/Employees/common/onboardingReducer"
 import { showRehireModal } from "@modules/Employees/common/rehireReducer"
-import { Dropdown, Menu } from "antd"
+import { Dropdown } from "antd"
 import { filter, isEmpty, isFunction, isUndefined, map } from "lodash-es"
 import { useContext } from "react"
 import { MoreVertical } from "react-feather"
@@ -133,7 +133,7 @@ const EmployeeAction = (props) => {
         _sendInvite()
       },
       condition: () =>
-        parseInt(employeeData.account_status.value) === 1 && canHiring,
+        parseInt(employeeData?.account_status?.value) === 1 && canHiring,
       ...invite
     },
     reinvite: {
@@ -143,19 +143,19 @@ const EmployeeAction = (props) => {
         _sendInvite()
       },
       condition: () =>
-        parseInt(employeeData.account_status.value) === 2 && canHiring,
+        parseInt(employeeData?.account_status?.value) === 2 && canHiring,
       ...reinvite
     },
     onboarding: {
       title: useFormatMessage("modules.employees.buttons.onboarding"),
       icon: <i className="iconly-Login me-25"></i>,
       onClick: () => {
-        console.log(employeeData)
         setAssignType("onboarding")
         toggleAssignChecklistModal()
         dispatch(showOnboardingModal(employeeData))
       },
-      condition: () => parseInt(employeeData.status.value) === 11 && canHiring,
+      condition: () =>
+        parseInt(employeeData?.status?.value) === 11 && canHiring,
       ...onboarding
     },
     offboarding: {
@@ -165,7 +165,7 @@ const EmployeeAction = (props) => {
         dispatch(showOffboardingModal(employeeData))
       },
       condition: () =>
-        [11, 12, 13, 14].includes(parseInt(employeeData.status.value)) &&
+        [11, 12, 13, 14].includes(parseInt(employeeData?.status?.value)) &&
         canTermination,
       ...offboarding
     },
@@ -176,7 +176,7 @@ const EmployeeAction = (props) => {
         _cancelOffboarding()
       },
       condition: () =>
-        parseInt(employeeData.status.value) === 15 && canTermination,
+        parseInt(employeeData?.status?.value) === 15 && canTermination,
       ...cancel_offboarding
     },
     rehire: {
@@ -185,7 +185,8 @@ const EmployeeAction = (props) => {
       onClick: () => {
         dispatch(showRehireModal(employeeData))
       },
-      condition: () => parseInt(employeeData.status.value) === 16 && canHiring,
+      condition: () =>
+        parseInt(employeeData?.status?.value) === 16 && canHiring,
       ...rehire
     },
     test: {
@@ -206,25 +207,27 @@ const EmployeeAction = (props) => {
     ...rest
   }
 
+  const items = [
+    ...map(
+      filter(actions, (item) => item !== false && item.condition()),
+      (item, index) => {
+        return {
+          key: index,
+          className: "employeeStatusDropdown",
+          label: (
+            <span onClick={item.onClick}>
+              {item.icon}
+              {item.title}
+            </span>
+          )
+        }
+      }
+    )
+  ]
+
   return (
     <Fragment>
-      <Dropdown
-        overlay={() => (
-          <Menu className="employeeStatusDropdown">
-            {map(
-              filter(actions, (item) => item !== false && item.condition()),
-              (item, index) => {
-                return (
-                  <Menu.Item key={index} onClick={item.onClick}>
-                    {item.icon}
-                    {item.title}
-                  </Menu.Item>
-                )
-              }
-            )}
-          </Menu>
-        )}
-        trigger={["click"]}>
+      <Dropdown menu={{ items }} trigger={["click"]}>
         {isUndefined(render) ? (
           <Button.Ripple
             size="sm"
