@@ -90,7 +90,7 @@ const PopoverSelectSource = (props) => {
       placement="rightTop"
       title={useFormatMessage("modules.recruitments.title.add_source")}
       content={renderSourceSelect()}
-      visible={visible}
+      open={visible}
       overlayClassName="popover-select-source"
     >
       <Button.Ripple

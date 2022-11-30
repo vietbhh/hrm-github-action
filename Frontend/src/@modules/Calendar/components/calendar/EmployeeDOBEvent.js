@@ -40,7 +40,7 @@ const EmployeeDOBEvent = (props) => {
               width="18px"
               height="18px"
               viewBox="0 0 512 512"
-              enable-background="new 0 0 512 512"
+              enableBackground="new 0 0 512 512"
               xmlSpace="preserve">
               {" "}
               <image

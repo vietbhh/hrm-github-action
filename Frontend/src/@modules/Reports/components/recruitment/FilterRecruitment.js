@@ -25,7 +25,6 @@ const FilterRecruitment = (props) => {
 
   // ** effect
   useEffect(() => {
-    console.log(watch)
     const subscription = watch((value, { name, type }) => {
       if (type === "change") {
         setFilter({ ...value })

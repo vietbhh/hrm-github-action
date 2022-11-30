@@ -23,7 +23,6 @@ const ListCustomFieldItem = (props) => {
 
   const fieldOptions = customField.field_options
   const fieldOptionsValues = customField.field_options?.option_values
-  console.log(fieldOptionsValues)
   const typeOption = getTypeOption()
   const [fieldTypeInfo] = typeOption.filter((item) => {
     return item.value === customField.field_type

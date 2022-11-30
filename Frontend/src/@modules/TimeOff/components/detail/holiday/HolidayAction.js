@@ -106,9 +106,9 @@ const HolidayAction = (props) => {
         <Popover
           placement="bottomRight"
           content={popOverDeleteContent}
-          visible={state.showPopup}
+          open={state.showPopup}
           trigger="click"
-          onVisibleChange={handleVisibleChange}
+          onOpenChange={handleVisibleChange}
         >
           <Button.Ripple className="btn-icon" color="flat-danger" size="sm">
             <Trash2 size={15} />
