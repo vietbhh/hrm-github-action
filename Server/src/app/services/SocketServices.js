@@ -1,6 +1,7 @@
 class SocketServices {
   users = []
   connection = (client) => {
+    console.log("test123")
     // event fired when the chat room is disconnected
     client.on("disconnect", () => {
       this.users = this.users.filter((user) => user.socketId !== client.id)

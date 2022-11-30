@@ -10,7 +10,7 @@ class CronJob
 	{
 		$namespaces = CODE_AUTOLOAD;
 		foreach ($namespaces as $key => $item) {
-			$class = '\\' . $key . '\Config\Cronjob';
+			$class = '\\' . $key . '\Config\CronJob';
 			if (class_exists($class)) {
 				$cronjob = new $class();
 				$cronjob->run($schedule);
