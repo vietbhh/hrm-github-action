@@ -32,7 +32,7 @@ const FilterPayroll = (props) => {
             defaultValue={options_payroll ? options_payroll[0] : null}
             nolabel
             isClearable={false}
-            readOnly={loading_table}
+            // readOnly={loading_table}
           />
         </div>
 
@@ -47,7 +47,7 @@ const FilterPayroll = (props) => {
             )}
             prepend={<i className="iconly-Search icli"></i>}
             nolabel
-            readOnly={isEmpty(options_payroll) || loading_table}
+            readOnly={isEmpty(options_payroll)}
           />
         </div>
       </div>

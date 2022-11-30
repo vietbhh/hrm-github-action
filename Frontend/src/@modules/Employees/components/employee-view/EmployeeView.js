@@ -174,8 +174,8 @@ const EmployeeView = (props) => {
           title={renderTitle()}
           content={renderContent()}
           trigger="click"
-          visible={state.visibleEmployeeView}
-          onVisibleChange={handleVisibleChange}
+          open={state.visibleEmployeeView}
+          onOpenChange={handleVisibleChange}
           overlayClassName="employee-view-popover">
           <div className="employee-view-text">
             <span>{state.employeeViewTitle}</span>

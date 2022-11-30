@@ -313,12 +313,13 @@ const SendPayslip = (props) => {
         className="send-payslip-drawer"
         placement="left"
         width={378}
+        zIndex={9999}
         onClose={() => {
           onCloseModal()
         }}
         title={useFormatMessage(`modules.payrolls.modal.payslip`)}
         closable={true}
-        visible={modal}
+        open={modal}
         mask={true}>
         <div className="drawer-content">
           {state.loadingPage && <DefaultSpinner />}
@@ -333,10 +334,11 @@ const SendPayslip = (props) => {
         }
         placement="left"
         size="large"
+        zIndex={9999}
         title={renderTitleModalMail()}
         closable={true}
         onClose={toggleModalMail}
-        visible={state.showContentMail}
+        open={state.showContentMail}
         mask={false}>
         {renderBodyModalMail()}
       </Drawer>

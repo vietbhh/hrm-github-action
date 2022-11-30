@@ -210,48 +210,43 @@ const AddNewsModal = (props) => {
     }
   }
 
-  const menu = (
-    <Menu
-      style={{ marginTop: "10px" }}
-      items={[
-        {
-          type: "group",
-          label: useFormatMessage("modules.news.share.item.title"),
-          key: "0"
-        },
-        {
-          label: (
-            <label
-              className="menu-share"
-              onClick={() => {
-                toggleShareModal()
-              }}>
-              <i className="fad fa-suitcase icon-share"></i>
-              {useFormatMessage("modules.news.share.item.department")}
-              {!state.checkShareEveryone && <i className="far fa-check"></i>}
-            </label>
-          ),
-          key: "1"
-        },
-        {
-          label: (
-            <span
-              className="menu-share"
-              onClick={() => {
-                clickShareEveryone()
-              }}>
-              <i className="far fa-globe icon-share"></i>
-              {useFormatMessage("modules.news.share.item.everyone")}
-              {state.checkShareEveryone && (
-                <i className="far fa-check" style={{ float: "right" }}></i>
-              )}
-            </span>
-          ),
-          key: "2"
-        }
-      ]}
-    />
-  )
+  const items = [
+    {
+      type: "group",
+      label: useFormatMessage("modules.news.share.item.title"),
+      key: "0"
+    },
+    {
+      label: (
+        <label
+          className="menu-share"
+          onClick={() => {
+            toggleShareModal()
+          }}>
+          <i className="fad fa-suitcase icon-share"></i>
+          {useFormatMessage("modules.news.share.item.department")}
+          {!state.checkShareEveryone && <i className="far fa-check"></i>}
+        </label>
+      ),
+      key: "1"
+    },
+    {
+      label: (
+        <span
+          className="menu-share"
+          onClick={() => {
+            clickShareEveryone()
+          }}>
+          <i className="far fa-globe icon-share"></i>
+          {useFormatMessage("modules.news.share.item.everyone")}
+          {state.checkShareEveryone && (
+            <i className="far fa-check" style={{ float: "right" }}></i>
+          )}
+        </span>
+      ),
+      key: "2"
+    }
+  ]
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -341,7 +336,7 @@ const AddNewsModal = (props) => {
                   </Col>
                   <Col sm={12} className="mb-25">
                     <Dropdown
-                      overlay={menu}
+                      menu={{ items }}
                       trigger={["click"]}
                       overlayClassName="news">
                       <a onClick={(e) => e.preventDefault()}>

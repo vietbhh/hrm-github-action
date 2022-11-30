@@ -387,60 +387,60 @@ const TablePayroll = (props) => {
                   <Table.Summary.Cell index={1}>
                     <div className="td-payroll td-bg">
                       {renderNumber(
-                        convertNumberCurrency(data_total.total_comp)
+                        convertNumberCurrency(data_total?.total_comp)
                       )}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={2}>
                     <div className="td-payroll">
-                      {renderNumber(convertNumberCurrency(data_total.salary))}
+                      {renderNumber(convertNumberCurrency(data_total?.salary))}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={3}>
                     <div className="td-payroll">
-                      {renderNumber(convertNumberCurrency(data_total.actual))}
+                      {renderNumber(convertNumberCurrency(data_total?.actual))}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={4}>
                     <div className="td-payroll">
                       {renderNumber(
-                        convertNumberCurrency(data_total.recurring)
+                        convertNumberCurrency(data_total?.recurring)
                       )}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={5}>
                     <div className="td-payroll">
-                      {renderNumber(convertNumberCurrency(data_total.one_off))}
+                      {renderNumber(convertNumberCurrency(data_total?.one_off))}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={6}>
                     <div className="td-payroll">
-                      {renderNumber(convertNumberCurrency(data_total.offset))}
+                      {renderNumber(convertNumberCurrency(data_total?.offset))}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={7}>
                     <div className="td-payroll">
-                      {renderNumber(convertNumberCurrency(data_total.ot))}
+                      {renderNumber(convertNumberCurrency(data_total?.ot))}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={8}>
                     <div className="td-payroll">
                       {renderNumber(
-                        convertNumberCurrency(data_total.off_cycle)
+                        convertNumberCurrency(data_total?.off_cycle)
                       )}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={9}>
                     <div className="td-payroll">
                       {renderNumber(
-                        convertNumberCurrency(data_total.unpaid, true)
+                        convertNumberCurrency(data_total?.unpaid, true)
                       )}
                     </div>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={9}>
                     <div className="td-payroll">
                       {renderNumber(
-                        convertNumberCurrency(data_total.deficit, true)
+                        convertNumberCurrency(data_total?.deficit, true)
                       )}
                     </div>
                   </Table.Summary.Cell>
