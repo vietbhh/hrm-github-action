@@ -88,7 +88,7 @@ const AddEvent = (props) => {
       title={useFormatMessage("modules.calendar.title.add_event")}
       placement="right"
       onClose={() => handleCloseDrawer()}
-      visible={visibleAddEvent}
+      open={visibleAddEvent}
       closable={false}>
       <div>
         <div className="mb-2">{renderEventForm()}</div>

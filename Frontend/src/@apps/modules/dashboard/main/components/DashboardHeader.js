@@ -94,7 +94,7 @@ const DashboardHeader = (props) => {
         <div className="ms-auto">
           {customRight}
           <Dropdown
-            overlay={menuDropdown}
+            menu={menuDropdown}
             placement="bottomRight"
             arrow={{ pointAtCenter: true }}
             trigger={["click"]}
