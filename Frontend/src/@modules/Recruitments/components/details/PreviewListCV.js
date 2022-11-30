@@ -167,8 +167,9 @@ const PreviewListCV = (props) => {
         className="preview-cv-drawer"
         placement="left"
         closable={false}
-        visible={visible}
-        mask={true}>
+        open={visible}
+        mask={true}
+        zIndex={9999}>
         <div className="drawer-content">
           <div className="upload-area">{renderCVDragger()}</div>
           <div className="list-cv-area">
@@ -196,8 +197,9 @@ const PreviewListCV = (props) => {
         className={showCVContent === true ? "preview-cv-drawer-content" : ""}
         placement="left"
         closable={false}
-        visible={showCVContent}
-        mask={false}>
+        open={showCVContent}
+        mask={false}
+        zIndex={9999}>
         <div className="preview-cv-container d-flex">
           <div className="cv-info-area">{renderCVInfo()}</div>
           <div>{renderPreviewCVContent()}</div>
