@@ -61,52 +61,6 @@ const OrgChartEmployees = (props) => {
     )
   }
 
-  const menu = (data) => {
-    return (
-      <Menu
-        items={[
-          {
-            label: (
-              <div>
-                {useFormatMessage(
-                  "modules.departments.text.new_department_sub"
-                )}
-              </div>
-            ),
-            key: "new_sub",
-            onClick: () =>
-              handleAddNew({
-                parent: { value: data.id, label: data.name },
-                id: data.id,
-                newSub: true
-              })
-          },
-          {
-            label: (
-              <div>
-                {useFormatMessage("modules.departments.buttons.new_employee")}
-              </div>
-            ),
-            key: "btn_new_employee",
-            onClick: () => handleNewEmployee(data),
-            disabled: !data.id
-          },
-          {
-            label: <div>{useFormatMessage("button.edit")}</div>,
-            key: "btn_edit",
-            onClick: () => handleAddNew(data),
-            disabled: !data.id
-          },
-          {
-            label: <div>{useFormatMessage("button.delete")}</div>,
-            key: "btn_deleta",
-            onClick: () => handleDelete(data),
-            disabled: !data.id
-          }
-        ]}
-      />
-    )
-  }
   const StyledNode = styled.div`
     padding: 5px;
     border-radius: 8px;
@@ -198,21 +152,7 @@ const OrgChartEmployees = (props) => {
         setState({ loading: false })
       })
   }
-  const menuEmployee = (userID) => {
-    return (
-      <Menu
-        items={[
-          {
-            label: (
-              <div>{useFormatMessage("modules.departments.text.profile")}</div>
-            ),
-            key: "profile",
-            onClick: () => window.open("/employees/u/" + userID, "_blank")
-          }
-        ]}
-      />
-    )
-  }
+
   const renderEmployee = (arr = []) => {
     return _.map(arr, (item) => {
       const [{ isDragging }, drag] = useDrag({
@@ -232,9 +172,18 @@ const OrgChartEmployees = (props) => {
           isDragging: monitor.isDragging()
         })
       })
+      const items = [
+        {
+          label: (
+            <div>{useFormatMessage("modules.departments.text.profile")}</div>
+          ),
+          key: "profile",
+          onClick: () => window.open("/employees/u/" + item?.username, "_blank")
+        }
+      ]
       return (
         <Dropdown
-          overlay={menuEmployee(item?.username)}
+          menu={{ items }}
           trigger={["click"]}
           placement="bottomRight"
           className="me-50"
@@ -251,6 +200,7 @@ const OrgChartEmployees = (props) => {
       )
     })
   }
+
   const Organization = ({ org, onCollapse, collapsed }) => {
     const [{ isDragging }, drag] = useDrag({
       item: {
@@ -290,6 +240,44 @@ const OrgChartEmployees = (props) => {
     } else if (canDrop) {
       backgroundColor = "#ffeedc"
     }
+    const items = [
+      {
+        label: (
+          <div>
+            {useFormatMessage("modules.departments.text.new_department_sub")}
+          </div>
+        ),
+        key: "new_sub",
+        onClick: () =>
+          handleAddNew({
+            parent: { value: org.id, label: org.name },
+            id: org.id,
+            newSub: true
+          })
+      },
+      {
+        label: (
+          <div>
+            {useFormatMessage("modules.departments.buttons.new_employee")}
+          </div>
+        ),
+        key: "btn_new_employee",
+        onClick: () => handleNewEmployee(org),
+        disabled: !org.id
+      },
+      {
+        label: <div>{useFormatMessage("button.edit")}</div>,
+        key: "btn_edit",
+        onClick: () => handleAddNew(org),
+        disabled: !org.id
+      },
+      {
+        label: <div>{useFormatMessage("button.delete")}</div>,
+        key: "btn_deleta",
+        onClick: () => handleDelete(org),
+        disabled: !org.id
+      }
+    ]
     return (
       <div ref={drop}>
         <StyledNode variant="outlined" ref={drag} style={{ backgroundColor }}>
@@ -303,7 +291,7 @@ const OrgChartEmployees = (props) => {
             }}>
             {org.name}
             <Dropdown
-              overlay={menu(org)}
+              menu={{ items }}
               trigger={["click"]}
               placement="bottomRight"
               overlayClassName="drop_workschedule"
