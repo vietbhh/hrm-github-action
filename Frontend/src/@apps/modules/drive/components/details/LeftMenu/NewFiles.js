@@ -1,0 +1,45 @@
+// ** React Imports
+import { Fragment } from "react"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+// ** Styles
+import {
+  UncontrolledButtonDropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle
+} from "reactstrap"
+// ** Components
+
+const NewFiles = (props) => {
+  const {
+    // ** props
+    // ** methods
+  } = props
+
+  //  ** render
+  return (
+    <Fragment>
+      <div className="w-100 p-250 new-file">
+        <UncontrolledButtonDropdown className="w-100 ">
+          <DropdownToggle color="custom-primary" caret>
+            <i className="fas fa-plus me-1" />
+            {useFormatMessage("modules.drive.buttons.new_file")}
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem href="/" tag="a">
+              {useFormatMessage("modules.drive.buttons.upload_file")}
+            </DropdownItem>
+            <DropdownItem href="/" tag="a">
+              {useFormatMessage("modules.drive.buttons.upload_folder")}
+            </DropdownItem>
+            <DropdownItem href="/" tag="a">
+              {useFormatMessage("modules.drive.buttons.new_folder")}
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledButtonDropdown>
+      </div>
+    </Fragment>
+  )
+}
+
+export default NewFiles

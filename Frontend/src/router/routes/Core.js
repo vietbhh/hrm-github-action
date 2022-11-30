@@ -53,6 +53,7 @@ const Calendar = lazy(() =>
 const Notification = lazy(() =>
   import("@apps/modules/notification/pages/NotificationIndex")
 )
+const Drive = lazy(() => import("@apps/modules/drive/pages/Drive"))
 
 const CoreRoutes = [
   {
@@ -244,7 +245,7 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: "erp-fullWidth",
-      layout : "chat"
+      layout: "chat"
     }
   },
   {
@@ -272,6 +273,15 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: ""
+    }
+  },
+  {
+    path: "/drive",
+    element: <Drive />,
+    meta: {
+      action: "login",
+      resource: "app",
+      layout: "drive"
     }
   }
 ]

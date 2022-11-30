@@ -152,6 +152,8 @@ $routes->get('calendar/load-calendar-tag', 'Calendar::load_calendar_tag_get');
 $routes->delete('calendar/remove-calendar/(:alphanum)', 'Calendar::delete_delete/$1');
 $routes->get('general/users', 'General::load_users_get');
 
+$routes->get('drive/get-my-drive-folder', 'Drive::get_my_drive_folder_get', ['namespace' => 'App\Controllers']);
+
 /*** Route for Search ****/
 $routes->get('search/get_data_user', 'Search::get_data_employee_search_get', ['namespace' => 'App\Controllers']);
 

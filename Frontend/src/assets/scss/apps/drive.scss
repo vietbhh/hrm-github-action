@@ -1,0 +1,117 @@
+@import "@scss/friday";
+
+.drive-page {
+    .p-250 {
+        padding: 2.5rem;
+    }
+
+    .w-30 {
+        width: 30%;
+    }
+
+    .w-60 {
+        width: 60%;
+    }
+
+    .w-70 {
+        width: 70%;
+    }
+
+    .bg-blue {
+        background-color: #3F8CFF;
+    }
+
+    .btn-flat-info {
+        color: $primary-text-color;
+
+        &:hover, &:focus {
+            background-color: #3F8CFF !important;
+            color: #ffffff;
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $primary-text-color;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .main-menu-content {
+        .new-file {
+            .dropdown-menu {
+                width: 100%;
+            }
+
+            .btn-custom-primary {
+                border-radius: 12px;
+                color: #FFFFFF;
+                background-color: #377DFF;
+
+                &:after {
+                    display: none;
+                }
+
+                &:hover {
+                    box-shadow: none !important;
+                }
+            }
+        }
+    }
+
+    .drive-content {
+        .s3-storage-container {
+            .s3-storage-item {
+                height: 200px;
+                .s3-storage-header {
+                    height: 100px;
+
+                    .icon-header {
+                        background-color: #F1F1F5;
+                        height: 50px;
+                        width: 50px;
+                        border-radius: 18px;
+                    }
+                }   
+
+                .s3-storage-body {
+                    .small-text {
+                        font-size: 10px;
+                        font-weight: 400;
+                    }
+
+                    .progress-capacity {
+                        background-color: #E4E4E4;
+                    }
+
+                    .progress-bar-warning .progress-bar {
+                        background-color: #FFC66F;
+                    }
+
+                    .progress-bar-info .progress-bar {
+                        background-color: #3F8CFF;
+                    }
+                }
+            }
+        }
+
+        .recent-file-and-folder-container {
+            .recent-file-and-folder-item {
+                .icon-file-and-folder {
+                    height: 48px;
+                    width: 48px;
+                    background-color: rgba(106, 75, 255, 0.05);
+                    border-radius: 12px;
+                }
+
+                .name-file-and-folder {
+                }
+
+                .extension-file-and-folder{
+                    color: #92929D;
+                }
+            }
+        }
+    }
+}
