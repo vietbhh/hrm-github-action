@@ -445,7 +445,7 @@ const MainDashboard = ({
           className="dnd widget-drawer"
           mask={false}
           onClose={() => setState({ visible: !state.visible })}
-          visible={state.visible}
+          open={state.visible}
           footer={
             <>
               <span>

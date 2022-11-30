@@ -7,7 +7,6 @@ import { useSelector } from "react-redux"
 import { requestPermission } from "./firebase"
 // ** Router Import
 import Router from "./router/Router"
-
 const App = () => {
   const appLoading = useSelector((state) => state.app.loading)
   const routes = useSelector((state) => state.app.routes)
