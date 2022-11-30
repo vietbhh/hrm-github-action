@@ -29,30 +29,24 @@ const TagAndSource = (props) => {
     loadData()
   }, [])
 
-  const menu = (item) => {
-    return (
-      <Menu
-        items={[
-          {
-            label: (
-              <div onClick={() => setState({ dataEdit: item, modal: true })}>
-                {useFormatMessage("button.edit")}
-              </div>
-            ),
-            key: "btn_edit"
-          },
-          {
-            label: (
-              <div onClick={() => deleteTS(item.id)}>
-                {useFormatMessage("button.delete")}
-              </div>
-            ),
-            key: "btn_delete"
-          }
-        ]}
-      />
-    )
-  }
+  const items = [
+    {
+      label: (
+        <div onClick={() => setState({ dataEdit: item, modal: true })}>
+          {useFormatMessage("button.edit")}
+        </div>
+      ),
+      key: "btn_edit"
+    },
+    {
+      label: (
+        <div onClick={() => deleteTS(item.id)}>
+          {useFormatMessage("button.delete")}
+        </div>
+      ),
+      key: "btn_delete"
+    }
+  ]
 
   const renderCard = (list) => {
     return list.map((item) => {
@@ -62,7 +56,7 @@ const TagAndSource = (props) => {
             <div className="tag-name d-flex">
               {item.title}
               <Dropdown
-                overlay={menu(item)}
+                menu={{ items }}
                 placement="bottomRight"
                 overlayClassName="drop_workschedule"
                 className="ms-auto">
@@ -104,6 +98,47 @@ const TagAndSource = (props) => {
   const handleModal = () => {
     setState({ modal: !state.modal, dataEdit: "" })
   }
+
+  const itemsTab = [
+    {
+      label: useFormatMessage("modules.recruitments.text.tags"),
+      key: "tab-tags",
+      children: (
+        <Row>
+          <Col sm={4}>
+            <div className="box box-add" onClick={() => handleModal()}>
+              <div>
+                <i className="fa-duotone fa-circle-plus"></i>
+              </div>
+              <div className="mt-50">
+                {useFormatMessage("modules.recruitments.text.new_tag")}
+              </div>
+            </div>
+          </Col>
+          {renderCard(state.listTag)}
+        </Row>
+      )
+    },
+    {
+      label: useFormatMessage("modules.recruitments.text.sources"),
+      key: "tab-sources",
+      children: (
+        <Row>
+          <Col sm={4}>
+            <div className="box box-add" onClick={() => handleModal()}>
+              <div>
+                <i className="fa-duotone fa-circle-plus"></i>
+              </div>
+              <div className="mt-50">
+                {useFormatMessage("modules.recruitments.text.new_source")}
+              </div>
+            </div>
+          </Col>
+          {renderCard(state.listSource)}
+        </Row>
+      )
+    }
+  ]
   return (
     <RecruitmentSettingLayout
       breadcrumbs={
@@ -117,42 +152,8 @@ const TagAndSource = (props) => {
           ]}
         />
       }>
-      <Tabs onTabClick={(e) => setState({ tab: e })}>
-        <TabPane
-          tab={useFormatMessage("modules.recruitments.text.tags")}
-          key="tags">
-          <Row>
-            <Col sm={4}>
-              <div className="box box-add" onClick={() => handleModal()}>
-                <div>
-                  <i className="fa-duotone fa-circle-plus"></i>
-                </div>
-                <div className="mt-50">
-                  {useFormatMessage("modules.recruitments.text.new_tag")}
-                </div>
-              </div>
-            </Col>
-            {renderCard(state.listTag)}
-          </Row>
-        </TabPane>
-        <TabPane
-          tab={useFormatMessage("modules.recruitments.text.sources")}
-          key="sources">
-          <Row>
-            <Col sm={4}>
-              <div className="box box-add" onClick={() => handleModal()}>
-                <div>
-                  <i className="fa-duotone fa-circle-plus"></i>
-                </div>
-                <div className="mt-50">
-                  {useFormatMessage("modules.recruitments.text.new_source")}
-                </div>
-              </div>
-            </Col>
-            {renderCard(state.listSource)}
-          </Row>
-        </TabPane>
-      </Tabs>
+      <Tabs items={itemsTab} />
+
       <TagSourceModal
         modal={state.modal}
         handleModal={handleModal}

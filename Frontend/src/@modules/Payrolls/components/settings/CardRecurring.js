@@ -1,28 +1,24 @@
 import { useFormatMessage } from "@apps/utility/common"
 import { convertNumberCurrency } from "@modules/Payrolls/common/common"
-import { Dropdown, Menu } from "antd"
+import { Dropdown } from "antd"
 import moment from "moment"
 import { MoreVertical } from "react-feather"
 import { Button, Card, CardBody, Col, Row } from "reactstrap"
 const CardRecurring = (props) => {
   const { item, handleEdit, handleDelete } = props
-  const menu = (
-    <Menu
-      items={[
-        {
-          label: <div>{useFormatMessage("button.edit")}</div>,
-          key: "0",
-          onClick: () => handleEdit(item?.id)
-        },
-        {
-          label: <div>{useFormatMessage("button.delete")}</div>,
-          key: "1",
-          onClick: () => handleDelete(item?.id)
-        }
-      ]}
-    />
-  )
 
+  const items = [
+    {
+      label: <div>{useFormatMessage("button.edit")}</div>,
+      key: "btn-edit",
+      onClick: () => handleEdit(item?.id)
+    },
+    {
+      label: <div>{useFormatMessage("button.delete")}</div>,
+      key: "btn-delete",
+      onClick: () => handleDelete(item?.id)
+    }
+  ]
   const formatValidFrom = (date, type = "week") => {
     if (date === "" || date === null) {
       return ""
@@ -41,7 +37,7 @@ const CardRecurring = (props) => {
           <i className="fal fa-coins me-1 text-primary size-rem"></i>
           <h4>{item?.name}</h4>
           <Dropdown
-            overlay={menu}
+            menu={{ items }}
             trigger={["click"]}
             placement="bottomRight"
             overlayClassName="drop_workschedule"

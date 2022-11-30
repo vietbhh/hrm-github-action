@@ -5,6 +5,13 @@ import { MoreVertical } from "react-feather"
 import { Button, Card, CardBody, CardTitle } from "reactstrap"
 const CardOffices = (props) => {
   const { item, handleEdit } = props
+
+  const items = [
+    {
+      label: <div>{useFormatMessage("button.edit")}</div>,
+      onClick: () => handleEdit(item)
+    }
+  ]
   return (
     <Card className="mb-4 card-offices">
       <CardBody>
@@ -12,16 +19,7 @@ const CardOffices = (props) => {
           <i className="fal fa-building me-1"></i> {item.name}
           <div className="ms-auto">
             <Dropdown
-              overlay={
-                <Menu
-                  items={[
-                    {
-                      label: <div>{useFormatMessage("button.edit")}</div>,
-                      onClick: () => handleEdit(item)
-                    }
-                  ]}
-                />
-              }
+              menu={{ items }}
               trigger={["click"]}
               placement="bottomRight"
               overlayClassName="drop_workschedule">
@@ -76,7 +74,9 @@ const CardOffices = (props) => {
           </div>
           <div className="info-row">
             <div>
-              {useFormatMessage("modules.attendance_setting.text.attendance_door_integrate")}
+              {useFormatMessage(
+                "modules.attendance_setting.text.attendance_door_integrate"
+              )}
             </div>
             <div>
               <ErpSwitch

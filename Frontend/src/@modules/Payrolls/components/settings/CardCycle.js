@@ -1,28 +1,25 @@
 import { useFormatMessage } from "@apps/utility/common"
-import { Dropdown, Menu } from "antd"
+import { Dropdown } from "antd"
 import moment from "moment"
 import { MoreVertical } from "react-feather"
 import { Button, Card, CardBody, Col, Row } from "reactstrap"
 
 const CardCycle = (props) => {
   const { item, handleEdit, handleDelete, canCreate } = props
-  const menu = (
-    <Menu
-      items={[
-        {
-          label: <div>{useFormatMessage("button.edit")}</div>,
-          key: "0",
-          onClick: () => handleEdit(item?.id)
-        },
-        {
-          label: <div>{useFormatMessage("button.delete")}</div>,
-          key: "1",
-          disabled: !canCreate,
-          onClick: () => handleDelete(item?.id)
-        }
-      ]}
-    />
-  )
+
+  const items = [
+    {
+      label: <div>{useFormatMessage("button.edit")}</div>,
+      key: "0",
+      onClick: () => handleEdit(item?.id)
+    },
+    {
+      label: <div>{useFormatMessage("button.delete")}</div>,
+      key: "1",
+      disabled: !canCreate,
+      onClick: () => handleDelete(item?.id)
+    }
+  ]
   let fm = "DD MMM YYYY"
   if (item?.repeat_every_type?.name_option === "month") {
     fm = "MMM YYYY"
@@ -34,7 +31,7 @@ const CardCycle = (props) => {
           <i className="fal fal fa-sync me-1 text-primary fs-4"></i>
           <h4>{item?.name}</h4>
           <Dropdown
-            overlay={menu}
+            menu={{ items }}
             trigger={["click"]}
             placement="bottomRight"
             overlayClassName="drop_workschedule"

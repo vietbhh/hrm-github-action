@@ -22,25 +22,6 @@ const EmailTemplate = (props) => {
     newTemplate: false,
     dataEdit: ""
   })
-  const menu = (item) => {
-    return (
-      <Menu
-        items={[
-          {
-            label: <div>{useFormatMessage("button.edit")}</div>,
-            key: "btn_edit",
-            onClick: () => setState({ dataEdit: item, newTemplate: true })
-          },
-          {
-            label: <div>{useFormatMessage("button.delete")}</div>,
-            key: "btn_delete",
-            onClick: () => handleDelete(item.id),
-            disabled: item.isLock === "1"
-          }
-        ]}
-      />
-    )
-  }
   const methods = useForm({
     mode: "onSubmit"
   })
@@ -86,6 +67,19 @@ const EmailTemplate = (props) => {
 
   const renderCard = (list) => {
     return list.map((item) => {
+      const items = [
+        {
+          label: <div>{useFormatMessage("button.edit")}</div>,
+          key: "btn_edit",
+          onClick: () => setState({ dataEdit: item, newTemplate: true })
+        },
+        {
+          label: <div>{useFormatMessage("button.delete")}</div>,
+          key: "btn_delete",
+          onClick: () => handleDelete(item.id),
+          disabled: item.isLock === "1"
+        }
+      ]
       return (
         <Col sm={3} key={item.id}>
           <div className="box-email-template">
@@ -95,7 +89,7 @@ const EmailTemplate = (props) => {
                 <i className="fa-light fa-lock-keyhole ms-50"></i>
               )}
               <Dropdown
-                overlay={menu(item)}
+                menu={{ items }}
                 placement="bottomRight"
                 overlayClassName="drop_workschedule"
                 className="ms-auto">
