@@ -78,16 +78,14 @@ const General = (props) => {
           attendance_approval_cycle: res.data.attendance_approval_cycle,
           attendance_repeat_on_value: attendance_repeat_on.value,
           attendance_repeat_on_type: attendance_repeat_on.type,
-          attendance_allow_overtime:
-            res.data.attendance_allow_overtime
+          attendance_allow_overtime: res.data.attendance_allow_overtime
         },
         originalSetting: {
           attendance_approval_cycle_num: res.data.attendance_approval_cycle_num,
           attendance_approval_cycle: res.data.attendance_approval_cycle,
           attendance_repeat_on_value: attendance_repeat_on.value,
           attendance_repeat_on_type: attendance_repeat_on.type,
-          attendance_allow_overtime:
-            res.data.attendance_allow_overtime
+          attendance_allow_overtime: res.data.attendance_allow_overtime
         },
         blockUI: false,
         isMonthly: isMonthly
@@ -328,6 +326,212 @@ const General = (props) => {
     }
   }, [state.generalUpdate.attendance_start_date, state.isMonthly])
 
+  const itemsTab = [
+    {
+      label: useFormatMessage("modules.attendance_setting.text.tabs.general"),
+      key: "tab-general",
+      children: (
+        <Row>
+          <Col sm={12}>
+            <div className="d-flex align-items-center mb-1">
+              <div className="w-50 title-attendance-setting ">
+                {useFormatMessage(
+                  "modules.attendance_setting.fields.start_date"
+                )}
+              </div>
+              <div className="w-50 d-flex attendance-start-date">
+                <DatePicker
+                  name="attendance_start_date"
+                  format="YYYY-MM-DD"
+                  disabledDate={disabledDate}
+                  onChange={(e) => handleChangeAttendanceStartDate(e)}
+                  defaultValue={moment(
+                    state.generalUpdate.attendance_start_date,
+                    "YYYY-MM-DD"
+                  )}
+                  allowClear={false}
+                />
+              </div>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="w-50 title-attendance-setting ">
+                {useFormatMessage(
+                  "modules.attendance_setting.fields.attendance_approval_cycle"
+                )}
+              </div>
+              <div className="w-50 d-flex input-select">
+                <ErpSelect
+                  name="attendance_approval_cycle_num"
+                  className="react-select"
+                  classNamePrefix="select"
+                  useForm={methods}
+                  onChange={(e) => {
+                    setValue("attendance_approval_cycle_num", e)
+                    setState({
+                      generalUpdate: {
+                        ...state.generalUpdate,
+                        attendance_approval_cycle_num: e.value
+                      }
+                    })
+                  }}
+                  options={
+                    !state.isMonthly
+                      ? numberApprovalOptions
+                      : numberApprovalOptionsMonthly
+                  }
+                  isClearable={false}
+                />
+                <ErpSelect
+                  className="react-select  ms-1 me-20"
+                  classNamePrefix="select"
+                  name="attendance_approval_cycle"
+                  useForm={methods}
+                  onChange={(e) => handleChangeAttendanceApprovalCycle(e)}
+                  options={approvalOptions}
+                  isClearable={false}
+                />
+              </div>
+            </div>
+            <div className="d-flex align-items-center repeat-on-select">
+              <div className="w-50 title-attendance-setting ">
+                {useFormatMessage(
+                  "modules.attendance_setting.fields.repeat_on"
+                )}
+              </div>
+              <div className="w-50 d-flex input-select">
+                <ErpSelect
+                  className="w-100"
+                  isClearable={false}
+                  name="repeat_on"
+                  options={state.repeatOnOption}
+                  useForm={methods}
+                  isDisabled={state.disableRepeatOnSelect}
+                  onChange={(e) => {
+                    setValue("repeat_on", e)
+                    setState({
+                      generalUpdate: {
+                        ...state.generalUpdate,
+                        repeat_on: e.value,
+                        attendance_approval_cycle_num: e.value.value,
+                        attendance_approval_cycle_type: e.value.type
+                      }
+                    })
+                  }}
+                  placeholder="select"
+                />
+              </div>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="w-50 title-attendance-setting ">
+                {useFormatMessage(
+                  "modules.attendance_setting.fields.locations"
+                )}
+              </div>
+              <div className="w-50 d-flex input-select">
+                <ErpSelect
+                  className="react-select w-100"
+                  classNamePrefix="select"
+                  defaultValue={{
+                    value: "all",
+                    label: "All Offices"
+                  }}
+                  isClearable={false}
+                  isDisabled={true}
+                />
+              </div>
+            </div>
+
+            <div className="d-flex mt-2 align-items-center">
+              <ErpCheckbox
+                name="primary"
+                id="check_outside"
+                inline
+                defaultChecked={true}
+                disabled
+              />
+              <span style={{ fontSize: "12px" }}>
+                {useFormatMessage(
+                  "modules.attendance_setting.text.manager_notification",
+                  {
+                    attendance_managers_notifications_day:
+                      state.info.attendance_managers_notifications_day
+                  }
+                )}
+              </span>
+            </div>
+          </Col>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="col-12 d-flex  mt-3 ">{addBtn}</div>
+          </form>
+        </Row>
+      )
+    },
+    {
+      label: useFormatMessage(
+        "modules.attendance_setting.text.tabs.person_in_charge"
+      ),
+      key: "tab-persion",
+      children: (
+        <Row>
+          <Col sm={12}>
+            <div className="d-flex align-items-center">
+              <div className="w-50 title-attendance-setting ">
+                {useFormatMessage(
+                  "modules.attendance_setting.fields.person_in_charge"
+                )}
+              </div>
+              <div className="w-50 ">
+                <ErpUserSelect
+                  onChange={(e) => handleSelectPerson(e)}
+                  placeholder="Select User"
+                />
+              </div>
+            </div>
+
+            <div className="d-flex align-items-center mt-1">
+              <div className="w-50 title-attendance-setting "></div>
+              <div className="w-50 ">{renderPersonCharge()}</div>
+            </div>
+          </Col>
+        </Row>
+      )
+    },
+    {
+      label: useFormatMessage("modules.attendance_setting.text.tabs.other"),
+      key: "tab-other",
+      children: (
+        <Row>
+          <Col sm={12}>
+            <div className="d-flex align-items-center">
+              <div className="w-25 title-attendance-setting ">
+                {useFormatMessage(
+                  "modules.attendance_setting.fields.allow_overtime"
+                )}
+              </div>
+              <div className="w-50 ">
+                <ErpSwitch
+                  name="attendance_allow_overtime"
+                  id="attendance_allow_overtime"
+                  defaultChecked={
+                    state.generalUpdate.attendance_allow_overtime === "true"
+                  }
+                  onChange={(e) => {
+                    setState({
+                      generalUpdate: {
+                        ...state.generalUpdate,
+                        attendance_allow_overtime: e.target.checked
+                      }
+                    })
+                  }}
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+      )
+    }
+  ]
+
   return (
     <>
       <AttendanceLayout
@@ -370,218 +574,7 @@ const General = (props) => {
             {!state.blockUI && (
               <FormProvider {...methods}>
                 <div className="general-tab">
-                  <Tabs>
-                    <TabPane
-                      tab={useFormatMessage(
-                        "modules.attendance_setting.text.tabs.general"
-                      )}
-                      key="general_content">
-                      <Row>
-                        <Col sm={12}>
-                          <div className="d-flex align-items-center mb-1">
-                            <div className="w-50 title-attendance-setting ">
-                              {useFormatMessage(
-                                "modules.attendance_setting.fields.start_date"
-                              )}
-                            </div>
-                            <div className="w-50 d-flex attendance-start-date">
-                              <DatePicker
-                                name="attendance_start_date"
-                                format="YYYY-MM-DD"
-                                disabledDate={disabledDate}
-                                onChange={(e) =>
-                                  handleChangeAttendanceStartDate(e)
-                                }
-                                defaultValue={moment(
-                                  state.generalUpdate.attendance_start_date,
-                                  "YYYY-MM-DD"
-                                )}
-                                allowClear={false}
-                              />
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center">
-                            <div className="w-50 title-attendance-setting ">
-                              {useFormatMessage(
-                                "modules.attendance_setting.fields.attendance_approval_cycle"
-                              )}
-                            </div>
-                            <div className="w-50 d-flex input-select">
-                              <ErpSelect
-                                name="attendance_approval_cycle_num"
-                                className="react-select"
-                                classNamePrefix="select"
-                                useForm={methods}
-                                onChange={(e) => {
-                                  setValue("attendance_approval_cycle_num", e)
-                                  setState({
-                                    generalUpdate: {
-                                      ...state.generalUpdate,
-                                      attendance_approval_cycle_num: e.value
-                                    }
-                                  })
-                                }}
-                                options={
-                                  !state.isMonthly
-                                    ? numberApprovalOptions
-                                    : numberApprovalOptionsMonthly
-                                }
-                                isClearable={false}
-                              />
-                              <ErpSelect
-                                className="react-select  ms-1 me-20"
-                                classNamePrefix="select"
-                                name="attendance_approval_cycle"
-                                useForm={methods}
-                                onChange={(e) =>
-                                  handleChangeAttendanceApprovalCycle(e)
-                                }
-                                options={approvalOptions}
-                                isClearable={false}
-                              />
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center repeat-on-select">
-                            <div className="w-50 title-attendance-setting ">
-                              {useFormatMessage(
-                                "modules.attendance_setting.fields.repeat_on"
-                              )}
-                            </div>
-                            <div className="w-50 d-flex input-select">
-                              <ErpSelect
-                                className="w-100"
-                                isClearable={false}
-                                name="repeat_on"
-                                options={state.repeatOnOption}
-                                useForm={methods}
-                                isDisabled={state.disableRepeatOnSelect}
-                                onChange={(e) => {
-                                  setValue("repeat_on", e)
-                                  setState({
-                                    generalUpdate: {
-                                      ...state.generalUpdate,
-                                      repeat_on: e.value,
-                                      attendance_approval_cycle_num:
-                                        e.value.value,
-                                      attendance_approval_cycle_type:
-                                        e.value.type
-                                    }
-                                  })
-                                }}
-                                placeholder="select"
-                              />
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center">
-                            <div className="w-50 title-attendance-setting ">
-                              {useFormatMessage(
-                                "modules.attendance_setting.fields.locations"
-                              )}
-                            </div>
-                            <div className="w-50 d-flex input-select">
-                              <ErpSelect
-                                className="react-select w-100"
-                                classNamePrefix="select"
-                                defaultValue={{
-                                  value: "all",
-                                  label: "All Offices"
-                                }}
-                                isClearable={false}
-                                isDisabled={true}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="d-flex mt-2 align-items-center">
-                            <ErpCheckbox
-                              name="primary"
-                              id="check_outside"
-                              inline
-                              defaultChecked={true}
-                              disabled
-                            />
-                            <span style={{ fontSize: "12px" }}>
-                              {useFormatMessage(
-                                "modules.attendance_setting.text.manager_notification",
-                                {
-                                  attendance_managers_notifications_day:
-                                    state.info
-                                      .attendance_managers_notifications_day
-                                }
-                              )}
-                            </span>
-                          </div>
-                        </Col>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                          <div className="col-12 d-flex  mt-3 ">{addBtn}</div>
-                        </form>
-                      </Row>
-                    </TabPane>
-                    <TabPane
-                      tab={useFormatMessage(
-                        "modules.attendance_setting.text.tabs.person_in_charge"
-                      )}
-                      key="person_content">
-                      <Row>
-                        <Col sm={12}>
-                          <div className="d-flex align-items-center">
-                            <div className="w-50 title-attendance-setting ">
-                              {useFormatMessage(
-                                "modules.attendance_setting.fields.person_in_charge"
-                              )}
-                            </div>
-                            <div className="w-50 ">
-                              <ErpUserSelect
-                                onChange={(e) => handleSelectPerson(e)}
-                                placeholder="Select User"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="d-flex align-items-center mt-1">
-                            <div className="w-50 title-attendance-setting "></div>
-                            <div className="w-50 ">{renderPersonCharge()}</div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                    <TabPane
-                      tab={useFormatMessage(
-                        "modules.attendance_setting.text.tabs.other"
-                      )}
-                      key="other_content">
-                      <Row>
-                        <Col sm={12}>
-                          <div className="d-flex align-items-center">
-                            <div className="w-25 title-attendance-setting ">
-                              {useFormatMessage(
-                                "modules.attendance_setting.fields.allow_overtime"
-                              )}
-                            </div>
-                            <div className="w-50 ">
-                              <ErpSwitch
-                                name="attendance_allow_overtime"
-                                id="attendance_allow_overtime"
-                                defaultChecked={
-                                  state.generalUpdate
-                                    .attendance_allow_overtime === "true"
-                                }
-                                onChange={(e) => {
-                                  setState({
-                                    generalUpdate: {
-                                      ...state.generalUpdate,
-                                      attendance_allow_overtime:
-                                        e.target.checked
-                                    }
-                                  })
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                  </Tabs>
+                  <Tabs items={itemsTab} />
                 </div>
               </FormProvider>
             )}

@@ -113,7 +113,7 @@ const FormEditOffices = (props) => {
     if (state.dataEdit?.webapp === true) {
       return false
     }
-    
+
     setState({
       dataEdit: {
         ...state.dataEdit,
@@ -266,7 +266,7 @@ const FormEditOffices = (props) => {
                     name="url_time_machine"
                     placeholder="BackEnd api"
                     label="API URL"
-                    value={
+                    defaultValue={
                       process.env.REACT_APP_API_URL +
                       "/attendances-time-machine"
                     }
