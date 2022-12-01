@@ -1135,6 +1135,33 @@ class Payrolls extends ErpController
 		$arr_table = [];
 		$arr_detail = [];
 
+		// time off request
+		$modules->setModule('time_off_requests');
+		$TimeOffRequestModel = $modules->model;
+		if (is_array($employee_id)) {
+			$TimeOffRequestModel->whereIn("created_by", $employee_id);
+		} else {
+			$TimeOffRequestModel->where("created_by", $employee_id);
+		}
+		$listTimeOffRequest = $TimeOffRequestModel->where('status', getOptionValue('time_off_requests', 'status', 'approved'))
+			->where('date_from <= ', $date_to)
+			->where('date_to >= ', $date_from)
+			->asArray()->findAll();
+
+		// holiday
+		$modules->setModule('time_off_holidays');
+		$model = $modules->model;
+		if (is_array($employee_id)) {
+			$arr_office[0] = 0;
+			foreach ($arr_employee as $item) {
+				$arr_office[$item['office']] = $item['office'];
+			}
+			$arr_office = array_values($arr_office);
+			$listHoliday = $model->asArray()->where('from_date <=', $date_to)->where('to_date >= ', $date_from)->whereIn('office_id', $arr_office)->findAll();
+		} else {
+			$listHoliday = $model->asArray()->where('from_date <=', $date_to)->where('to_date >= ', $date_from)->where('office_id', $arr_employee['office'])->findAll();
+		}
+
 		$modules->setModule("attendance_details");
 		$attendanceModel = $modules->model;
 		$module = $modules->getModule();
@@ -1154,8 +1181,17 @@ class Payrolls extends ErpController
 			foreach ($data_attendance_db as $item) {
 				$arr_attendance_detail_employee[$item['employee']][] = $item;
 			}
+			$arrListTimeOffRequest = [];
+			foreach ($listTimeOffRequest as $item) {
+				$arrListTimeOffRequest[$item['created_by']][] = $item;
+			}
 			foreach ($employee_id as $employee) {
-				if (!isset($arr_attendance_detail_employee[$employee]) && !empty($employee)) $arr_attendance_detail_employee[$employee][] = [];
+				if (!isset($arr_attendance_detail_employee[$employee]) && !empty($employee)) $arr_attendance_detail_employee[$employee] = [];
+				if (!isset($arrListTimeOffRequest[$employee]) && !empty($employee)) $arrListTimeOffRequest[$employee] = [];
+			}
+			$arrListHoliday = [];
+			foreach ($listHoliday as $item) {
+				$arrListHoliday[$item['office_id']][] = $item;
 			}
 
 			foreach ($arr_attendance_detail_employee as $employee => $item) {
@@ -1181,7 +1217,7 @@ class Payrolls extends ErpController
 				}
 
 				$currentEmployee = $arr_employee[$employee] ?? [];
-				$result = getAttendanceDetail($listAttendanceDetailAll, $currentEmployee, $date_from, $date_to, [], $work_schedule);
+				$result = getAttendanceDetail($listAttendanceDetailAll, $currentEmployee, $date_from, $date_to, [], $work_schedule, empty($arrListTimeOffRequest[$employee]) ? false : $arrListTimeOffRequest[$employee],[],empty($arrListHoliday[$currentEmployee['office']]) ? false : $arrListHoliday[$currentEmployee['office']]);
 				$deficit_min = $result['total_time']['deficit'] / 60;
 				$amount_per_min = $arr_amount_per_min[$employee] ?? 0;
 				$arr_table[$employee]['deficit'] = round($deficit_min * $amount_per_min, 2);
@@ -1222,7 +1258,7 @@ class Payrolls extends ErpController
 			}
 			$currentEmployee = $arr_employee;
 			$work_schedule = $arr_work_schedule;
-			$result = getAttendanceDetail($listAttendanceDetailAll, $currentEmployee, $date_from, $date_to, [], $work_schedule);
+			$result = getAttendanceDetail($listAttendanceDetailAll, $currentEmployee, $date_from, $date_to, [], $work_schedule, empty($listTimeOffRequest) ? false : $listTimeOffRequest,[],empty($listHoliday) ? false : $listHoliday);
 			$attendance = $result['total_time']['paid_time'] / 60;
 			$deficit_min = $result['total_time']['deficit'] / 60;
 			$amount_per_min = $arr_amount_per_min;
@@ -1305,17 +1341,17 @@ class Payrolls extends ErpController
 				}
 			}
 		}
-		if (!empty($date_from_cycle_offset)) {
+		if (!empty($date_from_cycle_offset) && $date_from_cycle_offset != '0000-00-00' && $date_from_cycle_offset != '1970-01-01') {
 			$date_to_new = date('Y-m-d', strtotime($date_from_cycle_offset . "-1 day"));
 		}
 
-		$out['date_from_cycle'] = $date_from_cycle;
-		$out['date_to_cycle'] = $date_to_cycle;
-		$out['date_from_offset'] = $date_from_offset;
-		$out['date_to_offset'] = $date_to_offset;
-		$out['date_from_cycle_offset'] = $date_from_cycle_offset;
-		$out['date_to_cycle_offset'] = $date_to_cycle_offset;
-		$out['date_to_new'] = $date_to_new;
+		$out['date_from_cycle'] = $date_from_cycle == '0000-00-00' || $date_from_cycle == '1970-01-01' ? '' : $date_from_cycle;
+		$out['date_to_cycle'] = $date_to_cycle == '0000-00-00' || $date_to_cycle == '1970-01-01' ? '' : $date_to_cycle;
+		$out['date_from_offset'] = $date_from_offset == '0000-00-00' || $date_from_offset == '1970-01-01' ? '' : $date_from_offset;
+		$out['date_to_offset'] = $date_to_offset == '0000-00-00' || $date_to_offset == '1970-01-01' ? '' : $date_to_offset;
+		$out['date_from_cycle_offset'] = $date_from_cycle_offset == '0000-00-00' || $date_from_cycle_offset == '1970-01-01' || empty($date_from_cycle_offset) ? null : $date_from_cycle_offset;
+		$out['date_to_cycle_offset'] = $date_to_cycle_offset == '0000-00-00' || $date_to_cycle_offset == '1970-01-01' ? '' : $date_to_cycle_offset;
+		$out['date_to_new'] = $date_to_new == '0000-00-00' || $date_to_new == '1970-01-01' ? '' : $date_to_new;
 
 		return $out;
 	}

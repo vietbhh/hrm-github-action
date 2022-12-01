@@ -74,8 +74,6 @@ const TabPayRoll = (props) => {
         dataRecurring: res.data?.employees_recurring || [],
         dataSalary: res.data?.employees_salary || [],
         loading: false,
-        dataPayroll: res.data?.employees_payroll?.data_payroll,
-        payrollTotalRow: res.data?.employees_payroll?.total_row,
         effective_end_salary: res.data.effective_end_salary
       })
     })
@@ -360,10 +358,10 @@ const TabPayRoll = (props) => {
   }
 
   useEffect(() => {
-    if (!state.loading) {
+    if (state.yearPayroll && employeeData.id) {
       changeYearPayroll()
     }
-  }, [state.yearPayroll])
+  }, [state.yearPayroll, employeeData])
 
   return (
     <Fragment>

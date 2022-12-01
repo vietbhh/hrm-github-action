@@ -79,30 +79,30 @@ const ModalPayroll = (props) => {
       .then((res) => {
         setState({
           loading: false,
-          data_employee: res.data.data_employee,
-          data_contracts: res.data.data_contracts,
-          total_comp: res.data.total_comp,
-          salary: res.data.salary,
-          recurring: res.data.recurring,
-          data_recurring: res.data.data_recurring,
-          one_off: res.data.one_off,
-          data_one_off: res.data.data_one_off,
-          count_one_off: res.data.count_one_off,
-          offset: res.data.offset,
-          data_offset: res.data.data_offset,
-          time_off: res.data.time_off,
-          data_time_off: res.data.data_time_off,
-          overtime: res.data.overtime,
-          data_overtime: res.data.data_overtime,
-          deficit: res.data.deficit,
-          data_deficit: res.data.data_deficit,
-          attendance: res.data.attendance,
-          data_attendance: res.data.data_attendance,
-          dependents: res.data.dependents,
-          data_dependents: res.data.data_dependents,
-          data_carry_over_of_overtime: res.data.data_carry_over_of_overtime,
-          off_cycle: res.data.off_cycle,
-          data_off_cycle: res.data.data_off_cycle
+          data_employee: res.data?.data_employee,
+          data_contracts: res.data?.data_contracts,
+          total_comp: res.data?.total_comp,
+          salary: res.data?.salary,
+          recurring: res.data?.recurring,
+          data_recurring: res.data?.data_recurring,
+          one_off: res.data?.one_off,
+          data_one_off: res.data?.data_one_off,
+          count_one_off: res.data?.count_one_off,
+          offset: res.data?.offset,
+          data_offset: res.data?.data_offset,
+          time_off: res.data?.time_off,
+          data_time_off: res.data?.data_time_off,
+          overtime: res.data?.overtime,
+          data_overtime: res.data?.data_overtime,
+          deficit: res.data?.deficit,
+          data_deficit: res.data?.data_deficit,
+          attendance: res.data?.attendance,
+          data_attendance: res.data?.data_attendance,
+          dependents: res.data?.dependents,
+          data_dependents: res.data?.data_dependents,
+          data_carry_over_of_overtime: res.data?.data_carry_over_of_overtime,
+          off_cycle: res.data?.off_cycle,
+          data_off_cycle: res.data?.data_off_cycle
         })
       })
       .catch((err) => {
@@ -126,8 +126,8 @@ const ModalPayroll = (props) => {
                 {useFormatMessage("modules.payrolls.modal.employee_status")}
               </Col>
               <Col sm={6} className="mb-7 color-black">
-                {state.data_employee && state.data_employee.status
-                  ? useFormatMessage(state.data_employee.status.label)
+                {state.data_employee && state.data_employee?.status
+                  ? useFormatMessage(state.data_employee?.status?.label)
                   : "-"}
               </Col>
             </Row>
@@ -136,8 +136,8 @@ const ModalPayroll = (props) => {
                 {useFormatMessage("modules.payrolls.modal.employee_type")}
               </Col>
               <Col sm={6} className="mb-7 color-black">
-                {state.data_employee && state.data_employee.employee_type
-                  ? state.data_employee.employee_type.label
+                {state.data_employee && state.data_employee?.employee_type
+                  ? state.data_employee?.employee_type?.label
                   : "-"}
               </Col>
             </Row>
@@ -146,8 +146,8 @@ const ModalPayroll = (props) => {
                 {useFormatMessage("modules.payrolls.modal.contract_end_date")}
               </Col>
               <Col sm={6} className="mb-7 color-black">
-                {state.data_contracts && state.data_contracts.contract_date_end
-                  ? convertDate(state.data_contracts.contract_date_end)
+                {state.data_contracts && state.data_contracts?.contract_date_end
+                  ? convertDate(state.data_contracts?.contract_date_end)
                   : "-"}
               </Col>
             </Row>
@@ -158,8 +158,8 @@ const ModalPayroll = (props) => {
                 {useFormatMessage("modules.payrolls.modal.job_title")}
               </Col>
               <Col sm={6} className="mb-7 color-black">
-                {state.data_employee && state.data_employee.job_title_id
-                  ? state.data_employee.job_title_id.label
+                {state.data_employee && state.data_employee?.job_title_id
+                  ? state.data_employee?.job_title_id?.label
                   : "-"}
               </Col>
             </Row>
@@ -168,8 +168,8 @@ const ModalPayroll = (props) => {
                 {useFormatMessage("modules.payrolls.modal.join_date")}
               </Col>
               <Col sm={6} className="mb-7 color-black">
-                {state.data_employee && state.data_employee.join_date
-                  ? convertDate(state.data_employee.join_date)
+                {state.data_employee && state.data_employee?.join_date
+                  ? convertDate(state.data_employee?.join_date)
                   : "-"}
               </Col>
             </Row>
@@ -178,8 +178,8 @@ const ModalPayroll = (props) => {
                 {useFormatMessage("modules.payrolls.modal.last_working_date")}
               </Col>
               <Col sm={6} className="mb-7 color-black">
-                {state.data_employee && state.data_employee.last_working_date
-                  ? convertDate(state.data_employee.last_working_date)
+                {state.data_employee && state.data_employee?.last_working_date
+                  ? convertDate(state.data_employee?.last_working_date)
                   : "-"}
               </Col>
             </Row>
@@ -208,7 +208,7 @@ const ModalPayroll = (props) => {
         <Col sm={6}>
           {useFormatMessage("modules.payrolls.fields.salary")}
           <Link
-            to={`/employees/u/${state.data_employee.username}/payroll`}
+            to={`/employees/u/${state.data_employee?.username}/payroll`}
             target="_blank">
             <i className="fal fa-external-link-alt icon-link"></i>
           </Link>
@@ -265,7 +265,7 @@ const ModalPayroll = (props) => {
               header={header(
                 useFormatMessage("modules.payrolls.fields.recurring"),
                 convertNumberCurrency(state.recurring),
-                `/employees/u/${state.data_employee.username}/payroll`
+                `/employees/u/${state.data_employee?.username}/payroll`
               )}
               key="recurring">
               <Recurring
@@ -390,7 +390,7 @@ const ModalPayroll = (props) => {
                 `${state.dependents} ${useFormatMessage(
                   "modules.payrolls.fields.dependents2"
                 )}`,
-                `/employees/u/${state.data_employee.username}/dependents`
+                `/employees/u/${state.data_employee?.username}/dependents`
               )}
               key="dependents">
               <Dependents data={state.data_dependents} />
@@ -400,7 +400,7 @@ const ModalPayroll = (props) => {
               header={header(
                 useFormatMessage("modules.payrolls.fields.bank_info"),
                 "",
-                `/employees/u/${state.data_employee.username}`
+                `/employees/u/${state.data_employee?.username}`
               )}
               key="bank_info">
               <BankInfo data_employee={state.data_employee} />

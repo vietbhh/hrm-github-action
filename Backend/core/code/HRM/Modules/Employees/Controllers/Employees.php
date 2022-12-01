@@ -1628,10 +1628,6 @@ class Employees extends Employee
 		$modelRecurring = $modules->model;
 		$listRecurring = handleDataBeforeReturn($modules, $modelRecurring->select('m_employee_recurring.id as key,m_employee_recurring.id as id,recurring ,employee ,m_employee_recurring.valid_from as valid_from,m_employee_recurring.valid_to as valid_to, amount,repeat_type ')->join('m_recurring', 'm_recurring.id = m_employee_recurring.recurring')->where('employee', $employeeId)->findAll(), true);
 
-		// get employee payroll
-		$year = date('Y');
-		$payroll = $this->getEmployeesPayroll($employeeId, $year);
-
 		$iSalary = 0;
 		$salaryFM = [];
 		$effective_end_salary = '';
@@ -1658,7 +1654,6 @@ class Employees extends Employee
 
 		$result['employees_salary'] = array_reverse($salaryFM);
 		$result['employees_recurring'] = $listRecurring;
-		$result['employees_payroll'] = $payroll;
 		$result['effective_end_salary'] = $effective_end_salary;
 		return $this->respond($result);
 	}
