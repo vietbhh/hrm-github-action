@@ -1,13 +1,10 @@
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import AvatarComponent from "@components/avatar"
+import { Skeleton, Tooltip } from "antd"
 import noavt from "assets/images/erp/noavt.png"
 import classnames from "classnames"
 import { isEmpty } from "lodash"
 import React, { Fragment, useEffect, useState } from "react"
-import { UncontrolledTooltip } from "reactstrap"
 import { downloadApi } from "../common/api"
-import ContentLoader from "react-content-loader"
-import { Skeleton } from "antd"
 const CACHE = {}
 
 function hashArgs(...args) {
@@ -67,20 +64,16 @@ const Avatar = (props) => {
     const randomNum = Math.floor(Math.random() * (5000 - 1 + 1)) + 1
     return (
       <Fragment>
-        {props.title ? (
-          <UncontrolledTooltip
-            target={props.title.split(" ").join("-") + randomNum}>
-            {props.title}
-          </UncontrolledTooltip>
-        ) : null}
-        <AvatarComponent
-          img={image}
-          {...res}
-          {...(props.title
-            ? { id: props.title.split(" ").join("-") + randomNum }
-            : {})}
-          className={classnames(props.className, "rounded-circle")}
-        />
+        <Tooltip title={props.title}>
+          <AvatarComponent
+            img={image}
+            {...res}
+            {...(props.title
+              ? { id: props.title.split(" ").join("-") + randomNum }
+              : {})}
+            className={classnames(props.className, "rounded-circle")}
+          />
+        </Tooltip>
       </Fragment>
     )
   }
