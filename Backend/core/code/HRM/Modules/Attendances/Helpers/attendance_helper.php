@@ -4,7 +4,7 @@ use HRM\Modules\WorkSchedule\Models\WorkScheduleModel;
 use HRM\Modules\Employees\Models\EmployeesModel;
 
 
-function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate, $toDate, $arrFilter = array(), $arrWorkingDay = array(), $listTimeOffRequest = array(), $arrReturnKey = [])
+function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate, $toDate, $arrFilter = array(), $arrWorkingDay = array(), $listTimeOffRequest = array(), $arrReturnKey = [], $listHoliday = array())
 {
 	helper('app_select_option');
 	$modules = \Config\Services::modules();
@@ -24,59 +24,64 @@ function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate,
 	}
 
 	//get holiday
-	$modules->setModule('time_off_holidays');
-	$model = $modules->model;
-	$listHoliday = $model->asArray()->where('from_date <=', $toDate)->where('to_date >= ', $fromDate)->where('office_id', $currentEmployee['office'])->findAll();
-	foreach ($listHoliday as $rowHoliday) {
-		if (strtotime($rowHoliday['from_date']) == strtotime($rowHoliday['to_date'])) {
-			$arrTimeOff[$rowHoliday['from_date']] = [
-				'type' => 'holiday',
-				'name' => $rowHoliday['name']
-			];
-		} else {
-			$begin = new DateTime($rowHoliday['from_date']);
-			$end = new DateTime($rowHoliday['to_date']);
-			for ($i = $begin; $i <= $end; $i->modify('+1 day')) {
-				$arrTimeOff[$i->format('Y-m-d')] = [
+	if ($listHoliday !== false) {
+		if (empty($listHoliday)) {
+			$modules->setModule('time_off_holidays');
+			$model = $modules->model;
+			$listHoliday = $model->asArray()->where('from_date <=', $toDate)->where('to_date >= ', $fromDate)->where('office_id', $currentEmployee['office'])->findAll();
+		}
+		foreach ($listHoliday as $rowHoliday) {
+			if (strtotime($rowHoliday['from_date']) == strtotime($rowHoliday['to_date'])) {
+				$arrTimeOff[$rowHoliday['from_date']] = [
 					'type' => 'holiday',
 					'name' => $rowHoliday['name']
 				];
+			} else {
+				$begin = new DateTime($rowHoliday['from_date']);
+				$end = new DateTime($rowHoliday['to_date']);
+				for ($i = $begin; $i <= $end; $i->modify('+1 day')) {
+					$arrTimeOff[$i->format('Y-m-d')] = [
+						'type' => 'holiday',
+						'name' => $rowHoliday['name']
+					];
+				}
 			}
 		}
 	}
 
 	//get time off
-	if (empty($listTimeOffRequest)) {
-		$modules->setModule('time_off_requests');
-		$model = $modules->model;
-		$listTimeOffRequest = $model->asArray()
-			->where('created_by', $currentEmployee['id'])
-			->where('status', getOptionValue('time_off_requests', 'status', 'approved'))
-			->where('date_from <= ', $toDate)
-			->where('date_to >= ', $fromDate)
-			->findAll();
-	}
-
-	foreach ($listTimeOffRequest as $rowTimeOffRequest) {
-		if (strtotime($rowTimeOffRequest['date_from']) == strtotime($rowTimeOffRequest['date_to'])) {
-			$arrTimeOff[$rowTimeOffRequest['date_from']] = [
-				'type' => 'time_off',
-				'time_from' => $rowTimeOffRequest['time_from'],
-				'time_to' => $rowTimeOffRequest['time_to'],
-				'total_day' => $rowTimeOffRequest['total_day'],
-				'is_full_day' => false
-			];
-		} else {
-			$begin = new DateTime($rowTimeOffRequest['date_from']);
-			$end = new DateTime($rowTimeOffRequest['date_to']);
-			for ($i = $begin; $i <= $end; $i->modify('+1 day')) {
-				$arrTimeOff[$i->format('Y-m-d')] = [
+	if ($listTimeOffRequest !== false) {
+		if (empty($listTimeOffRequest)) {
+			$modules->setModule('time_off_requests');
+			$model = $modules->model;
+			$listTimeOffRequest = $model->asArray()
+				->where('created_by', $currentEmployee['id'])
+				->where('status', getOptionValue('time_off_requests', 'status', 'approved'))
+				->where('date_from <= ', $toDate)
+				->where('date_to >= ', $fromDate)
+				->findAll();
+		}
+		foreach ($listTimeOffRequest as $rowTimeOffRequest) {
+			if (strtotime($rowTimeOffRequest['date_from']) == strtotime($rowTimeOffRequest['date_to'])) {
+				$arrTimeOff[$rowTimeOffRequest['date_from']] = [
 					'type' => 'time_off',
 					'time_from' => $rowTimeOffRequest['time_from'],
 					'time_to' => $rowTimeOffRequest['time_to'],
 					'total_day' => $rowTimeOffRequest['total_day'],
-					'is_full_day' => true
+					'is_full_day' => false
 				];
+			} else {
+				$begin = new DateTime($rowTimeOffRequest['date_from']);
+				$end = new DateTime($rowTimeOffRequest['date_to']);
+				for ($i = $begin; $i <= $end; $i->modify('+1 day')) {
+					$arrTimeOff[$i->format('Y-m-d')] = [
+						'type' => 'time_off',
+						'time_from' => $rowTimeOffRequest['time_from'],
+						'time_to' => $rowTimeOffRequest['time_to'],
+						'total_day' => $rowTimeOffRequest['total_day'],
+						'is_full_day' => true
+					];
+				}
 			}
 		}
 	}
@@ -408,11 +413,11 @@ function calculateTimeAttendanceDoorIntegrate($infoAttendanceDetail, $workSchedu
 
 	$endTime = $infoAttendanceDetail['date'] . ' 23:59:59';
 	$loggedTime = empty($infoAttendanceDetail['logged_time']) ? 0 : $infoAttendanceDetail['logged_time'];
-	$paidTime  = empty($infoAttendanceDetail['paid_time']) ? 0 : $infoAttendanceDetail['paid_time'];
+	$paidTime = empty($infoAttendanceDetail['paid_time']) ? 0 : $infoAttendanceDetail['paid_time'];
 	$overtime = empty($infoAttendanceDetail['overtime']) ? 0 : $infoAttendanceDetail['overtime'];
 
 	$clockIn = $clockInPaid = $firstClockIn;
-	$clockOut = $clockOutPaid =  $clockOutOT = $clockTime;
+	$clockOut = $clockOutPaid = $clockOutOT = $clockTime;
 
 	if ($workScheduleToday['working_day'] && !$infoHolidayToDay) {
 		$clockInOT = $infoAttendanceDetail['last_clock_in'];
