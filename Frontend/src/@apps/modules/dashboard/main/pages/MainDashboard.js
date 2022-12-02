@@ -81,25 +81,6 @@ const MainDashboard = ({
     if (window !== undefined) {
       window.addEventListener("resize", handleWindowWidth)
     }
-
-    // { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
-    let breakPoints = ""
-    if (windowWidth >= 0) {
-      breakPoints = "xxs"
-    }
-    if (windowWidth >= 480) {
-      breakPoints = "xs"
-    }
-    if (windowWidth >= 768) {
-      breakPoints = "sm"
-    }
-    if (windowWidth >= 996) {
-      breakPoints = "md"
-    }
-    if (windowWidth >= 1200) {
-      breakPoints = "lg"
-    }
-    setState({ breakPoints: breakPoints })
   }, [windowWidth])
 
   const handleWidget = (id, action = "remove", params = {}) => {
@@ -255,13 +236,8 @@ const MainDashboard = ({
       const _settingWidget = []
       _.forEach(data, (value, index) => {
         data[index] = { ...data[index], show: true }
-        _settingWidget.push({
-          ...value.data_grid,
-          static: true,
-          isDraggable: false
-        })
+        _settingWidget.push(value.data_grid)
       })
-      saveWidget({ lg: _settingWidget })
       setState({ data: data, layouts: { lg: _settingWidget } })
       localStorage.setItem("dashboard_widget", JSON.stringify(_settingWidget))
     }
@@ -302,6 +278,7 @@ const MainDashboard = ({
 
   const onLayoutChange = (layout, layouts) => {
     if (!state.loadingOnChange && !state.loadingRemove) {
+      console.log("change")
       const newData = [...state.data]
       const _settingWidget = layouts
       handleDataLayout(newData, _settingWidget)
@@ -317,6 +294,11 @@ const MainDashboard = ({
       handleDataLayout(newData, _settingWidget)
     }
   }
+
+  const onBreakpointChange = (newBreakpoint, newCols) => {
+    setState({ breakPoints: newBreakpoint })
+  }
+  console.log(state.breakPoints)
 
   if (_.isEmpty(state.data) || loadingDashboard) {
     return (
@@ -386,11 +368,14 @@ const MainDashboard = ({
                 className="layout"
                 layouts={state.layouts}
                 breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 12, md: 12, sm: 6, xs: 4, xxs: 2 }}
+                cols={{ lg: 3, md: 3, sm: 2, xs: 1, xxs: 1 }}
+                autoSize={true}
                 margin={[0, 30]}
                 containerPadding={[0, 0]}
                 rowHeight={10}
+                resizeHandles={["e"]}
                 onLayoutChange={onLayoutChange}
+                onBreakpointChange={onBreakpointChange}
                 onDrop={onDrop}
                 isDraggable={customizeDashboard}
                 isResizable={customizeDashboard}
@@ -411,15 +396,42 @@ const MainDashboard = ({
                         data-grid={value.data_grid}
                         className={classNames({
                           "widget-full":
-                            value.data_grid.x === 0 && value.data_grid.w === 12,
+                            value.data_grid.x === 0 &&
+                            (((state.breakPoints === "lg" ||
+                              state.breakPoints === "md") &&
+                              value.data_grid.w === 3) ||
+                              (state.breakPoints === "sm" &&
+                                value.data_grid.w === 2) ||
+                              ((state.breakPoints === "xs" ||
+                                state.breakPoints === "xxs") &&
+                                value.data_grid.w === 1)),
                           "widget-left":
-                            value.data_grid.x === 0 && value.data_grid.w < 12,
+                            state.breakPoints !== "xs" &&
+                            state.breakPoints !== "xxs" &&
+                            value.data_grid.x === 0 &&
+                            (((state.breakPoints === "lg" ||
+                              state.breakPoints === "md") &&
+                              value.data_grid.w < 3) ||
+                              (state.breakPoints === "sm" &&
+                                value.data_grid.w < 2)),
                           "widget-right":
+                            state.breakPoints !== "xs" &&
+                            state.breakPoints !== "xxs" &&
                             value.data_grid.x > 0 &&
-                            value.data_grid.x + value.data_grid.w === 12,
+                            (((state.breakPoints === "lg" ||
+                              state.breakPoints === "md") &&
+                              value.data_grid.x + value.data_grid.w === 3) ||
+                              (state.breakPoints === "sm" &&
+                                value.data_grid.x + value.data_grid.w === 2)),
                           "widget-center":
+                            state.breakPoints !== "xs" &&
+                            state.breakPoints !== "xxs" &&
                             value.data_grid.x > 0 &&
-                            value.data_grid.x + value.data_grid.w < 12
+                            (((state.breakPoints === "lg" ||
+                              state.breakPoints === "md") &&
+                              value.data_grid.x + value.data_grid.w < 3) ||
+                              (state.breakPoints === "sm" &&
+                                value.data_grid.x + value.data_grid.w < 2))
                         })}>
                         {value.component}
                       </div>
@@ -468,6 +480,8 @@ const MainDashboard = ({
                         }
                       })
                     )
+                    const param = { data: !e.target.checked }
+                    DashboardApi.postSaveWidgetLock(param).then((res) => {})
                     dispatch(updateLoadingDashboard(false))
                   }, 300)
                 }}

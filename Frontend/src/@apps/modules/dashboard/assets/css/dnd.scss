@@ -19,7 +19,8 @@
         margin-left: 15px;
       }
 
-      .dnd-btn-delete {
+      .dnd-btn-delete,
+      .react-resizable-handle {
         right: 0 !important;
       }
     }
@@ -40,7 +41,8 @@
       }
 
       .react-resizable-handle {
-        opacity: 0;
+        //opacity: 0;
+        right: 15px;
       }
 
       .dnd-btn-delete {

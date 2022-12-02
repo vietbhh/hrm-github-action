@@ -29,4 +29,12 @@ class Dashboard extends ErpController
 		return $this->respond($data);
 	}
 
+	public function save_widget_lock_post()
+	{
+		$getParam = $this->request->getPost();
+		$data = filter_var($getParam['data'], FILTER_VALIDATE_BOOLEAN);
+		preference("widget_dnd", $data);
+		return $this->respond($data);
+	}
+
 }
