@@ -48,7 +48,7 @@ const OrgChartEmployees = (props) => {
   })
   const head = {
     name: Setting.app_name,
-    line_manage: state.app_owner,
+    line_manager: state.app_owner,
     id: 0,
     updateOwner: true
   }
@@ -311,7 +311,7 @@ const OrgChartEmployees = (props) => {
               }}>
               <>
                 <i className="fa-solid fa-user-tie me-50"></i>{" "}
-                {org?.line_manage?.full_name}
+                {org?.line_manager?.full_name}
               </>
             </div>
           )}
