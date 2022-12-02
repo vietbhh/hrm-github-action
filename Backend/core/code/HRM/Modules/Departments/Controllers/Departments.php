@@ -69,12 +69,12 @@ class Departments extends ErpController
 		$departmentList = $model->asArray()->findAll();
 
 		if (isset($post['updateOwner']) && $post['updateOwner']) {
-			$infoOwner = $builder->where('id', $post['line_manage'])->get()->getRowArray();
+			$infoOwner = $builder->where('id', $post['line_manager'])->get()->getRowArray();
 			$idOwner = $infoOwner ? $infoOwner['users_id'] : 0;
 
 			$departmentList = $model->asArray()->findAll();
 			$arrNotParentAndChilds = array_filter($departmentList, function ($a) {
-				return $a['parent'] == 0 && $a['line_manage'] == 0;
+				return $a['parent'] == 0 && $a['line_manager'] == 0;
 			});
 			$arrNoLineManager = [];
 
@@ -83,7 +83,7 @@ class Departments extends ErpController
 				$dataChilds = $this->find_childs($departmentList, $val['id']);
 				$dataChilds[] = [
 					'id' => $val['id'],
-					'line_manage' => $val['line_manage'],
+					'line_manager' => $val['line_manager'],
 					'parent' => $val['parent'],
 					'name' => $val['name'],
 				];
@@ -101,9 +101,9 @@ class Departments extends ErpController
 			}
 
 			$arrNotParent = array_filter($departmentList, function ($a) {
-				return $a['parent'] == 0 && $a['line_manage'] != 0;
+				return $a['parent'] == 0 && $a['line_manager'] != 0;
 			});
-			$arrLineManager = array_column($arrNotParent, 'line_manage');
+			$arrLineManager = array_column($arrNotParent, 'line_manager');
 
 			/* Update line manager for department have line manager parent */
 			if ($arrLineManager) {
@@ -123,7 +123,7 @@ class Departments extends ErpController
 				'line_manager' => 0,
 				'department_id' => 0,
 			];
-			$builder->set($dataOwner)->where('id', $post['line_manage'])->update();
+			$builder->set($dataOwner)->where('id', $post['line_manager'])->update();
 			return $this->respond(ACTION_SUCCESS);
 		}
 
@@ -143,7 +143,7 @@ class Departments extends ErpController
 			$arrEmployees = $employeeModel->asArray()->whereIn('department_id', $idDepNoLineManager)->findAll();
 			$arrUpdate = [];
 			if ($arrEmployees) {
-				$idLineManager = !empty($dataHandle['data']['line_manage']) ? $dataHandle['data']['line_manage'] : $this->getLineManager($arrEmployees[0]);
+				$idLineManager = !empty($dataHandle['data']['line_manager']) ? $dataHandle['data']['line_manager'] : $this->getLineManager($arrEmployees[0]);
 
 				foreach ($arrEmployees as $key => $value) {
 					$arrUpdate[] = [
@@ -161,17 +161,17 @@ class Departments extends ErpController
 			foreach ($departmentChilds as $val) {
 				$id = $val['id'];
 				$arrChilds = array_filter($departmentList, function ($a) use ($id) {
-					return $a['parent'] == $id && $a['line_manage'] != 0;
+					return $a['parent'] == $id && $a['line_manager'] != 0;
 				});
 				$merge = array_merge($arrHaveLineManager, $arrChilds);
 				array_push($arrHaveLineManager, ...$merge);
 			}
-			$idEmployeesManager = array_column($arrHaveLineManager, 'line_manage');
+			$idEmployeesManager = array_column($arrHaveLineManager, 'line_manager');
 			$arrUpdate = [];
 			foreach ($idEmployeesManager as $value) {
 				$arrUpdate[] = [
 					'id' => $value,
-					'line_manager' => $dataHandle['data']['line_manage']
+					'line_manager' => $dataHandle['data']['line_manager']
 				];
 			}
 			if ($arrUpdate) {
@@ -180,13 +180,13 @@ class Departments extends ErpController
 
 
 		}
-		if (isset($dataHandle['data']['line_manage']) && $dataHandle['data']['line_manage']) {
+		if (isset($dataHandle['data']['line_manager']) && $dataHandle['data']['line_manager']) {
 
 			$updateDepartment = [
 				'department_id' => $idDepartment
 			];
-			$builder->update($updateDepartment, ['id' => $dataHandle['data']['line_manage']]);
-			$updateDepartment['id'] = $dataHandle['data']['line_manage'];
+			$builder->update($updateDepartment, ['id' => $dataHandle['data']['line_manager']]);
+			$updateDepartment['id'] = $dataHandle['data']['line_manager'];
 
 			\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $updateDepartment);
 
@@ -216,14 +216,14 @@ class Departments extends ErpController
 		$post = $this->request->getPost();
 		$modules = \Config\Services::modules('departments');
 		$model = $modules->model;
-		$model->setAllowedFields(['line_manage']);
+		$model->setAllowedFields(['line_manager']);
 		$departmentId = $post['department_id'];
 		$department = $model->asArray()->find($departmentId);
 		$departmentFrom = $model->asArray()->find($post['department_from']);
-		if ($departmentFrom['line_manage'] == $post['id']) {
+		if ($departmentFrom['line_manager'] == $post['id']) {
 			$dataUp = [
 				'id' => $post['department_from'],
-				'line_manage' => 0
+				'line_manager' => 0
 			];
 			$model->save($dataUp);
 			// employees update
@@ -251,7 +251,7 @@ class Departments extends ErpController
 		$model = $modules->model;
 		$employee = $model->asArray()->find($post['id']);
 
-		if ($employee['id'] == $department['line_manage']) {
+		if ($employee['id'] == $department['line_manager']) {
 			return $this->fail('error_line_manager');
 		}
 
@@ -281,24 +281,31 @@ class Departments extends ErpController
 			$db = \Config\Database::connect();
 			$builder = $db->table('m_employees');
 
-			if ($department['line_manage']) {
-				$line_manage = $builder->where('id', $department['line_manage'])->get()->getRowArray();
+			if ($department['line_manager']) {
+				$line_manage = $builder->where('id', $department['line_manager'])->get()->getRowArray();
 				$idLineManagerNew = $this->getLineManager($line_manage);
 				$data = [
 					'line_manager' => $idLineManagerNew,
 				];
-				$builder->where('id', $department['line_manage']);
+				$builder->where('id', $department['line_manager']);
 				$builder->update($data);
 			} else {
 				$arrEmployees = $builder->where('department_id', $post['id'])->get()->getResultArray();
-				$idLineManager = !empty($parent['line_manage']) ? $parent['line_manage'] : $this->getLineManager($arrEmployees[0]);
-				foreach ($arrEmployees as $key => $value) {
-					$arrUpdate[] = [
-						'id' => $value['id'],
-						'line_manager' => $idLineManager
-					];
+				if ($arrEmployees) {
+					$idLineManager = !empty($parent['line_manager']) ? $parent['line_manager'] : $this->getLineManager($arrEmployees[0]);
+					$arrUpdate = [];
+					foreach ($arrEmployees as $key => $value) {
+						$arrUpdate[] = [
+							'id' => $value['id'],
+							'line_manager' => $idLineManager
+						];
+					}
+					if ($arrUpdate) {
+
+						$builder->updateBatch($arrUpdate, 'id');
+					}
 				}
-				$builder->updateBatch($arrUpdate, 'id');
+
 			}
 			if ($parent['parent'] == $post['id'] and $parent['parent'] != 0) {
 				$data = [
@@ -384,8 +391,8 @@ class Departments extends ErpController
 		$allParent = $this->find_parents($listDepartment, $data['department_id']);
 		$idParentUpdate = preference('app_owner');
 		foreach ($allParent as $val):
-			if ($val['line_manage'] && $val['line_manage'] != $data['id']) {
-				$idParentUpdate = $val['line_manage'];
+			if ($val['line_manager'] && $val['line_manager'] != $data['id']) {
+				$idParentUpdate = $val['line_manager'];
 				break;
 			}
 		endforeach;
@@ -415,10 +422,10 @@ class Departments extends ErpController
 			if ($val['parent'] == $idParent) {
 				$data['id'] = $val['id'];
 				$data['parent'] = $val['parent'];
-				$data['line_manage'] = $val['line_manage'];
+				$data['line_manager'] = $val['line_manager'];
 				$data['name'] = $val['name'];
 
-				if (!$val['line_manage']) {
+				if (!$val['line_manager']) {
 					array_push($all, $data);
 					$parent = $this->find_childs($dataDepartments, $val['id']);
 					if ($parent) {

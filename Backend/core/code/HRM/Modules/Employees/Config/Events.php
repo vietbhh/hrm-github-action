@@ -182,8 +182,8 @@ class Events
 		$idParentUpdate = preference('app_owner');
 
 		foreach ($allParent as $val) :
-			if ($val['line_manage'] && $val['line_manage'] != $dataSave['id']) {
-				$idParentUpdate = $val['line_manage'];
+			if ($val['line_manager'] && $val['line_manager'] != $dataSave['id']) {
+				$idParentUpdate = $val['line_manager'];
 				break;
 			}
 		endforeach;

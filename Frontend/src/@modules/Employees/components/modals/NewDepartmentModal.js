@@ -73,11 +73,11 @@ const NewDepartmentModal = (props) => {
   const fieldLineMange = {
     module: "departments",
     fieldData: {
-      ...arrFields.line_manage,
+      ...arrFields.line_manager,
       field_form_require: false
     },
     useForm: methods,
-    updateData: dataDetail?.line_manage,
+    updateData: dataDetail?.line_manager,
     options
   }
   const optionsLineManager = []
@@ -183,11 +183,11 @@ const NewDepartmentModal = (props) => {
                     <ErpSelect
                       options={optionsLineManager}
                       nolabel
-                      id="line_manage"
-                      name="line_manage"
+                      id="line_manager"
+                      name="line_manager"
                       useForm={methods}
                       isClearable={true}
-                      defaultValue={dataDetail?.line_manage}
+                      defaultValue={dataDetail?.line_manager}
                       components={{
                         Option: CustomUsersOption,
                         SingleValue: CustomSingleUserSelect
@@ -207,12 +207,12 @@ const NewDepartmentModal = (props) => {
               <Col sm={12}>
                 <ErpUserSelect
                   nolabel
-                  id="line_manage"
-                  name="line_manage"
+                  id="line_manager"
+                  name="line_manager"
                   useForm={methods}
                   className="mt-50"
                   isClearable={true}
-                  defaultValue={dataDetail?.line_manage}
+                  defaultValue={dataDetail?.line_manager}
                 />
               </Col>
             )}
