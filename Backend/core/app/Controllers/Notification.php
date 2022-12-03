@@ -22,7 +22,7 @@ class Notification extends ErpController
 	public function load_get()
 	{
 		$dataGet = $this->request->getGet();
-		$perPage = isset($dataGet['per_page']) ? $dataGet['per_page'] : $this->setting->get('perPage');
+		$perPage = isset($dataGet['per_page']) ? $dataGet['per_page'] : preference('perPage');
 		$page = isset($dataGet['page']) ? $dataGet['page'] : 1;
 		$data = $this->notification->list(user_id(), $perPage, $page);
 		$data = $this->notification->handleNotificationData($data, true);
@@ -36,7 +36,7 @@ class Notification extends ErpController
 	{
 		$dataGet = $this->request->getGet();
 		$page = isset($dataGet['page']) ? $dataGet['page'] : 1;
-		$perPage = isset($dataGet['per_page']) ? $dataGet['per_page'] : $this->setting->get('perPage');
+		$perPage = isset($dataGet['per_page']) ? $dataGet['per_page'] : preference('perPage');
 		$listNotification = $this->notification->list(user_id(), $perPage, $page);
 		$arrId = [];
 		$userId = user_id();

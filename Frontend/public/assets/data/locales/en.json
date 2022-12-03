@@ -614,7 +614,9 @@
       "fields": {
         "name": "Department name",
         "description": "Description",
-        "is_active": "Active"
+        "is_active": "Active",
+        "parent" : "Parent",
+        "line_manage" : "Line manager"
       }
     },
     "offices": {

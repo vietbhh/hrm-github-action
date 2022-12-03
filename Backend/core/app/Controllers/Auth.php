@@ -117,7 +117,7 @@ class Auth extends ResourceController
 		foreach ($modules as $item) {
 			if ($r = $moduleServices->getRoutes($item->name)) {
 				foreach ($r as $routeKey => $routeItem) {
-					$r[$routeKey]->routePath = str_replace('{moduleName}', $item->name, $r[$routeKey]->routePath);
+					$r[$routeKey]->routePath = str_replace($moduleServices->getRouteModuleNameVar(), str_replace('_', '-', decamelize($item->name)), $r[$routeKey]->routePath);
 				}
 				$listRoutes = array_merge($listRoutes, $r);
 			}

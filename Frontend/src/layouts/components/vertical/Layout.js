@@ -196,7 +196,9 @@ const Layout = (props) => {
       target: "notification",
       title: useFormatMessage("layout.notification.title"),
       icon: "",
-      link: "/notification"
+      link: "/notification",
+      action: "login",
+      resource: "app"
     }
   }
 

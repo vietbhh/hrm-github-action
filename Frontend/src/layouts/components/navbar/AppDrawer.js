@@ -79,7 +79,7 @@ const AppDrawer = () => {
                 <Link
                   key={index}
                   className="col-md-4 app-drawer-item align-self-center align-items-center text-center"
-                  to={`/`}
+                  to={item.navLink}
                   onClick={() => toggle()}>
                   <div className="app-drawer-icon">{item.icon}</div>
                   <p>{item.title}</p>

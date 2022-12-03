@@ -23,6 +23,9 @@ export const SocketContextWrap = (props) => {
   useEffect(() => {
     if (!_.isNull(useJwt.getToken()) && !_.isEmpty(useJwt.getToken())) {
       socket.on("connect_error", (err) => {
+        console.log("connected")
+      })
+      socket.on("connect_error", (err) => {
         const refreshToken = useJwt.getRefreshToken()
         const isAlreadyFetchingAccessToken =
           useJwt.getIsAlreadyFetchingAccessToken()
@@ -62,6 +65,7 @@ export const SocketContextWrap = (props) => {
       })
       if (settingSocket) {
         socket.connect()
+        socket.emit("identity", 12345667)
       } else {
         socket.close()
       }

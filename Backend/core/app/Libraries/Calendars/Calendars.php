@@ -43,8 +43,9 @@ class Calendars
 		}
 
 		if (isset($getPost['allday'])) {
-			$content['allday'] = $getPost['allday'] ? 1 : 0;
-			if ($getPost['allday']) {
+			$isAllday = ($getPost['allday'] == 'true') ? 1 : 0;
+			$content['allday'] = $isAllday;
+			if ($isAllday) {
 				$content['start'] = date('Y-m-d 00:00:00', strtotime($content['start']));
 				$content['end'] = date('Y-m-d 23:59:59', strtotime($content['end']));
 			}
