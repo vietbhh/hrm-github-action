@@ -580,7 +580,6 @@
     }
   }
 
-
   .dashboard-card-calendar {
     .w-80 {
       width: 80%;
@@ -660,10 +659,11 @@
       margin-top: -10px;
     }
     .swiper {
-      height: 145px;
+      height: 170px;
       padding-top: 10px;
       padding-left: 10px;
       padding-right: 10px;
+      margin-bottom: 10px;
 
       .swiper-pagination {
         bottom: -4px;
@@ -709,14 +709,18 @@
     }
 
     .div-notepad {
-      height: 116px;
+      height: 140px;
       border: 0.6px solid #d9dddf;
       border-radius: $border-radius;
-      padding: 15px 22px 7px 22px;
+      padding: 20px 22px 12px 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+
+      &:hover {
+        cursor: pointer;
+      }
 
       .text-title {
         font-weight: 600;

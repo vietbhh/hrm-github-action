@@ -4,7 +4,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import "@styles/react/libs/charts/apex-charts.scss"
 import { Drawer, Skeleton } from "antd"
 import classNames from "classnames"
-import { Fragment, useContext, useEffect, useState } from "react"
+import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import { Responsive, WidthProvider } from "react-grid-layout"
 import { useDispatch, useSelector } from "react-redux"
 import { updateLoadingDashboard } from "@store/layout"
@@ -71,6 +71,18 @@ const MainDashboard = ({
     breakPoints: "lg"
   })
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const widgetMargin = [0, 30]
+  const widgetRowHeight = 10
+
+  // ** ref
+  const refLayout = useRef(null)
+  const ListDataComponent = listComponent
+    ? listComponent()
+    : ListComponentConfig()
+  global.widget = {}
+  _.forEach(ListDataComponent, (val) => {
+    global.widget["widget_" + val.id] = useRef(null)
+  })
 
   // ** Update Window Width
   const handleWindowWidth = () => {
@@ -100,10 +112,6 @@ const MainDashboard = ({
                 ...data[index],
                 data_grid: {
                   ...value,
-                  minW: data[index]["data_grid"]["minW"],
-                  minH: data[index]["data_grid"]["minH"],
-                  maxW: data[index]["data_grid"]["maxW"],
-                  maxH: data[index]["data_grid"]["maxH"],
                   static: !customizeDashboard,
                   isDraggable: customizeDashboard
                 },
@@ -193,6 +201,39 @@ const MainDashboard = ({
     }
   }
 
+  const handleLayouts = () => {
+    setTimeout(() => {
+      const dataLayout_ = JSON.parse(localStorage.getItem("dashboard_widget"))
+      _.forEach(dataLayout_, (val, key_val) => {
+        if (key_val === state.breakPoints) {
+          const val_layout = [...val]
+          _.forEach(val_layout, (value, key) => {
+            let h = value.h < value.minH ? value.minH : value.h
+            if (
+              global.widget["widget_" + value.i] &&
+              global.widget["widget_" + value.i].current
+            ) {
+              h =
+                Math.ceil(
+                  (global.widget["widget_" + value.i].current.clientHeight -
+                    widgetMargin[1]) /
+                    (widgetRowHeight + widgetMargin[1])
+                ) + 1
+            }
+            if (h < value.minH) {
+              h = value.minH
+            }
+
+            val_layout[key] = { ...value, h: h }
+          })
+          dataLayout_[key_val] = val_layout
+        }
+      })
+
+      setState({ layouts: dataLayout_ })
+    }, 500)
+  }
+
   const handleDataLayout = (dataComponent, dataLayout) => {
     const dataLayout_ = { ...dataLayout }
     _.forEach(dataLayout_, (val, key_val) => {
@@ -201,6 +242,26 @@ const MainDashboard = ({
         _.forEach(val_layout, (value, key) => {
           const index = dataComponent.findIndex((item) => item.id === value.i)
           if (index > -1) {
+            let h =
+              dataComponent[index]["data_grid"]["h"] <
+              dataComponent[index]["data_grid"]["minH"]
+                ? dataComponent[index]["data_grid"]["minH"]
+                : dataComponent[index]["data_grid"]["h"]
+            if (
+              global.widget["widget_" + value.i] &&
+              global.widget["widget_" + value.i].current
+            ) {
+              h =
+                Math.ceil(
+                  (global.widget["widget_" + value.i].current.clientHeight -
+                    widgetMargin[1]) /
+                    (widgetRowHeight + widgetMargin[1])
+                ) + 1
+            }
+            if (h < dataComponent[index]["data_grid"]["minH"]) {
+              h = dataComponent[index]["data_grid"]["minH"]
+            }
+
             dataComponent[index] = {
               ...dataComponent[index],
               data_grid: {
@@ -208,9 +269,9 @@ const MainDashboard = ({
                 minW: dataComponent[index]["data_grid"]["minW"],
                 minH: dataComponent[index]["data_grid"]["minH"],
                 maxW: dataComponent[index]["data_grid"]["maxW"],
-                maxH: dataComponent[index]["data_grid"]["maxH"],
                 static: !customizeDashboard,
-                isDraggable: customizeDashboard
+                isDraggable: customizeDashboard,
+                h: h
               },
               show: true
             }
@@ -227,8 +288,8 @@ const MainDashboard = ({
 
   useEffect(() => {
     const data = listComponent
-      ? listComponent({ handleWidget })
-      : ListComponentConfig({ handleWidget })
+      ? listComponent({ handleWidget, handleLayouts })
+      : ListComponentConfig({ handleWidget, handleLayouts })
     if (settingWidget !== undefined && !_.isEmpty(settingWidget)) {
       handleDataLayout(data, settingWidget)
       localStorage.setItem("dashboard_widget", JSON.stringify(settingWidget))
@@ -278,7 +339,6 @@ const MainDashboard = ({
 
   const onLayoutChange = (layout, layouts) => {
     if (!state.loadingOnChange && !state.loadingRemove) {
-      console.log("change")
       const newData = [...state.data]
       const _settingWidget = layouts
       handleDataLayout(newData, _settingWidget)
@@ -298,7 +358,6 @@ const MainDashboard = ({
   const onBreakpointChange = (newBreakpoint, newCols) => {
     setState({ breakPoints: newBreakpoint })
   }
-  console.log(state.breakPoints)
 
   if (_.isEmpty(state.data) || loadingDashboard) {
     return (
@@ -366,13 +425,14 @@ const MainDashboard = ({
 
               <ResponsiveReactGridLayout
                 className="layout"
+                ref={refLayout}
                 layouts={state.layouts}
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 3, md: 3, sm: 2, xs: 1, xxs: 1 }}
+                breakpoints={{ lg: 996, md: 768, sm: 480, xs: 10, xxs: 0 }}
+                cols={{ lg: 3, md: 2, sm: 1, xs: 1, xxs: 1 }}
                 autoSize={true}
-                margin={[0, 30]}
+                margin={widgetMargin}
                 containerPadding={[0, 0]}
-                rowHeight={10}
+                rowHeight={widgetRowHeight}
                 resizeHandles={["e"]}
                 onLayoutChange={onLayoutChange}
                 onBreakpointChange={onBreakpointChange}
@@ -433,7 +493,9 @@ const MainDashboard = ({
                               (state.breakPoints === "sm" &&
                                 value.data_grid.x + value.data_grid.w < 2))
                         })}>
-                        {value.component}
+                        <div ref={global.widget["widget_" + value.id]}>
+                          {value.component}
+                        </div>
                       </div>
                     )
                   }
