@@ -1,14 +1,14 @@
 import AvatarList from "@apps/components/common/AvatarList"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { isObject } from "@apps/utility/handleData"
 import { Col } from "antd"
 import { isEmpty, map } from "lodash"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Card, CardBody, CardHeader, CardTitle } from "reactstrap"
+import { CardBody } from "reactstrap"
 import { DashboardApi } from "../common/api"
-import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 
 const CardEmployees = (props) => {
   const [state, setState] = useMergedState({
@@ -24,9 +24,17 @@ const CardEmployees = (props) => {
           loading: false,
           data: res.data
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((error) => {
         setState({ loading: false })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

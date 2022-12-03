@@ -22,9 +22,17 @@ const CardAttendanceToDay = (props) => {
           loading: false,
           data: res.data
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((error) => {
         setState({ loading: false })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

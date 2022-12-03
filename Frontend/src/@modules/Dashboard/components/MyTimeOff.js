@@ -1,17 +1,16 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classNames from "classnames"
 import { isEmpty, map } from "lodash"
 import { useEffect } from "react"
-import { Link } from "react-router-dom"
-import { Card, CardBody, CardHeader, CardTitle } from "reactstrap"
+import { CardBody } from "reactstrap"
 import { DashboardApi } from "../common/api"
 import {
   convertDateGetDay,
   convertDateGetMonth,
   convertTime
 } from "../common/common"
-import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 
 const MyTimeOff = (props) => {
   const [state, setState] = useMergedState({
@@ -27,9 +26,17 @@ const MyTimeOff = (props) => {
           loading: false,
           data: res.data
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((error) => {
         setState({ loading: false })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

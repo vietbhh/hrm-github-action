@@ -1,66 +1,14 @@
 @import "@scss/friday";
 
 #dashboard-analytics {
-  .fri-card.news {
-    border-top: 1px solid #f9d530;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    margin-bottom: 0 !important;
-    &:first-child {
-      border-top: none;
-      .card-body {
-        padding-top: 0.5rem;
-      }
-    }
-  }
-
   .card {
-    box-shadow: unset;
     > .card-header {
       padding: 20px 30px 30px 30px;
 
       .card-title {
-        display: flex;
-        align-items: center;
-
-        .title {
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 24px;
-          color: #32434f;
-        }
-
-        .dashboard-title-icon {
-          width: 30px;
-          height: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: $border-radius;
-          margin-right: 10px;
-        }
-
-        .news-bg-icon {
-          background: #ffc66f;
-        }
         .bg-icon-green {
           background: #44d38a;
         }
-        .icon {
-          width: 18px;
-          height: 18px;
-          display: flex;
-          justify-content: center;
-        }
-
-        .news-icon {
-          color: #ffffff;
-        }
-      }
-
-      .btn-icon-right {
-        width: 16px;
-        height: 16px;
       }
     }
 
@@ -221,31 +169,6 @@
 
     .mr-5 {
       margin-right: 5px !important;
-    }
-
-    .bg-birth-day {
-      padding: 5px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      background-color: lighten($primary-bg, 10%);
-
-      .text-birth-day {
-        color: $primary-text-color;
-      }
-
-      h6 {
-        font-size: 12px;
-        font-weight: 500;
-      }
-
-      .avatar.avatar-sm img {
-        width: 22px;
-        height: 22px;
-      }
-
-      .me-1 {
-        margin-right: 5px !important;
-      }
     }
   }
 
@@ -600,14 +523,6 @@
       top: 19px;
       left: 20px;
     }
-  }
-
-  .min-height-50 {
-    min-height: 50px;
-  }
-
-  .ant-spin-nested-loading > div > .ant-spin .ant-spin-dot {
-    margin-top: 0;
   }
 
   .dashboard-card-follow-up {

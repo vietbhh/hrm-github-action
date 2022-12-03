@@ -3,14 +3,13 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 // ** Styles
-import { Badge, Button, Card, CardBody, Col, Row } from "reactstrap"
+import { Badge, Button, CardBody, Col, Row } from "reactstrap"
 // ** Components
+import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import { useEffect } from "react"
 import { DashboardApi } from "../../../common/api"
 import ChartEmployee from "./ChartEmployee"
 import TabChecklist from "./TabChecklist"
-import classNames from "classnames"
-import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 
 const FollowUp = (props) => {
   const [state, setState] = useMergedState({
@@ -26,9 +25,17 @@ const FollowUp = (props) => {
           loading: false,
           dataChecklist: res.data
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((error) => {
         setState({ loading: false })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

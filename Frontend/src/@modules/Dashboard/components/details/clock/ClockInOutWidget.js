@@ -23,12 +23,20 @@ const ClockInOutWidget = (props) => {
           isAttendanceDoorIntegrate: res.data.data.attendance_door_integrate,
           loading: false
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((err) => {
         setState({
           isAttendanceDoorIntegrate: null,
           loading: false
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

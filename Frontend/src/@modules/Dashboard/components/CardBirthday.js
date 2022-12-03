@@ -1,4 +1,5 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { convertDate } from "@modules/Payrolls/common/common"
@@ -6,10 +7,8 @@ import { Tooltip } from "antd"
 import classNames from "classnames"
 import { isEmpty, map } from "lodash"
 import { useEffect } from "react"
-import { Link } from "react-router-dom"
-import { Card, CardBody, CardHeader, CardTitle } from "reactstrap"
+import { CardBody } from "reactstrap"
 import { DashboardApi } from "../common/api"
-import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 
 const CardBirthday = (props) => {
   const [state, setState] = useMergedState({
@@ -25,9 +24,17 @@ const CardBirthday = (props) => {
           loading: false,
           data: res.data
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((error) => {
         setState({ loading: false })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

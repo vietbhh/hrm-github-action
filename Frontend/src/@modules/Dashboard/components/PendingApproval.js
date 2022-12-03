@@ -32,9 +32,17 @@ const PendingApproval = (props) => {
           count_data_time_attendance: res.data.count_data_time_attendance,
           count_pending_approval: res.data.count_pending_approval
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((error) => {
         setState({ loading: false })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 
