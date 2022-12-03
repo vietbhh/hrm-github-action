@@ -27,6 +27,19 @@ export const DashboardApi = {
         disableLoading: true
       }
     )
+  },
+
+  async postSaveWidgetLock(data) {
+    return await axiosApi.post(
+      "/dashboard/save-widget-lock",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        disableLoading: true
+      }
+    )
   }
 }
 

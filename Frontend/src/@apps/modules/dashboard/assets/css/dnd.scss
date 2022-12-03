@@ -19,7 +19,8 @@
         margin-left: 15px;
       }
 
-      .dnd-btn-delete {
+      .dnd-btn-delete,
+      .react-resizable-handle {
         right: 0 !important;
       }
     }
@@ -33,14 +34,20 @@
       cursor: grab;
       //border: 1px solid;
 
+      .card {
+        margin-bottom: 0;
+      }
+
       > div {
-        height: 100%;
+        //height: 100%;
+        background-color: #fff;
         overflow: hidden;
         border-radius: 20px;
       }
 
       .react-resizable-handle {
-        opacity: 0;
+        //opacity: 0;
+        right: 15px;
       }
 
       .dnd-btn-delete {
