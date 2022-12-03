@@ -748,14 +748,14 @@ const AppChat = (props) => {
             }
           }
           if (change.type === "removed") {
-            const timestamp = data.timestamp
+            /* const timestamp = data.timestamp
             const chat_new = [...chat]
             chat = chat_new.filter((item) => item.time !== timestamp)
             dispatch(
               handleChats({
                 chats: chat
               })
-            )
+            ) */
           }
         })
 
