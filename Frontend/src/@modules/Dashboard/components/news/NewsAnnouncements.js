@@ -31,7 +31,7 @@ const NewsAnnouncements = (props) => {
     news_loadData()
   }, [])
 
-  const news_loadData = (props) => {
+  const news_loadData = () => {
     setState({
       news_loading: true
     })
@@ -53,11 +53,19 @@ const NewsAnnouncements = (props) => {
           news_data: res.data.data_new,
           news_loading: false
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((err) => {
         setState({
           news_loading: false
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

@@ -91,6 +91,10 @@ const CardCalendar = (props) => {
           calendarsColor: listColor,
           loading: false
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((err) => {
         setState({
@@ -98,6 +102,10 @@ const CardCalendar = (props) => {
           calendarsColor: {},
           loading: false
         })
+
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

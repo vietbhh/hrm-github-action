@@ -101,7 +101,7 @@ const CardAnnouncements = (props) => {
           ...props
         }}>
         <CardBody className="min-height-50 div-news">
-          <NewsAnnouncements />
+          <NewsAnnouncements {...props} />
         </CardBody>
       </LayoutDashboard>
     </Fragment>
