@@ -34,11 +34,7 @@
     "craco-less": "^2.0.0",
     "draft-js": "0.11.7",
     "draftjs-to-html": "0.9.1",
-<<<<<<< HEAD
-    "emoji-picker-react": "^4.4.5",
-=======
     "emoji-picker-react": "^4.4.6",
->>>>>>> main
     "expr-eval": "^2.0.2",
     "file-saver": "^2.0.5",
     "firebase": "^9.9.4",
