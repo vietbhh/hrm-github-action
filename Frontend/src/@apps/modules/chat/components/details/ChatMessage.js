@@ -192,9 +192,7 @@ const ChatMessage = (props) => {
 
         return (
           <Dropdown
-            overlay={
-              <Menu items={renderItemReactionDropdown(chat.react, chat.time)} />
-            }
+            menu={{ items: renderItemReactionDropdown(chat.react, chat.time) }}
             placement="top"
             overlayClassName="chat-content-reaction-dropdown-more dropdown-react"
             arrow={{
@@ -855,7 +853,7 @@ const ChatMessage = (props) => {
         return (
           <div className="chat-content-reaction">
             <Dropdown
-              overlay={<Menu items={items_react} />}
+              menu={{ items: items_react }}
               placement="top"
               trigger={["hover"]}
               overlayClassName="chat-content-reaction-dropdown-react"
@@ -939,7 +937,7 @@ const ChatMessage = (props) => {
             </Tooltip>
 
             <Dropdown
-              overlay={<Menu items={items_more} />}
+              menu={{ items: items_more }}
               placement="top"
               trigger={["hover"]}
               overlayClassName="chat-content-reaction-dropdown-more"

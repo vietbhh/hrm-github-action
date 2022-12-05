@@ -1,7 +1,13 @@
 import ReactGiphySearchBox from "react-giphy-searchbox"
 
 const Gif = (props) => {
-  const { sendMessage, selectedUser, focusInputMsg, setReplyingDefault } = props
+  const {
+    sendMessage,
+    selectedUser,
+    focusInputMsg,
+    setReplyingDefault,
+    setShowEmotion
+  } = props
 
   return (
     <ReactGiphySearchBox
@@ -12,6 +18,7 @@ const Gif = (props) => {
         })
         focusInputMsg()
         setReplyingDefault()
+        setShowEmotion(false)
       }}
       masonryConfig={[
         { columns: 2, imageWidth: 110, gutter: 5 },

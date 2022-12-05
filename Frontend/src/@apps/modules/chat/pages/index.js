@@ -63,6 +63,12 @@ const AppChat = (props) => {
   const [dataEmployees, setDataEmployees] = useState([])
   const [loadingEmployee, setLoadingEmployee] = useState(true)
 
+  // ** env
+  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+  if (_.isUndefined(firestoreDb) || firestoreDb === "") {
+    return <>env: not found firestore db</>
+  }
+
   // ** setting
   const auth = useSelector((state) => state.auth)
   const settingChat = auth.settings.chat
@@ -82,7 +88,7 @@ const AppChat = (props) => {
     dispatch(handleUnread({ unread: num }))
   }
 
-  // ** States
+  // ** State
   const [user, setUser] = useState({})
   const [sidebar, setSidebar] = useState(false)
   const [userSidebarRight, setUserSidebarRight] = useState(false)
@@ -185,7 +191,7 @@ const AppChat = (props) => {
   }
 
   const handleAddNewGroup = async (docData) => {
-    return await addDoc(collection(db, "groups"), docData)
+    return await addDoc(collection(db, `${firestoreDb}/groups/groups`), docData)
   }
 
   const handleLastMessage = (type, msg) => {
@@ -217,8 +223,8 @@ const AppChat = (props) => {
         type: "text",
         ...dataAddFile
       }
-      setDoc(doc(collection(db, groupId)), docData)
-      updateDoc(doc(db, "groups", groupId), {
+      setDoc(doc(collection(db, `${firestoreDb}/messages/${groupId}`)), docData)
+      updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
         last_message: handleLastMessage(docData.type, msg),
         last_user: userId,
         timestamp: Date.now(),
@@ -269,7 +275,10 @@ const AppChat = (props) => {
           type: "text",
           ...dataAddFile
         }
-        setDoc(doc(collection(db, newGroupId)), docDataMessage)
+        setDoc(
+          doc(collection(db, `${firestoreDb}/messages/${newGroupId}`)),
+          docDataMessage
+        )
         setLoadingMessage(false)
       })
     }
@@ -280,7 +289,7 @@ const AppChat = (props) => {
   const updateMessage = (groupId, timestamp, dataUpdate) => {
     if (!_.isEmpty(groupId)) {
       const q = query(
-        collection(db, groupId),
+        collection(db, `${firestoreDb}/messages/${groupId}`),
         where("timestamp", "==", timestamp)
       )
       getDocs(q).then((res) => {
@@ -293,7 +302,10 @@ const AppChat = (props) => {
         if (dem === 0) {
           sendMessage(groupId, "", dataUpdate)
         } else {
-          updateDoc(doc(db, groupId, docId), dataUpdate)
+          updateDoc(
+            doc(db, `${firestoreDb}/messages/${groupId}`, docId),
+            dataUpdate
+          )
         }
       })
     } else {
@@ -309,7 +321,7 @@ const AppChat = (props) => {
     ) {
       setHasMoreHistory(false)
       const q = query(
-        collection(db, groupId),
+        collection(db, `${firestoreDb}/messages/${groupId}`),
         orderBy("timestamp", "desc"),
         limit(30),
         startAt(lastTimeMessage)
@@ -360,7 +372,7 @@ const AppChat = (props) => {
   const handleSeenMessage = (groupId) => {
     if (!_.isEmpty(groupId)) {
       const q_mess = query(
-        collection(db, groupId),
+        collection(db, `${firestoreDb}/messages/${groupId}`),
         orderBy("timestamp", "desc"),
         limit(10)
       )
@@ -370,9 +382,12 @@ const AppChat = (props) => {
           const dataSeen = docData.seen
           const dataSenderId = docData.sender_id
           if (dataSenderId !== userId && dataSeen.includes(userId) === false) {
-            updateDoc(doc(db, groupId, doc_mess.id), {
-              seen: [...dataSeen, userId]
-            })
+            updateDoc(
+              doc(db, `${firestoreDb}/messages/${groupId}`, doc_mess.id),
+              {
+                seen: [...dataSeen, userId]
+              }
+            )
           }
         })
 
@@ -391,7 +406,7 @@ const AppChat = (props) => {
   const handleUnSeenMessage = (groupId) => {
     if (!_.isEmpty(groupId)) {
       const q_mess = query(
-        collection(db, groupId),
+        collection(db, `${firestoreDb}/messages/${groupId}`),
         orderBy("timestamp", "desc"),
         limit(10)
       )
@@ -411,7 +426,10 @@ const AppChat = (props) => {
   }
 
   const handleUpdateGroup = async (groupId, dataUpdate) => {
-    await updateDoc(doc(db, "groups", groupId), dataUpdate)
+    await updateDoc(
+      doc(db, `${firestoreDb}/groups/groups`, groupId),
+      dataUpdate
+    )
   }
 
   useEffect(() => {
@@ -420,7 +438,7 @@ const AppChat = (props) => {
     }
     if (loadingEmployee === false) {
       const q = query(
-        collection(db, "groups"),
+        collection(db, `${firestoreDb}/groups/groups`),
         where("user", "array-contains", userId),
         orderBy("timestamp", "asc")
       )
@@ -520,7 +538,7 @@ const AppChat = (props) => {
           // ** get count unseen
           let unseen = 0
           const q_mess = query(
-            collection(db, id),
+            collection(db, `${firestoreDb}/messages/${id}`),
             orderBy("timestamp", "desc"),
             limit(10)
           )
@@ -671,7 +689,7 @@ const AppChat = (props) => {
       setSelectedUser(selectedUser)
 
       const q_mess = query(
-        collection(db, active),
+        collection(db, `${firestoreDb}/messages/${active}`),
         orderBy("timestamp", "desc"),
         limit(queryLimit)
       )
@@ -699,9 +717,12 @@ const AppChat = (props) => {
                 200 ||
                 chatContainer.scrollTop === 0)
             ) {
-              updateDoc(doc(db, active, docData.id), {
-                seen: arrayUnion(userId)
-              })
+              updateDoc(
+                doc(db, `${firestoreDb}/messages/${active}`, docData.id),
+                {
+                  seen: arrayUnion(userId)
+                }
+              )
             }
 
             _chat = [

@@ -122,6 +122,36 @@ const SidebarLeft = (props) => {
                         ? item.chat.lastMessage.time
                         : new Date()
                     )
+
+                    const items = [
+                      {
+                        key: "1",
+                        label: (
+                          <a
+                            href="/"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              let dataUPdate = {
+                                pin: arrayUnion(userId)
+                              }
+                              if (pin === true) {
+                                dataUPdate = {
+                                  pin: arrayRemove(userId)
+                                }
+                              }
+                              handleUpdateGroup(item.id, dataUPdate)
+                            }}>
+                            <i className="fa-regular fa-thumbtack me-75"></i>
+                            {useFormatMessage(
+                              `modules.chat.text.${
+                                pin === true ? "un_pin" : "pin"
+                              }`
+                            )}
+                          </a>
+                        )
+                      }
+                    ]
+
                     return (
                       <div className="div-li-chat" key={item.id}>
                         <li
@@ -169,38 +199,7 @@ const SidebarLeft = (props) => {
                           </div>
                         </li>
                         <Dropdown
-                          overlay={
-                            <Menu
-                              items={[
-                                {
-                                  key: "1",
-                                  label: (
-                                    <a
-                                      href="/"
-                                      onClick={(e) => {
-                                        e.preventDefault()
-                                        let dataUPdate = {
-                                          pin: arrayUnion(userId)
-                                        }
-                                        if (pin === true) {
-                                          dataUPdate = {
-                                            pin: arrayRemove(userId)
-                                          }
-                                        }
-                                        handleUpdateGroup(item.id, dataUPdate)
-                                      }}>
-                                      <i className="fa-regular fa-thumbtack me-75"></i>
-                                      {useFormatMessage(
-                                        `modules.chat.text.${
-                                          pin === true ? "un_pin" : "pin"
-                                        }`
-                                      )}
-                                    </a>
-                                  )
-                                }
-                              ]}
-                            />
-                          }
+                          menu={{ items }}
                           placement="bottomRight"
                           arrow={{ pointAtCenter: true }}
                           trigger={["click"]}

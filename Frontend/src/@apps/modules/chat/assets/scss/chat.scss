@@ -792,7 +792,7 @@
                     }
 
                     .ant-tabs-tabpane {
-                      width: 370px;
+                      width: 390px;
                     }
 
                     .ant-tabs-content {
@@ -800,7 +800,7 @@
 
                       // emoji
                       .epr-main {
-                        width: 370px !important;
+                        width: 390px !important;
                         border-width: 0;
 
                         .epr-header {
@@ -829,6 +829,7 @@
 
                       // gif
                       .reactGiphySearchbox-componentWrapper {
+                        width: 390px !important;
                         .reactGiphySearchbox-searchForm-input {
                           background: #f6f7fb !important;
                           border-radius: 10px;

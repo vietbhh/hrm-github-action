@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Smile } from "react-feather"
 import EmojiComponent from "./Emoji"
 import GifComponent from "./Gif"
+import Sticker from "./Sticker"
 
 const index = (props) => {
   const {
@@ -34,32 +35,46 @@ const index = (props) => {
       document.addEventListener("mousedown", handleClickOutside)
     }
   }, [emotionRef, emotionIconRef])
+
+  const items = [
+    {
+      key: "1",
+      label: "Emoji",
+      children: (
+        <EmojiComponent
+          setMsg={setMsg}
+          getValues={getValues}
+          focusInputMsg={focusInputMsg}
+        />
+      )
+    },
+    {
+      key: "2",
+      label: "Stickers",
+      children: <Sticker />
+    },
+    {
+      key: "3",
+      label: "Gifs",
+      children: (
+        <GifComponent
+          sendMessage={sendMessage}
+          selectedUser={selectedUser}
+          focusInputMsg={focusInputMsg}
+          setReplyingDefault={setReplyingDefault}
+          setShowEmotion={setShowEmotion}
+        />
+      )
+    }
+  ]
+
   return (
     <>
       <div
         className={`emotions-dropdown-menu ${showEmotion ? "show" : ""}`}
         ref={emotionRef}>
         <div className="emotions-dropdown-arrow"></div>
-        <Tabs defaultActiveKey="1" tabPosition={"bottom"}>
-          <Tabs.TabPane tab="Emoji" key="1">
-            <EmojiComponent
-              setMsg={setMsg}
-              getValues={getValues}
-              focusInputMsg={focusInputMsg}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Stickers" key="2">
-            Content of Tab Pane 2
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Gifs" key="3">
-            <GifComponent
-              sendMessage={sendMessage}
-              selectedUser={selectedUser}
-              focusInputMsg={focusInputMsg}
-              setReplyingDefault={setReplyingDefault}
-            />
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs defaultActiveKey="1" tabPosition={"bottom"} items={items} />
       </div>
       <Smile
         ref={emotionIconRef}
