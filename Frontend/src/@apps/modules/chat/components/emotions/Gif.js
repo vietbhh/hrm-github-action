@@ -1,4 +1,4 @@
-import ReactGiphySearchBox from "react-giphy-searchbox"
+import ReactGiphySearchBox from "./react-giphy"
 
 const Gif = (props) => {
   const {
