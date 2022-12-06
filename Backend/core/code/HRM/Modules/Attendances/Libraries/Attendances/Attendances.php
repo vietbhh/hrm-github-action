@@ -79,6 +79,7 @@ class Attendances
                             'date_from' => $startDateMonthlyForInsert,
                             'date_to' => $dateToForInsert
                         ];
+                        
                         $model->setAllowedFields(array_keys($dataInsert));
                         $model->save($dataInsert);
                         $idAttendance = $model->getInsertID();
@@ -90,6 +91,10 @@ class Attendances
                 } else {
                     $totalSchedule += 1;
                     for ($i = 1; $i <= $totalSchedule; $i++) {
+                        if (strtotime($startDateMonthly) > strtotime($today)) {
+                            break;
+                        }
+
                         $dateTo = date('Y-m-d', strtotime(' + ' . $attendanceApprovalCycleNum . ' month', strtotime($startDateMonthly)));
                         $dateToTemp = date('Y-m-d', strtotime('-1 days', strtotime($dateTo)));
 
@@ -111,8 +116,6 @@ class Attendances
                 }
             }
         }
-
-        exit();
     }
 
     public function recalculateAttendance()
