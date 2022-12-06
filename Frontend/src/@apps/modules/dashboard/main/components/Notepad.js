@@ -65,9 +65,15 @@ const Notepad = (props) => {
           data_pin: res.data.dataPin,
           data_un_pin: res.data.dataUnPin
         })
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((err) => {
         setState({ loading: false })
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 

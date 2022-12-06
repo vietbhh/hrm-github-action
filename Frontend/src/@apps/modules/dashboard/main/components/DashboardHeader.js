@@ -34,8 +34,7 @@ const DashboardHeader = (props) => {
         }
       ]
     : []
-  const menuHeader = [...menuRemove, ...menuRight]
-  const menuDropdown = <Menu items={menuHeader} />
+  const items = [...menuRemove, ...menuRight]
 
   const TitleTag = titleLink ? Link : "h1"
 
@@ -94,7 +93,7 @@ const DashboardHeader = (props) => {
         <div className="ms-auto">
           {customRight}
           <Dropdown
-            overlay={menuDropdown}
+            menu={{ items }}
             placement="bottomRight"
             arrow={{ pointAtCenter: true }}
             trigger={["click"]}
