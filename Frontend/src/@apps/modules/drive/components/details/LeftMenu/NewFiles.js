@@ -1,6 +1,9 @@
 // ** React Imports
 import { Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+// ** redux
+import { openModalUpload, toggleModalNewFolder } from "../../../common/reducer/drive"
+import { useDispatch } from "react-redux"
 // ** Styles
 import {
   UncontrolledButtonDropdown,
@@ -16,6 +19,20 @@ const NewFiles = (props) => {
     // ** methods
   } = props
 
+  const dispatch = useDispatch()
+
+  const handleClickUploadFile = (e) => {
+    e.preventDefault()
+    
+    dispatch(openModalUpload("file"))
+  }
+
+  const handleClickNewFolder = (e) => {
+    e.preventDefault()
+
+    dispatch(openModalUpload("folder"))
+  }
+
   //  ** render
   return (
     <Fragment>
@@ -26,13 +43,16 @@ const NewFiles = (props) => {
             {useFormatMessage("modules.drive.buttons.new_file")}
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem href="/" tag="a">
+            <DropdownItem
+              href="/"
+              tag="a"
+              onClick={(e) => handleClickUploadFile(e)}>
               {useFormatMessage("modules.drive.buttons.upload_file")}
             </DropdownItem>
             <DropdownItem href="/" tag="a">
               {useFormatMessage("modules.drive.buttons.upload_folder")}
             </DropdownItem>
-            <DropdownItem href="/" tag="a">
+            <DropdownItem href="/" tag="a" onClick={(e) => handleClickNewFolder(e)}>
               {useFormatMessage("modules.drive.buttons.new_folder")}
             </DropdownItem>
           </DropdownMenu>

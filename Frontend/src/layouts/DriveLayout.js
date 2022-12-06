@@ -1,20 +1,23 @@
 // ** React Imports
+import { useEffect } from "react"
 import { Outlet } from "react-router-dom"
-import { driveApi } from "../@apps/modules/drive/common/api"
+import { driveApi } from "@apps/modules/drive/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 
 // ** Core Layout Import
-// !Do not remove the Layout import
+// !Do not remove the Layout impo rt
 import Layout from "./components/vertical/Layout"
 
 // ** Menu Items Array
-import navigation from "@src/navigation/menuChat"
 import menuDrive from "../@apps/modules/drive/components/details/LeftMenu/menuDrive"
 
 // ** import component
 import Navbar2 from "./components/custom/Navbar2"
 import NewFiles from "../@apps/modules/drive/components/details/LeftMenu/NewFiles"
-import { useEffect } from "react"
+
+// ** redux
+import { useSelector, useDispatch } from "react-redux"
+import { setListFolder } from "@apps/modules/drive/common/reducer/drive"
 
 const DriveLayout = (props) => {
   const [state, setState] = useMergedState({
@@ -22,65 +25,96 @@ const DriveLayout = (props) => {
     menuData: []
   })
 
-  // ** effect
-  useEffect(() => {
+  const driveState = useSelector((state) => state.drive)
+  const { listFolder } = driveState
+
+  const dispatch = useDispatch()
+
+  const myFolderMenu = [
+    {
+      id: "my_files",
+      title: "menu.drive.my_file",
+      type: "dropdown",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          version="1.1"
+          id="Layer_1"
+          x="0px"
+          y="0px"
+          width="24px"
+          height="24px"
+          viewBox="0 0 24 24"
+          enableBackground="new 0 0 24 24"
+          xmlSpace="preserve">
+          {" "}
+          <image
+            id="image0"
+            width="24"
+            height="24"
+            x="0"
+            y="0"
+            href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAclBMVEUAAAAoLTEnKzInLDIo LDEnLTAoLDAqLTIqLjMpLTMpLTInLTIgMDAwMDApLDEpLTIpKTEpLTIoMDApLDIpLDMqLTAoLTEp LDEoLTMoLjMnLTImKzEoLDQqKjUpKzIgIDApLTAoLDIpLTEpLTMpLTL///9/S/UcAAAAJHRSTlMA P4+vv09/78+/348QEM/vH48gr89P37+/X68vQDCPEI9/768ZyXs7AAAAAWJLR0QlwwHJDwAAAAlw SFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+YMAgkpCCZ8W+MAAACZSURBVCjPpZHbFoIgEEVByaRR 0MpuUmae///GgmWpYD7UfplhNjBcGFuAR7EQIl759QTrVEq5gWc4KLMxV7qYiBJ9stVqInb7d1bh IGyziLvh8fSZc5aWFEg8MezO50WuaV4wdfkiXO13UfMXdSgqOIpwhbFc/2o+PKJ3wVJngQC5j7p5 5eYOY2MLKDFCPdD2B6VOjujIsAWej/EMPRPJGl8AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMTIt MDJUMDg6NDE6MDgrMDE6MDA69FV1AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTEyLTAyVDA4OjQx OjA4KzAxOjAwS6ntyQAAAABJRU5ErkJggg=="
+          />
+        </svg>
+      ),
+      children: []
+    }
+  ]
+
+  const getMyFolder = () => {
     setState({
       loading: true
     })
+
     driveApi
-      .getMyDriveFolder()
+      .getMyFolder()
       .then((res) => {
-        const menuDriveFolder = [
-          {
-            id: "my_file",
-            title: "menu.drive.my_file",
-            type: "dropdown",
-            icon: (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M14.4302 15.3H9.43018C9.02018 15.3 8.68018 14.96 8.68018 14.55C8.68018 14.14 9.02018 13.8 9.43018 13.8H14.4302C14.8402 13.8 15.1802 14.14 15.1802 14.55C15.1802 14.96 14.8402 15.3 14.4302 15.3Z"
-                  fill="#292D32"
-                />
-                <path
-                  d="M17 22.75H7C2.59 22.75 1.25 21.41 1.25 17V7C1.25 2.59 2.59 1.25 7 1.25H8.5C10.25 1.25 10.8 1.82 11.5 2.75L13 4.75C13.33 5.19 13.38 5.25 14 5.25H17C21.41 5.25 22.75 6.59 22.75 11V17C22.75 21.41 21.41 22.75 17 22.75ZM7 2.75C3.42 2.75 2.75 3.43 2.75 7V17C2.75 20.57 3.42 21.25 7 21.25H17C20.58 21.25 21.25 20.57 21.25 17V11C21.25 7.43 20.58 6.75 17 6.75H14C12.72 6.75 12.3 6.31 11.8 5.65L10.3 3.65C9.78 2.96 9.62 2.75 8.5 2.75H7V2.75Z"
-                  fill="#292D32"
-                />
-              </svg>
-            )
-          }
-        ]
         setState({
-          menuData: [...menuDriveFolder, ...menuDrive],
           loading: false
         })
+        dispatch(setListFolder(res.data.list_folder))
       })
       .catch((err) => {
+        myFolderMenu[0]["children"] = []
         setState({
-          menuData: [...menuDrive],
           loading: false
         })
+        dispatch(setListFolder([]))
       })
+  }
+
+  listFolder.map((item) => {
+    myFolderMenu[0]["children"].push({
+      id: `menu-my-file-${item.id}`,
+      title: item.name,
+      type: "item",
+      action: "access",
+      icon: "",
+      navLink: `/drive/folder/${item.id}`,
+      exactActive: true
+    })
+  })
+
+  // ** effect
+  useEffect(() => {
+    getMyFolder()
   }, [])
 
-  return (
-    !state.loading && (
-      <Layout
-        menuData={state.menuData}
-        navbar={(navProps) => <Navbar2 {...navProps} />}
-        outerCustomMenuComponent={(customProps) => (
-          <NewFiles {...customProps} />
-        )}
-        className="navbar-2 drive-page"
-        fixedSidebar={true}
-        {...props}>
-        <Outlet />
-      </Layout>
-    )
+  // ** render
+  return !state.loading ? (
+    <Layout
+      menuData={[...myFolderMenu, ...menuDrive]}
+      navbar={(navProps) => <Navbar2 {...navProps} />}
+      outerCustomMenuComponent={(customProps) => <NewFiles {...customProps} />}
+      className="navbar-2 drive-page"
+      fixedSidebar={true}
+      {...props}>
+      <Outlet />
+    </Layout>
+  ) : (
+    ""
   )
 }
 

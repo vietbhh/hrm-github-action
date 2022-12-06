@@ -47,7 +47,7 @@ const ItemS3Storage = (props) => {
       <Card className="s3-storage-item">
         <CardHeader className="s3-storage-header">
           <div className="w-100 d-flex justify-content-between align-items-start">
-            <div className="d-flex align-items-center justify-content-center icon-header">
+            <div className="d-flex align-items-center justify-content-center icon-bg">
               {icon}
             </div>
             <div>

@@ -2216,9 +2216,9 @@ class Module extends BaseConfig
 				]
 			]
 		],
-		'documents' => [
-			'name' => 'documents',
-			'tableName' => 'documents',
+		'drive_folders' => [
+			'name' => 'drive_folders',
+			'tableName' => 'drive_folders',
 			'type' => 'extend',
 			'system' => true,
 			'options' => '',
@@ -2255,8 +2255,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
 				'description' => [
 					'field' => 'description',
@@ -2269,7 +2269,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2290,8 +2290,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
 				'share_type' => [
 					'field' => 'share_type',
@@ -2304,7 +2304,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2325,43 +2325,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
-				],
-				'share' => [
-					'field' => 'share',
-					'field_type' => 'switch',
-					"field_default_value" => "",
-					"field_detail_order" => "0",
-					"field_detail_show" => true,
-					"field_enable" => true,
-					"field_filter_order" => "0",
-					"field_filter_show" => true,
-					"field_form_col_size" => "12",
-					"field_form_order" => 1,
-					"field_form_require" => true,
-					"field_form_show" => true,
-					"field_form_unique" => false,
-					"field_icon" => "",
-					"field_icon_type" => "no_icon",
-					'field_options' => [],
-					"field_options_values" => [
-						'values' => [],
-						'default' => ""
-					],
-					"field_quick_form_show" => true,
-					"field_quick_view_order" => "0",
-					"field_quick_view_show" => true,
-					"field_readonly" => false,
-					"field_select_field_show" => null,
-					"field_select_module" => null,
-					"field_table_order" => 1,
-					"field_table_show" => true,
-					"field_table_sortable" => true,
-					"field_table_width" => "0",
-					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
 				'office' => [
 					'field' => 'office',
@@ -2374,7 +2339,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2395,8 +2360,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
 				'department' => [
 					'field' => 'department',
@@ -2409,7 +2374,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2430,8 +2395,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
 				'user' => [
 					'field' => 'user',
@@ -2444,7 +2409,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2465,11 +2430,11 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
 				'parent' => [
-					'field' => 'user',
+					'field' => 'parent',
 					'field_type' => 'number_int',
 					"field_default_value" => "",
 					"field_detail_order" => "0",
@@ -2479,7 +2444,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2500,12 +2465,12 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
 				],
-				'sharing_permission_recursively' => [
-					'field' => 'sharing_permission_recursively',
-					'field_type' => 'switch',
+				'metas' => [
+					'field' => 'metas',
+					'field_type' => 'textarea',
 					"field_default_value" => "",
 					"field_detail_order" => "0",
 					"field_detail_show" => true,
@@ -2514,7 +2479,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2535,12 +2500,12 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "documents",
-					"module" => "documents"
-				]
+					"moduleName" => "drive_folders",
+					"module" => "drive_folders"
+				],
 			]
 		],
-		'document_details' => [
+		'drive_files' => [
 			'name' => 'document_details',
 			'tableName' => 'document_details',
 			'type' => 'extend',
@@ -2579,8 +2544,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 				'file_size' => [
 					'field' => 'file_size',
@@ -2614,8 +2579,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 				'file_type' => [
 					'field' => 'file_type',
@@ -2649,8 +2614,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 				'share_type' => [
 					'field' => 'share_type',
@@ -2663,7 +2628,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2684,43 +2649,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
-				],
-				'share' => [
-					'field' => 'share',
-					'field_type' => 'switch',
-					"field_default_value" => "",
-					"field_detail_order" => "0",
-					"field_detail_show" => true,
-					"field_enable" => true,
-					"field_filter_order" => "0",
-					"field_filter_show" => true,
-					"field_form_col_size" => "12",
-					"field_form_order" => 1,
-					"field_form_require" => true,
-					"field_form_show" => true,
-					"field_form_unique" => false,
-					"field_icon" => "",
-					"field_icon_type" => "no_icon",
-					'field_options' => [],
-					"field_options_values" => [
-						'values' => [],
-						'default' => ""
-					],
-					"field_quick_form_show" => true,
-					"field_quick_view_order" => "0",
-					"field_quick_view_show" => true,
-					"field_readonly" => false,
-					"field_select_field_show" => null,
-					"field_select_module" => null,
-					"field_table_order" => 1,
-					"field_table_show" => true,
-					"field_table_sortable" => true,
-					"field_table_width" => "0",
-					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 				'office' => [
 					'field' => 'office',
@@ -2733,7 +2663,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2754,8 +2684,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 				'department' => [
 					'field' => 'department',
@@ -2768,7 +2698,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2789,8 +2719,8 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 				'user' => [
 					'field' => 'user',
@@ -2803,7 +2733,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2824,11 +2754,11 @@ class Module extends BaseConfig
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
-				'document' => [
-					'field' => 'document',
+				'drive_folder' => [
+					'field' => 'drive_folder',
 					'field_type' => 'select_module',
 					"field_default_value" => "",
 					"field_detail_order" => "0",
@@ -2838,7 +2768,7 @@ class Module extends BaseConfig
 					"field_filter_show" => true,
 					"field_form_col_size" => "12",
 					"field_form_order" => 1,
-					"field_form_require" => true,
+					"field_form_require" => false,
 					"field_form_show" => true,
 					"field_form_unique" => false,
 					"field_icon" => "",
@@ -2853,14 +2783,14 @@ class Module extends BaseConfig
 					"field_quick_view_show" => true,
 					"field_readonly" => false,
 					"field_select_field_show" => "name",
-					"field_select_module" => "documents",
+					"field_select_module" => "drive_folders",
 					"field_table_order" => 1,
 					"field_table_show" => true,
 					"field_table_sortable" => true,
 					"field_table_width" => "0",
 					"field_validate_rules" => null,
-					"moduleName" => "document_details",
-					"module" => "document_details"
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
 				],
 			]
 		]

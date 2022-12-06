@@ -1,5 +1,102 @@
 @import "@scss/friday";
 
+.btn-custom-primary {
+    border-radius: 12px;
+    color: #ffffff !important;
+    background-color: #377dff !important;
+
+    &:after {
+        display: none;
+    }
+
+    &:hover {
+        box-shadow: none !important;
+    }
+
+    &:focus {
+        background-color: #377dff !important;
+    }
+}
+
+.btn-custom-white {
+    border-radius: 12px;
+    background-color: #ffffff !important;
+    border: none;
+
+    &:hover {
+        box-shadow: none !important;
+    }
+}
+
+.drive-filter-container {
+    .filter-sort-container {
+        .input-filter-drive {
+            height: 38px;
+            background-color: #ffffff;
+            border-radius: 12px;
+
+            .text-filter-drive-container {
+                padding-left: 16px;
+
+                .sort-by-text {
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #696974;
+                }
+
+                .sort-content {
+                    width: 120px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #000000;
+                    border: none;
+                    width: 120px;
+                }
+            }
+
+            .icon-filter-drive-container {
+                padding-right: 8px;
+                padding-left: 8px;
+                border-left: 1px solid #f1f1f5;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .filter-button-container {
+        .btn-filter-drive {
+            width: 38px;
+            height: 38px;
+        }
+    }
+
+    .toggle-drive-layout-container {
+        .toggle-drive-layout {
+            .toggle-drive-layout-item {
+                cursor: pointer;
+                color: #292d32;
+                height: 38px;
+                width: 38px;
+                background-color: #ffffff;
+
+                &:first-child {
+                    border-top-left-radius: 12px !important;
+                    border-bottom-left-radius: 12px !important;
+                }
+
+                &:last-child {
+                    border-top-right-radius: 12px !important;
+                    border-bottom-right-radius: 12px !important;
+                }
+            }
+
+            .active {
+                background-color: #377dff;
+            }
+        }
+    }
+}
+
 .drive-page {
     .p-250 {
         padding: 2.5rem;
@@ -18,19 +115,25 @@
     }
 
     .bg-blue {
-        background-color: #3F8CFF;
+        background-color: #3f8cff;
     }
 
     .btn-flat-info {
         color: $primary-text-color;
 
-        &:hover, &:focus {
-            background-color: #3F8CFF !important;
+        &:hover,
+        &:focus {
+            background-color: #3f8cff !important;
             color: #ffffff;
         }
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         color: $primary-text-color;
     }
 
@@ -38,24 +141,36 @@
         border-radius: 12px;
     }
 
+    .icon-bg {
+        background-color: #f1f1f5;
+        height: 50px;
+        width: 50px;
+        border-radius: 18px;
+    }
+
     .main-menu-content {
         .new-file {
             .dropdown-menu {
                 width: 100%;
             }
+        }
+    }
 
-            .btn-custom-primary {
+    .recent-file-and-folder-container,
+    .list-file-and-folder-container {
+        .recent-file-and-folder-item {
+            .icon-file-and-folder {
+                height: 48px;
+                width: 48px;
+                background-color: rgba(106, 75, 255, 0.05);
                 border-radius: 12px;
-                color: #FFFFFF;
-                background-color: #377DFF;
+            }
 
-                &:after {
-                    display: none;
-                }
+            .name-file-and-folder {
+            }
 
-                &:hover {
-                    box-shadow: none !important;
-                }
+            .extension-file-and-folder {
+                color: #92929d;
             }
         }
     }
@@ -66,14 +181,7 @@
                 height: 200px;
                 .s3-storage-header {
                     height: 100px;
-
-                    .icon-header {
-                        background-color: #F1F1F5;
-                        height: 50px;
-                        width: 50px;
-                        border-radius: 18px;
-                    }
-                }   
+                }
 
                 .s3-storage-body {
                     .small-text {
@@ -82,35 +190,157 @@
                     }
 
                     .progress-capacity {
-                        background-color: #E4E4E4;
+                        background-color: #e4e4e4;
                     }
 
                     .progress-bar-warning .progress-bar {
-                        background-color: #FFC66F;
+                        background-color: #ffc66f;
                     }
 
                     .progress-bar-info .progress-bar {
-                        background-color: #3F8CFF;
+                        background-color: #3f8cff;
                     }
                 }
             }
         }
 
-        .recent-file-and-folder-container {
-            .recent-file-and-folder-item {
-                .icon-file-and-folder {
-                    height: 48px;
-                    width: 48px;
-                    background-color: rgba(106, 75, 255, 0.05);
+        .folder-container {
+            a {
+                color: #32434f;
+                font-weight: 500;
+            }
+        }
+
+        .available-store-container {
+            .used-capacity-container {
+                .capacity-used {
+                    font-size: 18px;
+                    font-weight: 700;
+
+                    .capacity-number {
+                        color: $primary-text-color;
+                    }
+                }
+
+                .available-text {
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+
+            .file-capacity-container {
+                .file-capacity-item {
+                    .item-title {
+                        font-size: 14px;
+                    }
+
+                    .item-file-number {
+                        font-size: 10px;
+                    }
+
+                    .item-size {
+                        font-size: 13px;
+                    }
+                }
+            }
+
+            .upgrade-storage-capacity {
+                .upgrade-storage-body {
                     border-radius: 12px;
-                }
+                    background-color: #cfc8ff;
 
-                .name-file-and-folder {
+                    .btn-upgrade {
+                        background-color: #ffffff !important;
+                        border: none;
+                        border-radius: 16px;
+                        color: #5f75ee !important;
+                        font-size: 14px !important;
+                    }
                 }
+            }
+        }
+    }
 
-                .extension-file-and-folder{
-                    color: #92929D;
+    .folder-drive-page {
+        .folder-drive-header-container {
+            .folder-drive-header-title-container {
+                .drive-title-item {
+                    font-size: 15px !important;
+                    font-weight: 400 !important;
+                    color: #32434f;
                 }
+            }
+        }
+    }
+}
+
+.dropdown-action-file-and-folder,
+.dropdown-filter-sort-drive {
+    .ant-dropdown-menu {
+        border-radius: 12px !important;
+        padding: 7px;
+
+        .ant-dropdown-menu-item {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+    }
+}
+
+.drive-modal {
+    .modal-content {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 5px !important;
+
+        .modal-header {
+            padding: 0 !important;
+            height: 72px;
+            border-bottom: 1px solid rgba(228, 230, 232, 0.85) !important;
+
+            .modal-title {
+                width: 100%;
+                text-align: center;
+                font-weight: 600 !important;
+                font-size: 16px !important;
+                margin-left: 3rem;
+            }
+
+            .btn-close {
+                box-shadow: unset !important;
+                transform: unset !important;
+                margin: -1rem 1rem -0.4rem auto;
+            }
+        }
+
+        .modal-body {
+            padding: 30px !important;
+        }
+
+        .modal-footer {
+            padding: 10px 30px 20px 30px !important;
+        }
+    }
+}
+
+.drive-upload-modal {
+    width: 473px;
+
+    .modal-content {
+        .modal-body {
+            .ant-upload-drag {
+                height: 324px;
+                border-radius: 12px;
+            }
+
+            .upload-text {
+                color: #8083a3;
+                font-size: 12px;
+            }
+
+            .ant-upload {
+                width: 100% !important;
             }
         }
     }

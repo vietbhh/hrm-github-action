@@ -774,7 +774,7 @@
         }
       }
     },
-    "positions": {
+    "position`s": {
       "title": "Job titles",
       "buttons": {
         "add": "New Title"
@@ -848,13 +848,26 @@
       "title": {
         "index": "drive",
         "folders": "Folders",
-        "recent": "Recent"
+        "recent": "Recent",
+        "my_files": "My Files"
       },
       "buttons": {
         "new_file": "New File",
         "upload_file": "Upload Files",
         "upload_folder": "Upload Folder",
-        "new_folder": "New Folder"
+        "new_folder": "New Folder",
+        "upgrade": "Upgrade",
+        "share": "Share",
+        "get_link": "Get Link",
+        "download": "Download",
+        "rename": "Rename",
+        "copy": "Copy",
+        "delete": "Delete",
+        "star": "Star",
+        "view_detail": "View Detail",
+        "upload": "Upload",
+        "save": "Save",
+        "cancel": "Cancel"
       },
       "text": {
         "link_your_account": "Link your account",
@@ -862,7 +875,23 @@
         "files": "files",
         "folder": "Folder",
         "file": "File",
-        "used": "Used"
+        "used": "Used",
+        "available_store": "Available store",
+        "browse_files_to_upload": "Browse files to upload",
+        "browse_folder_to_upload": "Browse folder to upload",
+        "sort_by": "Sort by",
+        "filter_drive": {
+          "due_date": "Due Date",
+          "name": "Name",
+          "type": "Type",
+          "size": "Size"
+        }
+      }
+    },
+    "drive_folders": {
+      "fields": {
+        "name": "Folder name",
+        "description": "Description"
       }
     }
   },

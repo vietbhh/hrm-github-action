@@ -7,6 +7,7 @@ import notification from "./notification"
 // ** Custom Import
 import app from "./app/app"
 import calendar from "@apps/modules/calendar/common/reducer/calendar"
+import drive from "@apps/modules/drive/common/reducer/drive"
 import * as modules from "./modules"
 
 const rootReducer = {
@@ -16,6 +17,7 @@ const rootReducer = {
   navbar,
   layout,
   calendar,
+  drive,
   ...modules
 }
 

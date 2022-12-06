@@ -4,9 +4,9 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 import { Row, Col } from "reactstrap"
 // ** Components
-import ItemRecentFileAndFolder from "./ItemRecentFileAndFolder"
+import ItemRecentFileAndFolder from "../DriveContent/RecentFileAndFolder/ItemRecentFileAndFolder"
 
-const ListRecentFileAndFolder = (props) => {
+const ListFileAndFolderDrive = (props) => {
   const {
     // ** props
     // ** methods
@@ -64,15 +64,12 @@ const ListRecentFileAndFolder = (props) => {
   return (
     <Fragment>
       <div>
-        <div className="mb-2">
-          <h4>{useFormatMessage("modules.drive.title.recent")}</h4>
-        </div>
         <div>
-            <Fragment>{renderListRecentFileAndFolder()}</Fragment>
+          <Fragment>{renderListRecentFileAndFolder()}</Fragment>
         </div>
       </div>
     </Fragment>
   )
 }
 
-export default ListRecentFileAndFolder
+export default ListFileAndFolderDrive

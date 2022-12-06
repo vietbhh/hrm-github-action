@@ -152,7 +152,11 @@ $routes->get('calendar/load-calendar-tag', 'Calendar::load_calendar_tag_get');
 $routes->delete('calendar/remove-calendar/(:alphanum)', 'Calendar::delete_delete/$1');
 $routes->get('general/users', 'General::load_users_get');
 
-$routes->get('drive/get-my-drive-folder', 'Drive::get_my_drive_folder_get', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-my-folder', 'Drive::get_my_folder_get', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-init-drive', 'Drive::get_init_drive_get', ['namespace' => 'App\Controllers']);
+$routes->post('drive/create-drive-folder', 'Drive::create_drive_folder_post', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-drive-folder-detail', 'Drive::get_drive_folder_detail', ['namespace' => 'App\Controllers']);
+$routes->post('drive/upload-file-drive', 'Drive::upload_file_drive_post', ['namespace' => 'App\Controllers']);
 
 /*** Route for Search ****/
 $routes->get('search/get_data_user', 'Search::get_data_employee_search_get', ['namespace' => 'App\Controllers']);

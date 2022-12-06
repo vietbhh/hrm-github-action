@@ -1,5 +1,7 @@
 // ** React Imports
 import { Fragment } from "react"
+// ** redux
+import { useSelector } from "react-redux"
 // ** Styles
 // ** Components
 import ListS3Storage from "./S3Storage/ListS3Storage"
@@ -13,13 +15,16 @@ const DriveContent = (props) => {
     // ** methods
   } = props
 
+  const driveState = useSelector((state) => state.drive)
+  const {listFolder} = driveState
+
   // ** render
   const renderListS3Storage = () => {
     return <ListS3Storage />
   }
 
   const renderListDriveFolder = () => {
-    return <ListDriveFolder />
+    return <ListDriveFolder listFolder={listFolder}/>
   }
 
   const renderListRecentFileAndFolder = () => {
@@ -33,7 +38,7 @@ const DriveContent = (props) => {
   return (
     <Fragment>
       <div className="d-flex align-items-start justify-content-between drive-content">
-        <div className="w-70">
+        <div className="w-75">
           <div className="">
             <div className="mb-2 s3-storage-container">
               <Fragment>{renderListS3Storage()}</Fragment>
@@ -46,7 +51,7 @@ const DriveContent = (props) => {
             </div>
           </div>
         </div>
-        <div className="w-30">
+        <div className="w-25 available-store-container">
           <Fragment>{renderAvailableStore()}</Fragment>
         </div>
       </div>
