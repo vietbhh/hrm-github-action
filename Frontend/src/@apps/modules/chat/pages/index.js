@@ -5,6 +5,7 @@ import classnames from "classnames"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { useSelector, useDispatch } from "react-redux"
 import { ChatApi } from "../common/api"
+import { triGram } from "../common/common"
 import {
   handleChats,
   handleChatHistory,
@@ -32,7 +33,8 @@ import {
   updateDoc,
   limit,
   startAt,
-  arrayUnion
+  arrayUnion,
+  endAt
 } from "firebase/firestore"
 
 // ** style
@@ -431,6 +433,30 @@ const AppChat = (props) => {
       dataUpdate
     )
   }
+
+  // ** test
+  /* useEffect(() => {
+    // What we want to search for
+    const searchTxt = "zss"
+
+    // First we build out all our search constraints
+    const searchConstraints = []
+    _.forEach(triGram(searchTxt), (name, key) => {
+      searchConstraints.push(where(`_smeta.${key}`, "==", true))
+    })
+
+    const q_mess = query(
+      collection(db, `/core/messages/9ylPgvMTEESXofYc8m0R`),
+      ...searchConstraints
+    )
+    console.log(q_mess)
+    getDocs(q_mess).then((res) => {
+      res.forEach((doc_mess) => {
+        const docData = doc_mess.data()
+        console.log(docData)
+      })
+    })
+  }, []) */
 
   useEffect(() => {
     if (loadingEmployee === true) {

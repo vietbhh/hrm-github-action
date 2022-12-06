@@ -19,6 +19,7 @@ import {
   getMasonryConfigExceptLast,
   getMediaBreakpoints
 } from "./utils/masonry"
+import PerfectScrollbar from "react-perfect-scrollbar"
 
 const ReactGiphySearchBox = ({
   apiKey,
@@ -90,7 +91,8 @@ const ReactGiphySearchBox = ({
         autoFocus={autoFocus}
       />
 
-      <div
+      <PerfectScrollbar
+        options={{ wheelPropagation: false, suppressScrollX: true }}
         className={`reactGiphySearchbox-listWrapper${
           listWrapperClassName ? ` ${listWrapperClassName}` : ""
         }`}
@@ -138,7 +140,7 @@ const ReactGiphySearchBox = ({
             </MasonryLayout>
           )}
         </InfiniteScroll>
-      </div>
+      </PerfectScrollbar>
       {poweredByGiphy && <PoweredByGiphy image={poweredByGiphyImage} />}
     </div>
   )
