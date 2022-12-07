@@ -225,6 +225,10 @@ const AppChat = (props) => {
         type: "text",
         ...dataAddFile
       }
+      if (docData.type === "text") {
+        docData["_smeta"] = triGram(msg)
+      }
+
       setDoc(doc(collection(db, `${firestoreDb}/messages/${groupId}`)), docData)
       updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
         last_message: handleLastMessage(docData.type, msg),
@@ -277,6 +281,10 @@ const AppChat = (props) => {
           type: "text",
           ...dataAddFile
         }
+        if (docDataMessage.type === "text") {
+          docData["_smeta"] = triGram(msg)
+        }
+
         setDoc(
           doc(collection(db, `${firestoreDb}/messages/${newGroupId}`)),
           docDataMessage
@@ -434,29 +442,18 @@ const AppChat = (props) => {
     )
   }
 
-  // ** test
-  /* useEffect(() => {
-    // What we want to search for
-    const searchTxt = "zss"
-
-    // First we build out all our search constraints
+  const handleSearchMessage = async (groupId, searchTxt) => {
     const searchConstraints = []
     _.forEach(triGram(searchTxt), (name, key) => {
       searchConstraints.push(where(`_smeta.${key}`, "==", true))
     })
 
     const q_mess = query(
-      collection(db, `/core/messages/9ylPgvMTEESXofYc8m0R`),
+      collection(db, `${firestoreDb}/messages/${groupId}`),
       ...searchConstraints
     )
-    console.log(q_mess)
-    getDocs(q_mess).then((res) => {
-      res.forEach((doc_mess) => {
-        const docData = doc_mess.data()
-        console.log(docData)
-      })
-    })
-  }, []) */
+    return await getDocs(q_mess)
+  }
 
   useEffect(() => {
     if (loadingEmployee === true) {
@@ -914,6 +911,7 @@ const AppChat = (props) => {
               scrollToTopOffset={scrollToTopOffset}
               checkAddMessage={checkAddMessage}
               setCheckAddMessage={setCheckAddMessage}
+              handleSearchMessage={handleSearchMessage}
             />
             <UserProfileSidebar
               user={user}

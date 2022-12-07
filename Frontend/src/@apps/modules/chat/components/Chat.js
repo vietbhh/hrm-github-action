@@ -1,10 +1,11 @@
 // ** React Imports
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import ReactDOM from "react-dom"
 
 // ** Custom Components
 import Avatar from "@apps/modules/download/pages/Avatar"
 import ChatMessage from "./details/ChatMessage"
+import SearchMessage from "./details/SearchMessage"
 import UpFile from "./details/UpFile"
 import EmotionsComponent from "./emotions/index"
 import ModalForward from "./modals/ModalForward"
@@ -48,7 +49,8 @@ const ChatLog = (props) => {
     dataEmployees,
     queryLimit,
     checkAddMessage,
-    setCheckAddMessage
+    setCheckAddMessage,
+    handleSearchMessage
   } = props
   const { userProfile, selectedUser } = store
 
@@ -100,7 +102,7 @@ const ChatLog = (props) => {
   const methods = useForm({
     mode: "onSubmit"
   })
-  const { handleSubmit, setValue, getValues } = methods
+  const { handleSubmit, setValue, getValues, watch } = methods
 
   const setMsg = (msg) => {
     setValue("message", msg)
@@ -343,28 +345,11 @@ const ChatLog = (props) => {
                   </div>
                 </div>
                 <div className="d-flex align-items-center">
-                  <svg
-                    className="me-2 cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="19"
-                    height="19"
-                    viewBox="0 0 19 19"
-                    fill="none">
-                    <path
-                      d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                      stroke="#377DFF"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M17.4167 17.4167L15.8334 15.8334"
-                      stroke="#377DFF"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <SearchMessage
+                    handleSearchMessage={handleSearchMessage}
+                    selectedUser={selectedUser}
+                  />
+
                   <button className="chat-header-btn-border left">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
