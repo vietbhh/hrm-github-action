@@ -19,3 +19,18 @@ export const triGram = (txt) => {
 
   return map
 }
+
+export const highlightText = (text, textSearch) => {
+  const index = text.indexOf(textSearch)
+  if (index === -1) {
+    return text
+  }
+
+  return (
+    text.substring(0, index) +
+    "<span class='highlight-text'>" +
+    text.substring(index, index + textSearch.length) +
+    "</span>" +
+    text.substring(index + textSearch.length)
+  )
+}

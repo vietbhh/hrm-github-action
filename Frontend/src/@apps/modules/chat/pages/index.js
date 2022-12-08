@@ -6,12 +6,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { useSelector, useDispatch } from "react-redux"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
-import {
-  handleChats,
-  handleChatHistory,
-  handleLastTimeMessage,
-  handleUnread
-} from "redux/chat"
+import { handleChats, handleLastTimeMessage, handleUnread } from "redux/chat"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -82,9 +77,8 @@ const AppChat = (props) => {
   const chat = useSelector((state) => state.chat)
   const chats = chat.chats
   const lastTimeMessage = chat.lastTimeMessage
-  const chatHistory = chat.chatHistory
   const unreadStore = chat.unread
-  const queryLimit = 50
+  const queryLimit = 30
 
   const setUnread = (num) => {
     dispatch(handleUnread({ unread: num }))
@@ -102,6 +96,7 @@ const AppChat = (props) => {
   const [hasMoreHistory, setHasMoreHistory] = useState(true)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [checkAddMessage, setCheckAddMessage] = useState(false)
+  const [chatHistory, setChatHistory] = useState([])
 
   // ** Update Window Width
   const handleWindowWidth = () => {
@@ -141,9 +136,111 @@ const AppChat = (props) => {
     chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
   }
   // ** Scroll to chat top offset
-  const scrollToTopOffset = (number) => {
-    const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-    chatContainer.scrollTop = number
+  const scrollToMessage = (timestamp, groupId) => {
+    const section = document.getElementById(timestamp)
+    if (section) {
+      const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+      chatContainer.scrollTop = section.offsetTop
+      section.classList.add("highlight")
+      setTimeout(() => {
+        section.classList.remove("highlight")
+      }, 1000)
+    } else {
+      if (!_.isEmpty(groupId) && hasMoreHistory === true) {
+        setHasMoreHistory(false)
+        const q = query(
+          collection(db, `${firestoreDb}/messages/${groupId}`),
+          orderBy("timestamp", "desc"),
+          startAt(lastTimeMessage),
+          endAt(timestamp)
+        )
+
+        getDocs(q).then((res) => {
+          let chat = []
+          let dem = 0
+          res.forEach((docData) => {
+            dem++
+            const data = docData.data()
+            chat = [
+              ...chat,
+              {
+                message: data.message,
+                time: data.timestamp,
+                seen: data.seen,
+                senderId: data.sender_id,
+                type: data.type,
+                status: data.status,
+                file: data.file,
+                react: data.react,
+                reply: data.reply,
+                forward: data.forward
+              }
+            ]
+          })
+
+          if (dem > 1) {
+            let chat_reverse = chat.reverse()
+            chat_reverse.pop()
+
+            const q = query(
+              collection(db, `${firestoreDb}/messages/${groupId}`),
+              orderBy("timestamp", "desc"),
+              limit(10),
+              startAt(timestamp)
+            )
+
+            getDocs(q).then((res) => {
+              let dem = 0
+              res.forEach((docData) => {
+                dem++
+                const data = docData.data()
+                chat = [
+                  ...chat,
+                  {
+                    message: data.message,
+                    time: data.timestamp,
+                    seen: data.seen,
+                    senderId: data.sender_id,
+                    type: data.type,
+                    status: data.status,
+                    file: data.file,
+                    react: data.react,
+                    reply: data.reply,
+                    forward: data.forward
+                  }
+                ]
+              })
+
+              if (dem > 1) {
+                chat_reverse = chat.reverse()
+                chat_reverse.pop()
+              }
+
+              setChatHistory([...chat_reverse, ...chatHistory])
+              dispatch(
+                handleLastTimeMessage({
+                  lastTimeMessage:
+                    chat_reverse.length > 0 ? chat_reverse[0].time : 0
+                })
+              )
+
+              setTimeout(() => {
+                const section = document.getElementById(timestamp)
+                if (section) {
+                  const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+                  chatContainer.scrollTop = section.offsetTop
+                  section.classList.add("highlight")
+                  setTimeout(() => {
+                    section.classList.remove("highlight")
+                    setHasMoreHistory(true)
+                  }, 1000)
+                }
+              }, 200)
+            })
+          }
+        })
+      }
+    }
   }
 
   // ** Set user function for Right Sidebar
@@ -226,7 +323,7 @@ const AppChat = (props) => {
         ...dataAddFile
       }
       if (docData.type === "text") {
-        docData["_smeta"] = triGram(msg)
+        docData["_smeta"] = triGram(msg.slice(0, 500))
       }
 
       setDoc(doc(collection(db, `${firestoreDb}/messages/${groupId}`)), docData)
@@ -282,7 +379,7 @@ const AppChat = (props) => {
           ...dataAddFile
         }
         if (docDataMessage.type === "text") {
-          docData["_smeta"] = triGram(msg)
+          docDataMessage["_smeta"] = triGram(msg.slice(0, 500))
         }
 
         setDoc(
@@ -293,7 +390,7 @@ const AppChat = (props) => {
       })
     }
 
-    dispatch(handleChatHistory({ chatHistory: [] }))
+    setChatHistory([])
   }
 
   const updateMessage = (groupId, timestamp, dataUpdate) => {
@@ -324,11 +421,7 @@ const AppChat = (props) => {
   }
 
   const getChatHistory = (groupId = "") => {
-    if (
-      _.isEmpty(lastTimeMessage) &&
-      !_.isEmpty(groupId) &&
-      hasMoreHistory === true
-    ) {
+    if (!_.isEmpty(groupId) && hasMoreHistory === true) {
       setHasMoreHistory(false)
       const q = query(
         collection(db, `${firestoreDb}/messages/${groupId}`),
@@ -362,11 +455,9 @@ const AppChat = (props) => {
 
         if (dem > 1) {
           const chat_reverse = chat.reverse()
-          dispatch(
-            handleChatHistory({
-              chatHistory: [...chat_reverse, ...chatHistory]
-            })
-          )
+          chat_reverse.pop()
+
+          setChatHistory([...chat_reverse, ...chatHistory])
           dispatch(
             handleLastTimeMessage({
               lastTimeMessage:
@@ -667,7 +758,7 @@ const AppChat = (props) => {
         lastTimeMessage: 0
       })
     )
-    dispatch(handleChatHistory({ chatHistory: [] }))
+    setChatHistory([])
     setUnread(0)
     if (!_.isEmpty(active)) {
       setCheckAddMessage(true)
@@ -908,7 +999,7 @@ const AppChat = (props) => {
               setUserSidebarRight={setUserSidebarRight}
               dataEmployees={dataEmployees}
               queryLimit={queryLimit}
-              scrollToTopOffset={scrollToTopOffset}
+              scrollToMessage={scrollToMessage}
               checkAddMessage={checkAddMessage}
               setCheckAddMessage={setCheckAddMessage}
               handleSearchMessage={handleSearchMessage}

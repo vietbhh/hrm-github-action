@@ -14,7 +14,7 @@ import { useFormatMessage } from "@apps/utility/common"
 import { Dropdown, Image, Menu, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Badge, Spinner } from "reactstrap"
-import { formatTime } from "../../common/common"
+import { formatTime, highlightText } from "../../common/common"
 
 const ChatMessage = (props) => {
   const {
@@ -45,7 +45,9 @@ const ChatMessage = (props) => {
     focusInputMsg,
     toggleModalForward,
     setDataForward,
-    scrollToTopOffset
+    scrollToMessage,
+    search_message_highlight_timestamp,
+    search_message_highlight_text_search
   } = props
   const { userProfile, selectedUser } = store
 
@@ -91,9 +93,7 @@ const ChatMessage = (props) => {
     if (!_.isEmpty(chats)) {
       chatLog = chats
       if (!_.isEmpty(chatHistory)) {
-        const _chatHistory = [...chatHistory]
-        _chatHistory.pop()
-        chatLog = [..._chatHistory, ...chats]
+        chatLog = [...chatHistory, ...chats]
       }
     }
 
@@ -281,16 +281,10 @@ const ChatMessage = (props) => {
             <div
               className="chat-content-reply-content"
               onClick={() => {
-                const section = document.getElementById(
-                  chat.reply.replying_timestamp
+                scrollToMessage(
+                  chat.reply.replying_timestamp,
+                  selectedUser.chat.id
                 )
-                if (section) {
-                  scrollToTopOffset(section.offsetTop - 150)
-                  section.classList.add("highlight")
-                  setTimeout(() => {
-                    section.classList.remove("highlight")
-                  }, 1000)
-                }
               }}>
               <div className="chat-content-reply-title mb-25">
                 <svg
@@ -448,7 +442,14 @@ const ChatMessage = (props) => {
                   ? "has-seen"
                   : ""
               }`}>
-              {data.msg}
+              {search_message_highlight_timestamp === data.time
+                ? ReactHtmlParser(
+                    highlightText(
+                      data.msg,
+                      search_message_highlight_text_search
+                    )
+                  )
+                : data.msg}
             </p>
             <p className="time">
               {formatTime(data.time)}

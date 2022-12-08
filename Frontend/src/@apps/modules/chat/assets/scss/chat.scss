@@ -245,6 +245,11 @@
           transition: 0.5s;
 
           .chat-app-window {
+            .highlight-text {
+              background-color: $primary-bg;
+              color: #fff;
+            }
+
             .start-chat-area {
               border-radius: 12px;
             }
@@ -421,8 +426,6 @@
                       0 3px 6px -4px rgb(0 0 0 / 12%),
                       0 9px 28px 8px rgb(0 0 0 / 5%);
                     margin-top: 12px;
-                    max-height: 300px;
-                    min-height: 70px;
 
                     > .arrow {
                       left: 35px;
@@ -451,6 +454,11 @@
                       }
                     }
 
+                    .scrollbar-container {
+                      max-height: 300px;
+                      min-height: 70px;
+                    }
+
                     .ul-message-search {
                       padding: 0;
                       margin-bottom: 0;
@@ -468,9 +476,25 @@
                         line-height: 22px;
                         transition: all 0.3s;
                         list-style-type: none;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 10px;
 
                         &:hover {
                           background-color: #f5f5f5;
+                        }
+
+                        .text {
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
+                        }
+
+                        .time {
+                          font-size: 10px;
+                          white-space: nowrap;
+                          text-align: right;
                         }
                       }
                     }
@@ -853,6 +877,7 @@
                 .form-group {
                   margin: 0;
                   width: calc(100% - 120px);
+                  z-index: 9;
                 }
 
                 .form-control {

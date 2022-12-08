@@ -615,8 +615,8 @@
         "name": "Department name",
         "description": "Description",
         "is_active": "Active",
-        "parent" : "Parent",
-        "line_manage" : "Line manager"
+        "parent": "Parent",
+        "line_manage": "Line manager"
       }
     },
     "offices": {
@@ -865,7 +865,9 @@
         "replied_to": "replied to",
         "start_conversation": "Start Conversation",
         "contacts": "Contacts",
-        "seen": "Seen"
+        "seen": "Seen",
+        "search_error_character": "Please search 3 or more characters",
+        "no_results_found": "No results found"
       }
     }
   },

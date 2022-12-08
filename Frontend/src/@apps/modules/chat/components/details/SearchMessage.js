@@ -1,13 +1,21 @@
 import { Fragment, useEffect, useRef } from "react"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { X } from "react-feather"
 import { ErpInput } from "@apps/components/common/ErpField"
 import { FormProvider, useForm } from "react-hook-form"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { InputGroup, InputGroupText, Spinner } from "reactstrap"
+import notification from "@apps/utility/notification"
+import { formatTime, highlightText } from "../../common/common"
+import ReactHtmlParser from "react-html-parser"
 
 const SearchMessage = (props) => {
-  const { handleSearchMessage, selectedUser } = props
+  const {
+    handleSearchMessage,
+    selectedUser,
+    setSearchMessageHighlight,
+    scrollToMessage
+  } = props
 
   // ** State
   const [state, setState] = useMergedState({
@@ -74,6 +82,20 @@ const SearchMessage = (props) => {
     refDivSearchMessageResult
   ])
 
+  // ** listen esc
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.keyCode === 27) {
+        setState({ show_search_message_result: false })
+      }
+    }
+    window.addEventListener("keydown", handleEsc)
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc)
+    }
+  }, [])
+
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       if (name === "_searchMessage") {
@@ -87,14 +109,23 @@ const SearchMessage = (props) => {
           show_search_message_result: false,
           arr_search_message_result: []
         })
+        setSearchMessageHighlight(0, "")
       }
     })
     return () => subscription.unsubscribe()
   }, [watch])
 
   const submitSearchMessage = (values) => {
+    if (values._searchMessage.length === 0) {
+      return
+    }
+    if (values._searchMessage.length < 3) {
+      notification.showError({
+        text: useFormatMessage("modules.chat.text.search_error_character")
+      })
+      return
+    }
     setState({ loading_search_message: true })
-    console.log(values)
 
     const dataSearch = []
     handleSearchMessage(selectedUser.chat.id, values._searchMessage).then(
@@ -114,6 +145,15 @@ const SearchMessage = (props) => {
         })
       }
     )
+  }
+
+  const renderTextSearchResult = (message, textSearch) => {
+    const index = message.indexOf(textSearch)
+    const l = 20
+    const stringFirst = index - l > 0 ? "..." : ""
+    const _message = stringFirst + message.substring(index - l)
+
+    return _message
   }
 
   return (
@@ -211,6 +251,7 @@ const SearchMessage = (props) => {
                         show_search_message_result: false,
                         arr_search_message_result: []
                       })
+                      setSearchMessageHighlight(0, "")
                     }}>
                     {state.loading_search_message ? (
                       <Spinner size="sm" />
@@ -231,20 +272,43 @@ const SearchMessage = (props) => {
             }`}
             ref={refDivSearchMessageResult}>
             <div className="arrow"></div>
-            <PerfectScrollbar>
+            <PerfectScrollbar options={{ wheelPropagation: false }}>
               <ul className="ul-message-search">
                 {_.isEmpty(state.arr_search_message_result) && (
-                  <li className="li-message-search text-center">No result</li>
+                  <li className="li-message-search justify-content-center">
+                    {useFormatMessage("modules.chat.text.no_results_found")}
+                  </li>
                 )}
 
                 {!_.isEmpty(state.arr_search_message_result) &&
                   _.map(state.arr_search_message_result, (value, index) => {
                     return (
-                      <>
-                        <li key={index} className="li-message-search">
-                          {value.message}
-                        </li>
-                      </>
+                      <li
+                        key={index}
+                        className="li-message-search"
+                        onClick={() => {
+                          setSearchMessageHighlight(
+                            value.timestamp,
+                            getValues("_searchMessage")
+                          )
+
+                          scrollToMessage(value.timestamp, selectedUser.chat.id)
+                        }}>
+                        <span className="text">
+                          {ReactHtmlParser(
+                            highlightText(
+                              renderTextSearchResult(
+                                value.message,
+                                getValues("_searchMessage")
+                              ),
+                              getValues("_searchMessage")
+                            )
+                          )}
+                        </span>
+                        <span className="time">
+                          {formatTime(value.timestamp)}
+                        </span>
+                      </li>
                     )
                   })}
               </ul>

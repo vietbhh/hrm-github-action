@@ -65,8 +65,20 @@ const ChatLog = (props) => {
     replying_forward_id: "",
     modal_forward: false,
     data_forward: {},
-    show_btn_to_bottom: false
+    show_btn_to_bottom: false,
+
+    // ** search message
+    search_message_highlight_timestamp: 0,
+    search_message_highlight_text_search: ""
   })
+
+  // **
+  const setSearchMessageHighlight = (timestamp, text_search) => {
+    setState({
+      search_message_highlight_timestamp: timestamp,
+      search_message_highlight_text_search: text_search
+    })
+  }
 
   const setReplying = (data) => {
     setState(data)
@@ -94,7 +106,7 @@ const ChatLog = (props) => {
     }
   }
 
-  const scrollToMessage = () => {
+  const scrollToTopAfterGetHistory = () => {
     const chatContainer = ReactDOM.findDOMNode(chatArea.current)
     chatContainer.scrollTop = 1000
   }
@@ -348,6 +360,8 @@ const ChatLog = (props) => {
                   <SearchMessage
                     handleSearchMessage={handleSearchMessage}
                     selectedUser={selectedUser}
+                    setSearchMessageHighlight={setSearchMessageHighlight}
+                    scrollToMessage={props.scrollToMessage}
                   />
 
                   <button className="chat-header-btn-border left">
@@ -394,7 +408,7 @@ const ChatLog = (props) => {
                   if (container.scrollTop === 0) {
                     getChatHistory(active)
                     if (hasMoreHistory === true) {
-                      scrollToMessage()
+                      scrollToTopAfterGetHistory()
                     }
                   }
                 }
@@ -436,6 +450,12 @@ const ChatLog = (props) => {
                     focusInputMsg={focusInputMsg}
                     toggleModalForward={toggleModalForward}
                     setDataForward={setDataForward}
+                    search_message_highlight_timestamp={
+                      state.search_message_highlight_timestamp
+                    }
+                    search_message_highlight_text_search={
+                      state.search_message_highlight_text_search
+                    }
                   />
                 </div>
               ) : null}
