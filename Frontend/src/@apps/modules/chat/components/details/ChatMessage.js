@@ -47,7 +47,9 @@ const ChatMessage = (props) => {
     setDataForward,
     scrollToMessage,
     search_message_highlight_timestamp,
-    search_message_highlight_text_search
+    search_message_highlight_text_search,
+    dataChatScrollBottom,
+    checkShowDataChat
   } = props
   const { userProfile, selectedUser } = store
 
@@ -91,9 +93,11 @@ const ChatMessage = (props) => {
   const formattedChatData = () => {
     let chatLog = []
     if (!_.isEmpty(chats)) {
-      chatLog = chats
-      if (!_.isEmpty(chatHistory)) {
-        chatLog = [...chatHistory, ...chats]
+      //chatLog = chats
+      if (checkShowDataChat) {
+        chatLog = [...chatHistory, ...dataChatScrollBottom, ...chats]
+      } else {
+        chatLog = [...chatHistory, ...dataChatScrollBottom]
       }
     }
 

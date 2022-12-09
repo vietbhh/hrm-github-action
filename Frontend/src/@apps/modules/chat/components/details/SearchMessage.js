@@ -23,8 +23,21 @@ const SearchMessage = (props) => {
     show_search_message_result: false,
     show_search_message_x: false,
     loading_search_message: false,
-    arr_search_message_result: []
+    arr_search_message_result: [],
+    search_message_groupId: null
   })
+
+  useEffect(() => {
+    if (state.search_message_groupId !== selectedUser.chat.id) {
+      setValue("_searchMessage", "")
+      setState({
+        show_search_message: false,
+        show_search_message_result: false,
+        arr_search_message_result: []
+      })
+      setSearchMessageHighlight(0, "")
+    }
+  }, [selectedUser])
 
   const methods = useForm({
     mode: "onSubmit"
@@ -161,7 +174,10 @@ const SearchMessage = (props) => {
       {!state.show_search_message && (
         <svg
           onClick={() => {
-            setState({ show_search_message: true })
+            setState({
+              show_search_message: true,
+              search_message_groupId: selectedUser.chat.id
+            })
             setTimeout(() => {
               refInputSearchMessage.current.focus()
             }, 200)

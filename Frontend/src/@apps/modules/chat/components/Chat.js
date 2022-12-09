@@ -50,7 +50,9 @@ const ChatLog = (props) => {
     queryLimit,
     checkAddMessage,
     setCheckAddMessage,
-    handleSearchMessage
+    handleSearchMessage,
+    hasMoreChat,
+    getChatScrollBottom
   } = props
   const { userProfile, selectedUser } = store
 
@@ -108,7 +110,7 @@ const ChatLog = (props) => {
 
   const scrollToTopAfterGetHistory = () => {
     const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-    chatContainer.scrollTop = 1000
+    chatContainer.scrollTop = 800
   }
 
   const methods = useForm({
@@ -435,6 +437,17 @@ const ChatLog = (props) => {
                 } else {
                   setState({ show_btn_to_bottom: false })
                 }
+
+                // ** hasMoreChat
+                if (
+                  hasMoreChat === true &&
+                  container.scrollHeight -
+                    container.scrollTop -
+                    container.clientHeight ===
+                    0
+                ) {
+                  getChatScrollBottom(active)
+                }
               }}
               ref={chatArea}
               className={`user-chats ${state.replying ? "replying" : ""}`}
@@ -464,12 +477,16 @@ const ChatLog = (props) => {
                   <button
                     className="btn-icon btn btn-primary"
                     onClick={() => {
-                      const chatContainer = ReactDOM.findDOMNode(
-                        chatArea.current
-                      )
-                      chatContainer.scrollTo({
-                        top: Number.MAX_SAFE_INTEGER
-                      })
+                      if (hasMoreChat === true) {
+                        getChatScrollBottom(active, true)
+                      } else {
+                        const chatContainer = ReactDOM.findDOMNode(
+                          chatArea.current
+                        )
+                        chatContainer.scrollTo({
+                          top: Number.MAX_SAFE_INTEGER
+                        })
+                      }
                     }}>
                     <i className="fa-sharp fa-solid fa-arrow-down"></i>
                   </button>

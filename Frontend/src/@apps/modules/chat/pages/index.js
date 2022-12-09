@@ -78,7 +78,7 @@ const AppChat = (props) => {
   const chats = chat.chats
   const lastTimeMessage = chat.lastTimeMessage
   const unreadStore = chat.unread
-  const queryLimit = 30
+  const queryLimit = 50
 
   const setUnread = (num) => {
     dispatch(handleUnread({ unread: num }))
@@ -97,6 +97,12 @@ const AppChat = (props) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [checkAddMessage, setCheckAddMessage] = useState(false)
   const [chatHistory, setChatHistory] = useState([])
+  const [hasMoreChat, setHasMoreChat] = useState(false)
+  const [lastMessageChatScrollBottom, setLastMessageChatScrollBottom] =
+    useState(0)
+  const [dataChatScrollBottom, setDataChatScrollBottom] = useState([])
+  const [checkShowDataChat, setCheckDataChat] = useState(true)
+  const [lastTimeMessageChat, setLastTimeMessageChat] = useState(0)
 
   // ** Update Window Width
   const handleWindowWidth = () => {
@@ -148,45 +154,45 @@ const AppChat = (props) => {
     } else {
       if (!_.isEmpty(groupId) && hasMoreHistory === true) {
         setHasMoreHistory(false)
+        setChatHistory([])
         const q = query(
           collection(db, `${firestoreDb}/messages/${groupId}`),
-          orderBy("timestamp", "desc"),
-          startAt(lastTimeMessage),
-          endAt(timestamp)
+          orderBy("timestamp", "asc"),
+          where("timestamp", ">=", timestamp),
+          limit(30)
         )
 
         getDocs(q).then((res) => {
           let chat = []
-          let dem = 0
+          let dem_chat = 0
           res.forEach((docData) => {
-            dem++
             const data = docData.data()
-            chat = [
-              ...chat,
-              {
-                message: data.message,
-                time: data.timestamp,
-                seen: data.seen,
-                senderId: data.sender_id,
-                type: data.type,
-                status: data.status,
-                file: data.file,
-                react: data.react,
-                reply: data.reply,
-                forward: data.forward
-              }
-            ]
+            if (data.timestamp < lastTimeMessageChat) {
+              dem_chat++
+              chat = [
+                ...chat,
+                {
+                  message: data.message,
+                  time: data.timestamp,
+                  seen: data.seen,
+                  senderId: data.sender_id,
+                  type: data.type,
+                  status: data.status,
+                  file: data.file,
+                  react: data.react,
+                  reply: data.reply,
+                  forward: data.forward
+                }
+              ]
+            }
           })
 
-          if (dem > 1) {
-            let chat_reverse = chat.reverse()
-            chat_reverse.pop()
-
+          if (dem_chat > 1) {
             const q = query(
               collection(db, `${firestoreDb}/messages/${groupId}`),
               orderBy("timestamp", "desc"),
-              limit(10),
-              startAt(timestamp)
+              where("timestamp", "<", timestamp),
+              limit(20)
             )
 
             getDocs(q).then((res) => {
@@ -195,7 +201,6 @@ const AppChat = (props) => {
                 dem++
                 const data = docData.data()
                 chat = [
-                  ...chat,
                   {
                     message: data.message,
                     time: data.timestamp,
@@ -207,36 +212,48 @@ const AppChat = (props) => {
                     react: data.react,
                     reply: data.reply,
                     forward: data.forward
-                  }
+                  },
+                  ...chat
                 ]
               })
 
-              if (dem > 1) {
-                chat_reverse = chat.reverse()
-                chat_reverse.pop()
-              }
-
-              setChatHistory([...chat_reverse, ...chatHistory])
+              setDataChatScrollBottom(chat)
               dispatch(
                 handleLastTimeMessage({
-                  lastTimeMessage:
-                    chat_reverse.length > 0 ? chat_reverse[0].time : 0
+                  lastTimeMessage: chat.length > 0 ? chat[0].time : 0
                 })
               )
 
               setTimeout(() => {
                 const section = document.getElementById(timestamp)
                 if (section) {
+                  setHasMoreHistory(true)
+                  if (dem_chat === 30) {
+                    setHasMoreChat(true)
+                    setLastMessageChatScrollBottom(
+                      chat.length > 0 ? chat[chat.length - 1].time : 0
+                    )
+                    setCheckDataChat(false)
+                  } else {
+                    setHasMoreChat(false)
+                    setLastMessageChatScrollBottom(0)
+                    setCheckDataChat(true)
+                  }
+
                   const chatContainer = ReactDOM.findDOMNode(chatArea.current)
                   chatContainer.scrollTop = section.offsetTop
                   section.classList.add("highlight")
                   setTimeout(() => {
                     section.classList.remove("highlight")
-                    setHasMoreHistory(true)
                   }, 1000)
                 }
               }, 200)
             })
+          } else {
+            setHasMoreHistory(true)
+            setHasMoreChat(false)
+            setLastMessageChatScrollBottom(0)
+            setCheckDataChat(false)
           }
         })
       }
@@ -467,6 +484,108 @@ const AppChat = (props) => {
           setHasMoreHistory(true)
         }
       })
+    }
+  }
+
+  const getChatScrollBottom = (groupId = "", checkFull = false) => {
+    if (
+      !_.isEmpty(groupId) &&
+      hasMoreChat === true &&
+      lastMessageChatScrollBottom !== 0
+    ) {
+      setHasMoreChat(false)
+      if (checkFull === false) {
+        const q = query(
+          collection(db, `${firestoreDb}/messages/${groupId}`),
+          orderBy("timestamp", "asc"),
+          where("timestamp", ">=", lastMessageChatScrollBottom),
+          limit(queryLimit)
+        )
+
+        getDocs(q).then((res) => {
+          let chat = []
+          let dem_chat = 0
+          res.forEach((docData) => {
+            const data = docData.data()
+            if (data.timestamp < lastTimeMessageChat) {
+              dem_chat++
+              chat = [
+                ...chat,
+                {
+                  message: data.message,
+                  time: data.timestamp,
+                  seen: data.seen,
+                  senderId: data.sender_id,
+                  type: data.type,
+                  status: data.status,
+                  file: data.file,
+                  react: data.react,
+                  reply: data.reply,
+                  forward: data.forward
+                }
+              ]
+            }
+          })
+
+          setDataChatScrollBottom([...dataChatScrollBottom, ...chat])
+          if (dem_chat === queryLimit) {
+            setHasMoreChat(true)
+            setLastMessageChatScrollBottom(
+              chat.length > 0 ? chat[chat.length - 1].time : 0
+            )
+            setCheckDataChat(false)
+          } else {
+            setHasMoreChat(false)
+            setLastMessageChatScrollBottom(0)
+            setCheckDataChat(true)
+          }
+
+          const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+          chatContainer.scrollTop = chatContainer.scrollHeight - 500
+        })
+      } else {
+        const q = query(
+          collection(db, `${firestoreDb}/messages/${groupId}`),
+          orderBy("timestamp", "asc"),
+          where("timestamp", ">=", lastMessageChatScrollBottom),
+          where("timestamp", "<", lastTimeMessageChat)
+        )
+
+        getDocs(q).then((res) => {
+          let chat = []
+          let dem_chat = 0
+          res.forEach((docData) => {
+            const data = docData.data()
+            if (data.timestamp < lastTimeMessageChat) {
+              dem_chat++
+              chat = [
+                ...chat,
+                {
+                  message: data.message,
+                  time: data.timestamp,
+                  seen: data.seen,
+                  senderId: data.sender_id,
+                  type: data.type,
+                  status: data.status,
+                  file: data.file,
+                  react: data.react,
+                  reply: data.reply,
+                  forward: data.forward
+                }
+              ]
+            }
+          })
+
+          setDataChatScrollBottom([...dataChatScrollBottom, ...chat])
+          setHasMoreChat(false)
+          setLastMessageChatScrollBottom(0)
+          setCheckDataChat(true)
+          setTimeout(() => {
+            const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+            chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
+          }, 200)
+        })
+      }
     }
   }
 
@@ -758,6 +877,8 @@ const AppChat = (props) => {
         lastTimeMessage: 0
       })
     )
+    setLastTimeMessageChat(0)
+    setLastMessageChatScrollBottom(0)
     setChatHistory([])
     setUnread(0)
     if (!_.isEmpty(active)) {
@@ -904,6 +1025,9 @@ const AppChat = (props) => {
                 chat_reverse.length > 0 ? chat_reverse[0].time : 0
             })
           )
+          setLastTimeMessageChat(
+            chat_reverse.length > 0 ? chat_reverse[0].time : 0
+          )
         }
         setLoadingMessage(false)
       })
@@ -916,6 +1040,7 @@ const AppChat = (props) => {
   }, [active])
 
   useEffect(() => {
+    setCheckDataChat(true)
     if (_.isEmpty(active) && !_.isEmpty(activeFullName)) {
       const employeeIndex = state.contacts.findIndex(
         (item) => item.fullName === activeFullName
@@ -1003,6 +1128,10 @@ const AppChat = (props) => {
               checkAddMessage={checkAddMessage}
               setCheckAddMessage={setCheckAddMessage}
               handleSearchMessage={handleSearchMessage}
+              hasMoreChat={hasMoreChat}
+              dataChatScrollBottom={dataChatScrollBottom}
+              checkShowDataChat={checkShowDataChat}
+              getChatScrollBottom={getChatScrollBottom}
             />
             <UserProfileSidebar
               user={user}

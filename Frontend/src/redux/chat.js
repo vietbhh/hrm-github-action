@@ -6,7 +6,6 @@ const chatSlice = createSlice({
   initialState: {
     chats: [],
     lastTimeMessage: 0,
-    chatHistory: [],
     unread: 0
   },
   reducers: {
@@ -21,10 +20,6 @@ const chatSlice = createSlice({
       const { lastTimeMessage } = action.payload
       state.lastTimeMessage = lastTimeMessage
     },
-    handleChatHistory: (state, action) => {
-      const { chatHistory } = action.payload
-      state.chatHistory = chatHistory
-    },
     handleUnread: (state, action) => {
       const { unread } = action.payload
       state.unread = unread
@@ -32,11 +27,7 @@ const chatSlice = createSlice({
   }
 })
 
-export const {
-  handleChats,
-  handleChatHistory,
-  handleLastTimeMessage,
-  handleUnread
-} = chatSlice.actions
+export const { handleChats, handleLastTimeMessage, handleUnread } =
+  chatSlice.actions
 
 export default chatSlice.reducer
