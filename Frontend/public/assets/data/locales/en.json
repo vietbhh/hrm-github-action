@@ -615,8 +615,8 @@
         "name": "Department name",
         "description": "Description",
         "is_active": "Active",
-        "parent" : "Parent",
-        "line_manage" : "Line manager"
+        "parent": "Parent",
+        "line_manage": "Line manager"
       }
     },
     "offices": {
@@ -990,7 +990,11 @@
         },
         "clouds": {
           "title": "Clouds",
-          "content_1": "“Today is a beautiful day, let's go out and enjoy”"
+          "content_1": "“Today is a beautiful day, let's go out and enjoy”",
+          "content_2": "“When you like your work every day is a holiday”",
+          "content_3": "“Success is a journey not a destination”",
+          "content_4": "“Wherever the year ahead takes you, I hope it’s happy.”",
+          "content_5": "“Doing what you like is freedom. Liking what you do is happiness”"
         }
       },
       "header_assistant": {
