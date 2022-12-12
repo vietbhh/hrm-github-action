@@ -1,3 +1,4 @@
+import { isFileList } from "@apps/utility/handleData"
 import { Image } from "antd"
 import { useEffect, useState } from "react"
 import { Placeholder } from "rsuite"
@@ -15,21 +16,25 @@ function stringify(val) {
 const Photo = (props) => {
   const [image, setImage] = useState(false)
   useEffect(() => {
-    let imgUrl = ""
-    const cacheID = hashArgs(props.src)
-    if (CACHE[cacheID] !== undefined) {
-      imgUrl = CACHE[cacheID]
-      setImage(URL.createObjectURL(imgUrl))
+    if (isFileList(props.src)) {
+      setImage(URL.createObjectURL(props.src[0]))
     } else {
-      downloadApi.getPhoto(props.src).then((response) => {
-        imgUrl = response.data
-        CACHE[cacheID] = imgUrl
-        setImage(URL.createObjectURL(response.data))
-      })
-    }
-    return () => {
-      setImage(false)
-      URL.revokeObjectURL(imgUrl)
+      let imgUrl = ""
+      const cacheID = hashArgs(props.src)
+      if (CACHE[cacheID] !== undefined) {
+        imgUrl = CACHE[cacheID]
+        setImage(URL.createObjectURL(imgUrl))
+      } else {
+        downloadApi.getPhoto(props.src).then((response) => {
+          imgUrl = response.data
+          CACHE[cacheID] = imgUrl
+          setImage(URL.createObjectURL(response.data))
+        })
+      }
+      return () => {
+        setImage(false)
+        URL.revokeObjectURL(imgUrl)
+      }
     }
   }, [props.src])
   if (!image) return <Placeholder.Paragraph active={true} graph="image" />
