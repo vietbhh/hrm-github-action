@@ -1,9 +1,9 @@
+import { ErpInput, ErpUserSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import notification from "@apps/utility/notification"
+import { FormProvider, useForm } from "react-hook-form"
 import {
   Button,
   Col,
-  Label,
   Modal,
   ModalBody,
   ModalFooter,
@@ -11,8 +11,6 @@ import {
   Row,
   Spinner
 } from "reactstrap"
-import { FormProvider, useForm } from "react-hook-form"
-import { ErpInput, ErpUserSelect } from "@apps/components/common/ErpField"
 
 const ModalNewGroup = (props) => {
   const {
@@ -35,8 +33,10 @@ const ModalNewGroup = (props) => {
   const onSubmit = async (values) => {
     setState({ loading: true })
     const member = [userId]
+    const unseen = []
     _.forEach(values.group_member, (val) => {
       member.push(val.id)
+      unseen.push(val.id)
     })
     const docData = {
       last_message: useFormatMessage("modules.chat.text.create_new_group"),
@@ -48,7 +48,8 @@ const ModalNewGroup = (props) => {
       new: 0,
       pin: [],
       avatar: "",
-      background: ""
+      background: "",
+      unseen: unseen
     }
     await handleAddNewGroup(docData).then((res) => {
       setTimeout(() => {

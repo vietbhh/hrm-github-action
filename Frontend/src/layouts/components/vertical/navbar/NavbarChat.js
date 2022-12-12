@@ -1,19 +1,59 @@
 import { useFormatMessage } from "@apps/utility/common"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 // ** Reactstrap Imports
-import { UncontrolledTooltip } from "reactstrap"
+import { Badge, UncontrolledTooltip } from "reactstrap"
+
+// ** firebase
+import { db } from "firebase"
+import { collection, onSnapshot, query, where } from "firebase/firestore"
+import { useSelector } from "react-redux"
 
 const NavbarChat = () => {
+  const [unseen, setUnseen] = useState(0)
+
+  // ** setting
+  const auth = useSelector((state) => state.auth)
+  const settingUser = auth.userData
+  const userId = settingUser.id
+
+  // ** env
+  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+
+  useEffect(() => {
+    let unseen = 0
+
+    if (!_.isUndefined(firestoreDb) && firestoreDb !== "") {
+      const q = query(
+        collection(db, `${firestoreDb}/groups/groups`),
+        where("unseen", "array-contains", userId)
+      )
+
+      const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+        querySnapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            unseen++
+          }
+          if (change.type === "modified") {
+          }
+          if (change.type === "removed") {
+            unseen--
+          }
+
+          setUnseen(unseen)
+        })
+      })
+
+      return () => {
+        unsubscribe()
+      }
+    }
+  }, [])
+
   return (
     <li className="nav-item">
-      <Link
-        to="/chat"
-        aria-haspopup="true"
-        className="nav-link"
-        aria-expanded="false"
-        id="chat">
+      <Link to="/chat" className="nav-link" id="chat">
         <svg
           className="bell no-noti"
           width="24"
@@ -64,6 +104,10 @@ const NavbarChat = () => {
             strokeLinejoin="round"
           />
         </svg>
+
+        <Badge pill color="warning" className="badge-up">
+          {unseen}
+        </Badge>
 
         <UncontrolledTooltip target="chat">
           {useFormatMessage("layout.chat")}

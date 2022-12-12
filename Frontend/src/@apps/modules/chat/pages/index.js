@@ -1,12 +1,12 @@
 // ** Imports
-import ReactDOM from "react-dom"
-import { Fragment, useState, useEffect, useRef } from "react"
-import classnames from "classnames"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { useSelector, useDispatch } from "react-redux"
+import classnames from "classnames"
+import { Fragment, useEffect, useRef, useState } from "react"
+import ReactDOM from "react-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { handleChats, handleUnread } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
-import { handleChats, handleLastTimeMessage, handleUnread } from "redux/chat"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -16,29 +16,30 @@ import UserProfileSidebar from "../components/UserProfileSidebar"
 // ** firebase
 import { db } from "firebase"
 import {
-  collection,
   addDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  where,
-  orderBy,
-  doc,
-  setDoc,
-  updateDoc,
-  limit,
-  startAt,
+  arrayRemove,
   arrayUnion,
-  endAt
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  startAt,
+  updateDoc,
+  where
 } from "firebase/firestore"
 
 // ** style
-import "@styles/base/pages/app-chat.scss"
 import "@styles/base/pages/app-chat-list.scss"
+import "@styles/base/pages/app-chat.scss"
 import "../assets/scss/chat.scss"
 
 const AppChat = (props) => {
-  const [state, setState] = useMergedState({
+  const [store, setStore] = useMergedState({
     groups: [],
     contacts: [],
     userProfile: {
@@ -57,8 +58,41 @@ const AppChat = (props) => {
     },
     selectedUser: {}
   })
-  const [dataEmployees, setDataEmployees] = useState([])
-  const [loadingEmployee, setLoadingEmployee] = useState(true)
+
+  // ** handle store
+  const setGroups = (data) => setStore({ groups: data })
+  const setSelectedUser = (data) => {
+    setStore({ selectedUser: data })
+    handleUser(data.contact)
+  }
+  const setContacts = (data) => setStore({ contacts: data })
+  const setUserProfile = (data) => setStore({ userProfile: data })
+
+  const [state, setState] = useMergedState({
+    unread: 0,
+    dataEmployees: [],
+    loadingEmployee: true,
+    loadingGroup: true,
+    loadingMessage: true,
+    hasMoreHistory: true,
+    checkAddMessage: false,
+    lastTimeMessageChat: 0,
+    chatHistory: [],
+    lastTimeMessageHistory: 0,
+    dataChatScrollBottom: [],
+    hasMoreChat: false,
+    lastMessageChatScrollBottom: 0,
+    checkShowDataChat: true
+  })
+
+  // ** State
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [user, setUser] = useState({})
+  const [sidebar, setSidebar] = useState(false)
+  const [userSidebarRight, setUserSidebarRight] = useState(false)
+  const [userSidebarLeft, setUserSidebarLeft] = useState(false)
+  const [active, setActive] = useState(0)
+  const [activeFullName, setActiveFullName] = useState("")
 
   // ** env
   const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
@@ -76,45 +110,18 @@ const AppChat = (props) => {
   const dispatch = useDispatch()
   const chat = useSelector((state) => state.chat)
   const chats = chat.chats
-  const lastTimeMessage = chat.lastTimeMessage
-  const unreadStore = chat.unread
   const queryLimit = 50
-
-  const setUnread = (num) => {
-    dispatch(handleUnread({ unread: num }))
-  }
-
-  // ** State
-  const [user, setUser] = useState({})
-  const [sidebar, setSidebar] = useState(false)
-  const [userSidebarRight, setUserSidebarRight] = useState(false)
-  const [userSidebarLeft, setUserSidebarLeft] = useState(false)
-  const [active, setActive] = useState(0)
-  const [activeFullName, setActiveFullName] = useState("")
-  const [loadingGroup, setLoadingGroup] = useState(true)
-  const [loadingMessage, setLoadingMessage] = useState(true)
-  const [hasMoreHistory, setHasMoreHistory] = useState(true)
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  const [checkAddMessage, setCheckAddMessage] = useState(false)
-  const [chatHistory, setChatHistory] = useState([])
-  const [hasMoreChat, setHasMoreChat] = useState(false)
-  const [lastMessageChatScrollBottom, setLastMessageChatScrollBottom] =
-    useState(0)
-  const [dataChatScrollBottom, setDataChatScrollBottom] = useState([])
-  const [checkShowDataChat, setCheckDataChat] = useState(true)
-  const [lastTimeMessageChat, setLastTimeMessageChat] = useState(0)
 
   // ** Update Window Width
   const handleWindowWidth = () => {
     setWindowWidth(window.innerWidth)
   }
-  //** Sets Window Size & Layout Props
   useEffect(() => {
     if (window !== undefined) {
       window.addEventListener("resize", handleWindowWidth)
     }
 
-    if (!_.isEmpty(state.selectedUser)) {
+    if (!_.isEmpty(store.selectedUser)) {
       if (windowWidth > 1366) {
         setUserSidebarRight(true)
       } else {
@@ -131,6 +138,29 @@ const AppChat = (props) => {
     setSidebar(false)
     setUserSidebarRight(false)
     setUserSidebarLeft(false)
+  }
+
+  // ** Set user function for Right Sidebar
+  const handleUser = (obj) => setUser(obj)
+
+  // ** function
+  const setUnread = (num) => {
+    setState({ unread: num })
+  }
+  const setEmptyHistory = () => {
+    setState({
+      chatHistory: [],
+      lastTimeMessageHistory: chats.length > 0 ? chats[0].time : 0,
+      hasMoreHistory: true
+    })
+  }
+  const setEmptyDataScrollBottom = () => {
+    setState({
+      dataChatScrollBottom: [],
+      hasMoreChat: false,
+      lastMessageChatScrollBottom: 0,
+      checkShowDataChat: true
+    })
   }
 
   // ** Refs & Dispatch
@@ -152,9 +182,9 @@ const AppChat = (props) => {
         section.classList.remove("highlight")
       }, 1000)
     } else {
-      if (!_.isEmpty(groupId) && hasMoreHistory === true) {
-        setHasMoreHistory(false)
-        setChatHistory([])
+      if (!_.isEmpty(groupId) && state.hasMoreHistory === true) {
+        setState({ hasMoreHistory: false })
+        setEmptyHistory()
         const q = query(
           collection(db, `${firestoreDb}/messages/${groupId}`),
           orderBy("timestamp", "asc"),
@@ -167,7 +197,7 @@ const AppChat = (props) => {
           let dem_chat = 0
           res.forEach((docData) => {
             const data = docData.data()
-            if (data.timestamp < lastTimeMessageChat) {
+            if (data.timestamp < state.lastTimeMessageChat) {
               dem_chat++
               chat = [
                 ...chat,
@@ -217,27 +247,28 @@ const AppChat = (props) => {
                 ]
               })
 
-              setDataChatScrollBottom(chat)
-              dispatch(
-                handleLastTimeMessage({
-                  lastTimeMessage: chat.length > 0 ? chat[0].time : 0
-                })
-              )
+              setState({
+                lastTimeMessageHistory: chat.length > 0 ? chat[0].time : 0,
+                dataChatScrollBottom: chat
+              })
 
               setTimeout(() => {
                 const section = document.getElementById(timestamp)
                 if (section) {
-                  setHasMoreHistory(true)
+                  setState({ hasMoreHistory: true })
                   if (dem_chat === 30) {
-                    setHasMoreChat(true)
-                    setLastMessageChatScrollBottom(
-                      chat.length > 0 ? chat[chat.length - 1].time : 0
-                    )
-                    setCheckDataChat(false)
+                    setState({
+                      hasMoreChat: true,
+                      lastMessageChatScrollBottom:
+                        chat.length > 0 ? chat[chat.length - 1].time : 0,
+                      checkShowDataChat: false
+                    })
                   } else {
-                    setHasMoreChat(false)
-                    setLastMessageChatScrollBottom(0)
-                    setCheckDataChat(true)
+                    setState({
+                      hasMoreChat: false,
+                      lastMessageChatScrollBottom: 0,
+                      checkShowDataChat: true
+                    })
                   }
 
                   const chatContainer = ReactDOM.findDOMNode(chatArea.current)
@@ -246,43 +277,38 @@ const AppChat = (props) => {
                   setTimeout(() => {
                     section.classList.remove("highlight")
                   }, 1000)
+                } else {
+                  setState({
+                    hasMoreHistory: true,
+                    hasMoreChat: false,
+                    lastMessageChatScrollBottom: 0,
+                    checkShowDataChat: true
+                  })
                 }
               }, 200)
             })
           } else {
-            setHasMoreHistory(true)
-            setHasMoreChat(false)
-            setLastMessageChatScrollBottom(0)
-            setCheckDataChat(false)
+            setState({
+              hasMoreHistory: true,
+              hasMoreChat: false,
+              lastMessageChatScrollBottom: 0,
+              checkShowDataChat: true
+            })
           }
         })
       }
     }
   }
 
-  // ** Set user function for Right Sidebar
-  const handleUser = (obj) => setUser(obj)
-
-  // ** handle state
-  const setGroups = (data) => setState({ groups: data })
-  const setSelectedUser = (data) => {
-    setState({ selectedUser: data })
-    handleUser(data.contact)
-  }
-  const setContacts = (data) => setState({ contacts: data })
-  const setUserProfile = (data) => setState({ userProfile: data })
-
-  // ** chat
   const getListEmployees = () => {
     ChatApi.getEmployees().then((res) => {
-      setDataEmployees(res.data)
-      setLoadingEmployee(false)
+      setState({ dataEmployees: res.data, loadingEmployee: false })
     })
   }
 
   const getContacts = () => {
-    let dataEmployees_ = [...dataEmployees]
-    _.forEach(state.groups, (value) => {
+    let dataEmployees_ = [...state.dataEmployees]
+    _.forEach(store.groups, (value) => {
       dataEmployees_ = dataEmployees_.filter(
         (item) => item.full_name !== value.fullName
       )
@@ -328,30 +354,46 @@ const AppChat = (props) => {
   }
 
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
-    setCheckAddMessage(true)
+    setState({ checkAddMessage: true })
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id
-      const docData = {
-        message: msg,
-        seen: [userId],
-        sender_id: userId,
-        timestamp: Date.now(),
-        type: "text",
-        ...dataAddFile
-      }
-      if (docData.type === "text") {
-        docData["_smeta"] = triGram(msg.slice(0, 500))
-      }
 
-      setDoc(doc(collection(db, `${firestoreDb}/messages/${groupId}`)), docData)
-      updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
-        last_message: handleLastMessage(docData.type, msg),
-        last_user: userId,
-        timestamp: Date.now(),
-        new: 0
+      const docGroups = doc(db, `${firestoreDb}/groups/groups`, groupId)
+      getDoc(docGroups).then((res) => {
+        const dataGroups = res.data()
+        const unseen = dataGroups.user
+        const index = unseen.indexOf(userId)
+        if (index !== -1) {
+          unseen.splice(index, 1)
+        }
+
+        const docData = {
+          message: msg,
+          seen: [userId],
+          unseen: unseen,
+          sender_id: userId,
+          timestamp: Date.now(),
+          type: "text",
+          ...dataAddFile
+        }
+        if (docData.type === "text") {
+          docData["_smeta"] = triGram(msg.slice(0, 500))
+        }
+        setDoc(
+          doc(collection(db, `${firestoreDb}/messages/${groupId}`)),
+          docData
+        )
+
+        updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
+          last_message: handleLastMessage(docData.type, msg),
+          last_user: userId,
+          timestamp: Date.now(),
+          new: 0,
+          unseen: unseen
+        })
       })
     } else {
-      const contact = state.selectedUser.contact
+      const contact = store.selectedUser.contact
       let idEmployee = contact.idEmployee
       let checkSetActive = true
 
@@ -368,7 +410,7 @@ const AppChat = (props) => {
         }
       }
 
-      setLoadingMessage(true)
+      setState({ loadingMessage: true })
       const type = dataAddFile.type ? dataAddFile.type : "text"
       const docData = {
         last_message: handleLastMessage(type, msg),
@@ -380,7 +422,8 @@ const AppChat = (props) => {
         new: 1,
         pin: [],
         avatar: "",
-        background: ""
+        background: "",
+        unseen: [idEmployee]
       }
       handleAddNewGroup(docData).then((res) => {
         const newGroupId = res.id
@@ -390,6 +433,7 @@ const AppChat = (props) => {
         const docDataMessage = {
           message: msg,
           seen: [userId],
+          unseen: [idEmployee],
           sender_id: userId,
           timestamp: Date.now(),
           type: "text",
@@ -403,11 +447,12 @@ const AppChat = (props) => {
           doc(collection(db, `${firestoreDb}/messages/${newGroupId}`)),
           docDataMessage
         )
-        setLoadingMessage(false)
+        setState({ loadingMessage: false })
       })
     }
 
-    setChatHistory([])
+    setEmptyHistory()
+    setEmptyDataScrollBottom()
   }
 
   const updateMessage = (groupId, timestamp, dataUpdate) => {
@@ -438,13 +483,13 @@ const AppChat = (props) => {
   }
 
   const getChatHistory = (groupId = "") => {
-    if (!_.isEmpty(groupId) && hasMoreHistory === true) {
-      setHasMoreHistory(false)
+    if (!_.isEmpty(groupId) && state.hasMoreHistory === true) {
+      setState({ hasMoreHistory: false })
       const q = query(
         collection(db, `${firestoreDb}/messages/${groupId}`),
         orderBy("timestamp", "desc"),
         limit(30),
-        startAt(lastTimeMessage)
+        startAt(state.lastTimeMessageHistory)
       )
 
       getDocs(q).then((res) => {
@@ -474,14 +519,12 @@ const AppChat = (props) => {
           const chat_reverse = chat.reverse()
           chat_reverse.pop()
 
-          setChatHistory([...chat_reverse, ...chatHistory])
-          dispatch(
-            handleLastTimeMessage({
-              lastTimeMessage:
-                chat_reverse.length > 0 ? chat_reverse[0].time : 0
-            })
-          )
-          setHasMoreHistory(true)
+          setState({
+            chatHistory: [...chat_reverse, ...state.chatHistory],
+            hasMoreHistory: true,
+            lastTimeMessageHistory:
+              chat_reverse.length > 0 ? chat_reverse[0].time : 0
+          })
         }
       })
     }
@@ -490,15 +533,15 @@ const AppChat = (props) => {
   const getChatScrollBottom = (groupId = "", checkFull = false) => {
     if (
       !_.isEmpty(groupId) &&
-      hasMoreChat === true &&
-      lastMessageChatScrollBottom !== 0
+      state.hasMoreChat === true &&
+      state.lastMessageChatScrollBottom !== 0
     ) {
-      setHasMoreChat(false)
+      setState({ hasMoreChat: false })
       if (checkFull === false) {
         const q = query(
           collection(db, `${firestoreDb}/messages/${groupId}`),
           orderBy("timestamp", "asc"),
-          where("timestamp", ">=", lastMessageChatScrollBottom),
+          where("timestamp", ">=", state.lastMessageChatScrollBottom),
           limit(queryLimit)
         )
 
@@ -507,7 +550,7 @@ const AppChat = (props) => {
           let dem_chat = 0
           res.forEach((docData) => {
             const data = docData.data()
-            if (data.timestamp < lastTimeMessageChat) {
+            if (data.timestamp < state.lastTimeMessageChat) {
               dem_chat++
               chat = [
                 ...chat,
@@ -527,17 +570,22 @@ const AppChat = (props) => {
             }
           })
 
-          setDataChatScrollBottom([...dataChatScrollBottom, ...chat])
+          setState({
+            dataChatScrollBottom: [...state.dataChatScrollBottom, ...chat]
+          })
           if (dem_chat === queryLimit) {
-            setHasMoreChat(true)
-            setLastMessageChatScrollBottom(
-              chat.length > 0 ? chat[chat.length - 1].time : 0
-            )
-            setCheckDataChat(false)
+            setState({
+              hasMoreChat: true,
+              lastMessageChatScrollBottom:
+                chat.length > 0 ? chat[chat.length - 1].time : 0,
+              checkShowDataChat: false
+            })
           } else {
-            setHasMoreChat(false)
-            setLastMessageChatScrollBottom(0)
-            setCheckDataChat(true)
+            setState({
+              hasMoreChat: false,
+              lastMessageChatScrollBottom: 0,
+              checkShowDataChat: true
+            })
           }
 
           const chatContainer = ReactDOM.findDOMNode(chatArea.current)
@@ -547,8 +595,8 @@ const AppChat = (props) => {
         const q = query(
           collection(db, `${firestoreDb}/messages/${groupId}`),
           orderBy("timestamp", "asc"),
-          where("timestamp", ">=", lastMessageChatScrollBottom),
-          where("timestamp", "<", lastTimeMessageChat)
+          where("timestamp", ">=", state.lastMessageChatScrollBottom),
+          where("timestamp", "<", state.lastTimeMessageChat)
         )
 
         getDocs(q).then((res) => {
@@ -556,7 +604,7 @@ const AppChat = (props) => {
           let dem_chat = 0
           res.forEach((docData) => {
             const data = docData.data()
-            if (data.timestamp < lastTimeMessageChat) {
+            if (data.timestamp < state.lastTimeMessageChat) {
               dem_chat++
               chat = [
                 ...chat,
@@ -576,10 +624,12 @@ const AppChat = (props) => {
             }
           })
 
-          setDataChatScrollBottom([...dataChatScrollBottom, ...chat])
-          setHasMoreChat(false)
-          setLastMessageChatScrollBottom(0)
-          setCheckDataChat(true)
+          setState({
+            dataChatScrollBottom: [...state.dataChatScrollBottom, ...chat],
+            hasMoreChat: false,
+            lastMessageChatScrollBottom: 0,
+            checkShowDataChat: true
+          })
           setTimeout(() => {
             const chatContainer = ReactDOM.findDOMNode(chatArea.current)
             chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
@@ -593,32 +643,24 @@ const AppChat = (props) => {
     if (!_.isEmpty(groupId)) {
       const q_mess = query(
         collection(db, `${firestoreDb}/messages/${groupId}`),
-        orderBy("timestamp", "desc"),
-        limit(10)
+        where("unseen", "array-contains", userId)
       )
       getDocs(q_mess).then((res) => {
         res.forEach((doc_mess) => {
-          const docData = doc_mess.data()
-          const dataSeen = docData.seen
-          const dataSenderId = docData.sender_id
-          if (dataSenderId !== userId && dataSeen.includes(userId) === false) {
-            updateDoc(
-              doc(db, `${firestoreDb}/messages/${groupId}`, doc_mess.id),
-              {
-                seen: [...dataSeen, userId]
-              }
-            )
-          }
+          updateDoc(
+            doc(db, `${firestoreDb}/messages/${groupId}`, doc_mess.id),
+            {
+              seen: arrayUnion(userId),
+              unseen: arrayRemove(userId)
+            }
+          )
         })
 
-        const _listGroup = [...state.groups]
-        _.forEach(_listGroup, (value, index) => {
-          if (groupId === value.id) {
-            _listGroup[index].chat.unseenMsgs = 0
-          }
-        })
-        setGroups(_listGroup)
         setUnread(0)
+      })
+
+      updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
+        unseen: arrayRemove(userId)
       })
     }
   }
@@ -627,18 +669,13 @@ const AppChat = (props) => {
     if (!_.isEmpty(groupId)) {
       const q_mess = query(
         collection(db, `${firestoreDb}/messages/${groupId}`),
-        orderBy("timestamp", "desc"),
+        where("unseen", "array-contains", userId),
         limit(10)
       )
       getDocs(q_mess).then((res) => {
         let unseen = 0
         res.forEach((doc_mess) => {
-          const docData = doc_mess.data()
-          const dataSeen = docData.seen
-          const dataSenderId = docData.sender_id
-          if (dataSenderId !== userId && dataSeen.includes(userId) === false) {
-            unseen = unseen + 1
-          }
+          unseen++
         })
         setUnread(unseen)
       })
@@ -666,10 +703,10 @@ const AppChat = (props) => {
   }
 
   useEffect(() => {
-    if (loadingEmployee === true) {
+    if (state.loadingEmployee === true) {
       getListEmployees()
     }
-    if (loadingEmployee === false) {
+    if (state.loadingEmployee === false) {
       const q = query(
         collection(db, `${firestoreDb}/groups/groups`),
         where("user", "array-contains", userId),
@@ -690,13 +727,13 @@ const AppChat = (props) => {
           if (data.type === "employee") {
             const index = data.user.findIndex((item) => item !== userId)
             const employeeId = data.user[index] ? data.user[index] : 0
-            const employeeIndex = dataEmployees.findIndex(
+            const employeeIndex = state.dataEmployees.findIndex(
               (item) => item.id === employeeId
             )
-            const employee = dataEmployees[employeeIndex]
-              ? dataEmployees[employeeIndex]
-              : dataEmployees[
-                  dataEmployees.findIndex((item) => item.id === userId)
+            const employee = state.dataEmployees[employeeIndex]
+              ? state.dataEmployees[employeeIndex]
+              : state.dataEmployees[
+                  state.dataEmployees.findIndex((item) => item.id === userId)
                 ]
             dataGroupEmployee = {
               id: id,
@@ -709,6 +746,7 @@ const AppChat = (props) => {
               user: data.user,
               pin: pin,
               type: data.type,
+              unseen: data.unseen,
               personalInfo: {
                 email: employee.email ? employee.email : "",
                 phone: employee.phone ? employee.phone : "",
@@ -741,6 +779,7 @@ const AppChat = (props) => {
               user: data.user,
               pin: pin,
               type: data.type,
+              unseen: data.unseen,
               personalInfo: {
                 email: "",
                 phone: "",
@@ -757,12 +796,12 @@ const AppChat = (props) => {
           if (data.last_user === userId) {
             lastUser = useFormatMessage("modules.chat.text.you")
           } else {
-            const indexLastUser = dataEmployees.findIndex(
+            const indexLastUser = state.dataEmployees.findIndex(
               (item) => item.id === data.last_user
             )
 
             if (indexLastUser > -1) {
-              const employeeLastUser = dataEmployees[indexLastUser]
+              const employeeLastUser = state.dataEmployees[indexLastUser]
               const fullNameSplit = employeeLastUser.full_name.split(" ")
               lastUser = fullNameSplit[fullNameSplit.length - 1]
             }
@@ -770,43 +809,18 @@ const AppChat = (props) => {
 
           // ** get count unseen
           let unseen = 0
-          const q_mess = query(
-            collection(db, `${firestoreDb}/messages/${id}`),
-            orderBy("timestamp", "desc"),
-            limit(10)
-          )
-          await getDocs(q_mess).then((res) => {
-            let dem = 0
-            let check_dem_unseen = true
-            res.forEach((doc_mess) => {
-              dem++
-              const docData = doc_mess.data()
-              const dataSeen = docData.seen
-              const dataSenderId = docData.sender_id
-              if (
-                dem === 1 &&
-                dataSenderId === userId &&
-                dataSeen.includes(userId) === true
-              ) {
-                unseen = 0
-                check_dem_unseen = false
-              }
-
-              if (
-                check_dem_unseen === true &&
-                dataSenderId !== userId &&
-                dataSeen.includes(userId) === false
-              ) {
-                unseen = unseen + 1
-              }
+          if (data.unseen.indexOf(userId) > -1) {
+            const q_mess = query(
+              collection(db, `${firestoreDb}/messages/${id}`),
+              where("unseen", "array-contains", userId),
+              limit(10)
+            )
+            await getDocs(q_mess).then((res) => {
+              res.forEach((doc_mess) => {
+                unseen++
+              })
             })
-
-            if (dem === 0 && unseen === 0) {
-              if (data.new === 1 && data.last_user !== userId) {
-                unseen = 1
-              }
-            }
-          })
+          }
 
           if (change.type === "added") {
             listGroup = [
@@ -855,7 +869,7 @@ const AppChat = (props) => {
           }
         }
 
-        setLoadingGroup(false)
+        setState({ loadingGroup: false })
       })
 
       return () => {
@@ -864,27 +878,54 @@ const AppChat = (props) => {
         }
       }
     }
-  }, [loadingEmployee])
+  }, [state.loadingEmployee])
 
   useEffect(() => {
     getContacts()
-  }, [state.groups, loadingEmployee])
+  }, [store.groups, state.loadingEmployee])
 
   useEffect(() => {
     dispatch(
       handleChats({
-        chats: [],
-        lastTimeMessage: 0
+        chats: []
       })
     )
-    setLastTimeMessageChat(0)
-    setLastMessageChatScrollBottom(0)
-    setChatHistory([])
+    setEmptyHistory()
+    setEmptyDataScrollBottom()
     setUnread(0)
+    if (_.isEmpty(active) && !_.isEmpty(activeFullName)) {
+      const employeeIndex = store.contacts.findIndex(
+        (item) => item.fullName === activeFullName
+      )
+      const employee = store.contacts[employeeIndex]
+        ? store.contacts[employeeIndex]
+        : {}
+      const selectedUser = {
+        chat: {
+          id: ""
+        },
+        contact: {
+          id: employee.id,
+          idEmployee: employee.idEmployee,
+          fullName: employee.fullName,
+          role: employee.role,
+          about: employee.about,
+          avatar: employee.avatar,
+          status: employee.status,
+          user: employee.user,
+          type: employee.type,
+          personalInfo: employee.personalInfo
+        }
+      }
+      setSelectedUser(selectedUser)
+      setState({ loadingMessage: false })
+    }
+  }, [active, activeFullName])
+
+  useEffect(() => {
     if (!_.isEmpty(active)) {
-      setCheckAddMessage(true)
-      setLoadingMessage(true)
-      const _listGroup = [...state.groups]
+      setState({ loadingMessage: true, checkAddMessage: true })
+      const _listGroup = [...store.groups]
       _.forEach(_listGroup, (value, index) => {
         if (active === value.id) {
           _listGroup[index].chat.unseenMsgs = 0
@@ -892,17 +933,17 @@ const AppChat = (props) => {
       })
       setGroups(_listGroup)
 
-      const employeeIndex = state.groups.findIndex((item) => item.id === active)
+      const employeeIndex = store.groups.findIndex((item) => item.id === active)
       let employeeIndexContact = -1
       if (employeeIndex === -1) {
-        employeeIndexContact = state.contacts.findIndex(
+        employeeIndexContact = store.contacts.findIndex(
           (item) => item.fullName === activeFullName
         )
       }
-      const employee = state.groups[employeeIndex]
-        ? state.groups[employeeIndex]
-        : state.contacts[employeeIndexContact]
-        ? state.contacts[employeeIndexContact]
+      const employee = store.groups[employeeIndex]
+        ? store.groups[employeeIndex]
+        : store.contacts[employeeIndexContact]
+        ? store.contacts[employeeIndexContact]
         : {}
       const selectedUser = {
         chat: {
@@ -923,88 +964,97 @@ const AppChat = (props) => {
       }
       setSelectedUser(selectedUser)
 
-      const q_mess = query(
-        collection(db, `${firestoreDb}/messages/${active}`),
-        orderBy("timestamp", "desc"),
-        limit(queryLimit)
-      )
-      let chat = []
-      const unsubscribe = onSnapshot(q_mess, (querySnapshot) => {
-        let _chat = []
-        let check_add = false
-        querySnapshot.docChanges().forEach((change) => {
-          const docData = change.doc
-          const data = docData.data()
+      // ** seen message
+      handleSeenMessage(active)
 
-          if (change.type === "added") {
-            check_add = true
+      setTimeout(() => {
+        const q_mess = query(
+          collection(db, `${firestoreDb}/messages/${active}`),
+          orderBy("timestamp", "desc"),
+          limit(queryLimit)
+        )
+        let chat = []
+        const unsubscribe = onSnapshot(q_mess, (querySnapshot) => {
+          let _chat = []
+          let check_add = false
+          querySnapshot.docChanges().forEach((change) => {
+            const docData = change.doc
+            const data = docData.data()
 
-            // ** seen message
-            const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-            const dataSeen = data.seen
-            const dataSenderId = data.sender_id
-            if (
-              dataSenderId !== userId &&
-              dataSeen.includes(userId) === false &&
-              (chatContainer.scrollHeight -
-                chatContainer.scrollTop -
-                chatContainer.clientHeight <=
-                200 ||
-                chatContainer.scrollTop === 0)
-            ) {
-              updateDoc(
-                doc(db, `${firestoreDb}/messages/${active}`, docData.id),
-                {
-                  seen: arrayUnion(userId)
-                }
-              )
-            }
+            if (change.type === "added") {
+              check_add = true
 
-            _chat = [
-              ..._chat,
-              {
-                message: data.message,
-                time: data.timestamp,
-                seen: data.seen,
-                senderId: data.sender_id,
-                type: data.type,
-                status: data.status,
-                file: data.file,
-                react: data.react,
-                reply: data.reply,
-                forward: data.forward
-              }
-            ]
-          }
-          if (change.type === "modified") {
-            const timestamp = data.timestamp
-            const chat_new = [...chat]
-            const index_chat = chat_new.findIndex(
-              (item) => item.time === timestamp
-            )
-            if (index_chat > -1) {
-              chat_new[index_chat] = {
-                message: data.message,
-                time: data.timestamp,
-                seen: data.seen,
-                senderId: data.sender_id,
-                type: data.type,
-                status: data.status,
-                file: data.file,
-                react: data.react,
-                reply: data.reply,
-                forward: data.forward
-              }
-              chat = chat_new
-              dispatch(
-                handleChats({
-                  chats: chat
+              // ** seen message
+              const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+              const dataSeen = data.seen
+              const dataSenderId = data.sender_id
+              if (
+                dataSenderId !== userId &&
+                dataSeen.includes(userId) === false &&
+                (chatContainer.scrollHeight -
+                  chatContainer.scrollTop -
+                  chatContainer.clientHeight <=
+                  200 ||
+                  chatContainer.scrollTop === 0)
+              ) {
+                updateDoc(
+                  doc(db, `${firestoreDb}/messages/${active}`, docData.id),
+                  {
+                    seen: arrayUnion(userId),
+                    unseen: arrayRemove(userId)
+                  }
+                )
+
+                updateDoc(doc(db, `${firestoreDb}/groups/groups`, active), {
+                  unseen: arrayRemove(userId)
                 })
-              )
+              }
+
+              _chat = [
+                ..._chat,
+                {
+                  message: data.message,
+                  time: data.timestamp,
+                  seen: data.seen,
+                  senderId: data.sender_id,
+                  type: data.type,
+                  status: data.status,
+                  file: data.file,
+                  react: data.react,
+                  reply: data.reply,
+                  forward: data.forward
+                }
+              ]
             }
-          }
-          if (change.type === "removed") {
-            /* const timestamp = data.timestamp
+            if (change.type === "modified") {
+              const timestamp = data.timestamp
+              const chat_new = [...chat]
+              const index_chat = chat_new.findIndex(
+                (item) => item.time === timestamp
+              )
+              if (index_chat > -1) {
+                chat_new[index_chat] = {
+                  message: data.message,
+                  time: data.timestamp,
+                  seen: data.seen,
+                  senderId: data.sender_id,
+                  type: data.type,
+                  status: data.status,
+                  file: data.file,
+                  react: data.react,
+                  reply: data.reply,
+                  forward: data.forward
+                }
+                chat = chat_new
+                dispatch(
+                  handleChats({
+                    chats: chat
+                  })
+                )
+              }
+            }
+            if (change.type === "removed") {
+              /* const timestamp = data.timestamp
             const chat_new = [...chat]
             chat = chat_new.filter((item) => item.time !== timestamp)
             dispatch(
@@ -1012,68 +1062,38 @@ const AppChat = (props) => {
                 chats: chat
               })
             ) */
-          }
-        })
+            }
+          })
 
-        if (check_add === true) {
-          const chat_reverse = _chat.reverse()
-          chat = [...chat, ...chat_reverse]
-          dispatch(
-            handleChats({
-              chats: chat,
-              lastTimeMessage:
-                chat_reverse.length > 0 ? chat_reverse[0].time : 0
+          if (check_add === true) {
+            const chat_reverse = _chat.reverse()
+            chat = [...chat, ...chat_reverse]
+            dispatch(
+              handleChats({
+                chats: chat
+              })
+            )
+            setState({
+              lastTimeMessageChat:
+                chat_reverse.length > 0 ? chat_reverse[0].time : 0,
+              lastTimeMessageHistory: chat.length > 0 ? chat[0].time : 0
             })
-          )
-          setLastTimeMessageChat(
-            chat_reverse.length > 0 ? chat_reverse[0].time : 0
-          )
+          }
+          setState({ loadingMessage: false })
+        })
+        return () => {
+          if (_.isFunction(unsubscribe)) {
+            unsubscribe()
+          }
         }
-        setLoadingMessage(false)
-      })
-      return () => {
-        if (_.isFunction(unsubscribe)) {
-          unsubscribe()
-        }
-      }
+      }, 1000)
     }
   }, [active])
-
-  useEffect(() => {
-    setCheckDataChat(true)
-    if (_.isEmpty(active) && !_.isEmpty(activeFullName)) {
-      const employeeIndex = state.contacts.findIndex(
-        (item) => item.fullName === activeFullName
-      )
-      const employee = state.contacts[employeeIndex]
-        ? state.contacts[employeeIndex]
-        : {}
-      const selectedUser = {
-        chat: {
-          id: ""
-        },
-        contact: {
-          id: employee.id,
-          idEmployee: employee.idEmployee,
-          fullName: employee.fullName,
-          role: employee.role,
-          about: employee.about,
-          avatar: employee.avatar,
-          status: employee.status,
-          user: employee.user,
-          type: employee.type,
-          personalInfo: employee.personalInfo
-        }
-      }
-      setSelectedUser(selectedUser)
-      setLoadingMessage(false)
-    }
-  }, [active, activeFullName])
 
   return (
     <Fragment>
       <Sidebar
-        store={state}
+        store={store}
         sidebar={sidebar}
         handleSidebar={handleSidebar}
         userSidebarLeft={userSidebarLeft}
@@ -1081,8 +1101,8 @@ const AppChat = (props) => {
         active={active}
         setActive={setActive}
         setActiveFullName={setActiveFullName}
-        loadingGroup={loadingGroup}
-        setHasMoreHistory={setHasMoreHistory}
+        loadingGroup={state.loadingGroup}
+        setHasMoreHistory={(value) => setState({ hasMoreHistory: value })}
         handleAddNewGroup={handleAddNewGroup}
         userId={userId}
         setSelectedUser={setSelectedUser}
@@ -1100,44 +1120,46 @@ const AppChat = (props) => {
               })}
               onClick={handleOverlayClick}></div>
             <Chat
-              store={state}
+              store={store}
               handleSidebar={handleSidebar}
               userSidebarLeft={userSidebarLeft}
               handleUserSidebarRight={handleUserSidebarRight}
               settingChat={settingChat}
               userId={userId}
               sendMessage={sendMessage}
-              loadingMessage={loadingMessage}
+              loadingMessage={state.loadingMessage}
               chats={chats}
-              chatHistory={chatHistory}
+              chatHistory={state.chatHistory}
               getChatHistory={getChatHistory}
               active={active}
-              hasMoreHistory={hasMoreHistory}
+              hasMoreHistory={state.hasMoreHistory}
               chatArea={chatArea}
               scrollToBottom={scrollToBottom}
-              unread={unreadStore}
+              unread={state.unread}
               handleSeenMessage={handleSeenMessage}
               handleUnSeenMessage={handleUnSeenMessage}
               updateMessage={updateMessage}
               userSidebarRight={userSidebarRight}
               windowWidth={windowWidth}
               setUserSidebarRight={setUserSidebarRight}
-              dataEmployees={dataEmployees}
+              dataEmployees={state.dataEmployees}
               queryLimit={queryLimit}
               scrollToMessage={scrollToMessage}
-              checkAddMessage={checkAddMessage}
-              setCheckAddMessage={setCheckAddMessage}
+              checkAddMessage={state.checkAddMessage}
+              setCheckAddMessage={(value) =>
+                setState({ checkAddMessage: value })
+              }
               handleSearchMessage={handleSearchMessage}
-              hasMoreChat={hasMoreChat}
-              dataChatScrollBottom={dataChatScrollBottom}
-              checkShowDataChat={checkShowDataChat}
+              hasMoreChat={state.hasMoreChat}
+              dataChatScrollBottom={state.dataChatScrollBottom}
+              checkShowDataChat={state.checkShowDataChat}
               getChatScrollBottom={getChatScrollBottom}
             />
             <UserProfileSidebar
               user={user}
               userSidebarRight={userSidebarRight}
               handleUserSidebarRight={handleUserSidebarRight}
-              dataEmployees={dataEmployees}
+              dataEmployees={state.dataEmployees}
             />
           </div>
         </div>
