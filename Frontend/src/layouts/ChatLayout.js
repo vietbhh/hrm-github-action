@@ -19,8 +19,8 @@ const ChatLayout = (props) => {
       /* customMenuComponent={(customProps) => (
         <CustomMenuComponent {...customProps} />
       )} */
-      className="navbar-2"
-      fixedSidebar={true}
+      className="navbar-2 chat"
+      fixedSidebarCollapsed={true}
       {...props}>
       <Outlet />
     </Layout>
