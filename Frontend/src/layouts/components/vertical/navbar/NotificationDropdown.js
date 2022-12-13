@@ -219,9 +219,12 @@ const NotificationDropdown = () => {
           />
         </svg>
 
-        <Badge pill color="warning" className="badge-up">
-          {numberNotificationStore}
-        </Badge>
+        {numberNotificationStore > 0 && (
+          <Badge pill color="warning" className="badge-up">
+            {numberNotificationStore}
+          </Badge>
+        )}
+
         <UncontrolledTooltip target="notification">
           {useFormatMessage("layout.notification.title")}
         </UncontrolledTooltip>
