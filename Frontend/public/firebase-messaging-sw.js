@@ -17,12 +17,14 @@ if ("serviceWorker" in navigator) {
 
 // Initialize the Firebase app in the service worker by passing the generated config
 const firebaseConfig = {
-  apiKey: "AIzaSyC2Qp4HLnOWTQZ9xMZAqqfGNbfsUO1SOA0",
-  authDomain: "fir-messaging-f94fd.firebaseapp.com",
-  projectId: "fir-messaging-f94fd",
-  storageBucket: "fir-messaging-f94fd.appspot.com",
-  messagingSenderId: "672698124875",
-  appId: "1:672698124875:web:adf97a7830afbe4c3d9bce"
+  apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
+  authDomain: "friday-351410.firebaseapp.com",
+  databaseURL: "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "friday-351410",
+  storageBucket: "friday-351410.appspot.com",
+  messagingSenderId: "802894112425",
+  appId: "1:802894112425:web:cae06e5522d5bb31bcebb8",
+  measurementId: "G-PLDYVP5EMH"
 }
 
 firebase.initializeApp(firebaseConfig)

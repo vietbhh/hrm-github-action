@@ -26,6 +26,7 @@ class Notification extends ErpController
 		$page = isset($dataGet['page']) ? $dataGet['page'] : 1;
 		$data = $this->notification->list(user_id(), $perPage, $page);
 		$data = $this->notification->handleNotificationData($data, true);
+		
 		return $this->respond([
 			'results' => $data,
 			'number_notification' => $this->notification->getNotificationNumber(user_id())
@@ -46,6 +47,12 @@ class Notification extends ErpController
 				$arrId[] = $rowNotification['id'];
 			}
 		}
+
+		$this->notification->pushNotification([
+			'title' => 'gggg',
+			'content' => 'sdaf dsafasdf',
+			'link' => ''
+		], [1]);
 
 		if (count($arrId) > 0) {
 			$this->notification->read($arrId, false);
