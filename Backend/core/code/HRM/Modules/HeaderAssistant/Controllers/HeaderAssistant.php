@@ -15,10 +15,11 @@ class HeaderAssistant extends \App\Controllers\HeaderAssistant
 
 	private function getDataBirthday()
 	{
-		$datetoday = date("Y-m-d");
+		$month = date('m');
+		$day = date('d');
 		$modules = \Config\Services::modules();
 		$modules->setModule('employees');
 		$model = $modules->model;
-		return $model->select("id,full_name,avatar")->where("dob", $datetoday)->asArray()->findAll();
+		return $model->select("id,full_name,avatar")->where("Month(dob) = '$month'")->where("DAY(dob) = '$day'")->asArray()->findAll();
 	}
 }
