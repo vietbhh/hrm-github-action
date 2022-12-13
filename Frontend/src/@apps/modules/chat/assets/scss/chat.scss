@@ -47,6 +47,13 @@
           .chat-dot {
             color: #fd3b4c;
           }
+
+          .btn-new-group {
+            cursor: pointer;
+            float: right;
+            margin-right: 20px;
+            font-size: 20px;
+          }
         }
 
         .chat-fixed-search {
@@ -74,6 +81,14 @@
         }
 
         .list-group {
+          .btn-new-group {
+            cursor: pointer;
+            float: right;
+            margin-right: 20px;
+            font-size: 20px;
+            margin-top: 10px;
+          }
+
           .chat-list {
             .div-li-chat {
               position: relative;

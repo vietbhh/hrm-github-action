@@ -8,13 +8,13 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import classnames from "classnames"
 import { Search, X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import ModalNewGroup from "./modals/ModalNewGroup"
 import { formatTime } from "../common/common"
+import ModalNewGroup from "./modals/ModalNewGroup"
 
 // ** Reactstrap Imports
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { Dropdown, Menu } from "antd"
+import { Dropdown, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import {
   Badge,
@@ -397,6 +397,11 @@ const SidebarLeft = (props) => {
             <div className="div-chat-logo">
               <span className="chat-title">Chat</span>
               <span className="chat-title chat-dot">.</span>
+              <Tooltip title="New Group">
+                <i
+                  className="iconly-Edit-Square icli btn-new-group"
+                  onClick={() => toggleModalNewGroup()}></i>
+              </Tooltip>
             </div>
             <div className="chat-fixed-search">
               <div className="d-flex align-items-center w-100">
@@ -429,9 +434,10 @@ const SidebarLeft = (props) => {
             <PerfectScrollbar
               className="chat-user-list-wrapper list-group"
               options={{ wheelPropagation: false }}>
-              {/*  <Button color="primary" onClick={() => toggleModalNewGroup()}>
+              {/* <Button color="primary" onClick={() => toggleModalNewGroup()}>
                 New Group
               </Button> */}
+
               {loadingGroup && <DefaultSpinner />}
               {!loadingGroup && (
                 <>
