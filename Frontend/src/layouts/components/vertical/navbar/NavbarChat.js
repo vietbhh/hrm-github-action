@@ -105,9 +105,11 @@ const NavbarChat = () => {
           />
         </svg>
 
-        <Badge pill color="warning" className="badge-up">
-          {unseen}
-        </Badge>
+        {unseen > 0 && (
+          <Badge pill color="warning" className="badge-up">
+            {unseen}
+          </Badge>
+        )}
 
         <UncontrolledTooltip target="chat">
           {useFormatMessage("layout.chat")}

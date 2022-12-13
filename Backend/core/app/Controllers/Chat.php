@@ -16,7 +16,7 @@ class Chat extends ErpController
 		}
 		$select[] = "job_titles.name as job_title";
 
-		$dataUser = $userModel->asArray()->select($select)->join('job_titles', 'job_titles.id = users.job_title_id', 'left')->findAll();
+		$dataUser = $userModel->asArray()->select($select)->join('job_titles', 'job_titles.id = users.job_title_id', 'left')->where("account_status", "activated")->findAll();
 		return $this->respond($dataUser);
 	}
 

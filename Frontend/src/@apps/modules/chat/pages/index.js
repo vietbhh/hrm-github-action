@@ -967,94 +967,93 @@ const AppChat = (props) => {
       // ** seen message
       handleSeenMessage(active)
 
-      setTimeout(() => {
-        const q_mess = query(
-          collection(db, `${firestoreDb}/messages/${active}`),
-          orderBy("timestamp", "desc"),
-          limit(queryLimit)
-        )
-        let chat = []
-        const unsubscribe = onSnapshot(q_mess, (querySnapshot) => {
-          let _chat = []
-          let check_add = false
-          querySnapshot.docChanges().forEach((change) => {
-            const docData = change.doc
-            const data = docData.data()
+      const q_mess = query(
+        collection(db, `${firestoreDb}/messages/${active}`),
+        orderBy("timestamp", "desc"),
+        limit(queryLimit)
+      )
+      let chat = []
+      const unsubscribe = onSnapshot(q_mess, (querySnapshot) => {
+        let _chat = []
+        let check_add = false
+        querySnapshot.docChanges().forEach((change) => {
+          const docData = change.doc
+          const data = docData.data()
 
-            if (change.type === "added") {
-              check_add = true
+          if (change.type === "added") {
+            check_add = true
 
-              // ** seen message
-              const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-              const dataSeen = data.seen
-              const dataSenderId = data.sender_id
-              if (
-                dataSenderId !== userId &&
-                dataSeen.includes(userId) === false &&
-                (chatContainer.scrollHeight -
-                  chatContainer.scrollTop -
-                  chatContainer.clientHeight <=
-                  200 ||
-                  chatContainer.scrollTop === 0)
-              ) {
-                updateDoc(
-                  doc(db, `${firestoreDb}/messages/${active}`, docData.id),
-                  {
-                    seen: arrayUnion(userId),
-                    unseen: arrayRemove(userId)
-                  }
-                )
-
-                updateDoc(doc(db, `${firestoreDb}/groups/groups`, active), {
-                  unseen: arrayRemove(userId)
-                })
-              }
-
-              _chat = [
-                ..._chat,
+            // ** seen message
+            const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+            const dataSeen = data.seen
+            const dataSenderId = data.sender_id
+            if (
+              dataSenderId !== userId &&
+              dataSeen.includes(userId) === false &&
+              (chatContainer.scrollHeight -
+                chatContainer.scrollTop -
+                chatContainer.clientHeight <=
+                200 ||
+                chatContainer.scrollTop === 0)
+            ) {
+              updateDoc(
+                doc(db, `${firestoreDb}/messages/${active}`, docData.id),
                 {
-                  message: data.message,
-                  time: data.timestamp,
-                  seen: data.seen,
-                  senderId: data.sender_id,
-                  type: data.type,
-                  status: data.status,
-                  file: data.file,
-                  react: data.react,
-                  reply: data.reply,
-                  forward: data.forward
+                  seen: arrayUnion(userId),
+                  unseen: arrayRemove(userId)
                 }
-              ]
-            }
-            if (change.type === "modified") {
-              const timestamp = data.timestamp
-              const chat_new = [...chat]
-              const index_chat = chat_new.findIndex(
-                (item) => item.time === timestamp
               )
-              if (index_chat > -1) {
-                chat_new[index_chat] = {
-                  message: data.message,
-                  time: data.timestamp,
-                  seen: data.seen,
-                  senderId: data.sender_id,
-                  type: data.type,
-                  status: data.status,
-                  file: data.file,
-                  react: data.react,
-                  reply: data.reply,
-                  forward: data.forward
-                }
-                chat = chat_new
-                dispatch(
-                  handleChats({
-                    chats: chat
-                  })
-                )
-              }
+
+              updateDoc(doc(db, `${firestoreDb}/groups/groups`, active), {
+                unseen: arrayRemove(userId)
+              })
             }
-            if (change.type === "removed") {
-              /* const timestamp = data.timestamp
+
+            _chat = [
+              ..._chat,
+              {
+                message: data.message,
+                time: data.timestamp,
+                seen: data.seen,
+                senderId: data.sender_id,
+                type: data.type,
+                status: data.status,
+                file: data.file,
+                react: data.react,
+                reply: data.reply,
+                forward: data.forward
+              }
+            ]
+          }
+          if (change.type === "modified") {
+            const timestamp = data.timestamp
+            const chat_new = [...chat]
+            const index_chat = chat_new.findIndex(
+              (item) => item.time === timestamp
+            )
+            if (index_chat > -1) {
+              chat_new[index_chat] = {
+                message: data.message,
+                time: data.timestamp,
+                seen: data.seen,
+                senderId: data.sender_id,
+                type: data.type,
+                status: data.status,
+                file: data.file,
+                react: data.react,
+                reply: data.reply,
+                forward: data.forward
+              }
+              chat = chat_new
+              dispatch(
+                handleChats({
+                  chats: chat
+                })
+              )
+            }
+          }
+          if (change.type === "removed") {
+            /* const timestamp = data.timestamp
             const chat_new = [...chat]
             chat = chat_new.filter((item) => item.time !== timestamp)
             dispatch(
@@ -1062,31 +1061,30 @@ const AppChat = (props) => {
                 chats: chat
               })
             ) */
-            }
-          })
-
-          if (check_add === true) {
-            const chat_reverse = _chat.reverse()
-            chat = [...chat, ...chat_reverse]
-            dispatch(
-              handleChats({
-                chats: chat
-              })
-            )
-            setState({
-              lastTimeMessageChat:
-                chat_reverse.length > 0 ? chat_reverse[0].time : 0,
-              lastTimeMessageHistory: chat.length > 0 ? chat[0].time : 0
-            })
           }
-          setState({ loadingMessage: false })
         })
-        return () => {
-          if (_.isFunction(unsubscribe)) {
-            unsubscribe()
-          }
+
+        if (check_add === true) {
+          const chat_reverse = _chat.reverse()
+          chat = [...chat, ...chat_reverse]
+          dispatch(
+            handleChats({
+              chats: chat
+            })
+          )
+          setState({
+            lastTimeMessageChat:
+              chat_reverse.length > 0 ? chat_reverse[0].time : 0,
+            lastTimeMessageHistory: chat.length > 0 ? chat[0].time : 0
+          })
         }
-      }, 700)
+        setState({ loadingMessage: false })
+      })
+      return () => {
+        if (_.isFunction(unsubscribe)) {
+          unsubscribe()
+        }
+      }
     }
   }, [active])
 
