@@ -3,15 +3,22 @@ import firebase from "firebase/compat/app"
 import { getFirestore } from "firebase/firestore"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
 
+// ** firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
   authDomain: "friday-351410.firebaseapp.com",
+  databaseURL:
+    "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "friday-351410",
   storageBucket: "friday-351410.appspot.com",
   messagingSenderId: "802894112425",
-  appId: "1:802894112425:web:bb905d1836b787e7bcebb8",
-  measurementId: "G-2LBDCCGXJP"
+  appId: "1:802894112425:web:cae06e5522d5bb31bcebb8",
+  measurementId: "G-PLDYVP5EMH"
 }
+
+const vapidKey =
+  "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
+// ** end firebase config
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 
@@ -46,8 +53,7 @@ export const requestPermission = () => {
 
 const getRegistrationToken = async () => {
   return await getToken(messaging, {
-    vapidKey:
-      "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
+    vapidKey: vapidKey
   })
     .then((currentToken) => {
       if (currentToken) {
