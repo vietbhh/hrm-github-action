@@ -23,14 +23,16 @@ export const driveApi = {
     const strParams = object2QueryString(params)
     return await axiosApi.get(`drive/get-drive-folder-detail?get${strParams}`)
   },
-  async uploadFileDrive(data) {
+  async uploadFileDrive(data, config = {}) {
     return await axiosApi.post(
       "drive/upload-file-drive",
       serialize(_.cloneDeep(data)),
       {
+        disableLoading: true,
         headers: {
           "Content-Type": "multipart/form-data"
-        }
+        },
+        ...config
       }
     )
   }

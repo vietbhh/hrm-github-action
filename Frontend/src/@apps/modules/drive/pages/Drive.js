@@ -8,8 +8,9 @@ import { setListFolder } from "../common/reducer/drive"
 // ** Styles
 // ** Components
 import DriveContent from "../components/details/DriveContent/DriveContent"
-import UploadModal from "../components/modals/UploadModal"
+import UploadModal from "../components/modals/UploadModal/UploadModal"
 import NewFolderModal from "../components/modals/NewFolderModal"
+import UploadingNotification from "../components/details/UploadingNotification/UploadingNotification"
 
 const Drive = (props) => {
   const [state, setState] = useMergedState({
@@ -38,6 +39,10 @@ const Drive = (props) => {
     return <NewFolderModal />
   }
 
+  const renderUploadingNotification = () => {
+    return <UploadingNotification />
+  }
+
   return (
     <Fragment>
       <div>
@@ -46,6 +51,7 @@ const Drive = (props) => {
           <div></div>
         </div>
       </div>
+      <Fragment>{renderUploadingNotification()}</Fragment>
       <Fragment>{renderUploadModal()}</Fragment>
       <Fragment>{renderNewFolderModal()}</Fragment>
     </Fragment>

@@ -80,7 +80,7 @@ const FilterSort = (props) => {
         placement="bottom"
         trigger="click"
         overlayClassName="dropdown-filter-sort-drive"
-        visible={state.openFilter}>
+        open={state.openFilter}>
         <div className="d-flex align-items-center input-filter-drive">
           <div className="d-flex align-items-center h-100 text-filter-drive-container">
             <p className="me-50 mb-0 sort-by-text">

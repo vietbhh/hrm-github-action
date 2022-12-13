@@ -1,78 +1,27 @@
 // ** React Imports
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { driveApi } from "../../common/api"
-// ** redux
-import { closeModalUpload } from "../../common/reducer/drive"
-import { useDispatch, useSelector } from "react-redux"
+import { driveApi } from "../../../common/api"
 // ** Styles
-import {
-  Button,
-  Col,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Row,
-  Spinner
-} from "reactstrap"
+import { Button, Col, ModalBody, ModalHeader, Row } from "reactstrap"
 import { Upload } from "antd"
 // ** Components
 
 const { Dragger } = Upload
 
-const UploadModal = (props) => {
+const ChoseFileAndFolderUploadModalContent = (props) => {
   const {
     // ** props
+    isUploadFile,
+    uploadProps,
     // ** methods
+    handleCancelModal
   } = props
-
-  const [state, setState] = useMergedState({
-    uploading: false,
-    listFileUpload: []
-  })
-
-  const driveState = useSelector((state) => state.drive)
-  const { modalUpload, modalUploadType } = driveState
-
-  const isUploadFile = modalUploadType === "file"
-
-  const dispatch = useDispatch()
-
-  const draggerProps = {
-    name: "upload_file_and_folder",
-    multiple: isUploadFile,
-    directory: !isUploadFile,
-    beforeUpload: (file) => {
-      setState({
-        uploading: true
-      })
-
-      console.log(file)
-
-      return false
-    }
-  }
-
-  const handleModal = () => {
-    dispatch(closeModalUpload())
-  }
-
-  // ** effect
-  useEffect(() => {
-    console.log(state.listFileUpload)
-  }, [state.listFileUpload])
 
   // ** render
   return (
-    <Modal
-      isOpen={modalUpload}
-      toggle={() => handleModal()}
-      className="drive-modal drive-upload-modal"
-      backdrop={"static"}
-      modalTransition={{ timeout: 100 }}
-      backdropTransition={{ timeout: 100 }}
-      centered>
-      <ModalHeader toggle={() => handleModal()}>
+    <Fragment>
+      <ModalHeader toggle={() => handleCancelModal()}>
         {isUploadFile
           ? useFormatMessage("modules.drive.buttons.upload_file")
           : useFormatMessage("modules.drive.buttons.upload_folder")}
@@ -80,7 +29,7 @@ const UploadModal = (props) => {
       <ModalBody>
         <Row className="mb-1">
           <Col sm={12}>
-            <Dragger {...draggerProps}>
+            <Dragger {...uploadProps}>
               <div className="d-flex align-items-center justify-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +69,7 @@ const UploadModal = (props) => {
         </Row>
         <Row>
           <Col sm={12}>
-            <Upload {...draggerProps}>
+            <Upload {...uploadProps}>
               <Button.Ripple className="w-100 btn-custom-primary btn-upload">
                 {useFormatMessage("modules.drive.buttons.upload")}
               </Button.Ripple>
@@ -128,8 +77,8 @@ const UploadModal = (props) => {
           </Col>
         </Row>
       </ModalBody>
-    </Modal>
+    </Fragment>
   )
 }
 
-export default UploadModal
+export default ChoseFileAndFolderUploadModalContent

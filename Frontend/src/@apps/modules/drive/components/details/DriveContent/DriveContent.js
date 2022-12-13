@@ -16,7 +16,7 @@ const DriveContent = (props) => {
   } = props
 
   const driveState = useSelector((state) => state.drive)
-  const {listFolder} = driveState
+  const { listFolder } = driveState
 
   // ** render
   const renderListS3Storage = () => {

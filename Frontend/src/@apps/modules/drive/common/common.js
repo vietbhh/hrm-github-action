@@ -53,7 +53,12 @@ export const getFileAndFolderIcon = (type, extension) => {
     )
   }
 
-  if (extension === "png" || extension === "jpg" || extension === "jpeg") {
+  if (
+    extension === "png" ||
+    extension === "jpg" ||
+    extension === "jpeg" ||
+    extension === "image"
+  ) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -131,4 +136,13 @@ export const getFileAndFolderIcon = (type, extension) => {
       />
     </svg>
   )
+}
+
+export const formatBytes = (bytes, decimals = 2) => {
+  if (bytes === 0) return "0 Bytes"
+  const k = 1024,
+    dm = decimals,
+    sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+    i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
 }

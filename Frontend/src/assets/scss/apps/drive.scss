@@ -18,6 +18,25 @@
     }
 }
 
+.btn-custom-primary-outline {
+    border-radius: 12px;
+    border-color: #377dff !important;
+    color: #377dff !important;
+    background-color: #ffffff !important;
+
+    &:after {
+        display: none;
+    }
+
+    &:hover {
+        box-shadow: none !important;
+    }
+
+    &:focus {
+        background-color: #ffffff !important;
+    }
+}
+
 .btn-custom-white {
     border-radius: 12px;
     background-color: #ffffff !important;
@@ -26,6 +45,24 @@
     &:hover {
         box-shadow: none !important;
     }
+}
+
+.modal-dialog {
+    max-width: 1000px;
+}
+
+.drive-icon-bg {
+    background-color: #f1f1f5;
+    height: 50px;
+    width: 50px;
+    border-radius: 18px;
+}
+
+.drive-icon-bg-md {
+    background-color: #f1f1f5;
+    height: 40px;
+    width: 40px;
+    border-radius: 15px;
 }
 
 .drive-filter-container {
@@ -141,13 +178,6 @@
         border-radius: 12px;
     }
 
-    .icon-bg {
-        background-color: #f1f1f5;
-        height: 50px;
-        width: 50px;
-        border-radius: 18px;
-    }
-
     .main-menu-content {
         .new-file {
             .dropdown-menu {
@@ -208,6 +238,12 @@
             a {
                 color: #32434f;
                 font-weight: 500;
+            }
+
+            .drive-folder-item {
+                .folder-name {
+                    cursor: pointer;
+                }
             }
         }
 
@@ -341,6 +377,69 @@
 
             .ant-upload {
                 width: 100% !important;
+            }
+        }
+    }
+}
+
+.drive-upload-modal-uploading {
+    width: 900px;
+    transition: transform 19s ease-out;
+
+    .modal-content {
+        .modal-body {
+            .list-uploading-file-container {
+                .uploading-file-item {
+                    .ant-progress-bg {
+                        background-color: #377dff !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.drive-uploading-notification {
+    height: auto;
+    width: 400px;
+    border-radius: 12px;
+    position: fixed;
+    right: 30px;
+    top: auto;
+    bottom: 30px;
+    padding: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+
+    .notification-header {
+        font-size: 14px;
+        font-weight: 600;
+        padding-right: 0 !important;
+
+        .notification-header-container {
+            .icon-action-container {
+                .icon-item {
+                    color: #377dff;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    height: 22px;
+                    width: 22px;
+                    padding: 2px;
+
+                    &:hover {
+                        background-color: rgba(55, 125, 255, 0.1);
+                    }
+                }
+            }
+        }
+    }
+
+    .notification-body {
+        .upload-detail {
+            font-size: 12px;
+
+            .content-name {
+                text-overflow: ellipsis
             }
         }
     }

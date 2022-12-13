@@ -18,13 +18,12 @@ const ListDriveFolder = (props) => {
   listFolder.map((item, index) => {
     if (index < 3) {
       dataFolder.push({
+        id: item.id,
         title: item.name,
         file_number: item?.file_number === undefined ? 0 : item.file_number
       })
     }
   })
-
-  console.log(dataFolder)
 
   // ** render
   const renderListFolder = () => {

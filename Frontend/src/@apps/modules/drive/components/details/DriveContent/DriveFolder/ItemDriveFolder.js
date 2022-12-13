@@ -1,6 +1,7 @@
 // ** React Imports
 import { Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useNavigate } from "react-router-dom"
 // ** Styles
 import { Card, CardHeader, CardBody } from "reactstrap"
 // ** Components
@@ -11,6 +12,12 @@ const ItemDriveFolder = (props) => {
     folderItem
     // ** methods
   } = props
+
+  const navigate = useNavigate()
+
+  const handleClickFolderItem = () => {
+    navigate(`/drive/folder/${folderItem.id}`)
+  }
 
   // ** render
   return (
@@ -43,8 +50,12 @@ const ItemDriveFolder = (props) => {
               </svg>
             </div>
             <div>
-                <h6 className="mb-25">{folderItem.title}</h6>
-                <small>{`${folderItem.file_number} ${useFormatMessage("modules.drive.text.files")}`}</small>
+              <h6 className="mb-25 folder-name" onClick={() => handleClickFolderItem()}>
+                {folderItem.title}
+              </h6>
+              <small>{`${folderItem.file_number} ${useFormatMessage(
+                "modules.drive.text.files"
+              )}`}</small>
             </div>
           </div>
         </CardBody>

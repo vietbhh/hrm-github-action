@@ -146,9 +146,30 @@ class Drive extends ErpController
 
     public function upload_file_drive_post()
     {
+        $modules = \Config\Services::modules();
 
+        $postData = $this->request->getPost();
+        $fileData = $this->request->getFiles();
+
+        // upload file
+        try {
+            $resultUpload = $this->_handleUploadFile($modules, $postData['folder_id'], $fileData);
+
+            return $this->respond([
+                'file_info' => $resultUpload
+            ]);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function get_upload_progress_get()
+    {
+        $session = session();
+        $key = ini_get("session.upload_progress.prefix") . 'upload_drive';
+        
         return $this->respond([
-            'file_info' => ""
+            'data' => $session->get($key)
         ]);
     }
 
@@ -258,6 +279,34 @@ class Drive extends ErpController
                 ];
             }
         }
+
+        return $result;
+    }
+
+    private function _getFolderUploadFile($modules, $folderId)
+    {
+        $commonFolder = '/' . $_ENV['data_folder_module'] . '/common/data/';
+
+        if ($folderId == 0) {
+            return  $commonFolder;
+        }
+
+        $modules->setModule('drive_folders');
+        $model = $modules->model;
+
+        $infoDriveFolder = $model->asArray()->find($folderId);
+        $metas = json_decode($infoDriveFolder['metas'], true);
+
+        return isset($metas['folder_path']) ? $metas['folder_path'] : $commonFolder;
+    }
+
+    private function _handleUploadFile($modules, $folderId, $filesUpload)
+    {
+        $uploadService = \App\Libraries\Upload\Config\Services::upload();
+
+
+        $storePath = $this->_getFolderUploadFile($modules, $folderId);
+        $result = $uploadService->uploadFile($storePath, $filesUpload);
 
         return $result;
     }

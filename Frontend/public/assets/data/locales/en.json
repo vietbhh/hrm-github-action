@@ -867,7 +867,9 @@
         "view_detail": "View Detail",
         "upload": "Upload",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "hide": "Hide",
+        "add_more_file": "Add more file"
       },
       "text": {
         "link_your_account": "Link your account",
@@ -885,7 +887,8 @@
           "name": "Name",
           "type": "Type",
           "size": "Size"
-        }
+        },
+        "upload_progress": "Upload Progress"
       }
     },
     "drive_folders": {

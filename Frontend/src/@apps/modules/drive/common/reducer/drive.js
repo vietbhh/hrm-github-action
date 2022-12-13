@@ -16,7 +16,10 @@ const driveSlice = createSlice({
       },
       layout: "list" // [list, grid]
     },
-    reloadPage: false
+    reloadPage: false,
+    isUploadingFile: false,
+    listUploadingFile: {},
+    showUploadNotification: false
   },
   reducers: {
     openModalUpload: (state, action) => {
@@ -40,6 +43,21 @@ const driveSlice = createSlice({
     },
     setReloadPage: (state, action) => {
       state.reloadPage = action.payload
+    },
+    setIsUploadingFile: (state, action) => {
+      state.isUploadingFile = action.payload
+    },
+    setListUploadingFile: (state, action) => {
+      state.listUploadingFile = {
+        ...state.listUploadingFile,
+        [action.payload.uid]: { ...action.payload }
+      }
+    },
+    updateUploadingProgress: (state, action) => {
+      state.listUploadingFile[action.payload.uid] = { ...action.payload }
+    },
+    setShowUploadNotification: (state, action) => {
+      state.showUploadNotification = action.payload
     }
   }
 })
@@ -50,7 +68,11 @@ export const {
   toggleModalNewFolder,
   setListFolder,
   setFilter,
-  setReloadPage
+  setReloadPage,
+  setIsUploadingFile,
+  setListUploadingFile,
+  updateUploadingProgress,
+  setShowUploadNotification
 } = driveSlice.actions
 
 export default driveSlice.reducer

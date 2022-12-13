@@ -9,8 +9,9 @@ import { setReloadPage } from "../common/reducer/drive"
 // ** Styles
 // ** Components
 import FolderDriveHeader from "../components/details/FolderDrive/FolderDriveHeader"
-import UploadModal from "../components/modals/UploadModal"
+import UploadModal from "../components/modals/UploadModal/UploadModal"
 import NewFolderModal from "../components/modals/NewFolderModal"
+import UploadingNotification from "../components/details/UploadingNotification/UploadingNotification"
 
 const FolderDrive = (props) => {
   const {
@@ -91,6 +92,10 @@ const FolderDrive = (props) => {
     return <NewFolderModal />
   }
 
+  const renderUploadingNotification = () => {
+    return <UploadingNotification />
+  }
+
   const renderComponent = () => {
     if (state.loading) {
       return ""
@@ -103,6 +108,7 @@ const FolderDrive = (props) => {
             <Fragment>{renderFolderDriveHeader()}</Fragment>
           </div>
         </div>
+        <Fragment>{renderUploadingNotification()}</Fragment>
         <Fragment>{renderUploadModal()}</Fragment>
         <Fragment>{renderNewFolderModal()}</Fragment>
       </Fragment>
