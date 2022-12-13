@@ -48,12 +48,6 @@ class Notification extends ErpController
 			}
 		}
 
-		$this->notification->pushNotification([
-			'title' => 'gggg',
-			'content' => 'sdaf dsafasdf',
-			'link' => ''
-		], [1]);
-
 		if (count($arrId) > 0) {
 			$this->notification->read($arrId, false);
 		}
