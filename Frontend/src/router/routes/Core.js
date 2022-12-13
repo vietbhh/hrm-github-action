@@ -42,6 +42,7 @@ const Maintenance = lazy(() => import("@apps/modules/misc/Maintenance"))
 const NotAuthorized = lazy(() => import("@apps/modules/misc/NotAuthorized"))
 const Restrict = lazy(() => import("@apps/modules/misc/Restrict"))
 const Error = lazy(() => import("@apps/modules/misc/Error"))
+const Test = lazy(() => import("@apps/modules/misc/Test"))
 const Start = lazy(() => import("@apps/modules/misc/Start"))
 const Faq = lazy(() => import("@apps/modules/misc/faq/index"))
 const Tasks = lazy(() => import("@apps/modules/tasks/index"))
@@ -283,6 +284,15 @@ const CoreRoutes = [
       appLayout: true,
       className: "chat-application",
       layout: "chat"
+    }
+  },
+  {
+    path: "/test/dev",
+    element: <Test />,
+    meta: {
+      action: "login",
+      resource: "app",
+      className: ""
     }
   }
 ]

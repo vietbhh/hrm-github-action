@@ -1,10 +1,10 @@
 import { socketUsers } from "#app/sockets/core.socket.js"
 
-const testSocket = (client) => {
-  console.log(22,socketUsers)
-  client.on("connection", () => {
+const testSocket = () => {
+  /* global._io.on("connection", () => {
+    console.log(22, socketUsers)
     console.log(2, "dis")
-  })
+  }) */
 }
 
 export default testSocket

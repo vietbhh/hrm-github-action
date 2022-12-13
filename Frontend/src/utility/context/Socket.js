@@ -1,7 +1,8 @@
 import SwAlert from "@apps/utility/SwAlert"
 import useJwt from "@src/auth/jwt/useJwt"
 import React, { useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { updateOnlineUsers } from "redux/app/users"
 import socketio from "socket.io-client"
 
 const SocketContext = React.createContext()
@@ -17,6 +18,7 @@ export const SocketContextWrap = (props) => {
           : null
     }
   })
+  const dispatch = useDispatch()
   const settingSocket =
     useSelector((state) => state.auth.settings.sockets) || false
 
@@ -63,9 +65,11 @@ export const SocketContextWrap = (props) => {
           allowOutsideClick: false
         })
       })
+      socket.on("users_online", (data) => {
+        dispatch(updateOnlineUsers(data))
+      })
       if (settingSocket) {
         socket.connect()
-        socket.emit("identity", 12345667)
       } else {
         socket.close()
       }

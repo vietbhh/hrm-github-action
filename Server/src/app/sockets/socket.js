@@ -1,6 +1,9 @@
+import { authorize } from "#app/middlewares/socket-jwt/authorize.js"
+import { Users } from "#app/models/user.model.mysql.js"
 import { walk } from "file"
 import fs from "fs"
 import path, { dirname } from "path"
+import { Server } from "socket.io"
 import { fileURLToPath } from "url"
 import coreSocket from "./core.socket.js"
 const __filename = fileURLToPath(import.meta.url)
@@ -9,26 +12,52 @@ const basename = path.basename(__filename)
 
 const codeFolder = path.join(__dirname, "..", "..", "code")
 const sourcePath = path.join("src", "code")
-const appSocket = (socket) => {
-  coreSocket(socket)
-  walk(codeFolder, (err, dir) => {
-    fs.readdirSync(dir)
-      .filter((file) => {
-        return (
-          file.indexOf(".") !== 0 &&
-          file !== basename &&
-          file.slice(-10) === ".socket.js"
-        )
+
+class appSocket {
+  constructor(server) {
+    const io = new Server(server, {
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
+    })
+    io.use(
+      authorize({
+        secret: process.env.JWT_SECRET,
+        onAuthentication: async (decodedToken) => {
+          // return the object that you want to add to the user property
+          // or throw an error if the token is unauthorized
+          const user = await Users.findByPk(decodedToken.id)
+          if (!user) {
+            throw Error("user_not_found")
+          }
+          return {
+            ...decodedToken,
+            ...user.dataValues
+          }
+        }
       })
-      .forEach(async (file) => {
-        let socketPath = path.join(dir, file)
-        socketPath =
-          "#code" + socketPath.split(sourcePath).pop().split("\\").join("/")
-        const { default: moduleSocket } = await import(socketPath)
-        moduleSocket(socket)
-      })
-  })
-  
+    )
+    global._io = io
+    coreSocket()
+    walk(codeFolder, (err, dir) => {
+      fs.readdirSync(dir)
+        .filter((file) => {
+          return (
+            file.indexOf(".") !== 0 &&
+            file !== basename &&
+            file.slice(-10) === ".socket.js"
+          )
+        })
+        .forEach(async (file) => {
+          let socketPath = path.join(dir, file)
+          socketPath =
+            "#code" + socketPath.split(sourcePath).pop().split("\\").join("/")
+          const { default: moduleSocket } = await import(socketPath)
+          moduleSocket()
+        })
+    })
+  }
 }
 
 export default appSocket

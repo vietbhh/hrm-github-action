@@ -7,6 +7,7 @@ import chat from "./chat"
 
 // ** Custom Import
 import app from "./app/app"
+import users from "./app/users"
 import calendar from "@apps/modules/calendar/common/reducer/calendar"
 import * as modules from "./modules"
 
@@ -18,6 +19,7 @@ const rootReducer = {
   layout,
   calendar,
   chat,
+  users,
   ...modules
 }
 

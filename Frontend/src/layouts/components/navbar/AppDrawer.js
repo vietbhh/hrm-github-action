@@ -16,7 +16,7 @@ const AppDrawer = () => {
   const appDrawerSetting = useSelector(
     (state) => state.auth.settings.app_drawer_data
   )
-  const appDrawerSettingEnable = appDrawerSetting.enable ?? true
+  const appDrawerSettingEnable = appDrawerSetting?.enable ?? true
   const appDrawerSettingData = appDrawerSetting?.data || {}
   // ** Function to toggle Dropdown
   const toggle = () => setDropdownOpen((prevState) => !prevState)
