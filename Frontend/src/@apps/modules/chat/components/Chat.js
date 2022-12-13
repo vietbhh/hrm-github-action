@@ -152,22 +152,13 @@ const ChatLog = (props) => {
       ) {
         scrollToBottom()
         setCheckAddMessage(false)
+
+        setTimeout(() => {
+          scrollToBottom()
+        }, 700)
       } else {
         handleUnSeenMessage(selectedUser.chat.id)
       }
-
-      setTimeout(() => {
-        if (
-          chatContainer.scrollHeight -
-            chatContainer.scrollTop -
-            chatContainer.clientHeight <=
-            200 ||
-          chatContainer.scrollTop === 0 ||
-          (senderId === userId && checkAddMessage === true)
-        ) {
-          scrollToBottom()
-        }
-      }, 700)
     }
   }, [selectedUser, loadingMessage, chats])
 

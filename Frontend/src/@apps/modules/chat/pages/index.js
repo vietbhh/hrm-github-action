@@ -1086,7 +1086,7 @@ const AppChat = (props) => {
             unsubscribe()
           }
         }
-      }, 1000)
+      }, 700)
     }
   }, [active])
 

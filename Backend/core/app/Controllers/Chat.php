@@ -9,7 +9,14 @@ class Chat extends ErpController
 	public function get_employees_get()
 	{
 		$userModel = new UserModel();
-		$dataUser = $userModel->asArray()->select(["users.*", "job_titles.name as job_title"])->join('job_titles', 'job_titles.id = users.job_title_id', 'left')->findAll();
+		$publicField = $userModel->getPublicField();
+		$select = [];
+		foreach ($publicField as $item) {
+			$select[] = "users." . $item;
+		}
+		$select[] = "job_titles.name as job_title";
+
+		$dataUser = $userModel->asArray()->select($select)->join('job_titles', 'job_titles.id = users.job_title_id', 'left')->findAll();
 		return $this->respond($dataUser);
 	}
 
