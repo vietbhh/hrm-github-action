@@ -454,19 +454,8 @@ $margin-navigation-a: 22px !default;
     }
   }
 
-  .header-navbar
-    .navbar-container
-    ul.navbar-nav
-    .dropdown-notification
-    .badge-up {
+  .header-navbar .navbar-container ul.navbar-nav .badge.bg-warning {
     color: #fff !important;
-  }
-
-  .header-navbar
-    .navbar-container
-    ul.navbar-nav
-    .dropdown-notification
-    .badge-up {
     background-color: #ff754c !important;
   }
 

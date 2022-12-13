@@ -54,6 +54,7 @@ const Calendar = lazy(() =>
 const Notification = lazy(() =>
   import("@apps/modules/notification/pages/NotificationIndex")
 )
+const Chat = lazy(() => import("@apps/modules/chat/pages/index"))
 
 const CoreRoutes = [
   {
@@ -244,8 +245,7 @@ const CoreRoutes = [
     meta: {
       action: "login",
       resource: "app",
-      className: "erp-fullWidth",
-      layout: "chat"
+      className: "erp-fullWidth"
     }
   },
   {
@@ -273,6 +273,17 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: ""
+    }
+  },
+  {
+    path: "/chat",
+    element: <Chat />,
+    meta: {
+      action: "login",
+      resource: "app",
+      appLayout: true,
+      className: "chat-application",
+      layout: "chat"
     }
   },
   {

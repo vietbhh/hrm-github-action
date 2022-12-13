@@ -3,6 +3,7 @@ import navbar from "./navbar"
 import layout from "./layout"
 import auth from "./authentication"
 import notification from "./notification"
+import chat from "./chat"
 
 // ** Custom Import
 import app from "./app/app"
@@ -17,6 +18,7 @@ const rootReducer = {
   navbar,
   layout,
   calendar,
+  chat,
   users,
   ...modules
 }

@@ -176,6 +176,11 @@ $routes->post('header-assistant/save-header-assistant', 'HeaderAssistant::save_h
 $routes->get('header-assistant/get-delete-header-assistant/(:alphanum)', 'HeaderAssistant::get_delete_header_assistant_get/$1', ['namespace' => 'App\Controllers']);
 $routes->get('header-assistant/get-data-header-assistant/(:alphanum)', 'HeaderAssistant::get_data_header_assistant_get/$1', ['namespace' => 'App\Controllers']);
 
+/*** Route for Chat */
+$routes->get('chat/get-employees', 'Chat::get_employees_get', ['namespace' => 'App\Controllers']);
+$routes->post('chat/post-up-file', 'Chat::post_up_file_post', ['namespace' => 'App\Controllers']);
+
+
 /**
  * --------------------------------------------------------------------
  * Custom Code Routing

@@ -836,6 +836,39 @@
     },
     "notification": {
       "title": "Notification"
+    },
+    "chat": {
+      "text": {
+        "you": "You",
+        "you_": "you",
+        "picture": "Picture",
+        "send": "Send",
+        "sending": "Sending",
+        "sent_error": "sent error",
+        "create_new_group": "Create new group",
+        "group_name": "Group name",
+        "group_member": "Group member",
+        "recent": "Recent",
+        "pinned": "Pinned",
+        "pin": "Pin",
+        "un_pin": "Un pin",
+        "reply": "Reply",
+        "forward": "Forward",
+        "copy_text": "Copy text",
+        "click_to_remove": "Click to remove",
+        "reacts_about_message": "Reacts about message",
+        "replying_to": "Replying to",
+        "your_self": "yourself",
+        "file_attachment": "File attachment",
+        "no_chats_found": "No Chats Found",
+        "no_contacts_found": "No Contacts Found",
+        "replied_to": "replied to",
+        "start_conversation": "Start Conversation",
+        "contacts": "Contacts",
+        "seen": "Seen",
+        "search_error_character": "Please search 3 or more characters",
+        "no_results_found": "No results found"
+      }
     }
   },
   "layout": {
