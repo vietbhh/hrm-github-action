@@ -21,7 +21,7 @@ const VerticalMenuHeader = (props) => {
     saveQuickAccess,
     windowWidth,
     windowWidthMin,
-    fixedSidebar
+    fixedSidebarCollapsed
   } = props
 
   const logoDefault = useSelector((state) => state.layout.logo_default)
@@ -39,7 +39,7 @@ const VerticalMenuHeader = (props) => {
 
   // ** Menu toggler component
   const Toggler = () => {
-    if (fixedSidebar === true) return ""
+    if (!_.isUndefined(fixedSidebarCollapsed)) return ""
     if (!menuCollapsed) {
       return (
         <Disc

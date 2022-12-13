@@ -1,8 +1,7 @@
 // ** Router imports
-import { lazy } from "react"
 
 // ** Router imports
-import { Navigate, useLocation, useRoutes } from "react-router-dom"
+import { Navigate, useRoutes } from "react-router-dom"
 
 // ** Layouts
 import BlankLayout from "@layouts/BlankLayout"
@@ -14,9 +13,9 @@ import { useLayout } from "@hooks/useLayout"
 import { getHomeRouteForLoggedInUser, getUserData } from "../utility/Utils"
 
 // ** GetRoutes
-import { getRoutes } from "./routes"
 import Error from "@apps/modules/misc/Error"
 import NotAuthorized from "@apps/modules/misc/NotAuthorized"
+import { getRoutes } from "./routes"
 
 // ** Components
 

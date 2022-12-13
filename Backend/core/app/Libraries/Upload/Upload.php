@@ -231,7 +231,7 @@ class Upload
                 $arrFilename = explode(".", $filename);
 
                 $arrUploadFile[] = [
-                    'fileName' => $filename,
+                    'filename' => $filename,
                     'filename_origin' => $fileNameOrigin,
                     'size' => $fileSize,
                     'url' => $storePathForDownload . $filename,

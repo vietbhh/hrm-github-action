@@ -19,7 +19,7 @@
   .card {
     box-shadow: unset;
     > .card-header {
-      padding: 20px 30px 10px 30px;
+      padding: 20px 30px 30px 30px;
 
       .card-title {
         display: flex;
@@ -74,7 +74,7 @@
 
     > .card-body {
       padding: 30px;
-      padding-top: 20px;
+      padding-top: 0px;
     }
 
     .border-bot {
@@ -123,358 +123,6 @@
     }
   }
 
-  .dashboard-my-time-off {
-    div {
-      box-sizing: border-box;
-    }
-
-    .hFaHPd {
-      display: flex;
-      background-color: rgb(249, 250, 251);
-      border-bottom: 1px solid rgb(227, 235, 241);
-    }
-
-    .hTOPdK {
-      display: flex;
-      padding: 16px 30px;
-      min-width: 95px;
-      flex-direction: column;
-      border-right: 1px solid rgb(227, 235, 241);
-      justify-content: center;
-    }
-
-    .dhrebC.size-h2_semi {
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 32px;
-      color: rgb(14, 34, 61);
-
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 32px;
-      color: #0e223d;
-    }
-
-    .dhrebC {
-      margin-bottom: 0px;
-    }
-
-    .fSIMyF.fSIMyF.fSIMyF {
-      color: rgb(14, 34, 61);
-    }
-
-    .fSIMyF.size-md {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-    }
-
-    .iZVhmE {
-      display: flex;
-      width: 100%;
-      padding: 16px 20px;
-      -webkit-box-pack: justify;
-      justify-content: space-between;
-      overflow: hidden;
-    }
-
-    .gYpcqe {
-      display: flex;
-      margin-right: 20px;
-      flex-direction: column;
-      -webkit-box-pack: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .blSxNl.blSxNl.blSxNl {
-      color: rgb(14, 34, 61);
-      margin-bottom: 4px;
-    }
-
-    .blSxNl.ellipsis {
-      white-space: pre;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .blSxNl.size-md {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-    }
-
-    .iObPrO.iObPrO.iObPrO {
-      color: rgb(95, 125, 149);
-    }
-
-    .iObPrO.size-md {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-    }
-
-    .dAIDjF {
-      display: flex;
-      height: 100%;
-      -webkit-box-align: center;
-      align-items: center;
-    }
-
-    .eDaSPr.ant-tag.size-medium {
-      font-size: 14px;
-      height: 24px;
-      font-weight: 500;
-    }
-
-    .eDaSPr.ant-tag.role-status {
-      border: none;
-      border-radius: 3px;
-      padding: 4px 7px;
-      background: rgb(249, 241, 145);
-      color: rgb(187, 155, 27);
-    }
-
-    .eDaSPr.ant-tag {
-      width: fit-content;
-      display: flex;
-      -webkit-box-align: center;
-      align-items: center;
-      padding: 2px 12px;
-      transition: all 0.3s ease 0s;
-      cursor: auto;
-      --antd-wave-shadow-color: none;
-    }
-  }
-
-  .card-pending-approval {
-    .daViYb {
-      display: flex;
-      height: 24px;
-      padding: 5px 7px;
-      border-radius: 3px;
-      color: rgb(255, 255, 255);
-      background-color: rgb(242, 145, 50);
-      margin-left: 12px;
-      -webkit-box-align: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    div {
-      box-sizing: border-box;
-    }
-
-    .brNRdl {
-      display: flex;
-      flex-direction: row;
-      -webkit-box-pack: justify;
-      justify-content: space-between;
-    }
-
-    .gFAXQn {
-      display: flex;
-      flex-direction: column;
-      width: 50%;
-      border-right: 1px solid rgb(235, 240, 244);
-      padding: 16px 32px 8px 10px;
-    }
-
-    .crbwqA {
-      width: 100%;
-    }
-
-    .iNlKMY {
-      display: flex;
-      margin-bottom: 20px;
-      -webkit-box-pack: justify;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      align-items: center;
-    }
-
-    .dhrebC.size-h6 {
-      font-weight: bold;
-      font-size: 15px;
-      line-height: 20px;
-      color: rgb(35, 54, 78);
-    }
-
-    .dhrebC {
-      margin-bottom: 0px;
-    }
-
-    h6 {
-      margin: 0px;
-    }
-
-    .edKxpf {
-      display: flex;
-      -webkit-box-pack: justify;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      align-items: center;
-    }
-
-    .hShLOE.hShLOE.hShLOE {
-      grid-template-columns: max-content minmax(auto, max-content) auto;
-      -webkit-box-align: center;
-      align-items: center;
-    }
-
-    .vxrDB {
-      max-width: 47%;
-    }
-
-    .hShLOE {
-      display: grid;
-    }
-
-    .cboliN.cboliN.cboliN {
-      color: rgb(52, 52, 52);
-      margin-left: 8px;
-    }
-
-    .cboliN.ellipsis {
-      white-space: pre;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .cboliN.size-md {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-    }
-
-    .cboliN {
-      width: 100%;
-    }
-
-    .hBLTuq {
-      grid-template-columns: max-content minmax(auto, max-content);
-      display: grid;
-      max-width: 47%;
-    }
-
-    .fSIMyF.ellipsis {
-      white-space: pre;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .fSIMyF.size-md {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-    }
-
-    .htXJTA.htXJTA.ant-divider {
-      background: rgb(235, 240, 244);
-    }
-
-    .htXJTA.htXJTA {
-      margin-top: 16px;
-      margin-bottom: 16px;
-    }
-
-    .ant-divider-horizontal {
-      display: block;
-      clear: both;
-      width: 100%;
-      min-width: 100%;
-      height: 1px;
-      margin: 24px 0;
-    }
-
-    .ant-divider,
-    .ant-divider-vertical {
-      position: relative;
-      top: -0.06em;
-      vertical-align: middle;
-    }
-
-    .ant-divider {
-      box-sizing: border-box;
-      padding: 0;
-      color: rgba(0, 0, 0, 0.65);
-      font-size: 14px;
-      font-variant: tabular-nums;
-      line-height: 1.5;
-      list-style: none;
-      font-feature-settings: "tnum";
-    }
-
-    .gKYTGi {
-      display: flex;
-      flex-direction: column;
-      width: 50%;
-      padding: 16px 0 8px 32px;
-    }
-
-    .eYKZpv.eYKZpv.eYKZpv {
-      grid-template-columns: 1fr;
-      column-gap: 4px;
-      display: grid;
-    }
-
-    .kIatjy {
-      float: right;
-    }
-
-    .bCucuK {
-      position: relative;
-    }
-
-    .kIatjy.kIatjy span {
-      position: absolute;
-      top: 2px;
-      left: 10px;
-    }
-
-    .fSIMyF.size-md {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 20px;
-    }
-
-    .kijuOh {
-      max-width: 97%;
-    }
-
-    .kIatjy {
-      max-width: 97%;
-      display: grid;
-    }
-
-    .avatar.avatar-sm img {
-      width: 24px;
-      height: 24px;
-    }
-
-    .ant-progress-inner {
-      height: 25px;
-      background-color: rgb(238, 243, 246);
-      border-radius: 4px;
-      position: relative;
-      display: inline-block;
-      width: 100%;
-      vertical-align: middle;
-    }
-
-    .ant-progress-bg {
-      height: 25px !important;
-      border-radius: 4px !important;
-      background-color: #d9dee3 !important;
-    }
-
-    .progress-span {
-      position: absolute;
-      top: 19px;
-      left: 20px;
-    }
-  }
-
   .min-height-50 {
     min-height: 50px;
   }
@@ -482,104 +130,6 @@
   .ant-spin-nested-loading > div > .ant-spin .ant-spin-dot {
     margin-top: 0;
   }
-
-  .dashboard-card-follow-up {
-    .card-body {
-      padding: 0 !important;
-
-      .col-left {
-        padding: 0px !important;
-        border-right: 1px solid rgba(0, 0, 0, 0.1);
-
-        .card-title {
-          padding: 21px 40px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          .content-left {
-            width: 50%;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-
-            .status {
-              height: 12px;
-              width: 12px;
-              border-radius: 50%;
-              background-color: orange;
-            }
-          }
-
-          h5 {
-            font-weight: 600;
-          }
-        }
-
-        .ant-tabs {
-          width: 85%;
-          margin: auto;
-
-          .ant-tabs-tab-active {
-            .ant-tabs-tab-btn {
-              color: $primary;
-            }
-          }
-
-          .ant-tabs-tab-btn {
-            font-size: 90%;
-            font-weight: 500;
-          }
-
-          .ant-tabs-ink-bar {
-            position: absolute;
-            background: $primary;
-            pointer-events: none;
-          }
-
-          .tab-checklist-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 0 !important;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
-            .content-left {
-              width: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: flex-start;
-              .employee-name {
-                font-weight: 500;
-                font-size: 90%;
-
-                .employee-info-icon {
-                  cursor: pointer;
-                }
-              }
-            }
-
-            .content-right {
-              width: 40%;
-              display: flex;
-              align-items: center;
-              justify-content: space-around;
-
-              .ant-progress-text {
-                display: none;
-              }
-            }
-          }
-        }
-
-        .ant-tabs-tab:hover {
-          color: unset !important;
-        }
-      }
-    }
-  }
-
 
   .dashboard-card-calendar {
     .w-80 {
@@ -660,10 +210,11 @@
       margin-top: -10px;
     }
     .swiper {
-      height: 145px;
+      height: 170px;
       padding-top: 10px;
       padding-left: 10px;
       padding-right: 10px;
+      margin-bottom: 10px;
 
       .swiper-pagination {
         bottom: -4px;
@@ -709,14 +260,18 @@
     }
 
     .div-notepad {
-      height: 116px;
+      height: 140px;
       border: 0.6px solid #d9dddf;
       border-radius: $border-radius;
-      padding: 15px 22px 7px 22px;
+      padding: 20px 22px 12px 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+
+      &:hover {
+        cursor: pointer;
+      }
 
       .text-title {
         font-weight: 600;

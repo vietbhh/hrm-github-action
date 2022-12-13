@@ -11,17 +11,7 @@ import "./scss/navbar2.scss"
 
 const Navbar2 = (props) => {
   // ** Props
-  const {
-    skin,
-    setSkin,
-    setMenuVisibility,
-    windowWidth,
-    windowWidthMin,
-    full_name,
-    saveQuickAccess,
-    defaultMenuNav,
-    settingPermits
-  } = props
+  const { saveQuickAccess, defaultMenuNav, settingPermits } = props
 
   const customSettingMenu =
     useSelector((state) => state.auth.settings).top_menu_config || {}

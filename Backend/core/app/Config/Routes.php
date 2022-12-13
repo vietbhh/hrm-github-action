@@ -159,6 +159,7 @@ $routes->get('search/get_data_user', 'Search::get_data_employee_search_get', ['n
 $routes->get('dashboard/get-dashboard', 'Dashboard::get_dashboard_get', ['namespace' => 'App\Controllers\Dashboard']);
 $routes->get('dashboard/update-loading-dashboard', 'Dashboard::update_loading_dashboard_get', ['namespace' => 'App\Controllers\Dashboard']);
 $routes->post('dashboard/save-widget', 'Dashboard::save_widget_post', ['namespace' => 'App\Controllers\Dashboard']);
+$routes->post('dashboard/save-widget-lock', 'Dashboard::save_widget_lock_post', ['namespace' => 'App\Controllers\Dashboard']);
 $routes->post('notepad/save', 'Notepad::save_post', ['namespace' => 'App\Controllers\Dashboard']);
 $routes->get('notepad/get_all', 'Notepad::get_all_get', ['namespace' => 'App\Controllers\Dashboard']);
 $routes->get('notepad/get/(:alphanum)', 'Notepad::get_get/$1', ['namespace' => 'App\Controllers\Dashboard']);

@@ -52,7 +52,7 @@ const Layout = (props) => {
     menuData,
     navbar,
     className,
-    fixedSidebar,
+    fixedSidebarCollapsed,
     customMenuComponent
   } = props
 
@@ -89,8 +89,9 @@ const Layout = (props) => {
   const location = useLocation()
   const isHidden = layoutStore.menuHidden
   const contentWidth = layoutStore.contentWidth
-  const menuCollapsed =
-    fixedSidebar === true ? false : layoutStore.menuCollapsed
+  const menuCollapsed = !_.isUndefined(fixedSidebarCollapsed)
+    ? fixedSidebarCollapsed
+    : layoutStore.menuCollapsed
 
   //** Friday */
   const customSettingMenu =
@@ -256,7 +257,7 @@ const Layout = (props) => {
         saveQuickAccess={saveQuickAccess}
         defaultMenuNav={defaultMenuNav}
         settingPermits={settingPermits}
-        fixedSidebar={fixedSidebar}
+        fixedSidebarCollapsed={fixedSidebarCollapsed}
         customMenuComponent={customMenuComponent}
       />
 

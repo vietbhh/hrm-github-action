@@ -132,8 +132,12 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 		if (!is_numeric($identity)) {
 			$whereKey = 'username';
 		}
-		return $this->asArray()->where($whereKey, $identity)->select(['id', 'full_name', 'username', 'email', 'phone', 'account_status',
-			'active', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'office', 'group_id', 'job_title_id', 'department_id'])->first();
+		return $this->asArray()->where($whereKey, $identity)->select($this->getPublicField())->first();
+	}
+
+	public function getPublicField()
+	{
+		return ['id', 'full_name', 'username', 'email', 'phone', 'account_status', 'active', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'office', 'group_id', 'job_title_id', 'department_id', 'device_token'];
 	}
 
 }
