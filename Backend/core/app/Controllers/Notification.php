@@ -26,6 +26,7 @@ class Notification extends ErpController
 		$page = isset($dataGet['page']) ? $dataGet['page'] : 1;
 		$data = $this->notification->list(user_id(), $perPage, $page);
 		$data = $this->notification->handleNotificationData($data, true);
+		
 		return $this->respond([
 			'results' => $data,
 			'number_notification' => $this->notification->getNotificationNumber(user_id())

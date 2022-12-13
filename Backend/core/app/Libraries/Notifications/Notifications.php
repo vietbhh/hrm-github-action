@@ -120,6 +120,7 @@ class Notifications
 				$id = $this->add($arrDataAdd);
 				$newNotification = $this->handleNotificationData($this->detail($id), false);
 			}
+			
 			foreach ($listUser as $rowUser) {
 				$deviceTokens = $rowUser['device_token'];
 				if ($deviceTokens) {
@@ -154,7 +155,7 @@ class Notifications
 
 						$headers = array();
 						$headers[] = 'Content-Type: application/json';
-						$headers[] = 'Authorization: key=AAAAnJ_uyks:APA91bFnmONZaweCGqVzpzcSFZwQCPYfQBcU-saA5Xsrkh5Hya1d_Fb23oGH_S-xp2C3NoRtRZNrE2pCVKNrvAQ2s_Dhj2w7s74HzzVTE9pJ29lHeIodj8sY92xQAenqRjJvjPByz3QT';
+						$headers[] = 'Authorization: key='.$_ENV['firebase_server_key'];
 						curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 						$result = curl_exec($ch);
