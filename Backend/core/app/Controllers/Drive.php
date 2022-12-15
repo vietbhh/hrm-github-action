@@ -146,20 +146,19 @@ class Drive extends ErpController
 
     public function upload_file_drive_post()
     {
-        $modules = \Config\Services::modules();
+        $modules = \Config\Services::modules('drive_files');
+        $folderModules = \Config\Services::modules('drive_folders');
 
         $postData = $this->request->getPost();
         $fileData = $this->request->getFiles();
 
-        // upload file
-        try {
-            $resultUpload = $this->_handleUploadFile($modules, $postData['folder_id'], $fileData);
-
-            return $this->respond([
-                'file_info' => $resultUpload
-            ]);
-        } catch (\Exception $e) {
-            return $this->fail($e->getMessage());
+        
+        if ($postData['upload_type'] === 'file') { 
+            // upload file
+            $this->_uploadFileDrive($folderModules, $modules, $postData, $fileData);
+        } elseif ($postData['upload_type'] === 'folder') { // 
+            // upload folder
+            $this->_uploadFolderDrive($folderModules, $modules, $postData, $fileData);
         }
     }
 
@@ -167,7 +166,7 @@ class Drive extends ErpController
     {
         $session = session();
         $key = ini_get("session.upload_progress.prefix") . 'upload_drive';
-        
+
         return $this->respond([
             'data' => $session->get($key)
         ]);
@@ -291,7 +290,6 @@ class Drive extends ErpController
             return  $commonFolder;
         }
 
-        $modules->setModule('drive_folders');
         $model = $modules->model;
 
         $infoDriveFolder = $model->asArray()->find($folderId);
@@ -304,10 +302,71 @@ class Drive extends ErpController
     {
         $uploadService = \App\Libraries\Upload\Config\Services::upload();
 
-
         $storePath = $this->_getFolderUploadFile($modules, $folderId);
         $result = $uploadService->uploadFile($storePath, $filesUpload);
 
         return $result;
+    }
+
+    private function _uploadFileDrive($folderModules, $modules, $postData, $fileData)
+    {
+        try {
+            $resultUpload = $this->_handleUploadFile($folderModules, $postData['folder_id'], $fileData);
+            $modules->setModule('drive_files');
+            $model = $modules->model;
+
+            //save file to db
+            foreach ($resultUpload['arr_upload_file'] as $row) {
+                $dataSaveFile = [
+                    'filename' => $row['filename'],
+                    'file_size' => $row['size'],
+                    'file_type' => $row['type'],
+                    'share_type' => 0,
+                    'drive_folder' => empty($postData['folder_id']) ? 0 : $postData['folder_id'],
+                    'metas' => json_encode([
+                        'file_path' => $row['url']
+                    ])
+                ];
+
+                $dataHandle = handleDataBeforeSave($modules, $dataSaveFile);
+
+                try {
+                    $model->setAllowedFields($dataHandle['fieldsArray']);
+                    $model->save($dataHandle['data']);
+                } catch (\Exception $err) {
+                    continue;
+                }
+            }
+
+            return $this->respond([
+                'file_info' => $resultUpload
+            ]);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    private function _uploadFolderDrive($folderModules, $modules, $postData, $fileData) {
+        try {
+            $modelFolder = $folderModules->model;
+            $modules->setModule('drive_files');
+            $model = $modules->model;
+
+            $path = '/' . $_ENV['data_folder_module'] . '/' . 'drive_folders/';
+
+            if (!empty($postData['folder_id'])) {
+                $infoFolder = $modelFolder->asArray()->find($postData['folder_id']);
+                $path = json_decode($infoFolder['metas'], true)['folder_path'];
+            }
+
+            foreach ($fileData as $rowFile) {
+                echo '<pre>';
+                print_r($rowFile);
+                echo '</pre>';
+            }
+
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
     }
 }

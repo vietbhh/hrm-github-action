@@ -2502,12 +2502,12 @@ class Module extends BaseConfig
 					"field_validate_rules" => null,
 					"moduleName" => "drive_folders",
 					"module" => "drive_folders"
-				],
+				]
 			]
 		],
 		'drive_files' => [
-			'name' => 'document_details',
-			'tableName' => 'document_details',
+			'name' => 'drive_files',
+			'tableName' => 'drive_files',
 			'type' => 'extend',
 			'system' => true,
 			'options' => '',
@@ -2792,6 +2792,41 @@ class Module extends BaseConfig
 					"moduleName" => "drive_files",
 					"module" => "drive_files"
 				],
+				'metas' => [
+					'field' => 'metas',
+					'field_type' => 'textarea',
+					"field_default_value" => "",
+					"field_detail_order" => "0",
+					"field_detail_show" => true,
+					"field_enable" => true,
+					"field_filter_order" => "0",
+					"field_filter_show" => true,
+					"field_form_col_size" => "12",
+					"field_form_order" => 1,
+					"field_form_require" => false,
+					"field_form_show" => true,
+					"field_form_unique" => false,
+					"field_icon" => "",
+					"field_icon_type" => "no_icon",
+					'field_options' => [],
+					"field_options_values" => [
+						'values' => [],
+						'default' => ""
+					],
+					"field_quick_form_show" => true,
+					"field_quick_view_order" => "0",
+					"field_quick_view_show" => true,
+					"field_readonly" => false,
+					"field_select_field_show" => null,
+					"field_select_module" => null,
+					"field_table_order" => 1,
+					"field_table_show" => true,
+					"field_table_sortable" => true,
+					"field_table_width" => "0",
+					"field_validate_rules" => null,
+					"moduleName" => "drive_files",
+					"module" => "drive_files"
+				]
 			]
 		]
 	];

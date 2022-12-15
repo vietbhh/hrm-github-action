@@ -8,7 +8,6 @@ import {
   openModalUpload
 } from "@apps/modules/drive/common/reducer/drive"
 // ** Styles
-import { notification } from "antd"
 // ** Components
 import NotificationHeader from "./NotificationHeader"
 import NotificationBody from "./NotificationBody"
@@ -24,21 +23,19 @@ const UploadingNotification = (props) => {
   })
 
   const driveState = useSelector((state) => state.drive)
-  const { listUploadingFile, showUploadNotification, modalUploadType } =
-    driveState
+  const {
+    listUploadingFile,
+    showUploadNotification,
+    modalUploadType,
+    axiosTokenSource
+  } = driveState
 
   const dispatch = useDispatch()
-
-  const [api, contextHolder] = notification.useNotification()
 
   const toggleShowUploadContent = () => {
     setState({
       showUploadContent: !state.showUploadContent
     })
-  }
-
-  const handleCloseUploadNotification = () => {
-    dispatch(setShowUploadNotification(false))
   }
 
   const handleOpenUploadModal = () => {
@@ -49,9 +46,9 @@ const UploadingNotification = (props) => {
   const renderNotificationHeader = () => {
     return (
       <NotificationHeader
-        listUploadingFile={listUploadingFile}
         showUploadContent={state.showUploadContent}
-        handleCloseUploadNotification={handleCloseUploadNotification}
+        listUploadingFile={listUploadingFile}
+        axiosTokenSource={axiosTokenSource}
         handleOpenUploadModal={handleOpenUploadModal}
         toggleShowUploadContent={toggleShowUploadContent}
       />
@@ -76,7 +73,7 @@ const UploadingNotification = (props) => {
               <Fragment>{renderNotificationHeader()}</Fragment>
             </div>
             <div>
-              <div className="pt-50 notification-body">
+              <div className="pt-2 notification-body">
                 <Fragment>{renderNotificationBody()}</Fragment>
               </div>
             </div>

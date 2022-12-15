@@ -2,7 +2,8 @@
 import { Fragment } from "react"
 // ** Styles
 // ** Components
-import FileUploadItem from "./FileUploadItem"
+import UploadingFileAndFolderItem from "./UploadingFileAndFolderItem"
+import ListUploadingFileAndFolder from "../Common/UploadingFileAndFolder/ListUploadingFileAndFolder"
 
 const NotificationBody = (props) => {
   const {
@@ -13,22 +14,18 @@ const NotificationBody = (props) => {
   } = props
 
   // ** render
+  const renderListUploadingFileAndFolder = () => {
+    return (
+      <ListUploadingFileAndFolder
+        uploadingFileAndFolderItem={UploadingFileAndFolderItem}
+        listUploadingFile={listUploadingFile}
+      />
+    )
+  }
+
   const renderComponent = () => {
     if (showUploadContent === true) {
-      return (
-        <Fragment>
-          <div className="mt-2">
-            {_.map(listUploadingFile, (item, index) => {
-              return (
-                <FileUploadItem
-                  key={`uploading-file-notification-${index}`}
-                  fileItem={item}
-                />
-              )
-            })}
-          </div>
-        </Fragment>
-      )
+      return <Fragment>{renderListUploadingFileAndFolder()}</Fragment>
     }
 
     return ""

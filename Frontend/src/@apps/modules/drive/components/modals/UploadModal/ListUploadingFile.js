@@ -2,7 +2,7 @@
 import { Fragment } from "react"
 // ** Styles
 // ** Components
-import UploadingFileItem from "./UploadingFileItem"
+import UploadingFileAndFolderItem from "./UploadingFileAndFolderItem"
 import ListUPloadingFileAndFolder from "../../details/Common/UploadingFileAndFolder/ListUploadingFileAndFolder"
 
 const ListUploadingFile = (props) => {
@@ -13,16 +13,16 @@ const ListUploadingFile = (props) => {
   } = props
 
   // ** render
-  const renderUploadingFileItem = () => {
+  const renderComponent = () => {
     return (
       <ListUPloadingFileAndFolder
-        uploadingFileAndFolderItem={UploadingFileItem}
-        listUploading={listUploadingFile}
+        uploadingFileAndFolderItem={UploadingFileAndFolderItem}
+        listUploadingFile={listUploadingFile}
       />
     )
   }
 
-  return <Fragment>{renderUploadingFileItem()}</Fragment>
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default ListUploadingFile

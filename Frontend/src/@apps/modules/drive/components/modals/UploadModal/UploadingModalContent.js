@@ -1,22 +1,47 @@
 // ** React Imports
 import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-// ** redux
+import { _getUploadProcess } from "@apps/modules/drive/common/common"
 // ** Styles
 import { Button, ModalBody, ModalFooter } from "reactstrap"
 // ** Components
 import ListUploadingFile from "./ListUploadingFile"
+import SwAlert from "@apps/utility/SwAlert"
 
 const UploadingModalContent = (props) => {
   const {
     // ** props
     listUploadingFile,
+    axiosTokenSource,
     // ** methods
-    handleCancelModal
+    handleCancelModal,
+    resetModalUploadState
   } = props
 
   const handleHideUploadModal = () => {
     handleCancelModal(true)
+  }
+
+  const handleCloseModal = () => {
+    const isUploadComplete = _getUploadProcess(listUploadingFile)
+
+    if (isUploadComplete) {
+      resetModalUploadState()
+      return false
+    }
+
+    SwAlert.showWarning({
+      title: useFormatMessage("modules.drive.text.warning_close_upload.title"),
+      text: useFormatMessage("modules.drive.text.warning_close_upload.content")
+    }).then((res) => {
+      if (res.isConfirmed === true) {
+        _.map(axiosTokenSource, (item, index) => {
+          item.cancelTokenSource.cancel()
+        })
+      }
+
+      resetModalUploadState()
+    })
   }
 
   // ** render
@@ -78,6 +103,11 @@ const UploadingModalContent = (props) => {
             className="btn-custom-primary-outline me-50"
             onClick={() => handleHideUploadModal()}>
             {useFormatMessage("modules.drive.buttons.hide")}
+          </Button.Ripple>
+          <Button.Ripple
+            className="btn-custom-primary-outline me-50"
+            onClick={() => handleCloseModal()}>
+            {useFormatMessage("modules.drive.buttons.cancel")}
           </Button.Ripple>
           <Button.Ripple className="btn-custom-primary">
             {useFormatMessage("modules.drive.buttons.add_more_file")}

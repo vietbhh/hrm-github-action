@@ -1,16 +1,20 @@
 // ** React Imports
 import { Fragment } from "react"
-import { getFileAndFolderIcon, formatBytes } from "@apps/modules/drive/common/common"
+import {
+  getFileAndFolderIcon,
+  formatBytes
+} from "@apps/modules/drive/common/common"
 // ** Styles
 import { Progress } from "antd"
 // ** Components
-import UploadStatusIcon from "./UploadStatusIcon"
+import UploadStatusIcon from "../../details/Common/UploadingFileAndFolder/UploadStatusIcon"
 
-const UploadingFileItem = (props) => {
+const UploadingFileAndFolderItem = (props) => {
   const {
     // ** props
-    fileItem
+    fileItem,
     // ** methods
+    handleCancelUpload
   } = props
 
   const fileType =
@@ -18,7 +22,12 @@ const UploadingFileItem = (props) => {
 
   // ** render
   const renderUploadStatusIcon = () => {
-    return <UploadStatusIcon fileItem={fileItem} />
+    return (
+      <UploadStatusIcon
+        fileItem={fileItem}
+        handleCancelUpload={handleCancelUpload}
+      />
+    )
   }
 
   return (
@@ -44,4 +53,4 @@ const UploadingFileItem = (props) => {
   )
 }
 
-export default UploadingFileItem
+export default UploadingFileAndFolderItem

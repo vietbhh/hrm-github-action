@@ -1,40 +1,64 @@
 // ** React Imports
 import { Fragment } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { Space } from "antd"
+import { useFormatMessage } from "@apps/utility/common"
+import { _getUploadProcess } from "@apps/modules/drive/common/common"
+// ** redux
+import { useDispatch } from "react-redux"
+import { resetDriveState } from "@apps/modules/drive/common/reducer/drive"
 // ** Styles
 // ** Components
+import { Space } from "antd"
+import SwAlert from "@apps/utility/SwAlert"
+
 
 const NotificationHeader = (props) => {
   const {
     // ** props
-    listUploadingFile,
     showUploadContent,
+    listUploadingFile,
+    axiosTokenSource,
     // ** methods
-    handleCloseUploadNotification,
     handleOpenUploadModal,
     toggleShowUploadContent
   } = props
 
+  const dispatch = useDispatch()
+
   const handleClickOpenUploadModal = () => {
-    handleCloseUploadNotification()
     handleOpenUploadModal()
   }
 
+  const resetNotificationState = () => {
+    dispatch(
+      resetDriveState([
+        "axiosTokenSource",
+        "listUploadingFile",
+        "isUploadingFileAndFolder",
+        "showUploadNotification"
+      ])
+    )
+  }
+
   const handleClickCLose = () => {
-    let closeable = true
+    const isUploadComplete = _getUploadProcess(listUploadingFile)
 
-    _.map(listUploadingFile, (item) => {
-      if (item.progress < 100) {
-        closeable = false
-      }
-    })
-
-    if (!closeable) {
+    if (isUploadComplete) {
+      resetNotificationState()
       return false
     }
 
-    handleCloseUploadNotification()
+    SwAlert.showWarning({
+      title: useFormatMessage("modules.drive.text.warning_close_upload.title"),
+      text: useFormatMessage("modules.drive.text.warning_close_upload.content")
+    }).then((res) => {
+      if (res.isConfirmed === true) {
+        _.map(axiosTokenSource, (item, index) => {
+          item.cancelTokenSource.cancel()
+        })
+      }
+
+      resetNotificationState()
+    })
   }
 
   const handleToggleUploadContent = () => {
@@ -43,24 +67,16 @@ const NotificationHeader = (props) => {
 
   // ** render
   const renderShowUploadContentIcon = () => {
-    if (showUploadContent) {
-      return (
-        <Fragment>
-          <div
-            className="me-50 d-flex align-items-center justify-content-center icon-item"
-            onClick={() => handleToggleUploadContent()}>
-            <i className="fas fa-angle-down "></i>
-          </div>
-        </Fragment>
-      )
-    }
-
     return (
       <Fragment>
         <div
           className="me-50 d-flex align-items-center justify-content-center icon-item"
           onClick={() => handleToggleUploadContent()}>
-          <i className="fas fa-angle-up "></i>
+          {showUploadContent ? (
+            <i className="fas fa-angle-down "></i>
+          ) : (
+            <i className="fas fa-angle-up "></i>
+          )}
         </div>
       </Fragment>
     )

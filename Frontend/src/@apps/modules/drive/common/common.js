@@ -146,3 +146,16 @@ export const formatBytes = (bytes, decimals = 2) => {
     i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
 }
+
+export const _getUploadProcess = (listUploadingFile) => {
+  let isUploadComplete = true
+
+  _.map(listUploadingFile, (item) => {
+    if (item.progress < 100 && item.canceled === undefined) {
+      isUploadComplete = false
+      return false
+    }
+  })
+
+  return isUploadComplete
+}

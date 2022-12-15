@@ -888,7 +888,13 @@
           "type": "Type",
           "size": "Size"
         },
-        "upload_progress": "Upload Progress"
+        "upload_progress": "Upload Progress",
+        "warning_close_upload": {
+          "title": "Cancel upload?",
+          "content": "Your upload is not complete. Do you want to cancel the upload?"
+        },
+        "upload_successful_many": "Upload Successful, {file_number} files has been uploaded!",
+        "upload_successful": "Upload Successful!"
       }
     },
     "drive_folders": {

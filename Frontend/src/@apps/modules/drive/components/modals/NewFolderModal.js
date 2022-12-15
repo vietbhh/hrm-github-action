@@ -5,7 +5,11 @@ import { driveApi } from "../../common/api"
 import { useParams } from "react-router-dom"
 // ** redux
 import { useDispatch, useSelector } from "react-redux"
-import { toggleModalNewFolder, setListFolder, setReloadPage } from "../../common/reducer/drive"
+import {
+  toggleModalNewFolder,
+  setListFolder,
+  setReloadPage
+} from "../../common/reducer/drive"
 // ** Styles
 import {
   Button,
@@ -119,19 +123,15 @@ const NewFolderModal = (props) => {
         </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Space>
-            <Button.Ripple
-              className="btn-custom-primary"
-              type="submit"
-              disabled={
-                state.loading ||
-                formState.isSubmitting ||
-                formState.isValidating
-              }>
-              {useFormatMessage("modules.drive.buttons.save")}
-            </Button.Ripple>
-          </Space>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-100">
+          <Button.Ripple
+            className="w-100 btn-custom-primary"
+            type="submit"
+            disabled={
+              state.loading || formState.isSubmitting || formState.isValidating
+            }>
+            {useFormatMessage("modules.drive.buttons.save")}
+          </Button.Ripple>
         </form>
       </ModalFooter>
     </Modal>

@@ -25,7 +25,7 @@ class Upload
      *  $storePathForDownload = '/' . $_ENV['data_folder_module'] . '/'.$module.'/' . $id . '/data/';
      *  $listFile: list file upload
      **/
-    public function uploadFile($storePath, $listFile, $uploadByFileContent = false, $saveFilename = '')
+    public function uploadFile($storePath, $listFile, $uploadByFileContent = false, $safeFilename = '')
     {
         helper('filesystem');
         if ($storePath == '') {
@@ -33,9 +33,9 @@ class Upload
         }
 
         if ($this->uploadType == 'direct') {
-            return $this->_handleUploadDirect($storePath, $listFile, $uploadByFileContent, $saveFilename);
+            return $this->_handleUploadDirect($storePath, $listFile, $uploadByFileContent, $safeFilename);
         } else if ($this->uploadType == 'cloud_storage') {
-            return $this->_handleUploadCloudStorage($storePath, $listFile, $uploadByFileContent, $saveFilename);
+            return $this->_handleUploadCloudStorage($storePath, $listFile, $uploadByFileContent, $safeFilename);
         }
     }
 
@@ -147,7 +147,7 @@ class Upload
     }
 
     // ** support function
-    private function _handleUploadDirect($path, $listFile, $uploadByFileContent = false, $saveFilename = '', $isFullPath = false)
+    private function _handleUploadDirect($path, $listFile, $uploadByFileContent = false, $safeFileName = '', $isFullPath = false)
     {
         $result = [];
         $arrUploadFile = [];
@@ -165,7 +165,7 @@ class Upload
                 if (empty($files)) continue;
                 if (!is_array($files)) $files = [$files];
                 foreach ($files as $position => $file) {
-                    $fileName = $saveFilename == '' ? safeFileName($file->getName()) : $saveFilename;
+                    $fileName = $safeFileName == '' ? safeFileName($file->getName()) : $safeFileName;
                     try {
                         validateFiles($file);
                     } catch (\Exception $e) {
@@ -203,12 +203,10 @@ class Upload
             }
         } else {
             foreach ($listFile as $file) {
-                $filename = $saveFilename == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $saveFilename;
+                $filename = $safeFileName == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $safeFileName;
                 $fileNameOrigin = isset($file['filename']) ? $file['filename'] : $file->getName();
                 $fileSize = isset($file['filesize']) ? $file['filesize'] : $file->getSize();
                 file_put_contents($storePath . $filename, $file['content']);
-
-                $infoFileUpload = getFilesProps($storePathForDownload . $filename);
 
                 $arrFilename = explode(".", $filename);
 
@@ -229,7 +227,7 @@ class Upload
         return $result;
     }
 
-    private function _handleUploadCloudStorage($storePathForDownload, $listFile, $uploadByFileContent = false, $saveFilename = '')
+    private function _handleUploadCloudStorage($storePathForDownload, $listFile, $uploadByFileContent = false, $safeFileName = '')
     {
         $storage = $this->googleCloudStorage->storage();
         $bucket = $storage->bucket($this->bucketName);
@@ -241,7 +239,7 @@ class Upload
                 if (empty($files)) continue;
                 if (!is_array($files)) $files = [$files];
                 foreach ($files as $position => $file) {
-                    $filename = $saveFilename == '' ? safeFileName($file->getName()) : $saveFilename;
+                    $filename = $safeFileName == '' ? safeFileName($file->getName()) : $safeFileName;
                     try {
                         validateFiles($file);
                     } catch (\Exception $e) {
@@ -282,7 +280,7 @@ class Upload
             }
         } else {
             foreach ($listFile as $file) {
-                $filename = $saveFilename == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $saveFilename;
+                $filename = $safeFileName == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $safeFileName;
                 $fileNameOrigin = isset($file['filename']) ? $file['filename'] : $file->getName();
                 $fileSize = isset($file['filesize']) ? $file['filesize'] : $file->getSize();
                 $fileUpload = $file['content'];

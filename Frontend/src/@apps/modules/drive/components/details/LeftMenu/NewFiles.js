@@ -2,7 +2,10 @@
 import { Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** redux
-import { openModalUpload, toggleModalNewFolder } from "../../../common/reducer/drive"
+import {
+  openModalUpload,
+  toggleModalNewFolder
+} from "../../../common/reducer/drive"
 import { useDispatch } from "react-redux"
 // ** Styles
 import {
@@ -23,14 +26,20 @@ const NewFiles = (props) => {
 
   const handleClickUploadFile = (e) => {
     e.preventDefault()
-    
+
     dispatch(openModalUpload("file"))
+  }
+
+  const handleClickUploadFolder = (e) => {
+    e.preventDefault()
+
+    dispatch(openModalUpload("folder"))
   }
 
   const handleClickNewFolder = (e) => {
     e.preventDefault()
 
-    dispatch(openModalUpload("folder"))
+    dispatch(toggleModalNewFolder())
   }
 
   //  ** render
@@ -49,10 +58,16 @@ const NewFiles = (props) => {
               onClick={(e) => handleClickUploadFile(e)}>
               {useFormatMessage("modules.drive.buttons.upload_file")}
             </DropdownItem>
-            <DropdownItem href="/" tag="a">
+            <DropdownItem
+              href="/"
+              tag="a"
+              onClick={(e) => handleClickUploadFolder(e)}>
               {useFormatMessage("modules.drive.buttons.upload_folder")}
             </DropdownItem>
-            <DropdownItem href="/" tag="a" onClick={(e) => handleClickNewFolder(e)}>
+            <DropdownItem
+              href="/"
+              tag="a"
+              onClick={(e) => handleClickNewFolder(e)}>
               {useFormatMessage("modules.drive.buttons.new_folder")}
             </DropdownItem>
           </DropdownMenu>

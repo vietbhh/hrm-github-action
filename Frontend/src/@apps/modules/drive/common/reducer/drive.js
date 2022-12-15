@@ -1,26 +1,29 @@
 // ** Redux Imports
 import { createSlice } from "@reduxjs/toolkit"
 
+const initialState = {
+  modalUpload: false,
+  modalUploadType: false,
+  modalNewFolder: false,
+  modalDataNewFolder: {},
+  listFolder: [],
+  filter: {
+    sort: {
+      label: "due_date",
+      value: "due_date"
+    },
+    layout: "list" // [list, grid]
+  },
+  reloadPage: false,
+  isUploadingFileAndFolder: false,
+  listUploadingFile: {},
+  showUploadNotification: false,
+  axiosTokenSource: {}
+}
+
 const driveSlice = createSlice({
   name: "drive",
-  initialState: {
-    modalUpload: false,
-    modalUploadType: false,
-    modalNewFolder: false,
-    modalDataNewFolder: {},
-    listFolder: [],
-    filter: {
-      sort: {
-        label: "due_date",
-        value: "due_date"
-      },
-      layout: "list" // [list, grid]
-    },
-    reloadPage: false,
-    isUploadingFile: false,
-    listUploadingFile: {},
-    showUploadNotification: false
-  },
+  initialState: initialState,
   reducers: {
     openModalUpload: (state, action) => {
       state.modalUploadType = action.payload
@@ -44,8 +47,8 @@ const driveSlice = createSlice({
     setReloadPage: (state, action) => {
       state.reloadPage = action.payload
     },
-    setIsUploadingFile: (state, action) => {
-      state.isUploadingFile = action.payload
+    setIsUploadingFileAndFolder: (state, action) => {
+      state.isUploadingFileAndFolder = action.payload
     },
     setListUploadingFile: (state, action) => {
       state.listUploadingFile = {
@@ -58,6 +61,21 @@ const driveSlice = createSlice({
     },
     setShowUploadNotification: (state, action) => {
       state.showUploadNotification = action.payload
+    },
+    setAxiosTokenSource: (state, action) => {
+      state.axiosTokenSource = {
+        ...state.axiosTokenSource,
+        [action.payload.uid]: { ...action.payload }
+      }
+    },
+    resetDriveState: (state, action) => {
+      const listKey = _.isArray(action.payload)
+        ? action.payload
+        : [action.payload]
+
+      listKey.map((item) => {
+        state[item] = initialState[item]
+      })
     }
   }
 })
@@ -69,10 +87,12 @@ export const {
   setListFolder,
   setFilter,
   setReloadPage,
-  setIsUploadingFile,
+  setIsUploadingFileAndFolder,
   setListUploadingFile,
   updateUploadingProgress,
-  setShowUploadNotification
+  setShowUploadNotification,
+  setAxiosTokenSource,
+  resetDriveState
 } = driveSlice.actions
 
 export default driveSlice.reducer

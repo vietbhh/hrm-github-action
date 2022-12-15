@@ -6,11 +6,17 @@ import { Fragment } from "react"
 const UploadStatusIcon = (props) => {
   const {
     // ** props
-    fileItem
+    fileItem,
+    iconSize,
     // ** methods
+    handleCancelUpload
   } = props
 
   const isUploadComplete = parseInt(fileItem.progress) === 100
+
+  const handleClickCancelUpload = () => {
+    handleCancelUpload(fileItem.uid)
+  }
 
   // ** render
   const renderComponent = () => {
@@ -23,8 +29,8 @@ const UploadStatusIcon = (props) => {
           id="Layer_1"
           x="0px"
           y="0px"
-          width="20px"
-          height="15px"
+          width={iconSize !== undefined ? iconSize.checkIconWidth : "20px"}
+          height={iconSize !== undefined ? iconSize.checkIconHeight : "15px"}
           viewBox="0 0 20 15"
           enableBackground="new 0 0 20 15"
           xmlSpace="preserve">
@@ -49,11 +55,13 @@ const UploadStatusIcon = (props) => {
         id="Layer_1"
         x="0px"
         y="0px"
-        width="16px"
-        height="16px"
+        width={iconSize !== undefined ? iconSize.cancelIconWidth : "16px"}
+        height={iconSize !== undefined ? iconSize.cancelIconHeight : "16px"}
         viewBox="0 0 16 16"
         enableBackground="new 0 0 16 16"
-        xmlSpace="preserve">
+        xmlSpace="preserve"
+        className="drive-cancel-uploading-icon"
+        onClick={() => handleClickCancelUpload()}>
         {" "}
         <image
           id="image0"
