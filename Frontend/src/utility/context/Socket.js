@@ -10,7 +10,8 @@ const SocketContext = React.createContext()
 export const SocketContextWrap = (props) => {
   const socket = socketio.connect(process.env.REACT_APP_NODE_API_URL, {
     autoConnect: false,
-    reconnection: false,
+    reconnection: true,
+    reconnectionAttempts: 2,
     auth: {
       token:
         !_.isNull(useJwt.getToken()) && !_.isEmpty(useJwt.getToken())
@@ -21,12 +22,9 @@ export const SocketContextWrap = (props) => {
   const dispatch = useDispatch()
   const settingSocket =
     useSelector((state) => state.auth.settings.sockets) || false
-
+  let errorAlert = false
   useEffect(() => {
     if (!_.isNull(useJwt.getToken()) && !_.isEmpty(useJwt.getToken())) {
-      socket.on("connect_error", (err) => {
-        console.log("connected")
-      })
       socket.on("connect_error", (err) => {
         const refreshToken = useJwt.getRefreshToken()
         const isAlreadyFetchingAccessToken =
@@ -47,7 +45,7 @@ export const SocketContextWrap = (props) => {
             socket.connect()
           })
         } else {
-          SwAlert.showError({
+          errorAlert = SwAlert.showError({
             title: "Unable connect to socket server",
             text: "Try reloading the page, if the problem persists please contact technical support for assistance",
             iconHtml: <i className="fa-duotone fa-plug-circle-exclamation"></i>,
@@ -56,8 +54,18 @@ export const SocketContextWrap = (props) => {
           })
         }
       })
+      socket.on("reconnect", () => {
+        if (errorAlert !== false) {
+          errorAlert.close()
+        }
+      })
+      socket.on("connect", () => {
+        if (errorAlert !== false) {
+          errorAlert.close()
+        }
+      })
       socket.on("disconnect", (err) => {
-        SwAlert.showError({
+        errorAlert = SwAlert.showError({
           title: "Socket server is disconnected",
           text: "Try reloading the page, if the problem persists please contact technical support for assistance",
           iconHtml: <i className="fa-duotone fa-plug-circle-exclamation"></i>,
