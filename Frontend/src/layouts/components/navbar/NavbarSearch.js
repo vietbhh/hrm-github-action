@@ -246,7 +246,11 @@ const NavbarSearch = ({
                         item.file || item.img
                     })}>
                     <div className="item-container d-flex align-items-center">
-                      {item.icon ? item.icon : <Avatar src={item.avatar} />}
+                      {item.icon ? (
+                        item.icon
+                      ) : (
+                        <Avatar userId={item.id} src={item.avatar} />
+                      )}
                       <div className="item-info ms-1">
                         <p className="align-middle mb-0">
                           {item.full_name

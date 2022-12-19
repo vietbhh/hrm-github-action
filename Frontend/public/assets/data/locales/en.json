@@ -256,6 +256,7 @@
     "more": "more",
     "files": "Files",
     "ago": "ago",
+    "few_seconds_ago" : "few seconds ago",
     "time": "time",
     "hours": "hours",
     "minutes": "minutes",

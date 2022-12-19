@@ -253,7 +253,7 @@ const UsersSetting = (props) => {
                           <Avatar
                             className="mt-25 me-50"
                             size="sm"
-                            src={rowData.avatar}
+                            userId={rowData.id}
                           />
                         </div>
                         <div className="flex-column">

@@ -69,6 +69,7 @@ const CardBirthday = (props) => {
                               className="img"
                               size="sm"
                               src={value.avatar}
+                              userId={value.id}
                             />
                           </div>
                           <div className="profile-user-info">
