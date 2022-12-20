@@ -20,6 +20,7 @@ import { ErpInput } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { FormProvider, useForm } from "react-hook-form"
 import { Badge, InputGroup, InputGroupText } from "reactstrap"
+import { useSelector } from "react-redux"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -41,7 +42,6 @@ const ChatLog = (props) => {
     scrollToBottom,
     unread,
     handleSeenMessage,
-    handleUnSeenMessage,
     updateMessage,
     userSidebarRight,
     windowWidth,
@@ -68,11 +68,34 @@ const ChatLog = (props) => {
     modal_forward: false,
     data_forward: {},
     show_btn_to_bottom: false,
+    status: "",
 
     // ** search message
     search_message_highlight_timestamp: 0,
     search_message_highlight_text_search: ""
   })
+
+  // ** redux
+  const usersRedux = useSelector((state) => state.users)
+  const onlineRedux = usersRedux.online
+  useEffect(() => {
+    if (selectedUser?.contact?.type === "group") {
+      const online = _.filter(onlineRedux, (item) => {
+        const index = selectedUser?.contact?.user.findIndex(
+          (val) => val === item.id.toString()
+        )
+        return index > -1
+      })
+      const status = !_.isEmpty(online) ? "online" : "offline"
+      setState({ status: status })
+    } else {
+      const online = _.filter(onlineRedux, (item) => {
+        return item.id.toString() === selectedUser?.contact?.idEmployee
+      })
+      const status = !_.isEmpty(online) ? "online" : "offline"
+      setState({ status: status })
+    }
+  }, [onlineRedux, selectedUser])
 
   // **
   const setSearchMessageHighlight = (timestamp, text_search) => {
@@ -156,8 +179,6 @@ const ChatLog = (props) => {
         setTimeout(() => {
           scrollToBottom()
         }, 700)
-      } else {
-        handleUnSeenMessage(selectedUser.chat.id)
       }
     }
   }, [selectedUser, loadingMessage, chats])
@@ -334,7 +355,7 @@ const ChatLog = (props) => {
                     imgHeight="36"
                     imgWidth="36"
                     src={selectedUser.contact.avatar}
-                    status={selectedUser.contact.status}
+                    userId={selectedUser.contact.idEmployee}
                     className="avatar-border user-profile-toggle m-0 me-1"
                     onClick={() => handleAvatarClick(selectedUser.contact)}
                   />
@@ -344,8 +365,11 @@ const ChatLog = (props) => {
                       onClick={() => handleAvatarClick(selectedUser.contact)}>
                       {selectedUser.contact.fullName}
                     </h6>
-                    <span className="chat-header-name-status">
-                      {selectedUser.contact.status}
+                    <span
+                      className={`chat-header-name-status ${
+                        state.status === "offline" ? "status-offline" : ""
+                      }`}>
+                      {state.status}
                     </span>
                   </div>
                 </div>

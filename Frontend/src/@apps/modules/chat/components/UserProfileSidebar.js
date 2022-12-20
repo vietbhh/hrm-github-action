@@ -1,7 +1,7 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import classnames from "classnames"
+import { X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { Mail, PhoneCall, X } from "react-feather"
 import BackgroudProfile from "../assets/images/Bitmap.png"
 
 const UserProfileSidebar = (props) => {
@@ -29,6 +29,7 @@ const UserProfileSidebar = (props) => {
               src={user?.avatar}
               imgHeight="70"
               imgWidth="70"
+              userId={user?.idEmployee}
             />
             <h4 className="chat-user-name">{user?.fullName}</h4>
             <span className="user-post">{user?.role}</span>

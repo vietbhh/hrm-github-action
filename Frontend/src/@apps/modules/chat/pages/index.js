@@ -50,13 +50,13 @@ const AppChat = (props) => {
         "Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing",
       avatar:
         "/demo/vuexy-react-admin-dashboard-template/demo-1/static/media/avatar-s-2.d21f2121.jpg",
-      status: "online",
       settings: {
         isTwoStepAuthVerificationEnabled: true,
         isNotificationsOn: false
       }
     },
-    selectedUser: {}
+    selectedUser: {},
+    selectedGroup: {}
   })
 
   // ** handle store
@@ -204,7 +204,6 @@ const AppChat = (props) => {
                 {
                   message: data.message,
                   time: data.timestamp,
-                  seen: data.seen,
                   senderId: data.sender_id,
                   type: data.type,
                   status: data.status,
@@ -234,7 +233,6 @@ const AppChat = (props) => {
                   {
                     message: data.message,
                     time: data.timestamp,
-                    seen: data.seen,
                     senderId: data.sender_id,
                     type: data.type,
                     status: data.status,
@@ -324,7 +322,6 @@ const AppChat = (props) => {
           role: value.job_title ? value.job_title : "",
           about: "",
           avatar: value.avatar ? value.avatar : "",
-          status: "online",
           user: [userId, value.id]
         }
       ]
@@ -353,6 +350,92 @@ const AppChat = (props) => {
     return last_message
   }
 
+  const setDataUnseenDetail = (
+    action,
+    user_id,
+    timestamp,
+    unseen_detail,
+    user
+  ) => {
+    if (action === "add") {
+      const _unseen_detail = []
+      _.forEach(user, (item) => {
+        if (user_id === item) {
+          _unseen_detail.push({
+            user_id: item,
+            timestamp_from: 0,
+            timestamp_to: 0,
+            unread_count: 0
+          })
+        } else {
+          _unseen_detail.push({
+            user_id: item,
+            timestamp_from: timestamp,
+            timestamp_to: timestamp,
+            unread_count: 1
+          })
+        }
+      })
+
+      return _unseen_detail
+    }
+
+    if (action === "update") {
+      const _unseen_detail = []
+      _.forEach(unseen_detail, (item) => {
+        if (user_id === item.user_id) {
+          _unseen_detail.push({
+            user_id: item.user_id,
+            timestamp_from: 0,
+            timestamp_to: 0,
+            unread_count: 0
+          })
+        } else {
+          let timestamp_from = 0
+          let timestamp_to = 0
+          let unread_count = 0
+          if (item.unread_count === 0) {
+            timestamp_from = timestamp
+            timestamp_to = timestamp
+            unread_count = 1
+          } else {
+            timestamp_from = item.timestamp_from
+            timestamp_to = timestamp
+            unread_count = item.unread_count + 1
+          }
+          _unseen_detail.push({
+            user_id: item.user_id,
+            timestamp_from: timestamp_from,
+            timestamp_to: timestamp_to,
+            unread_count: unread_count
+          })
+        }
+      })
+
+      return _unseen_detail
+    }
+
+    if (action === "seen") {
+      const _unseen_detail = []
+      _.forEach(unseen_detail, (item) => {
+        if (user_id === item.user_id) {
+          _unseen_detail.push({
+            user_id: item.user_id,
+            timestamp_from: 0,
+            timestamp_to: 0,
+            unread_count: 0
+          })
+        } else {
+          _unseen_detail.push(item)
+        }
+      })
+
+      return _unseen_detail
+    }
+
+    return []
+  }
+
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
     if (!_.isEmpty(groupId)) {
@@ -366,13 +449,13 @@ const AppChat = (props) => {
         if (index !== -1) {
           unseen.splice(index, 1)
         }
+        const unseen_detail = dataGroups.unseen_detail
+        const timestamp = Date.now()
 
         const docData = {
           message: msg,
-          seen: [userId],
-          unseen: unseen,
           sender_id: userId,
-          timestamp: Date.now(),
+          timestamp: timestamp,
           type: "text",
           ...dataAddFile
         }
@@ -387,9 +470,16 @@ const AppChat = (props) => {
         updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
           last_message: handleLastMessage(docData.type, msg),
           last_user: userId,
-          timestamp: Date.now(),
+          timestamp: timestamp,
           new: 0,
-          unseen: unseen
+          unseen: unseen,
+          unseen_detail: setDataUnseenDetail(
+            "update",
+            userId,
+            timestamp,
+            unseen_detail,
+            []
+          )
         })
       })
     } else {
@@ -412,18 +502,26 @@ const AppChat = (props) => {
 
       setState({ loadingMessage: true })
       const type = dataAddFile.type ? dataAddFile.type : "text"
+      const timestamp = Date.now()
       const docData = {
         last_message: handleLastMessage(type, msg),
         last_user: userId,
         name: "",
-        timestamp: Date.now(),
+        timestamp: timestamp,
         type: "employee",
         user: [userId, idEmployee],
         new: 1,
         pin: [],
         avatar: "",
         background: "",
-        unseen: [idEmployee]
+        unseen: [idEmployee],
+        unseen_detail: setDataUnseenDetail(
+          "add",
+          userId,
+          timestamp,
+          [],
+          [userId, idEmployee]
+        )
       }
       handleAddNewGroup(docData).then((res) => {
         const newGroupId = res.id
@@ -432,10 +530,8 @@ const AppChat = (props) => {
         }
         const docDataMessage = {
           message: msg,
-          seen: [userId],
-          unseen: [idEmployee],
           sender_id: userId,
-          timestamp: Date.now(),
+          timestamp: timestamp,
           type: "text",
           ...dataAddFile
         }
@@ -503,7 +599,6 @@ const AppChat = (props) => {
             {
               message: data.message,
               time: data.timestamp,
-              seen: data.seen,
               senderId: data.sender_id,
               type: data.type,
               status: data.status,
@@ -557,7 +652,6 @@ const AppChat = (props) => {
                 {
                   message: data.message,
                   time: data.timestamp,
-                  seen: data.seen,
                   senderId: data.sender_id,
                   type: data.type,
                   status: data.status,
@@ -611,7 +705,6 @@ const AppChat = (props) => {
                 {
                   message: data.message,
                   time: data.timestamp,
-                  seen: data.seen,
                   senderId: data.sender_id,
                   type: data.type,
                   status: data.status,
@@ -641,46 +734,37 @@ const AppChat = (props) => {
 
   const handleSeenMessage = (groupId) => {
     if (!_.isEmpty(groupId)) {
-      const q_mess = query(
-        collection(db, `${firestoreDb}/messages/${groupId}`),
-        where("unseen", "array-contains", userId)
-      )
-      getDocs(q_mess).then((res) => {
-        res.forEach((doc_mess) => {
-          updateDoc(
-            doc(db, `${firestoreDb}/messages/${groupId}`, doc_mess.id),
-            {
-              seen: arrayUnion(userId),
-              unseen: arrayRemove(userId)
-            }
+      setUnread(0)
+      const index = store.groups.findIndex((item) => item.id === groupId)
+      if (index !== -1) {
+        const unseen_detail = store.groups[index].chat.unseen_detail
+        updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
+          unseen: arrayRemove(userId),
+          unseen_detail: setDataUnseenDetail(
+            "seen",
+            userId,
+            0,
+            unseen_detail,
+            []
           )
         })
-
-        setUnread(0)
-      })
-
-      updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
-        unseen: arrayRemove(userId)
-      })
+      }
     }
   }
 
-  const handleUnSeenMessage = (groupId) => {
-    if (!_.isEmpty(groupId)) {
-      const q_mess = query(
-        collection(db, `${firestoreDb}/messages/${groupId}`),
-        where("unseen", "array-contains", userId),
-        limit(10)
+  useEffect(() => {
+    setUnread(0)
+    const index = store.groups.findIndex((item) => item.id === active)
+    if (index !== -1) {
+      const unseen_detail = store.groups[index].chat.unseen_detail
+      const index_unseen_detail = unseen_detail.findIndex(
+        (item) => item.user_id === userId
       )
-      getDocs(q_mess).then((res) => {
-        let unseen = 0
-        res.forEach((doc_mess) => {
-          unseen++
-        })
-        setUnread(unseen)
-      })
+      if (index_unseen_detail !== -1) {
+        setUnread(unseen_detail[index_unseen_detail].unread_count)
+      }
     }
-  }
+  }, [store.groups, active])
 
   const handleUpdateGroup = async (groupId, dataUpdate) => {
     await updateDoc(
@@ -713,8 +797,8 @@ const AppChat = (props) => {
         orderBy("timestamp", "asc")
       )
       let listGroup = []
-      const unsubscribe = onSnapshot(q, async (querySnapshot) => {
-        for (const change of querySnapshot.docChanges()) {
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.docChanges().forEach((change) => {
           const docData = change.doc
           const data = docData.data()
           const id = docData.id
@@ -742,11 +826,10 @@ const AppChat = (props) => {
               role: employee.job_title ? employee.job_title : "",
               about: "",
               avatar: employee.avatar ? employee.avatar : "",
-              status: "online",
               user: data.user,
               pin: pin,
               type: data.type,
-              unseen: data.unseen,
+              timestamp: data.timestamp,
               personalInfo: {
                 email: employee.email ? employee.email : "",
                 phone: employee.phone ? employee.phone : "",
@@ -775,11 +858,10 @@ const AppChat = (props) => {
               role: "",
               about: "",
               avatar: "",
-              status: "online",
               user: data.user,
               pin: pin,
               type: data.type,
-              unseen: data.unseen,
+              timestamp: data.timestamp,
               personalInfo: {
                 email: "",
                 phone: "",
@@ -810,16 +892,12 @@ const AppChat = (props) => {
           // ** get count unseen
           let unseen = 0
           if (data.unseen.indexOf(userId) > -1) {
-            const q_mess = query(
-              collection(db, `${firestoreDb}/messages/${id}`),
-              where("unseen", "array-contains", userId),
-              limit(10)
+            const index_unseen_detail = data.unseen_detail.findIndex(
+              (item) => item.user_id === userId
             )
-            await getDocs(q_mess).then((res) => {
-              res.forEach((doc_mess) => {
-                unseen++
-              })
-            })
+            if (index_unseen_detail > -1) {
+              unseen = data.unseen_detail[index_unseen_detail].unread_count
+            }
           }
 
           if (change.type === "added") {
@@ -832,11 +910,17 @@ const AppChat = (props) => {
                     message: data.last_message ? data.last_message : "",
                     time: data.timestamp ? data.timestamp : ""
                   },
-                  lastUser: lastUser
+                  lastUser: lastUser,
+                  unseen: data.unseen,
+                  unseen_detail: data.unseen_detail
                 }
               },
               ...listGroup
             ]
+
+            listGroup.sort(
+              (a, b) => b.chat.lastMessage.time - a.chat.lastMessage.time
+            )
 
             setGroups(listGroup)
           }
@@ -852,7 +936,9 @@ const AppChat = (props) => {
                     message: data.last_message ? data.last_message : "",
                     time: data.timestamp ? data.timestamp : ""
                   },
-                  lastUser: lastUser
+                  lastUser: lastUser,
+                  unseen: data.unseen,
+                  unseen_detail: data.unseen_detail
                 }
               }
               group_new.sort(
@@ -867,7 +953,7 @@ const AppChat = (props) => {
             listGroup = group_new.filter((item) => item.id !== id)
             setGroups(listGroup)
           }
-        }
+        })
 
         setState({ loadingGroup: false })
       })
@@ -911,7 +997,6 @@ const AppChat = (props) => {
           role: employee.role,
           about: employee.about,
           avatar: employee.avatar,
-          status: employee.status,
           user: employee.user,
           type: employee.type,
           personalInfo: employee.personalInfo
@@ -956,7 +1041,6 @@ const AppChat = (props) => {
           role: employee.role,
           about: employee.about,
           avatar: employee.avatar,
-          status: employee.status,
           user: employee.user,
           type: employee.type,
           personalInfo: employee.personalInfo
@@ -966,6 +1050,10 @@ const AppChat = (props) => {
 
       // ** seen message
       handleSeenMessage(active)
+      let check_seen_listener = false
+      setTimeout(() => {
+        check_seen_listener = true
+      }, 1000)
 
       const q_mess = query(
         collection(db, `${firestoreDb}/messages/${active}`),
@@ -985,28 +1073,17 @@ const AppChat = (props) => {
 
             // ** seen message
             const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-            const dataSeen = data.seen
             const dataSenderId = data.sender_id
             if (
+              check_seen_listener === true &&
               dataSenderId !== userId &&
-              dataSeen.includes(userId) === false &&
               (chatContainer.scrollHeight -
                 chatContainer.scrollTop -
                 chatContainer.clientHeight <=
                 200 ||
                 chatContainer.scrollTop === 0)
             ) {
-              updateDoc(
-                doc(db, `${firestoreDb}/messages/${active}`, docData.id),
-                {
-                  seen: arrayUnion(userId),
-                  unseen: arrayRemove(userId)
-                }
-              )
-
-              updateDoc(doc(db, `${firestoreDb}/groups/groups`, active), {
-                unseen: arrayRemove(userId)
-              })
+              handleSeenMessage(active)
             }
 
             _chat = [
@@ -1014,7 +1091,6 @@ const AppChat = (props) => {
               {
                 message: data.message,
                 time: data.timestamp,
-                seen: data.seen,
                 senderId: data.sender_id,
                 type: data.type,
                 status: data.status,
@@ -1035,7 +1111,6 @@ const AppChat = (props) => {
               chat_new[index_chat] = {
                 message: data.message,
                 time: data.timestamp,
-                seen: data.seen,
                 senderId: data.sender_id,
                 type: data.type,
                 status: data.status,
@@ -1103,8 +1178,8 @@ const AppChat = (props) => {
         setHasMoreHistory={(value) => setState({ hasMoreHistory: value })}
         handleAddNewGroup={handleAddNewGroup}
         userId={userId}
-        setSelectedUser={setSelectedUser}
         handleUpdateGroup={handleUpdateGroup}
+        setDataUnseenDetail={setDataUnseenDetail}
       />
       <div className="content-right">
         <div className="content-wrapper">
@@ -1135,7 +1210,6 @@ const AppChat = (props) => {
               scrollToBottom={scrollToBottom}
               unread={state.unread}
               handleSeenMessage={handleSeenMessage}
-              handleUnSeenMessage={handleUnSeenMessage}
               updateMessage={updateMessage}
               userSidebarRight={userSidebarRight}
               windowWidth={windowWidth}

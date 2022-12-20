@@ -35,7 +35,6 @@ const ChatMessage = (props) => {
     scrollToBottom,
     unread,
     handleSeenMessage,
-    handleUnSeenMessage,
     updateMessage,
     userSidebarRight,
     windowWidth,
@@ -51,7 +50,7 @@ const ChatMessage = (props) => {
     dataChatScrollBottom,
     checkShowDataChat
   } = props
-  const { userProfile, selectedUser } = store
+  const { userProfile, selectedUser, groups } = store
 
   // ** reaction
   const reaction = [
@@ -101,6 +100,30 @@ const ChatMessage = (props) => {
       }
     }
 
+    const index_groups = groups.findIndex((item) => item.id === active)
+    let unseen_detail = []
+    let user_list = []
+    if (index_groups !== -1) {
+      unseen_detail = groups[index_groups].chat.unseen_detail
+      user_list = groups[index_groups].user
+    }
+    const detail = {}
+    _.forEach(user_list, (value) => {
+      const index_unseen_detail = unseen_detail.findIndex(
+        (item) => item.user_id === value
+      )
+      if (index_unseen_detail !== -1) {
+        detail[value] = unseen_detail[index_unseen_detail]
+      } else {
+        detail[value] = {
+          timestamp_from: 0,
+          timestamp_to: 0,
+          unread_count: 0,
+          user_id: value
+        }
+      }
+    })
+
     const formattedChatLog = []
     let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : undefined
     let msgGroup = {
@@ -108,10 +131,17 @@ const ChatMessage = (props) => {
       messages: []
     }
     chatLog.forEach((msg, index) => {
+      const seen = []
+      _.forEach(detail, (value) => {
+        if (value.timestamp_from === 0 || msg.time < value.timestamp_from) {
+          seen.push(value.user_id)
+        }
+      })
       if (chatMessageSenderId === msg.senderId) {
         msgGroup.messages.push({
           msg: msg.message,
           time: msg.time,
+          seen: seen,
           ...msg
         })
       } else {
@@ -123,6 +153,7 @@ const ChatMessage = (props) => {
             {
               msg: msg.message,
               time: msg.time,
+              seen: seen,
               ...msg
             }
           ]

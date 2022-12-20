@@ -40,8 +40,8 @@ const SidebarLeft = (props) => {
     setHasMoreHistory,
     handleAddNewGroup,
     userId,
-    setSelectedUser,
-    handleUpdateGroup
+    handleUpdateGroup,
+    setDataUnseenDetail
   } = props
   const { groups, contacts, userProfile } = store
   const [state, setState] = useMergedState({
@@ -165,7 +165,7 @@ const SidebarLeft = (props) => {
                             src={item.avatar}
                             imgHeight="50"
                             imgWidth="50"
-                            status={item.status}
+                            userId={item.idEmployee}
                           />
                           <div className="chat-info flex-grow-1">
                             <h5 className="mb-0">{item.fullName}</h5>
@@ -241,7 +241,12 @@ const SidebarLeft = (props) => {
             <li
               key={item.fullName}
               onClick={() => handleUserClick(item.id, item.fullName)}>
-              <Avatar src={item.avatar} imgHeight="50" imgWidth="50" />
+              <Avatar
+                src={item.avatar}
+                imgHeight="50"
+                imgWidth="50"
+                userId={item.idEmployee}
+              />
               <div
                 className="chat-info flex-grow-1"
                 style={{ display: "flex", alignItems: "center" }}>
@@ -290,7 +295,7 @@ const SidebarLeft = (props) => {
       <div className="sidebar-left">
         <div className="sidebar">
           <div
-            className={classnames("chat-profile-sidebar", {
+            className={classnames("chat-profile-sidebar d-none", {
               show: userSidebarLeft
             })}>
             <header className="chat-profile-header">
@@ -301,7 +306,6 @@ const SidebarLeft = (props) => {
                 <Avatar
                   className="box-shadow-1 avatar-border"
                   src={userProfile.avatar}
-                  status={status}
                   size="xl"
                 />
                 <h4 className="chat-user-name">{userProfile.fullName}</h4>
@@ -466,7 +470,7 @@ const SidebarLeft = (props) => {
         handleAddNewGroup={handleAddNewGroup}
         setActive={setActive}
         userId={userId}
-        setSelectedUser={setSelectedUser}
+        setDataUnseenDetail={setDataUnseenDetail}
       />
     </>
   ) : null

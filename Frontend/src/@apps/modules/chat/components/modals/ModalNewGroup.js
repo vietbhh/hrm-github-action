@@ -19,7 +19,7 @@ const ModalNewGroup = (props) => {
     handleAddNewGroup,
     setActive,
     userId,
-    setSelectedUser
+    setDataUnseenDetail
   } = props
   const [state, setState] = useMergedState({
     loading: false
@@ -38,18 +38,20 @@ const ModalNewGroup = (props) => {
       member.push(val.id)
       unseen.push(val.id)
     })
+    const timestamp = Date.now()
     const docData = {
       last_message: useFormatMessage("modules.chat.text.create_new_group"),
       last_user: userId,
       name: values.group_name,
-      timestamp: Date.now(),
+      timestamp: timestamp,
       type: "group",
       user: member,
       new: 0,
       pin: [],
       avatar: "",
       background: "",
-      unseen: unseen
+      unseen: unseen,
+      unseen_detail: setDataUnseenDetail("add", userId, timestamp, [], member)
     }
     await handleAddNewGroup(docData).then((res) => {
       setTimeout(() => {
