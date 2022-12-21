@@ -56,6 +56,10 @@ class Chat extends ErpController
 				];
 				$pathUpload = getModuleUploadPath($moduleName, $groupId, false) . "other/";
 				$result = $uploadService->uploadFile($pathUpload, $filesUpload, true);
+				if (!empty($result['error_file'])){
+					return $this->failServerError('error');
+				}
+
 				$out[] = [
 					'type' => $arrFileType[$key]['type'],
 					'file' => $result['arr_upload_file'][0]['filename']
@@ -65,6 +69,10 @@ class Chat extends ErpController
 			foreach ($file as $key => $item) {
 				$storePath = getModuleUploadPath($moduleName, $groupId, false) . "other/";
 				$result = $uploadService->uploadFile($storePath, [$item['file']]);
+				if (!empty($result['error_file'])){
+					return $this->failServerError('error');
+				}
+
 				$out[] = [
 					'type' => $arrFileType[$key]['type'],
 					'file' => $result['arr_upload_file'][0]['filename']

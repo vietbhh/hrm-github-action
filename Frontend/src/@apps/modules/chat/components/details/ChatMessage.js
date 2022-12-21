@@ -566,8 +566,7 @@ const ChatMessage = (props) => {
         } else if (data.status === "error") {
           return (
             <p>
-              {useFormatMessage("modules.chat.text.send")} {data.type}{" "}
-              {useFormatMessage("modules.chat.text.sent_error")}
+              {data.type} {useFormatMessage("modules.chat.text.sent_error")}
             </p>
           )
         } else {

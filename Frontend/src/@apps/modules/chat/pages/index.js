@@ -1,10 +1,10 @@
 // ** Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classnames from "classnames"
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState, useContext } from "react"
 import ReactDOM from "react-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { handleChats, handleUnread } from "redux/chat"
+import { handleChats } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
 
@@ -18,7 +18,6 @@ import { db } from "firebase"
 import {
   addDoc,
   arrayRemove,
-  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -36,6 +35,7 @@ import {
 // ** style
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
+import SocketContext from "utility/context/Socket"
 import "../assets/scss/chat.scss"
 
 const AppChat = (props) => {
@@ -93,6 +93,7 @@ const AppChat = (props) => {
   const [userSidebarLeft, setUserSidebarLeft] = useState(false)
   const [active, setActive] = useState(0)
   const [activeFullName, setActiveFullName] = useState("")
+  const socket = useContext(SocketContext)
 
   // ** env
   const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
@@ -466,6 +467,19 @@ const AppChat = (props) => {
           doc(collection(db, `${firestoreDb}/messages/${groupId}`)),
           docData
         )
+
+        // ** noti
+        /* socket.emit("send_data_to_users", {
+          receiver: 1,
+          key: "chat_notification",
+          data: {
+            title: "Trịnh Hải Long 111",
+            body: msg,
+            senderType: "user",
+            sender: userId,
+            link: "#"
+          }
+        }) */
 
         updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
           last_message: handleLastMessage(docData.type, msg),
