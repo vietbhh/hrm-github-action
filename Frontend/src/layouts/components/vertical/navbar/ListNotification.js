@@ -81,19 +81,13 @@ const ListNotification = (props) => {
       <Fragment>
         {listNotification.map((item, index) => {
           if (index < 10) {
-            if (item.link.trim().length === 0) {
-              return (
-                <Fragment key={index}>
-                  {renderNotificationItem(item, index)}
-                </Fragment>
-              )
-            } else {
-              return (
-                <a key={index} href={item.link} target="_blank">
-                  <Fragment>{renderNotificationItem(item, index)}</Fragment>
-                </a>
-              )
-            }
+            const Wrap = item.link ? Fragment : Link
+            const wrapProps = item.link ? {} : { to: item.link }
+            return (
+              <Wrap key={index} {...wrapProps}>
+                {renderNotificationItem(item, index)}
+              </Wrap>
+            )
           }
         })}
       </Fragment>

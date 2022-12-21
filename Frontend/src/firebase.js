@@ -56,6 +56,7 @@ const getRegistrationToken = async () => {
     vapidKey: vapidKey
   })
     .then((currentToken) => {
+      //console.log(currentToken)
       if (currentToken) {
         usersApi
           .saveDeviceToken({

@@ -164,8 +164,21 @@ class User extends ErpController
 		$userId = user_id();
 		$userInfo = $userModel->asArray()->find($userId);
 
+		if (empty($postData['token'])) return $this->respond(ACTION_SUCCESS);
+
 		$arrDeviceToken = (empty($userInfo['device_token'])) ? [] : json_decode($userInfo['device_token'], true);
-		$allowSave = true; 
+
+		//Check for auto logout - if someone is auto logout,then other login on same pc,we remove token from previous user
+		/*$checkTokenExist = $userModel->select(['id', 'device_token'])->asArray()->like('device_token', $postData['token'])->where('id !=',$userId)->findAll();
+		if(!empty($checkTokenExist)){
+			foreach ($checkTokenExist as $userExist) {
+				//$userExist['devide']
+
+			}
+		}
+
+		exit;*/
+		$allowSave = true;
 		foreach ($arrDeviceToken as $rowDeviceToken) {
 			if ($rowDeviceToken['token'] == $postData['token']) {
 				$allowSave = false;

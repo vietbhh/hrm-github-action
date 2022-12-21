@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit"
 
 // ** UseJWT import to get config
 import useJwt from "@src/auth/jwt/useJwt"
+import { useContext } from "react"
+import SocketContext from "utility/context/Socket"
 
 const config = useJwt.jwtConfig
 
