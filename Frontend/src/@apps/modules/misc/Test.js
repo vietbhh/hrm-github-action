@@ -1,9 +1,8 @@
 import { useFormatMessage } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { socketConnect } from "@apps/utility/socketHandler"
-import { Fragment, useCallback, useContext, useEffect } from "react"
+import { Fragment, useCallback, useContext, useEffect, useRef } from "react"
 import SocketContext from "utility/context/Socket"
-
 const Test = (props) => {
   const socketDoc = socketConnect({
     path: "/document"
@@ -15,23 +14,27 @@ const Test = (props) => {
     console.log(data)
   }, [])
 
+  const notificationSound = useRef(null)
   useEffect(() => {
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
     //socket.on("notification", handleData)
     socket.emit("send_data_to_users", {
       receiver: 1,
-      key: "notification",
+      key: "chat_notification",
       data: {
-        title: "bạn nhận được thông báo",
-        body: "thế này ok chưa"
+        title: "Trịnh Hải Long",
+        body: "uh,cứ thế mà làm",
+        senderType : "user",
+        sender : "1",
+        link : "#"
       }
     })
   }, [socket])
 
   const testNoti = () => {
     notification.show({
-      title: "bạn nhận được thông báo",
+      title: "bạn nhận được thông báo",  
       config: {
         duration: 10000000
       }
@@ -64,7 +67,6 @@ const Test = (props) => {
 
   return (
     <Fragment>
-      testt
       <button onClick={testNoti}>noti</button>
     </Fragment>
   )

@@ -14,7 +14,7 @@ const App = () => {
   const defaultDashboardComponent = useSelector(
     (state) => state.auth.settings.dashboardComponent
   )
-
+  const appTitle = useSelector((state) => state.app.title)
   // ** effect
   useEffect(() => {
     requestPermission()
@@ -24,7 +24,12 @@ const App = () => {
     <AppSpinner />
   ) : (
     <Suspense fallback={null}>
-      <Helmet defaultTitle={appName} titleTemplate={`%s | ${appName}`} />
+      <Helmet
+        defaultTitle={appName}
+        titleTemplate={`%s | ${appName}`}
+        defer={false}>
+        {!_.isEmpty(appTitle) && <title>{appTitle}</title>}
+      </Helmet>
       <AppLoadingBar />
       <Notification />
       <Router

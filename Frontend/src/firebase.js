@@ -2,12 +2,12 @@ import firebase from "firebase/compat/app"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
 import { usersApi } from "@apps/modules/settings/common/api"
 
-
 // ** firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
   authDomain: "friday-351410.firebaseapp.com",
-  databaseURL: "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "friday-351410",
   storageBucket: "friday-351410.appspot.com",
   messagingSenderId: "802894112425",
@@ -15,7 +15,8 @@ const firebaseConfig = {
   measurementId: "G-PLDYVP5EMH"
 }
 
-const vapidKey = "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
+const vapidKey =
+  "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
 // ** end firebase config
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
@@ -53,6 +54,7 @@ const getRegistrationToken = async () => {
     vapidKey: vapidKey
   })
     .then((currentToken) => {
+      //console.log(currentToken)
       if (currentToken) {
         usersApi
           .saveDeviceToken({

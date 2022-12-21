@@ -1,3 +1,4 @@
+import { isNumber } from "lodash-es"
 import { DataTypes } from "sequelize"
 import { mysql } from "../config/mysql.js"
 
@@ -59,6 +60,9 @@ const Users = mysql.define("users", {
   department_id: {
     type: DataTypes.INTEGER
   },
+  device_token: {
+    type: DataTypes.JSON
+  },
   owner: {
     type: DataTypes.INTEGER
   },
@@ -73,4 +77,12 @@ const Users = mysql.define("users", {
   }
 })
 
-export { Users }
+const getUser = (identity) => {
+  return isNumber(identity)
+    ? Users.findByPk(identity)
+    : Users.findOne({
+        username: identity
+      })
+}
+
+export { getUser, Users }

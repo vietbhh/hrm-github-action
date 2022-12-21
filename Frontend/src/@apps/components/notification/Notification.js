@@ -7,61 +7,64 @@ import { useDispatch, useSelector } from "react-redux"
 import { handleNotification } from "redux/notification"
 // ** Styles
 // ** Components
-import notification from "@apps/utility/notification"
-import SocketContext from "utility/context/Socket"
+import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import ChatSound from "@src/assets/sounds/chat_sound.mp3"
+import NotificationSound from "@src/assets/sounds/notification_sound.mp3"
+import SocketContext from "utility/context/Socket"
 
 const Notification = (props) => {
   const notificationStore = useSelector((state) => state.notification)
   const listNotificationStore = notificationStore.listNotification
   const numberNotificationStore = notificationStore.numberNotification
   const dispatch = useDispatch()
-
+  // const play = useSo
   const socket = useContext(SocketContext)
-
   useEffect(() => {
-    socket.on("notification", (data) => {
+    socket.on("app_notification", (data) => {
+      const sound = new Audio(NotificationSound)
+      sound.addEventListener("canplaythrough", (event) => {
+        // the audio is now playable; play it if permissions allow
+        const playedPromise = sound.play()
+        if (playedPromise) {
+          playedPromise.catch((e) => {}).then(() => {})
+        }
+      })
       notification.show({
         title: data.title,
         text: data.body,
-        meta: useFormatMessage("common.few_seconds_ago"),
+        meta: useFormatMessage("common.few_seconds_ago")
+      })
+    })
+
+    socket.on("chat_notification", (data) => {
+      const sound = new Audio(ChatSound)
+      sound.addEventListener("canplaythrough", (event) => {
+        // the audio is now playable; play it if permissions allow
+        const playedPromise = sound.play()
+        if (playedPromise) {
+          playedPromise.catch((e) => {}).then(() => {})
+        }
+      })
+      notification.show({
+        title: data.title,
+        text: data.body,
+        icon: (
+          <Avatar className="mt-25 me-50" size="sm" userId={data?.sender} />
+        ),
+        link: data.link,
         config: {
-          duration: 10000000
+          duration: 10000000,
+          position: "bottom-right"
         }
       })
     })
   }, [socket])
 
-  // ** handle
-  const renderImage = (notification) => {
-    if (notification.image !== undefined) {
-      return (
-        <div className="w-25">
-          <div className="d-flex align-items-center div-notification">
-            <div className="div-img">
-              <img src={notification.image} className="img" />
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    return ""
-  }
-
-  const renderNotificationBody = (notification) => {
-    return (
-      <div className="d-flex">
-        <Fragment>{renderImage(notification)}</Fragment>
-        <div className="pt-1">
-          <p className="mb-0 ms-50">{notification.body}</p>
-        </div>
-      </div>
-    )
-  }
-
   onMessageListener()
     .then((payload) => {
+      console.log(payload)
       notification.show({
         title: payload.notification.title,
         text: payload.notification.body,
@@ -99,7 +102,7 @@ const Notification = (props) => {
     )
   })
 
-  return ""
+  return <Fragment></Fragment>
 }
 
 export default Notification

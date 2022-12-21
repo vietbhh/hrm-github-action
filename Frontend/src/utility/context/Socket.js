@@ -1,10 +1,10 @@
 import SwAlert from "@apps/utility/SwAlert"
 import useJwt from "@src/auth/jwt/useJwt"
 import React, { useEffect } from "react"
+import { IdleTimerProvider } from "react-idle-timer"
 import { useDispatch, useSelector } from "react-redux"
 import { updateOnlineUsers } from "redux/app/users"
 import socketio from "socket.io-client"
-
 const SocketContext = React.createContext()
 
 export const SocketContextWrap = (props) => {
@@ -64,15 +64,7 @@ export const SocketContextWrap = (props) => {
           errorAlert.close()
         }
       })
-      socket.on("disconnect", (err) => {
-        errorAlert = SwAlert.showError({
-          title: "Socket server is disconnected",
-          text: "Try reloading the page, if the problem persists please contact technical support for assistance",
-          iconHtml: <i className="fa-duotone fa-plug-circle-exclamation"></i>,
-          showConfirmButton: false,
-          allowOutsideClick: false
-        })
-      })
+
       socket.on("users_online", (data) => {
         dispatch(updateOnlineUsers(data))
       })
@@ -88,10 +80,22 @@ export const SocketContextWrap = (props) => {
     }
   }, [settingSocket, socket])
 
+  const onIdle = () => {}
+
+  const onActive = (event) => {}
+
+  const onAction = (event) => {}
+
   return (
-    <SocketContext.Provider value={socket}>
-      {props.children}
-    </SocketContext.Provider>
+    <IdleTimerProvider
+      timeout={1000 * 60}
+      onIdle={onIdle}
+      onActive={onActive}
+      onAction={onAction}>
+      <SocketContext.Provider value={socket}>
+        {props.children}
+      </SocketContext.Provider>
+    </IdleTimerProvider>
   )
 }
 

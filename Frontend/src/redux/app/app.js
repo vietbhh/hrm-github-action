@@ -12,7 +12,8 @@ export const appSlice = createSlice({
     loading: false,
     modules: {},
     routes: [],
-    filters: {}
+    filters: {},
+    title: null
   },
   reducers: {
     initAppData: (state, action) => {
@@ -43,6 +44,12 @@ export const appSlice = createSlice({
     },
     updateStateModule: (state, action) => {
       state.modules = action.payload
+    },
+    setAppTitle: (state, action) => {
+      state.title = action.payload
+    },
+    resetAppTitle: (state, action) => {
+      state.title = null
     }
   }
 })
@@ -53,7 +60,9 @@ export const {
   handleAppLoading,
   showAppError,
   dismissAppError,
-  updateStateModule
+  updateStateModule,
+  setAppTitle,
+  resetAppTitle
 } = appSlice.actions
 
 export default appSlice.reducer
