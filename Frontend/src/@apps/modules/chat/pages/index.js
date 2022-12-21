@@ -752,20 +752,6 @@ const AppChat = (props) => {
     }
   }
 
-  useEffect(() => {
-    setUnread(0)
-    const index = store.groups.findIndex((item) => item.id === active)
-    if (index !== -1) {
-      const unseen_detail = store.groups[index].chat.unseen_detail
-      const index_unseen_detail = unseen_detail.findIndex(
-        (item) => item.user_id === userId
-      )
-      if (index_unseen_detail !== -1) {
-        setUnread(unseen_detail[index_unseen_detail].unread_count)
-      }
-    }
-  }, [store.groups, active])
-
   const handleUpdateGroup = async (groupId, dataUpdate) => {
     await updateDoc(
       doc(db, `${firestoreDb}/groups/groups`, groupId),
@@ -785,6 +771,21 @@ const AppChat = (props) => {
     )
     return await getDocs(q_mess)
   }
+
+  // ** setUnread
+  useEffect(() => {
+    setUnread(0)
+    const index = store.groups.findIndex((item) => item.id === active)
+    if (index !== -1) {
+      const unseen_detail = store.groups[index].chat.unseen_detail
+      const index_unseen_detail = unseen_detail.findIndex(
+        (item) => item.user_id === userId
+      )
+      if (index_unseen_detail !== -1) {
+        setUnread(unseen_detail[index_unseen_detail].unread_count)
+      }
+    }
+  }, [store.groups, active])
 
   useEffect(() => {
     if (state.loadingEmployee === true) {

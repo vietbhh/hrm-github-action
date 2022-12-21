@@ -103,10 +103,13 @@ const ChatMessage = (props) => {
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
     let user_list = []
+    let unseen_list = []
     if (index_groups !== -1) {
       unseen_detail = groups[index_groups].chat.unseen_detail
       user_list = groups[index_groups].user
+      unseen_list = groups[index_groups].chat.unseen
     }
+
     const detail = {}
     _.forEach(user_list, (value) => {
       const index_unseen_detail = unseen_detail.findIndex(
@@ -133,7 +136,10 @@ const ChatMessage = (props) => {
     chatLog.forEach((msg, index) => {
       const seen = []
       _.forEach(detail, (value) => {
-        if (value.timestamp_from === 0 || msg.time < value.timestamp_from) {
+        if (
+          unseen_list.indexOf(value.user_id) === -1 &&
+          (value.timestamp_from === 0 || msg.time < value.timestamp_from)
+        ) {
           seen.push(value.user_id)
         }
       })
@@ -732,7 +738,7 @@ const ChatMessage = (props) => {
           )
         ]
 
-        const items_more = [
+        let items_more = [
           {
             key: "1",
             label: (
@@ -851,40 +857,45 @@ const ChatMessage = (props) => {
                 </a>
               </>
             )
-          },
-          {
-            type: "divider"
-          },
-          {
-            key: "3",
-            label: (
-              <div className="react_more">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="17"
-                  height="17"
-                  viewBox="0 0 17 17"
-                  fill="none">
-                  <path
-                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
-                    fill="#292D32"
-                  />
-                  <path
-                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
-                    fill="#292D32"
-                  />
-                </svg>
-                <span>
-                  {chat.senderId === userId
-                    ? chat.seen.length - 1
-                    : chat.seen.length}{" "}
-                  {useFormatMessage("modules.chat.text.seen")}
-                </span>
-              </div>
-            ),
-            children: items_seen
           }
         ]
+        if (chat.senderId === userId) {
+          items_more = [
+            ...items_more,
+            {
+              type: "divider"
+            },
+            {
+              key: "3",
+              label: (
+                <div className="react_more">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="17"
+                    viewBox="0 0 17 17"
+                    fill="none">
+                    <path
+                      d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
+                      fill="#292D32"
+                    />
+                    <path
+                      d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
+                      fill="#292D32"
+                    />
+                  </svg>
+                  <span>
+                    {chat.senderId === userId
+                      ? chat.seen.length - 1
+                      : chat.seen.length}{" "}
+                    {useFormatMessage("modules.chat.text.seen")}
+                  </span>
+                </div>
+              ),
+              children: items_seen
+            }
+          ]
+        }
 
         return (
           <div className="chat-content-reaction">

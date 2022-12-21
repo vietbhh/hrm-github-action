@@ -19,6 +19,7 @@ import {
   Row
 } from "reactstrap"
 import { ChatApi } from "../../common/api"
+import { useEffect } from "react"
 
 const UpFile = (props) => {
   const { updateMessage, selectedUser, setReplyingDefault } = props
@@ -140,6 +141,27 @@ const UpFile = (props) => {
       }
     }
   }
+
+  // ** listen paste image
+  useEffect(() => {
+    const handlePaste = (event) => {
+      const clipboardItems = event.clipboardData.items
+      const items = [].slice.call(clipboardItems).filter(function (item) {
+        // Filter the image items only
+        return /^image\//.test(item.type)
+      })
+      if (items.length === 0) {
+        return
+      }
+      const item = items[0]
+      const blob = item.getAsFile()
+    }
+    window.addEventListener("paste", handlePaste)
+
+    return () => {
+      window.removeEventListener("paste", handlePaste)
+    }
+  }, [])
 
   return (
     <>

@@ -185,7 +185,14 @@ const ChatLog = (props) => {
 
   // ** check show btn to bottom
   useEffect(() => {
-    if (unread > 0) {
+    const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+    if (
+      unread > 0 &&
+      chatContainer.scrollHeight -
+        chatContainer.scrollTop -
+        chatContainer.clientHeight >
+        300
+    ) {
       setState({ show_btn_to_bottom: true })
     }
   }, [unread])
