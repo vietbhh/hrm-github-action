@@ -602,7 +602,10 @@ const ChatLog = (props) => {
               </header>
             </div>
 
-            <div id="form-chat" onDragEnter={handleDrag}>
+            <div
+              id="form-chat"
+              onDragEnter={handleDrag}
+              className={`${state.replying ? "replying" : ""}`}>
               <input
                 type="file"
                 hidden

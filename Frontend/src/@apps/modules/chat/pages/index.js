@@ -1,13 +1,13 @@
 // ** Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classnames from "classnames"
-import { Fragment, useEffect, useRef, useState, useContext } from "react"
+import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
+import { IdleTimerProvider } from "react-idle-timer"
 import { useDispatch, useSelector } from "react-redux"
 import { handleChats } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
-import { IdleTimerProvider, useIdleTimerContext } from "react-idle-timer"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -1090,11 +1090,6 @@ const AppChat = (props) => {
 
           if (change.type === "added") {
             check_add = true
-            console.log(
-              "lis",
-              localStorage.getItem("chatAppFocus"),
-              localStorage.getItem("chatAppHidden")
-            )
 
             // ** seen message
             const chatContainer = ReactDOM.findDOMNode(chatArea.current)
@@ -1223,10 +1218,6 @@ const AppChat = (props) => {
       localStorage.setItem("chatAppFocus", checkIssetDiv)
     }
   }
-  console.log(
-    localStorage.getItem("chatAppFocus"),
-    localStorage.getItem("chatAppHidden")
-  )
 
   return (
     <Fragment>
