@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { handleChats } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
+import { IdleTimerProvider, useIdleTimerContext } from "react-idle-timer"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -82,7 +83,11 @@ const AppChat = (props) => {
     dataChatScrollBottom: [],
     hasMoreChat: false,
     lastMessageChatScrollBottom: 0,
-    checkShowDataChat: true
+    checkShowDataChat: true,
+
+    // ** idleTimer
+    chatAppHidden: false,
+    chatAppFocus: false
   })
 
   // ** State
@@ -1085,11 +1090,18 @@ const AppChat = (props) => {
 
           if (change.type === "added") {
             check_add = true
+            console.log(
+              "lis",
+              localStorage.getItem("chatAppFocus"),
+              localStorage.getItem("chatAppHidden")
+            )
 
             // ** seen message
             const chatContainer = ReactDOM.findDOMNode(chatArea.current)
             const dataSenderId = data.sender_id
             if (
+              localStorage.getItem("chatAppHidden") === "false" &&
+              localStorage.getItem("chatAppFocus") === "true" &&
               check_seen_listener === true &&
               dataSenderId !== userId &&
               (chatContainer.scrollHeight -
@@ -1178,79 +1190,125 @@ const AppChat = (props) => {
     }
   }, [active])
 
+  useEffect(() => {
+    localStorage.setItem("chatAppHidden", false)
+    localStorage.setItem("chatAppFocus", true)
+  }, [])
+
+  // ** idleTimer
+  const onIdle = () => {
+    // Close Modal Prompt
+    // Do some idle action like log out your user
+  }
+
+  const onActive = (event) => {
+    // Close Modal Prompt
+    // Do some active action
+  }
+
+  const onAction = (event) => {
+    // Do something when a user triggers a watched event
+    if (event.type !== "mousemove") {
+      let checkIssetDiv = false
+      _.forEach(event.path, (item) => {
+        if (
+          item.className === "div-li-chat" ||
+          item.className === "chat-app-window"
+        ) {
+          checkIssetDiv = true
+          return true
+        }
+      })
+      localStorage.setItem("chatAppHidden", event.target.hidden)
+      localStorage.setItem("chatAppFocus", checkIssetDiv)
+    }
+  }
+  console.log(
+    localStorage.getItem("chatAppFocus"),
+    localStorage.getItem("chatAppHidden")
+  )
+
   return (
     <Fragment>
-      <Sidebar
-        store={store}
-        sidebar={sidebar}
-        handleSidebar={handleSidebar}
-        userSidebarLeft={userSidebarLeft}
-        handleUserSidebarLeft={handleUserSidebarLeft}
-        active={active}
-        setActive={setActive}
-        setActiveFullName={setActiveFullName}
-        loadingGroup={state.loadingGroup}
-        setHasMoreHistory={(value) => setState({ hasMoreHistory: value })}
-        handleAddNewGroup={handleAddNewGroup}
-        userId={userId}
-        handleUpdateGroup={handleUpdateGroup}
-        setDataUnseenDetail={setDataUnseenDetail}
-      />
-      <div className="content-right">
-        <div className="content-wrapper">
-          <div
-            className={`content-body ${
-              userSidebarRight === true ? "sidebar-right-show" : ""
-            }`}>
+      <IdleTimerProvider
+        timeout={1000 * 60}
+        onIdle={onIdle}
+        onActive={onActive}
+        onAction={onAction}>
+        <Sidebar
+          store={store}
+          sidebar={sidebar}
+          handleSidebar={handleSidebar}
+          userSidebarLeft={userSidebarLeft}
+          handleUserSidebarLeft={handleUserSidebarLeft}
+          active={active}
+          setActive={setActive}
+          setActiveFullName={setActiveFullName}
+          loadingGroup={state.loadingGroup}
+          setHasMoreHistory={(value) => setState({ hasMoreHistory: value })}
+          handleAddNewGroup={handleAddNewGroup}
+          userId={userId}
+          handleUpdateGroup={handleUpdateGroup}
+          setDataUnseenDetail={setDataUnseenDetail}
+        />
+        <div className="content-right">
+          <div className="content-wrapper">
             <div
-              className={classnames("body-content-overlay", {
-                show: sidebar === true || userSidebarLeft === true
-              })}
-              onClick={handleOverlayClick}></div>
-            <Chat
-              store={store}
-              handleSidebar={handleSidebar}
-              userSidebarLeft={userSidebarLeft}
-              handleUserSidebarRight={handleUserSidebarRight}
-              settingChat={settingChat}
-              userId={userId}
-              sendMessage={sendMessage}
-              loadingMessage={state.loadingMessage}
-              chats={chats}
-              chatHistory={state.chatHistory}
-              getChatHistory={getChatHistory}
-              active={active}
-              hasMoreHistory={state.hasMoreHistory}
-              chatArea={chatArea}
-              scrollToBottom={scrollToBottom}
-              unread={state.unread}
-              handleSeenMessage={handleSeenMessage}
-              updateMessage={updateMessage}
-              userSidebarRight={userSidebarRight}
-              windowWidth={windowWidth}
-              setUserSidebarRight={setUserSidebarRight}
-              dataEmployees={state.dataEmployees}
-              queryLimit={queryLimit}
-              scrollToMessage={scrollToMessage}
-              checkAddMessage={state.checkAddMessage}
-              setCheckAddMessage={(value) =>
-                setState({ checkAddMessage: value })
-              }
-              handleSearchMessage={handleSearchMessage}
-              hasMoreChat={state.hasMoreChat}
-              dataChatScrollBottom={state.dataChatScrollBottom}
-              checkShowDataChat={state.checkShowDataChat}
-              getChatScrollBottom={getChatScrollBottom}
-            />
-            <UserProfileSidebar
-              user={user}
-              userSidebarRight={userSidebarRight}
-              handleUserSidebarRight={handleUserSidebarRight}
-              dataEmployees={state.dataEmployees}
-            />
+              className={`content-body ${
+                userSidebarRight === true ? "sidebar-right-show" : ""
+              }`}>
+              <div
+                className={classnames("body-content-overlay", {
+                  show: sidebar === true || userSidebarLeft === true
+                })}
+                onClick={handleOverlayClick}></div>
+
+              <Chat
+                store={store}
+                handleSidebar={handleSidebar}
+                userSidebarLeft={userSidebarLeft}
+                handleUserSidebarRight={handleUserSidebarRight}
+                settingChat={settingChat}
+                userId={userId}
+                sendMessage={sendMessage}
+                loadingMessage={state.loadingMessage}
+                chats={chats}
+                chatHistory={state.chatHistory}
+                getChatHistory={getChatHistory}
+                active={active}
+                hasMoreHistory={state.hasMoreHistory}
+                chatArea={chatArea}
+                scrollToBottom={scrollToBottom}
+                unread={state.unread}
+                handleSeenMessage={handleSeenMessage}
+                updateMessage={updateMessage}
+                userSidebarRight={userSidebarRight}
+                windowWidth={windowWidth}
+                setUserSidebarRight={setUserSidebarRight}
+                dataEmployees={state.dataEmployees}
+                queryLimit={queryLimit}
+                scrollToMessage={scrollToMessage}
+                checkAddMessage={state.checkAddMessage}
+                setCheckAddMessage={(value) =>
+                  setState({ checkAddMessage: value })
+                }
+                handleSearchMessage={handleSearchMessage}
+                hasMoreChat={state.hasMoreChat}
+                dataChatScrollBottom={state.dataChatScrollBottom}
+                checkShowDataChat={state.checkShowDataChat}
+                getChatScrollBottom={getChatScrollBottom}
+              />
+
+              <UserProfileSidebar
+                user={user}
+                userSidebarRight={userSidebarRight}
+                handleUserSidebarRight={handleUserSidebarRight}
+                dataEmployees={state.dataEmployees}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </IdleTimerProvider>
     </Fragment>
   )
 }

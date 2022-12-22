@@ -137,6 +137,7 @@ const ChatLog = (props) => {
   const focusInputMsg = () => {
     if (msgRef.current) {
       msgRef.current.focus()
+      localStorage.setItem("chatAppFocus", true)
     }
   }
 
@@ -175,10 +176,11 @@ const ChatLog = (props) => {
       const chatContainer = ReactDOM.findDOMNode(chatArea.current)
       const senderId = chats.length > 0 ? chats[chats.length - 1].senderId : 0
       if (
-        chatContainer.scrollHeight -
-          chatContainer.scrollTop -
-          chatContainer.clientHeight <=
-          200 ||
+        (unread === 0 &&
+          chatContainer.scrollHeight -
+            chatContainer.scrollTop -
+            chatContainer.clientHeight <=
+            200) ||
         chatContainer.scrollTop === 0 ||
         (senderId === userId && checkAddMessage === true)
       ) {
@@ -194,14 +196,8 @@ const ChatLog = (props) => {
 
   // ** check show btn to bottom
   useEffect(() => {
-    const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-    if (
-      unread > 0 &&
-      chatContainer.scrollHeight -
-        chatContainer.scrollTop -
-        chatContainer.clientHeight >
-        300
-    ) {
+    setState({ show_btn_to_bottom: false })
+    if (unread > 0) {
       setState({ show_btn_to_bottom: true })
     }
   }, [unread])

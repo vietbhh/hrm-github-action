@@ -103,11 +103,9 @@ const ChatMessage = (props) => {
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
     let user_list = []
-    let unseen_list = []
     if (index_groups !== -1) {
       unseen_detail = groups[index_groups].chat.unseen_detail
       user_list = groups[index_groups].user
-      unseen_list = groups[index_groups].chat.unseen
     }
 
     const detail = {}
@@ -136,10 +134,7 @@ const ChatMessage = (props) => {
     chatLog.forEach((msg, index) => {
       const seen = []
       _.forEach(detail, (value) => {
-        if (
-          unseen_list.indexOf(value.user_id) === -1 &&
-          (value.timestamp_from === 0 || msg.time < value.timestamp_from)
-        ) {
+        if (value.timestamp_from === 0 || msg.time < value.timestamp_from) {
           seen.push(value.user_id)
         }
       })
