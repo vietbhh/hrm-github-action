@@ -31,7 +31,6 @@ const NotificationDropdown = () => {
   const dispatch = useDispatch()
 
   const handleClick = (e) => {
-    e.preventDefault()
     defaultModuleApi
       .get("/notification/seen-notification")
       .then((res) => {
@@ -48,128 +47,6 @@ const NotificationDropdown = () => {
         )
       })
       .catch((err) => {})
-  }
-
-  // ** Function to render Notifications
-  const renderNotificationItems = () => {
-    return (
-      <PerfectScrollbar
-        component="li"
-        className="noti-list scrollable-container"
-        options={{
-          wheelPropagation: false
-        }}>
-        <a href="/" onClick={(e) => e.preventDefault()}>
-          <div className={classnames("d-flex align-items-center div-noti")}>
-            <div className="div-img">
-              <Avatar src={""} imgHeight="48" imgWidth="48" className="img" />
-              <Badge pill color="warning" className="badge-up">
-                <i className="iconly-Chat icbo icon"></i>
-              </Badge>
-            </div>
-            <div className="div-text">
-              <span className="text-title">Sarah Saunders</span>
-              <span className="text-content">
-                Commentted on{" "}
-                <span className="text-content-blue">Collab Design</span>
-              </span>
-            </div>
-            <div className="div-time">8h</div>
-          </div>
-
-          <div
-            className={classnames(
-              "d-flex align-items-center div-noti bg-active"
-            )}>
-            <div className="div-img">
-              <Avatar src={""} imgHeight="48" imgWidth="48" className="img" />
-              <Badge pill color="warning" className="badge-up badge-up-green">
-                <i className="iconly-Message icbo icon"></i>
-              </Badge>
-            </div>
-            <div className="div-text">
-              <span className="text-title">Sarah Saunders</span>
-              <span className="text-content">
-                Commentted on{" "}
-                <span className="text-content-blue">Collab Design</span>
-              </span>
-            </div>
-            <div className="div-time">8h</div>
-          </div>
-
-          <div className={classnames("d-flex align-items-center div-noti")}>
-            <div className="div-img">
-              <Avatar src={""} imgHeight="48" imgWidth="48" className="img" />
-              <Badge pill color="warning" className="badge-up badge-up-purple">
-                <i className="iconly-Chat icbo icon"></i>
-              </Badge>
-            </div>
-            <div className="div-text">
-              <span className="text-title">Sarah Saunders</span>
-              <span className="text-content">
-                Commentted on{" "}
-                <span className="text-content-blue">Collab Design</span>
-              </span>
-            </div>
-            <div className="div-time">8h</div>
-          </div>
-
-          <div
-            className={classnames(
-              "d-flex align-items-center div-noti bg-gray"
-            )}>
-            <div className="div-img">
-              <Avatar src={""} imgHeight="48" imgWidth="48" className="img" />
-              <Badge pill color="warning" className="badge-up badge-up-orange">
-                <i className="iconly-Chat icbo icon"></i>
-              </Badge>
-            </div>
-            <div className="div-text">
-              <span className="text-title">Sarah Saunders</span>
-              <span className="text-content">
-                Commentted on{" "}
-                <span className="text-content-blue">Collab Design</span>
-              </span>
-            </div>
-            <div className="div-time">8h</div>
-          </div>
-
-          <div className={classnames("d-flex align-items-center div-noti")}>
-            <div className="div-img">
-              <Avatar src={""} imgHeight="48" imgWidth="48" className="img" />
-              <Badge pill color="warning" className="badge-up">
-                <i className="iconly-Chat icbo icon"></i>
-              </Badge>
-            </div>
-            <div className="div-text">
-              <span className="text-title">Sarah Saunders</span>
-              <span className="text-content">
-                Commentted on{" "}
-                <span className="text-content-blue">Collab Design</span>
-              </span>
-            </div>
-            <div className="div-time">8h</div>
-          </div>
-
-          <div className={classnames("d-flex align-items-center div-noti")}>
-            <div className="div-img">
-              <Avatar src={""} imgHeight="48" imgWidth="48" className="img" />
-              <Badge pill color="warning" className="badge-up">
-                <i className="iconly-Chat icbo icon"></i>
-              </Badge>
-            </div>
-            <div className="div-text">
-              <span className="text-title">Sarah Saunders</span>
-              <span className="text-content">
-                Commentted on{" "}
-                <span className="text-content-blue">Collab Design</span>
-              </span>
-            </div>
-            <div className="div-time">8h</div>
-          </div>
-        </a>
-      </PerfectScrollbar>
-    )
   }
 
   const renderListNotification = () => {
@@ -195,7 +72,10 @@ const NotificationDropdown = () => {
         tag="a"
         className="nav-link"
         href="/"
-        onClick={(e) => handleClick(e)}
+        onClick={(e) => {
+          e.preventDefault()
+          if (numberNotificationStore > 0) handleClick(e)
+        }}
         id="notification">
         <svg
           className="bell"

@@ -21,20 +21,22 @@ const Test = (props) => {
     //socket.on("notification", handleData)
     socket.emit("send_data_to_users", {
       receiver: 1,
-      key: "chat_notification",
+      key: "app_notification",
+      push_notification: true,
+      save_notification: true,
       data: {
         title: "Trịnh Hải Long",
-        body: "uh,cứ thế mà làm",
-        senderType : "user",
-        sender : "1",
-        link : "#"
+        body: "uh,cứ thế mà làm" + Math.floor(Math.random() * 100),
+        senderType: "user",
+        sender: "1",
+        link: "#"
       }
     })
   }, [socket])
 
   const testNoti = () => {
     notification.show({
-      title: "bạn nhận được thông báo",  
+      title: "bạn nhận được thông báo",
       config: {
         duration: 10000000
       }

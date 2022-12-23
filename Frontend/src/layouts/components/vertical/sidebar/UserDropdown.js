@@ -138,8 +138,6 @@ const UserDropdown = ({
             <span className="align-middle">FAQ</span>
           </DropdownItem>
           <DropdownItem
-            tag={Link}
-            to="/login"
             onClick={() => {
               dispatch(handleLogout())
               if (socket.connected) {

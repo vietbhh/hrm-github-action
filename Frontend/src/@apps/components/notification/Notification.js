@@ -47,6 +47,7 @@ const Notification = (props) => {
           playedPromise.catch((e) => {}).then(() => {})
         }
       })
+      //console.log(window.location.pathname)
       notification.show({
         title: data.title,
         text: data.body,
@@ -65,12 +66,13 @@ const Notification = (props) => {
   onMessageListener()
     .then((payload) => {
       console.log(payload)
-      notification.show({
-        title: payload.notification.title,
-        text: payload.notification.body,
-        meta: moment().format("D MMM YYYY, h:mm:ss a")
-      })
-
+      if (!socket.connect) {
+        notification.show({
+          title: payload.data.title,
+          text: payload.data.body,
+          meta: useFormatMessage("common.few_seconds_ago")
+        })
+      }
       const notificationData = payload?.data
       if (notificationData?.add_notification === "true") {
         const listNotification = [

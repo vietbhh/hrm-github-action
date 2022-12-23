@@ -18,8 +18,7 @@ class Notifications
 
 	public function add($content = [])
 	{
-		$this->model->save($content);
-		return $this->model->insertID;
+		return $this->model->insert($content);
 	}
 
 	public function detail($id)
@@ -79,9 +78,7 @@ class Notifications
 			'full_name',
 			'email',
 			'avatar'
-		])
-			->asArray()
-			->findAll();
+		])->asArray()->findAll();
 		$arrUser = [];
 		foreach ($listUser as $rowUser) {
 			$arrUser[$rowUser['id']] = $rowUser;
@@ -95,74 +92,74 @@ class Notifications
 
 			return $result;
 		}
-		
+
 		return $this->_getDataNotification($data, $userId, $arrUser);
 	}
 
-	public function pushNotification($params, $arrIdUser, $addToNotification = false)
+	public function pushNotification($data = ['title' => '', 'content' => '', 'link' => '', 'image' => '', 'type' => 'other'], $receiver, $saveToDb = true)
 	{
-		$title = $params['title'];
-		$content = $params['content'];
-		$link =  $params['link'];
-		$image = isset($params['img']) ? $params['img'] : '';
+		$title = $data['title'];
+		$content = $data['content'];
+		$link = $data['link'];
+		$image = $data['image'] ?? '';
+		$type = $data['type'] ?? "other";
 
 		try {
 			$userModel = new UserModel();
-			$listUser = $userModel->asArray()->whereIn('id', $arrIdUser)->findAll();
+			$listUser = $userModel->select(['id', 'username', 'device_token'])->asArray()->whereIn('id', $receiver)->findAll();
 			$newNotification = [];
-			if ($addToNotification) {
-				$arrDataAdd = $params;
-				unset($arrDataAdd['img']);
-				$arrDataAdd['recipient_id'] = json_encode($arrIdUser);
-				$arrDataAdd['type'] = 'system';
-				$arrDataAdd['sender_id'] = user_id();
-				$arrDataAdd['read_by'] = json_encode([]);
-				$id = $this->add($arrDataAdd);
-				$newNotification = $this->handleNotificationData($this->detail($id), false);
+			if ($saveToDb) {
+				$saveNotificationData = [
+					'sender_id' => user_id() ?? 0,
+					'recipient_id' => json_encode($receiver),
+					'type' => $type,
+					'title' => $title,
+					'content' => $content,
+					'link' => $link,
+					'image' => $image,
+					'read_by' => json_encode([])
+				];
+				$id = $this->add($saveNotificationData);
 			}
-			
+
+			$client = new FirebaseCM\Client();
+
+			$client->setApiKey($_ENV['firebase_server_key']);
+			$client->injectGuzzleHttpClient(new \GuzzleHttp\Client());
+
+			$message = new FirebaseCM\Message();
+
+			$message->setPriority('high');
+			$message->setNotification(new FirebaseCM\Notification('some title', 'some body'))->setData(['key' => 'value']);
+
+
 			foreach ($listUser as $rowUser) {
-				$deviceTokens = $rowUser['device_token'];
-				if ($deviceTokens) {
-					$deviceTokens = json_decode($deviceTokens, true);
-					foreach ($deviceTokens as $deviceToken) {
-						$token = $deviceToken['token'];
-						$data = [
-							"notification" => [
-								"body"  => $content,
-								"title" => $title,
-								"image" => $image
-							],
-							"priority" =>  "high",
-							"data" => [
-								"info" => [
-									"title"  => $title,
-									"link"   => $link,
-									"image"  => $image
-								],
-								"add_notification" => $addToNotification,
-								"notification_info" => $newNotification
-							],
-							"to" => $token
-						];
-
-						$ch = curl_init();
-
-						curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-						curl_setopt($ch, CURLOPT_POST, 1);
-
-						$headers = array();
-						$headers[] = 'Content-Type: application/json';
-						$headers[] = 'Authorization: key='.$_ENV['firebase_server_key'];
-						curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-						$result = curl_exec($ch);
-						curl_close($ch);
-					}
+				$recipients = $rowUser['device_token'] ?? [];
+				$recipients = json_decode($recipients, true);
+				foreach ($recipients as $recipient) {
+					$message->addRecipient(new FirebaseCM\Recipient\Device($recipient));
 				}
 			}
+			$response = $client->send($message);
+			$responseData = $response->getBody()->getContents();
+			if (!empty($responseData)) {
+				$responseData = json_decode($responseData, true);
+				if (!empty($responseData['results'])) {
+					foreach ($responseData["results"] as $i => $result) {
+						if (isset($result["error"])) {
+							echo "<pre>";
+							print_r($recipients[$i]);
+							echo "</pre>";
+
+						}
+					}
+				}
+				echo "<pre>";
+				print_r($responseData);
+				echo "</pre>";
+
+			}
+
 
 			return true;
 		} catch (\Exception $e) {
@@ -176,7 +173,7 @@ class Notifications
 	// ** support function
 	private function _getDataNotification($data, $userId, $arrUser)
 	{
-		$data['sender_id'] = isset($arrUser[$data['sender_id']]) ? $arrUser[$data['sender_id']] : [];
+		$data['sender_id'] = $arrUser[$data['sender_id']] ?? [];
 		$data['seen'] = false;
 		if (!empty($data['read_by'])) {
 			$a = array_search($userId, json_decode($data['read_by'], true));
@@ -184,6 +181,7 @@ class Notifications
 				$data['seen'] = true;
 			}
 		}
+
 		unset($data['recipient_id']);
 		unset($data['read_by']);
 

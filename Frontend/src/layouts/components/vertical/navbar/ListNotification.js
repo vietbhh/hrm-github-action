@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import { Badge } from "reactstrap"
 // ** Components
 import Avatar from "@apps/modules/download/pages/Avatar"
+import { timeDifference } from "@apps/utility/common"
 
 const ListNotification = (props) => {
   const {
@@ -51,10 +52,9 @@ const ListNotification = (props) => {
     return (
       <div
         key={`notification-${index}`}
-        className={classnames(
-          "d-flex align-items-center justify-content-between div-noti",
-          { "bg-active": !item.seen }
-        )}>
+        className={classnames("d-flex align-items-center div-noti app-notifications", {
+          "bg-active": !item.seen
+        })}>
         <div className="div-img">
           <Avatar
             src={sender?.avatar}
@@ -62,16 +62,15 @@ const ListNotification = (props) => {
             imgWidth="48"
             className="img"
           />
-          <Fragment>{renderCategoryBadge()}</Fragment>
         </div>
-        <div className="div-text">
-          <span className="text-title">{sender?.full_name}</span>
-          <span className="text-content">
-            {item.content} on{" "}
-            <span className="text-content-blue">{item.title}</span>
-          </span>
+        <div
+          className={classnames("div-text", {
+            "has-content": item.content
+          })}>
+          {item.title}
+          {item.content && <p className="div-content">{item.content}</p>}
+          <p className="div-time">{timeDifference(item.created_at)}</p>
         </div>
-        <div className="div-time">{`${Math.floor(duration)}${suffix}`}</div>
       </div>
     )
   }

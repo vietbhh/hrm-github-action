@@ -1,5 +1,5 @@
 import { authorize } from "#app/middlewares/socket-jwt/authorize.js"
-import { Users } from "#app/models/user.model.mysql.js"
+import { Users } from "#app/models/users.model.mysql.js"
 import { walk } from "file"
 import fs from "fs"
 import path, { dirname } from "path"

@@ -19,7 +19,8 @@ if ("serviceWorker" in navigator) {
 const firebaseConfig = {
   apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
   authDomain: "friday-351410.firebaseapp.com",
-  databaseURL: "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "friday-351410",
   storageBucket: "friday-351410.appspot.com",
   messagingSenderId: "802894112425",
@@ -33,14 +34,48 @@ const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage((payload) => {
   const notificationData = payload?.data
-  if (notificationData?.add_notification === "true") {
-    const notificationInfo = JSON.parse(notificationData.notification_info)
-    self.clients.matchAll({ includeUncontrolled: true }).then(function (clients) {
-      //you can see your main window client in this list.
-      clients.forEach(function (client) {
-        client.postMessage(notificationInfo)
-      })
-    })
+  const notificationTitle = notificationData.title
+  const badge = notificationData?.badge ?? null
+  const body = notificationData?.body ?? ""
+  const data = notificationData?.data ?? null
+  const icon = notificationData?.icon ?? null
+  const image = notificationData?.image ?? null
+  const actions =
+    notificationData?.actions !== undefined
+      ? {
+          actions: notificationData?.actions
+        }
+      : {}
+  const notificationOptions = {
+    body,
+    badge,
+    data,
+    icon,
+    image,
+    ...actions
   }
-  
+  self.addEventListener("push", function (event) {
+    event.waitUntil(
+      self.clients
+        .matchAll({ type: "window", includeUncontrolled: true })
+        .then((windowClients) => {
+          let visibleClients = windowClients.some(
+            (client) =>
+              client.visibilityState === "visible" &&
+              // Ignore chrome-extension clients as that matches the background pages of extensions, which
+              // are always considered visible for some reason.
+              !client.url.startsWith("chrome-extension://")
+          )
+
+          if (!visibleClients) {
+            event.waitUntil(
+              self.registration.showNotification(
+                notificationTitle,
+                notificationOptions
+              )
+            )
+          }
+        })
+    )
+  })
 })
