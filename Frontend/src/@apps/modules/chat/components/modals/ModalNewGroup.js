@@ -1,5 +1,6 @@
 import { ErpInput, ErpUserSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import { FormProvider, useForm } from "react-hook-form"
 import {
   Button,
@@ -31,6 +32,12 @@ const ModalNewGroup = (props) => {
   const { handleSubmit } = methods
 
   const onSubmit = async (values) => {
+    if (values.group_member.length <= 1) {
+      notification.showWarning({
+        text: useFormatMessage("modules.chat.text.warning_add_group_member")
+      })
+      return
+    }
     setState({ loading: true })
     const member = [userId]
     const unseen = []
@@ -46,10 +53,9 @@ const ModalNewGroup = (props) => {
       timestamp: timestamp,
       type: "group",
       user: member,
+      admin: [userId],
+      creator: userId,
       new: 0,
-      pin: [],
-      avatar: "",
-      background: "",
       unseen: unseen,
       unseen_detail: setDataUnseenDetail("add", userId, timestamp, [], member)
     }

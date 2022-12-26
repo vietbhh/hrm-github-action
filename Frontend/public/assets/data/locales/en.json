@@ -869,7 +869,17 @@
         "seen": "Seen",
         "search_error_character": "Please search 3 or more characters",
         "no_results_found": "No results found",
-        "drop_your_file_here": "Drop your file here"
+        "drop_your_file_here": "Drop your file here",
+        "new_group": "New Group",
+        "notification": "Notification",
+        "files": "Files",
+        "images": "Images",
+        "share_links": "Share links",
+        "more_options": "More options",
+        "members": "Members",
+        "add_member": "Add member",
+        "admin": "Admin",
+        "warning_add_group_member": "Please add 2 or more members"
       }
     }
   },

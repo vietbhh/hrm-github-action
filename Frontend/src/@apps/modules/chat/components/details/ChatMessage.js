@@ -103,9 +103,11 @@ const ChatMessage = (props) => {
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
     let user_list = []
+    let unseen_list = []
     if (index_groups !== -1) {
       unseen_detail = groups[index_groups].chat.unseen_detail
       user_list = groups[index_groups].user
+      unseen_list = groups[index_groups].chat.unseen
     }
 
     const detail = {}
@@ -134,7 +136,10 @@ const ChatMessage = (props) => {
     chatLog.forEach((msg, index) => {
       const seen = []
       _.forEach(detail, (value) => {
-        if (value.timestamp_from === 0 || msg.time < value.timestamp_from) {
+        if (
+          value.user_id !== msg.senderId &&
+          (value.timestamp_from === 0 || msg.time < value.timestamp_from)
+        ) {
           seen.push(value.user_id)
         }
       })
@@ -425,7 +430,7 @@ const ChatMessage = (props) => {
         return (
           <div
             className={`chat-content chat-content-file ${className} ${
-              chat.seen.length > 1 && chat.senderId === userId ? "has-seen" : ""
+              chat.seen.length > 0 && chat.senderId === userId ? "has-seen" : ""
             }`}>
             {renderSenderName(chat, index_message)}
             <DownloadFile
@@ -443,7 +448,7 @@ const ChatMessage = (props) => {
             </DownloadFile>
             <p className="time">
               {formatTime(chat.time)}
-              {chat.seen.length > 1 && chat.senderId === userId && (
+              {chat.seen.length > 0 && chat.senderId === userId && (
                 <svg
                   className="ms-25"
                   xmlns="http://www.w3.org/2000/svg"
@@ -474,7 +479,7 @@ const ChatMessage = (props) => {
           <>
             <p
               className={`text ${
-                data.seen.length > 1 && data.senderId === userId
+                data.seen.length > 0 && data.senderId === userId
                   ? "has-seen"
                   : ""
               }`}>
@@ -489,7 +494,7 @@ const ChatMessage = (props) => {
             </p>
             <p className="time">
               {formatTime(data.time)}
-              {data.seen.length > 1 && data.senderId === userId && (
+              {data.seen.length > 0 && data.senderId === userId && (
                 <svg
                   className="ms-25"
                   xmlns="http://www.w3.org/2000/svg"
@@ -521,7 +526,7 @@ const ChatMessage = (props) => {
           <>
             <p
               className={`text ${
-                data.seen.length > 1 && data.senderId === userId
+                data.seen.length > 0 && data.senderId === userId
                   ? "has-seen"
                   : ""
               }`}>
@@ -529,7 +534,7 @@ const ChatMessage = (props) => {
             </p>
             <p className="time">
               {formatTime(data.time)}
-              {data.seen.length > 1 && data.senderId === userId && (
+              {data.seen.length > 0 && data.senderId === userId && (
                 <svg
                   className="ms-25"
                   xmlns="http://www.w3.org/2000/svg"
@@ -853,6 +858,7 @@ const ChatMessage = (props) => {
             )
           }
         ]
+
         if (chat.senderId === userId) {
           items_more = [
             ...items_more,
@@ -879,9 +885,7 @@ const ChatMessage = (props) => {
                     />
                   </svg>
                   <span>
-                    {chat.senderId === userId
-                      ? chat.seen.length - 1
-                      : chat.seen.length}{" "}
+                    {chat.seen.length}{" "}
                     {useFormatMessage("modules.chat.text.seen")}
                   </span>
                 </div>

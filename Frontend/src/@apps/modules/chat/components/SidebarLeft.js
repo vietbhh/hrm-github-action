@@ -167,7 +167,10 @@ const SidebarLeft = (props) => {
                             imgWidth="50"
                             userId={item.idEmployee}
                           />
-                          <div className="chat-info flex-grow-1">
+                          <div
+                            className={`chat-info flex-grow-1 ${
+                              item.chat.unseenMsgs > 0 ? "unread" : ""
+                            }`}>
                             <h5 className="mb-0">{item.fullName}</h5>
                             <CardText className="text-truncate">
                               {!_.isEmpty(item.chat.lastUser)
@@ -179,7 +182,7 @@ const SidebarLeft = (props) => {
                             </CardText>
                           </div>
                           <div className="chat-meta text-nowrap">
-                            {item.chat.unseenMsgs >= 1 ? (
+                            {item.chat.unseenMsgs > 0 ? (
                               <Badge className="float-end" color="danger" pill>
                                 {item.chat.unseenMsgs &&
                                 item.chat.unseenMsgs > 9 ? (
@@ -401,11 +404,6 @@ const SidebarLeft = (props) => {
             <div className="div-chat-logo">
               <span className="chat-title">Chat</span>
               <span className="chat-title chat-dot">.</span>
-              <Tooltip title="New Group">
-                <i
-                  className="iconly-Edit-Square icli btn-new-group"
-                  onClick={() => toggleModalNewGroup()}></i>
-              </Tooltip>
             </div>
             <div className="chat-fixed-search">
               <div className="d-flex align-items-center w-100">
@@ -433,15 +431,20 @@ const SidebarLeft = (props) => {
                     onChange={handleFilter}
                   />
                 </InputGroup>
+
+                <Tooltip title="New Group">
+                  <button
+                    type="button"
+                    className="btn-new-group"
+                    onClick={() => toggleModalNewGroup()}>
+                    <i className="fa-regular fa-plus"></i>
+                  </button>
+                </Tooltip>
               </div>
             </div>
             <PerfectScrollbar
               className="chat-user-list-wrapper list-group"
               options={{ wheelPropagation: false }}>
-              {/* <Button color="primary" onClick={() => toggleModalNewGroup()}>
-                New Group
-              </Button> */}
-
               {loadingGroup && <DefaultSpinner />}
               {!loadingGroup && (
                 <>

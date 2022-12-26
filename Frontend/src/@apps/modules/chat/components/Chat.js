@@ -394,7 +394,7 @@ const ChatLog = (props) => {
       file_type: file[0].type
     }
     const timestamp = Date.now()
-    updateMessage(selectedUser.chat.id, timestamp, {
+    sendMessage(selectedUser.chat.id, "", {
       message: "",
       status: "loading",
       type: file[0].type,
@@ -451,6 +451,16 @@ const ChatLog = (props) => {
 
   // ** listen paste image
   useEffect(() => {
+    const handleClick = (event) => {
+      if (
+        divChatRef.current &&
+        divChatRef.current.contains(event.target) &&
+        unread > 0
+      ) {
+        handleSeenMessage(selectedUser.chat.id)
+      }
+    }
+
     const handlePaste = (event) => {
       if (divChatRef.current && divChatRef.current.contains(event.target)) {
         const clipboardItems = event.clipboardData.items
@@ -472,11 +482,13 @@ const ChatLog = (props) => {
       }
     }
     window.addEventListener("paste", handlePaste)
+    window.addEventListener("click", handleClick)
 
     return () => {
       window.removeEventListener("paste", handlePaste)
+      window.removeEventListener("click", handleClick)
     }
-  }, [divChatRef])
+  }, [divChatRef, unread])
 
   // drag state
   const [dragActive, setDragActive] = useState(null)

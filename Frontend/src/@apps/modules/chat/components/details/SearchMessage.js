@@ -133,7 +133,7 @@ const SearchMessage = (props) => {
       return
     }
     if (values._searchMessage.length < 3) {
-      notification.showError({
+      notification.showWarning({
         text: useFormatMessage("modules.chat.text.search_error_character")
       })
       return

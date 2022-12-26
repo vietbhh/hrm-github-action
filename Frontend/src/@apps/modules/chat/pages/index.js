@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { handleChats } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
+import SocketContext from "utility/context/Socket"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -36,7 +37,6 @@ import {
 // ** style
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
-import SocketContext from "utility/context/Socket"
 import "../assets/scss/chat.scss"
 
 const AppChat = (props) => {
@@ -56,8 +56,7 @@ const AppChat = (props) => {
         isNotificationsOn: false
       }
     },
-    selectedUser: {},
-    selectedGroup: {}
+    selectedUser: {}
   })
 
   // ** handle store
@@ -192,7 +191,7 @@ const AppChat = (props) => {
         setState({ hasMoreHistory: false })
         setEmptyHistory()
         const q = query(
-          collection(db, `${firestoreDb}/messages/${groupId}`),
+          collection(db, `${firestoreDb}/chat_messages/${groupId}`),
           orderBy("timestamp", "asc"),
           where("timestamp", ">=", timestamp),
           limit(30)
@@ -224,7 +223,7 @@ const AppChat = (props) => {
 
           if (dem_chat > 1) {
             const q = query(
-              collection(db, `${firestoreDb}/messages/${groupId}`),
+              collection(db, `${firestoreDb}/chat_messages/${groupId}`),
               orderBy("timestamp", "desc"),
               where("timestamp", "<", timestamp),
               limit(20)
@@ -336,7 +335,18 @@ const AppChat = (props) => {
   }
 
   const handleAddNewGroup = async (docData) => {
-    return await addDoc(collection(db, `${firestoreDb}/groups/groups`), docData)
+    docData = {
+      ...docData,
+      mute: [],
+      pin: [],
+      avatar: "",
+      background: "",
+      file_count: {}
+    }
+    return await addDoc(
+      collection(db, `${firestoreDb}/chat_groups/groups`),
+      docData
+    )
   }
 
   const handleLastMessage = (type, msg) => {
@@ -371,14 +381,16 @@ const AppChat = (props) => {
             user_id: item,
             timestamp_from: 0,
             timestamp_to: 0,
-            unread_count: 0
+            unread_count: 0,
+            timestamp_seen_last: timestamp
           })
         } else {
           _unseen_detail.push({
             user_id: item,
             timestamp_from: timestamp,
             timestamp_to: timestamp,
-            unread_count: 1
+            unread_count: 1,
+            timestamp_seen_last: 0
           })
         }
       })
@@ -394,12 +406,14 @@ const AppChat = (props) => {
             user_id: item.user_id,
             timestamp_from: 0,
             timestamp_to: 0,
-            unread_count: 0
+            unread_count: 0,
+            timestamp_seen_last: timestamp
           })
         } else {
           let timestamp_from = 0
           let timestamp_to = 0
           let unread_count = 0
+          const timestamp_seen_last = item.timestamp_seen_last
           if (item.unread_count === 0) {
             timestamp_from = timestamp
             timestamp_to = timestamp
@@ -413,7 +427,8 @@ const AppChat = (props) => {
             user_id: item.user_id,
             timestamp_from: timestamp_from,
             timestamp_to: timestamp_to,
-            unread_count: unread_count
+            unread_count: unread_count,
+            timestamp_seen_last: timestamp_seen_last
           })
         }
       })
@@ -429,7 +444,8 @@ const AppChat = (props) => {
             user_id: item.user_id,
             timestamp_from: 0,
             timestamp_to: 0,
-            unread_count: 0
+            unread_count: 0,
+            timestamp_seen_last: item.timestamp_to
           })
         } else {
           _unseen_detail.push(item)
@@ -444,10 +460,26 @@ const AppChat = (props) => {
 
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
+    const index_groups = store.groups.findIndex((item) => item.id === groupId)
+    let file_count = {}
+    if (index_groups !== 1) {
+      const group_file_count = store.groups[index_groups].file_count
+      if (dataAddFile.type === "link") {
+        const count_link = group_file_count?.link
+          ? group_file_count?.link + 1
+          : 1
+        file_count = group_file_count
+          ? { ...group_file_count, link: count_link }
+          : { link: count_link }
+      } else {
+        file_count = group_file_count ? { ...group_file_count } : {}
+      }
+    }
+
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id
 
-      const docGroups = doc(db, `${firestoreDb}/groups/groups`, groupId)
+      const docGroups = doc(db, `${firestoreDb}/chat_groups/groups`, groupId)
       getDoc(docGroups).then((res) => {
         const dataGroups = res.data()
         const unseen = dataGroups.user
@@ -469,7 +501,7 @@ const AppChat = (props) => {
           docData["_smeta"] = triGram(msg.slice(0, 500))
         }
         setDoc(
-          doc(collection(db, `${firestoreDb}/messages/${groupId}`)),
+          doc(collection(db, `${firestoreDb}/chat_messages/${groupId}`)),
           docData
         )
 
@@ -486,7 +518,7 @@ const AppChat = (props) => {
           }
         }) */
 
-        updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
+        updateDoc(doc(db, `${firestoreDb}/chat_groups/groups`, groupId), {
           last_message: handleLastMessage(docData.type, msg),
           last_user: userId,
           timestamp: timestamp,
@@ -498,7 +530,8 @@ const AppChat = (props) => {
             timestamp,
             unseen_detail,
             []
-          )
+          ),
+          file_count: file_count
         })
       })
     } else {
@@ -530,9 +563,6 @@ const AppChat = (props) => {
         type: "employee",
         user: [userId, idEmployee],
         new: 1,
-        pin: [],
-        avatar: "",
-        background: "",
         unseen: [idEmployee],
         unseen_detail: setDataUnseenDetail(
           "add",
@@ -540,7 +570,8 @@ const AppChat = (props) => {
           timestamp,
           [],
           [userId, idEmployee]
-        )
+        ),
+        file_count: file_count
       }
       handleAddNewGroup(docData).then((res) => {
         const newGroupId = res.id
@@ -559,7 +590,7 @@ const AppChat = (props) => {
         }
 
         setDoc(
-          doc(collection(db, `${firestoreDb}/messages/${newGroupId}`)),
+          doc(collection(db, `${firestoreDb}/chat_messages/${newGroupId}`)),
           docDataMessage
         )
         setState({ loadingMessage: false })
@@ -573,7 +604,7 @@ const AppChat = (props) => {
   const updateMessage = (groupId, timestamp, dataUpdate) => {
     if (!_.isEmpty(groupId)) {
       const q = query(
-        collection(db, `${firestoreDb}/messages/${groupId}`),
+        collection(db, `${firestoreDb}/chat_messages/${groupId}`),
         where("timestamp", "==", timestamp)
       )
       getDocs(q).then((res) => {
@@ -583,13 +614,49 @@ const AppChat = (props) => {
           dem++
           docId = docData.id
         })
-        if (dem === 0) {
-          sendMessage(groupId, "", dataUpdate)
-        } else {
+        if (dem > 0) {
           updateDoc(
-            doc(db, `${firestoreDb}/messages/${groupId}`, docId),
+            doc(db, `${firestoreDb}/chat_messages/${groupId}`, docId),
             dataUpdate
           )
+          if (dataUpdate.status === "success") {
+            const index_groups = store.groups.findIndex(
+              (item) => item.id === groupId
+            )
+            if (index_groups !== 1) {
+              const group_file_count = store.groups[index_groups].file_count
+              if (
+                dataUpdate.type === "image" ||
+                dataUpdate.type === "image_gif"
+              ) {
+                const count_image = group_file_count?.image
+                  ? group_file_count?.image + 1
+                  : 1
+                const file_groups = group_file_count
+                  ? { ...group_file_count, image: count_image }
+                  : { image: count_image }
+                updateDoc(
+                  doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
+                  {
+                    file_count: file_groups
+                  }
+                )
+              } else {
+                const count_file = group_file_count?.file
+                  ? group_file_count?.file + 1
+                  : 1
+                const file_groups = group_file_count
+                  ? { ...group_file_count, file: count_file }
+                  : { file: count_file }
+                updateDoc(
+                  doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
+                  {
+                    file_count: file_groups
+                  }
+                )
+              }
+            }
+          }
         }
       })
     } else {
@@ -601,7 +668,7 @@ const AppChat = (props) => {
     if (!_.isEmpty(groupId) && state.hasMoreHistory === true) {
       setState({ hasMoreHistory: false })
       const q = query(
-        collection(db, `${firestoreDb}/messages/${groupId}`),
+        collection(db, `${firestoreDb}/chat_messages/${groupId}`),
         orderBy("timestamp", "desc"),
         limit(30),
         startAt(state.lastTimeMessageHistory)
@@ -653,7 +720,7 @@ const AppChat = (props) => {
       setState({ hasMoreChat: false })
       if (checkFull === false) {
         const q = query(
-          collection(db, `${firestoreDb}/messages/${groupId}`),
+          collection(db, `${firestoreDb}/chat_messages/${groupId}`),
           orderBy("timestamp", "asc"),
           where("timestamp", ">=", state.lastMessageChatScrollBottom),
           limit(queryLimit)
@@ -706,7 +773,7 @@ const AppChat = (props) => {
         })
       } else {
         const q = query(
-          collection(db, `${firestoreDb}/messages/${groupId}`),
+          collection(db, `${firestoreDb}/chat_messages/${groupId}`),
           orderBy("timestamp", "asc"),
           where("timestamp", ">=", state.lastMessageChatScrollBottom),
           where("timestamp", "<", state.lastTimeMessageChat)
@@ -757,7 +824,7 @@ const AppChat = (props) => {
       const index = store.groups.findIndex((item) => item.id === groupId)
       if (index !== -1) {
         const unseen_detail = store.groups[index].chat.unseen_detail
-        updateDoc(doc(db, `${firestoreDb}/groups/groups`, groupId), {
+        updateDoc(doc(db, `${firestoreDb}/chat_groups/groups`, groupId), {
           unseen: arrayRemove(userId),
           unseen_detail: setDataUnseenDetail(
             "seen",
@@ -773,7 +840,7 @@ const AppChat = (props) => {
 
   const handleUpdateGroup = async (groupId, dataUpdate) => {
     await updateDoc(
-      doc(db, `${firestoreDb}/groups/groups`, groupId),
+      doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
       dataUpdate
     )
   }
@@ -785,7 +852,7 @@ const AppChat = (props) => {
     })
 
     const q_mess = query(
-      collection(db, `${firestoreDb}/messages/${groupId}`),
+      collection(db, `${firestoreDb}/chat_messages/${groupId}`),
       ...searchConstraints
     )
     return await getDocs(q_mess)
@@ -800,7 +867,8 @@ const AppChat = (props) => {
       const index_unseen_detail = unseen_detail.findIndex(
         (item) => item.user_id === userId
       )
-      if (index_unseen_detail !== -1) {
+      const unseen = store.groups[index].chat.unseen
+      if (index_unseen_detail !== -1 && unseen.indexOf(userId) !== -1) {
         setUnread(unseen_detail[index_unseen_detail].unread_count)
       }
     }
@@ -812,7 +880,7 @@ const AppChat = (props) => {
     }
     if (state.loadingEmployee === false) {
       const q = query(
-        collection(db, `${firestoreDb}/groups/groups`),
+        collection(db, `${firestoreDb}/chat_groups/groups`),
         where("user", "array-contains", userId),
         orderBy("timestamp", "asc")
       )
@@ -850,6 +918,9 @@ const AppChat = (props) => {
               pin: pin,
               type: data.type,
               timestamp: data.timestamp,
+              file_count: data.file_count,
+              mute: data.mute,
+              admin: data.admin,
               personalInfo: {
                 email: employee.email ? employee.email : "",
                 phone: employee.phone ? employee.phone : "",
@@ -882,6 +953,9 @@ const AppChat = (props) => {
               pin: pin,
               type: data.type,
               timestamp: data.timestamp,
+              file_count: data.file_count,
+              mute: data.mute,
+              admin: data.admin,
               personalInfo: {
                 email: "",
                 phone: "",
@@ -1018,6 +1092,7 @@ const AppChat = (props) => {
           about: employee.about,
           avatar: employee.avatar,
           user: employee.user,
+          admin: [],
           type: employee.type,
           personalInfo: employee.personalInfo
         }
@@ -1062,8 +1137,10 @@ const AppChat = (props) => {
           about: employee.about,
           avatar: employee.avatar,
           user: employee.user,
+          admin: employee.admin,
           type: employee.type,
-          personalInfo: employee.personalInfo
+          personalInfo: employee.personalInfo,
+          file_count: employee?.file_count || {}
         }
       }
       setSelectedUser(selectedUser)
@@ -1076,7 +1153,7 @@ const AppChat = (props) => {
       }, 1000)
 
       const q_mess = query(
-        collection(db, `${firestoreDb}/messages/${active}`),
+        collection(db, `${firestoreDb}/chat_messages/${active}`),
         orderBy("timestamp", "desc"),
         limit(queryLimit)
       )
@@ -1295,6 +1372,9 @@ const AppChat = (props) => {
                 userSidebarRight={userSidebarRight}
                 handleUserSidebarRight={handleUserSidebarRight}
                 dataEmployees={state.dataEmployees}
+                userId={userId}
+                groups={store.groups}
+                active={active}
               />
             </div>
           </div>
