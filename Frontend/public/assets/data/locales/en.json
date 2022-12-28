@@ -878,8 +878,15 @@
         "more_options": "More options",
         "members": "Members",
         "add_member": "Add member",
+        "add_new_member": "Add new member",
         "admin": "Admin",
-        "warning_add_group_member": "Please add 2 or more members"
+        "warning_add_group_member": "Please add 2 or more members",
+        "view_chat": "View chat",
+        "delete_member": "Delete member",
+        "file_image_link": "File, image and link",
+        "file": "File",
+        "image": "Image",
+        "link": "Link"
       }
     }
   },

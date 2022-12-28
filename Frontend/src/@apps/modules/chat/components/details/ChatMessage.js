@@ -11,7 +11,7 @@ import { Link2 } from "react-feather"
 import ReactHtmlParser from "react-html-parser"
 
 import { useFormatMessage } from "@apps/utility/common"
-import { Dropdown, Image, Menu, Tooltip } from "antd"
+import { Dropdown, Image, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Badge, Spinner } from "reactstrap"
 import { formatTime, highlightText } from "../../common/common"

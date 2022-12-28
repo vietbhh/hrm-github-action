@@ -60,8 +60,6 @@ const SidebarLeft = (props) => {
     setQuery("")
     setActive(id)
     setActiveFullName(fullName)
-    setHasMoreHistory(true)
-    //getMessage(id, fullName)
     if (sidebar === true) {
       handleSidebar()
     }

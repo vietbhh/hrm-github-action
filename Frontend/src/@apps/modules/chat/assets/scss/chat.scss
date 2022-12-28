@@ -307,6 +307,10 @@ $btn-background-color: #377dff;
           border-radius: 12px;
           transition: 0.5s;
 
+          .body-content-overlay {
+            z-index: 10;
+          }
+
           .chat-app-window {
             .highlight-text {
               background-color: $primary-bg;
@@ -787,6 +791,7 @@ $btn-background-color: #377dff;
 
                     p.text {
                       margin-right: 40px;
+                      word-break: break-word;
 
                       a {
                         &:hover {
@@ -1349,7 +1354,7 @@ $btn-background-color: #377dff;
                 margin-left: -10px;
                 margin-right: -10px;
                 cursor: pointer;
-                margin-bottom: 15px;
+                margin-bottom: 20px;
 
                 .div-left {
                   width: 35px;
@@ -1372,7 +1377,7 @@ $btn-background-color: #377dff;
               .profile-member {
                 display: flex;
                 align-items: center;
-                margin-bottom: 10px;
+                margin-bottom: 13px;
 
                 .div-left {
                   margin-right: 15px;
@@ -1412,6 +1417,176 @@ $btn-background-color: #377dff;
 
                   &:hover {
                     background: #f0f0f0;
+                  }
+                }
+              }
+
+              .collapse-member {
+                background-color: unset;
+                border: unset;
+                border-radius: 0;
+
+                .ant-collapse-item {
+                  border-radius: 0;
+                  border: unset;
+
+                  .ant-collapse-header {
+                    padding: 0;
+                    border-radius: 0;
+                    padding-bottom: 5px;
+                    flex-direction: row-reverse;
+
+                    .ant-collapse-expand-icon {
+                      .ant-collapse-arrow {
+                        width: 15px;
+                        color: #212121;
+                        margin-right: 0;
+
+                        svg {
+                          margin-bottom: 5px;
+                        }
+                      }
+                    }
+                  }
+
+                  .ant-collapse-content {
+                    border-radius: 0;
+                    background-color: unset;
+                    border: unset;
+
+                    .ant-collapse-content-box {
+                      padding: 0;
+                    }
+                  }
+                }
+              }
+            }
+
+            .user-profile-sidebar-area.hide {
+              display: none;
+            }
+
+            .div-file-view.hide {
+              display: none;
+            }
+
+            .div-file-view {
+              padding: 0 2rem 1.5rem;
+
+              .file-view-header {
+                display: flex;
+                font-weight: 400;
+                font-size: 14px;
+                color: #212121;
+                align-items: center;
+
+                .header-icon {
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  cursor: pointer;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin-right: 5px;
+
+                  &:hover {
+                    background: #f0f0f0;
+                  }
+                }
+              }
+
+              .file-view-body {
+                .body-header {
+                  font-size: 14px;
+                  color: #212121;
+                  align-items: center;
+                  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+
+                  display: flex;
+                  justify-content: space-around;
+
+                  .div-tab {
+                    cursor: pointer;
+                    padding: 7px;
+                  }
+
+                  .div-tab.active {
+                    color: #1677ff;
+                    border-bottom: 2px solid #1677ff;
+                  }
+                }
+
+                .body-content {
+                  .div-content {
+                    .div-content-perfect-scrollbar {
+                      height: calc(100% - 230px);
+                    }
+
+                    .div-content-file {
+                      display: flex;
+                      justify-content: space-between;
+                      margin-top: 10px;
+                      align-items: center;
+
+                      > span {
+                        width: calc(100% - 40px);
+
+                        > span {
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
+                          width: 100%;
+                        }
+                      }
+
+                      p.time {
+                        font-size: 12px;
+                        margin-bottom: 0;
+                      }
+                    }
+
+                    .div-content-link {
+                      display: flex;
+                      justify-content: space-between;
+                      margin-top: 10px;
+                      align-items: center;
+
+                      a {
+                        width: calc(100% - 40px);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                      }
+
+                      p {
+                        font-size: 12px;
+                        margin-bottom: 0;
+                      }
+                    }
+
+                    .div-content-image {
+                      .ant-image {
+                        padding: 7px;
+                        border-radius: 6px;
+                        width: 70px;
+                        height: 70px;
+
+                        .ant-image-img {
+                          border-radius: 6px;
+                          width: 58px;
+                          height: 58px;
+                        }
+
+                        .ant-image-mask {
+                          border-radius: 6px;
+                        }
+                      }
+                    }
+                  }
+
+                  .div-content.hide {
+                    display: none;
                   }
                 }
               }

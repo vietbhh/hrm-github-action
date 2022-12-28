@@ -1,6 +1,5 @@
-import { ErpInput, ErpUserSelect } from "@apps/components/common/ErpField"
+import { ErpUserSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import notification from "@apps/utility/notification"
 import { FormProvider, useForm } from "react-hook-form"
 import {
   Button,
@@ -13,14 +12,14 @@ import {
   Spinner
 } from "reactstrap"
 
-const ModalNewGroup = (props) => {
+const ModalAddMember = (props) => {
   const {
     modal,
     toggleModal,
-    handleAddNewGroup,
-    setActive,
+    handleUpdateGroup,
     userId,
-    setDataUnseenDetail
+    setDataUnseenDetail,
+    selectedGroup
   } = props
   const [state, setState] = useMergedState({
     loading: false
@@ -32,37 +31,33 @@ const ModalNewGroup = (props) => {
   const { handleSubmit } = methods
 
   const onSubmit = async (values) => {
-    if (values.group_member.length <= 1) {
-      notification.showWarning({
-        text: useFormatMessage("modules.chat.text.warning_add_group_member")
-      })
-      return
-    }
     setState({ loading: true })
-    const member = [userId]
-    const unseen = []
+    const member = selectedGroup.user
+    const unseen = selectedGroup.chat.unseen
+    const member_add = []
     _.forEach(values.group_member, (val) => {
       member.push(val.id)
       unseen.push(val.id)
+      member_add.push(val.id)
     })
     const timestamp = Date.now()
     const docData = {
-      last_message: useFormatMessage("modules.chat.text.create_new_group"),
+      last_message: useFormatMessage("modules.chat.text.add_new_member"),
       last_user: userId,
-      name: values.group_name,
       timestamp: timestamp,
-      type: "group",
       user: member,
-      admin: [userId],
-      creator: userId,
-      new: 0,
       unseen: unseen,
-      unseen_detail: setDataUnseenDetail("add", userId, timestamp, [], member)
+      unseen_detail: setDataUnseenDetail(
+        "add_member",
+        userId,
+        timestamp,
+        selectedGroup.chat.unseen_detail,
+        member,
+        member_add
+      )
     }
-    await handleAddNewGroup(docData).then((res) => {
+    await handleUpdateGroup(selectedGroup.id, docData).then((res) => {
       setTimeout(() => {
-        const newGroupId = res.id
-        setActive(newGroupId)
         toggleModal()
         setState({ loading: false })
       }, 500)
@@ -75,20 +70,12 @@ const ModalNewGroup = (props) => {
       toggle={toggleModal}
       className="modal-dialog-centered">
       <ModalHeader toggle={() => toggleModal()}>
-        {useFormatMessage("modules.chat.text.create_new_group")}
+        {useFormatMessage("modules.chat.text.add_member")}
       </ModalHeader>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <Row>
-              <Col sm="12">
-                <ErpInput
-                  name="group_name"
-                  label={useFormatMessage("modules.chat.text.group_name")}
-                  required
-                  useForm={methods}
-                />
-              </Col>
               <Col sm="12">
                 <ErpUserSelect
                   name="group_member"
@@ -96,7 +83,11 @@ const ModalNewGroup = (props) => {
                   required
                   useForm={methods}
                   isMulti={true}
-                  excepts={[userId]}
+                  excepts={
+                    selectedGroup.user
+                      ? [userId, ...selectedGroup.user]
+                      : [userId]
+                  }
                   loadOptionsApi={{ filters: { account_status: "activated" } }}
                 />
               </Col>
@@ -125,4 +116,4 @@ const ModalNewGroup = (props) => {
   )
 }
 
-export default ModalNewGroup
+export default ModalAddMember

@@ -349,6 +349,13 @@ const AppChat = (props) => {
     )
   }
 
+  const handleUpdateGroup = async (groupId, dataUpdate) => {
+    await updateDoc(
+      doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
+      dataUpdate
+    )
+  }
+
   const handleLastMessage = (type, msg) => {
     let last_message = msg
     if (type === "image" || type === "image_gif") {
@@ -371,7 +378,9 @@ const AppChat = (props) => {
     user_id,
     timestamp,
     unseen_detail,
-    user
+    user,
+    member_add = [],
+    member_remove = ""
   ) => {
     if (action === "add") {
       const _unseen_detail = []
@@ -381,16 +390,14 @@ const AppChat = (props) => {
             user_id: item,
             timestamp_from: 0,
             timestamp_to: 0,
-            unread_count: 0,
-            timestamp_seen_last: timestamp
+            unread_count: 0
           })
         } else {
           _unseen_detail.push({
             user_id: item,
             timestamp_from: timestamp,
             timestamp_to: timestamp,
-            unread_count: 1,
-            timestamp_seen_last: 0
+            unread_count: 1
           })
         }
       })
@@ -406,14 +413,12 @@ const AppChat = (props) => {
             user_id: item.user_id,
             timestamp_from: 0,
             timestamp_to: 0,
-            unread_count: 0,
-            timestamp_seen_last: timestamp
+            unread_count: 0
           })
         } else {
           let timestamp_from = 0
           let timestamp_to = 0
           let unread_count = 0
-          const timestamp_seen_last = item.timestamp_seen_last
           if (item.unread_count === 0) {
             timestamp_from = timestamp
             timestamp_to = timestamp
@@ -427,8 +432,7 @@ const AppChat = (props) => {
             user_id: item.user_id,
             timestamp_from: timestamp_from,
             timestamp_to: timestamp_to,
-            unread_count: unread_count,
-            timestamp_seen_last: timestamp_seen_last
+            unread_count: unread_count
           })
         }
       })
@@ -444,13 +448,34 @@ const AppChat = (props) => {
             user_id: item.user_id,
             timestamp_from: 0,
             timestamp_to: 0,
-            unread_count: 0,
-            timestamp_seen_last: item.timestamp_to
+            unread_count: 0
           })
         } else {
           _unseen_detail.push(item)
         }
       })
+
+      return _unseen_detail
+    }
+
+    if (action === "add_member") {
+      const _unseen_detail = [...unseen_detail]
+      _.forEach(member_add, (item) => {
+        _unseen_detail.push({
+          user_id: item,
+          timestamp_from: timestamp,
+          timestamp_to: timestamp,
+          unread_count: 1
+        })
+      })
+
+      return _unseen_detail
+    }
+
+    if (action === "delete_member") {
+      const _unseen_detail = unseen_detail.filter(
+        (item) => item.user_id !== member_remove
+      )
 
       return _unseen_detail
     }
@@ -463,7 +488,7 @@ const AppChat = (props) => {
     const index_groups = store.groups.findIndex((item) => item.id === groupId)
     let file_count = {}
     if (index_groups !== 1) {
-      const group_file_count = store.groups[index_groups].file_count
+      const group_file_count = store.groups[index_groups]?.file_count || {}
       if (dataAddFile.type === "link") {
         const count_link = group_file_count?.link
           ? group_file_count?.link + 1
@@ -518,7 +543,7 @@ const AppChat = (props) => {
           }
         }) */
 
-        updateDoc(doc(db, `${firestoreDb}/chat_groups/groups`, groupId), {
+        handleUpdateGroup(groupId, {
           last_message: handleLastMessage(docData.type, msg),
           last_user: userId,
           timestamp: timestamp,
@@ -635,12 +660,9 @@ const AppChat = (props) => {
                 const file_groups = group_file_count
                   ? { ...group_file_count, image: count_image }
                   : { image: count_image }
-                updateDoc(
-                  doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
-                  {
-                    file_count: file_groups
-                  }
-                )
+                handleUpdateGroup(groupId, {
+                  file_count: file_groups
+                })
               } else {
                 const count_file = group_file_count?.file
                   ? group_file_count?.file + 1
@@ -648,12 +670,9 @@ const AppChat = (props) => {
                 const file_groups = group_file_count
                   ? { ...group_file_count, file: count_file }
                   : { file: count_file }
-                updateDoc(
-                  doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
-                  {
-                    file_count: file_groups
-                  }
-                )
+                handleUpdateGroup(groupId, {
+                  file_count: file_groups
+                })
               }
             }
           }
@@ -824,7 +843,7 @@ const AppChat = (props) => {
       const index = store.groups.findIndex((item) => item.id === groupId)
       if (index !== -1) {
         const unseen_detail = store.groups[index].chat.unseen_detail
-        updateDoc(doc(db, `${firestoreDb}/chat_groups/groups`, groupId), {
+        handleUpdateGroup(groupId, {
           unseen: arrayRemove(userId),
           unseen_detail: setDataUnseenDetail(
             "seen",
@@ -836,13 +855,6 @@ const AppChat = (props) => {
         })
       }
     }
-  }
-
-  const handleUpdateGroup = async (groupId, dataUpdate) => {
-    await updateDoc(
-      doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
-      dataUpdate
-    )
   }
 
   const handleSearchMessage = async (groupId, searchTxt) => {
@@ -1375,6 +1387,10 @@ const AppChat = (props) => {
                 userId={userId}
                 groups={store.groups}
                 active={active}
+                handleUpdateGroup={handleUpdateGroup}
+                setDataUnseenDetail={setDataUnseenDetail}
+                setActive={setActive}
+                setActiveFullName={setActiveFullName}
               />
             </div>
           </div>
