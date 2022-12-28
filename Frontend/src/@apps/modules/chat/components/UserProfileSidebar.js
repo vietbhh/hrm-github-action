@@ -3,7 +3,7 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Collapse, Dropdown } from "antd"
 import classnames from "classnames"
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import BackgroundProfile from "../assets/images/Bitmap.png"
@@ -11,6 +11,12 @@ import ModalAddMember from "./modals/ModalAddMember"
 import SwAlert from "@apps/utility/SwAlert"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import FileViewComponent from "./details/FileView/index"
+import notification from "@apps/utility/notification"
+import { ChatApi } from "../common/api"
+import Photo from "./details/Photo"
+import ModalAvatarPreview from "./modals/ModalAvatarPreview"
+import ModalBackgroundPreview from "./modals/ModalBackgroundPreview"
+
 const { Panel } = Collapse
 
 const UserProfileSidebar = (props) => {
@@ -37,11 +43,32 @@ const UserProfileSidebar = (props) => {
 
     // ** file view
     showFileView: false,
-    tabView: ""
+    tabView: "",
+
+    // ** avatar
+    avatarPreviewLink: "",
+    avatarPreviewModal: false,
+    avatarPreviewLoading: false,
+
+    // ** background
+    backgroundPreviewLink: "",
+    backgroundPreviewModal: false,
+    backgroundPreviewLoading: false
   })
+
+  const avatarEditor = useRef()
+  const backgroundEditor = useRef()
 
   const toggleModalAddMember = () => {
     setState({ modalAddMember: !state.modalAddMember })
+  }
+
+  const toggleAvatarPreviewModal = () => {
+    setState({ avatarPreviewModal: !state.avatarPreviewModal })
+  }
+
+  const toggleBackgroundPreviewModal = () => {
+    setState({ backgroundPreviewModal: !state.backgroundPreviewModal })
   }
 
   useEffect(() => {
@@ -65,6 +92,142 @@ const UserProfileSidebar = (props) => {
     setState({ showFileView: value, tabView: tab })
   }
 
+  const changeBackground = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      if (file.type !== "image/png" && file.type !== "image/jpeg") {
+        notification.showError({
+          text: useFormatMessage("modules.chat.notification.image_error", {
+            allowType: "image/png, image/jpeg"
+          })
+        })
+      } else {
+        const linkPreview = URL.createObjectURL(file)
+        setState({
+          backgroundPreviewLink: linkPreview,
+          backgroundPreviewModal: true
+        })
+      }
+    }
+  }
+
+  const handleSaveBackground = () => {
+    if (backgroundEditor.current) {
+      setState({ backgroundPreviewLoading: true })
+      const img = backgroundEditor.current.getImageScaledToCanvas().toDataURL()
+      const data = {
+        groupId: state.selectedGroup.id,
+        file: img
+      }
+      ChatApi.postUpBackground(data)
+        .then((res) => {
+          document.getElementById("input-background").value = null
+          handleUpdateGroup(state.selectedGroup.id, {
+            last_message: useFormatMessage(
+              "modules.chat.text.change_background_image"
+            ),
+            last_user: userId,
+            timestamp: Date.now(),
+            background: res.data
+          })
+          toggleBackgroundPreviewModal()
+          setState({ backgroundPreviewLoading: false })
+        })
+        .catch((err) => {
+          document.getElementById("input-background").value = null
+          notification.showError({
+            text: useFormatMessage("notification.error")
+          })
+          setState({ backgroundPreviewLoading: false })
+        })
+    }
+  }
+
+  const changeAvatar = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      if (file.type !== "image/png" && file.type !== "image/jpeg") {
+        notification.showError({
+          text: useFormatMessage("modules.chat.notification.image_error", {
+            allowType: "image/png, image/jpeg"
+          })
+        })
+      } else {
+        const linkPreview = URL.createObjectURL(file)
+        setState({ avatarPreviewLink: linkPreview, avatarPreviewModal: true })
+      }
+    }
+  }
+
+  const handleSaveAvatar = () => {
+    if (avatarEditor.current) {
+      setState({ avatarPreviewLoading: true })
+      const img = avatarEditor.current.getImageScaledToCanvas().toDataURL()
+      const data = {
+        groupId: state.selectedGroup.id,
+        file: img
+      }
+      ChatApi.postUpAvatar(data)
+        .then((res) => {
+          document.getElementById("input-avatar").value = null
+          handleUpdateGroup(state.selectedGroup.id, {
+            last_message: useFormatMessage(
+              "modules.chat.text.change_avatar_image"
+            ),
+            last_user: userId,
+            timestamp: Date.now(),
+            avatar: res.data
+          })
+          toggleAvatarPreviewModal()
+          setState({ avatarPreviewLoading: false })
+        })
+        .catch((err) => {
+          document.getElementById("input-avatar").value = null
+          notification.showError({
+            text: useFormatMessage("notification.error")
+          })
+          setState({ avatarPreviewLoading: false })
+        })
+    }
+  }
+
+  const renderBackground = () => {
+    if (user.type && user.type === "group" && state.selectedGroup.background) {
+      return (
+        <Photo
+          src={`/modules/chat/${state.selectedGroup.id}/background/${state.selectedGroup.background}`}
+        />
+      )
+    }
+
+    return <img src={BackgroundProfile} />
+  }
+
+  const renderAvatar = () => {
+    if (user.type && user.type === "group" && state.selectedGroup.avatar) {
+      return (
+        <Avatar
+          className="box-shadow-1 avatar-border"
+          size="xl"
+          src={`/modules/chat/${state.selectedGroup.id}/avatar/${state.selectedGroup.avatar}`}
+          imgHeight="70"
+          imgWidth="70"
+        />
+      )
+    }
+
+    return (
+      <Avatar
+        className="box-shadow-1 avatar-border"
+        size="xl"
+        src={user?.avatar}
+        imgHeight="70"
+        imgWidth="70"
+        userId={user?.idEmployee}
+      />
+    )
+  }
+
   return (
     <Fragment>
       <div
@@ -77,17 +240,85 @@ const UserProfileSidebar = (props) => {
           </span>
           <div className="header-profile-sidebar">
             <div className="header-profile-image-background">
-              <img src={BackgroundProfile} />
+              {renderBackground()}
+              <input
+                type="file"
+                id="input-background"
+                name="input-background"
+                accept="image/png, image/jpeg"
+                hidden
+                onChange={changeBackground}
+                onClick={() => {
+                  document.getElementById("input-background").value = null
+                }}
+              />
+              <label id="label-background" htmlFor="input-background">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none">
+                  <path
+                    d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle
+                    cx="9"
+                    cy="9.75"
+                    r="3"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </label>
             </div>
             <div className="header-profile-avatar">
-              <Avatar
-                className="box-shadow-1 avatar-border"
-                size="xl"
-                src={user?.avatar}
-                imgHeight="70"
-                imgWidth="70"
-                userId={user?.idEmployee}
-              />
+              <div className="div-avatar">
+                {renderAvatar()}
+                <input
+                  type="file"
+                  id="input-avatar"
+                  name="input-avatar"
+                  accept="image/png, image/jpeg"
+                  hidden
+                  onChange={changeAvatar}
+                  onClick={() => {
+                    document.getElementById("input-avatar").value = null
+                  }}
+                />
+                <label id="label-avatar" htmlFor="input-avatar">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none">
+                    <path
+                      d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="9"
+                      cy="9.75"
+                      r="3"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </label>
+              </div>
+
               <h4 className="chat-user-name">{user?.fullName}</h4>
               <span className="user-post">
                 {user?.type === "employee" ? user?.role : "Never settle!"}
@@ -701,6 +932,24 @@ const UserProfileSidebar = (props) => {
         userId={userId}
         setDataUnseenDetail={setDataUnseenDetail}
         selectedGroup={state.selectedGroup}
+      />
+
+      <ModalAvatarPreview
+        modal={state.avatarPreviewModal}
+        toggleModal={toggleAvatarPreviewModal}
+        linkPreview={state.avatarPreviewLink}
+        handleSave={handleSaveAvatar}
+        avatarEditor={avatarEditor}
+        avatarPreviewLoading={state.avatarPreviewLoading}
+      />
+
+      <ModalBackgroundPreview
+        modal={state.backgroundPreviewModal}
+        toggleModal={toggleBackgroundPreviewModal}
+        linkPreview={state.backgroundPreviewLink}
+        handleSave={handleSaveBackground}
+        backgroundEditor={backgroundEditor}
+        backgroundPreviewLoading={state.backgroundPreviewLoading}
       />
     </Fragment>
   )

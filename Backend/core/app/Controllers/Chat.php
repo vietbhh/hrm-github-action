@@ -34,29 +34,8 @@ class Chat extends ErpController
 		$out = [];
 		if ($file_type == 'image' && filter_var($compress_images, FILTER_VALIDATE_BOOLEAN)) {
 			foreach ($file as $key => $item) {
-				$name = explode(".", safeFileName($item['file']->getName()))[0];
-				for ($i = 1; $i <= 50; $i++) {
-					if (file_exists(getModuleUploadPath($moduleName, $groupId) . "other/" . $name . ".webp")) {
-						$name = explode(".", safeFileName($item['file']->getName()))[0] . "_" . $i;
-					} else {
-						break;
-					}
-				}
-				$fileName = $item['file']->getPathName();
-				$image = \Config\Services::image();
-				$tempFile = tmpfile();
-				$path = stream_get_meta_data($tempFile)['uri'];
-				$image->withFile($fileName)->withResource()->convert(IMAGETYPE_WEBP)->save($path, 80);
-				$filesUpload = [
-					[
-						'filename' => $name . '.webp',
-						'filesize' => filesize($path),
-						'content' => file_get_contents($path)
-					]
-				];
-				$pathUpload = getModuleUploadPath($moduleName, $groupId, false) . "other/";
-				$result = $uploadService->uploadFile($pathUpload, $filesUpload, true);
-				if (!empty($result['error_file'])){
+				$result = $this->_renderImageWebp($moduleName, $groupId, $item['file'], "other");
+				if (!empty($result['error_file'])) {
 					return $this->failServerError('error');
 				}
 
@@ -69,7 +48,7 @@ class Chat extends ErpController
 			foreach ($file as $key => $item) {
 				$storePath = getModuleUploadPath($moduleName, $groupId, false) . "other/";
 				$result = $uploadService->uploadFile($storePath, [$item['file']]);
-				if (!empty($result['error_file'])){
+				if (!empty($result['error_file'])) {
 					return $this->failServerError('error');
 				}
 
@@ -81,5 +60,133 @@ class Chat extends ErpController
 		}
 
 		return $this->respond($out);
+	}
+
+	public function post_up_background()
+	{
+		$out = "";
+		$getPara = $this->request->getPost();
+		$file = $getPara['file'];
+		$groupId = $getPara['groupId'];
+		$moduleName = "chat";
+		if (preg_match('/^data:image\/(\w+);base64,/', $file, $type)) {
+			$uploadService = \App\Libraries\Upload\Config\Services::upload();
+			$data = substr($file, strpos($file, ',') + 1);
+			$mime_type = getimagesize($file);
+			$type = strtolower($type[1]); // jpg, png, gif
+			if (!in_array($type, ['jpg', 'jpeg', 'png'])) {
+				throw new \Exception(FILE_NOT_ALLOWED);
+			}
+			$data = str_replace(' ', '+', $data);
+			$data = base64_decode($data);
+			if (!$data) {
+				throw new \Exception(FILE_CORRUPTED);
+			}
+			$name = $this->_handleNameWebp($moduleName, $groupId, 'background');
+			$tempImage = tmpfile();
+			fwrite($tempImage, $data);
+			$fileName = stream_get_meta_data($tempImage)['uri'];
+			$result = $this->_handleImageWebp($moduleName, $groupId, "background", $name, $fileName);
+			if (!empty($result['error_file'])) {
+				return $this->failServerError('error');
+			}
+
+			$out = $result['arr_upload_file'][0]['filename'];
+		}
+
+		return $this->respond($out);
+	}
+
+	public function post_up_avatar()
+	{
+		$out = "";
+		$getPara = $this->request->getPost();
+		$file = $getPara['file'];
+		$groupId = $getPara['groupId'];
+		$moduleName = "chat";
+		if (preg_match('/^data:image\/(\w+);base64,/', $file, $type)) {
+			$uploadService = \App\Libraries\Upload\Config\Services::upload();
+			$data = substr($file, strpos($file, ',') + 1);
+			$mime_type = getimagesize($file);
+			$type = strtolower($type[1]); // jpg, png, gif
+			if (!in_array($type, ['jpg', 'jpeg', 'png'])) {
+				throw new \Exception(FILE_NOT_ALLOWED);
+			}
+			$data = str_replace(' ', '+', $data);
+			$data = base64_decode($data);
+			if (!$data) {
+				throw new \Exception(FILE_CORRUPTED);
+			}
+			$name = $this->_handleNameWebp($moduleName, $groupId, 'avatar');
+			$tempImage = tmpfile();
+			fwrite($tempImage, $data);
+			$fileName = stream_get_meta_data($tempImage)['uri'];
+			$result = $this->_handleImageWebp($moduleName, $groupId, "avatar", $name, $fileName);
+			if (!empty($result['error_file'])) {
+				return $this->failServerError('error');
+			}
+
+			$out = $result['arr_upload_file'][0]['filename'];
+		}
+
+		return $this->respond($out);
+	}
+
+	/** support function */
+	private function _renderImageWebp($moduleName, $groupId, $file, $folder)
+	{
+
+		$resultNameImage = $this->_handleNameImageWebp($moduleName, $groupId, $file, $folder);
+		$name = $resultNameImage['name'];
+		$fileName = $resultNameImage['fileName'];
+
+		return $this->_handleImageWebp($moduleName, $groupId, $folder, $name, $fileName);
+	}
+
+	private function _handleNameImageWebp($moduleName, $groupId, $file, $folder)
+	{
+		$name = explode(".", safeFileName($file->getName()))[0] . ".webp";
+		for ($i = 1; $i <= 50; $i++) {
+			if (file_exists(getModuleUploadPath($moduleName, $groupId) . $folder . "/" . $name)) {
+				$name = explode(".", safeFileName($file->getName()))[0] . "_" . $i . ".webp";
+			} else {
+				break;
+			}
+		}
+
+		$fileName = $file->getPathName();
+		return ['name' => $name, 'fileName' => $fileName];
+	}
+
+	private function _handleNameWebp($moduleName, $groupId, $folder)
+	{
+		$name = $folder . ".webp";
+		for ($i = 1; $i <= 50; $i++) {
+			if (file_exists(getModuleUploadPath($moduleName, $groupId) . $folder . "/" . $name)) {
+				$name = $folder . "_" . $i . ".webp";
+			} else {
+				break;
+			}
+		}
+
+		return $name;
+	}
+
+	private function _handleImageWebp($moduleName, $groupId, $folder, $name, $fileName)
+	{
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
+		$image = \Config\Services::image();
+		$tempFile = tmpfile();
+		$path = stream_get_meta_data($tempFile)['uri'];
+		$image->withFile($fileName)->withResource()->convert(IMAGETYPE_WEBP)->save($path, 80);
+		$filesUpload = [
+			[
+				'filename' => $name,
+				'filesize' => filesize($path),
+				'content' => file_get_contents($path)
+			]
+		];
+		$pathUpload = getModuleUploadPath($moduleName, $groupId, false) . $folder . "/";
+		return $uploadService->uploadFile($pathUpload, $filesUpload, true);
 	}
 }

@@ -20,5 +20,29 @@ export const ChatApi = {
         }
       }
     )
+  },
+
+  async postUpBackground(data) {
+    return await axiosApi.post(
+      "/chat/post-up-background",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async postUpAvatar(data) {
+    return await axiosApi.post(
+      "/chat/post-up-avatar",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
   }
 }

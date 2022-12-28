@@ -483,23 +483,36 @@ const AppChat = (props) => {
     return []
   }
 
-  const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
-    setState({ checkAddMessage: true })
+  const handleCountFile = (groupId, type) => {
     const index_groups = store.groups.findIndex((item) => item.id === groupId)
     let file_count = {}
     if (index_groups !== 1) {
       const group_file_count = store.groups[index_groups]?.file_count || {}
-      if (dataAddFile.type === "link") {
+      if (type === "link") {
         const count_link = group_file_count?.link
           ? group_file_count?.link + 1
           : 1
-        file_count = group_file_count
-          ? { ...group_file_count, link: count_link }
-          : { link: count_link }
-      } else {
-        file_count = group_file_count ? { ...group_file_count } : {}
+        file_count = { ...group_file_count, link: count_link }
+      } else if (type === "image" || type === "image_gif") {
+        const count_image = group_file_count?.image
+          ? group_file_count?.image + 1
+          : 1
+        file_count = { ...group_file_count, image: count_image }
+      } else if (type === "file" || type === "audio" || type === "video") {
+        const count_file = group_file_count?.file
+          ? group_file_count?.file + 1
+          : 1
+        file_count = { ...group_file_count, file: count_file }
       }
     }
+
+    return file_count
+  }
+
+  const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
+    setState({ checkAddMessage: true })
+
+    const file_count = handleCountFile(groupId, dataAddFile.type)
 
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id
@@ -543,7 +556,7 @@ const AppChat = (props) => {
           }
         }) */
 
-        handleUpdateGroup(groupId, {
+        let dataGroup = {
           last_message: handleLastMessage(docData.type, msg),
           last_user: userId,
           timestamp: timestamp,
@@ -555,9 +568,12 @@ const AppChat = (props) => {
             timestamp,
             unseen_detail,
             []
-          ),
-          file_count: file_count
-        })
+          )
+        }
+        if (!_.isEmpty(file_count)) {
+          dataGroup = { ...dataGroup, file_count: file_count }
+        }
+        handleUpdateGroup(groupId, dataGroup)
       })
     } else {
       const contact = store.selectedUser.contact
@@ -580,7 +596,7 @@ const AppChat = (props) => {
       setState({ loadingMessage: true })
       const type = dataAddFile.type ? dataAddFile.type : "text"
       const timestamp = Date.now()
-      const docData = {
+      let docData = {
         last_message: handleLastMessage(type, msg),
         last_user: userId,
         name: "",
@@ -595,8 +611,10 @@ const AppChat = (props) => {
           timestamp,
           [],
           [userId, idEmployee]
-        ),
-        file_count: file_count
+        )
+      }
+      if (!_.isEmpty(file_count)) {
+        docData = { ...docData, file_count: file_count }
       }
       handleAddNewGroup(docData).then((res) => {
         const newGroupId = res.id
@@ -645,35 +663,11 @@ const AppChat = (props) => {
             dataUpdate
           )
           if (dataUpdate.status === "success") {
-            const index_groups = store.groups.findIndex(
-              (item) => item.id === groupId
-            )
-            if (index_groups !== 1) {
-              const group_file_count = store.groups[index_groups].file_count
-              if (
-                dataUpdate.type === "image" ||
-                dataUpdate.type === "image_gif"
-              ) {
-                const count_image = group_file_count?.image
-                  ? group_file_count?.image + 1
-                  : 1
-                const file_groups = group_file_count
-                  ? { ...group_file_count, image: count_image }
-                  : { image: count_image }
-                handleUpdateGroup(groupId, {
-                  file_count: file_groups
-                })
-              } else {
-                const count_file = group_file_count?.file
-                  ? group_file_count?.file + 1
-                  : 1
-                const file_groups = group_file_count
-                  ? { ...group_file_count, file: count_file }
-                  : { file: count_file }
-                handleUpdateGroup(groupId, {
-                  file_count: file_groups
-                })
-              }
+            const file_count = handleCountFile(groupId, dataUpdate.type)
+            if (!_.isEmpty(file_count)) {
+              handleUpdateGroup(groupId, {
+                file_count: file_count
+              })
             }
           }
         }
@@ -933,6 +927,8 @@ const AppChat = (props) => {
               file_count: data.file_count,
               mute: data.mute,
               admin: data.admin,
+              background: data.background,
+              avatar: data.avatar,
               personalInfo: {
                 email: employee.email ? employee.email : "",
                 phone: employee.phone ? employee.phone : "",
@@ -968,6 +964,8 @@ const AppChat = (props) => {
               file_count: data.file_count,
               mute: data.mute,
               admin: data.admin,
+              background: data.background,
+              avatar: data.avatar,
               personalInfo: {
                 email: "",
                 phone: "",

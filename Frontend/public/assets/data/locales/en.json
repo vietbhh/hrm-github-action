@@ -886,7 +886,15 @@
         "file_image_link": "File, image and link",
         "file": "File",
         "image": "Image",
-        "link": "Link"
+        "link": "Link",
+        "load_more": "Load more",
+        "change_background_image": "Change background image",
+        "change_avatar_image": "Change avatar image",
+        "avatar_image": "Avatar image",
+        "background_image": "Background image"
+      },
+      "notification": {
+        "image_error": "Image type is not allow, (just {allowType})"
       }
     }
   },
