@@ -90,7 +90,7 @@ const AppChat = (props) => {
     chatAppFocus: false,
 
     // ** params url
-    checkLoadUrl: true
+    checkLoadUrlActiveId: true
   })
 
   // ** State
@@ -110,17 +110,17 @@ const AppChat = (props) => {
       id !== "" &&
       id !== undefined &&
       !_.isEmpty(store.groups) &&
-      state.checkLoadUrl === true
+      state.checkLoadUrlActiveId === true
     ) {
+      setState({ checkLoadUrlActiveId: false })
       const index_group = store.groups.findIndex((item) => item.id === id)
       if (index_group !== -1) {
         setActive(id)
       } else {
         window.history.replaceState(null, "", "/chat")
       }
-      setState({ checkLoadUrl: false })
     }
-  }, [id, store.groups, state.checkLoadUrl])
+  }, [id, store.groups, state.checkLoadUrlActiveId])
 
   // ** env
   const firestoreDb = process.env.REACT_APP_FIRESTORE_DB

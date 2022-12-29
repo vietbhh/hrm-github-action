@@ -563,7 +563,7 @@ const ChatLog = (props) => {
                     </h6>
                     <span
                       className={`chat-header-name-status ${
-                        state.status === "offline" ? "status-offline" : ""
+                        state.status === "offline" ? "text-muted" : ""
                       }`}>
                       {state.status}
                     </span>

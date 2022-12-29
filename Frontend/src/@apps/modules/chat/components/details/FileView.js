@@ -15,7 +15,7 @@ import { Badge, Button, Spinner } from "reactstrap"
 import { Link2 } from "react-feather"
 import { formatTime } from "@apps/modules/chat/common/common"
 import { Image } from "antd"
-import Photo from "../Photo"
+import Photo from "./Photo"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { useDispatch, useSelector } from "react-redux"
 
