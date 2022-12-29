@@ -38,6 +38,7 @@ import {
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
 import "../assets/scss/chat.scss"
+import { useParams } from "react-router-dom"
 
 const AppChat = (props) => {
   const [store, setStore] = useMergedState({
@@ -86,7 +87,10 @@ const AppChat = (props) => {
 
     // ** idleTimer
     chatAppHidden: false,
-    chatAppFocus: false
+    chatAppFocus: false,
+
+    // ** params url
+    checkLoadUrl: true
   })
 
   // ** State
@@ -98,6 +102,25 @@ const AppChat = (props) => {
   const [active, setActive] = useState(0)
   const [activeFullName, setActiveFullName] = useState("")
   const socket = useContext(SocketContext)
+
+  // ** params
+  const { id } = useParams()
+  useEffect(() => {
+    if (
+      id !== "" &&
+      id !== undefined &&
+      !_.isEmpty(store.groups) &&
+      state.checkLoadUrl === true
+    ) {
+      const index_group = store.groups.findIndex((item) => item.id === id)
+      if (index_group !== -1) {
+        setActive(id)
+      } else {
+        window.history.replaceState(null, "", "/chat")
+      }
+      setState({ checkLoadUrl: false })
+    }
+  }, [id, store.groups, state.checkLoadUrl])
 
   // ** env
   const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
@@ -864,7 +887,7 @@ const AppChat = (props) => {
     return await getDocs(q_mess)
   }
 
-  // ** setUnread
+  // ** useEffect
   useEffect(() => {
     setUnread(0)
     const index = store.groups.findIndex((item) => item.id === active)
@@ -881,9 +904,6 @@ const AppChat = (props) => {
   }, [store.groups, active])
 
   useEffect(() => {
-    if (state.loadingEmployee === true) {
-      getListEmployees()
-    }
     if (state.loadingEmployee === false) {
       const q = query(
         collection(db, `${firestoreDb}/chat_groups/groups`),
@@ -1273,6 +1293,8 @@ const AppChat = (props) => {
   }, [active])
 
   useEffect(() => {
+    getListEmployees()
+
     localStorage.setItem("chatAppHidden", false)
     localStorage.setItem("chatAppFocus", true)
   }, [])

@@ -276,7 +276,7 @@ const CoreRoutes = [
     }
   },
   {
-    path: "/chat",
+    path: "/chat/:id?",
     element: <Chat />,
     meta: {
       action: "login",

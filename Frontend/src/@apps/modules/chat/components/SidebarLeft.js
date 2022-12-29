@@ -24,6 +24,7 @@ import {
   InputGroupText,
   Label
 } from "reactstrap"
+import { Link } from "react-router-dom"
 
 const SidebarLeft = (props) => {
   // ** Props & Store
@@ -153,9 +154,14 @@ const SidebarLeft = (props) => {
                     return (
                       <div className="div-li-chat" key={item.id}>
                         <li
-                          onClick={() =>
+                          onClick={() => {
+                            window.history.replaceState(
+                              null,
+                              "",
+                              `/chat/${item.id}`
+                            )
                             handleUserClick(item.id, item.fullName)
-                          }
+                          }}
                           className={classnames({
                             active: active === item.id
                           })}>
@@ -241,7 +247,10 @@ const SidebarLeft = (props) => {
           return (
             <li
               key={item.fullName}
-              onClick={() => handleUserClick(item.id, item.fullName)}>
+              onClick={() => {
+                window.history.replaceState(null, "", "/chat")
+                handleUserClick(item.id, item.fullName)
+              }}>
               <Avatar
                 src={item.avatar}
                 imgHeight="50"

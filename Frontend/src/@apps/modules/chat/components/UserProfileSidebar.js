@@ -195,6 +195,7 @@ const UserProfileSidebar = (props) => {
     if (user.type && user.type === "group" && state.selectedGroup.background) {
       return (
         <Photo
+          tag="img"
           src={`/modules/chat/${state.selectedGroup.id}/background/${state.selectedGroup.background}`}
         />
       )
@@ -241,82 +242,90 @@ const UserProfileSidebar = (props) => {
           <div className="header-profile-sidebar">
             <div className="header-profile-image-background">
               {renderBackground()}
-              <input
-                type="file"
-                id="input-background"
-                name="input-background"
-                accept="image/png, image/jpeg"
-                hidden
-                onChange={changeBackground}
-                onClick={() => {
-                  document.getElementById("input-background").value = null
-                }}
-              />
-              <label id="label-background" htmlFor="input-background">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none">
-                  <path
-                    d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+              {user.type && user.type === "group" && (
+                <>
+                  <input
+                    type="file"
+                    id="input-background"
+                    name="input-background"
+                    accept="image/png, image/jpeg"
+                    hidden
+                    onChange={changeBackground}
+                    onClick={() => {
+                      document.getElementById("input-background").value = null
+                    }}
                   />
-                  <circle
-                    cx="9"
-                    cy="9.75"
-                    r="3"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </label>
+                  <label id="label-background" htmlFor="input-background">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none">
+                      <path
+                        d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <circle
+                        cx="9"
+                        cy="9.75"
+                        r="3"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </label>
+                </>
+              )}
             </div>
             <div className="header-profile-avatar">
               <div className="div-avatar">
                 {renderAvatar()}
-                <input
-                  type="file"
-                  id="input-avatar"
-                  name="input-avatar"
-                  accept="image/png, image/jpeg"
-                  hidden
-                  onChange={changeAvatar}
-                  onClick={() => {
-                    document.getElementById("input-avatar").value = null
-                  }}
-                />
-                <label id="label-avatar" htmlFor="input-avatar">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none">
-                    <path
-                      d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                {user.type && user.type === "group" && (
+                  <>
+                    <input
+                      type="file"
+                      id="input-avatar"
+                      name="input-avatar"
+                      accept="image/png, image/jpeg"
+                      hidden
+                      onChange={changeAvatar}
+                      onClick={() => {
+                        document.getElementById("input-avatar").value = null
+                      }}
                     />
-                    <circle
-                      cx="9"
-                      cy="9.75"
-                      r="3"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </label>
+                    <label id="label-avatar" htmlFor="input-avatar">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none">
+                        <path
+                          d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle
+                          cx="9"
+                          cy="9.75"
+                          r="3"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </label>
+                  </>
+                )}
               </div>
 
               <h4 className="chat-user-name">{user?.fullName}</h4>
