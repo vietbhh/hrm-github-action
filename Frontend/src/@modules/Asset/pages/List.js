@@ -18,7 +18,7 @@ import moment from "moment"
 import React, { Fragment, useContext, useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
-import { Navigate, useNavigate, useParams } from "react-router-dom"
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
 import {
   Button,
   Card,
@@ -30,9 +30,11 @@ import {
 } from "reactstrap"
 import { Table } from "rsuite"
 import { AbilityContext } from "utility/context/Can"
-import { YoutubeApi } from "../common/api"
+import { AssetApi } from "../common/api"
+import Photo from "@apps/modules/download/pages/Photo"
+import CardStatistic from "../components/CardStatistic"
+import AssetDetailModal from "../components/modals/AssetDetailModal"
 const { Cell } = Table
-const { RangePicker } = DatePicker
 const List = (props) => {
   const { slug } = useParams()
   const [state, setState] = useMergedState({
@@ -50,7 +52,7 @@ const List = (props) => {
     orderType: "desc",
     loadingEmployeeView: true,
     dataDetail: {},
-    videolModal: false,
+    assetDetailModal: false,
     isOpenDate: false,
     date_from: "",
     date_to: "",
@@ -61,7 +63,7 @@ const List = (props) => {
   })
 
   const history = useNavigate()
-  const moduleData = useSelector((state) => state.app.modules.yt_channels)
+  const moduleData = useSelector((state) => state.app.modules.asset_lists)
   const filterConfig = useSelector((state) => state.app.filters)
   const optionsModules = useSelector((state) => state.app.optionsModules)
   const userId = useSelector((state) => state.auth.userData.id) || 0
@@ -70,14 +72,7 @@ const List = (props) => {
   const moduleName = module.name
   const metas = moduleData.metas
   const options = moduleData.options
-  const base = useSelector((state) => state.base)
-  const checkMyBase = base.my_base.filter(function (item) {
-    return item.slug === slug
-  })[0]
-  const checkShareBase = base.share_base.filter(function (item) {
-    return item.slug === slug
-  })[0]
-
+  // filter type, gorup , owwner
   const ability = useContext(AbilityContext)
   const methods = useForm({
     mode: "onSubmit"
@@ -93,7 +88,7 @@ const List = (props) => {
   } = methods
 
   const checkSlug = () => {
-    YoutubeApi.checkBase({ slug: slug, id: userId }).then((res) => {
+    AssetApi.checkBase({ slug: slug, id: userId }).then((res) => {
       setState({
         accessBase: res.data,
         loading: false
@@ -118,11 +113,13 @@ const List = (props) => {
       category: state.category,
       ...props
     }
-    YoutubeApi.loadData(params).then((res) => {
+    AssetApi.loadData(params).then((res) => {
       setState({
-        data: res.data.channels,
+        data: res.data.asset_list,
         infoBoard: res.data.board,
         total: res.data.total,
+        assetThisMonth: res.data.assetThisMonth,
+        assetTotal: res.data.assetTotal,
         loading: false,
         recordsTotal: res.data.recordsTotal,
         currentPage: res.data.page,
@@ -150,41 +147,30 @@ const List = (props) => {
       className="rounded btn-tool d-flex align-items-center">
       <i className="icpega Actions-Plus"></i> &nbsp;
       <span className="align-self-center ms-50" style={{ fontSize: "14px" }}>
-        {useFormatMessage("modules.yt_channels.buttons.new")}
+        {useFormatMessage("modules.asset_lists.buttons.new_asset")}
       </span>
     </Button.Ripple>
   ) : (
     ""
   )
   const addButton = () => {
-    if (checkShareBase?.canEdit || checkMyBase) {
-      return (
-        <Button.Ripple
-          color="primary"
-          onClick={toggleAddModal}
-          className="rounded btn-tool d-flex align-items-center">
-          <i className="icpega Actions-Plus"></i> &nbsp;
-          <span
-            className="align-self-center ms-50"
-            style={{ fontSize: "14px" }}>
-            {useFormatMessage("modules.yt_channels.buttons.new")}
-          </span>
-        </Button.Ripple>
-      )
-    }
+    return (
+      <Button.Ripple
+        color="primary"
+        onClick={toggleAddModal}
+        className="rounded btn-tool d-flex align-items-center">
+        <i className="icpega Actions-Plus"></i> &nbsp;
+        <span className="align-self-center ms-50" style={{ fontSize: "14px" }}>
+          {useFormatMessage("modules.asset_lists.buttons.new_asset")}
+        </span>
+      </Button.Ripple>
+    )
   }
 
-  useEffect(() => {
-    if (state.accessBase) {
-      loadData()
-    }
-  }, [state.perPage])
+  useEffect(() => {}, [state.perPage])
 
-  useEffect(() => {
-    checkSlug()
-  }, [])
   const synC = (id) => {
-    YoutubeApi.syncChannel(id)
+    AssetApi.syncChannel(id)
       .then((res) => {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
@@ -201,7 +187,7 @@ const List = (props) => {
       confirmButtonText: useFormatMessage("button.delete")
     }).then((res) => {
       if (res.value) {
-        YoutubeApi.deleteChannel(data)
+        AssetApi.deleteChannel(data)
           .then((res) => {
             loadData()
             notification.showSuccess({
@@ -224,13 +210,7 @@ const List = (props) => {
     })
   }
   const checkPer = () => {
-    if (checkShareBase?.canEdit) {
-      return false
-    } else if (checkMyBase) {
-      return false
-    } else {
-      return true
-    }
+    return true
   }
   const menu = (data) => {
     return [
@@ -475,7 +455,7 @@ const List = (props) => {
       id: data?.id,
       rpm: getValues("rpm")
     }
-    YoutubeApi.changeRPM(dataUp)
+    AssetApi.changeRPM(dataUp)
       .then((res) => {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
@@ -566,107 +546,42 @@ const List = (props) => {
       </div>
     )
   }
-
+  const handleDetail = (id) => {
+    AssetApi.detailAsset(id).then((res) => {
+      //res.data.data
+      setState({ assetDetail: res.data.data, assetDetailModal: true })
+    })
+  }
   const CellDisplay = (props) => {
     const { field, rowData, cellProps } = props
+    console.log("rowData", rowData)
     switch (field.field) {
-      case "avatar":
+      case "asset_name":
         return (
           <div className="d-flex justify-content-left align-items-center text-dark">
-            <img
-              className="rounded-circle mr-50"
-              size="sm"
-              width={"45px"}
-              src={!isEmpty(rowData.avatar) && rowData.avatar}
+            <Photo
+              src={!isEmpty(rowData.recent_image) && rowData.recent_image?.url}
+              width="60px"
+              className="rounded"
             />
+
             <div className="d-flex flex-column cursor ms-1">
               <p className=" text-truncate mb-0">
-                <span className="font-weight-bold">
-                  <a
-                    target={"blank"}
-                    className="name-channel-table"
-                    href={`https://www.youtube.com/channel/${rowData?.pid}`}>
-                    {rowData.name}{" "}
-                  </a>
+                <span
+                  className="font-weight-bold name-channel-table"
+                  onClick={() => handleDetail(rowData?.id)}>
+                  {rowData.asset_name}
                 </span>
                 <br />
                 <span
                   style={{
                     color: "rgba(162, 160, 158, 0.7)",
-                    fontSize: "10px"
+                    fontSize: "12px"
                   }}>
-                  {rowData.pid}
+                  {rowData.pid}Group
                 </span>
               </p>
             </div>
-          </div>
-        )
-      case "category":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <Popover
-              content={contentCategory(rowData)}
-              overlayClassName="overlay-category"
-              trigger="click"
-              disabled>
-              <p className="user-name text-truncate mb-0">
-                <span>
-                  {rowData.category ? rowData.category?.label : "---"}
-                </span>
-              </p>
-            </Popover>
-          </div>
-        )
-      case "rpm":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <Popover
-              content={contentRPM(rowData)}
-              overlayClassName="overlay-rpm"
-              trigger="click"
-              disabled>
-              <p className="user-name text-truncate mb-0">
-                <span>${addComma(rowData.rpm)}</span>
-              </p>
-            </Popover>
-          </div>
-        )
-      case "revenue":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <p className="user-name text-truncate mb-0">
-              <span>${addComma((rowData.revenue * 1).toFixed(0))}</span>
-            </p>
-          </div>
-        )
-      case "channel_subs":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <p className="user-name text-truncate mb-0">
-              <span>{addComma(rowData.channel_subs)}</span>
-              <br />
-              {renderIcon(rowData.channel_subs_change)}
-            </p>
-          </div>
-        )
-      case "channel_views":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <p className="user-name text-truncate mb-0">
-              <span>{addComma(rowData.channel_views)}</span>
-              <br />
-              {renderIcon(rowData.channel_views_change)}
-            </p>
-          </div>
-        )
-      case "channel_videos":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <p className="user-name text-truncate mb-0">
-              <span>{addComma(rowData.channel_videos)}</span>
-              <br />
-              {renderIcon(rowData.channel_videos_change)}
-            </p>
           </div>
         )
       default:
@@ -715,6 +630,144 @@ const List = (props) => {
   useEffect(() => {
     selectDate(28)
   }, [slug])
-  return <Fragment>asdasd</Fragment>
+  return (
+    <Fragment>
+      <Row>
+        <Col lg={3}>
+          <CardStatistic
+            title={useFormatMessage("modules.asset_lists.text.total_asset")}
+            number={state?.assetTotal}
+            subTitle={`...`}
+          />
+        </Col>
+        <Col lg={3}>
+          <CardStatistic
+            title={useFormatMessage("modules.asset_lists.text.new_asset")}
+            number={state?.assetThisMonth}
+            subTitle={`...`}
+          />
+        </Col>
+        <Col lg={3}>
+          <CardStatistic title={"Constructed.."} number={0} subTitle={`...`} />
+        </Col>
+        <Col lg={3}>
+          <CardStatistic title={"Constructed.."} number={0} subTitle={`...`} />
+        </Col>
+      </Row>
+
+      <div className="d-flex align-items-center mb-2 mt-3 youtube">
+        <div className="" key="search_text">
+          <ErpInput
+            prepend={<i className="iconly-Search icli"></i>}
+            onChange={(e) => handleFilterText(e.target.value)}
+            defaultValue={state.search}
+            name="search_field"
+            placeholder="Search"
+            formGroupClass="mb-0"
+            className="input-tool-weight"
+            label={useFormatMessage("modules.recruitments.fields.search")}
+            nolabel
+          />
+        </div>
+
+        <div className="col-1 ms-auto">
+          <FieldHandle
+            module={moduleName}
+            nolabel
+            formGroupClass="mb-0"
+            isClearable={true}
+            prepend={<i className="fa-light fa-filter"></i>}
+            className="select-tool-weight"
+            fieldData={{
+              ...metas.category
+            }}
+            onChange={(e) => {
+              loadData(
+                { category: e ? e.value : 0 },
+                { category: e ? e.value : 0 }
+              )
+            }}
+          />
+        </div>
+        <div className="ms-1">
+          <ErpSelect
+            nolabel
+            formGroupClass="mb-0"
+            isClearable={false}
+            options={perPageOptions}
+            defaultValue={perPageOptions[0]}
+            className="select-tool-weight"
+            onChange={(e) => {
+              //  loadData(e.value)
+              setState({ perPage: e.value })
+            }}
+          />
+        </div>
+        <div className="ms-1 text-end">{addButton()}</div>
+      </div>
+
+      <Card className="rounded youtube">
+        <CardHeader className="pb-0"></CardHeader>
+        <CardBody className="pt-0 youtube">
+          <TableDefaultModule
+            metas={metas}
+            data={state.data}
+            recordsTotal={0}
+            currentPage={state.currentPage}
+            perPage={state.perPage}
+            module={module}
+            loading={state.loading}
+            pagination={true}
+            CustomCell={CellDisplay}
+            rowHeight={80}
+            onChangePage={(page) => {
+              loadData({
+                page: page
+              })
+            }}
+            onChangeLength={(length) => {
+              loadData(
+                {
+                  perPage: length
+                },
+                {
+                  perPage: length
+                }
+              )
+            }}
+            onSortColumn={false}
+            onSelectedRow={(rows) => {
+              setState({
+                selectedRows: rows
+              })
+            }}
+            onDragColumn={false}
+            onResize={false}
+            customColumnAfter={[
+              {
+                props: {
+                  width: 120,
+                  align: "center",
+                  verticalAlign: "middle",
+                  fixed: "right"
+                },
+                header: "",
+                cellComponent: (cellProps) => {
+                  return <ActionCellComp module={module} {...cellProps} />
+                }
+              }
+            ]}
+          />
+          <div className="row mt-3">
+            <div className="col-12"></div>
+          </div>
+        </CardBody>
+      </Card>
+      <AssetDetailModal
+        modal={state.assetDetailModal}
+        dataDetail={state.assetDetail}
+      />
+    </Fragment>
+  )
 }
 export default List
