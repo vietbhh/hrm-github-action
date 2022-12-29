@@ -646,7 +646,11 @@
     "employee_setting": "Settings",
     "overtime": "Overtime",
     "manage_overtime": "Manage Overtime",
-    "request_overtime": "Request Overtime"
+    "request_overtime": "Request Overtime",
+    "asset": {
+      "list": "Asset List",
+      "import": "Import Asset"
+    }
   },
   "settings": {
     "apps": {
