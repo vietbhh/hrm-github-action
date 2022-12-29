@@ -9,6 +9,8 @@ import { handleChats } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
 import SocketContext from "utility/context/Socket"
+import { useParams } from "react-router-dom"
+import notification from "@apps/utility/notification"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -38,7 +40,6 @@ import {
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
 import "../assets/scss/chat.scss"
-import { useParams } from "react-router-dom"
 
 const AppChat = (props) => {
   const [store, setStore] = useMergedState({
@@ -116,8 +117,30 @@ const AppChat = (props) => {
       const index_group = store.groups.findIndex((item) => item.id === id)
       if (index_group !== -1) {
         setActive(id)
+        setActiveFullName(store.groups[index_group].username)
       } else {
-        window.history.replaceState(null, "", "/chat")
+        const index_group = store.groups.findIndex(
+          (item) => item.username === id
+        )
+        if (index_group !== -1) {
+          setActive(store.groups[index_group].id)
+          setActiveFullName(store.groups[index_group].username)
+        } else {
+          const index_employee = state.dataEmployees.findIndex(
+            (item) => item.username === id
+          )
+          if (index_employee !== -1) {
+            setActive("")
+            setActiveFullName(state.dataEmployees[index_employee].username)
+          } else {
+            notification.showWarning({
+              text: useFormatMessage(
+                "modules.chat.notification.user_is_not_active"
+              )
+            })
+            window.history.replaceState(null, "", "/chat")
+          }
+        }
       }
     }
   }, [id, store.groups, state.checkLoadUrlActiveId])
@@ -336,7 +359,7 @@ const AppChat = (props) => {
     let dataEmployees_ = [...state.dataEmployees]
     _.forEach(store.groups, (value) => {
       dataEmployees_ = dataEmployees_.filter(
-        (item) => item.full_name !== value.fullName
+        (item) => item.username !== value.username
       )
     })
     let contacts = []
@@ -347,6 +370,7 @@ const AppChat = (props) => {
           id: "",
           idEmployee: value.id ? value.id : "",
           fullName: value.full_name ? value.full_name : "",
+          username: value.username ? value.username : "",
           role: value.job_title ? value.job_title : "",
           about: "",
           avatar: value.avatar ? value.avatar : "",
@@ -936,6 +960,7 @@ const AppChat = (props) => {
             dataGroupEmployee = {
               id: id,
               idEmployee: employee.id ? employee.id : "",
+              username: employee.username ? employee.username : "",
               fullName: employee.full_name ? employee.full_name : "",
               role: employee.job_title ? employee.job_title : "",
               about: "",
@@ -973,6 +998,7 @@ const AppChat = (props) => {
             dataGroupEmployee = {
               id: id,
               idEmployee: "",
+              username: "",
               fullName: data.name,
               role: "",
               about: "",
@@ -1105,7 +1131,7 @@ const AppChat = (props) => {
     setUnread(0)
     if (_.isEmpty(active) && !_.isEmpty(activeFullName)) {
       const employeeIndex = store.contacts.findIndex(
-        (item) => item.fullName === activeFullName
+        (item) => item.username === activeFullName
       )
       const employee = store.contacts[employeeIndex]
         ? store.contacts[employeeIndex]
@@ -1117,6 +1143,7 @@ const AppChat = (props) => {
         contact: {
           id: employee.id,
           idEmployee: employee.idEmployee,
+          username: employee.username,
           fullName: employee.fullName,
           role: employee.role,
           about: employee.about,
@@ -1147,7 +1174,7 @@ const AppChat = (props) => {
       let employeeIndexContact = -1
       if (employeeIndex === -1) {
         employeeIndexContact = store.contacts.findIndex(
-          (item) => item.fullName === activeFullName
+          (item) => item.username === activeFullName
         )
       }
       const employee = store.groups[employeeIndex]
@@ -1162,6 +1189,7 @@ const AppChat = (props) => {
         contact: {
           id: employee.id,
           idEmployee: employee.idEmployee,
+          username: employee.username,
           fullName: employee.fullName,
           role: employee.role,
           about: employee.about,

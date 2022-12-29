@@ -748,11 +748,13 @@ const UserProfileSidebar = (props) => {
                       (item) => item.id === value
                     )
                     let name = ""
+                    let username = ""
                     let avatar = ""
                     let id = ""
                     if (indexEmployee > -1) {
                       id = dataEmployees[indexEmployee].id
                       name = dataEmployees[indexEmployee].full_name
+                      username = dataEmployees[indexEmployee].username
                       avatar = dataEmployees[indexEmployee].avatar
                     }
 
@@ -775,7 +777,7 @@ const UserProfileSidebar = (props) => {
                               onClick={(e) => {
                                 e.preventDefault()
                                 setActive(idGroup)
-                                setActiveFullName(name)
+                                setActiveFullName(username)
                               }}>
                               <i className="fa-regular fa-eye"></i>
                               <span>

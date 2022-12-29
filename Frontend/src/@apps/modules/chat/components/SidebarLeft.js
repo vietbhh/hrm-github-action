@@ -160,7 +160,7 @@ const SidebarLeft = (props) => {
                               "",
                               `/chat/${item.id}`
                             )
-                            handleUserClick(item.id, item.fullName)
+                            handleUserClick(item.id, item.username)
                           }}
                           className={classnames({
                             active: active === item.id
@@ -248,8 +248,8 @@ const SidebarLeft = (props) => {
             <li
               key={item.fullName}
               onClick={() => {
-                window.history.replaceState(null, "", "/chat")
-                handleUserClick(item.id, item.fullName)
+                window.history.replaceState(null, "", `/chat/${item.username}`)
+                handleUserClick(item.id, item.username)
               }}>
               <Avatar
                 src={item.avatar}
