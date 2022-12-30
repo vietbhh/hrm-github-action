@@ -3860,7 +3860,37 @@
         "new_asset" : "New Asset"
       },
       "title":{
-        "detail" : "Asset Detail"
+        "detail" : "Asset Detail",
+        "edit" : "Asset Edit",
+        "update_stt" : "Update Status"
+      }
+    },
+    "asset_history":{
+      "fields":{
+        "asset_code" : "Code",
+        "type" : "Type",
+        "owner_current" : "Owner Current",
+        "owner_change" : "Owner Chage",
+        "status_current" : "Current",
+        "status_change" : "Change",
+        "history_image" : "Image",
+        "history_files" : "Files",
+        "notes":"Notes"
+
+      },
+      "text":{
+        "total_asset": "Total Asset",
+        "new_asset" : "New asset this month",
+        "this_month":"This month"
+      },
+      "buttons":{
+        "new_asset" : "New Asset"
+      },
+      "title":{
+        "detail" : "Asset Detail",
+        "edit" : "Asset Edit",
+        "update_stt" : "Update Status",
+        "handover" :"Handover"
       }
     }
   },

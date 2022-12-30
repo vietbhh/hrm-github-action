@@ -2,6 +2,7 @@ import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import DownloadFile from "@apps/modules/download/pages/DownloadFile"
 import {
   formatDate,
+  getOptionValue,
   sortFieldsDisplay,
   useFormatMessage,
   useMergedState
@@ -12,7 +13,7 @@ import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
 import AvatarBox from "@modules/Employees/components/detail/AvatarBox"
 import classnames from "classnames"
-import { isEmpty, toArray } from "lodash-es"
+import { isEmpty, toArray, map } from "lodash-es"
 import { Fragment, useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import ReactStars from "react-rating-stars-component"
@@ -33,8 +34,10 @@ import {
 import { AbilityContext } from "utility/context/Can"
 import SwAlert from "@apps/utility/SwAlert"
 import Photo from "@apps/modules/download/pages/Photo"
-const AssetEditModal = (props) => {
-  const { modal, options, dataDetail, handleDetail, loadData } = props
+import { AssetApi } from "@modules/Asset/common/api"
+import { ErpSelect } from "@apps/components/common/ErpField"
+const AssetUpdateStatusModal = (props) => {
+  const { modal, dataDetail, handleDetail, loadData } = props
   const ability = useContext(AbilityContext)
   const [state, setState] = useMergedState({
     readOnly: true,
@@ -42,25 +45,29 @@ const AssetEditModal = (props) => {
     loading: false,
     averageStar: 0,
     loadingStar: modal,
-    dataReviews: [],
+    optionStt: [],
     modalAssign: false,
     currentJob: "",
     typeCoppy: false
   })
-  const module = "asset_lists"
   const arrFields = useSelector(
-    (state) => state.app.modules["asset_lists"].metas
+    (state) => state.app.modules["asset_history"].metas
   )
-  const optionsArr = useSelector(
-    (state) => state.app.modules["asset_lists"].options
+  const options = useSelector(
+    (state) => state.app.modules["asset_history"].options
   )
 
   const onSubmitFrm = (values) => {
-    values.id = dataDetail.id
-    defaultModuleApi.postSave("asset_lists", values).then((res) => {
+    values.asset_code = dataDetail?.id
+    values.type = getOptionValue(options, "type", "other")
+    values.status_current = dataDetail?.asset_status?.value
+
+    AssetApi.updateSTT(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
+      handleDetail("")
+      loadData()
     })
   }
 
@@ -68,7 +75,6 @@ const AssetEditModal = (props) => {
     mode: "onSubmit"
   })
 
-  const dataFields = isArray(arrFields) ? arrFields : toArray(arrFields)
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
   const cancelUpdate = () => {
@@ -77,38 +83,36 @@ const AssetEditModal = (props) => {
       saving: false
     })
   }
-
-  const handleDeDelete = () => {
-    const idCandidate = dataDetail.id
-    SwAlert.showWarning({
-      confirmButtonText: useFormatMessage("button.delete")
-    }).then((res) => {
-      if (res.value) {
-        defaultModuleApi
-          .delete("candidates", idCandidate)
-          .then((result) => {
-            notification.showSuccess({
-              text: useFormatMessage("notification.delete.success")
-            })
-
-            loadData()
-            handleDetail("")
-          })
-          .catch((err) => {
-            notification.showError({
-              text: err.message
-            })
-          })
-      }
+  const loadStatus = () => {
+    defaultModuleApi.getList("asset_status").then((res) => {
+      const data = res.data.results
+      const arrSTT = []
+      map(data, (value, index) => {
+        if (
+          value?.status_code === "normal" ||
+          value?.status_code === "broken" ||
+          value?.status_code === "repair"
+        ) {
+          const obj = {
+            value: value?.id,
+            label: value?.status_name
+          }
+          arrSTT.push(obj)
+        }
+      })
+      setState({ optionStt: arrSTT })
     })
   }
+  useEffect(() => {
+    loadStatus()
+  }, [])
   return (
     <>
       <Modal
         isOpen={modal}
         toggle={() => handleDetail("")}
         backdrop={"static"}
-        size="lg"
+        size="sm"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
@@ -116,7 +120,7 @@ const AssetEditModal = (props) => {
             <i class="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
-            {useFormatMessage("modules.asset_lists.title.edit")}
+            {useFormatMessage("modules.asset_lists.title.update_stt")}
           </span>
         </ModalHeader>
         <ModalBody>
@@ -125,54 +129,53 @@ const AssetEditModal = (props) => {
               <div className="div-tab-content">
                 <FormProvider {...methods}>
                   <Row>
-                    {dataFields
-                      .filter(
-                        (field) => field.field_form_show && field.field_enable
-                      )
-                      .sort((a, b) => {
-                        return sortFieldsDisplay(a, b)
-                      })
-                      .map((field, key) => {
-                        const options = optionsArr
-                        const fieldAuth = { ...field }
-                        const nameField = field.field
-                        if (
-                          nameField === "asset_code" ||
-                          nameField === "asset_status" ||
-                          nameField === "asset_name"
-                        ) {
-                          fieldAuth.field_readonly = true
-                          console.log("nameField", nameField)
-                        }
-
-                        const fieldProps = {
-                          module: "asset_lists",
-                          fieldData: fieldAuth,
-                          useForm: methods,
-                          options
-                        }
-
-                        if (nameField !== "recruitment_proposal") {
-                          return (
-                            <Col
-                              lg={field.field_form_col_size}
-                              className="mb-1"
-                              key={key}>
-                              <Fragment>
-                                <FieldHandle
-                                  updateDataId={dataDetail?.id}
-                                  label={useFormatMessage(
-                                    "modules.asset_lists.fields." + field.field
-                                  )}
-                                  updateData={dataDetail?.[field.field]}
-                                  {...fieldProps}
-                                />
-                              </Fragment>
-                            </Col>
-                          )
-                        }
-                      })}
-
+                    <Col lg={12} className="mb-1">
+                      <ErpSelect
+                        options={state?.optionStt}
+                        isClearable={false}
+                        label={useFormatMessage(
+                          "modules.asset_lists.fields.asset_status"
+                        )}
+                        required
+                        useForm={methods}
+                        name={"status_change"}
+                      />
+                      <FieldHandle
+                        updateDataId={dataDetail?.id}
+                        label={useFormatMessage(
+                          "modules.asset_history.fields." +
+                            arrFields?.notes?.field
+                        )}
+                        required
+                        fieldData={arrFields.notes}
+                        module="notes"
+                        isClearable={false}
+                        useForm={methods}
+                        options
+                      />
+                    </Col>
+                    <Col lg={12} className="mb-1">
+                      <FieldHandle
+                        updateDataId={dataDetail?.id}
+                        label={useFormatMessage(
+                          "modules.asset_history.fields." +
+                            arrFields?.history_image?.field
+                        )}
+                        fieldData={arrFields.history_image}
+                        useForm={methods}
+                      />
+                    </Col>
+                    <Col lg={12} className="mb-1">
+                      <FieldHandle
+                        updateDataId={dataDetail?.id}
+                        label={useFormatMessage(
+                          "modules.asset_history.fields." +
+                            arrFields?.history_files?.field
+                        )}
+                        fieldData={arrFields.history_files}
+                        useForm={methods}
+                      />
+                    </Col>
                     <Col sm={12}>
                       <div className="row pt-2">
                         <form
@@ -194,7 +197,7 @@ const AssetEditModal = (props) => {
                           <Button.Ripple
                             type="button"
                             className="btn-cancel"
-                            onClick={() => handleDetail("")}
+                            onClick={cancelUpdate}
                             disabled={state.saving}>
                             <span className="align-middle d-sm-inline-block d-none">
                               {useFormatMessage("button.cancel")}
@@ -214,4 +217,4 @@ const AssetEditModal = (props) => {
     </>
   )
 }
-export default AssetEditModal
+export default AssetUpdateStatusModal

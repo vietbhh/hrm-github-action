@@ -12,8 +12,26 @@ export const AssetApi = {
     )
     return await axiosApi.get("/asset/load-data?" + stringFilters)
   },
+
+  async loadHistory(filters = {}) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(filters))
+    )
+    return await axiosApi.get("/asset/load-history?" + stringFilters)
+  },
+
   async detailAsset(id) {
     return await defaultModuleApi.getDetail("asset_lists", id)
+  },
+  async updateSTT(data) {
+    return await axiosApi.post(
+      "/asset/update-status",
+      serialize(_.cloneDeep(data))
+    )
+  },
+
+  async handOver(data) {
+    return await axiosApi.post("/asset/hand-over", serialize(_.cloneDeep(data)))
   },
   async getChannelInfo(url) {
     return await axiosApi.get("youtube/channel-info?url=" + url)

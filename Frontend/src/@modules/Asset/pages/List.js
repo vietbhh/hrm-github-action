@@ -34,6 +34,10 @@ import { AssetApi } from "../common/api"
 import Photo from "@apps/modules/download/pages/Photo"
 import CardStatistic from "../components/CardStatistic"
 import AssetDetailModal from "../components/modals/AssetDetailModal"
+import AssetEditModal from "../components/modals/AssetEditModal"
+import AssetUpdateStatusModal from "../components/modals/AssetUpdateStatusModal"
+import AssetHandoverModal from "../components/modals/AssetHandoverModal"
+
 const { Cell } = Table
 const List = (props) => {
   const { slug } = useParams()
@@ -53,6 +57,9 @@ const List = (props) => {
     loadingEmployeeView: true,
     dataDetail: {},
     assetDetailModal: false,
+    assetEditModal: false,
+    assetUpdateSTTModal: false,
+    assetHandoverModal: false,
     isOpenDate: false,
     date_from: "",
     date_to: "",
@@ -212,124 +219,69 @@ const List = (props) => {
   const checkPer = () => {
     return true
   }
+  const handleUpdateSTT = (id) => {
+    if (id) {
+      AssetApi.detailAsset(id).then((res) => {
+        setState({ assetDetail: res.data.data, assetUpdateSTTModal: true })
+      })
+    } else {
+      setState({ assetUpdateSTTModal: !state.assetUpdateSTTModal })
+    }
+  }
+  const handleHandover = (id) => {
+    if (id) {
+      AssetApi.detailAsset(id).then((res) => {
+        setState({ assetDetail: res.data.data, assetHandoverModal: true })
+      })
+    } else {
+      setState({ assetHandoverModal: !state.assetHandoverModal })
+    }
+  }
+
+  const handleError = (id) => {}
   const menu = (data) => {
     return [
       {
         label: (
           <div className="d-flex align-items-center">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              className="me-1"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12.4082 4.23333C11.6832 4.01667 10.8832 3.875 9.9999 3.875C6.00824 3.875 2.7749 7.10833 2.7749 11.1C2.7749 15.1 6.00824 18.3333 9.9999 18.3333C13.9916 18.3333 17.2249 15.1 17.2249 11.1083C17.2249 9.625 16.7749 8.24167 16.0082 7.09167"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M13.4418 4.43335L11.0334 1.66669"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M13.4416 4.43335L10.6333 6.48335"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Reload data
+            <i class="fa-regular fa-pen-to-square me-50"></i> Edit
           </div>
         ),
-        key: "btn_reload",
-        onClick: () => synC(data.id)
+        key: "btn_edit",
+        onClick: () => handleAssetEdit(data.id)
       },
       {
         label: (
           <div className="d-flex align-items-center">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              className="me-1"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M10.8834 9.11664C12.7584 10.9916 12.7584 14.025 10.8834 15.8916C9.00845 17.7583 5.97512 17.7666 4.10845 15.8916C2.24178 14.0166 2.23345 10.9833 4.10845 9.11664"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.82505 11.175C6.87505 9.22503 6.87505 6.05836 8.82505 4.10003C10.775 2.14169 13.9417 2.15003 15.9 4.10003C17.8584 6.05003 17.85 9.21669 15.9 11.175"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Get link
+            <i class="fa-regular fa-repeat me-50"></i> Update status
           </div>
         ),
-        key: "btn_get_link",
-        onClick: () => handleGetLink(data),
+        key: "btn_stt",
+        onClick: () => handleUpdateSTT(data.id)
+      },
+      {
+        label: (
+          <div className="d-flex align-items-center">
+            <i class="fa-regular fa-repeat me-50"></i> Handover
+          </div>
+        ),
+        key: "btn_hover",
+        onClick: () => handleHandover(data.id)
+      },
+      {
+        label: (
+          <div className="d-flex align-items-center">
+            <i class="fa-regular fa-triangle-exclamation me-50"></i> Error
+          </div>
+        ),
+        key: "btn_error",
+        onClick: () => handleError(data),
         disabled: !data.id
       },
       {
         label: (
           <div className="d-flex align-items-center">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              className="me-1"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M17.5 4.98335C14.725 4.70835 11.9333 4.56668 9.15 4.56668C7.5 4.56668 5.85 4.65001 4.2 4.81668L2.5 4.98335"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7.08325 4.14166L7.26659 3.04999C7.39992 2.25832 7.49992 1.66666 8.90825 1.66666H11.0916C12.4999 1.66666 12.6083 2.29166 12.7333 3.05832L12.9166 4.14166"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M15.7084 7.61667L15.1667 16.0083C15.0751 17.3167 15.0001 18.3333 12.6751 18.3333H7.32508C5.00008 18.3333 4.92508 17.3167 4.83341 16.0083L4.29175 7.61667"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.6084 13.75H11.3834"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7.91675 10.4167H12.0834"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <i class="fa-regular fa-trash-can me-50"></i>
             {useFormatMessage("button.delete")}
           </div>
         ),
@@ -430,122 +382,7 @@ const List = (props) => {
       </Cell>
     )
   }
-  const renderIcon = (num) => {
-    let symbol = "+"
-    let icon = <i className="fa-duotone fa-arrow-up-wide-short ms-50"></i>
-    let color = "text-success"
-    if (parseInt(num) < 0) {
-      symbol = ""
-      color = "text-danger"
-      icon = <i className="fa-duotone fa-arrow-down-wide-short ms-50"></i>
-    }
-    if (parseInt(num) === 0) {
-      return ""
-    }
-    return (
-      <span className={`${color} font-small-3`}>
-        ({symbol}
-        {addComma(num)}){icon}
-      </span>
-    )
-  }
-  const changeRPM = (data) => {
-    setState({ loading: true })
-    const dataUp = {
-      id: data?.id,
-      rpm: getValues("rpm")
-    }
-    AssetApi.changeRPM(dataUp)
-      .then((res) => {
-        notification.showSuccess({
-          text: useFormatMessage("notification.save.success")
-        })
-        setState({ loading: false })
-        loadData()
-      })
-      .catch((err) => {
-        setState({ loading: false })
-        notification.showError(useFormatMessage("notification.save.error"))
-      })
-  }
 
-  const changeCategory = (data) => {
-    setState({ loading: true })
-    const dataUp = {
-      id: data?.id,
-      category: getValues("category")
-    }
-    defaultModuleApi
-      .postSave("yt_channels", dataUp)
-      .then((res) => {
-        notification.showSuccess({
-          text: useFormatMessage("notification.save.success")
-        })
-        setState({ loading: false })
-        loadData()
-      })
-      .catch((err) => {
-        setState({ loading: false })
-        notification.showError(useFormatMessage("notification.save.error"))
-      })
-  }
-  const contentRPM = (data) => {
-    return (
-      <div className="d-flex align-items-center">
-        <ErpInput
-          nolabel
-          formGroupClass="mb-0"
-          defaultValue={data?.rpm}
-          name="rpm"
-          useForm={methods}
-          disabled={checkPer()}
-        />
-        {!checkPer() && (
-          <div>
-            <Button
-              size="sm"
-              className="ms-1 btn-tool"
-              color="primary"
-              type="button"
-              onClick={() => changeRPM(data)}>
-              {state.loading && <Spinner size="sm" className="me-50" />}
-              <i className="fa-regular fa-check"></i>
-            </Button>
-          </div>
-        )}
-      </div>
-    )
-  }
-  const contentCategory = (data) => {
-    return (
-      <div className="d-flex align-items-center">
-        <FieldHandle
-          module={moduleName}
-          nolabel
-          formGroupClass="mb-0"
-          className="w-100"
-          fieldData={{
-            ...metas.category
-          }}
-          useForm={methods}
-          defaultValue={data?.category}
-        />
-        {!checkPer() && (
-          <div>
-            <Button
-              size="sm"
-              className="ms-1 btn-tool"
-              color="primary"
-              type="button"
-              onClick={() => changeCategory(data)}>
-              {state.loading && <Spinner size="sm" className="me-50" />}
-              <i className="fa-regular fa-check"></i>
-            </Button>
-          </div>
-        )}
-      </div>
-    )
-  }
   const handleDetail = (id) => {
     AssetApi.detailAsset(id).then((res) => {
       //res.data.data
@@ -554,7 +391,6 @@ const List = (props) => {
   }
   const CellDisplay = (props) => {
     const { field, rowData, cellProps } = props
-    console.log("rowData", rowData)
     switch (field.field) {
       case "asset_name":
         return (
@@ -612,24 +448,23 @@ const List = (props) => {
     return dot + addComma(num)
   }
 
-  const selectDate = (numOfDay, props) => {
-    const today = moment()
-    const dateAgo = moment(today).subtract(numOfDay, "days")
-    const date_from = numOfDay ? dateAgo.format("YYYY-MM-DD") : ""
-    const date_to = numOfDay ? today.format("YYYY-MM-DD") : ""
-    loadData(
-      {
-        date_from: date_from,
-        date_to: date_to,
-        page: 1
-      },
-      { date_select: numOfDay, ...props }
-    )
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const handleAssetDetail = () => {
+    setState({ assetDetailModal: !state.assetDetailModal })
   }
 
-  useEffect(() => {
-    selectDate(28)
-  }, [slug])
+  const handleAssetEdit = (id = 0) => {
+    if (id) {
+      AssetApi.detailAsset(id).then((res) => {
+        setState({ assetDetail: res.data.data, assetEditModal: true })
+      })
+    } else {
+      setState({ assetEditModal: !state.assetEditModal })
+    }
+  }
   return (
     <Fragment>
       <Row>
@@ -766,6 +601,24 @@ const List = (props) => {
       <AssetDetailModal
         modal={state.assetDetailModal}
         dataDetail={state.assetDetail}
+        handleDetail={handleAssetDetail}
+      />
+
+      <AssetEditModal
+        modal={state.assetEditModal}
+        dataDetail={state.assetDetail}
+        handleDetail={handleAssetEdit}
+      />
+      <AssetUpdateStatusModal
+        modal={state.assetUpdateSTTModal}
+        dataDetail={state.assetDetail}
+        loadData={loadData}
+        handleDetail={handleUpdateSTT}
+      />
+      <AssetHandoverModal
+        modal={state.assetHandoverModal}
+        dataDetail={state.assetDetail}
+        handleDetail={handleHandover}
       />
     </Fragment>
   )
