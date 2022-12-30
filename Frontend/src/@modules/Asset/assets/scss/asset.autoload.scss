@@ -1,0 +1,108 @@
+@import "@scss/friday";
+
+.import-asset-list-page {
+    .upload-file-step {
+        .upload-file-dragger {
+            width: 35%;
+
+            .dragger {
+                padding: 20px;
+
+                &:hover {
+                    border-color: $primary !important;
+                }
+
+                p,
+                .upload-icon {
+                    color: $primary;
+                }
+
+                .upload-icon {
+                    font-size: 64px;
+                    padding-bottom: 15px;
+                }
+            }
+
+            small {
+                color: $primary;
+            }
+        }
+    }
+
+    .preview-and-import {
+        .error-field {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .ant-collapse {
+            border: 0 !important;
+            background-color: #fff !important;
+
+            .ant-collapse-content {
+                border-top: 0 !important;
+
+                .info-record-skip {
+                    .collapse-header {
+                        padding-bottom: 10px;
+                        .row {
+                            width: 100px;
+                        }
+
+                        .email {
+                            width: 300px;
+                        }
+                    }
+
+                    .list-error {
+                        div {
+                            width: 24%;
+                            padding-bottom: 10px;
+                            padding-top: 10px;
+                        }
+                    }
+
+                    .ant-collapse-item {
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+                    }
+                }
+
+                .info-ready-to-create {
+                    .duplicate-icon {
+                        color: orange;
+                        padding-right: 5px;
+                    }
+
+                    .chosen-icon {
+                        color: green;
+                        padding-right: 5px;
+                    }
+                }
+
+                .info-duplicate {
+                    width: 100%;
+
+                    .header-info-duplicate {
+                        width: 100%;
+                        background-color: #f9fafb;
+                        padding: 10px;
+                    }
+                }
+            }
+
+            .ant-collapse-item {
+                border-bottom: 0 !important;
+
+                .ant-collapse-content-box {
+                    padding-top: 0px;
+                }
+            }
+
+            .ant-collapse-header {
+                display: flex;
+                align-items: flex-start;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+        }
+    }
+}
