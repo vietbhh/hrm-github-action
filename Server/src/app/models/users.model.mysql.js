@@ -85,4 +85,12 @@ const getUser = (identity) => {
       })
 }
 
-export { getUser, Users }
+const getUsers = (ids) => {
+  return Users.findAll({
+    where: {
+      id: ids
+    }
+  })
+}
+
+export { getUser, getUsers, Users }

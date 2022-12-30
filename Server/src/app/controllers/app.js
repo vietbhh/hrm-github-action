@@ -1,4 +1,4 @@
-import { Users } from "#app/models/user.model.mysql.js"
+import { Users } from "#app/models/users.model.mysql.js"
 
 export const testFn = (req, res, next) => {
   const user = Users.findAll().then((res) => {

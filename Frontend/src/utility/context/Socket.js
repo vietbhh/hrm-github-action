@@ -21,7 +21,7 @@ export const SocketContextWrap = (props) => {
   })
   const dispatch = useDispatch()
   const settingSocket =
-    useSelector((state) => state.auth.settings.sockets) || false
+    useSelector((state) => state?.auth?.settings?.sockets) || false
   let errorAlert = false
   useEffect(() => {
     if (!_.isNull(useJwt.getToken()) && !_.isEmpty(useJwt.getToken())) {

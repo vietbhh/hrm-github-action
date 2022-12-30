@@ -124,7 +124,8 @@ $routes->get('user/profile', 'User::profile_get');
 $routes->post('user/update', 'User::update_post');
 $routes->add('user/avatar', 'User::avatar');
 $routes->get('user/get/(:alphanum)', 'User::get_get/$1');
-$routes->post('user/save-device-token', 'User::save_device_token_post/$1');
+$routes->post('user/save-device-token', 'User::save_device_token_post');
+$routes->post('user/remove-device-token', 'User::remove_device_token_post');
 
 
 /*** Route for Libs ***/
@@ -182,7 +183,8 @@ $routes->post('chat/post-up-file', 'Chat::post_up_file_post', ['namespace' => 'A
 $routes->post('chat/post-up-background', 'Chat::post_up_background', ['namespace' => 'App\Controllers']);
 $routes->post('chat/post-up-avatar', 'Chat::post_up_avatar', ['namespace' => 'App\Controllers']);
 
-
+$routes->get('fri/test', 'Test::index_get');
+$routes->post('fri/test', 'Test::index_post');
 /**
  * --------------------------------------------------------------------
  * Custom Code Routing

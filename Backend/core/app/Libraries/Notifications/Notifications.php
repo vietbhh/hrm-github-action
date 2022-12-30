@@ -18,8 +18,7 @@ class Notifications
 
 	public function add($content = [])
 	{
-		$this->model->save($content);
-		return $this->model->insertID;
+		return $this->model->insert($content);
 	}
 
 	public function detail($id)
@@ -79,9 +78,7 @@ class Notifications
 			'full_name',
 			'email',
 			'avatar'
-		])
-			->asArray()
-			->findAll();
+		])->asArray()->findAll();
 		$arrUser = [];
 		foreach ($listUser as $rowUser) {
 			$arrUser[$rowUser['id']] = $rowUser;
@@ -95,75 +92,91 @@ class Notifications
 
 			return $result;
 		}
-		
+
 		return $this->_getDataNotification($data, $userId, $arrUser);
 	}
 
-	public function pushNotification($params, $arrIdUser, $addToNotification = false)
+	private function _sendNotification($receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true)
 	{
-		$title = $params['title'];
-		$content = $params['content'];
-		$link =  $params['link'];
-		$image = isset($params['img']) ? $params['img'] : '';
-
+		$title = $payload['title'];
+		$body = $payload['body'];
+		$link = $payload['link'];
+		$type = empty($payload['type']) ? "other" : $payload['type'];
+		$badge = $payload['badge'] ?? "";
+		$icon = empty($payload['icon']) ? getDefaultFridayLogo() : $payload['icon'];
+		$icon = is_numeric($icon) ? getAvatarUrl($icon) : $icon;
 		try {
 			$userModel = new UserModel();
-			$listUser = $userModel->asArray()->whereIn('id', $arrIdUser)->findAll();
-			$newNotification = [];
-			if ($addToNotification) {
-				$arrDataAdd = $params;
-				unset($arrDataAdd['img']);
-				$arrDataAdd['recipient_id'] = json_encode($arrIdUser);
-				$arrDataAdd['type'] = 'system';
-				$arrDataAdd['sender_id'] = user_id();
-				$arrDataAdd['read_by'] = json_encode([]);
-				$id = $this->add($arrDataAdd);
-				$newNotification = $this->handleNotificationData($this->detail($id), false);
+			$userModel->select(['id', 'username', 'device_token'])->asArray();
+			if (is_numeric($receivers)) $userModel->where('id', $receivers);
+			else $userModel->whereIn('id', $receivers);
+			$listUser = $userModel->findAll();
+			if ($saveToDb) {
+				$saveNotificationData = [
+					'sender_id' => user_id() ?? 0,
+					'recipient_id' => json_encode($receivers),
+					'type' => $type,
+					'title' => $title,
+					'body' => $body,
+					'link' => $link,
+					'icon' => $icon,
+					'read_by' => json_encode([])
+				];
+				$id = $this->add($saveNotificationData);
 			}
-			
+
+			$client = new FirebaseCM\Client();
+
+			$client->setApiKey($_ENV['firebase_server_key']);
+			$client->injectGuzzleHttpClient(new \GuzzleHttp\Client());
+
+			$message = new FirebaseCM\Message();
+
+			$message->setPriority('high');
+
+			$notification = new FirebaseCM\Notification($title, $body);
+			if (!empty($badge)) $notification->setBadge($badge);
+			if (!empty($link)) $notification->setClickAction($link);
+			if (!empty($icon)) $notification->setIcon($icon);
+			$data['isSave'] = $saveToDb ? "true" : "false";
+			$data['emitKey'] = "app_notification";
+			$data['sender_id'] = user_id() ?? 0;
+			$message->setNotification($notification)->setData($data);
+
+			$listAllReceiverToken = $listAllReceiverId = $listUserById = [];
 			foreach ($listUser as $rowUser) {
-				$deviceTokens = $rowUser['device_token'];
-				if ($deviceTokens) {
-					$deviceTokens = json_decode($deviceTokens, true);
-					foreach ($deviceTokens as $deviceToken) {
-						$token = $deviceToken['token'];
-						$data = [
-							"notification" => [
-								"body"  => $content,
-								"title" => $title,
-								"image" => $image
-							],
-							"priority" =>  "high",
-							"data" => [
-								"info" => [
-									"title"  => $title,
-									"link"   => $link,
-									"image"  => $image
-								],
-								"add_notification" => $addToNotification,
-								"notification_info" => $newNotification
-							],
-							"to" => $token
-						];
-
-						$ch = curl_init();
-
-						curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-						curl_setopt($ch, CURLOPT_POST, 1);
-
-						$headers = array();
-						$headers[] = 'Content-Type: application/json';
-						$headers[] = 'Authorization: key='.$_ENV['firebase_server_key'];
-						curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-						$result = curl_exec($ch);
-						curl_close($ch);
-					}
+				$recipients = $rowUser['device_token'] ?? [];
+				$recipients = json_decode($recipients, true);
+				$listUserById[$rowUser['id']] = $recipients;
+				foreach ($recipients as $recipient) {
+					$listAllReceiverToken[] = $recipient;
+					$listAllReceiverId[] = $rowUser['id'];
+					$message->addRecipient(new FirebaseCM\Recipient\Device($recipient));
 				}
 			}
-
+			$response = $client->send($message);
+			$responseData = $response->getBody()->getContents();
+			if (!empty($responseData)) {
+				$deleteErrorToken = [];
+				$responseData = json_decode($responseData, true);
+				if (!empty($responseData['results'])) {
+					foreach ($responseData["results"] as $i => $result) {
+						if (isset($result["error"])) {
+							$deleteErrorToken[$listAllReceiverId[$i]][] = $listAllReceiverToken[$i];
+						}
+					}
+				}
+				//Update database
+				foreach ($deleteErrorToken as $userId => $errorTokens) {
+					$newTokenList = array_values(array_diff($listUserById[$userId], $errorTokens));
+					$dataSave = [
+						'id' => $userId,
+						'device_token' => json_encode($newTokenList)
+					];
+					$userModel->setAllowedFields(array_keys($dataSave));
+					$userModel->save($dataSave);
+				}
+			}
 			return true;
 		} catch (\Exception $e) {
 			return [
@@ -173,10 +186,24 @@ class Notifications
 		}
 	}
 
+	public function sendNotification(...$args)
+	{
+		$isSocketEnable = preference('sockets');
+		if ($isSocketEnable) {
+			$nodeServer = \Config\Services::nodeServer();
+			$nodeServer->node->get('/notification/send');
+		} else {
+			return $this->_sendNotification($args);
+		}
+
+
+	}
+
+
 	// ** support function
 	private function _getDataNotification($data, $userId, $arrUser)
 	{
-		$data['sender_id'] = isset($arrUser[$data['sender_id']]) ? $arrUser[$data['sender_id']] : [];
+		$data['sender_id'] = $arrUser[$data['sender_id']] ?? [];
 		$data['seen'] = false;
 		if (!empty($data['read_by'])) {
 			$a = array_search($userId, json_decode($data['read_by'], true));
@@ -184,6 +211,7 @@ class Notifications
 				$data['seen'] = true;
 			}
 		}
+
 		unset($data['recipient_id']);
 		unset($data['read_by']);
 

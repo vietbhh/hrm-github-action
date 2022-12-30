@@ -1,7 +1,11 @@
-import { useFormatMessage } from "@apps/utility/common"
+import {
+  getAvatarUrl,
+  getPublicDownloadUrl,
+  useFormatMessage
+} from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { socketConnect } from "@apps/utility/socketHandler"
-import { Fragment, useCallback, useContext, useEffect, useRef } from "react"
+import { Fragment, useCallback, useContext, useEffect } from "react"
 import SocketContext from "utility/context/Socket"
 const Test = (props) => {
   const socketDoc = socketConnect({
@@ -14,27 +18,37 @@ const Test = (props) => {
     console.log(data)
   }, [])
 
-  const notificationSound = useRef(null)
   useEffect(() => {
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
     //socket.on("notification", handleData)
-    socket.emit("send_data_to_users", {
-      receiver: 1,
-      key: "chat_notification",
-      data: {
+    socket.emit("app_notification", {
+      receivers: [1, 10],
+      payload: {
         title: "Trịnh Hải Long",
-        body: "uh,cứ thế mà làm",
-        senderType : "user",
-        sender : "1",
-        link : "#"
+        body: "uh,cứ thế mà làm" + Math.floor(Math.random() * 100),
+        link: "/dashboard",
+        image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
       }
     })
+    /* socket.emit("chat_notification", {
+      receivers: 1,
+      payload: {
+        title: "John Doe",
+        body: "well done!!!",
+        link: "/chat/hailongtrinh",
+        icon: getAvatarUrl("avatars/1/1_avatar.webp"),
+        image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+      },
+      data: {
+        skipUrls: "/chat/hailongtrinh,/chat/dlskalskdjdf"
+      }
+    }) */
   }, [socket])
 
   const testNoti = () => {
     notification.show({
-      title: "bạn nhận được thông báo",  
+      title: "bạn nhận được thông báo",
       config: {
         duration: 10000000
       }

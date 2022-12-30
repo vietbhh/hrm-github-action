@@ -1,4 +1,4 @@
-import { usersApi } from "@apps/modules/settings/common/api"
+import { userApi } from "@apps/modules/users/common/api"
 import firebase from "firebase/compat/app"
 import { getFirestore } from "firebase/firestore"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
@@ -36,13 +36,13 @@ export const requestPermission = () => {
   } else if (Notification.permission === "granted") {
     // Check whether notification permissions have already been granted;
     // if so, create a notification
-    if (getAccessToken()) getRegistrationToken()
+    getRegistrationToken()
     // …
   } else if (Notification.permission !== "denied") {
     // We need to ask the user for permission
     Notification.requestPermission().then((permission) => {
       // If the user accepts, let's create a notification
-      if (permission === "granted" && getAccessToken()) {
+      if (permission === "granted") {
         getRegistrationToken()
         //getAccessToken()
         // …
@@ -56,16 +56,19 @@ const getRegistrationToken = async () => {
     vapidKey: vapidKey
   })
     .then((currentToken) => {
-      //console.log(currentToken)
       if (currentToken) {
-        usersApi
-          .saveDeviceToken({
-            token: currentToken
-          })
-          .then((res) => {})
-          .catch((err) => {
-            console.log(err)
-          })
+        localStorage.setItem("deviceToken", currentToken)
+        if (getAccessToken()) {
+          userApi
+            .saveDeviceToken({
+              token: currentToken
+            })
+            .then((res) => {})
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
         // Track the token -> client mapping, by sending to backend server
         // show on the UI that permission is secured
       } else {

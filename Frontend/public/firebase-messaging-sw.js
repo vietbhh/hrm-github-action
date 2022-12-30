@@ -19,7 +19,8 @@ if ("serviceWorker" in navigator) {
 const firebaseConfig = {
   apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
   authDomain: "friday-351410.firebaseapp.com",
-  databaseURL: "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "friday-351410",
   storageBucket: "friday-351410.appspot.com",
   messagingSenderId: "802894112425",
@@ -30,17 +31,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
+console.log(messaging)
 
-messaging.onBackgroundMessage((payload) => {
-  const notificationData = payload?.data
-  if (notificationData?.add_notification === "true") {
-    const notificationInfo = JSON.parse(notificationData.notification_info)
-    self.clients.matchAll({ includeUncontrolled: true }).then(function (clients) {
-      //you can see your main window client in this list.
-      clients.forEach(function (client) {
-        client.postMessage(notificationInfo)
-      })
-    })
-  }
-  
+self.addEventListener("notificationclick", (event) => {
+  console.log(event)
 })

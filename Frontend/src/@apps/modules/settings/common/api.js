@@ -85,12 +85,6 @@ export const usersApi = {
   },
   async delete(id) {
     return await axiosApi.delete("/settings/users/delete/" + id)
-  },
-  async saveDeviceToken(data) {
-    return await axiosApi.post(
-      "/user/save-device-token",
-      serialize(_.cloneDeep(data))
-    )
   }
 }
 

@@ -1,4 +1,4 @@
-
+import { isNumber } from "lodash-es"
 
 export const getBool = (val) => {
   if (isUndefined(val)) return false
@@ -90,6 +90,10 @@ export const stringInject = (str, data) => {
   }
 }
 
+export const currentDateTime = () => {
+  return moment().format("DD/MM/YYYY h:mm:ss a")
+}
+
 export const formatDate = (date, format = "DD/MM/YYYY") => {
   return moment(date).format(format)
 }
@@ -109,4 +113,18 @@ export const decamelize = (str, separator = "_") => {
     .replace(/([a-z\d])([A-Z])/g, "$1" + separator + "$2")
     .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, "$1" + separator + "$2")
     .toLowerCase()
+}
+
+export const getDefaultFridayLogo = (type = "icon") => {
+  const logoName = type === "text" ? "friday_text.png" : "friday.png"
+  return process.env.SITEURL + "/assets/images/" + logoName
+}
+
+export const getAvatarUrl = (userOrPath) => {
+  const type = isNumber(userOrPath) ? "user" : "name"
+  return process.env.BASEURL + `/download/avatar?${type}=` + userOrPath
+}
+
+export const getPublicDownloadUrl = (path, type = "image") => {
+  return process.env.BASEURL + `/download/public/${type}?name=` + path
 }

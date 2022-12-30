@@ -1,0 +1,459 @@
+{
+  "cacheDuration": 500,
+  "silent": true,
+  "foreignKeyForMetaFieldsAllowOption": false,
+  "moduleTablePrefix": "m_",
+  "routeModuleNameVar": "{moduleName}",
+  "metaFieldsAllowOptionSelection": [
+    "select_option",
+    "checkbox",
+    "radio"
+  ],
+  "metaFieldsAllowModuleSelectionNoPaginate": [
+    "checkbox_module",
+    "radio_module"
+  ],
+  "metaFieldsAllowModuleSelectionPaginate": [
+    "select_module"
+  ],
+  "metaFieldsUpload": [
+    "upload_one",
+    "upload_multiple",
+    "upload_image"
+  ],
+  "usingMigrate": false,
+  "defaultMetaAttr": {
+    "dbFieldExists": true,
+    "field": "",
+    "field_default_value": "",
+    "field_detail_order": "0",
+    "field_detail_show": true,
+    "field_enable": true,
+    "field_filter_order": "0",
+    "field_filter_show": true,
+    "field_form_col_size": "3",
+    "field_form_order": "0",
+    "field_form_require": false,
+    "field_form_show": true,
+    "field_form_unique": false,
+    "field_icon": "",
+    "field_icon_type": "no_icon",
+    "field_options": [],
+    "field_options_values": {
+      "values": [],
+      "default": ""
+    },
+    "field_quick_form_show": true,
+    "field_quick_view_order": "0",
+    "field_quick_view_show": true,
+    "field_readonly": false,
+    "field_select_field_show": null,
+    "field_select_module": null,
+    "field_table_order": "0",
+    "field_table_show": true,
+    "field_table_sortable": true,
+    "field_table_width": "0",
+    "field_type": "text",
+    "field_validate_rules": null,
+    "module": "0"
+  },
+  "route": {
+    "default": {
+      "/{moduleName}/:action?/:id?": "default_route"
+    },
+    "extend": []
+  },
+  "permits": {
+    "manage": "Allow manage full resource of this module",
+    "access": "Allow access to this module",
+    "list": "Allow view data on this module (only data that their are owner or has view/edit permission)",
+    "listAll": "Allow view all data on this module",
+    "add": "Allow create new data",
+    "update": "Allow update data (only data that their are owner or has edit permission)",
+    "updateAll": "Allow update all data on this module",
+    "delete": "Allow delete data (only data that their are owner)",
+    "deleteAll": "Allow delete all data on this module",
+    "export": "Allow export data on this module"
+  },
+  "defaultFields": {
+    "fields": {
+      "id": {
+        "type": "int",
+        "constraint": 11,
+        "unsigned": true,
+        "auto_increment": true
+      },
+      "owner": {
+        "type": "int",
+        "constraint": 11,
+        "unsigned": true,
+        "null": true
+      },
+      "created_by": {
+        "type": "int",
+        "constraint": 11,
+        "unsigned": true,
+        "null": true
+      },
+      "updated_by": {
+        "type": "int",
+        "constraint": 11,
+        "unsigned": true,
+        "null": true
+      },
+      "created_at": {
+        "type": "datetime",
+        "null": true
+      },
+      "updated_at": {
+        "type": "datetime",
+        "null": true
+      },
+      "deleted_at": {
+        "type": "datetime",
+        "null": true
+      },
+      "view_permissions": {
+        "type": "json",
+        "null": true
+      },
+      "update_permissions": {
+        "type": "json",
+        "null": true
+      }
+    },
+    "keys": {
+      "id": {
+        "primary": true,
+        "unique": true
+      }
+    },
+    "foreignKeys": {
+      "owner": {
+        "refTable": "users",
+        "refField": "id",
+        "onDelete": "NO ACTION",
+        "onUpdate": "CASCADE"
+      },
+      "created_by": {
+        "refTable": "users",
+        "refField": "id",
+        "onDelete": "NO ACTION",
+        "onUpdate": "CASCADE"
+      },
+      "updated_by": {
+        "refTable": "users",
+        "refField": "id",
+        "onDelete": "NO ACTION",
+        "onUpdate": "CASCADE"
+      }
+    }
+  },
+  "defaultMetasFields": [
+    {
+      "field": "owner",
+      "field_type": "select_module",
+      "field_filter_show": true,
+      "field_options": [],
+      "field_select_module": "users",
+      "field_select_field_show": "username"
+    },
+    {
+      "field": "created_by",
+      "field_type": "select_module",
+      "field_filter_show": true,
+      "field_options": [],
+      "field_select_module": "users",
+      "field_select_field_show": "username"
+    },
+    {
+      "field": "updated_by",
+      "field_type": "select_module",
+      "field_filter_show": true,
+      "field_options": [],
+      "field_select_module": "users",
+      "field_select_field_show": "username"
+    },
+    {
+      "field": "created_at",
+      "field_type": "datetime",
+      "field_filter_show": true,
+      "field_options": []
+    },
+    {
+      "field": "updated_at",
+      "field_type": "datetime",
+      "field_filter_show": true,
+      "field_options": []
+    },
+    {
+      "field": "deleted_at",
+      "field_type": "datetime",
+      "field_filter_show": false,
+      "field_options": []
+    },
+    {
+      "field": "view_permissions",
+      "field_type": "select_module",
+      "field_filter_show": true,
+      "field_options": [],
+      "field_select_module": "users",
+      "field_select_field_show": "username"
+    },
+    {
+      "field": "update_permissions",
+      "field_type": "select_module",
+      "field_filter_show": true,
+      "field_options": [],
+      "field_select_module": "users",
+      "field_select_field_show": "username"
+    }
+  ],
+  "fieldTypeDef": {
+    "text": {
+      "type": "varchar",
+      "constraint": "255",
+      "null": true,
+      "default": ""
+    },
+    "number_int": {
+      "type": "int",
+      "constraint": 11,
+      "null": true,
+      "default": 0
+    },
+    "number_dec": {
+      "type": "decimal",
+      "constraint": "10,2",
+      "null": true,
+      "default": 0
+    },
+    "textarea": {
+      "type": "longtext",
+      "null": true
+    },
+    "date": {
+      "type": "date",
+      "null": true
+    },
+    "datetime": {
+      "type": "datetime",
+      "null": true
+    },
+    "time": {
+      "type": "time",
+      "null": true
+    },
+    "select_option": {
+      "type": "json",
+      "null": true
+    },
+    "select_module": {
+      "type": "json",
+      "null": true
+    },
+    "checkbox": {
+      "type": "json",
+      "null": true
+    },
+    "checkbox_module": {
+      "type": "json",
+      "null": true
+    },
+    "radio": {
+      "type": "smallint",
+      "unsigned": true,
+      "null": true,
+      "default": 0
+    },
+    "radio_module": {
+      "type": "smallint",
+      "unsigned": true,
+      "null": true,
+      "default": 0
+    },
+    "switch": {
+      "type": "tinyint",
+      "constraint": "1",
+      "null": true,
+      "default": 0
+    },
+    "upload_one": {
+      "type": "text",
+      "null": true,
+      "default": ""
+    },
+    "upload_multiple": {
+      "type": "json",
+      "null": true
+    },
+    "upload_image": {
+      "type": "text",
+      "null": true,
+      "default": ""
+    },
+    "other": {
+      "type": "varchar",
+      "constraint": "255",
+      "null": true,
+      "default": ""
+    }
+  },
+  "fieldTypeFilterDef": {
+    "text": {
+      "operator": [
+        "=",
+        "!=",
+        "contains",
+        "!contains",
+        "startswith",
+        "!startswith",
+        "endswith",
+        "!endswith"
+      ]
+    },
+    "number_int": {
+      "operator": [
+        "=",
+        "!=",
+        ">",
+        "<",
+        ">=",
+        "<=",
+        "between"
+      ]
+    },
+    "number_dec": {
+      "operator": [
+        "=",
+        "!=",
+        ">",
+        "<",
+        ">=",
+        "<=",
+        "between"
+      ]
+    },
+    "textarea": {
+      "operator": [
+        "=",
+        "!=",
+        "contains",
+        "!contains",
+        "startswith",
+        "!startswith",
+        "endswith",
+        "!endswith"
+      ]
+    },
+    "date": {
+      "operator": [
+        "=",
+        "!=",
+        ">",
+        "<",
+        ">=",
+        "<=",
+        "between"
+      ]
+    },
+    "datetime": {
+      "operator": [
+        "=",
+        "!=",
+        ">",
+        "<",
+        ">=",
+        "<=",
+        "between"
+      ]
+    },
+    "time": {
+      "operator": [
+        "=",
+        "!=",
+        ">",
+        "<",
+        ">=",
+        "<=",
+        "between"
+      ]
+    },
+    "select_option": {
+      "operator": [
+        "=",
+        "!="
+      ]
+    },
+    "select_module": {
+      "operator": [
+        "=",
+        "!="
+      ]
+    },
+    "checkbox": {
+      "operator": [
+        "=",
+        "!="
+      ]
+    },
+    "checkbox_module": {
+      "operator": [
+        "=",
+        "!="
+      ]
+    },
+    "radio": {
+      "operator": [
+        "=",
+        "!="
+      ]
+    },
+    "radio_module": {
+      "operator": [
+        "=",
+        "!="
+      ]
+    },
+    "switch": {
+      "operator": [
+        "="
+      ]
+    },
+    "upload_one": {
+      "operator": [
+        "=",
+        "!=",
+        "contains",
+        "!contains"
+      ]
+    },
+    "upload_multiple": {
+      "operator": [
+        "=",
+        "!=",
+        "contains",
+        "!contains"
+      ]
+    },
+    "upload_image": {
+      "operator": [
+        "=",
+        "!=",
+        "contains",
+        "!contains"
+      ]
+    }
+  },
+  "bannedMetaWords": [
+    "id",
+    "owner",
+    "created_by",
+    "updated_by",
+    "created_at",
+    "updated_at",
+    "deleted_at",
+    "view_permissions",
+    "update_permissions"
+  ]
+}

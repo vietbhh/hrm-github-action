@@ -1,14 +1,11 @@
 // ** React Imports
-import { onMessageListener } from "firebase"
-import moment from "moment"
 import { Fragment, useContext, useEffect } from "react"
 // ** redux
 import { useDispatch, useSelector } from "react-redux"
 import { handleNotification } from "redux/notification"
 // ** Styles
 // ** Components
-import Avatar from "@apps/modules/download/pages/Avatar"
-import { useFormatMessage } from "@apps/utility/common"
+import { currentDateTime, useFormatMessage } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import ChatSound from "@src/assets/sounds/chat_sound.mp3"
 import NotificationSound from "@src/assets/sounds/notification_sound.mp3"
@@ -21,8 +18,63 @@ const Notification = (props) => {
   const dispatch = useDispatch()
   // const play = useSo
   const socket = useContext(SocketContext)
+
+  const addNotificationToStore = (notificationData) => {
+    const { id, title, body, link, type, image, sender_id } = notificationData
+    const listNotification = [
+      {
+        id,
+        title,
+        body,
+        link,
+        type,
+        image,
+        sender_id,
+        created_at: currentDateTime(),
+        seen: false
+      },
+      ...listNotificationStore
+    ]
+    const numberNotification = parseInt(numberNotificationStore) + 1
+    dispatch(
+      handleNotification({
+        listNotification,
+        numberNotification
+      })
+    )
+  }
+  const showNotificationPopup = (payload, emitKey = "app_notification") => {
+    let data = {
+      title: payload.title,
+      text: payload.body,
+      meta: useFormatMessage("common.few_seconds_ago"),
+      link: payload.link
+    }
+    if (payload?.click_action) {
+      data.link = payload?.click_action
+    }
+    if (emitKey === "chat_notification") {
+      data = {
+        ...data,
+        icon: (
+          <img
+            className="rounded-circle me-1"
+            src={payload.icon}
+            width={30}
+            height={30}
+          />
+        ),
+        config: {
+          position: "bottom-right"
+        }
+      }
+    }
+    notification.show(data)
+  }
+
   useEffect(() => {
     socket.on("app_notification", (data) => {
+      const { payload, isSave } = data
       const sound = new Audio(NotificationSound)
       sound.addEventListener("canplaythrough", (event) => {
         // the audio is now playable; play it if permissions allow
@@ -31,75 +83,54 @@ const Notification = (props) => {
           playedPromise.catch((e) => {}).then(() => {})
         }
       })
-      notification.show({
-        title: data.title,
-        text: data.body,
-        meta: useFormatMessage("common.few_seconds_ago")
-      })
+      //show notification
+      showNotificationPopup(payload)
+      //If save to db,update bell badge and list notification
+      if (isSave) {
+        addNotificationToStore(payload)
+      }
     })
 
     socket.on("chat_notification", (data) => {
-      const sound = new Audio(ChatSound)
-      sound.addEventListener("canplaythrough", (event) => {
-        // the audio is now playable; play it if permissions allow
-        const playedPromise = sound.play()
-        if (playedPromise) {
-          playedPromise.catch((e) => {}).then(() => {})
-        }
-      })
-      notification.show({
-        title: data.title,
-        text: data.body,
-        icon: (
-          <Avatar className="mt-25 me-50" size="sm" userId={data?.sender} />
-        ),
-        link: data.link,
-        config: {
-          duration: 10000000,
-          position: "bottom-right"
-        }
-      })
+      const { payload } = data
+      const skipUrls = data.data?.skipUrls ?? ""
+      const skipUrlsArray = skipUrls.split(",")
+      if (
+        window.location.pathname !== payload.link &&
+        !skipUrlsArray.includes(window.location.pathname)
+      ) {
+        const sound = new Audio(ChatSound)
+        sound.addEventListener("canplaythrough", (event) => {
+          // the audio is now playable; play it if permissions allow
+          const playedPromise = sound.play()
+          if (playedPromise) {
+            playedPromise.catch((e) => {}).then(() => {})
+          }
+        })
+        showNotificationPopup(payload, "chat_notification")
+      }
     })
   }, [socket])
 
-  onMessageListener()
-    .then((payload) => {
-      console.log(payload)
-      notification.show({
-        title: payload.notification.title,
-        text: payload.notification.body,
-        meta: moment().format("D MMM YYYY, h:mm:ss a")
-      })
-
-      const notificationData = payload?.data
-      if (notificationData?.add_notification === "true") {
-        const listNotification = [
-          { ...JSON.parse(notificationData.notification_info) },
-          ...listNotificationStore
-        ]
-        const numberNotification = parseInt(numberNotificationStore) + 1
-        dispatch(
-          handleNotification({
-            listNotification,
-            numberNotification
-          })
-        )
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-
   navigator.serviceWorker.addEventListener("message", function (event) {
-    const notificationInfo = event.data
-    const listNotification = [{ ...notificationInfo }, ...listNotificationStore]
-    const numberNotification = parseInt(numberNotificationStore) + 1
-    dispatch(
-      handleNotification({
-        listNotification,
-        numberNotification
-      })
-    )
+    const { data } = event
+    if (data?.isFirebaseMessaging) {
+      const payload = data?.notification
+      const otherData = data?.data
+      const emitKey = otherData?.emitKey ?? ""
+      const isSave = otherData?.isSave
+      if (!socket.connected) {
+        showNotificationPopup(payload, emitKey)
+        if (isSave === "true") {
+          const { id, sender_id } = otherData
+          addNotificationToStore({
+            id,
+            sender_id,
+            ...payload
+          })
+        }
+      }
+    }
   })
 
   return <Fragment></Fragment>

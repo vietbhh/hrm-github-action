@@ -1,8 +1,5 @@
-import { getUser } from "#app/models/user.model.mysql.js"
-import { sendMessage } from "#app/services/firebaseServices.js"
 import { objectMap } from "#app/utility/common.js"
-import { isUndefined } from "lodash-es"
-
+import { forEach, isArray, isUndefined } from "lodash-es"
 export let socketUsers = {}
 
 export const getUserSocketData = (userId) => {
@@ -34,6 +31,23 @@ const getOnlineUsers = () => {
   return result
 }
 
+const emitDataToUserById = (userId, key, data) => {
+  const receiverSocket = getUserSocketData(userId)
+  if (receiverSocket) {
+    global._io.to(receiverSocket.socketId).emit(key, data)
+  }
+}
+export const emitDataToOnlineUsers = (userIds, key, data) => {
+  if (isArray(userIds)) {
+    forEach(userIds, (item) => {
+      emitDataToUserById(item, key, data)
+    })
+  } else {
+    emitDataToUserById(userIds, key, data)
+  }
+}
+
+
 const coreSocket = () => {
   global._io.on("connection", (socket) => {
     socket.join("friday")
@@ -49,28 +63,9 @@ const coreSocket = () => {
     })
 
     //Handle Send data between client
-    socket.on("send_data_to_users", async (data) => {
-      const receiver = getUserSocketData(data.receiver)
-      /* sendMessage({
-        data: {
-          score: "850",
-          time: "2:45"
-        },
-        token:
-          "e3SfcN-B-3YGT1_-hctryu:APA91bGajzUgYNTMlcu6nYdNZa-Xur2lgrTd14guQkLKcaqefD5yrgVyBevMbjsmWp35Hbq2uQrsCiuCf1KNH3GnSvl-vxs0QpuNSnHrt5X3PYgjjsICOeYfzhhGWwD85UKQuNSi7ff1"
-      }) */
-      if (data.key.endsWith("_notification")) {
-        const user = await getUser(data.receiver)
-        console.log(user)
-      }
-      if (receiver) {
-        global._io.to(receiver.socketId).emit(data.key, data.data)
-      }
-      /* if (!isUndefined(socketUsers[data.receiver]?.socketId)) {
-        global._io
-          .to(socketUsers[data.receiver].socketId)
-          .emit(data.key, data.data)
-      } */
+    socket.on("send_data_to_users", async (socketData) => {
+      const { receivers, key, data } = socketData
+      emitDataToOnlineUsers(receivers, key, data)
     })
   })
 }

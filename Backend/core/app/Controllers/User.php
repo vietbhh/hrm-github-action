@@ -156,9 +156,32 @@ class User extends ErpController
 		return $this->respondUpdated(ACTION_SUCCESS);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
+	public function remove_device_token_post()
+	{
+		$userModel = model(UserModel::class);
+		$postData = $this->request->getPost();
+		$userId = user_id();
+		$userInfo = $userModel->asArray()->find($userId);
+		if (empty($postData['token'])) return $this->respond(ACTION_SUCCESS);
+		$device_tokens_org = $device_tokens = (empty($userInfo['device_token'])) ? [] : json_decode($userInfo['device_token'], true);
+		foreach ($device_tokens as $token_position => $token_item) {
+			if ($token_item['token'] === $postData['token']) {
+				unset($device_tokens_org[$token_position]);
+			}
+		}
+		$userModel->update($userId, ['device_token' => json_encode(array_values($device_tokens_org))]);
+		return $this->respond(ACTION_SUCCESS);
+	}
+
+
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function save_device_token_post()
 	{
-		$modules = \Config\Services::modules('users');
 		$userModel = model(UserModel::class);
 		$postData = $this->request->getPost();
 		$userId = user_id();
@@ -169,31 +192,24 @@ class User extends ErpController
 		$arrDeviceToken = (empty($userInfo['device_token'])) ? [] : json_decode($userInfo['device_token'], true);
 
 		//Check for auto logout - if someone is auto logout,then other login on same pc,we remove token from previous user
-		/*$checkTokenExist = $userModel->select(['id', 'device_token'])->asArray()->like('device_token', $postData['token'])->where('id !=',$userId)->findAll();
-		if(!empty($checkTokenExist)){
+		$checkTokenExist = $userModel->select(['id', 'device_token'])->asArray()->like('device_token', $postData['token'])->where('id !=', $userId)->findAll();
+		if (!empty($checkTokenExist)) {
 			foreach ($checkTokenExist as $userExist) {
-				//$userExist['devide']
-
+				$device_tokens_org = $device_tokens = json_decode($userExist['device_token'], true);
+				foreach ($device_tokens as $token_position => $token_item) {
+					if ($token_item === $postData['token']) {
+						unset($device_tokens_org[$token_position]);
+					}
+				}
+				$userModel->update($userExist['id'], ['device_token' => json_encode(array_values($device_tokens_org))]);
 			}
 		}
 
-		exit;*/
-		$allowSave = true;
-		foreach ($arrDeviceToken as $rowDeviceToken) {
-			if ($rowDeviceToken['token'] == $postData['token']) {
-				$allowSave = false;
-				break;
-			}
-		}
-
-		if ($allowSave) {
-			array_push($arrDeviceToken, [
-				'token' => $postData['token'],
-				'created_at' => date('Y-m-d H:i:s')
-			]);
+		if (!in_array($postData['token'], $arrDeviceToken)) {
+			$arrDeviceToken[] = $postData['token'];
 			$dataSave = [
 				'id' => $userId,
-				'device_token' => json_encode($arrDeviceToken)
+				'device_token' => json_encode(array_values($arrDeviceToken))
 			];
 			$userModel->setAllowedFields(array_keys($dataSave));
 			$userModel->save($dataSave);
