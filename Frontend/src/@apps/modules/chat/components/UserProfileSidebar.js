@@ -340,133 +340,6 @@ const UserProfileSidebar = (props) => {
             state.showFileView ? "hide" : ""
           }`}
           options={{ wheelPropagation: false }}>
-          <div className="profile-div" style={{ cursor: "unset" }}>
-            <span className="title">
-              {useFormatMessage("modules.chat.text.notification")}
-            </span>
-            <ErpSwitch
-              nolabel
-              checked={state.checkedNotification}
-              onChange={(e) => {
-                setState({ checkedNotification: e.target.checked })
-                if (e.target.checked === true) {
-                  handleUpdateGroup(state.selectedGroup.id, {
-                    mute: arrayRemove(userId)
-                  })
-                } else {
-                  handleUpdateGroup(state.selectedGroup.id, {
-                    mute: arrayUnion(userId)
-                  })
-                }
-              }}
-            />
-          </div>
-
-          <div
-            className="profile-div"
-            onClick={() => handleShowFileView(true, "file")}>
-            <span className="title">
-              {useFormatMessage("modules.chat.text.files")}
-            </span>
-            <div className="profile-div-right">
-              <span className="number">
-                {state.selectedGroup?.file_count?.file || 0}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="15"
-                height="16"
-                viewBox="0 0 15 16"
-                fill="none">
-                <path
-                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
-                  stroke="#212121"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div
-            className="profile-div"
-            onClick={() => handleShowFileView(true, "image")}>
-            <span className="title">
-              {useFormatMessage("modules.chat.text.images")}
-            </span>
-            <div className="profile-div-right">
-              <span className="number">
-                {state.selectedGroup?.file_count?.image || 0}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="15"
-                height="16"
-                viewBox="0 0 15 16"
-                fill="none">
-                <path
-                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
-                  stroke="#212121"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div
-            className="profile-div"
-            onClick={() => handleShowFileView(true, "link")}>
-            <span className="title">
-              {useFormatMessage("modules.chat.text.share_links")}
-            </span>
-            <div className="profile-div-right">
-              <span className="number">
-                {state.selectedGroup?.file_count?.link || 0}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="15"
-                height="16"
-                viewBox="0 0 15 16"
-                fill="none">
-                <path
-                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
-                  stroke="#212121"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div className="profile-div">
-            <span className="title">
-              {useFormatMessage("modules.chat.text.more_options")}
-            </span>
-            <div className="profile-div-right">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="15"
-                height="16"
-                viewBox="0 0 15 16"
-                fill="none">
-                <path
-                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
-                  stroke="#212121"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <hr />
-
           {user?.type === "employee" && (
             <>
               <div className="personal-info">
@@ -492,7 +365,7 @@ const UserProfileSidebar = (props) => {
               </div>
 
               <div className="personal-info">
-                <h6 className="section-label mb-75">Social</h6>
+                <h6 className="section-label mb-1">Social</h6>
                 <ul className="list-unstyled">
                   <li className="mb-50">
                     <a
@@ -662,11 +535,139 @@ const UserProfileSidebar = (props) => {
                   </li>
                 </ul>
               </div>
+
+              <hr />
             </>
           )}
 
+          <div className="profile-div" style={{ cursor: "unset" }}>
+            <span className="title">
+              {useFormatMessage("modules.chat.text.notification")}
+            </span>
+            <ErpSwitch
+              nolabel
+              checked={state.checkedNotification}
+              onChange={(e) => {
+                setState({ checkedNotification: e.target.checked })
+                if (e.target.checked === true) {
+                  handleUpdateGroup(state.selectedGroup.id, {
+                    mute: arrayRemove(userId)
+                  })
+                } else {
+                  handleUpdateGroup(state.selectedGroup.id, {
+                    mute: arrayUnion(userId)
+                  })
+                }
+              }}
+            />
+          </div>
+
+          <div
+            className="profile-div"
+            onClick={() => handleShowFileView(true, "file")}>
+            <span className="title">
+              {useFormatMessage("modules.chat.text.files")}
+            </span>
+            <div className="profile-div-right">
+              <span className="number">
+                {state.selectedGroup?.file_count?.file || 0}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="16"
+                viewBox="0 0 15 16"
+                fill="none">
+                <path
+                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
+                  stroke="#212121"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div
+            className="profile-div"
+            onClick={() => handleShowFileView(true, "image")}>
+            <span className="title">
+              {useFormatMessage("modules.chat.text.images")}
+            </span>
+            <div className="profile-div-right">
+              <span className="number">
+                {state.selectedGroup?.file_count?.image || 0}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="16"
+                viewBox="0 0 15 16"
+                fill="none">
+                <path
+                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
+                  stroke="#212121"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div
+            className="profile-div"
+            onClick={() => handleShowFileView(true, "link")}>
+            <span className="title">
+              {useFormatMessage("modules.chat.text.share_links")}
+            </span>
+            <div className="profile-div-right">
+              <span className="number">
+                {state.selectedGroup?.file_count?.link || 0}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="16"
+                viewBox="0 0 15 16"
+                fill="none">
+                <path
+                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
+                  stroke="#212121"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div className="profile-div">
+            <span className="title">
+              {useFormatMessage("modules.chat.text.more_options")}
+            </span>
+            <div className="profile-div-right">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="16"
+                viewBox="0 0 15 16"
+                fill="none">
+                <path
+                  d="M5.3125 3.625L9.6875 8L5.3125 12.375"
+                  stroke="#212121"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+
           {user?.type === "group" && (
             <>
+              <hr />
               <Collapse defaultActiveKey={["1"]} className="collapse-member">
                 <Panel
                   header={

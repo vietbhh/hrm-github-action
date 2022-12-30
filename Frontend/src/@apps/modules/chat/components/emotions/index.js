@@ -7,14 +7,15 @@ import Sticker from "./Sticker"
 
 const index = (props) => {
   const {
-    setMsg,
-    getValues,
     sendMessage,
     selectedUser,
     focusInputMsg,
-    setReplyingDefault
+    setReplyingDefault,
+    handleInsertEditorState,
+    showEmotion,
+    setShowEmotion
   } = props
-  const [showEmotion, setShowEmotion] = useState(false)
+
   const emotionRef = useRef(null)
   const emotionIconRef = useRef(null)
   useEffect(() => {
@@ -42,9 +43,8 @@ const index = (props) => {
       label: "Emoji",
       children: (
         <EmojiComponent
-          setMsg={setMsg}
-          getValues={getValues}
           focusInputMsg={focusInputMsg}
+          handleInsertEditorState={handleInsertEditorState}
         />
       )
     },
@@ -84,7 +84,7 @@ const index = (props) => {
           if (showEmotion === false) {
             setShowEmotion(true)
           }
-          focusInputMsg()
+          //focusInputMsg()
         }}
       />
     </>

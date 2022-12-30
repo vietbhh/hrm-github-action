@@ -48,7 +48,8 @@ const ChatMessage = (props) => {
     search_message_highlight_timestamp,
     search_message_highlight_text_search,
     dataChatScrollBottom,
-    checkShowDataChat
+    checkShowDataChat,
+    handleHeight
   } = props
   const { userProfile, selectedUser, groups } = store
 
@@ -490,7 +491,7 @@ const ChatMessage = (props) => {
                       search_message_highlight_text_search
                     )
                   )
-                : data.msg}
+                : ReactHtmlParser(data.msg)}
             </p>
             <p className="time">
               {formatTime(data.time)}
@@ -953,9 +954,16 @@ const ChatMessage = (props) => {
             <Tooltip title={useFormatMessage("modules.chat.text.reply")}>
               <svg
                 onClick={() => {
+                  let message = chat.message
+                  const mapObj = {
+                    "<br>": " "
+                  }
+                  message = message.replace(/<br>/gi, function (matched) {
+                    return mapObj[matched]
+                  })
                   setReplying({
                     replying: true,
-                    replying_message: chat.message,
+                    replying_message: message,
                     replying_type: chat.type,
                     replying_timestamp: chat.time,
                     replying_file: !_.isEmpty(chat.file)
@@ -966,7 +974,9 @@ const ChatMessage = (props) => {
                       ? chat?.forward?.forward_id_from
                       : ""
                   })
-                  focusInputMsg()
+                  //focusInputMsg()
+
+                  handleHeight(true, false)
                 }}
                 className="reaction"
                 xmlns="http://www.w3.org/2000/svg"

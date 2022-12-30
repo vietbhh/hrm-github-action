@@ -23,6 +23,14 @@ import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { Badge, InputGroup, InputGroupText } from "reactstrap"
 import { ChatApi } from "../common/api"
+import InputMessage from "./details/InputMessage"
+import {
+  ContentState,
+  convertFromRaw,
+  convertToRaw,
+  EditorState
+} from "draft-js"
+import ReactHtmlParser from "react-html-parser"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -83,6 +91,21 @@ const ChatLog = (props) => {
     compress_images: true
   })
 
+  const msgRef = useRef(null)
+  const divChatRef = useRef(null)
+
+  const setRefMessage = (ref) => {
+    msgRef.current = ref
+  }
+
+  const focusInputMsg = () => {
+    if (msgRef.current) {
+      msgRef.current.focus()
+      localStorage.setItem("chatAppFocus", true)
+      localStorage.setItem("formChatFocus", true)
+    }
+  }
+
   // ** redux
   const usersRedux = useSelector((state) => state.users)
   const onlineRedux = usersRedux.online
@@ -94,7 +117,8 @@ const ChatLog = (props) => {
         )
         return index > -1
       })
-      const status = !_.isEmpty(online) ? "online" : "offline"
+      const status =
+        !_.isEmpty(online) && online.length >= 2 ? "online" : "offline"
       setState({ status: status })
     } else {
       const online = _.filter(onlineRedux, (item) => {
@@ -131,16 +155,6 @@ const ChatLog = (props) => {
     setState({ data_forward: data })
   }
 
-  const msgRef = useRef(null)
-  const divChatRef = useRef(null)
-
-  const focusInputMsg = () => {
-    if (msgRef.current) {
-      msgRef.current.focus()
-      localStorage.setItem("chatAppFocus", true)
-    }
-  }
-
   const scrollToTopAfterGetHistory = () => {
     const chatContainer = ReactDOM.findDOMNode(chatArea.current)
     chatContainer.scrollTop = 800
@@ -155,11 +169,44 @@ const ChatLog = (props) => {
     setValue("message", msg)
   }
 
+  const handleHeight = (replying, isScroll = true, height = 0) => {
+    let heightEditor =
+      document.getElementsByClassName("wrapper-message")?.[0]?.offsetHeight
+    if (replying) {
+      heightEditor = heightEditor + 55
+    }
+    if (height !== 0) {
+      heightEditor = height
+    }
+    if (heightEditor) {
+      document.getElementById("form-chat").style.height =
+        "calc(100% - 85px - 40px - " + heightEditor + "px)"
+    }
+
+    if (isScroll === true) {
+      scrollToBottom()
+    } else {
+      if (replying) {
+        const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+        if (
+          chatContainer.scrollHeight -
+            chatContainer.scrollTop -
+            chatContainer.clientHeight <=
+            150 ||
+          chatContainer.scrollTop === 0
+        ) {
+          scrollToBottom()
+        }
+      }
+    }
+  }
+
   // ** listen esc
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.keyCode === 27) {
         setReplyingDefault()
+        handleHeight(false, false)
       }
     }
     window.addEventListener("keydown", handleEsc)
@@ -215,7 +262,7 @@ const ChatLog = (props) => {
     setMsg("")
     setReplyingDefault()
     focusInputMsg()
-  }, [selectedUser])
+  }, [selectedUser, loadingMessage])
 
   // ** Opens right sidebar & handles its data
   const handleAvatarClick = (obj) => {
@@ -267,12 +314,6 @@ const ChatLog = (props) => {
     }
   }
 
-  // ** ChatWrapper tag based on chat's length
-  const ChatWrapper =
-    Object.keys(selectedUser).length && selectedUser.chat
-      ? PerfectScrollbar
-      : "div"
-
   const renderFormReply = () => {
     let replying_to = useFormatMessage("modules.chat.text.your_self")
     if (state.replying_user_id !== userId) {
@@ -308,26 +349,12 @@ const ChatLog = (props) => {
           </svg>
           {useFormatMessage("modules.chat.text.replying_to")} {replying_to}
         </div>
-        <div className="form-reply-content">{replying_content}</div>
+        <div className="form-reply-content">
+          {ReactHtmlParser(replying_content)}
+        </div>
       </>
     )
   }
-
-  // ** scroll to bottom when replying
-  useEffect(() => {
-    if (state.replying) {
-      const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-      if (
-        chatContainer.scrollHeight -
-          chatContainer.scrollTop -
-          chatContainer.clientHeight <=
-          150 ||
-        chatContainer.scrollTop === 0
-      ) {
-        scrollToBottom()
-      }
-    }
-  }, [state.replying])
 
   // ** toggle modal forward
   const toggleModalForward = () => {
@@ -449,6 +476,50 @@ const ChatLog = (props) => {
     }
   }
 
+  // drag state
+  const [dragActive, setDragActive] = useState(null)
+
+  // handle drag events
+  const handleDrag = function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.dataTransfer.effectAllowed === "copyLink") {
+      if (e.type === "dragenter" || e.type === "dragover") {
+        setDragActive(true)
+      } else {
+        setDragActive(false)
+      }
+    } else {
+      setDragActive(false)
+    }
+  }
+
+  // triggers when file is dropped
+  const handleDrop = function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleChangeFile(e.dataTransfer.files)
+    }
+  }
+
+  // ** scroll to bottom when replying
+  useEffect(() => {
+    if (state.replying) {
+      const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+      if (
+        chatContainer.scrollHeight -
+          chatContainer.scrollTop -
+          chatContainer.clientHeight <=
+          150 ||
+        chatContainer.scrollTop === 0
+      ) {
+        scrollToBottom()
+      }
+    }
+  }, [state.replying])
+
   // ** listen paste image
   useEffect(() => {
     const handleClick = (event) => {
@@ -490,33 +561,11 @@ const ChatLog = (props) => {
     }
   }, [divChatRef, unread])
 
-  // drag state
-  const [dragActive, setDragActive] = useState(null)
-
-  // handle drag events
-  const handleDrag = function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    if (e.dataTransfer.effectAllowed === "copyLink") {
-      if (e.type === "dragenter" || e.type === "dragover") {
-        setDragActive(true)
-      } else {
-        setDragActive(false)
-      }
-    } else {
-      setDragActive(false)
-    }
-  }
-
-  // triggers when file is dropped
-  const handleDrop = function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleChangeFile(e.dataTransfer.files)
-    }
-  }
+  // ** ChatWrapper tag based on chat's length
+  const ChatWrapper =
+    Object.keys(selectedUser).length && selectedUser.chat
+      ? PerfectScrollbar
+      : "div"
 
   return (
     <Fragment>
@@ -696,6 +745,7 @@ const ChatLog = (props) => {
                         search_message_highlight_text_search={
                           state.search_message_highlight_text_search
                         }
+                        handleHeight={handleHeight}
                       />
                     </div>
                   ) : null}
@@ -772,71 +822,28 @@ const ChatLog = (props) => {
                   id="label-file-upload"
                   className={`${dragActive ? "drag-active" : ""}`}
                   htmlFor="input-file-upload-chat-form">
-                  <InputGroup className="input-group-merge form-send-message">
-                    <InputGroupText>
-                      <EmotionsComponent
-                        setMsg={setMsg}
-                        getValues={getValues}
-                        sendMessage={sendMessage}
-                        selectedUser={selectedUser}
-                        focusInputMsg={focusInputMsg}
-                        setReplyingDefault={setReplyingDefault}
-                      />
-                    </InputGroupText>
-                    {state.replying && (
-                      <div className="form-reply">
-                        <div className="form-reply-left">
-                          {renderFormReply()}
-                        </div>
-                        <div className="form-reply-right">
-                          <i
-                            className="far fa-times form-reply-right-icon"
-                            onClick={() => {
-                              setReplyingDefault()
-                              focusInputMsg()
-                            }}></i>
-                        </div>
-                      </div>
-                    )}
-                    <ErpInput
-                      innerRef={msgRef}
-                      useForm={methods}
-                      name="message"
-                      defaultValue=""
-                      placeholder="Type a message ..."
-                      nolabel
-                      autoComplete="off"
-                    />
-                    <InputGroupText>
-                      <UpFile
-                        selectedUser={selectedUser}
-                        linkPreview={state.linkPreview}
-                        file={state.file}
-                        modal={state.modal}
-                        compress_images={state.compress_images}
-                        toggleModal={toggleModalFile}
-                        setCompressImages={(value) =>
-                          setState({ compress_images: value })
-                        }
-                        handleSaveFile={handleSaveFile}
-                        changeFile={changeFile}
-                      />
-                    </InputGroupText>
-                  </InputGroup>
-
-                  <button type="submit" className="send">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none">
-                      <path
-                        d="M16.586 5.09924L8.76251 6.3913C3.50182 7.27084 3.07032 9.99521 7.80305 12.4491L9.89286 13.531L10.276 15.8529C11.1473 21.1123 13.8799 21.5451 16.3339 16.8123L19.9872 9.78061C21.6181 6.62185 20.0954 4.51606 16.586 5.09924ZM16.148 9.5691L12.5223 12.2179C12.3793 12.3218 12.2138 12.3546 12.0574 12.3298C11.901 12.3051 11.7538 12.2227 11.6499 12.0797C11.449 11.8032 11.5116 11.4081 11.7881 11.2072L15.4137 8.55845C15.6902 8.35757 16.0853 8.42014 16.2862 8.69664C16.4871 8.97313 16.4245 9.36821 16.148 9.5691Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
+                  <InputMessage
+                    replying={state.replying}
+                    replying_timestamp={state.replying_timestamp}
+                    handleHeight={handleHeight}
+                    handleSendMsg={handleSendMsg}
+                    sendMessage={sendMessage}
+                    selectedUser={selectedUser}
+                    focusInputMsg={focusInputMsg}
+                    setReplyingDefault={setReplyingDefault}
+                    setRefMessage={setRefMessage}
+                    linkPreview={state.linkPreview}
+                    file={state.file}
+                    modal={state.modal}
+                    compress_images={state.compress_images}
+                    toggleModal={toggleModalFile}
+                    setCompressImages={(value) =>
+                      setState({ compress_images: value })
+                    }
+                    handleSaveFile={handleSaveFile}
+                    changeFile={changeFile}
+                    renderFormReply={renderFormReply}
+                  />
                 </label>
                 {dragActive && (
                   <div

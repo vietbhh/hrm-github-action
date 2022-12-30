@@ -67,6 +67,27 @@ const SidebarLeft = (props) => {
   }
 
   // ** Renders Chat
+  const renderAvatar = (item) => {
+    if (item.type && item.type === "group" && item.avatar) {
+      return (
+        <Avatar
+          src={`/modules/chat/${item.id}/avatar/${item.avatar}`}
+          imgHeight="50"
+          imgWidth="50"
+        />
+      )
+    }
+
+    return (
+      <Avatar
+        src={item.avatar}
+        imgHeight="50"
+        imgWidth="50"
+        userId={item.idEmployee}
+      />
+    )
+  }
+
   const renderChats = (pin = false) => {
     if (groups && groups.length) {
       const index_search = filteredChat.findIndex(
@@ -165,12 +186,7 @@ const SidebarLeft = (props) => {
                           className={classnames({
                             active: active === item.id
                           })}>
-                          <Avatar
-                            src={item.avatar}
-                            imgHeight="50"
-                            imgWidth="50"
-                            userId={item.idEmployee}
-                          />
+                          {renderAvatar(item)}
                           <div
                             className={`chat-info flex-grow-1 ${
                               item.chat.unseenMsgs > 0 ? "unread" : ""
@@ -181,7 +197,10 @@ const SidebarLeft = (props) => {
                                 ? item.chat.lastUser + ": "
                                 : ""}
                               {item.chat.lastMessage
-                                ? item.chat.lastMessage.message
+                                ? item.chat.lastMessage.message.replace(
+                                    /<[^>]*>/g,
+                                    ""
+                                  )
                                 : groups[groups.length - 1].message}
                             </CardText>
                           </div>
@@ -479,6 +498,7 @@ const SidebarLeft = (props) => {
         toggleModal={toggleModalNewGroup}
         handleAddNewGroup={handleAddNewGroup}
         setActive={setActive}
+        setActiveFullName={setActiveFullName}
         userId={userId}
         setDataUnseenDetail={setDataUnseenDetail}
       />

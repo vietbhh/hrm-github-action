@@ -1325,6 +1325,7 @@ const AppChat = (props) => {
 
     localStorage.setItem("chatAppHidden", false)
     localStorage.setItem("chatAppFocus", true)
+    localStorage.setItem("formChatFocus", false)
   }, [])
 
   // ** idleTimer
@@ -1342,17 +1343,25 @@ const AppChat = (props) => {
     // Do something when a user triggers a watched event
     if (event.type !== "mousemove") {
       let checkIssetDiv = false
+      let checkFocusFormChat = false
       _.forEach(event.path, (item) => {
         if (
           item.className === "div-li-chat" ||
           item.className === "chat-app-window"
         ) {
           checkIssetDiv = true
-          return true
+        }
+
+        if (
+          item.className === "chat-app-form " ||
+          item.className === "chat-app-form replying"
+        ) {
+          checkFocusFormChat = true
         }
       })
       localStorage.setItem("chatAppHidden", event.target.hidden)
       localStorage.setItem("chatAppFocus", checkIssetDiv)
+      localStorage.setItem("formChatFocus", checkFocusFormChat)
     }
   }
 

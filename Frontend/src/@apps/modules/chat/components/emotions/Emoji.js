@@ -1,13 +1,14 @@
 import EmojiPicker, { Categories, EmojiStyle, Theme } from "emoji-picker-react"
 
 const Emoji = (props) => {
-  const { setMsg, getValues, focusInputMsg } = props
+  const { focusInputMsg, handleInsertEditorState } = props
   return (
     <EmojiPicker
       onEmojiClick={(emojiData) => {
-        const msg = getValues("message")
-        setMsg(msg + emojiData.emoji)
-        focusInputMsg()
+        /* const msg = getValues("message")
+        setMsg(msg + emojiData.emoji) */
+        handleInsertEditorState(emojiData.emoji)
+        //focusInputMsg()
       }}
       autoFocusSearch={false}
       theme={Theme.AUTO}

@@ -19,6 +19,7 @@ const ModalNewGroup = (props) => {
     toggleModal,
     handleAddNewGroup,
     setActive,
+    setActiveFullName,
     userId,
     setDataUnseenDetail
   } = props
@@ -63,6 +64,7 @@ const ModalNewGroup = (props) => {
       setTimeout(() => {
         const newGroupId = res.id
         setActive(newGroupId)
+        setActiveFullName("")
         toggleModal()
         setState({ loading: false })
       }, 500)
