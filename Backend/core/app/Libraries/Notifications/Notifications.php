@@ -191,7 +191,15 @@ class Notifications
 		$isSocketEnable = preference('sockets');
 		if ($isSocketEnable) {
 			$nodeServer = \Config\Services::nodeServer();
-			$nodeServer->node->get('/notification/send');
+			$result = $nodeServer->node->get('/notification/send');
+			echo "<pre>";
+			print_r($nodeServer->node);
+			echo "</pre>";
+
+			echo "<pre>";
+			print_r($result);
+			echo "</pre>";
+
 		} else {
 			return $this->_sendNotification($args);
 		}
