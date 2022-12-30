@@ -97,7 +97,7 @@ const AssetHandoverModal = (props) => {
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
           <span className="title-icon align-self-center">
-            <i class="fa-regular fa-circle-info"></i>
+            <i className="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
             {useFormatMessage("modules.asset_history.title.handover")}
@@ -111,7 +111,7 @@ const AssetHandoverModal = (props) => {
                   <Row>
                     <Col lg={12} className="mb-1">
                       <ErpUserSelect
-                        isClearable={false}
+                        isclearable={false}
                         label={"Owner change"}
                         required
                         useForm={methods}
@@ -126,7 +126,7 @@ const AssetHandoverModal = (props) => {
                         required
                         fieldData={arrFields.notes}
                         module="asset_history"
-                        isClearable={false}
+                        isclearable={false}
                         useForm={methods}
                         options
                       />

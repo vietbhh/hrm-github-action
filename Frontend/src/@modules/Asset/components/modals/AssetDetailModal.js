@@ -12,7 +12,7 @@ import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
 import AvatarBox from "@modules/Employees/components/detail/AvatarBox"
 import classnames from "classnames"
-import { isEmpty, toArray } from "lodash-es"
+import { isEmpty, toArray, map } from "lodash-es"
 import { Fragment, useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import ReactStars from "react-rating-stars-component"
@@ -34,30 +34,70 @@ import { AbilityContext } from "utility/context/Can"
 import SwAlert from "@apps/utility/SwAlert"
 import Photo from "@apps/modules/download/pages/Photo"
 import { AssetApi } from "@modules/Asset/common/api"
+import { Timeline } from "antd"
 const AssetDetailModal = (props) => {
   const { modal, options, dataDetail, handleDetail, loadData } = props
   const [state, setState] = useMergedState({
     loading: false,
     filterHistory: {
-      limit: 5,
+      limit: 3,
       page: 1
     },
-    history: []
+    historyData: [],
+    recordsTotal: 0
   })
 
   const loadHistory = () => {
+    const arrHis = [...state.historyData]
+    console.log("arrHis", arrHis)
     AssetApi.loadHistory({
       ...state.filterHistory,
       asset_code: dataDetail?.id
     }).then((res) => {
-      console.log("ressss", res)
+      console.log("arrHis2", arrHis)
+      setState({
+        historyData: res.data.history,
+        recordsTotal: res.data.recordsTotal
+      })
+
+      return
+      if (arrHis) {
+        const concat = arrHis.concat(res.data.history)
+        setState({ historyData: concat })
+      } else {
+      }
     })
   }
+  console.log("state", state)
   useEffect(() => {
     if (dataDetail?.id) {
       loadHistory()
     }
   }, [dataDetail])
+
+  const renderHistory = (data) => {
+    return map(data, (value, index) => {
+      return (
+        <Timeline.Item>
+          {useFormatMessage(value?.type?.label)} - {value?.notes}
+        </Timeline.Item>
+      )
+    })
+    console.log("res.data.history", res.data.history)
+    //const concat = arrHis.concat(res.data.history)
+    //setState({ historyData: concat })
+  }
+  const handleLoadMore = () => {
+    const filters = { ...state.filterHistory }
+    filters.page = filters.page + 1
+    setState({ filterHistory: { ...filters } })
+  }
+  useEffect(() => {
+    if (dataDetail?.id) {
+      loadHistory()
+    }
+  }, [state.filterHistory])
+  console.log("state.historyData.lenght", state.historyData.length)
   return (
     <>
       <Modal
@@ -69,7 +109,7 @@ const AssetDetailModal = (props) => {
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
           <span className="title-icon align-self-center">
-            <i class="fa-regular fa-circle-info"></i>
+            <i className="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
             {useFormatMessage("modules.asset_lists.title.detail")}
@@ -143,6 +183,21 @@ const AssetDetailModal = (props) => {
               </div>
             </Col>
           </Row>
+
+          <div className="history-asset">
+            <Timeline>{renderHistory(state.historyData)}</Timeline>
+            <Row>
+              {state.historyData.length < state.recordsTotal && (
+                <Col className="text-center">
+                  <span
+                    className="text-primary"
+                    onClick={() => handleLoadMore()}>
+                    Load more
+                  </span>
+                </Col>
+              )}
+            </Row>
+          </div>
         </ModalBody>
         <ModalFooter></ModalFooter>
       </Modal>

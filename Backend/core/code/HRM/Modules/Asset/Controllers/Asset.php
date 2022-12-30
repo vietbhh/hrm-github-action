@@ -160,7 +160,7 @@ class Asset extends ErpController
 		$model->where('asset_code', $getPara['asset_code']);
 		$dataReturn['recordsTotal'] = $model->countAllResults(false);
 
-		$history = $model->orderBy('created_at', 'desc')->findAll($getPara['limit'], $getPara['page'] * $getPara['limit'] - $getPara['limit']);
+		$history = $model->orderBy('created_at', 'desc')->findAll($getPara['limit'] * $getPara['page'], 0);
 		$dataReturn['history'] = handleDataBeforeReturn($modules, $history, true);
 		return $this->respond($dataReturn);
 	}

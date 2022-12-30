@@ -510,7 +510,7 @@ const List = (props) => {
             module={moduleName}
             nolabel
             formGroupClass="mb-0"
-            isClearable={true}
+            isclearable={true}
             prepend={<i className="fa-light fa-filter"></i>}
             className="select-tool-weight"
             fieldData={{
@@ -528,7 +528,7 @@ const List = (props) => {
           <ErpSelect
             nolabel
             formGroupClass="mb-0"
-            isClearable={false}
+            isclearable={false}
             options={perPageOptions}
             defaultValue={perPageOptions[0]}
             className="select-tool-weight"

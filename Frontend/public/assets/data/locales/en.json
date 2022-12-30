@@ -3891,6 +3891,14 @@
         "edit" : "Asset Edit",
         "update_stt" : "Update Status",
         "handover" :"Handover"
+      },
+      "app_options" :{
+        "type" :{
+          "handover" : "Handover",
+          "other" :"Other",
+          "warehouse" : "Warehouse",
+          "inventory" : "Inventory"
+        }
       }
     }
   },

@@ -113,7 +113,7 @@ const AssetEditModal = (props) => {
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
           <span className="title-icon align-self-center">
-            <i class="fa-regular fa-circle-info"></i>
+            <i className="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
             {useFormatMessage("modules.asset_lists.title.edit")}
@@ -142,7 +142,6 @@ const AssetEditModal = (props) => {
                           nameField === "asset_name"
                         ) {
                           fieldAuth.field_readonly = true
-                          console.log("nameField", nameField)
                         }
 
                         const fieldProps = {

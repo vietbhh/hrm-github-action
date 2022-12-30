@@ -117,7 +117,7 @@ const AssetUpdateStatusModal = (props) => {
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
           <span className="title-icon align-self-center">
-            <i class="fa-regular fa-circle-info"></i>
+            <i className="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
             {useFormatMessage("modules.asset_lists.title.update_stt")}
@@ -132,7 +132,7 @@ const AssetUpdateStatusModal = (props) => {
                     <Col lg={12} className="mb-1">
                       <ErpSelect
                         options={state?.optionStt}
-                        isClearable={false}
+                        isclearable={false}
                         label={useFormatMessage(
                           "modules.asset_lists.fields.asset_status"
                         )}
@@ -149,7 +149,7 @@ const AssetUpdateStatusModal = (props) => {
                         required
                         fieldData={arrFields.notes}
                         module="notes"
-                        isClearable={false}
+                        isclearable={false}
                         useForm={methods}
                         options
                       />
