@@ -1,12 +1,10 @@
 // ** React Imports
-import { onMessageListener } from "firebase"
 import { Fragment, useContext, useEffect } from "react"
 // ** redux
 import { useDispatch, useSelector } from "react-redux"
 import { handleNotification } from "redux/notification"
 // ** Styles
 // ** Components
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { currentDateTime, useFormatMessage } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import ChatSound from "@src/assets/sounds/chat_sound.mp3"
@@ -55,7 +53,6 @@ const Notification = (props) => {
     if (payload?.click_action) {
       data.link = payload?.click_action
     }
-    console.log(data)
     if (emitKey === "chat_notification") {
       data = {
         ...data,

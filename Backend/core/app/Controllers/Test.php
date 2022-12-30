@@ -12,11 +12,7 @@ class Test extends ErpController
 	{
 
 		$notification = \Config\Services::notifications();
-		$payload = ['title' => 'test', 'body' => 'Test cai 23', 'link' => '/dashboard', 'image' => '', 'type' => 'other'];
-		echo "<pre>";
-		print_r($payload);
-		echo "</pre>";
-
+		$payload = ['title' => 'test', 'body' => 'Test cai 23', 'link' => '/dashboard', 'icon' => getAvatarUrl('avatars/1/1_avatar.webp'), 'type' => 'other'];
 		try {
 			$notification->sendNotification(1, $payload, []);
 		} catch (\Exception $e) {

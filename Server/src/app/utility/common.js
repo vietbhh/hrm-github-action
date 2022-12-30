@@ -1,3 +1,5 @@
+import { isNumber } from "lodash-es"
+
 export const getBool = (val) => {
   if (isUndefined(val)) return false
   const num = +val
@@ -116,4 +118,13 @@ export const decamelize = (str, separator = "_") => {
 export const getDefaultFridayLogo = (type = "icon") => {
   const logoName = type === "text" ? "friday_text.png" : "friday.png"
   return process.env.SITEURL + "/assets/images/" + logoName
+}
+
+export const getAvatarUrl = (userOrPath) => {
+  const type = isNumber(userOrPath) ? "user" : "name"
+  return process.env.BASEURL + `/download/avatar?${type}=` + userOrPath
+}
+
+export const getPublicDownloadUrl = (path, type = "image") => {
+  return process.env.BASEURL + `/download/public/${type}?name=` + path
 }

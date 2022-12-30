@@ -232,4 +232,19 @@ if (!function_exists('getDefaultFridayLogo')) {
 	}
 }
 
+if (!function_exists('getAvatarUrl')) {
+	function getAvatarUrl($userOrPath): string
+	{
+		$type = is_numeric($userOrPath) ? "user" : "name";
+		return $_ENV['app.baseURL'] . '/download/avatar?' . $type . '=' . $userOrPath;
+	}
+}
+
+if (!function_exists('getPublicDownloadUrl')) {
+	function getPublicDownloadUrl($path, $type = "image"): string
+	{
+		return $_ENV['app.baseURL'] . '/download/public/' . $type . '?name=' . $path;
+	}
+}
+
 ?>

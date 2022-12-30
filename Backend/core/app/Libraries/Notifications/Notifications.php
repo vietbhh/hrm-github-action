@@ -96,14 +96,15 @@ class Notifications
 		return $this->_getDataNotification($data, $userId, $arrUser);
 	}
 
-	public function sendNotification($receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'image' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true)
+	private function _sendNotification($receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true)
 	{
 		$title = $payload['title'];
 		$body = $payload['body'];
 		$link = $payload['link'];
-		$image = empty($payload['image']) ? getDefaultFridayLogo() : $payload['image'];
 		$type = empty($payload['type']) ? "other" : $payload['type'];
 		$badge = $payload['badge'] ?? "";
+		$icon = empty($payload['icon']) ? getDefaultFridayLogo() : $payload['icon'];
+		$icon = is_numeric($icon) ? getAvatarUrl($icon) : $icon;
 		try {
 			$userModel = new UserModel();
 			$userModel->select(['id', 'username', 'device_token'])->asArray();
@@ -118,7 +119,7 @@ class Notifications
 					'title' => $title,
 					'body' => $body,
 					'link' => $link,
-					'image' => $image,
+					'icon' => $icon,
 					'read_by' => json_encode([])
 				];
 				$id = $this->add($saveNotificationData);
@@ -136,7 +137,7 @@ class Notifications
 			$notification = new FirebaseCM\Notification($title, $body);
 			if (!empty($badge)) $notification->setBadge($badge);
 			if (!empty($link)) $notification->setClickAction($link);
-			if (!empty($image)) $notification->setIcon($image);
+			if (!empty($icon)) $notification->setIcon($icon);
 			$data['isSave'] = $saveToDb ? "true" : "false";
 			$data['emitKey'] = "app_notification";
 			$data['sender_id'] = user_id() ?? 0;
@@ -184,6 +185,20 @@ class Notifications
 			];
 		}
 	}
+
+	public function sendNotification(...$args)
+	{
+		$isSocketEnable = preference('sockets');
+		if ($isSocketEnable) {
+			$nodeServer = \Config\Services::nodeServer();
+			$nodeServer->node->get('/notification/send');
+		} else {
+			return $this->_sendNotification($args);
+		}
+
+
+	}
+
 
 	// ** support function
 	private function _getDataNotification($data, $userId, $arrUser)

@@ -22,6 +22,9 @@ const notificationsModel = new notificationsModelClass("notifications", {
   link: {
     type: DataTypes.TEXT("long")
   },
+  icon: {
+    type: DataTypes.TEXT("long")
+  },
   read_by: {
     type: DataTypes.TEXT("long"),
     defaultValue: "[]"

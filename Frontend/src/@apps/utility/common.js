@@ -318,12 +318,13 @@ export const getDefaultFridayLogo = (type = "icon") => {
   return process.env.REACT_APP_URL + "/assets/images/" + logoName
 }
 
-export const getAvatarUrl = (path) => {
-  return process.env.REACT_APP_API_URL + "/download/avatar?name=" + path
+export const getAvatarUrl = (userOrPath) => {
+  const type = _.isNumber(userOrPath) ? "user" : "name"
+  return (
+    process.env.REACT_APP_API_URL + `/download/avatar?${type}=` + userOrPath
+  )
 }
 
 export const getPublicDownloadUrl = (path, type = "image") => {
-  return (
-    process.env.REACT_APP_API_URL + `/download/public/${type}?name=` + path
-  )
+  return process.env.REACT_APP_API_URL + `/download/public/${type}?name=` + path
 }

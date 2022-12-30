@@ -4,6 +4,7 @@ use App\Libraries\Calendars\Calendars;
 use App\Libraries\Calendars\Config\Calendars as CalendarsConfig;
 use App\Libraries\Mail\Config\Mail as MailConfig;
 use App\Libraries\Mail\MailManager;
+use App\Libraries\NodeServer\NodeServer;
 use App\Libraries\Notifications\Notifications;
 use App\Libraries\Tasks\Tasks;
 use App\Models\UserModel;
@@ -124,6 +125,11 @@ class Services extends CoreServices
 		}
 
 		return new Audits($config);
+	}
+
+	public static function nodeServer($options = []): NodeServer
+	{
+		return new NodeServer($options);
 	}
 
 

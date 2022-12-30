@@ -1,6 +1,8 @@
 import { notificationsModel } from "#app/models/notifications.model.mysql.js"
 import { sendFirebaseNotification } from "#app/services/firebaseServices.js"
 import { emitDataToOnlineUsers } from "#app/sockets/core.socket.js"
+import { getAvatarUrl, getDefaultFridayLogo } from "#app/utility/common.js"
+import { isNumber } from "lodash-es"
 
 const sendNotification = async (
   sender,
@@ -11,7 +13,13 @@ const sendNotification = async (
   emitKey = "app_notification"
 ) => {
   //save notification to database if need
-  const { title, body, link, type } = payload
+  const { title, body, link, type, icon } = payload
+  let notificationIcon = getDefaultFridayLogo()
+  if (icon) {
+    notificationIcon = isNumber(icon) ? getAvatarUrl(icon) : icon
+  }
+  payload.icon = notificationIcon
+
   let notificationId = 0
   if (saveToDb) {
     const saveNotification = await notificationsModel.friCreate(
@@ -21,7 +29,8 @@ const sendNotification = async (
         type: type,
         title: title,
         body: body,
-        link: link
+        link: link,
+        icon: notificationIcon
       },
       sender
     )

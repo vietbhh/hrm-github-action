@@ -27,12 +27,11 @@ const Test = (props) => {
       payload: {
         title: "Trịnh Hải Long",
         body: "uh,cứ thế mà làm" + Math.floor(Math.random() * 100),
-        senderType: "user",
-        sender: "1",
-        link: "#"
+        link: "/dashboard",
+        image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
       }
     })
-    socket.emit("chat_notification", {
+    /* socket.emit("chat_notification", {
       receivers: 1,
       payload: {
         title: "John Doe",
@@ -44,7 +43,7 @@ const Test = (props) => {
       data: {
         skipUrls: "/chat/hailongtrinh,/chat/dlskalskdjdf"
       }
-    })
+    }) */
   }, [socket])
 
   const testNoti = () => {
