@@ -223,4 +223,13 @@ if (!function_exists('decamelize')) {
 	}
 }
 
+if (!function_exists('getDefaultFridayLogo')) {
+	function getDefaultFridayLogo($type = 'icon'): string
+	{
+		$logoName = 'friday.png';
+		if ($type === 'text') $logoName = 'friday_text.png';
+		return $_ENV['app.siteURL'] . '/assets/images/' . $logoName;
+	}
+}
+
 ?>

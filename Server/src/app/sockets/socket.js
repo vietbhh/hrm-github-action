@@ -6,6 +6,8 @@ import path, { dirname } from "path"
 import { Server } from "socket.io"
 import { fileURLToPath } from "url"
 import coreSocket from "./core.socket.js"
+import notificationsSocket from "./notifications.sockets.js"
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const basename = path.basename(__filename)
@@ -31,6 +33,7 @@ class appSocket {
           if (!user) {
             throw Error("user_not_found")
           }
+
           return {
             ...decodedToken,
             ...user.dataValues
@@ -40,6 +43,7 @@ class appSocket {
     )
     global._io = io
     coreSocket()
+    notificationsSocket()
     walk(codeFolder, (err, dir) => {
       fs.readdirSync(dir)
         .filter((file) => {

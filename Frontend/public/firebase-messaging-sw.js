@@ -31,51 +31,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
+console.log(messaging)
 
-messaging.onBackgroundMessage((payload) => {
-  const notificationData = payload?.data
-  const notificationTitle = notificationData.title
-  const badge = notificationData?.badge ?? null
-  const body = notificationData?.body ?? ""
-  const data = notificationData?.data ?? null
-  const icon = notificationData?.icon ?? null
-  const image = notificationData?.image ?? null
-  const actions =
-    notificationData?.actions !== undefined
-      ? {
-          actions: notificationData?.actions
-        }
-      : {}
-  const notificationOptions = {
-    body,
-    badge,
-    data,
-    icon,
-    image,
-    ...actions
-  }
-  self.addEventListener("push", function (event) {
-    event.waitUntil(
-      self.clients
-        .matchAll({ type: "window", includeUncontrolled: true })
-        .then((windowClients) => {
-          let visibleClients = windowClients.some(
-            (client) =>
-              client.visibilityState === "visible" &&
-              // Ignore chrome-extension clients as that matches the background pages of extensions, which
-              // are always considered visible for some reason.
-              !client.url.startsWith("chrome-extension://")
-          )
-
-          if (!visibleClients) {
-            event.waitUntil(
-              self.registration.showNotification(
-                notificationTitle,
-                notificationOptions
-              )
-            )
-          }
-        })
-    )
-  })
+self.addEventListener("notificationclick", (event) => {
+  console.log(event)
 })

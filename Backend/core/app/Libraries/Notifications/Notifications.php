@@ -96,25 +96,27 @@ class Notifications
 		return $this->_getDataNotification($data, $userId, $arrUser);
 	}
 
-	public function pushNotification($data = ['title' => '', 'content' => '', 'link' => '', 'image' => '', 'type' => 'other'], $receiver, $saveToDb = true)
+	public function sendNotification($receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'image' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true)
 	{
-		$title = $data['title'];
-		$content = $data['content'];
-		$link = $data['link'];
-		$image = $data['image'] ?? '';
-		$type = $data['type'] ?? "other";
-
+		$title = $payload['title'];
+		$body = $payload['body'];
+		$link = $payload['link'];
+		$image = empty($payload['image']) ? getDefaultFridayLogo() : $payload['image'];
+		$type = empty($payload['type']) ? "other" : $payload['type'];
+		$badge = $payload['badge'] ?? "";
 		try {
 			$userModel = new UserModel();
-			$listUser = $userModel->select(['id', 'username', 'device_token'])->asArray()->whereIn('id', $receiver)->findAll();
-			$newNotification = [];
+			$userModel->select(['id', 'username', 'device_token'])->asArray();
+			if (is_numeric($receivers)) $userModel->where('id', $receivers);
+			else $userModel->whereIn('id', $receivers);
+			$listUser = $userModel->findAll();
 			if ($saveToDb) {
 				$saveNotificationData = [
 					'sender_id' => user_id() ?? 0,
-					'recipient_id' => json_encode($receiver),
+					'recipient_id' => json_encode($receivers),
 					'type' => $type,
 					'title' => $title,
-					'content' => $content,
+					'body' => $body,
 					'link' => $link,
 					'image' => $image,
 					'read_by' => json_encode([])
@@ -130,37 +132,50 @@ class Notifications
 			$message = new FirebaseCM\Message();
 
 			$message->setPriority('high');
-			$message->setNotification(new FirebaseCM\Notification('some title', 'some body'))->setData(['key' => 'value']);
 
+			$notification = new FirebaseCM\Notification($title, $body);
+			if (!empty($badge)) $notification->setBadge($badge);
+			if (!empty($link)) $notification->setClickAction($link);
+			if (!empty($image)) $notification->setIcon($image);
+			$data['isSave'] = $saveToDb ? "true" : "false";
+			$data['emitKey'] = "app_notification";
+			$data['sender_id'] = user_id() ?? 0;
+			$message->setNotification($notification)->setData($data);
 
+			$listAllReceiverToken = $listAllReceiverId = $listUserById = [];
 			foreach ($listUser as $rowUser) {
 				$recipients = $rowUser['device_token'] ?? [];
 				$recipients = json_decode($recipients, true);
+				$listUserById[$rowUser['id']] = $recipients;
 				foreach ($recipients as $recipient) {
+					$listAllReceiverToken[] = $recipient;
+					$listAllReceiverId[] = $rowUser['id'];
 					$message->addRecipient(new FirebaseCM\Recipient\Device($recipient));
 				}
 			}
 			$response = $client->send($message);
 			$responseData = $response->getBody()->getContents();
 			if (!empty($responseData)) {
+				$deleteErrorToken = [];
 				$responseData = json_decode($responseData, true);
 				if (!empty($responseData['results'])) {
 					foreach ($responseData["results"] as $i => $result) {
 						if (isset($result["error"])) {
-							echo "<pre>";
-							print_r($recipients[$i]);
-							echo "</pre>";
-
+							$deleteErrorToken[$listAllReceiverId[$i]][] = $listAllReceiverToken[$i];
 						}
 					}
 				}
-				echo "<pre>";
-				print_r($responseData);
-				echo "</pre>";
-
+				//Update database
+				foreach ($deleteErrorToken as $userId => $errorTokens) {
+					$newTokenList = array_values(array_diff($listUserById[$userId], $errorTokens));
+					$dataSave = [
+						'id' => $userId,
+						'device_token' => json_encode($newTokenList)
+					];
+					$userModel->setAllowedFields(array_keys($dataSave));
+					$userModel->save($dataSave);
+				}
 			}
-
-
 			return true;
 		} catch (\Exception $e) {
 			return [

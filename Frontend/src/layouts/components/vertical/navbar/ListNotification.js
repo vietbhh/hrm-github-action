@@ -52,9 +52,12 @@ const ListNotification = (props) => {
     return (
       <div
         key={`notification-${index}`}
-        className={classnames("d-flex align-items-center div-noti app-notifications", {
-          "bg-active": !item.seen
-        })}>
+        className={classnames(
+          "d-flex align-items-center div-noti app-notifications",
+          {
+            "bg-active": !item.seen
+          }
+        )}>
         <div className="div-img">
           <Avatar
             src={sender?.avatar}
@@ -69,7 +72,9 @@ const ListNotification = (props) => {
           })}>
           {item.title}
           {item.content && <p className="div-content">{item.content}</p>}
-          <p className="div-time">{timeDifference(item.created_at)}</p>
+          {item.created_at && (
+            <p className="div-time">{timeDifference(item.created_at)}</p>
+          )}
         </div>
       </div>
     )

@@ -1,7 +1,8 @@
 import { DataTypes } from "sequelize"
-import { mysql } from "../config/mysql.js"
+import appModel from "./app.model.mysql.js"
 
-const notificationsModel = mysql.define("notifications", {
+class notificationsModelClass extends appModel {}
+const notificationsModel = new notificationsModelClass("notifications", {
   sender_id: {
     type: DataTypes.INTEGER
   },
@@ -9,32 +10,21 @@ const notificationsModel = mysql.define("notifications", {
     type: DataTypes.TEXT("long")
   },
   type: {
-    type: DataTypes.ENUM(["system", "other"])
+    type: DataTypes.ENUM(["system", "other"]),
+    defaultValue: "other"
   },
   title: {
     type: DataTypes.TEXT
   },
-  content: {
+  body: {
     type: DataTypes.TEXT
   },
   link: {
     type: DataTypes.TEXT("long")
   },
   read_by: {
-    type: DataTypes.STRING
-  },
-  owner: {
-    type: DataTypes.INTEGER
-  },
-  created_by: {
-    type: DataTypes.INTEGER
-  },
-  updated_by: {
-    type: DataTypes.INTEGER
-  },
-  deleted_at: {
-    type: DataTypes.DATE
+    type: DataTypes.TEXT("long"),
+    defaultValue: "[]"
   }
 })
-
 export { notificationsModel }

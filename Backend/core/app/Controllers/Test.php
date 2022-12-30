@@ -12,9 +12,13 @@ class Test extends ErpController
 	{
 
 		$notification = \Config\Services::notifications();
-		$data = ['title' => 'test', 'content' => 'Test cai', 'link' => '', 'image' => '', 'type' => 'other'];
+		$payload = ['title' => 'test', 'body' => 'Test cai 23', 'link' => '/dashboard', 'image' => '', 'type' => 'other'];
+		echo "<pre>";
+		print_r($payload);
+		echo "</pre>";
+
 		try {
-			$notification->pushNotification($data, [1], false);
+			$notification->sendNotification(1, $payload, []);
 		} catch (\Exception $e) {
 			echo "<pre>";
 			print_r($e);

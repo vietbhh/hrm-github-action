@@ -276,6 +276,10 @@ export const stringInject = (str, data) => {
   }
 }
 
+export const currentDateTime = () => {
+  return moment().format("YYYY-MM-DD HH:mm:ss")
+}
+
 export const formatDate = (date, format = "DD/MM/YYYY") => {
   return moment(date).format(format)
 }
@@ -307,4 +311,19 @@ export const getOptionValue = (options, optionName, nameOptionKey) => {
     }
   })
   return parseInt(valueOption)
+}
+
+export const getDefaultFridayLogo = (type = "icon") => {
+  const logoName = type === "text" ? "friday.png" : "friday_text.png"
+  return process.env.REACT_APP_URL + "/assets/images/" + logoName
+}
+
+export const getAvatarUrl = (path) => {
+  return process.env.REACT_APP_API_URL + "/download/avatar?name=" + path
+}
+
+export const getPublicDownloadUrl = (path, type = "image") => {
+  return (
+    process.env.REACT_APP_API_URL + `/download/public/${type}?name=` + path
+  )
 }

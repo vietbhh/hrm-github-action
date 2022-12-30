@@ -1,9 +1,5 @@
-import { notificationsModel } from "#app/models/notifications.model.mysql.js"
-import { getUser } from "#app/models/users.model.mysql.js"
-import { sendNotification } from "#app/services/firebaseServices.js"
 import { objectMap } from "#app/utility/common.js"
-import { isUndefined, map } from "lodash-es"
-
+import { forEach, isArray, isUndefined } from "lodash-es"
 export let socketUsers = {}
 
 export const getUserSocketData = (userId) => {
@@ -35,6 +31,23 @@ const getOnlineUsers = () => {
   return result
 }
 
+const emitDataToUserById = (userId, key, data) => {
+  const receiverSocket = getUserSocketData(userId)
+  if (receiverSocket) {
+    global._io.to(receiverSocket.socketId).emit(key, data)
+  }
+}
+export const emitDataToOnlineUsers = (userIds, key, data) => {
+  if (isArray(userIds)) {
+    forEach(userIds, (item) => {
+      emitDataToUserById(item, key, data)
+    })
+  } else {
+    emitDataToUserById(userIds, key, data)
+  }
+}
+
+
 const coreSocket = () => {
   global._io.on("connection", (socket) => {
     socket.join("friday")
@@ -50,24 +63,9 @@ const coreSocket = () => {
     })
 
     //Handle Send data between client
-    socket.on("send_data_to_users", async (data) => {
-      const receiver = getUserSocketData(data.receiver)
-      if (data.push_notification) {
-        const user = await getUser(data.receiver)
-        if (user.device_token) {
-          const device_tokens = JSON.parse(user.device_token)
-          const tokens_list = map(device_tokens, (item) => item.token)
-          sendNotification(tokens_list, data.data)
-        }
-      }
-      if (data.save_notification) {
-        notificationsModel.create({
-          
-        })
-      }
-      if (receiver) {
-        global._io.to(receiver.socketId).emit(data.key, data.data)
-      }
+    socket.on("send_data_to_users", async (socketData) => {
+      const { receivers, key, data } = socketData
+      emitDataToOnlineUsers(receivers, key, data)
     })
   })
 }
