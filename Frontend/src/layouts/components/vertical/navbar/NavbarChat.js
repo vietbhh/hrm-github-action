@@ -26,7 +26,7 @@ const NavbarChat = () => {
 
     if (!_.isUndefined(firestoreDb) && firestoreDb !== "") {
       const q = query(
-        collection(db, `${firestoreDb}/groups/groups`),
+        collection(db, `${firestoreDb}/chat_groups/groups`),
         where("unseen", "array-contains", userId)
       )
 

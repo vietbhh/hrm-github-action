@@ -1,5 +1,9 @@
 // ** Imports
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  getPublicDownloadUrl,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import classnames from "classnames"
 import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
@@ -590,18 +594,40 @@ const AppChat = (props) => {
           docData
         )
 
-        // ** noti
-        /* socket.emit("send_data_to_users", {
-          receiver: 1,
-          key: "chat_notification",
-          data: {
-            title: "Trịnh Hải Long 111",
-            body: msg,
-            senderType: "user",
-            sender: userId,
-            link: "#"
+        // ** notification
+        let notification_name = dataGroups.name
+        let icon = dataGroups.avatar
+          ? getPublicDownloadUrl(`modules/chat/avatar/${dataGroups.avatar}`)
+          : ""
+        const link = `/chat/${groupId}`
+        const skipUrls = `/chat`
+        if (dataGroups.type === "employee") {
+          const index_employee = state.dataEmployees.findIndex(
+            (item) => item.id === unseen[0]
+          )
+          if (index_employee !== -1) {
+            notification_name = state.dataEmployees[index_employee].full_name
+            icon = unseen[0] * 1
+            //skipUrls = `/chat/${groupId},/chat/${state.dataEmployees[index_employee].username}`
           }
-        }) */
+        }
+        let _msg = msg
+        _msg = _msg.replace(/<[^>]*>/g, "")
+        const dot = msg.length > 30 ? "..." : ""
+        _msg = _msg.slice(0, 30) + dot
+        socket.emit("chat_notification", {
+          receivers: unseen,
+          payload: {
+            title: notification_name,
+            body: _msg,
+            link: link,
+            icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          data: {
+            skipUrls: skipUrls
+          }
+        })
 
         let dataGroup = {
           last_message: handleLastMessage(docData.type, msg),
@@ -678,6 +704,41 @@ const AppChat = (props) => {
         if (docDataMessage.type === "text") {
           docDataMessage["_smeta"] = triGram(msg.slice(0, 500))
         }
+
+        // ** notification
+        let notification_name = docData.name
+        let icon = docData.avatar
+          ? getPublicDownloadUrl(`modules/chat/avatar/${docData.avatar}`)
+          : ""
+        const link = `/chat/${newGroupId}`
+        const skipUrls = `/chat`
+        if (docData.type === "employee") {
+          const index_employee = state.dataEmployees.findIndex(
+            (item) => item.id === idEmployee
+          )
+          if (index_employee !== -1) {
+            notification_name = state.dataEmployees[index_employee].full_name
+            icon = idEmployee * 1
+            //skipUrls = `/chat/${groupId},/chat/${state.dataEmployees[index_employee].username}`
+          }
+        }
+        let _msg = msg
+        _msg = _msg.replace(/<[^>]*>/g, "")
+        const dot = msg.length > 30 ? "..." : ""
+        _msg = _msg.slice(0, 30) + dot
+        socket.emit("chat_notification", {
+          receivers: idEmployee,
+          payload: {
+            title: notification_name,
+            body: _msg,
+            link: link,
+            icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          data: {
+            skipUrls: skipUrls
+          }
+        })
 
         setDoc(
           doc(collection(db, `${firestoreDb}/chat_messages/${newGroupId}`)),

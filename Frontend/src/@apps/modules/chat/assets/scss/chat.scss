@@ -1242,9 +1242,13 @@ $btn-background-color: #377dff;
               .editor-message {
                 background-color: #fff;
                 padding: 0.571rem 1rem;
+                border: none !important;
+                border-radius: 0 !important;
+                height: auto;
 
                 .DraftEditor-root {
                   min-height: 39px;
+                  height: auto;
                   display: flex;
                   align-items: center;
                   max-height: 96px;
@@ -1260,6 +1264,10 @@ $btn-background-color: #377dff;
                   .DraftEditor-editorContainer {
                     width: 100%;
                     word-break: break-word;
+                  }
+
+                  .public-DraftStyleDefault-block {
+                    margin: 0;
                   }
                 }
               }
