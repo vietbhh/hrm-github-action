@@ -1,41 +1,24 @@
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import DownloadFile from "@apps/modules/download/pages/DownloadFile"
+import { ErpSelect } from "@apps/components/common/ErpField"
 import {
-  formatDate,
-  getOptionValue,
-  sortFieldsDisplay,
-  useFormatMessage,
+  getOptionValue, useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
-import { isArray } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
-import AvatarBox from "@modules/Employees/components/detail/AvatarBox"
-import classnames from "classnames"
-import { isEmpty, toArray, map } from "lodash-es"
-import { Fragment, useContext, useEffect, useState } from "react"
+import { AssetApi } from "@modules/Asset/common/api"
+import { map } from "lodash-es"
+import { useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import ReactStars from "react-rating-stars-component"
 import { useSelector } from "react-redux"
 import {
-  Col,
-  Button,
-  Modal,
+  Button, Col, Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
+  ModalHeader, Row,
   Spinner
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
-import SwAlert from "@apps/utility/SwAlert"
-import Photo from "@apps/modules/download/pages/Photo"
-import { AssetApi } from "@modules/Asset/common/api"
-import { ErpSelect } from "@apps/components/common/ErpField"
 const AssetUpdateStatusModal = (props) => {
   const { modal, dataDetail, handleDetail, loadData } = props
   const ability = useContext(AbilityContext)
@@ -132,7 +115,7 @@ const AssetUpdateStatusModal = (props) => {
                     <Col lg={12} className="mb-1">
                       <ErpSelect
                         options={state?.optionStt}
-                        isclearable={false}
+                        isClearable={false}
                         label={useFormatMessage(
                           "modules.asset_lists.fields.asset_status"
                         )}
@@ -144,12 +127,11 @@ const AssetUpdateStatusModal = (props) => {
                         updateDataId={dataDetail?.id}
                         label={useFormatMessage(
                           "modules.asset_history.fields." +
-                            arrFields?.notes?.field
+                          arrFields?.notes?.field
                         )}
                         required
                         fieldData={arrFields.notes}
                         module="notes"
-                        isclearable={false}
                         useForm={methods}
                         options
                       />
@@ -159,7 +141,7 @@ const AssetUpdateStatusModal = (props) => {
                         updateDataId={dataDetail?.id}
                         label={useFormatMessage(
                           "modules.asset_history.fields." +
-                            arrFields?.history_image?.field
+                          arrFields?.history_image?.field
                         )}
                         fieldData={arrFields.history_image}
                         useForm={methods}
@@ -170,7 +152,7 @@ const AssetUpdateStatusModal = (props) => {
                         updateDataId={dataDetail?.id}
                         label={useFormatMessage(
                           "modules.asset_history.fields." +
-                            arrFields?.history_files?.field
+                          arrFields?.history_files?.field
                         )}
                         fieldData={arrFields.history_files}
                         useForm={methods}

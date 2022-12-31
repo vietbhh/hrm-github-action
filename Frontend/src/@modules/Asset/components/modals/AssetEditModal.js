@@ -1,7 +1,4 @@
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import DownloadFile from "@apps/modules/download/pages/DownloadFile"
 import {
-  formatDate,
   sortFieldsDisplay,
   useFormatMessage,
   useMergedState
@@ -10,29 +7,18 @@ import { FieldHandle } from "@apps/utility/FieldHandler"
 import { isArray } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
-import AvatarBox from "@modules/Employees/components/detail/AvatarBox"
-import classnames from "classnames"
-import { isEmpty, toArray } from "lodash-es"
-import { Fragment, useContext, useEffect, useState } from "react"
+import { toArray } from "lodash-es"
+import { Fragment, useContext } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import ReactStars from "react-rating-stars-component"
 import { useSelector } from "react-redux"
 import {
-  Col,
-  Button,
-  Modal,
+  Button, Col, Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
+  ModalHeader, Row,
   Spinner
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
-import SwAlert from "@apps/utility/SwAlert"
-import Photo from "@apps/modules/download/pages/Photo"
 const AssetEditModal = (props) => {
   const { modal, options, dataDetail, handleDetail, loadData } = props
   const ability = useContext(AbilityContext)
@@ -56,11 +42,16 @@ const AssetEditModal = (props) => {
   )
 
   const onSubmitFrm = (values) => {
-    values.id = dataDetail.id
+    if (dataDetail.id) {
+      values.id = dataDetail.id
+    }
+
     defaultModuleApi.postSave("asset_lists", values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
+      handleDetail("")
+      loadData()
     })
   }
 
@@ -71,37 +62,6 @@ const AssetEditModal = (props) => {
   const dataFields = isArray(arrFields) ? arrFields : toArray(arrFields)
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
-  const cancelUpdate = () => {
-    setState({
-      readOnly: true,
-      saving: false
-    })
-  }
-
-  const handleDeDelete = () => {
-    const idCandidate = dataDetail.id
-    SwAlert.showWarning({
-      confirmButtonText: useFormatMessage("button.delete")
-    }).then((res) => {
-      if (res.value) {
-        defaultModuleApi
-          .delete("candidates", idCandidate)
-          .then((result) => {
-            notification.showSuccess({
-              text: useFormatMessage("notification.delete.success")
-            })
-
-            loadData()
-            handleDetail("")
-          })
-          .catch((err) => {
-            notification.showError({
-              text: err.message
-            })
-          })
-      }
-    })
-  }
   return (
     <>
       <Modal
@@ -116,7 +76,7 @@ const AssetEditModal = (props) => {
             <i className="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
-            {useFormatMessage("modules.asset_lists.title.edit")}
+            {dataDetail?.id ? useFormatMessage("modules.asset_lists.title.edit") : useFormatMessage("modules.asset_lists.title.new")}
           </span>
         </ModalHeader>
         <ModalBody>
@@ -137,10 +97,10 @@ const AssetEditModal = (props) => {
                         const fieldAuth = { ...field }
                         const nameField = field.field
                         if (
-                          nameField === "asset_code" ||
-                          nameField === "asset_status" ||
-                          nameField === "asset_name"
-                        ) {
+                          (nameField === "asset_code" ||
+                            nameField === "asset_status" ||
+                            nameField === "asset_name")
+                          && dataDetail?.id) {
                           fieldAuth.field_readonly = true
                         }
 

@@ -43,8 +43,9 @@ class Asset extends ErpController
 			$model->groupEnd();
 		}
 		$data['recordsTotal'] = $model->countAllResults(false);
-		$list = $model->findAll();
+		$list = $model->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
 		$data['asset_list'] = handleDataBeforeReturn($modules, $list, true);
+		$data['page'] = $getPara['page'];
 		return $this->respond($data);
 	}
 
@@ -140,6 +141,26 @@ class Asset extends ErpController
 		$assetModel = $modules->model;
 		$assetModel->setAllowedFields(['owner']);
 		$assetModel->save(['owner' => $postData['owner_change'], 'id' => $postData['asset_code']]);
+		return $this->respond(ACTION_SUCCESS);
+
+	}
+
+	public function error_post()
+	{
+		$modules = \Config\Services::modules('asset_history');
+		$postData = $this->request->getPost();
+		$historyModel = $modules->model;
+
+		$asset_status = $postData['status_change'];
+		$dataHandle = handleDataBeforeSave($modules, $postData);
+		$dataSave = $dataHandle['data'];
+		$historyModel->setAllowedFields($dataHandle['fieldsArray']);
+		$historyModel->save($dataSave);
+
+		$modules->setModule('asset_lists');
+		$assetModel = $modules->model;
+		$assetModel->setAllowedFields(['asset_status']);
+		$assetModel->save(['asset_status' => $asset_status, 'id' => $postData['asset_code']]);
 		return $this->respond(ACTION_SUCCESS);
 
 	}

@@ -1,51 +1,41 @@
 @import "@scss/friday";
-.youtube {
-  .timepicker_fri {
-    border-radius: 6px;
-    padding: 8px 12px 8px;
-    border: 0.5px solid #f2f7fb;
-    background: #EDEFF2;
-    height: 0;
-    padding: 0;
-    position: absolute;
-    visibility: hidden;
-  }
-.hidden_dash{
-  border-radius: 6px;
-  padding: 8px 12px 8px;
-  border: 0.5px solid #f2f7fb;
-  background: #EDEFF2;
-  position: absolute;
-  visibility: hidden;
-  margin-left: 10rem;
-}
+
+.asset {
   .ant-pagination {
     justify-content: right !important;
     text-align: end;
-    .ant-pagination-item{
+
+    .ant-pagination-item {
       border-radius: 12px;
-      &:hover{
+
+      &:hover {
         border-color: #377dff;
       }
     }
-    .ant-pagination-item-active{
+
+    .ant-pagination-item-active {
       border-color: #377dff;
     }
+
     .ant-pagination-item-link {
       border-radius: 12px;
-      &:hover{
+
+      &:hover {
         border-color: #377dff;
         color: initial;
       }
-      .ant-pagination-item-link-icon{
+
+      .ant-pagination-item-link-icon {
         color: initial;
       }
     }
-    .ant-pagination-prev{
-      &:hover{
+
+    .ant-pagination-prev {
+      &:hover {
         border-color: #377dff;
       }
     }
+
     .page-item {
       .page-link {
 
@@ -63,43 +53,93 @@
       }
     }
   }
-.input-group-text{
-  background-color: #EDEFF2 !important;
 }
-.field-locked input:not([type=checkbox]){
-  background-color: #EDEFF2 !important;
-}
-.input-tool-weight{
-  background-color: #EDEFF2 !important;
-}
-.input-tool-height{
-  height: 55px !important;
-}
-.select-date{
-  color: #000000;
-  background-color: #edeff2;
-  padding: 0px 12px;
-  border-radius: 12px;
-  min-height: 40px;
-  cursor: pointer;
-  .label{
-    font-size: 8px;
-  }
-  .value{
+
+.modal-asset-detail {
+  .status {
     font-size: 12px;
-    font-weight: 500;
+    padding: 3px 8px;
+    background-color: #d9d9d9;
+    border-radius: 8px;
+  }
+
+  .btn-load-more {
+    cursor: pointer;
+  }
+
+  .time-history {
+    font-size: 12px;
   }
 }
+
+.youtube {
+  .timepicker_fri {
+    border-radius: 6px;
+    padding: 8px 12px 8px;
+    border: 0.5px solid #f2f7fb;
+    background: #EDEFF2;
+    height: 0;
+    padding: 0;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .hidden_dash {
+    border-radius: 6px;
+    padding: 8px 12px 8px;
+    border: 0.5px solid #f2f7fb;
+    background: #EDEFF2;
+    position: absolute;
+    visibility: hidden;
+    margin-left: 10rem;
+  }
+
+  .input-group-text {
+    background-color: #EDEFF2 !important;
+  }
+
+  .field-locked input:not([type=checkbox]) {
+    background-color: #EDEFF2 !important;
+  }
+
+  .input-tool-weight {
+    background-color: #EDEFF2 !important;
+  }
+
+  .input-tool-height {
+    height: 55px !important;
+  }
+
+  .select-date {
+    color: #000000;
+    background-color: #edeff2;
+    padding: 0px 12px;
+    border-radius: 12px;
+    min-height: 40px;
+    cursor: pointer;
+
+    .label {
+      font-size: 8px;
+    }
+
+    .value {
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
 }
-.modal-yt-tool{
+
+.modal-yt-tool {
   top: 60px;
-  .modal-content{
-    .modal-header{
-    border-bottom: none !important;
-    .btn-close {
-       transform: none !important; 
-       box-shadow: none !important
-  }
+
+  .modal-content {
+    .modal-header {
+      border-bottom: none !important;
+
+      .btn-close {
+        transform: none !important;
+        box-shadow: none !important
+      }
     }
   }
 }
@@ -187,6 +227,7 @@
     line-height: 20px;
     color: #32434F;
   }
+
   .name-video {
     font-weight: 500;
     font-size: 15px;
@@ -345,44 +386,54 @@
     background: rgba(241, 241, 245, 0.66);
     /*#EDEFF2*/
     min-height: 50px;
+
     .select__single-value {
       color: #000000;
       font-weight: 400;
     }
+
     .select__indicators {
       margin-right: 15px !important;
     }
-    .select__value-container{
+
+    .select__value-container {
       margin-left: 15px !important;
     }
   }
-  .select__multi-value{
+
+  .select__multi-value {
     border-radius: 20px;
     border: 0.5px solid #F5B029;
     background-color: transparent !important;
-    .select__multi-value__label{
+
+    .select__multi-value__label {
       color: #130F26;
       font-weight: 400;
       font-size: 12px;
     }
-    .select__multi-value__remove{
+
+    .select__multi-value__remove {
       color: #130F26;
     }
   }
-  .select__indicators{
+
+  .select__indicators {
     display: none;
   }
 }
-.dropdown-tool{
+
+.dropdown-tool {
   background-color: #ffffff;
   box-shadow: 0 5px 25px rgb(34 41 47 / 10%);
   border-radius: 12px;
   padding: 20px 30px;
   margin-top: 12px;
-  .base-option{
+
+  .base-option {
     cursor: pointer;
-    div{
-      span{
+
+    div {
+      span {
         font-size: 14px;
         color: #25546F;
       }
@@ -393,12 +444,14 @@
 .select-tool-weight {
   .select__control {
     background: #EDEFF2;
+
     .select__single-value {
       color: #000000;
       font-weight: 400;
     }
   }
 }
+
 .input-tool {
   background: rgba(241, 241, 245, 0.66);
 }
@@ -412,17 +465,19 @@
   width: 0px !important
 }
 
-.overlay-rpm{
-  .ant-popover-content{
+.overlay-rpm {
+  .ant-popover-content {
     width: 160px;
   }
-  .ant-popover-inner{
+
+  .ant-popover-inner {
     border-radius: 12px;
   }
 }
-.overlay-category{
 
-  .ant-popover-inner{
+.overlay-category {
+
+  .ant-popover-inner {
     border-radius: 12px;
   }
 }
@@ -431,6 +486,7 @@
 .youtube-select-dropdown-menu {
   .ant-dropdown-menu {
     border-radius: $border-radius;
+
     li {
       margin: 7px 5px;
       border-radius: 6px;

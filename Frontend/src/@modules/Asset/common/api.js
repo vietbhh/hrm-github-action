@@ -33,6 +33,9 @@ export const AssetApi = {
   async handOver(data) {
     return await axiosApi.post("/asset/hand-over", serialize(_.cloneDeep(data)))
   },
+  async postError(data) {
+    return await axiosApi.post("/asset/error", serialize(_.cloneDeep(data)))
+  },
   async getChannelInfo(url) {
     return await axiosApi.get("youtube/channel-info?url=" + url)
   },

@@ -1,40 +1,19 @@
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import DownloadFile from "@apps/modules/download/pages/DownloadFile"
+import Photo from "@apps/modules/download/pages/Photo"
 import {
-  formatDate,
-  sortFieldsDisplay,
-  useFormatMessage,
+  formatDate, timeDifference, useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
-import { FieldHandle } from "@apps/utility/FieldHandler"
-import { isArray } from "@apps/utility/handleData"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
-import notification from "@apps/utility/notification"
-import AvatarBox from "@modules/Employees/components/detail/AvatarBox"
-import classnames from "classnames"
-import { isEmpty, toArray, map } from "lodash-es"
-import { Fragment, useContext, useEffect, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import ReactStars from "react-rating-stars-component"
-import { useSelector } from "react-redux"
-import {
-  Col,
-  Button,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  Spinner
-} from "reactstrap"
-import { AbilityContext } from "utility/context/Can"
-import SwAlert from "@apps/utility/SwAlert"
-import Photo from "@apps/modules/download/pages/Photo"
 import { AssetApi } from "@modules/Asset/common/api"
 import { Timeline } from "antd"
+import { map } from "lodash-es"
+import { useEffect } from "react"
+import {
+  Badge,
+  Col, Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader, Row
+} from "reactstrap"
 const AssetDetailModal = (props) => {
   const { modal, options, dataDetail, handleDetail, loadData } = props
   const [state, setState] = useMergedState({
@@ -48,27 +27,16 @@ const AssetDetailModal = (props) => {
   })
 
   const loadHistory = () => {
-    const arrHis = [...state.historyData]
-    console.log("arrHis", arrHis)
     AssetApi.loadHistory({
       ...state.filterHistory,
       asset_code: dataDetail?.id
     }).then((res) => {
-      console.log("arrHis2", arrHis)
       setState({
         historyData: res.data.history,
         recordsTotal: res.data.recordsTotal
       })
-
-      return
-      if (arrHis) {
-        const concat = arrHis.concat(res.data.history)
-        setState({ historyData: concat })
-      } else {
-      }
     })
   }
-  console.log("state", state)
   useEffect(() => {
     if (dataDetail?.id) {
       loadHistory()
@@ -77,15 +45,34 @@ const AssetDetailModal = (props) => {
 
   const renderHistory = (data) => {
     return map(data, (value, index) => {
+      if (value?.type?.name_option === 'handover') {
+        return (<Timeline.Item key={index}>
+          <h6 className="d-flex">{useFormatMessage(value?.type?.label)} <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
+          Owner from : {value?.owner_current?.full_name} <i className="fa-solid fa-arrow-right ms-50 me-50"></i> {value?.owner_change?.full_name}
+        </Timeline.Item>)
+      }
+      if (value?.type?.name_option === 'other') {
+        return (<Timeline.Item key={index}>
+          <h6 className="d-flex">Update <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
+          Status from : {value?.status_current?.label} <i className="fa-solid fa-arrow-right ms-50 me-50"></i> {value?.status_change?.label}
+          <br />
+          <span className="mt-50 fw-blod">Notes : {value?.notes}</span>
+        </Timeline.Item>)
+      }
+
+      if (value?.type?.name_option === 'warehouse') {
+        return (<Timeline.Item key={index}>
+          <h6 className="d-flex">Warehouse <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
+          Owner : {value?.owner_current?.full_name}
+        </Timeline.Item>)
+      }
       return (
-        <Timeline.Item>
-          {useFormatMessage(value?.type?.label)} - {value?.notes}
+        <Timeline.Item key={index}>
+          <h6 className="d-flex">{useFormatMessage(value?.type?.label)} <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
+          Notes : {value?.notes}
         </Timeline.Item>
       )
     })
-    console.log("res.data.history", res.data.history)
-    //const concat = arrHis.concat(res.data.history)
-    //setState({ historyData: concat })
   }
   const handleLoadMore = () => {
     const filters = { ...state.filterHistory }
@@ -97,7 +84,7 @@ const AssetDetailModal = (props) => {
       loadHistory()
     }
   }, [state.filterHistory])
-  console.log("state.historyData.lenght", state.historyData.length)
+
   return (
     <>
       <Modal
@@ -105,6 +92,7 @@ const AssetDetailModal = (props) => {
         toggle={() => handleDetail("")}
         backdrop={"static"}
         size="lg"
+        className="modal-asset-detail"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
@@ -127,9 +115,10 @@ const AssetDetailModal = (props) => {
                 <div className="name d-flex align-items-center">
                   {dataDetail?.asset_name}{" "}
                   {dataDetail?.asset_status && (
-                    <span className="stage ms-1 btn-light btn-sm">
+                    <span className="status ms-1 btn-light btn-sm">
                       {dataDetail?.asset_status?.label}
                     </span>
+
                   )}
                 </div>
 
@@ -138,14 +127,18 @@ const AssetDetailModal = (props) => {
                     {useFormatMessage("modules.asset_lists.fields.asset_code")}:
                     <span> {dataDetail?.asset_code}</span>
                   </div>
-
+                  <div className="create-date text-dark mt-50">
+                    {useFormatMessage("modules.asset_lists.fields.owner")}
+                    :<span> {(dataDetail?.owner?.label)}</span>
+                  </div>
                   <div className="create-date text-dark mt-50">
                     {useFormatMessage("modules.recruitments.fields.created_at")}
                     :<span> {formatDate(dataDetail?.created_at)}</span>
                   </div>
+
                 </div>
               </div>
-              <div className="content-right ms-auto mt-2">Owner</div>
+              <div className="content-right ms-auto mt-2"></div>
             </Col>
           </Row>
           <hr className="invoice-spacing" />
@@ -185,12 +178,14 @@ const AssetDetailModal = (props) => {
           </Row>
 
           <div className="history-asset">
+            <hr />
+            <h5 className="mb-2">History</h5>
             <Timeline>{renderHistory(state.historyData)}</Timeline>
             <Row>
-              {state.historyData.length < state.recordsTotal && (
+              {state.historyData.length > 0 && state.historyData.length < state.recordsTotal && (
                 <Col className="text-center">
                   <span
-                    className="text-primary"
+                    className="text-primary btn-load-more"
                     onClick={() => handleLoadMore()}>
                     Load more
                   </span>

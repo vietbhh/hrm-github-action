@@ -1,5 +1,5 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
+import { ErpInput, ErpSelect, ErpUserSelect } from "@apps/components/common/ErpField"
 import TableDefaultModule from "@apps/modules/default/components/table/TableDefaultModule"
 import {
   addComma,
@@ -37,7 +37,8 @@ import AssetDetailModal from "../components/modals/AssetDetailModal"
 import AssetEditModal from "../components/modals/AssetEditModal"
 import AssetUpdateStatusModal from "../components/modals/AssetUpdateStatusModal"
 import AssetHandoverModal from "../components/modals/AssetHandoverModal"
-
+import AssetErrorModal from "../components/modals/AssetErrorModal"
+import PaginationAsset from "../components/PaginationAsset"
 const { Cell } = Table
 const List = (props) => {
   const { slug } = useParams()
@@ -46,7 +47,7 @@ const List = (props) => {
     infoBoard: {},
     total: {},
     loading: true,
-    perPage: 5,
+    perPage: 10,
     recordsTotal: 0,
     currentPage: 1,
     search: "",
@@ -54,19 +55,16 @@ const List = (props) => {
     selectedRows: [],
     orderCol: "id",
     orderType: "desc",
-    loadingEmployeeView: true,
     dataDetail: {},
     assetDetailModal: false,
     assetEditModal: false,
     assetUpdateSTTModal: false,
     assetHandoverModal: false,
-    isOpenDate: false,
-    date_from: "",
-    date_to: "",
-    date_select: "",
-    accessBase: false,
-    category: 0,
-    customDate: false
+    filters: {
+      asset_type: 0,
+      owner: 0,
+      group: 0
+    }
   })
 
   const history = useNavigate()
@@ -94,37 +92,22 @@ const List = (props) => {
     getValues
   } = methods
 
-  const checkSlug = () => {
-    AssetApi.checkBase({ slug: slug, id: userId }).then((res) => {
-      setState({
-        accessBase: res.data,
-        loading: false
-      })
-      if (res.data === false) {
-        history("/not-found")
-      }
-    })
-  }
   const loadData = (props, stateParams = {}) => {
     setState({
       loading: true
     })
     const params = {
       perPage: state.perPage,
+      page: state.currentPage,
       orderCol: state.orderCol,
       orderType: state.orderType,
-      slug: slug,
-      date_from: state.date_from,
-      date_to: state.date_to,
       search: state.search,
-      category: state.category,
+      filters: state.filters,
       ...props
     }
     AssetApi.loadData(params).then((res) => {
       setState({
         data: res.data.asset_list,
-        infoBoard: res.data.board,
-        total: res.data.total,
         assetThisMonth: res.data.assetThisMonth,
         assetTotal: res.data.assetTotal,
         loading: false,
@@ -133,10 +116,8 @@ const List = (props) => {
         perPage: params.perPage,
         orderCol: params.orderCol,
         orderType: params.orderType,
-        date_from: params.date_from,
-        date_to: params.date_to,
         search: params.search,
-        isOpenDate: false,
+        filters: params.filters,
         ...stateParams
       })
     })
@@ -144,22 +125,11 @@ const List = (props) => {
 
   const toggleAddModal = () => {
     setState({
-      addModal: !state.addModal
+      assetDetail: {},
+      assetEditModal: !state.assetEditModal
     })
   }
-  const addBtn = ability.can("add", moduleName) ? (
-    <Button.Ripple
-      color="primary"
-      onClick={toggleAddModal}
-      className="rounded btn-tool d-flex align-items-center">
-      <i className="icpega Actions-Plus"></i> &nbsp;
-      <span className="align-self-center ms-50" style={{ fontSize: "14px" }}>
-        {useFormatMessage("modules.asset_lists.buttons.new_asset")}
-      </span>
-    </Button.Ripple>
-  ) : (
-    ""
-  )
+
   const addButton = () => {
     return (
       <Button.Ripple
@@ -174,33 +144,19 @@ const List = (props) => {
     )
   }
 
-  useEffect(() => {}, [state.perPage])
+  useEffect(() => { }, [state.perPage])
 
-  const synC = (id) => {
-    AssetApi.syncChannel(id)
-      .then((res) => {
-        notification.showSuccess({
-          text: useFormatMessage("notification.save.success")
-        })
-        loadData()
-      })
-      .catch((err) => {
-        setState({ loading: false })
-        notification.showError(useFormatMessage("notification.save.error"))
-      })
-  }
-  const handleDelete = (data) => {
+  const handleDelete = (id) => {
     SwAlert.showWarning({
       confirmButtonText: useFormatMessage("button.delete")
     }).then((res) => {
       if (res.value) {
-        AssetApi.deleteChannel(data)
-          .then((res) => {
-            loadData()
-            notification.showSuccess({
-              text: useFormatMessage("notification.save.success")
-            })
+        defaultModuleApi.delete('asset_lists', [id]).then((res) => {
+          loadData()
+          notification.showSuccess({
+            text: useFormatMessage("notification.save.success")
           })
+        })
           .catch((err) => {
             setState({ loading: false })
             notification.showError(useFormatMessage("notification.save.error"))
@@ -208,16 +164,12 @@ const List = (props) => {
       }
     })
   }
-  const handleGetLink = (data) => {
-    navigator.clipboard.writeText(
-      `https://www.youtube.com/channel/${data?.pid}`
-    )
-    notification.showSuccess({
-      text: useFormatMessage("notification.copy.success")
-    })
-  }
-  const checkPer = () => {
-    return true
+  const checkPer = (owner) => {
+    if (owner === userId) {
+      return false
+    } else {
+      return true
+    }
   }
   const handleUpdateSTT = (id) => {
     if (id) {
@@ -238,13 +190,21 @@ const List = (props) => {
     }
   }
 
-  const handleError = (id) => {}
+  const handleError = (id) => {
+    if (id) {
+      AssetApi.detailAsset(id).then((res) => {
+        setState({ assetDetail: res.data.data, assetErrorModal: true })
+      })
+    } else {
+      setState({ assetErrorModal: !state.assetErrorModal })
+    }
+  }
   const menu = (data) => {
     return [
       {
         label: (
           <div className="d-flex align-items-center">
-            <i class="fa-regular fa-pen-to-square me-50"></i> Edit
+            <i className="fa-regular fa-pen-to-square me-50"></i> Edit
           </div>
         ),
         key: "btn_edit",
@@ -253,7 +213,7 @@ const List = (props) => {
       {
         label: (
           <div className="d-flex align-items-center">
-            <i class="fa-regular fa-repeat me-50"></i> Update status
+            <i className="fa-regular fa-file-pen me-50"></i> Update status
           </div>
         ),
         key: "btn_stt",
@@ -262,7 +222,7 @@ const List = (props) => {
       {
         label: (
           <div className="d-flex align-items-center">
-            <i class="fa-regular fa-repeat me-50"></i> Handover
+            <i className="fa-regular fa-repeat me-50"></i> Handover
           </div>
         ),
         key: "btn_hover",
@@ -271,24 +231,24 @@ const List = (props) => {
       {
         label: (
           <div className="d-flex align-items-center">
-            <i class="fa-regular fa-triangle-exclamation me-50"></i> Error
+            <i className="fa-regular fa-triangle-exclamation me-50"></i> Error
           </div>
         ),
         key: "btn_error",
-        onClick: () => handleError(data),
+        onClick: () => handleError(data.id),
         disabled: !data.id
       },
       {
         label: (
           <div className="d-flex align-items-center">
-            <i class="fa-regular fa-trash-can me-50"></i>
+            <i className="fa-regular fa-trash-can me-50"></i>
             {useFormatMessage("button.delete")}
           </div>
         ),
         key: "btn_delete",
         onClick: () =>
-          handleDelete({ id: data?.id, base_id: state.infoBoard?.id }),
-        disabled: checkPer()
+          handleDelete(data?.id),
+        disabled: checkPer(data?.owner.value)
       }
     ]
   }
@@ -301,20 +261,6 @@ const List = (props) => {
     const canDelete = canDeleteData(ability, moduleName, userId, rowData)
     return (
       <Cell {...props} fixed={"right"} className="link-group">
-        <Button.Ripple
-          title={`Video`}
-          color="flat-dark"
-          size="sm"
-          className="btn-edit"
-          key={"btn-edit"}
-          onClick={() => {
-            setState({
-              videolModal: !state.videolModal,
-              dataDetail: { id: rowData.id, rpm: rowData.rpm }
-            })
-          }}>
-          <i className="fa-brands fa-youtube" style={{ fontSize: "20px" }}></i>
-        </Button.Ripple>
         <Dropdown
           menu={{ items: menu(rowData) }}
           placement="bottom"
@@ -490,7 +436,7 @@ const List = (props) => {
         </Col>
       </Row>
 
-      <div className="d-flex align-items-center mb-2 mt-3 youtube">
+      <div className="d-flex align-items-center mb-2 mt-3 ">
         <div className="" key="search_text">
           <ErpInput
             prepend={<i className="iconly-Search icli"></i>}
@@ -504,8 +450,12 @@ const List = (props) => {
             nolabel
           />
         </div>
-
-        <div className="col-1 ms-auto">
+        <div className="col-2 ms-auto">
+          <ErpUserSelect nolabel formGroupClass="mb-0" className="select-tool-weight" placeholder="Owner" isClearable={true} name="owner" onChange={(e) => {
+            loadData({ filters: { ...state.filters, owner: e ? e.value : 0 } })
+          }} />
+        </div>
+        <div className="col-2 ms-1">
           <FieldHandle
             module={moduleName}
             nolabel
@@ -514,36 +464,33 @@ const List = (props) => {
             prepend={<i className="fa-light fa-filter"></i>}
             className="select-tool-weight"
             fieldData={{
-              ...metas.category
+              ...metas.asset_type
             }}
             onChange={(e) => {
-              loadData(
-                { category: e ? e.value : 0 },
-                { category: e ? e.value : 0 }
-              )
+              loadData({ filters: { ...state.filters, asset_type: e ? e.value : 0 } })
             }}
           />
         </div>
+
         <div className="ms-1">
           <ErpSelect
             nolabel
             formGroupClass="mb-0"
-            isclearable={false}
+            isClearable={false}
             options={perPageOptions}
-            defaultValue={perPageOptions[0]}
+            defaultValue={perPageOptions[1]}
             className="select-tool-weight"
             onChange={(e) => {
-              //  loadData(e.value)
-              setState({ perPage: e.value })
+              loadData({ perPage: e.value })
             }}
           />
         </div>
         <div className="ms-1 text-end">{addButton()}</div>
       </div>
 
-      <Card className="rounded youtube">
+      <Card className="rounded ">
         <CardHeader className="pb-0"></CardHeader>
-        <CardBody className="pt-0 youtube">
+        <CardBody className="pt-0 ">
           <TableDefaultModule
             metas={metas}
             data={state.data}
@@ -552,7 +499,7 @@ const List = (props) => {
             perPage={state.perPage}
             module={module}
             loading={state.loading}
-            pagination={true}
+            pagination={false}
             CustomCell={CellDisplay}
             rowHeight={80}
             onChangePage={(page) => {
@@ -594,7 +541,16 @@ const List = (props) => {
             ]}
           />
           <div className="row mt-3">
-            <div className="col-12"></div>
+            <div className="col-12 asset">
+              <PaginationAsset
+                currentPage={parseInt(state.currentPage)}
+                pagination={{
+                  toltalRow: state.recordsTotal,
+                  perPage: state.perPage
+                }}
+                loadData={loadData}
+              />
+            </div>
           </div>
         </CardBody>
       </Card>
@@ -606,6 +562,7 @@ const List = (props) => {
 
       <AssetEditModal
         modal={state.assetEditModal}
+        loadData={loadData}
         dataDetail={state.assetDetail}
         handleDetail={handleAssetEdit}
       />
@@ -619,6 +576,12 @@ const List = (props) => {
         modal={state.assetHandoverModal}
         dataDetail={state.assetDetail}
         handleDetail={handleHandover}
+      />
+
+      <AssetErrorModal
+        modal={state.assetErrorModal}
+        dataDetail={state.assetDetail}
+        handleDetail={handleError}
       />
     </Fragment>
   )
