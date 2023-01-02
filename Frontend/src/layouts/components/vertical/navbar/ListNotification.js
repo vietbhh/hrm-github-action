@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { Badge } from "reactstrap"
 // ** Components
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { timeDifference } from "@apps/utility/common"
+import { getDefaultFridayLogo, timeDifference } from "@apps/utility/common"
 
 const ListNotification = (props) => {
   const {
@@ -59,19 +59,18 @@ const ListNotification = (props) => {
           }
         )}>
         <div className="div-img">
-          <Avatar
-            src={sender?.avatar}
-            imgHeight="48"
-            imgWidth="48"
+          <img
+            src={item.icon ?? getDefaultFridayLogo("icon")}
             className="img"
+            width={48}
           />
         </div>
         <div
           className={classnames("div-text", {
-            "has-content": item.content
+            "has-content": item.body
           })}>
           {item.title}
-          {item.content && <p className="div-content">{item.content}</p>}
+          {item.body && <p className="div-content">{item.body}</p>}
           {item.created_at && (
             <p className="div-time">{timeDifference(item.created_at)}</p>
           )}
