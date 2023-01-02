@@ -120,15 +120,17 @@ const Notification = (props) => {
     })
   }, [socket])
 
-  navigator.serviceWorker.addEventListener("message", function (event) {
+  /* navigator.serviceWorker.addEventListener("message", function (event) {
     const { data } = event
     if (data?.isFirebaseMessaging) {
       const payload = data?.notification
       const otherData = data?.data
       const emitKey = otherData?.emitKey ?? ""
       const isSave = otherData?.isSave
+      console.log(localStorage.getItem("socket"))
+      console.log(socket)
       if (!socket.connected) {
-        showNotificationPopup(payload, emitKey)
+        //showNotificationPopup(payload, emitKey)
         if (isSave === "true") {
           const { id, sender_id } = otherData
           addNotificationToStore({
@@ -139,7 +141,7 @@ const Notification = (props) => {
         }
       }
     }
-  })
+  }) */
 
   return <Fragment></Fragment>
 }
