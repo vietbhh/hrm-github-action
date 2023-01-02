@@ -60,9 +60,14 @@ export const SocketContextWrap = (props) => {
         }
       })
       socket.on("connect", () => {
+        localStorage.setItem("socket", 1)
         if (errorAlert !== false) {
           errorAlert.close()
         }
+      })
+      socket.on("disconnect", () => {
+        localStorage.setItem("socket", 0)
+        console.log("disconnect")
       })
 
       socket.on("users_online", (data) => {
@@ -75,6 +80,8 @@ export const SocketContextWrap = (props) => {
       }
       return () => {
         socket.off("connect_error")
+        socket.off("reconnect")
+        socket.off("users_online")
         socket.off("disconnect")
       }
     }
