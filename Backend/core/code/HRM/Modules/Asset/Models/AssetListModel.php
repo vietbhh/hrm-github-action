@@ -23,7 +23,6 @@ class AssetListModel extends AppModel
         'asset_warranty_expires',
         'asset_status',
         'recent_image',
-        'test_import',
         'owner'
     ];
     protected $createdField = 'created_at';
