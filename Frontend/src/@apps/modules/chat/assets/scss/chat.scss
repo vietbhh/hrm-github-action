@@ -18,25 +18,25 @@ $btn-background-color: #377dff;
   }
 }
 
-.btn-primary {
-  border-color: $btn-background-color !important;
-  background-color: $btn-background-color !important;
-  color: #fff !important;
-}
-
-.btn-primary:hover:not(.disabled):not(:disabled) {
-  box-shadow: 0 8px 25px -8px $btn-background-color;
-}
-
-.btn-primary:active,
-.btn-primary:focus {
-  background-color: $btn-background-color !important;
-}
-
 .chat-application {
   .content-area-wrapper {
     border-width: 0;
     overflow: visible !important;
+
+    .btn-primary {
+      border-color: $btn-background-color !important;
+      background-color: $btn-background-color !important;
+      color: #fff !important;
+    }
+
+    .btn-primary:hover:not(.disabled):not(:disabled) {
+      box-shadow: 0 8px 25px -8px $btn-background-color;
+    }
+
+    .btn-primary:active,
+    .btn-primary:focus {
+      background-color: $btn-background-color !important;
+    }
 
     .input-group-merge {
       &:hover,
@@ -1719,14 +1719,14 @@ $btn-background-color: #377dff;
 
 .chat-content-reaction-dropdown-react {
   ul {
-    border-radius: 12px;
+    border-radius: 16px;
 
     li {
       background: unset !important;
       .react_icon {
         background: unset;
         font-size: 18px;
-        margin-right: 0.7rem;
+        margin-right: 0rem;
         border-radius: 8px;
 
         &:hover {

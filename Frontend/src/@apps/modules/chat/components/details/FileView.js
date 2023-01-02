@@ -231,7 +231,7 @@ const index = (props) => {
         })
         .catch((err) => {
           console.log(err)
-          setState({ loadMoreFile: false })
+          setState({ loadingFile: false })
         })
     }
 
@@ -261,7 +261,7 @@ const index = (props) => {
         })
         .catch((err) => {
           console.log(err)
-          setState({ loadMoreImage: false })
+          setState({ loadingImage: false })
         })
     }
 
@@ -291,7 +291,7 @@ const index = (props) => {
         })
         .catch((err) => {
           console.log(err)
-          setState({ loadMoreLink: false })
+          setState({ loadingLink: false })
         })
     }
   }, [tabView])

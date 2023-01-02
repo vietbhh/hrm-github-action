@@ -560,6 +560,43 @@ const AppChat = (props) => {
     return file_count
   }
 
+  const handleSendNotification = (groupId, msg, dataGroups, unseen) => {
+    const idEmployee = _.isArray(unseen) ? unseen[0] : unseen
+    let notification_name = dataGroups.name
+    let icon = dataGroups.avatar
+      ? getPublicDownloadUrl(`modules/chat/avatar/${dataGroups.avatar}`)
+      : ""
+    const link = `/chat/${groupId}`
+    const skipUrls = `/chat`
+    if (dataGroups.type === "employee") {
+      const index_employee = state.dataEmployees.findIndex(
+        (item) => item.id === idEmployee
+      )
+      if (index_employee !== -1) {
+        notification_name = state.dataEmployees[index_employee].full_name
+        icon = idEmployee * 1
+        //skipUrls = `/chat/${groupId},/chat/${state.dataEmployees[index_employee].username}`
+      }
+    }
+    let _msg = msg
+    _msg = _msg.replace(/<[^>]*>/g, "")
+    const dot = msg.length > 30 ? "..." : ""
+    _msg = _msg.slice(0, 30) + dot
+    socket.emit("chat_notification", {
+      receivers: unseen,
+      payload: {
+        title: notification_name,
+        body: _msg,
+        link: link,
+        icon: icon
+        //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+      },
+      data: {
+        skipUrls: skipUrls
+      }
+    })
+  }
+
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
 
@@ -595,39 +632,7 @@ const AppChat = (props) => {
         )
 
         // ** notification
-        let notification_name = dataGroups.name
-        let icon = dataGroups.avatar
-          ? getPublicDownloadUrl(`modules/chat/avatar/${dataGroups.avatar}`)
-          : ""
-        const link = `/chat/${groupId}`
-        const skipUrls = `/chat`
-        if (dataGroups.type === "employee") {
-          const index_employee = state.dataEmployees.findIndex(
-            (item) => item.id === unseen[0]
-          )
-          if (index_employee !== -1) {
-            notification_name = state.dataEmployees[index_employee].full_name
-            icon = unseen[0] * 1
-            //skipUrls = `/chat/${groupId},/chat/${state.dataEmployees[index_employee].username}`
-          }
-        }
-        let _msg = msg
-        _msg = _msg.replace(/<[^>]*>/g, "")
-        const dot = msg.length > 30 ? "..." : ""
-        _msg = _msg.slice(0, 30) + dot
-        socket.emit("chat_notification", {
-          receivers: unseen,
-          payload: {
-            title: notification_name,
-            body: _msg,
-            link: link,
-            icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          data: {
-            skipUrls: skipUrls
-          }
-        })
+        handleSendNotification(groupId, msg, dataGroups, unseen)
 
         let dataGroup = {
           last_message: handleLastMessage(docData.type, msg),
@@ -706,39 +711,7 @@ const AppChat = (props) => {
         }
 
         // ** notification
-        let notification_name = docData.name
-        let icon = docData.avatar
-          ? getPublicDownloadUrl(`modules/chat/avatar/${docData.avatar}`)
-          : ""
-        const link = `/chat/${newGroupId}`
-        const skipUrls = `/chat`
-        if (docData.type === "employee") {
-          const index_employee = state.dataEmployees.findIndex(
-            (item) => item.id === idEmployee
-          )
-          if (index_employee !== -1) {
-            notification_name = state.dataEmployees[index_employee].full_name
-            icon = idEmployee * 1
-            //skipUrls = `/chat/${groupId},/chat/${state.dataEmployees[index_employee].username}`
-          }
-        }
-        let _msg = msg
-        _msg = _msg.replace(/<[^>]*>/g, "")
-        const dot = msg.length > 30 ? "..." : ""
-        _msg = _msg.slice(0, 30) + dot
-        socket.emit("chat_notification", {
-          receivers: idEmployee,
-          payload: {
-            title: notification_name,
-            body: _msg,
-            link: link,
-            icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          data: {
-            skipUrls: skipUrls
-          }
-        })
+        handleSendNotification(newGroupId, msg, docData, idEmployee)
 
         setDoc(
           doc(collection(db, `${firestoreDb}/chat_messages/${newGroupId}`)),
