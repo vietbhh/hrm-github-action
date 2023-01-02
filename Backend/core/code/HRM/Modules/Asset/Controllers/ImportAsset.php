@@ -103,6 +103,8 @@ class ImportAsset extends ErpController
                 '',
                 '25/06/2022',
                 '25/06/2024',
+                '',
+                '',
                 ''
             ],
             [
@@ -114,6 +116,8 @@ class ImportAsset extends ErpController
                 '',
                 '01/06/2022',
                 '01/06/2024',
+                '',
+                '',
                 ''
             ]
         ];
@@ -123,7 +127,7 @@ class ImportAsset extends ErpController
         foreach ($defaultData as $keyData => $rowData) {
             foreach ($arrImportColumn as $keyColumn => $rowColumn) {
                 $value = isset($rowData[$keyColumn]) ? $rowData[$keyColumn] : '';
-                if ($rowColumn['type'] == 'select_module') {
+                if ($rowColumn['type'] == 'select_module' || $rowColumn['type'] == 'select_option') {
                     $infoSelectModule = $arrSelectModuleData[$rowColumn['field']];
                     $this->_getSelectColumnData(
                         $sheet,
@@ -132,7 +136,7 @@ class ImportAsset extends ErpController
                         $startRow,
                         $infoSelectModule['start_col'],
                         $startRowOrigin,
-                        $startRowOrigin + $infoSelectModule['length']
+                        $startRowOrigin + ($infoSelectModule['length'] - 1)
                     );
                 }
 
@@ -230,8 +234,8 @@ class ImportAsset extends ErpController
                 foreach ($arrFieldImport as $fieldInfo) {
                     // ** get skip record
                     if (
-                        !isset($row[$fieldInfo['header']])
-                        || ($fieldInfo['required'] == true && $this->_isEmptyString($row[$fieldInfo['header']]))
+                        $fieldInfo['required'] == 'true'
+                        && (!isset($row[$fieldInfo['header']]) || $this->_isEmptyString($row[$fieldInfo['header']]))
                     ) {
                         $arrError = $fieldInfo;
                         if (!isset($recordSkip[$key])) {
@@ -273,7 +277,7 @@ class ImportAsset extends ErpController
                     }
 
                     // ** empty required field
-                    if ($fieldInfo['required'] && $this->_isEmptyString($row[$fieldInfo['header']])) {
+                    if ($fieldInfo['required'] == 'true' && $this->_isEmptyString($row[$fieldInfo['header']])) {
                         $arrError = $fieldInfo;
                         $arrError['value'] = $valueSelect;
                         $arrError['error'] = 'required_field';
@@ -326,7 +330,7 @@ class ImportAsset extends ErpController
                             $value = "$date[2]-$date[1]-$date[0]";
                         }
                         $value = date('Y-m-d', strtotime($value));
-                    } else if ($rowListFieldImport['type'] == 'select_module') {
+                    } else if ($rowListFieldImport['type'] == 'select_module' || $rowListFieldImport['type'] == 'select_option') {
                         $value = 0;
                         if (isset($arrSelectModuleData[$rowListFieldImport['header']])) {
                             $dataSelect = $arrSelectModuleData[$rowListFieldImport['header']]['data'];
@@ -342,7 +346,7 @@ class ImportAsset extends ErpController
                     $dataInsert[$rowListFieldImport['field']] = $value;
                 }
             }
-            
+
             // ** insert
             $model->insertAssetList($dataInsert);
         }
@@ -369,10 +373,28 @@ class ImportAsset extends ErpController
             if ($row->field_type == 'select_module') {
                 $pushData['field_select_module'] = $row->field_select_module;
                 $pushData['field_select_field_show'] = $row->field_select_field_show;
+            } elseif ($row->field_type == 'select_option') {
+                $fieldOptionValue  = isset($row->field_options_values['values']) ? $row->field_options_values['values'] : [];
+                foreach ($fieldOptionValue as $keyOptionValue => $rowOptionValue) {
+                    $pushData['field_options_values'][] = [
+                        'id' => $rowOptionValue['id'],
+                        'label' => $rowOptionValue['name']
+                    ];
+                }
             }
 
             $result[] = $pushData;
         }
+
+        // ** owner column
+        $result[] = [
+            'field' => 'owner',
+            'name' => 'Owner',
+            'type' => 'select_module',
+            'required' => true,
+            'field_select_module' => 'users',
+            'field_select_field_show' => 'username'
+        ];
 
         return $result;
     }
@@ -396,6 +418,15 @@ class ImportAsset extends ErpController
                     'data' => $listData,
                     'start_col' => $keySelectModule,
                     'length' => count($listData)
+                ];
+
+                $keySelectModule++;
+            } elseif ($rowColumn['type'] == 'select_option') {
+                $result[$rowColumn['field']] = [
+                    'name' => $this->_handleFieldName($rowColumn['field']),
+                    'data' => $rowColumn['field_options_values'],
+                    'start_col' => $keySelectModule,
+                    'length' => count($rowColumn['field_options_values'])
                 ];
 
                 $keySelectModule++;

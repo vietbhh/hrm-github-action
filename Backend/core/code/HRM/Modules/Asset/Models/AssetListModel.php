@@ -22,9 +22,10 @@ class AssetListModel extends AppModel
         'date_created',
         'asset_warranty_expires',
         'asset_status',
-        'recent_image'
+        'recent_image',
+        'test_import',
+        'owner'
     ];
-    protected $useTimestamps = false;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';

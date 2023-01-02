@@ -106,7 +106,7 @@ const PreviewAndImportStep = (props) => {
     <div className="preview-and-import">
       <div className="mb-2">
         <ReadyToCreate
-          fileUploadContent={fileUploadContent}
+          fileUploadContent={fileUploadContent}      
           recordReadyToCreate={recordReadyToCreate}
           renderCollapseHeader={renderCollapseHeader}
         />
