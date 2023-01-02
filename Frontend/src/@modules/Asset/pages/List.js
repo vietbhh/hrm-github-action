@@ -1,5 +1,9 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { ErpInput, ErpSelect, ErpUserSelect } from "@apps/components/common/ErpField"
+import {
+  ErpInput,
+  ErpSelect,
+  ErpUserSelect
+} from "@apps/components/common/ErpField"
 import TableDefaultModule from "@apps/modules/default/components/table/TableDefaultModule"
 import {
   addComma,
@@ -41,7 +45,6 @@ import AssetErrorModal from "../components/modals/AssetErrorModal"
 import PaginationAsset from "../components/PaginationAsset"
 const { Cell } = Table
 const List = (props) => {
-  const { slug } = useParams()
   const [state, setState] = useMergedState({
     data: [],
     infoBoard: {},
@@ -144,19 +147,21 @@ const List = (props) => {
     )
   }
 
-  useEffect(() => { }, [state.perPage])
+  useEffect(() => {}, [state.perPage])
 
   const handleDelete = (id) => {
     SwAlert.showWarning({
       confirmButtonText: useFormatMessage("button.delete")
     }).then((res) => {
       if (res.value) {
-        defaultModuleApi.delete('asset_lists', [id]).then((res) => {
-          loadData()
-          notification.showSuccess({
-            text: useFormatMessage("notification.save.success")
+        defaultModuleApi
+          .delete("asset_lists", [id])
+          .then((res) => {
+            loadData()
+            notification.showSuccess({
+              text: useFormatMessage("notification.save.success")
+            })
           })
-        })
           .catch((err) => {
             setState({ loading: false })
             notification.showError(useFormatMessage("notification.save.error"))
@@ -173,8 +178,15 @@ const List = (props) => {
   }
   const handleUpdateSTT = (id) => {
     if (id) {
+      setState({
+        loading: true
+      })
       AssetApi.detailAsset(id).then((res) => {
-        setState({ assetDetail: res.data.data, assetUpdateSTTModal: true })
+        setState({
+          assetDetail: res.data.data,
+          assetUpdateSTTModal: true,
+          loading: false
+        })
       })
     } else {
       setState({ assetUpdateSTTModal: !state.assetUpdateSTTModal })
@@ -182,8 +194,15 @@ const List = (props) => {
   }
   const handleHandover = (id) => {
     if (id) {
+      setState({
+        loading: true
+      })
       AssetApi.detailAsset(id).then((res) => {
-        setState({ assetDetail: res.data.data, assetHandoverModal: true })
+        setState({
+          assetDetail: res.data.data,
+          assetHandoverModal: true,
+          loading: false
+        })
       })
     } else {
       setState({ assetHandoverModal: !state.assetHandoverModal })
@@ -192,8 +211,15 @@ const List = (props) => {
 
   const handleError = (id) => {
     if (id) {
+      setState({
+        loading: true
+      })
       AssetApi.detailAsset(id).then((res) => {
-        setState({ assetDetail: res.data.data, assetErrorModal: true })
+        setState({
+          assetDetail: res.data.data,
+          assetErrorModal: true,
+          loading: false
+        })
       })
     } else {
       setState({ assetErrorModal: !state.assetErrorModal })
@@ -213,24 +239,6 @@ const List = (props) => {
       {
         label: (
           <div className="d-flex align-items-center">
-            <i className="fa-regular fa-file-pen me-50"></i> Update status
-          </div>
-        ),
-        key: "btn_stt",
-        onClick: () => handleUpdateSTT(data.id)
-      },
-      {
-        label: (
-          <div className="d-flex align-items-center">
-            <i className="fa-regular fa-repeat me-50"></i> Handover
-          </div>
-        ),
-        key: "btn_hover",
-        onClick: () => handleHandover(data.id)
-      },
-      {
-        label: (
-          <div className="d-flex align-items-center">
             <i className="fa-regular fa-triangle-exclamation me-50"></i> Error
           </div>
         ),
@@ -246,8 +254,7 @@ const List = (props) => {
           </div>
         ),
         key: "btn_delete",
-        onClick: () =>
-          handleDelete(data?.id),
+        onClick: () => handleDelete(data?.id),
         disabled: checkPer(data?.owner.value)
       }
     ]
@@ -261,6 +268,24 @@ const List = (props) => {
     const canDelete = canDeleteData(ability, moduleName, userId, rowData)
     return (
       <Cell {...props} fixed={"right"} className="link-group">
+        <Button.Ripple
+          title={`Update status`}
+          color="flat-dark"
+          size="sm"
+          className="btn_stt"
+          key={"btn_stt"}
+          onClick={() => handleUpdateSTT(rowData?.id)}>
+          <i className="fa-regular fa-file-pen"></i>
+        </Button.Ripple>
+        <Button.Ripple
+          title={`Handover`}
+          color="flat-dark"
+          size="sm"
+          className="btn_hover"
+          key={"btn_hover"}
+          onClick={() => handleHandover(rowData?.id)}>
+          <i className="fa-regular fa-repeat"></i>
+        </Button.Ripple>
         <Dropdown
           menu={{ items: menu(rowData) }}
           placement="bottom"
@@ -268,61 +293,7 @@ const List = (props) => {
           overlayClassName="drop_channel rounded"
           className="ms-50">
           <Button.Ripple color="flat-dark" size="sm" key={"btn-option"}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M18.3333 5.41666H13.3333"
-                stroke="#585757"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M5.00008 5.41666H1.66675"
-                stroke="#585757"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.33342 8.33333C9.94425 8.33333 11.2501 7.0275 11.2501 5.41667C11.2501 3.80584 9.94425 2.5 8.33342 2.5C6.72258 2.5 5.41675 3.80584 5.41675 5.41667C5.41675 7.0275 6.72258 8.33333 8.33342 8.33333Z"
-                stroke="#585757"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M18.3333 14.5833H15"
-                stroke="#585757"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M6.66675 14.5833H1.66675"
-                stroke="#585757"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M11.6667 17.5C13.2775 17.5 14.5833 16.1942 14.5833 14.5833C14.5833 12.9725 13.2775 11.6667 11.6667 11.6667C10.0558 11.6667 8.75 12.9725 8.75 14.5833C8.75 16.1942 10.0558 17.5 11.6667 17.5Z"
-                stroke="#585757"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <i class="fa-regular fa-ellipsis-stroke"></i>
           </Button.Ripple>
         </Dropdown>
       </Cell>
@@ -352,7 +323,7 @@ const List = (props) => {
                 <span
                   className="font-weight-bold name-channel-table"
                   onClick={() => handleDetail(rowData?.id)}>
-                  {rowData.asset_name}
+                  {rowData?.asset_name}
                 </span>
                 <br />
                 <span
@@ -360,7 +331,7 @@ const List = (props) => {
                     color: "rgba(162, 160, 158, 0.7)",
                     fontSize: "12px"
                   }}>
-                  {rowData.pid}Group
+                  {rowData?.asset_group_name}
                 </span>
               </p>
             </div>
@@ -388,11 +359,6 @@ const List = (props) => {
     { value: 10, label: 10 },
     { value: 30, label: 30 }
   ]
-  const renderCopared = (num) => {
-    let dot = "+"
-    if (num < 0) dot = ""
-    return dot + addComma(num)
-  }
 
   useEffect(() => {
     loadData()
@@ -418,21 +384,19 @@ const List = (props) => {
           <CardStatistic
             title={useFormatMessage("modules.asset_lists.text.total_asset")}
             number={state?.assetTotal}
-            subTitle={`...`}
           />
         </Col>
         <Col lg={3}>
           <CardStatistic
             title={useFormatMessage("modules.asset_lists.text.new_asset")}
             number={state?.assetThisMonth}
-            subTitle={`...`}
           />
         </Col>
         <Col lg={3}>
-          <CardStatistic title={"Constructed.."} number={0} subTitle={`...`} />
+          <CardStatistic title={"Constructed.."} number={0} />
         </Col>
         <Col lg={3}>
-          <CardStatistic title={"Constructed.."} number={0} subTitle={`...`} />
+          <CardStatistic title={"Constructed.."} number={0} />
         </Col>
       </Row>
 
@@ -451,9 +415,19 @@ const List = (props) => {
           />
         </div>
         <div className="col-2 ms-auto">
-          <ErpUserSelect nolabel formGroupClass="mb-0" className="select-tool-weight" placeholder="Owner" isClearable={true} name="owner" onChange={(e) => {
-            loadData({ filters: { ...state.filters, owner: e ? e.value : 0 } })
-          }} />
+          <ErpUserSelect
+            nolabel
+            formGroupClass="mb-0"
+            className="select-tool-weight"
+            placeholder="Owner"
+            isClearable={true}
+            name="owner"
+            onChange={(e) => {
+              loadData({
+                filters: { ...state.filters, owner: e ? e.value : 0 }
+              })
+            }}
+          />
         </div>
         <div className="col-2 ms-1">
           <FieldHandle
@@ -467,7 +441,9 @@ const List = (props) => {
               ...metas.asset_type
             }}
             onChange={(e) => {
-              loadData({ filters: { ...state.filters, asset_type: e ? e.value : 0 } })
+              loadData({
+                filters: { ...state.filters, asset_type: e ? e.value : 0 }
+              })
             }}
           />
         </div>
@@ -557,6 +533,7 @@ const List = (props) => {
       <AssetDetailModal
         modal={state.assetDetailModal}
         dataDetail={state.assetDetail}
+        loading={state.loading}
         handleDetail={handleAssetDetail}
       />
 

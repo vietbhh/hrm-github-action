@@ -26,9 +26,17 @@ class Asset extends ErpController
 		$data['assetThisMonth'] = $model->where('MONTH(date_created)', date("m"))->where('YEAR(date_created)', date("Y"))->countAllResults(true);
 
 		if (isset($getPara['filters'])) {
+
+
 			foreach ($getPara['filters'] as $key => $val) {
-				if ($val) {
-					$model->where($key, $val);
+				if ($key === 'owner') {
+					if ($val) {
+						$model->where('m_asset_lists.owner', $val);
+					}
+				} else {
+					if ($val) {
+						$model->where($key, $val);
+					}
 				}
 			}
 		}
@@ -43,7 +51,9 @@ class Asset extends ErpController
 			$model->groupEnd();
 		}
 		$data['recordsTotal'] = $model->countAllResults(false);
-		$list = $model->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
+		$list = $model->select('*,m_asset_lists.id as id,m_asset_lists.owner as owner')
+			->join('m_asset_types', 'm_asset_types.id = m_asset_lists.asset_type', 'left')
+			->join('m_asset_groups', 'm_asset_groups.id = m_asset_types.asset_type_group', 'left')->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
 		$data['asset_list'] = handleDataBeforeReturn($modules, $list, true);
 		$data['page'] = $getPara['page'];
 		return $this->respond($data);

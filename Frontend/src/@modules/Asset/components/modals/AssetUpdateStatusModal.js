@@ -1,6 +1,7 @@
 import { ErpSelect } from "@apps/components/common/ErpField"
 import {
-  getOptionValue, useFormatMessage,
+  getOptionValue,
+  useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
@@ -12,10 +13,13 @@ import { useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import {
-  Button, Col, Modal,
+  Button,
+  Col,
+  Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader, Row,
+  ModalHeader,
+  Row,
   Spinner
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
@@ -127,7 +131,7 @@ const AssetUpdateStatusModal = (props) => {
                         updateDataId={dataDetail?.id}
                         label={useFormatMessage(
                           "modules.asset_history.fields." +
-                          arrFields?.notes?.field
+                            arrFields?.notes?.field
                         )}
                         required
                         fieldData={arrFields.notes}
@@ -141,7 +145,7 @@ const AssetUpdateStatusModal = (props) => {
                         updateDataId={dataDetail?.id}
                         label={useFormatMessage(
                           "modules.asset_history.fields." +
-                          arrFields?.history_image?.field
+                            arrFields?.history_image?.field
                         )}
                         fieldData={arrFields.history_image}
                         useForm={methods}
@@ -152,7 +156,7 @@ const AssetUpdateStatusModal = (props) => {
                         updateDataId={dataDetail?.id}
                         label={useFormatMessage(
                           "modules.asset_history.fields." +
-                          arrFields?.history_files?.field
+                            arrFields?.history_files?.field
                         )}
                         fieldData={arrFields.history_files}
                         useForm={methods}
@@ -179,7 +183,7 @@ const AssetUpdateStatusModal = (props) => {
                           <Button.Ripple
                             type="button"
                             className="btn-cancel"
-                            onClick={cancelUpdate}
+                            onClick={() => handleDetail("")}
                             disabled={state.saving}>
                             <span className="align-middle d-sm-inline-block d-none">
                               {useFormatMessage("button.cancel")}
