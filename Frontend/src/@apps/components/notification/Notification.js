@@ -99,15 +99,23 @@ const Notification = (props) => {
         window.location.pathname !== payload.link &&
         !skipUrlsArray.includes(window.location.pathname)
       ) {
-        const sound = new Audio(ChatSound)
-        sound.addEventListener("canplaythrough", (event) => {
-          // the audio is now playable; play it if permissions allow
-          const playedPromise = sound.play()
-          if (playedPromise) {
-            playedPromise.catch((e) => {}).then(() => {})
+        let checkUrlStart = false
+        _.forEach(skipUrlsArray, (item) => {
+          if (window.location.pathname.startsWith(item)) {
+            checkUrlStart = true
           }
         })
-        showNotificationPopup(payload, "chat_notification")
+        if (!checkUrlStart) {
+          const sound = new Audio(ChatSound)
+          sound.addEventListener("canplaythrough", (event) => {
+            // the audio is now playable; play it if permissions allow
+            const playedPromise = sound.play()
+            if (playedPromise) {
+              playedPromise.catch((e) => {}).then(() => {})
+            }
+          })
+          showNotificationPopup(payload, "chat_notification")
+        }
       }
     })
   }, [socket])
