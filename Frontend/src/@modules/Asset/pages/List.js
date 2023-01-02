@@ -34,7 +34,7 @@ import {
 } from "reactstrap"
 import { Table } from "rsuite"
 import { AbilityContext } from "utility/context/Can"
-import { AssetApi } from "../common/api"
+import { assetApi } from "../common/api"
 import Photo from "@apps/modules/download/pages/Photo"
 import CardStatistic from "../components/CardStatistic"
 import AssetDetailModal from "../components/modals/AssetDetailModal"
@@ -108,7 +108,7 @@ const List = (props) => {
       filters: state.filters,
       ...props
     }
-    AssetApi.loadData(params).then((res) => {
+    assetApi.loadData(params).then((res) => {
       setState({
         data: res.data.asset_list,
         assetThisMonth: res.data.assetThisMonth,
@@ -181,7 +181,7 @@ const List = (props) => {
       setState({
         loading: true
       })
-      AssetApi.detailAsset(id).then((res) => {
+      assetApi.detailAsset(id).then((res) => {
         setState({
           assetDetail: res.data.data,
           assetUpdateSTTModal: true,
@@ -197,7 +197,7 @@ const List = (props) => {
       setState({
         loading: true
       })
-      AssetApi.detailAsset(id).then((res) => {
+      assetApi.detailAsset(id).then((res) => {
         setState({
           assetDetail: res.data.data,
           assetHandoverModal: true,
@@ -214,7 +214,7 @@ const List = (props) => {
       setState({
         loading: true
       })
-      AssetApi.detailAsset(id).then((res) => {
+      assetApi.detailAsset(id).then((res) => {
         setState({
           assetDetail: res.data.data,
           assetErrorModal: true,
@@ -272,7 +272,7 @@ const List = (props) => {
           title={`Update status`}
           color="flat-dark"
           size="sm"
-          className="btn_stt"
+          className="btn_stt me-50"
           key={"btn_stt"}
           onClick={() => handleUpdateSTT(rowData?.id)}>
           <i className="fa-regular fa-file-pen"></i>
@@ -293,7 +293,7 @@ const List = (props) => {
           overlayClassName="drop_channel rounded"
           className="ms-50">
           <Button.Ripple color="flat-dark" size="sm" key={"btn-option"}>
-            <i class="fa-regular fa-ellipsis-stroke"></i>
+            <i className="fa-regular fa-ellipsis-stroke"></i>
           </Button.Ripple>
         </Dropdown>
       </Cell>
@@ -301,7 +301,7 @@ const List = (props) => {
   }
 
   const handleDetail = (id) => {
-    AssetApi.detailAsset(id).then((res) => {
+    assetApi.detailAsset(id).then((res) => {
       //res.data.data
       setState({ assetDetail: res.data.data, assetDetailModal: true })
     })
@@ -370,7 +370,7 @@ const List = (props) => {
 
   const handleAssetEdit = (id = 0) => {
     if (id) {
-      AssetApi.detailAsset(id).then((res) => {
+      assetApi.detailAsset(id).then((res) => {
         setState({ assetDetail: res.data.data, assetEditModal: true })
       })
     } else {

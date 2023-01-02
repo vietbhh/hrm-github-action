@@ -7,7 +7,7 @@ import {
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
-import { AssetApi } from "@modules/Asset/common/api"
+import { assetApi } from "@modules/Asset/common/api"
 import { map } from "lodash-es"
 import { useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -49,7 +49,7 @@ const AssetUpdateStatusModal = (props) => {
     values.type = getOptionValue(options, "type", "other")
     values.status_current = dataDetail?.asset_status?.value
 
-    AssetApi.updateSTT(values).then((res) => {
+    assetApi.updateSTT(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })

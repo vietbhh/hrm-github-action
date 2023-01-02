@@ -1,15 +1,36 @@
-<<<<<<< HEAD
 import { defaultModuleApi } from "@apps/utility/moduleApi"
-=======
->>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
 import { axiosApi } from "@apps/utility/api"
 import {
   erpSelectToValues,
   object2QueryString,
   serialize
 } from "@apps/utility/handleData"
-<<<<<<< HEAD
-export const AssetApi = {
+
+export const assetApi = {
+  async getAssetTemplate() {
+    return await axiosApi.get("asset/get-asset-template", {
+      responseType: "blob"
+    })
+  },
+  async getMappingFields(data) {
+    return await axiosApi.post(
+      "/asset/get-mapping-fields",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async getImportData(data) {
+    return await axiosApi.post(
+      "/asset/get-import-data",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async importAsset(data) {
+    return await axiosApi.post(
+      "/asset/import-asset",
+      serialize(_.cloneDeep(data))
+    )
+  },
+
   async loadData(filters = {}) {
     const stringFilters = object2QueryString(
       erpSelectToValues(_.cloneDeep(filters))
@@ -40,99 +61,7 @@ export const AssetApi = {
   async postError(data) {
     return await axiosApi.post("/asset/error", serialize(_.cloneDeep(data)))
   },
-  async getChannelInfo(url) {
-    return await axiosApi.get("youtube/channel-info?url=" + url)
-  },
-  async detailChannel(filters = {}) {
-    const stringFilters = object2QueryString(
-      erpSelectToValues(_.cloneDeep(filters))
-    )
-    return await axiosApi.get("youtube/detail-channel?" + stringFilters)
-  },
-  async detailBase(filters = {}) {
-    const stringFilters = object2QueryString(
-      erpSelectToValues(_.cloneDeep(filters))
-    )
-    return await axiosApi.get("youtube/detail-base?" + stringFilters)
-  },
-  async videoChannel(filters = {}) {
-    const stringFilters = object2QueryString(
-      erpSelectToValues(_.cloneDeep(filters))
-    )
-    return await axiosApi.get("youtube/video-channel?" + stringFilters)
-  },
-  async videoBase(filters = {}) {
-    const stringFilters = object2QueryString(
-      erpSelectToValues(_.cloneDeep(filters))
-    )
-    return await axiosApi.get("youtube/video-base?" + stringFilters)
-  },
-
-  async syncChannel(id) {
-    return await axiosApi.get("youtube/sync-channel/" + id)
-  },
-  async loadBoard(id) {
-    return await axiosApi.get("youtube/load-board/" + id)
-  },
-  async addChannel(data) {
-    return await axiosApi.post(
-      "youtube/add-channel",
-      serialize(_.cloneDeep({ data }))
-    )
-  },
-  async deleteChannel(data) {
-    return await axiosApi.post(
-      "youtube/delete-channel",
-      serialize(_.cloneDeep({ data }))
-    )
-  },
-  async addBase(data) {
-    return await axiosApi.post(
-      "youtube/add-base",
-      serialize(_.cloneDeep({ data }))
-    )
-  },
-  async shareBase(data) {
-    return await axiosApi.post(
-      "youtube/share-base",
-      serialize(_.cloneDeep({ data }))
-    )
-  },
-  async checkBase(data) {
-    return await axiosApi.post(
-      "youtube/check-base",
-      serialize(_.cloneDeep({ data }))
-    )
-  },
-  async changeRPM(data) {
-    return await axiosApi.post(
-      "youtube/change-rpm",
-      serialize(_.cloneDeep({ data }))
-=======
-
-export const assetApi = {
-  async getAssetTemplate() {
-    return await axiosApi.get("asset/get-asset-template", {
-      responseType: "blob"
-    })
-  },
-  async getMappingFields(data) {
-    return await axiosApi.post(
-      "/asset/get-mapping-fields",
-      serialize(_.cloneDeep(data))
-    )
-  },
-  async getImportData(data) {
-    return await axiosApi.post(
-      "/asset/get-import-data",
-      serialize(_.cloneDeep(data))
-    )
-  },
-  async importAsset(data) {
-    return await axiosApi.post(
-      "/asset/import-asset",
-      serialize(_.cloneDeep(data))
->>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
-    )
+  async addAsset(data) {
+    return await axiosApi.post("/asset/add", serialize(_.cloneDeep(data)))
   }
 }

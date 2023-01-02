@@ -1,19 +1,24 @@
 import Photo from "@apps/modules/download/pages/Photo"
 import {
-  formatDate, timeDifference, useFormatMessage,
+  formatDate,
+  timeDifference,
+  useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
-import { AssetApi } from "@modules/Asset/common/api"
+import { assetApi } from "@modules/Asset/common/api"
 import { Timeline } from "antd"
-import { map } from "lodash-es"
-import { useEffect } from "react"
+import { map, isEmpty } from "lodash-es"
+import { Fragment, useEffect } from "react"
 import {
   Badge,
-  Col, Modal,
+  Col,
+  Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader, Row
+  ModalHeader,
+  Row
 } from "reactstrap"
+import DownloadFile from "@apps/modules/download/pages/DownloadFile"
 const AssetDetailModal = (props) => {
   const { modal, options, dataDetail, handleDetail, loadData } = props
   const [state, setState] = useMergedState({
@@ -27,48 +32,104 @@ const AssetDetailModal = (props) => {
   })
 
   const loadHistory = () => {
-    AssetApi.loadHistory({
-      ...state.filterHistory,
-      asset_code: dataDetail?.id
-    }).then((res) => {
-      setState({
-        historyData: res.data.history,
-        recordsTotal: res.data.recordsTotal
+    assetApi
+      .loadHistory({
+        ...state.filterHistory,
+        asset_code: dataDetail?.id
       })
-    })
+      .then((res) => {
+        setState({
+          historyData: res.data.history,
+          recordsTotal: res.data.recordsTotal
+        })
+      })
   }
   useEffect(() => {
     if (dataDetail?.id) {
       loadHistory()
     }
   }, [dataDetail])
-
+  const RenderFiles = (files) => {
+    const dataFiles = files
+    return (
+      <Fragment>
+        {!isEmpty(dataFiles) &&
+          dataFiles.map((field, key) => {
+            if (field.fileName) {
+              return (
+                <Fragment key={`file_` + key}>
+                  <Badge color="light-secondary" className="mt-50 me-1">
+                    <DownloadFile fileName={field.fileName} src={field.url}>
+                      <i className="far fa-paperclip"></i> {field.fileName}
+                    </DownloadFile>
+                  </Badge>
+                </Fragment>
+              )
+            }
+          })}
+      </Fragment>
+    )
+  }
   const renderHistory = (data) => {
     return map(data, (value, index) => {
-      if (value?.type?.name_option === 'handover') {
-        return (<Timeline.Item key={index}>
-          <h6 className="d-flex">{useFormatMessage(value?.type?.label)} <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
-          Owner from : {value?.owner_current?.full_name} <i className="fa-solid fa-arrow-right ms-50 me-50"></i> {value?.owner_change?.full_name}
-        </Timeline.Item>)
+      if (value?.type?.name_option === "handover") {
+        return (
+          <Timeline.Item key={index}>
+            <h6 className="d-flex">
+              {useFormatMessage(value?.type?.label)}{" "}
+              <span className="time-history ms-auto">
+                {timeDifference(value?.created_at)}
+              </span>
+            </h6>
+            Owner from : {value?.owner_current?.full_name}{" "}
+            <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
+            {value?.owner_change?.full_name}
+          </Timeline.Item>
+        )
       }
-      if (value?.type?.name_option === 'other') {
-        return (<Timeline.Item key={index}>
-          <h6 className="d-flex">Update <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
-          Status from : {value?.status_current?.label} <i className="fa-solid fa-arrow-right ms-50 me-50"></i> {value?.status_change?.label}
-          <br />
-          <span className="mt-50 fw-blod">Notes : {value?.notes}</span>
-        </Timeline.Item>)
+      if (value?.type?.name_option === "other") {
+        return (
+          <Timeline.Item key={index}>
+            <h6 className="d-flex">
+              Update{" "}
+              <span className="time-history ms-auto">
+                {timeDifference(value?.created_at)}
+              </span>
+            </h6>
+            Status from : {value?.status_current?.label}{" "}
+            <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
+            {value?.status_change?.label}
+            <br />
+            <span className="mt-50 fw-blod">Notes : {value?.notes}</span>
+            <div className="mt-50">
+              {RenderFiles(value?.history_files)}
+              {value?.history_image && RenderFiles([value?.history_image])}
+            </div>
+          </Timeline.Item>
+        )
       }
 
-      if (value?.type?.name_option === 'warehouse') {
-        return (<Timeline.Item key={index}>
-          <h6 className="d-flex">Warehouse <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
-          Owner : {value?.owner_current?.full_name}
-        </Timeline.Item>)
+      if (value?.type?.name_option === "warehouse") {
+        return (
+          <Timeline.Item key={index}>
+            <h6 className="d-flex">
+              Warehouse{" "}
+              <span className="time-history ms-auto">
+                {timeDifference(value?.created_at)}
+              </span>
+            </h6>
+            Owner : {value?.owner_current?.full_name}
+          </Timeline.Item>
+        )
       }
       return (
         <Timeline.Item key={index}>
-          <h6 className="d-flex">{useFormatMessage(value?.type?.label)} <span className="time-history ms-auto">{timeDifference(value?.created_at)}</span></h6>
+          <h6 className="d-flex">
+            {useFormatMessage(value?.type?.label)}{" "}
+            <span className="time-history ms-auto">
+              {timeDifference(value?.created_at)}
+            </span>
+          </h6>
           Notes : {value?.notes}
         </Timeline.Item>
       )
@@ -118,7 +179,6 @@ const AssetDetailModal = (props) => {
                     <span className="status ms-1 btn-light btn-sm">
                       {dataDetail?.asset_status?.label}
                     </span>
-
                   )}
                 </div>
 
@@ -128,14 +188,13 @@ const AssetDetailModal = (props) => {
                     <span> {dataDetail?.asset_code}</span>
                   </div>
                   <div className="create-date text-dark mt-50">
-                    {useFormatMessage("modules.asset_lists.fields.owner")}
-                    :<span> {(dataDetail?.owner?.label)}</span>
+                    {useFormatMessage("modules.asset_lists.fields.owner")}:
+                    <span> {dataDetail?.owner?.label}</span>
                   </div>
                   <div className="create-date text-dark mt-50">
                     {useFormatMessage("modules.recruitments.fields.created_at")}
                     :<span> {formatDate(dataDetail?.created_at)}</span>
                   </div>
-
                 </div>
               </div>
               <div className="content-right ms-auto mt-2"></div>
@@ -182,15 +241,16 @@ const AssetDetailModal = (props) => {
             <h5 className="mb-2">History</h5>
             <Timeline>{renderHistory(state.historyData)}</Timeline>
             <Row>
-              {state.historyData.length > 0 && state.historyData.length < state.recordsTotal && (
-                <Col className="text-center">
-                  <span
-                    className="text-primary btn-load-more"
-                    onClick={() => handleLoadMore()}>
-                    Load more
-                  </span>
-                </Col>
-              )}
+              {state.historyData.length > 0 &&
+                state.historyData.length < state.recordsTotal && (
+                  <Col className="text-center">
+                    <span
+                      className="text-primary btn-load-more"
+                      onClick={() => handleLoadMore()}>
+                      Load more
+                    </span>
+                  </Col>
+                )}
             </Row>
           </div>
         </ModalBody>

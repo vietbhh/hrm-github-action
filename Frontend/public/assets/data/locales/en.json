@@ -3836,7 +3836,6 @@
         "period": "Period"
       }
     },
-<<<<<<< HEAD
     "asset_lists": {
       "fields": {
         "asset_code": "Code",
@@ -3865,6 +3864,9 @@
         "new": "New Asset",
         "edit": "Asset Edit",
         "update_stt": "Update Status"
+      },
+      "notification" :{
+        "is_owner": "The user already owns this Asset"
       }
     },
     "asset_history": {
@@ -3900,7 +3902,9 @@
           "other": "Other",
           "warehouse": "Warehouse",
           "inventory": "Inventory"
-=======
+        }
+      }
+    },
     "asset": {
       "import_asset": {
         "title": {
@@ -3917,7 +3921,6 @@
             "text": "Download the template and fill it in with your asset data."
           },
           "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import."
->>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
         }
       }
     }

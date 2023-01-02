@@ -1,3 +1,4 @@
+import { ErpUserSelect } from "@apps/components/common/ErpField"
 import {
   sortFieldsDisplay,
   useFormatMessage,
@@ -7,15 +8,19 @@ import { FieldHandle } from "@apps/utility/FieldHandler"
 import { isArray } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
+import { assetApi } from "@modules/Asset/common/api"
 import { toArray } from "lodash-es"
 import { Fragment, useContext } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import {
-  Button, Col, Modal,
+  Button,
+  Col,
+  Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader, Row,
+  ModalHeader,
+  Row,
   Spinner
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
@@ -46,7 +51,7 @@ const AssetEditModal = (props) => {
       values.id = dataDetail.id
     }
 
-    defaultModuleApi.postSave("asset_lists", values).then((res) => {
+    assetApi.addAsset(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
@@ -76,7 +81,9 @@ const AssetEditModal = (props) => {
             <i className="fa-regular fa-circle-info"></i>
           </span>{" "}
           <span className="ms-50">
-            {dataDetail?.id ? useFormatMessage("modules.asset_lists.title.edit") : useFormatMessage("modules.asset_lists.title.new")}
+            {dataDetail?.id
+              ? useFormatMessage("modules.asset_lists.title.edit")
+              : useFormatMessage("modules.asset_lists.title.new")}
           </span>
         </ModalHeader>
         <ModalBody>
@@ -85,6 +92,14 @@ const AssetEditModal = (props) => {
               <div className="div-tab-content">
                 <FormProvider {...methods}>
                   <Row>
+                    <Col lg={6}>
+                      <ErpUserSelect
+                        label="Owner"
+                        name="owner"
+                        required
+                        useForm={methods}
+                      />
+                    </Col>
                     {dataFields
                       .filter(
                         (field) => field.field_form_show && field.field_enable
@@ -99,8 +114,9 @@ const AssetEditModal = (props) => {
                         if (
                           (nameField === "asset_code" ||
                             nameField === "asset_status" ||
-                            nameField === "asset_name")
-                          && dataDetail?.id) {
+                            nameField === "asset_name") &&
+                          dataDetail?.id
+                        ) {
                           fieldAuth.field_readonly = true
                         }
 

@@ -1,6 +1,5 @@
 @import "@scss/friday";
 
-<<<<<<< HEAD
 .asset {
   .ant-pagination {
     justify-content: right !important;
@@ -181,10 +180,6 @@
     border-radius: 12px;
     padding: 15px 10px;
     box-shadow: 0px 4px 24px rgba(221, 218, 235, 0.4);
-
-    li {
-      color: #25546F;
-    }
   }
 }
 
@@ -484,25 +479,6 @@
 }
 
 
-.youtube-select-dropdown-menu {
-  .ant-dropdown-menu {
-    border-radius: $border-radius;
-
-    li {
-      margin: 7px 5px;
-      border-radius: 6px;
-
-      i,
-      svg {
-        width: 10px;
-        height: 10px;
-        margin-right: 0.75rem;
-        text-align: center;
-      }
-    }
-  }
-}
-=======
 .import-asset-list-page {
     .upload-file-step {
         .upload-file-dragger {
@@ -609,4 +585,3 @@
         }
     }
 }
->>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9

@@ -7,7 +7,7 @@ import {
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
-import { AssetApi } from "@modules/Asset/common/api"
+import { assetApi } from "@modules/Asset/common/api"
 import { map } from "lodash-es"
 import { useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -42,8 +42,16 @@ const AssetHandoverModal = (props) => {
   const onSubmitFrm = (values) => {
     values.asset_code = dataDetail?.id
     values.type = getOptionValue(options, "type", "handover")
-    values.owner_current = userId
-    AssetApi.handOver(values).then((res) => {
+    values.owner_current = dataDetail.owner?.value
+
+    if (values.owner_current === values.owner_change?.id) {
+      notification.showError({
+        text: useFormatMessage("modules.asset_lists.notification.is_owner")
+      })
+      return
+    }
+
+    assetApi.handOver(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
@@ -57,12 +65,6 @@ const AssetHandoverModal = (props) => {
 
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
-  const cancelUpdate = () => {
-    setState({
-      readOnly: true,
-      saving: false
-    })
-  }
   const loadStatus = () => {
     defaultModuleApi.getList("asset_status").then((res) => {
       const data = res.data.results
@@ -111,7 +113,7 @@ const AssetHandoverModal = (props) => {
                   <Row>
                     <Col lg={12} className="mb-1">
                       <ErpUserSelect
-                        isclearable={false}
+                        isClearable={false}
                         label={"Owner change"}
                         required
                         useForm={methods}
@@ -126,7 +128,6 @@ const AssetHandoverModal = (props) => {
                         required
                         fieldData={arrFields.notes}
                         module="asset_history"
-                        isclearable={false}
                         useForm={methods}
                         options
                       />
