@@ -1,20 +1,30 @@
+<<<<<<< HEAD
 <?php
+=======
+<?php 
+>>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
 /*
 * Copyright (C) 2020 @hailongtrinh
 * Controller create by CLI - ERP
 * Module name : asset
 */
+<<<<<<< HEAD
 
 namespace HRM\Modules\Asset\Controllers;
 
 use App\Controllers\ErpController;
 
+=======
+namespace HRM\Modules\Asset\Controllers;
+use App\Controllers\ErpController;
+>>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
 class Asset extends ErpController
 {
 	public function index_get()
 	{
 		return $this->respond([]);
 	}
+<<<<<<< HEAD
 
 	public function load_data_get()
 	{
@@ -195,4 +205,6 @@ class Asset extends ErpController
 		$dataReturn['history'] = handleDataBeforeReturn($modules, $history, true);
 		return $this->respond($dataReturn);
 	}
+=======
+>>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
 }

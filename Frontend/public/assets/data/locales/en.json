@@ -3748,7 +3748,7 @@
           "descriptions": {
             "duplicated": "Duplicate record has been found. Select the records that you want to import.",
             "skipped": "The record does not allow for import. The following is a list of errors, details for the error that help you check the data.",
-            "unmapped": "These fields in your uploaded file have not been mapped to any Grove field. The data in these fields will be ignored during the import."
+            "unmapped": "These fields in your uploaded file have not been mapped to any field. The data in these fields will be ignored during the import."
           },
           "row": "Row",
           "error": "errors",
@@ -3836,6 +3836,7 @@
         "period": "Period"
       }
     },
+<<<<<<< HEAD
     "asset_lists": {
       "fields": {
         "asset_code": "Code",
@@ -3899,6 +3900,24 @@
           "other": "Other",
           "warehouse": "Warehouse",
           "inventory": "Inventory"
+=======
+    "asset": {
+      "import_asset": {
+        "title": {
+          "index": "Import Asset",
+          "download_asset_template": "Download Asset Template"
+        },
+        "buttons": {
+          "asset_template": "Assset Template.xlsx",
+          "mapping_fields": "Mapping fields"
+        },
+        "text": {
+          "warning_import": {
+            "title": "Instructions to import successfully",
+            "text": "Download the template and fill it in with your asset data."
+          },
+          "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import."
+>>>>>>> c8915bc03f7024b5ea75403c1bab7a7d54924ed9
         }
       }
     }
