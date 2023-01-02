@@ -168,7 +168,7 @@ class User extends ErpController
 		if (empty($postData['token'])) return $this->respond(ACTION_SUCCESS);
 		$device_tokens_org = $device_tokens = (empty($userInfo['device_token'])) ? [] : json_decode($userInfo['device_token'], true);
 		foreach ($device_tokens as $token_position => $token_item) {
-			if ($token_item['token'] === $postData['token']) {
+			if ($token_item === $postData['token']) {
 				unset($device_tokens_org[$token_position]);
 			}
 		}
