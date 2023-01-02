@@ -891,7 +891,13 @@
         "change_background_image": "Change background image",
         "change_avatar_image": "Change avatar image",
         "avatar_image": "Avatar image",
-        "background_image": "Background image"
+        "background_image": "Background image",
+        "email": "Email",
+        "phone": "Phone",
+        "social": "Social",
+        "change_name": "Change name",
+        "change_description": "Change description",
+        "new_message": "{num} new messages"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",

@@ -9,7 +9,7 @@ import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 import { IdleTimerProvider } from "react-idle-timer"
 import { useDispatch, useSelector } from "react-redux"
-import { handleChats } from "redux/chat"
+import { handleChats, handleTitleChat } from "redux/chat"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
 import SocketContext from "utility/context/Socket"
@@ -90,10 +90,6 @@ const AppChat = (props) => {
     lastMessageChatScrollBottom: 0,
     checkShowDataChat: true,
 
-    // ** idleTimer
-    chatAppHidden: false,
-    chatAppFocus: false,
-
     // ** params url
     checkLoadUrlActiveId: true
   })
@@ -117,35 +113,40 @@ const AppChat = (props) => {
       !_.isEmpty(store.groups) &&
       state.checkLoadUrlActiveId === true
     ) {
-      setState({ checkLoadUrlActiveId: false })
-      const index_group = store.groups.findIndex((item) => item.id === id)
-      if (index_group !== -1) {
-        setActive(id)
-        setActiveFullName(store.groups[index_group].username)
-      } else {
-        const index_group = store.groups.findIndex(
-          (item) => item.username === id
-        )
+      setTimeout(() => {
+        setState({ checkLoadUrlActiveId: false })
+        const index_group = store.groups.findIndex((item) => item.id === id)
         if (index_group !== -1) {
-          setActive(store.groups[index_group].id)
+          setActive(id)
           setActiveFullName(store.groups[index_group].username)
+          window.history.replaceState(null, "", `/chat/${id}`)
         } else {
-          const index_employee = state.dataEmployees.findIndex(
+          const index_group = store.groups.findIndex(
             (item) => item.username === id
           )
-          if (index_employee !== -1) {
-            setActive("")
-            setActiveFullName(state.dataEmployees[index_employee].username)
+          if (index_group !== -1) {
+            setActive(store.groups[index_group].id)
+            setActiveFullName(store.groups[index_group].username)
+            window.history.replaceState(null, "", `/chat/${id}`)
           } else {
-            notification.showWarning({
-              text: useFormatMessage(
-                "modules.chat.notification.user_is_not_active"
-              )
-            })
-            window.history.replaceState(null, "", "/chat")
+            const index_employee = state.dataEmployees.findIndex(
+              (item) => item.username === id
+            )
+            if (index_employee !== -1) {
+              setActive("")
+              setActiveFullName(state.dataEmployees[index_employee].username)
+              window.history.replaceState(null, "", `/chat/${id}`)
+            } else {
+              /* notification.showWarning({
+                text: useFormatMessage(
+                  "modules.chat.notification.user_is_not_active"
+                )
+              }) */
+              window.history.replaceState(null, "", "/chat")
+            }
           }
         }
-      }
+      }, 500)
     }
   }, [id, store.groups, state.checkLoadUrlActiveId])
 
@@ -165,6 +166,7 @@ const AppChat = (props) => {
   const dispatch = useDispatch()
   const chat = useSelector((state) => state.chat)
   const chats = chat.chats
+  const reduxUnseen = chat.unseen
   const queryLimit = 50
 
   // ** Update Window Width
@@ -387,12 +389,13 @@ const AppChat = (props) => {
 
   const handleAddNewGroup = async (docData) => {
     docData = {
-      ...docData,
       mute: [],
       pin: [],
       avatar: "",
       background: "",
-      file_count: {}
+      file_count: {},
+      des: "",
+      ...docData
     }
     return await addDoc(
       collection(db, `${firestoreDb}/chat_groups/groups`),
@@ -560,15 +563,17 @@ const AppChat = (props) => {
     return file_count
   }
 
-  const handleSendNotification = (groupId, msg, dataGroups, unseen) => {
-    const idEmployee = _.isArray(unseen) ? unseen[0] : unseen
+  const handleSendNotification = (groupId, msg, dataGroups, receivers) => {
     let notification_name = dataGroups.name
     let icon = dataGroups.avatar
-      ? getPublicDownloadUrl(`modules/chat/avatar/${dataGroups.avatar}`)
+      ? getPublicDownloadUrl(
+          `modules/chat/${groupId}/avatar/${dataGroups.avatar}`
+        )
       : ""
     const link = `/chat/${groupId}`
     const skipUrls = `/chat`
     if (dataGroups.type === "employee") {
+      const idEmployee = _.isArray(receivers) ? receivers[0] : receivers
       const index_employee = state.dataEmployees.findIndex(
         (item) => item.id === idEmployee
       )
@@ -583,7 +588,7 @@ const AppChat = (props) => {
     const dot = msg.length > 30 ? "..." : ""
     _msg = _msg.slice(0, 30) + dot
     socket.emit("chat_notification", {
-      receivers: unseen,
+      receivers: receivers,
       payload: {
         title: notification_name,
         body: _msg,
@@ -632,8 +637,13 @@ const AppChat = (props) => {
         )
 
         // ** notification
-        handleSendNotification(groupId, msg, dataGroups, unseen)
-
+        const mute = dataGroups.mute.filter((item) => item !== userId)
+        const receivers = mute
+          .filter((x) => !unseen.includes(x))
+          .concat(unseen.filter((x) => !mute.includes(x)))
+        if (!_.isEmpty(receivers)) {
+          handleSendNotification(groupId, msg, dataGroups, receivers)
+        }
         let dataGroup = {
           last_message: handleLastMessage(docData.type, msg),
           last_user: userId,
@@ -962,6 +972,7 @@ const AppChat = (props) => {
   }, [store.groups, active])
 
   useEffect(() => {
+    dispatch(handleTitleChat(""))
     if (state.loadingEmployee === false) {
       const q = query(
         collection(db, `${firestoreDb}/chat_groups/groups`),
@@ -997,6 +1008,7 @@ const AppChat = (props) => {
               username: employee.username ? employee.username : "",
               fullName: employee.full_name ? employee.full_name : "",
               role: employee.job_title ? employee.job_title : "",
+              des: data?.des,
               about: "",
               avatar: employee.avatar ? employee.avatar : "",
               user: data.user,
@@ -1035,6 +1047,7 @@ const AppChat = (props) => {
               username: "",
               fullName: data.name,
               role: "",
+              des: data?.des,
               about: "",
               avatar: "",
               user: data.user,
@@ -1185,7 +1198,9 @@ const AppChat = (props) => {
           user: employee.user,
           admin: [],
           type: employee.type,
-          personalInfo: employee.personalInfo
+          personalInfo: employee.personalInfo,
+          file_count: employee?.file_count || {},
+          des: employee?.des
         }
       }
       setSelectedUser(selectedUser)
@@ -1232,7 +1247,8 @@ const AppChat = (props) => {
           admin: employee.admin,
           type: employee.type,
           personalInfo: employee.personalInfo,
-          file_count: employee?.file_count || {}
+          file_count: employee?.file_count || {},
+          des: employee?.des
         }
       }
       setSelectedUser(selectedUser)
@@ -1393,6 +1409,18 @@ const AppChat = (props) => {
           checkFocusFormChat = true
         }
       })
+
+      if (event.target.hidden === false) {
+        dispatch(handleTitleChat(""))
+      } else {
+        dispatch(
+          handleTitleChat(
+            useFormatMessage("modules.chat.text.new_message", {
+              num: reduxUnseen
+            })
+          )
+        )
+      }
       localStorage.setItem("chatAppHidden", event.target.hidden)
       localStorage.setItem("chatAppFocus", checkIssetDiv)
       localStorage.setItem("formChatFocus", checkFocusFormChat)

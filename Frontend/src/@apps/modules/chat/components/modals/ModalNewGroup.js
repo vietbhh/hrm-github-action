@@ -58,7 +58,8 @@ const ModalNewGroup = (props) => {
       creator: userId,
       new: 0,
       unseen: unseen,
-      unseen_detail: setDataUnseenDetail("add", userId, timestamp, [], member)
+      unseen_detail: setDataUnseenDetail("add", userId, timestamp, [], member),
+      des: "Never settle!"
     }
     await handleAddNewGroup(docData).then((res) => {
       setTimeout(() => {
@@ -75,7 +76,7 @@ const ModalNewGroup = (props) => {
     <Modal
       isOpen={modal}
       toggle={toggleModal}
-      className="modal-dialog-centered">
+      className="modal-dialog-centered chat-application">
       <ModalHeader toggle={() => toggleModal()}>
         {useFormatMessage("modules.chat.text.create_new_group")}
       </ModalHeader>

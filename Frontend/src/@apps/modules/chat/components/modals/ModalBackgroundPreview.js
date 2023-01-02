@@ -35,7 +35,7 @@ const ModalBackgroundPreview = (props) => {
     <Modal
       isOpen={modal}
       toggle={toggleModal}
-      className="modal-dialog-centered">
+      className="modal-dialog-centered chat-application">
       <ModalHeader toggle={toggleModal}>
         {useFormatMessage("modules.chat.text.avatar_image")}
       </ModalHeader>

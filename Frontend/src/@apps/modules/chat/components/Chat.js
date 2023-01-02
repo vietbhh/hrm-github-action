@@ -163,7 +163,7 @@ const ChatLog = (props) => {
   const methods = useForm({
     mode: "onSubmit"
   })
-  const { handleSubmit, setValue, getValues, watch } = methods
+  const { handleSubmit, setValue } = methods
 
   const setMsg = (msg) => {
     setValue("message", msg)

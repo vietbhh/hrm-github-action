@@ -19,35 +19,53 @@ $btn-background-color: #377dff;
 }
 
 .chat-application {
+  .btn-primary {
+    border-color: $btn-background-color !important;
+    background-color: $btn-background-color !important;
+    color: #fff !important;
+  }
+
+  .btn-primary:hover:not(.disabled):not(:disabled) {
+    box-shadow: 0 8px 25px -8px $btn-background-color;
+  }
+
+  .btn-primary:active,
+  .btn-primary:focus {
+    background-color: $btn-background-color !important;
+  }
+
+  .btn-flat-primary {
+    color: $btn-background-color !important;
+    background-color: var(--bs-btn-disabled-bg);
+    border-color: var(--bs-btn-disabled-border-color);
+  }
+
+  .btn-flat-primary:hover,
+  .btn-flat-primary:focus {
+    color: $btn-background-color !important;
+    background-color: lighten($color: $btn-background-color, $amount: 30);
+  }
+
+  .btn-flat-danger {
+    color: #ea5455;
+    background-color: var(--bs-btn-disabled-bg);
+    border-color: var(--bs-btn-disabled-border-color);
+  }
+
+  .input-group-merge {
+    &:hover,
+    &:focus-within {
+      .input-group-text,
+      .form-control,
+      .wrapper-message {
+        border-color: #007aeb !important;
+      }
+    }
+  }
+
   .content-area-wrapper {
     border-width: 0;
     overflow: visible !important;
-
-    .btn-primary {
-      border-color: $btn-background-color !important;
-      background-color: $btn-background-color !important;
-      color: #fff !important;
-    }
-
-    .btn-primary:hover:not(.disabled):not(:disabled) {
-      box-shadow: 0 8px 25px -8px $btn-background-color;
-    }
-
-    .btn-primary:active,
-    .btn-primary:focus {
-      background-color: $btn-background-color !important;
-    }
-
-    .input-group-merge {
-      &:hover,
-      &:focus-within {
-        .input-group-text,
-        .form-control,
-        .wrapper-message {
-          border-color: #007aeb !important;
-        }
-      }
-    }
 
     .sidebar-left {
       margin-top: -70px;
@@ -1294,7 +1312,7 @@ $btn-background-color: #377dff;
               }
 
               .header-profile-sidebar {
-                height: 230px;
+                height: auto;
                 justify-content: unset;
 
                 .chat-user-name {
@@ -1303,6 +1321,7 @@ $btn-background-color: #377dff;
                   line-height: 27px;
                   color: #171721;
                   margin-bottom: 0;
+                  margin-top: 50px;
                 }
 
                 .user-post {
@@ -1364,15 +1383,41 @@ $btn-background-color: #377dff;
                     justify-content: center;
                     position: absolute;
                     top: 0px;
-                    left: 2px;
+                    left: 0px;
                     display: none;
                     cursor: pointer;
+                  }
+
+                  .div-avatar {
+                    position: relative;
                   }
 
                   .div-avatar:hover {
                     #label-avatar {
                       display: flex;
                     }
+                  }
+                }
+
+                .div-edit {
+                  display: flex;
+                  align-items: center;
+                  gap: 5px;
+                  margin-bottom: 7px;
+
+                  .form-group {
+                    width: 150px;
+                    margin-bottom: 0;
+                  }
+
+                  .btn-edit {
+                    width: 35px;
+                    height: 35px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 12px;
+                    padding: 0;
                   }
                 }
               }

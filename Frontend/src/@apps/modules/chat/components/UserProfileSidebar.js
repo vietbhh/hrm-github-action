@@ -1,4 +1,4 @@
-import { ErpSwitch } from "@apps/components/common/ErpField"
+import { ErpInput, ErpSwitch } from "@apps/components/common/ErpField"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Collapse, Dropdown } from "antd"
@@ -16,6 +16,8 @@ import { ChatApi } from "../common/api"
 import Photo from "./details/Photo"
 import ModalAvatarPreview from "./modals/ModalAvatarPreview"
 import ModalBackgroundPreview from "./modals/ModalBackgroundPreview"
+import { Button, Spinner } from "reactstrap"
+import { FormProvider, useForm } from "react-hook-form"
 
 const { Panel } = Collapse
 
@@ -40,6 +42,9 @@ const UserProfileSidebar = (props) => {
     modalAddMember: false,
     showMember: true,
     checkedNotification: true,
+    showInputFullName: false,
+    showInputDes: "",
+    loadingEdit: false,
 
     // ** file view
     showFileView: false,
@@ -56,8 +61,43 @@ const UserProfileSidebar = (props) => {
     backgroundPreviewLoading: false
   })
 
-  const avatarEditor = useRef()
-  const backgroundEditor = useRef()
+  const avatarEditor = useRef(null)
+  const backgroundEditor = useRef(null)
+  const refInputFullName = useRef(null)
+  const refInputDes = useRef(null)
+
+  const methods = useForm({
+    mode: "onSubmit"
+  })
+  const { handleSubmit, setValue } = methods
+
+  const submitEdit = (values) => {
+    setState({ loadingEdit: true })
+    let dataUpdate = {}
+    if (values.editFullName) {
+      dataUpdate = { ...dataUpdate, name: values.editFullName }
+    }
+    if (values.editDes) {
+      dataUpdate = { ...dataUpdate, des: values.editDes }
+    }
+
+    handleUpdateGroup(state.selectedGroup.id, {
+      last_message: useFormatMessage("modules.chat.text.change_name"),
+      last_user: userId,
+      timestamp: Date.now(),
+      ...dataUpdate
+    })
+      .then((res) => {
+        setState({ loadingEdit: false })
+        handleShowHideInput("fullName", "hide")
+        handleShowHideInput("des", "hide")
+      })
+      .catch((err) => {
+        setState({ loadingEdit: false })
+        handleShowHideInput("fullName", "hide")
+        handleShowHideInput("des", "hide")
+      })
+  }
 
   const toggleModalAddMember = () => {
     setState({ modalAddMember: !state.modalAddMember })
@@ -70,23 +110,6 @@ const UserProfileSidebar = (props) => {
   const toggleBackgroundPreviewModal = () => {
     setState({ backgroundPreviewModal: !state.backgroundPreviewModal })
   }
-
-  useEffect(() => {
-    const index = groups.findIndex((item) => item.id === active)
-    if (index !== -1) {
-      setState({
-        selectedGroup: groups[index],
-        checkedNotification:
-          groups[index].mute && groups[index].mute.indexOf(userId) === -1
-      })
-    } else {
-      setState({ selectedGroup: {}, checkedNotification: true })
-    }
-  }, [groups, active])
-
-  useEffect(() => {
-    setState({ showFileView: false, tabView: "" })
-  }, [active])
 
   const handleShowFileView = (value, tab = "") => {
     setState({ showFileView: value, tabView: tab })
@@ -229,6 +252,47 @@ const UserProfileSidebar = (props) => {
     )
   }
 
+  const handleShowHideInput = (type, action) => {
+    if (type === "fullName") {
+      if (action === "show") {
+        setState({ showInputFullName: true })
+        setValue("editFullName", state.selectedGroup?.fullName)
+      }
+      if (action === "hide") {
+        setState({ showInputFullName: false })
+        setValue("editFullName", "")
+      }
+    }
+
+    if (type === "des") {
+      if (action === "show") {
+        setState({ showInputDes: true })
+        setValue("editDes", state.selectedGroup?.des)
+      }
+      if (action === "hide") {
+        setState({ showInputDes: false })
+        setValue("editDes", "")
+      }
+    }
+  }
+
+  useEffect(() => {
+    const index = groups.findIndex((item) => item.id === active)
+    if (index !== -1) {
+      setState({
+        selectedGroup: groups[index],
+        checkedNotification:
+          groups[index].mute && groups[index].mute.indexOf(userId) === -1
+      })
+    } else {
+      setState({ selectedGroup: {}, checkedNotification: true })
+    }
+  }, [groups, active])
+
+  useEffect(() => {
+    setState({ showFileView: false, tabView: "" })
+  }, [active])
+
   return (
     <Fragment>
       <div
@@ -327,12 +391,117 @@ const UserProfileSidebar = (props) => {
                   </>
                 )}
               </div>
-
-              <h4 className="chat-user-name">{user?.fullName}</h4>
-              <span className="user-post">
-                {user?.type === "employee" ? user?.role : "Never settle!"}
-              </span>
             </div>
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(submitEdit)}>
+                <h4 className="chat-user-name">
+                  <div
+                    className={`div-edit ${
+                      state.showInputFullName ? "" : "d-none"
+                    }`}>
+                    <ErpInput
+                      innerRef={refInputFullName}
+                      useForm={methods}
+                      nolabel
+                      name="editFullName"
+                      defaultValue={""}
+                      autoComplete="off"
+                      readOnly={state.loadingEdit}
+                    />
+                    <Button.Ripple
+                      color="flat-primary"
+                      type="submit"
+                      className="btn-edit"
+                      disabled={state.loadingEdit}>
+                      {state.loadingEdit ? (
+                        <Spinner size="sm" />
+                      ) : (
+                        <i className="fa-regular fa-check"></i>
+                      )}
+                    </Button.Ripple>
+                    <Button.Ripple
+                      color="flat-danger"
+                      type="button"
+                      className="btn-edit"
+                      disabled={state.loadingEdit}
+                      onClick={() => {
+                        handleShowHideInput("fullName", "hide")
+                      }}>
+                      <i className="fa-regular fa-times"></i>
+                    </Button.Ripple>
+                  </div>
+                  <span
+                    className={`${state.showInputFullName ? "d-none" : ""}`}
+                    onClick={() => {
+                      if (user?.type === "group") {
+                        handleShowHideInput("fullName", "show")
+                        setTimeout(() => {
+                          if (refInputFullName.current) {
+                            refInputFullName.current.focus()
+                          }
+                        }, 300)
+                      }
+                    }}>
+                    {state.selectedGroup?.fullName}
+                  </span>
+                </h4>
+                <span className="user-post">
+                  <div
+                    className={`div-edit ${
+                      state.showInputDes ? "" : "d-none"
+                    }`}>
+                    <ErpInput
+                      innerRef={refInputDes}
+                      useForm={methods}
+                      nolabel
+                      name="editDes"
+                      defaultValue={""}
+                      autoComplete="off"
+                      readOnly={state.loadingEdit}
+                    />
+                    <Button.Ripple
+                      color="flat-primary"
+                      type="submit"
+                      className="btn-edit"
+                      disabled={state.loadingEdit}>
+                      {state.loadingEdit ? (
+                        <Spinner size="sm" />
+                      ) : (
+                        <i className="fa-regular fa-check"></i>
+                      )}
+                    </Button.Ripple>
+                    <Button.Ripple
+                      color="flat-danger"
+                      type="button"
+                      className="btn-edit"
+                      disabled={state.loadingEdit}
+                      onClick={() => {
+                        handleShowHideInput("des", "hide")
+                      }}>
+                      <i className="fa-regular fa-times"></i>
+                    </Button.Ripple>
+                  </div>
+                  <span
+                    className={`${state.showInputDes ? "d-none" : ""}`}
+                    onClick={() => {
+                      if (user?.type === "group") {
+                        handleShowHideInput("des", "show")
+                        setTimeout(() => {
+                          if (refInputDes.current) {
+                            refInputDes.current.focus()
+                          }
+                        }, 300)
+                      }
+                    }}>
+                    {user?.type === "employee"
+                      ? state.selectedGroup?.role
+                      : state.selectedGroup?.des
+                      ? state.selectedGroup?.des
+                      : "Never settle!"}
+                  </span>
+                </span>
+              </form>
+            </FormProvider>
           </div>
         </header>
         <PerfectScrollbar
@@ -343,7 +512,9 @@ const UserProfileSidebar = (props) => {
           {user?.type === "employee" && (
             <>
               <div className="personal-info">
-                <h6 className="section-label mb-50">Email</h6>
+                <h6 className="section-label mb-50">
+                  {useFormatMessage("modules.chat.text.email")}
+                </h6>
                 <ul className="list-unstyled">
                   <li className="mb-50">
                     <span className="align-middle section-text">
@@ -354,7 +525,9 @@ const UserProfileSidebar = (props) => {
               </div>
 
               <div className="personal-info">
-                <h6 className="section-label mb-50">Phone</h6>
+                <h6 className="section-label mb-50">
+                  {useFormatMessage("modules.chat.text.phone")}
+                </h6>
                 <ul className="list-unstyled">
                   <li className="mb-50">
                     <span className="align-middle section-text">
@@ -365,7 +538,9 @@ const UserProfileSidebar = (props) => {
               </div>
 
               <div className="personal-info">
-                <h6 className="section-label mb-1">Social</h6>
+                <h6 className="section-label mb-1">
+                  {useFormatMessage("modules.chat.text.social")}
+                </h6>
                 <ul className="list-unstyled">
                   <li className="mb-50">
                     <a
