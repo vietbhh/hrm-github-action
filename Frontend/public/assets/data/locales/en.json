@@ -3854,7 +3854,9 @@
       "text": {
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
-        "this_month": "This month"
+        "this_month": "This month",
+        "eli_liq" : "Eliminate / Liquidated",
+        "re_bro" : "Repair / Broken"
       },
       "buttons": {
         "new_asset": "New Asset"
@@ -3866,7 +3868,8 @@
         "update_stt": "Update Status"
       },
       "notification" :{
-        "is_owner": "The user already owns this Asset"
+        "is_owner": "The user already owns this Asset",
+        "asset_not_exist" :"Asset does not exist"
       }
     },
     "asset_history": {

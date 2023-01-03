@@ -1,48 +1,35 @@
-import { EmptyContent } from "@apps/components/common/EmptyContent"
 import {
   ErpInput,
   ErpSelect,
   ErpUserSelect
 } from "@apps/components/common/ErpField"
 import TableDefaultModule from "@apps/modules/default/components/table/TableDefaultModule"
-import {
-  addComma,
-  useFormatMessage,
-  useMergedState
-} from "@apps/utility/common"
+import Photo from "@apps/modules/download/pages/Photo"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
 import { canDeleteData, canUpdateData } from "@apps/utility/permissions"
 import SwAlert from "@apps/utility/SwAlert"
 import { cellHandle } from "@apps/utility/TableHandler"
-import { DatePicker, Dropdown, Menu, Popover } from "antd"
+import { Dropdown } from "antd"
 import { isEmpty } from "lodash"
-import moment from "moment"
 import React, { Fragment, useContext, useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Row,
-  Spinner
-} from "reactstrap"
+import { Navigate, NavLink } from "react-router-dom"
+import { Button, Card, CardBody, CardHeader, Col, Row } from "reactstrap"
 import { Table } from "rsuite"
 import { AbilityContext } from "utility/context/Can"
 import { assetApi } from "../common/api"
-import Photo from "@apps/modules/download/pages/Photo"
 import CardStatistic from "../components/CardStatistic"
 import AssetDetailModal from "../components/modals/AssetDetailModal"
 import AssetEditModal from "../components/modals/AssetEditModal"
-import AssetUpdateStatusModal from "../components/modals/AssetUpdateStatusModal"
-import AssetHandoverModal from "../components/modals/AssetHandoverModal"
 import AssetErrorModal from "../components/modals/AssetErrorModal"
+import AssetHandoverModal from "../components/modals/AssetHandoverModal"
+import AssetUpdateStatusModal from "../components/modals/AssetUpdateStatusModal"
 import PaginationAsset from "../components/PaginationAsset"
+
 const { Cell } = Table
 const List = (props) => {
   const [state, setState] = useMergedState({
@@ -70,7 +57,6 @@ const List = (props) => {
     }
   })
 
-  const history = useNavigate()
   const moduleData = useSelector((state) => state.app.modules.asset_lists)
   const filterConfig = useSelector((state) => state.app.filters)
   const optionsModules = useSelector((state) => state.app.optionsModules)
@@ -82,6 +68,15 @@ const List = (props) => {
   const options = moduleData.options
   // filter type, gorup , owwner
   const ability = useContext(AbilityContext)
+
+  if (!ability.can("accessAssetList", "assets_lists")) {
+    return (
+      <>
+        <Navigate to="/not-found" replace={true} />
+      </>
+    )
+  }
+
   const methods = useForm({
     mode: "onSubmit"
   })
@@ -113,6 +108,8 @@ const List = (props) => {
         data: res.data.asset_list,
         assetThisMonth: res.data.assetThisMonth,
         assetTotal: res.data.assetTotal,
+        assetEli_Liq: res.data.assetEli_liq,
+        assetRe_bro: res.data.assetRe_bro,
         loading: false,
         recordsTotal: res.data.recordsTotal,
         currentPage: res.data.page,
@@ -147,7 +144,22 @@ const List = (props) => {
     )
   }
 
-  useEffect(() => {}, [state.perPage])
+  const importButton = () => {
+    return (
+      <NavLink to={"/asset/import"}>
+        <Button.Ripple
+          color="primary"
+          className="rounded btn-tool d-flex align-items-center">
+          <i className="fa-regular fa-up-from-dotted-line"></i> &nbsp;
+          <span
+            className="align-self-center ms-50"
+            style={{ fontSize: "14px" }}>
+            {useFormatMessage("app.import")}
+          </span>
+        </Button.Ripple>
+      </NavLink>
+    )
+  }
 
   const handleDelete = (id) => {
     SwAlert.showWarning({
@@ -377,6 +389,7 @@ const List = (props) => {
       setState({ assetEditModal: !state.assetEditModal })
     }
   }
+
   return (
     <Fragment>
       <Row>
@@ -393,10 +406,16 @@ const List = (props) => {
           />
         </Col>
         <Col lg={3}>
-          <CardStatistic title={"Constructed.."} number={0} />
+          <CardStatistic
+            title={useFormatMessage("modules.asset_lists.text.eli_liq")}
+            number={state?.assetEli_Liq}
+          />
         </Col>
         <Col lg={3}>
-          <CardStatistic title={"Constructed.."} number={0} />
+          <CardStatistic
+            title={useFormatMessage("modules.asset_lists.text.re_bro")}
+            number={state?.assetRe_bro}
+          />
         </Col>
       </Row>
 
@@ -462,6 +481,8 @@ const List = (props) => {
           />
         </div>
         <div className="ms-1 text-end">{addButton()}</div>
+
+        <div className="ms-1 text-end">{importButton()}</div>
       </div>
 
       <Card className="rounded ">

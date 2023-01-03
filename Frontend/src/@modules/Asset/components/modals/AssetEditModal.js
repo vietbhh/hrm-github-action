@@ -38,7 +38,6 @@ const AssetEditModal = (props) => {
     currentJob: "",
     typeCoppy: false
   })
-  const module = "asset_lists"
   const arrFields = useSelector(
     (state) => state.app.modules["asset_lists"].metas
   )
@@ -97,6 +96,7 @@ const AssetEditModal = (props) => {
                         label="Owner"
                         name="owner"
                         required
+                        readOnly={dataDetail?.id}
                         useForm={methods}
                       />
                     </Col>
@@ -112,14 +112,14 @@ const AssetEditModal = (props) => {
                         const fieldAuth = { ...field }
                         const nameField = field.field
                         if (
-                          (nameField === "asset_code" ||
-                            nameField === "asset_status" ||
-                            nameField === "asset_name") &&
-                          dataDetail?.id
+                          nameField === "asset_code" ||
+                          nameField === "asset_status"
                         ) {
                           fieldAuth.field_readonly = true
                         }
-
+                        if (nameField === "date_created" && dataDetail?.id) {
+                          fieldAuth.field_readonly = true
+                        }
                         const fieldProps = {
                           module: "asset_lists",
                           fieldData: fieldAuth,

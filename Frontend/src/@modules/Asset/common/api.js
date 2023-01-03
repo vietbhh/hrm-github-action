@@ -48,6 +48,14 @@ export const assetApi = {
   async detailAsset(id) {
     return await defaultModuleApi.getDetail("asset_lists", id)
   },
+
+  async detailAssetByCode(code) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep({ code }))
+    )
+    return await axiosApi.get("/asset/detail-by-code?" + stringFilters)
+  },
+
   async updateSTT(data) {
     return await axiosApi.post(
       "/asset/update-status",
