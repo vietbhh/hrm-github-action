@@ -8,7 +8,7 @@ class NotificationModel extends Model
 	protected $primaryKey = 'id';
 	protected $returnType = 'array';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['sender_id', 'recipient_id', 'type', 'title', 'content', 'link', 'read_by', 'created_at', 'created_by'];
+	protected $allowedFields = ['sender_id', 'recipient_id', 'type', 'title', 'body', 'link', 'icon', 'read_by', 'created_at', 'created_by'];
 	protected $useTimestamps = true;
 	protected $createdField = 'created_at';
 	protected $updatedField = '';
@@ -38,7 +38,7 @@ class NotificationModel extends Model
 		$this->select("*");
 		$this->where("JSON_SEARCH(recipient_id, 'all', '{$user}', null, '$[*]') IS NOT NULL ");
 		if ($page > 1) {
-			$this->limit($perPage,$page * $perPage);
+			$this->limit($perPage, $page * $perPage);
 		} else {
 			$this->limit($perPage);
 		}

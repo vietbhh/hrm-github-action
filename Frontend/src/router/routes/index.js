@@ -3,6 +3,7 @@ import { isEmpty } from "lodash"
 import { cloneElement, Fragment, lazy } from "react"
 // ** Routes Imports
 import CoreRoutes from "./Core"
+import DriveRoutes from "./Drive"
 
 // ** Layouts
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
@@ -29,7 +30,7 @@ const TemplateTitle = "%s - Friday"
 const DefaultRoute = "/dashboard"
 
 // ** Merge Routes
-const Routes = [...CoreRoutes]
+const Routes = [...CoreRoutes, ...DriveRoutes]
 const getRouteMeta = (route) => {
   if (isObjEmpty(route.element.props)) {
     if (route.meta) {

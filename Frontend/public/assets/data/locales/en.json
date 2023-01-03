@@ -647,9 +647,23 @@
     "overtime": "Overtime",
     "manage_overtime": "Manage Overtime",
     "request_overtime": "Request Overtime",
+    "other": "Other",
+    "drive": {
+      "my_file": "My Files",
+      "one_drive": "One Drive",
+      "google_drive": "Google Drive",
+      "share_with_me": "Share with me",
+      "trash": "Trash"
+    },
     "asset": {
       "list": "Asset List",
-      "import": "Import Asset"
+      "import": "Import Asset",
+      "code_generator": "Asset QR Code Generator",
+      "information": "Asset Information",
+      "qrCodeGenerator": "QrCode Generator",
+      "inventories": "Inventories",
+      "assetGroups": "Asset Groups",
+      "assetTypes": "Asset Types"
     }
   },
   "settings": {
@@ -969,6 +983,33 @@
           "news": {
             "news": "News",
             "news_des": "View, create, edit, publish, delete news"
+          },
+          "assets": {
+            "assets": "Assets",
+            "asset_list": {
+              "title": "Asset List",
+              "description": "Access Asset List"
+            },
+            "asset_inventory": {
+              "title": "Asset Inventory",
+              "description": "Access Asset Inventory"
+            },
+            "asset_import": {
+              "title": "Import Asset",
+              "description": "Import Asset List"
+            },
+            "asset_generate_qr_code": {
+              "title": "Generate QR Code",
+              "description": "Access Generate Asset QR Code"
+            },
+            "asset_types": {
+              "title": "Asset Type",
+              "description": "Manage Asset Type"
+            },
+            "asset_groups": {
+              "title": "Asset Group",
+              "description": "Manage Asset Group"
+            }
           },
           "reports": {
             "reports": "Reports",
@@ -3836,6 +3877,88 @@
         "period": "Period"
       }
     },
+    "drive": {
+      "title": {
+        "index": "drive",
+        "folders": "Folders",
+        "recent": "Recent",
+        "my_files": "My Files"
+      },
+      "buttons": {
+        "new_file": "New File",
+        "upload_file": "Upload Files",
+        "upload_folder": "Upload Folder",
+        "new_folder": "New Folder",
+        "upgrade": "Upgrade",
+        "share": "Share",
+        "get_link": "Get Link",
+        "download": "Download",
+        "rename": "Rename",
+        "copy": "Copy",
+        "delete": "Delete",
+        "star": "Star",
+        "favorite": "Favorite",
+        "view_detail": "View Detail",
+        "upload": "Upload",
+        "save": "Save",
+        "cancel": "Cancel",
+        "hide": "Hide",
+        "add_more_file": "Add more file"
+      },
+      "field_options": {
+        "share_type": {
+          "share_private": "Private",
+          "share_to_everyone": "Share to everyone",
+          "share_to_user": "Share to users"
+        }
+      },
+      "text": {
+        "link_your_account": "Link your account",
+        "view_all": "View all",
+        "files": "files",
+        "folder": "Folder",
+        "file": "File",
+        "used": "Used",
+        "available_store": "Available store",
+        "browse_files_to_upload": "Browse files to upload",
+        "browse_folder_to_upload": "Browse folder to upload",
+        "sort_by": "Sort by",
+        "filter_drive": {
+          "due_date": "Due Date",
+          "name": "Name",
+          "type": "Type",
+          "size": "Size"
+        },
+        "upload_progress": "Upload Progress",
+        "warning_close_upload": {
+          "title": "Cancel upload?",
+          "content": "Your upload is not complete. Do you want to cancel the upload?"
+        },
+        "upload_successful_many": "Upload Successful, {file_number} files has been uploaded!",
+        "upload_successful": "Upload Successful!",
+        "share_file_and_folder": "Share {name}",
+        "find_user": "Find User",
+        "chosen_users": "Chosen Users",
+        "view_only": "View Only",
+        "editable": "Editable",
+        "share_file_and_folder_warning": "Editors can change permissions and share",
+        "share_type_text": {
+          "private": "Only owner can open using this content!",
+          "share_editable": "Shared users can change permissions and share!",
+          "share_view_only": "Shared users can only view the content!"
+        },
+        "confirm_delete": {
+          "title": "Remove {name}",
+          "content": "File or Folder will be moved to Trash"
+        }
+      }
+    },
+    "drive_folders": {
+      "fields": {
+        "name": "Folder name",
+        "description": "Description"
+      }
+    },
     "asset_lists": {
       "fields": {
         "asset_code": "Code",
@@ -3854,10 +3977,13 @@
       "text": {
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
-        "this_month": "This month"
+        "this_month": "This month",
+        "eli_liq": "Eliminate / Liquidated",
+        "re_bro": "Repair / Broken"
       },
       "buttons": {
-        "new_asset": "New Asset"
+        "new_asset": "New Asset",
+        "generate": "Generate"
       },
       "title": {
         "detail": "Asset Detail",
@@ -3866,7 +3992,25 @@
         "update_stt": "Update Status"
       },
       "notification": {
-        "is_owner": "The user already owns this Asset"
+        "is_owner": "The user already owns this Asset",
+        "asset_not_exist": "Asset does not exist"
+      }
+    },
+    "asset_groups": {
+      "title": "Asset Groups",
+      "fields": {
+        "asset_group_code": "Asset group code",
+        "asset_group_name": "Asset group name",
+        "asset_group_descriptions": "Asset group description"
+      }
+    },
+    "asset_types": {
+      "title": "Asset Types",
+      "fields": {
+        "asset_type_code": "Asset type code",
+        "asset_type_name": "Asset type name",
+        "asset_type_descriptions": "Asset type description",
+        "asset_type_group": "Asset group"
       }
     },
     "asset_history": {
@@ -3955,6 +4099,27 @@
         "current_status": "Current status",
         "notes": "Notes",
         "recent_image": "Recent image"
+      }
+    },
+    "asset_code_generator": {
+      "title": {
+        "index": "Asset QR Code Generator",
+        "filter": "Filter",
+        "asset_list": "Asset List"
+      },
+      "text": {
+        "search_asset_name_or_code": "Search by asset name or asset code"
+      }
+    },
+
+    "asset_brands": {
+      "fields": {
+        "brand_name": "Brand Name"
+      }
+    },
+    "asset_status": {
+      "fields": {
+        "status_name": "Status Name"
       }
     }
   },

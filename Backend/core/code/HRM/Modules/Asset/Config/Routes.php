@@ -11,12 +11,14 @@ if(!isset($routes))
 	/*** Route for Asset ***/
 $routes->get('asset', 'Asset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset/index', 'Asset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset/get-data-asset-list', 'Asset::get_data_asset_list_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset/add', 'Asset::add_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset/load-data', 'Asset::load_data_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset/update-status', 'Asset::update_status_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset/hand-over', 'Asset::hand_over_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset/error', 'Asset::error_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset/load-history', 'Asset::load_history_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset/detail-by-code', 'Asset::detail_by_code_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 
 	/*** Route for ImportAsset ***/
 $routes->get('asset-import-asset', 'ImportAsset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);

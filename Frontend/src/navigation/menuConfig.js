@@ -290,15 +290,6 @@ const menuConfig = [
     ]
   },
   {
-    id: "documents",
-    title: "menu.documents",
-    type: "dropdown",
-    action: "login",
-    resource: "app",
-    icon: <i className="iconly-Folder icli"></i>,
-    navLink: "/documents"
-  },
-  {
     id: "overtimes",
     title: "menu.overtime",
     type: "dropdown",

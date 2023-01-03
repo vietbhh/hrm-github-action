@@ -12,9 +12,68 @@ use HRM\Modules\Asset\Models\AssetListModel;
 
 class Asset extends ErpController
 {
+
 	public function index_get()
 	{
 		return $this->respond([]);
+	}
+
+	public function get_data_asset_list_get()
+	{
+		$getData = $this->request->getGet();
+		$text = $getData['text'];
+		$assetTypeGroup = $getData['asset_type_group'];
+		$assetType = $getData['asset_type'];
+		$assetStatus = $getData['asset_status'];
+		$owner = $getData['owner'];
+
+		$modules = \Config\Services::modules('asset_lists');
+		$model = new AssetListModel();
+
+		$builder = $model->asArray()->select([
+			'm_asset_lists.id',
+			'm_asset_lists.asset_code',
+			'm_asset_lists.asset_name',
+			'm_asset_lists.asset_type',
+			'm_asset_lists.recent_image',
+			'm_asset_brands.brand_name ',
+			'm_asset_status.status_name',
+			'm_asset_types.asset_type_code',
+			'm_asset_groups.asset_group_code'
+		])
+			->join('m_asset_types', 'm_asset_types.id = m_asset_lists.asset_type')
+			->join('m_asset_groups', 'm_asset_groups.id = m_asset_types.asset_type_group')
+			->join('m_asset_status', 'm_asset_status.id = m_asset_lists.asset_status', 'left')
+			->join('m_asset_brands', 'm_asset_brands.id = m_asset_lists.asset_brand', 'left');
+
+		if (strlen(trim($text)) > 0) {
+			$builder->groupStart()
+				->like('asset_code', $text, 'after')
+				->orLike('asset_name', $text, 'after')
+				->groupEnd();
+		}
+
+		if (!empty($assetTypeGroup)) {
+			$builder->where('m_asset_types.asset_type_group', $assetTypeGroup);
+		}
+
+		if (!empty($assetType)) {
+			$builder->where('m_asset_lists.asset_type', $assetType);
+		}
+
+		if (!empty($assetStatus)) {
+			$builder->where('m_asset_lists.asset_status', $assetStatus);
+		}
+
+		if (!empty($owner)) {
+			$builder->where('m_asset_lists.owner', $owner);
+		}
+
+		$listAssetList = $builder->orderBy('m_asset_lists.id', 'DESC')->findAll();
+
+		return $this->respond([
+			'results' => handleDataBeforeReturn($modules, $listAssetList, true)
+		]);
 	}
 
 	public function add_post()
@@ -93,6 +152,8 @@ class Asset extends ErpController
 		$model = $modules->model;
 		$data['assetTotal'] = $model->countAllResults();
 		$data['assetThisMonth'] = $model->where('MONTH(date_created)', date("m"))->where('YEAR(date_created)', date("Y"))->countAllResults(true);
+		$data['assetEli_liq'] = $model->join('m_asset_status', 'm_asset_status.id = m_asset_lists.asset_status')->where('m_asset_status.status_code', 'eliminate')->orWhere('m_asset_status.status_code', 'liquidated')->countAllResults(true);
+		$data['assetRe_bro'] = $model->join('m_asset_status', 'm_asset_status.id = m_asset_lists.asset_status')->where('m_asset_status.status_code', 'repair')->orWhere('m_asset_status.status_code', 'broken')->countAllResults(true);
 
 		if (isset($getPara['filters'])) {
 
@@ -139,9 +200,6 @@ class Asset extends ErpController
 		$assetListModel = new AssetListModel();
 
 		$insertHis = $assetListModel->insertHistory($dataSave, $filesData);
-		echo "<pre>";
-		print_r($insertHis);
-		echo "</pre>";
 
 		return $this->respond(ACTION_SUCCESS);
 	}
@@ -191,5 +249,22 @@ class Asset extends ErpController
 		$history = $model->orderBy('created_at', 'desc')->findAll($getPara['limit'] * $getPara['page'], 0);
 		$dataReturn['history'] = handleDataBeforeReturn('asset_history', $history, true);
 		return $this->respond($dataReturn);
+	}
+
+	public function detail_by_code_get()
+	{
+		$modules = \Config\Services::modules('asset_lists');
+		$model = $modules->model;
+		$getGet = $this->request->getGet();
+		if (!isset($getGet['code']) || !$getGet['code']) {
+			return $this->fail(null);
+		}
+		$code = $getGet['code'];
+		$info = $model->asArray()->where('asset_code', $code)->first();
+		if(!$info){
+			return $this->fail(null);
+		}
+		$befoReturn = handleDataBeforeReturn('asset_lists', $info);
+		return $this->respond($befoReturn);
 	}
 }

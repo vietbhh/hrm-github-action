@@ -399,6 +399,30 @@ class Permissions extends ErpController
 		[
 			'name' => 'settings_employee_level',
 			'value' => ['modules.employee_level.manage']
+		],
+		[
+			'name' => 'asset_list',
+			'value' => ['modules.asset_lists.accessAssetList']
+		],
+		[
+			'name' => 'asset_inventory',
+			'value' => ['modules.asset_lists.accessAssetInventory']
+		],
+		[
+			'name' => 'asset_import',
+			'value' => ['modules.asset_lists.accessImportAsset']
+		],
+		[
+			'name' => 'asset_qr_code_generator',
+			'value' => ['modules.asset_lists.accessBarcodeGenerator']
+		],
+		[
+			'name' => 'asset_type',
+			'value' => ['modules.asset_types.manage']
+		],
+		[
+			'name' => 'asset_group',
+			'value' => ['modules.asset_groups.manage']
 		]
 	];
 	protected array $arrCheckboxChild = [
@@ -575,6 +599,9 @@ class Permissions extends ErpController
 			foreach ($this->arrPermissionsCheckbox as $item) {
 				if (isset($getPost[$item['name']]) && filter_var($getPost[$item['name']], FILTER_VALIDATE_BOOLEAN)) {
 					foreach ($item['value'] as $per) {
+						echo '<pre>';
+						print_r($per);
+						echo '</pre>';
 						$authorize->addPermissionToGroup($per, $id);
 					}
 				}

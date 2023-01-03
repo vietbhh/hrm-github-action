@@ -60,6 +60,7 @@ class Autoload extends \CodeIgniter\Config\AutoloadConfig
 			'Myth\Auth' => APPPATH . 'ThirdParty/myth-auth/src',
 			'Halo\Dump' => APPPATH . 'Libraries/Dump',
 			'Daycry\CronJob' => APPPATH . 'Libraries/Cronjob',
+			'FirebaseCM' => APPPATH . 'Libraries/Cronjob',
 			'CLIENT' => CLIENTPATH
 		];
 		$psr4 = array_merge($psr4, CODE_AUTOLOAD);

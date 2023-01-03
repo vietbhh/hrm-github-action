@@ -13,7 +13,7 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 
 	protected $allowedFields = [
 		'full_name', 'username', 'email', 'phone', 'password_hash', 'reset_hash', 'reset_at', 'reset_expires', 'activate_hash', 'account_status',
-		'active', 'force_pass_reset', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'deleted_at', 'office', 'group_id', 'job_title_id', 'department_id'
+		'active', 'force_pass_reset', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'deleted_at', 'office', 'group_id', 'job_title_id', 'department_id', 'device_token'
 	];
 
 	protected $useTimestamps = true;
