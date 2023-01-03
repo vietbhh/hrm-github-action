@@ -67,6 +67,7 @@ export const defaultModuleApi = {
       rankTarget: [],
       rankDirectOnly: false,
       isPaginate: true,
+      withModules: "",
       ...props
     }
     const {
@@ -81,7 +82,8 @@ export const defaultModuleApi = {
       rankType,
       rankTarget,
       rankDirectOnly,
-      isPaginate
+      isPaginate,
+      withModules
     } = sendProps
     const stringFilters = object2QueryString({ filters: filters })
     const stringExcepts = object2QueryString({ excepts: excepts })
@@ -102,7 +104,8 @@ export const defaultModuleApi = {
         (rankDirectOnly ? "&rankDirectOnly=" + rankDirectOnly : "") +
         (rankTarget ? stringRankTarget : "") +
         (filters ? stringFilters : "") +
-        (excepts ? stringExcepts : "")
+        (excepts ? stringExcepts : "") +
+        (withModules ? "&withModules=" + withModules : "")
     )
   },
   async getList(m, props = {}, url = "") {
