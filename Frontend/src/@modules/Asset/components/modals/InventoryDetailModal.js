@@ -1,9 +1,12 @@
-import { ErpInput } from "@apps/components/common/ErpField"
+import TableDefaultModule from "@apps/modules/default/components/table/TableDefaultModule"
+import Photo from "@apps/modules/download/pages/Photo"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { cellHandle } from "@apps/utility/TableHandler"
 import { assetInventoryApi } from "@modules/Asset/common/api"
-import moment from "moment"
-import React, { useEffect, useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { Pagination } from "antd"
+import React, { useEffect } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import {
   Button,
   Col,
@@ -11,16 +14,8 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Row,
-  Spinner
+  Row
 } from "reactstrap"
-import TableDefaultModule from "@apps/modules/default/components/table/TableDefaultModule"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { Pagination } from "antd"
-import { useSelector } from "react-redux"
-import { cellHandle } from "@apps/utility/TableHandler"
-import Photo from "@apps/modules/download/pages/Photo"
-import { Link } from "react-router-dom"
 
 const InventoryDetailModal = (props) => {
   const { modal, toggleModal, id, name, showButtonInventory } = props
@@ -28,7 +23,7 @@ const InventoryDetailModal = (props) => {
     loading: true,
     data: [],
     currentPage: 1,
-    perPage: 10,
+    perPage: 5,
     recordsTotal: 0
   })
 
@@ -117,7 +112,7 @@ const InventoryDetailModal = (props) => {
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => toggleModal()}>
         {useFormatMessage(
-          "modules.asset.inventories.text.asset_inventory_detail"
+          "modules.asset.inventory.text.asset_inventory_detail"
         )}
         {name ? `: ${name}` : ""}
       </ModalHeader>
@@ -180,7 +175,7 @@ const InventoryDetailModal = (props) => {
         <ModalFooter className="justify-content-center">
           <Link to={`/asset/inventories/${id}`}>
             <Button type="button" color="primary" className="btn-tool">
-              {useFormatMessage("modules.asset.inventories.text.inventory")}
+              {useFormatMessage("modules.asset.inventory.text.inventory")}
             </Button>
           </Link>
         </ModalFooter>

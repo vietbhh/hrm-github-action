@@ -3,6 +3,7 @@
 namespace HRM\Modules\Asset\Controllers;
 
 use App\Controllers\ErpController;
+use HRM\Modules\Asset\Models\AssetListModel;
 
 class Inventories extends ErpController
 {
@@ -63,7 +64,7 @@ class Inventories extends ErpController
 		$modules = \Config\Services::modules($moduleName);
 		$model = $modules->model;
 		$recordsTotal = $model->countAllResults(false);
-		$data = $model->asArray()->join("m_asset_lists", "m_asset_lists.id = m_asset_inventories_detail.asset_code")->select(["m_asset_inventories_detail.*", "m_asset_lists.asset_name as asset_name"])->findAll($length, $start);
+		$data = $model->asArray()->join("m_asset_lists", "m_asset_lists.id = m_asset_inventories_detail.asset_code")->select(["m_asset_inventories_detail.*", "m_asset_lists.asset_name as asset_name"])->orderBy('m_asset_inventories_detail.id', 'desc')->findAll($length, $start);
 
 		$result['results'] = handleDataBeforeReturn($modules, $data, true);
 		$result['recordsTotal'] = $recordsTotal;
@@ -94,10 +95,10 @@ class Inventories extends ErpController
 		$file = $this->request->getFiles();
 		$modulesStatus = \Config\Services::modules("asset_status");
 		$modelStatus = $modulesStatus->model;
-		$statusQuery = $modelStatus->asArray()->where("status_name",$current_status)->first();
-		if ($statusQuery){
+		$statusQuery = $modelStatus->asArray()->where("status_name", $current_status)->first();
+		if ($statusQuery) {
 			$status = $statusQuery['id'];
-		}else{
+		} else {
 			$status = 0;
 		}
 		$modulesDetail = \Config\Services::modules("asset_inventories_detail");
@@ -110,19 +111,44 @@ class Inventories extends ErpController
 			"notes" => $notes
 		];
 		$modelDetail->save($dataSaveDetail);
+		$idDetail = $modelDetail->getInsertID();
 
 		// update status asset
 		$modulesAsset = \Config\Services::modules("asset_lists");
 		$modelAsset = $modulesAsset->model;
 		$modelAsset->setAllowedFields(["asset_status", "recent_image"]);
-		$dataSaveAsset = [
-			"id" => $idAsset,
-			"asset_status" => $status,
+		$dataAsset = $modelAsset->find($idAsset);
+		if ($dataAsset) {
+			$dataSaveAsset = [
+				"id" => $idAsset,
+				"asset_status" => $status,
+			];
+			$modelAsset->save($dataSaveAsset);
+		}
+
+		helper('app_select_option');
+		$assetListModel = new AssetListModel();
+		$filesData = ['history_image' => $file['recent_image']];
+		$dataHistory = [
+			"asset_code" => $idAsset,
+			"type" => getOptionValue('asset_history', 'type', 'inventory'),
+			"owner_current" => $dataAsset ? $dataAsset->owner : "",
+			"owner_change" => $dataAsset ? $dataAsset->owner : "",
+			"status_current" => $dataAsset ? $dataAsset->asset_status : 0,
+			"status_change" => $status,
+			"notes" => $notes,
 		];
-		$modelAsset->save($dataSaveAsset);
+		$dataReturnHistory = $assetListModel->insertHistory($dataHistory, $filesData);
 
 		if (!empty($file)) {
-
+			$uploadService = \App\Libraries\Upload\Config\Services::upload();
+			$storePath = getModuleUploadPath('asset_lists', $idAsset, false) . 'other/';
+			$pathAsset = getModuleUploadPath('asset_inventories_detail', $idDetail, false) . 'other/';
+			$uploadService->copyFile($storePath, $pathAsset, $dataReturnHistory['history_image']);
+			$modelDetail->save([
+				"id" => $idDetail,
+				"recent_image" => $dataReturnHistory['history_image'],
+			]);
 		}
 
 		return $this->respond(ACTION_SUCCESS);

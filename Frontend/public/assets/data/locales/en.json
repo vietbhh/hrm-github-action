@@ -4068,8 +4068,8 @@
           "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import."
         }
       },
-      "inventories": {
-        "title": "Inventories",
+      "inventory": {
+        "title": "Inventory",
         "text": {
           "add_more_asset_inventory": "Add more asset inventory",
           "add_new_inventory": "Add new inventory",
@@ -4079,7 +4079,7 @@
           "asset_code": "Asset code",
           "asset_inventory": "Asset inventory",
           "asset_inventory_detail": "Asset inventory Detail",
-          "recent_inventories": "Recent inventories",
+          "recent_inventory": "Recent inventory",
           "asset_detail": "Asset detail",
           "asset_detail_empty": "No asset information"
         },

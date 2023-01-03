@@ -1,20 +1,18 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { ErpInput, ErpRadio } from "@apps/components/common/ErpField"
+import { ErpInput } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { FieldHandle } from "@apps/utility/FieldHandler"
 import notification from "@apps/utility/notification"
 import React, { Fragment, useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader, Col, Row } from "reactstrap"
+import { Card, CardBody, CardHeader, Col, Row } from "reactstrap"
 import "../assets/scss/inventories.scss"
 import { assetInventoryApi } from "../common/api"
+import FormAssetDetail from "../components/details/inventories/FormAssetDetail"
 import RecentInventories from "../components/details/inventories/RecentInventories"
 import InventoryDetailModal from "../components/modals/InventoryDetailModal"
-import FormAssetDetail from "../components/details/inventories/FormAssetDetail"
 
 const InventoriesDetail = () => {
   const [state, setState] = useMergedState({
@@ -55,7 +53,7 @@ const InventoriesDetail = () => {
       .catch((err) => {
         notification.showError({
           text: useFormatMessage(
-            "modules.asset.inventories.notification.asset_not_found"
+            "modules.asset.inventory.notification.asset_not_found"
           )
         })
         setState({ dataAssetDetail: [], loadAssetDetail: false })
@@ -80,7 +78,7 @@ const InventoriesDetail = () => {
 
   const loadDataHistory = () => {
     const params = {
-      perPage: 10,
+      perPage: 5,
       page: 1
     }
     assetInventoryApi
@@ -89,7 +87,7 @@ const InventoriesDetail = () => {
         setState({
           dataHistory: res.data.results
         })
-        if (res.data.recordsTotal > 10) {
+        if (res.data.recordsTotal > 5) {
           setState({ showMoreHistory: true })
         }
       })
@@ -115,8 +113,8 @@ const InventoriesDetail = () => {
             link: "/asset"
           },
           {
-            title: useFormatMessage("modules.asset.inventories.title"),
-            link: "/asset/inventories"
+            title: useFormatMessage("modules.asset.inventory.title"),
+            link: "/asset/inventory"
           },
           { title: state.data?.inventory_name }
         ]}
@@ -139,7 +137,7 @@ const InventoriesDetail = () => {
                   <CardHeader>
                     <span className="title">
                       {useFormatMessage("modules.asset.title")}{" "}
-                      {useFormatMessage("modules.asset.inventories.title")}
+                      {useFormatMessage("modules.asset.inventory.title")}
                     </span>
                   </CardHeader>
                   <CardBody>
@@ -153,7 +151,7 @@ const InventoriesDetail = () => {
                           useForm={methods}
                           defaultValue={``}
                           placeholder={useFormatMessage(
-                            "modules.asset.inventories.text.asset_code"
+                            "modules.asset.inventory.text.asset_code"
                           )}
                           required
                         />
@@ -178,7 +176,7 @@ const InventoriesDetail = () => {
               <CardHeader>
                 <span className="title">
                   {useFormatMessage(
-                    "modules.asset.inventories.text.asset_detail"
+                    "modules.asset.inventory.text.asset_detail"
                   )}
                 </span>
               </CardHeader>
@@ -195,7 +193,7 @@ const InventoriesDetail = () => {
                   <EmptyContent
                     icon={<i className="fa-regular fa-box-circle-check"></i>}
                     title={useFormatMessage(
-                      "modules.asset.inventories.text.asset_detail_empty"
+                      "modules.asset.inventory.text.asset_detail_empty"
                     )}
                     text=""
                   />

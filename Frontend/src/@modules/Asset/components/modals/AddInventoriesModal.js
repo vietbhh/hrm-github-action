@@ -59,7 +59,7 @@ const AddInventoriesModal = (props) => {
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => toggleModal()}>
-        {useFormatMessage("modules.asset.inventories.text.add_new_inventory")}
+        {useFormatMessage("modules.asset.inventory.text.add_new_inventory")}
       </ModalHeader>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -73,10 +73,10 @@ const AddInventoriesModal = (props) => {
                   className="input-tool"
                   useForm={methods}
                   defaultValue={`${useFormatMessage(
-                    "modules.asset.inventories.text.inventory"
+                    "modules.asset.inventory.text.inventory"
                   )} ${moment().format("DD/MM/YYYY")} `}
                   placeholder={useFormatMessage(
-                    "modules.asset.inventories.text.inventory_name"
+                    "modules.asset.inventory.text.inventory_name"
                   )}
                   required
                 />
@@ -89,7 +89,7 @@ const AddInventoriesModal = (props) => {
                   useForm={methods}
                   defaultValue={""}
                   placeholder={useFormatMessage(
-                    "modules.asset.inventories.text.inventory_description"
+                    "modules.asset.inventory.text.inventory_description"
                   )}
                   type="textarea"
                 />
@@ -103,7 +103,7 @@ const AddInventoriesModal = (props) => {
               className="btn-tool"
               disabled={state.loadingSubmit}>
               {state.loadingSubmit && <Spinner size="sm" className="me-50" />}
-              {useFormatMessage("modules.asset.inventories.button.add")}
+              {useFormatMessage("modules.asset.inventory.button.add")}
             </Button>
           </ModalFooter>
         </form>

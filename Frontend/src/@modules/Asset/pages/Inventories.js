@@ -1,13 +1,12 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { Pagination } from "antd"
 import React, { Fragment, useEffect } from "react"
 import { Card, CardBody, CardHeader, Col, Row } from "reactstrap"
 import "../assets/scss/inventories.scss"
-import AddInventoriesModal from "../components/modals/AddInventoriesModal"
-import { Pagination } from "antd"
 import { assetInventoryApi } from "../common/api"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { Link } from "react-router-dom"
+import AddInventoriesModal from "../components/modals/AddInventoriesModal"
 import InventoryDetailModal from "../components/modals/InventoryDetailModal"
 
 const Inventories = () => {
@@ -70,7 +69,7 @@ const Inventories = () => {
             link: "/asset"
           },
           {
-            title: useFormatMessage("modules.asset.inventories.title")
+            title: useFormatMessage("modules.asset.inventory.title")
           }
         ]}
       />
@@ -79,7 +78,7 @@ const Inventories = () => {
         <CardHeader>
           <span className="title">
             {useFormatMessage("modules.asset.title")}{" "}
-            {useFormatMessage("modules.asset.inventories.title")}
+            {useFormatMessage("modules.asset.inventory.title")}
           </span>
         </CardHeader>
         <CardBody>
@@ -127,7 +126,7 @@ const Inventories = () => {
                   </div>
                   <div className="name">
                     {useFormatMessage(
-                      "modules.asset.inventories.text.add_more_asset_inventory"
+                      "modules.asset.inventory.text.add_more_asset_inventory"
                     )}
                   </div>
                 </div>

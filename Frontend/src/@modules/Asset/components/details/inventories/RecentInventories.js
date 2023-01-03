@@ -73,9 +73,7 @@ const RecentInventories = (props) => {
     <Card className="inventories">
       <CardHeader>
         <span className="title">
-          {useFormatMessage(
-            "modules.asset.inventories.text.recent_inventories"
-          )}
+          {useFormatMessage("modules.asset.inventory.text.recent_inventory")}
         </span>
       </CardHeader>
       <CardBody>
@@ -94,7 +92,7 @@ const RecentInventories = (props) => {
                 color="primary"
                 className="btn-tool"
                 onClick={() => toggleModalDetail()}>
-                {useFormatMessage("modules.asset.inventories.button.view_all")}
+                {useFormatMessage("modules.asset.inventory.button.view_all")}
               </Button>
             </Col>
           )}
