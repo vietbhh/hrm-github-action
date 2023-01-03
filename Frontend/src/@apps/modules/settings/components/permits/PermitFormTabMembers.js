@@ -64,6 +64,7 @@ const PermitFormTabMembers = (props) => {
                         className="my-0 me-50"
                         size="sm"
                         src={item.icon}
+                        userId={item.value}
                       />
                       <span className="fw-bold">{item.full_name}</span>{" "}
                       &nbsp;

@@ -1,13 +1,13 @@
+import { userApi } from "@apps/modules/users/common/api"
 import firebase from "firebase/compat/app"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
-import { usersApi } from "@apps/modules/settings/common/api"
-
 
 // ** firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyA927U22MOf2vYDGqFSIRVIpzU_G0bJ6fM",
   authDomain: "friday-351410.firebaseapp.com",
-  databaseURL: "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://friday-351410-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "friday-351410",
   storageBucket: "friday-351410.appspot.com",
   messagingSenderId: "802894112425",
@@ -15,7 +15,8 @@ const firebaseConfig = {
   measurementId: "G-PLDYVP5EMH"
 }
 
-const vapidKey = "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
+const vapidKey =
+  "BJzv2V3CDTFohLwbC4iwF8EkqfJJRUwgrnxN4mAXYCN57I5Ual8p5fDvc1B-AFplk87OFMJysVGhL-0mWff9_hI"
 // ** end firebase config
 
 const firebaseApp = firebase.initializeApp(firebaseConfig)
@@ -33,13 +34,13 @@ export const requestPermission = () => {
   } else if (Notification.permission === "granted") {
     // Check whether notification permissions have already been granted;
     // if so, create a notification
-    if (getAccessToken()) getRegistrationToken()
+    getRegistrationToken()
     // …
   } else if (Notification.permission !== "denied") {
     // We need to ask the user for permission
     Notification.requestPermission().then((permission) => {
       // If the user accepts, let's create a notification
-      if (permission === "granted" && getAccessToken()) {
+      if (permission === "granted") {
         getRegistrationToken()
         //getAccessToken()
         // …
@@ -54,14 +55,18 @@ const getRegistrationToken = async () => {
   })
     .then((currentToken) => {
       if (currentToken) {
-        usersApi
-          .saveDeviceToken({
-            token: currentToken
-          })
-          .then((res) => {})
-          .catch((err) => {
-            console.log(err)
-          })
+        localStorage.setItem("deviceToken", currentToken)
+        if (getAccessToken()) {
+          userApi
+            .saveDeviceToken({
+              token: currentToken
+            })
+            .then((res) => {})
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
         // Track the token -> client mapping, by sending to backend server
         // show on the UI that permission is secured
       } else {

@@ -8,6 +8,7 @@ const mysql = new Sequelize(
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_PORT || 3306,
     dialect: "mysql",
+    logging: false,
     define: {
       underscored: true,
       createdAt: "created_at",

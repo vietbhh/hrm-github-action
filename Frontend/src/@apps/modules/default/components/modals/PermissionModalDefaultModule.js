@@ -49,6 +49,7 @@ const OptionComponent = ({ data, ...props }) => {
         content={charName}
         size="sm"
         src={data.icon}
+        userId={data.value}
       />
       {data.label}
     </components.Option>
@@ -103,8 +104,7 @@ function PermissionModalDefaultModule(props) {
         onClosed={onCloseModal}
         toggle={props.handleModal}
         backdrop={"static"}
-        className="modal-sm"
-      >
+        className="modal-sm">
         <ModalHeader toggle={props.handleModal}>
           {useFormatMessage("app.permissions")}
         </ModalHeader>

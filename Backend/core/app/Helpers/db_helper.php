@@ -21,17 +21,19 @@ if (!function_exists('getLastQuery')) {
 }
 
 if (!function_exists('handleJsonQuery')) {
-	function handleJsonQueryString($key, $value, $compare = '='): string
+	function handleJsonQueryString($key, $value, $compare = '=', $parseInt = true): string
 	{
 		$str = "";
 		$compareStr = ($compare == '=') ? ' NOT ' : ' ';
 		if (is_array($value)) {
 			foreach ($value as $keyIndex => $item) {
-				$str .= "JSON_SEARCH(" . $key . ",'one'," . (int)$item . ") IS" . $compareStr . "NULL";
+				$compareValue = $parseInt ? (int)$item : '"' . $item . '"';
+				$str .= "JSON_SEARCH(" . $key . ",'one'," . $compareValue . ") IS" . $compareStr . "NULL";
 				if ($keyIndex < count($value) - 1) $str .= ' OR ';
 			}
 		} else {
-			$str .= "JSON_SEARCH(" . $key . ",'one'," . (int)$value . ") IS" . $compareStr . "NULL";
+			$compareValue = $parseInt ? (int)$value : '"' . $value . '"';
+			$str .= "JSON_SEARCH(" . $key . ",'one'," . $compareValue . ") IS" . $compareStr . "NULL";
 		}
 		return $str;
 	}
@@ -654,4 +656,3 @@ if (!function_exists('handleDataBeforeReturn')) {
 		return ($multiData) ? $arrayData : $arrayData[0];
 	}
 }
-?>
