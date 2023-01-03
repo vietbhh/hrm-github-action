@@ -104,7 +104,7 @@ export const defaultModuleApi = {
         (rankDirectOnly ? "&rankDirectOnly=" + rankDirectOnly : "") +
         (rankTarget ? stringRankTarget : "") +
         (filters ? stringFilters : "") +
-        (excepts ? stringExcepts : "")
+        (excepts ? stringExcepts : "") +
         (withModules ? "&withModules=" + withModules : "")
     )
   },
