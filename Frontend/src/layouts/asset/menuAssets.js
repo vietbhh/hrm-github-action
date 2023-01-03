@@ -11,7 +11,26 @@ const assetMenu = [
     icon: <i className="iconly-Folder"></i>,
     action: "access",
     resource: "asset",
-    navLink: "/asset"
+    navLink: "/asset",
+    exactActive: true
+  },
+  {
+    id: "asset-import",
+    title: "menu.asset.import",
+    icon: <i className="iconly-Folder"></i>,
+    action: "access",
+    resource: "asset",
+    navLink: "/asset/import",
+    exactActive: true
+  },
+  {
+    id: "asset-barcode-generator",
+    title: "menu.asset.code_generator",
+    icon: <i className="iconly-Folder"></i>,
+    action: "access",
+    resource: "asset",
+    navLink: "/asset/barcode-generator",
+    exactActive: true
   }
 ]
 

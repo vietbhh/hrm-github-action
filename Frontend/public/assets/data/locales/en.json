@@ -649,7 +649,8 @@
     "request_overtime": "Request Overtime",
     "asset": {
       "list": "Asset List",
-      "import": "Import Asset"
+      "import": "Import Asset",
+      "code_generator": "Asset QR Code Generator"
     }
   },
   "settings": {
@@ -3853,6 +3854,45 @@
           },
           "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import."
         }
+      },
+      "asset_code_generator": {
+        "title": {
+          "index": "Asset QR Code Generator",
+          "filter": "Filter",
+          "asset_list": "Asset List"
+        },
+        "text": {
+          "search_asset_name_or_code": "Search by asset name or asset code"
+        }
+      }
+    },
+    "asset_types": {
+      "fields": {
+        "asset_type_group": "Asset Group",
+        "asset_type_code": "Asset Type Code"
+      }
+    },
+    "asset_groups": {
+      "fields": {
+        "asset_group_code": "Asset Group Code"
+      }
+    },
+    "asset_lists": {
+      "fields": {
+        "asset_code": "Asset Code",
+        "asset_name": "Asset Name",
+        "asset_type": "Asset Type",
+        "asset_status": "Asset Status"
+      }
+    },
+    "asset_brands": {
+      "fields": {
+        "brand_name": "Brand Name"
+      }
+    },
+    "asset_status": {
+      "fields": {
+        "status_name": "Status Name"
       }
     }
   },

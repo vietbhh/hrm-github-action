@@ -28,5 +28,9 @@ export const assetApi = {
       "/asset/import-asset",
       serialize(_.cloneDeep(data))
     )
+  },
+  async getDataAssetList(params) {
+    const strParam = object2QueryString(params)
+    return await axiosApi.get(`/asset/get-data-asset-list?get${strParam}`)
   }
 }
