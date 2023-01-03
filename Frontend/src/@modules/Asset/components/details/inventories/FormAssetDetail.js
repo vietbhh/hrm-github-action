@@ -96,7 +96,7 @@ const FormAssetDetail = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col sm="12">
+          <Col sm="6">
             <FieldHandle
               module={moduleName}
               fieldData={{
@@ -109,9 +109,7 @@ const FormAssetDetail = (props) => {
               useForm={methods}
             />
           </Col>
-        </Row>
-        <Row>
-          <Col sm="12">
+          <Col sm="6">
             <FieldHandle
               module={moduleName}
               fieldData={{
