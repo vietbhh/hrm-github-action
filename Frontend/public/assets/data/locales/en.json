@@ -3865,7 +3865,7 @@
         "edit": "Asset Edit",
         "update_stt": "Update Status"
       },
-      "notification" :{
+      "notification": {
         "is_owner": "The user already owns this Asset"
       }
     },
@@ -3906,6 +3906,7 @@
       }
     },
     "asset": {
+      "title": "Asset",
       "import_asset": {
         "title": {
           "index": "Import Asset",
@@ -3921,6 +3922,19 @@
             "text": "Download the template and fill it in with your asset data."
           },
           "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import."
+        }
+      },
+      "inventories": {
+        "title": "Inventories",
+        "text": {
+          "add_more_asset_inventory": "Add more asset inventory",
+          "add_new_inventory": "Add new inventory",
+          "inventory_name": "Inventory name",
+          "inventory_description": "Inventory description",
+          "inventory": "Inventory"
+        },
+        "button": {
+          "add": "Add"
         }
       }
     }

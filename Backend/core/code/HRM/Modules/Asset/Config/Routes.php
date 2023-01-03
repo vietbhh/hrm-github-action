@@ -25,3 +25,8 @@ $routes->get('asset-import-asset/get-asset-template', 'ImportAsset::get_asset_te
 $routes->post('asset-import-asset/get-mapping-fields', 'ImportAsset::get_mapping_fields_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset-import-asset/get-import-data', 'ImportAsset::get_import_data_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset-import-asset/import-asset', 'ImportAsset::import_asset_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+
+	/*** Route for Inventories ***/
+$routes->post('asset-inventories/add-new-inventory', 'Inventories::add_new_inventory_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-inventories/get-list-inventory', 'Inventories::get_list_inventory_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-inventories/get-inventory/(:any)', 'Inventories::get_inventory_get/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);

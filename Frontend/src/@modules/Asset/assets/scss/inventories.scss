@@ -1,0 +1,41 @@
+@import "@scss/friday";
+
+.inventories {
+  .card-header {
+    .title {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 16px;
+      color: #32434f;
+    }
+  }
+
+  .base {
+    margin-bottom: 20px;
+
+    .icon {
+      min-width: 50px;
+      min-height: 50px;
+
+      i {
+        color: #fff;
+        font-size: 18px;
+      }
+    }
+
+    .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+  }
+
+  button.ant-pagination-item-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
