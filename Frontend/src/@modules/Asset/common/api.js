@@ -8,25 +8,25 @@ import {
 
 export const assetApi = {
   async getAssetTemplate() {
-    return await axiosApi.get("asset/get-asset-template", {
+    return await axiosApi.get("asset-import-asset/get-asset-template", {
       responseType: "blob"
     })
   },
   async getMappingFields(data) {
     return await axiosApi.post(
-      "/asset/get-mapping-fields",
+      "/asset-import-asset/get-mapping-fields",
       serialize(_.cloneDeep(data))
     )
   },
   async getImportData(data) {
     return await axiosApi.post(
-      "/asset/get-import-data",
+      "/asset-import-asset/get-import-data",
       serialize(_.cloneDeep(data))
     )
   },
   async importAsset(data) {
     return await axiosApi.post(
-      "/asset/import-asset",
+      "/asset-import-asset/import-asset",
       serialize(_.cloneDeep(data))
     )
   },
