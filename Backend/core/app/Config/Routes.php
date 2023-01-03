@@ -124,7 +124,8 @@ $routes->get('user/profile', 'User::profile_get');
 $routes->post('user/update', 'User::update_post');
 $routes->add('user/avatar', 'User::avatar');
 $routes->get('user/get/(:alphanum)', 'User::get_get/$1');
-$routes->post('user/save-device-token', 'User::save_device_token_post/$1');
+$routes->post('user/save-device-token', 'User::save_device_token_post');
+$routes->post('user/remove-device-token', 'User::remove_device_token_post');
 
 
 /*** Route for Libs ***/
@@ -152,6 +153,17 @@ $routes->get('calendar/load-calendar-tag', 'Calendar::load_calendar_tag_get');
 $routes->delete('calendar/remove-calendar/(:alphanum)', 'Calendar::delete_delete/$1');
 $routes->get('general/users', 'General::load_users_get');
 
+$routes->get('drive/get-my-folder', 'Drive::get_my_folder_get', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-init-drive', 'Drive::get_init_drive_get', ['namespace' => 'App\Controllers']);
+$routes->post('drive/create-drive-folder', 'Drive::create_drive_folder_post', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-drive-folder-detail', 'Drive::get_drive_folder_detail', ['namespace' => 'App\Controllers']);
+$routes->post('drive/upload-file-drive', 'Drive::upload_file_drive_post', ['namespace' => 'App\Controllers']);
+$routes->post('drive/get-upload-progress', 'Drive::get_upload_progress_get', ['namespace' => 'App\Controllers']);
+$routes->post('drive/share-file-and-folder', 'Drive::share_file_and_folder_post', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-file-and-folder-permission', 'Drive::get_file_and_folder_permission_get', ['namespace' => 'App\Controllers']);
+$routes->post('drive/update-favorite', 'Drive::update_favorite_post', ['namespace' => 'App\Controllers']);
+$routes->post('drive/remove-drive-content', 'Drive::remove_drive_content_post', ['namespace' => 'App\Controllers']);
+
 /*** Route for Search ****/
 $routes->get('search/get_data_user', 'Search::get_data_employee_search_get', ['namespace' => 'App\Controllers']);
 
@@ -176,6 +188,9 @@ $routes->post('header-assistant/save-header-assistant', 'HeaderAssistant::save_h
 $routes->get('header-assistant/get-delete-header-assistant/(:alphanum)', 'HeaderAssistant::get_delete_header_assistant_get/$1', ['namespace' => 'App\Controllers']);
 $routes->get('header-assistant/get-data-header-assistant/(:alphanum)', 'HeaderAssistant::get_data_header_assistant_get/$1', ['namespace' => 'App\Controllers']);
 
+
+$routes->get('fri/test', 'Test::index_get');
+$routes->post('fri/test', 'Test::index_post');
 /**
  * --------------------------------------------------------------------
  * Custom Code Routing

@@ -15,9 +15,10 @@
     "dragonmantank/cron-expression": "^3.2",
     "smalot/pdfparser": "^2.0",
     "codeigniter4/settings": "dev-develop",
-    "phpoffice/phpspreadsheet": "^1.23",
     "google/apiclient": "^2.12.1",
-    "google/cloud-storage": "dev-main"
+    "google/cloud-storage": "dev-main",
+    "phpoffice/phpspreadsheet": "dev-master",
+    "guzzlehttp/guzzle": "7.5.x-dev"
   },
   "require-dev": {
     "mikey179/vfsstream": "1.6.*",

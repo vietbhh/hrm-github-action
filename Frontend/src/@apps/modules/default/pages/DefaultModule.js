@@ -12,6 +12,7 @@ const DefaultModule = (props) => {
   const action = params.action
   const module = props.route.module
   const moduleStore = useSelector((state) => state.app.modules[module.name])
+  const optionsModules = useSelector((state) => state.app.optionsModules)
   const filters = useSelector((state) => state.app.filters)
   const allowAction = ["page", "add", "update", "detail", "import"]
   if (action !== undefined && !allowAction.includes(action)) {
@@ -66,6 +67,7 @@ const DefaultModule = (props) => {
           metas={moduleStore.metas}
           options={moduleStore.options}
           filters={filters}
+          optionsModules={optionsModules}
         />
       )}
     </React.Fragment>

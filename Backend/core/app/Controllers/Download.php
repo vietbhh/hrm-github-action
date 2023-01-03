@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\Upload\GoogleCloudStorage;
+use App\Models\UserModel;
 
 class Download extends ErpController
 {
@@ -105,7 +106,14 @@ class Download extends ErpController
 	public function avatar()
 	{
 		$downloadType = preference('upload_type');
-		$path = $this->request->getVar('name');
+		$userId = $this->request->getVar('user');
+		if (!empty($userId)) {
+			$userModel = new UserModel();
+			$user = $userModel->select(['id', 'avatar'])->find($userId);
+			$path = $user ? $user->avatar : "";
+		} else {
+			$path = $this->request->getVar('name');
+		}
 		$filepath = WRITEPATH . 'uploads/' . $path;
 		if ($downloadType == 'direct') {
 			$filepath = WRITEPATH . 'uploads/' . $path;

@@ -223,4 +223,28 @@ if (!function_exists('decamelize')) {
 	}
 }
 
+if (!function_exists('getDefaultFridayLogo')) {
+	function getDefaultFridayLogo($type = 'icon'): string
+	{
+		$logoName = 'friday.png';
+		if ($type === 'text') $logoName = 'friday_text.png';
+		return $_ENV['app.siteURL'] . '/assets/images/' . $logoName;
+	}
+}
+
+if (!function_exists('getAvatarUrl')) {
+	function getAvatarUrl($userOrPath): string
+	{
+		$type = is_numeric($userOrPath) ? "user" : "name";
+		return $_ENV['app.baseURL'] . '/download/avatar?' . $type . '=' . $userOrPath;
+	}
+}
+
+if (!function_exists('getPublicDownloadUrl')) {
+	function getPublicDownloadUrl($path, $type = "image"): string
+	{
+		return $_ENV['app.baseURL'] . '/download/public/' . $type . '?name=' . $path;
+	}
+}
+
 ?>

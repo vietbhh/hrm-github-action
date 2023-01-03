@@ -34,7 +34,6 @@ const MapFieldStep = (props) => {
   }
 
   const onSubmit = (values) => {
-    console.log(listFieldImport)
     const newListFieldImport = listFieldImport.map((fieldItem) => {
       let newFieldItem = { ...fieldItem }
       _.forEach(values, (item, key) => {
@@ -47,8 +46,6 @@ const MapFieldStep = (props) => {
       })
       return newFieldItem
     })
-
-    console.log(newListFieldImport)
 
     handleSubmitMapFields(newListFieldImport)
   }
