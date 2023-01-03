@@ -18,11 +18,8 @@ const rootReducer = {
   navbar,
   layout,
   calendar,
-<<<<<<< HEAD
   drive,
-=======
   users,
->>>>>>> 6fa4e8c16c439201db3133cb47b39486c3f88202
   ...modules
 }
 

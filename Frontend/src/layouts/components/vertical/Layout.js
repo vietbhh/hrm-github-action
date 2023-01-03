@@ -52,14 +52,9 @@ const Layout = (props) => {
     menuData,
     navbar,
     className,
-<<<<<<< HEAD
-    fixedSidebar,
+    fixedSidebarCollapsed,
     customMenuComponent,
     outerCustomMenuComponent
-=======
-    fixedSidebarCollapsed,
-    customMenuComponent
->>>>>>> 6fa4e8c16c439201db3133cb47b39486c3f88202
   } = props
 
   // ** Hooks
