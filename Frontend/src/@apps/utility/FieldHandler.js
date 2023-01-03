@@ -381,7 +381,7 @@ export const FieldHandleBase = (props) => {
           }
         }
         const isLoadPaginate = field_options?.form?.loadPaginate ?? true
-        const optionsLists =
+        let optionsLists =
           optionsModules?.[field_select_module]?.[field_select_field_show] ?? []
         const creatable = field_options?.form?.allowCreate ?? false
         const creatableProps = {
@@ -408,8 +408,9 @@ export const FieldHandleBase = (props) => {
                   setValue(field, newOpt)
                 }
                 if (!isLoadPaginate) {
-                  optionsLists.push(newOpt)
+                  optionsLists = [...optionsLists, newOpt]
                 }
+                console.log(optionsLists)
               })
               .catch((err) => {
                 console.log(err)
