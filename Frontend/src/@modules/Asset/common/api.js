@@ -76,3 +76,55 @@ export const assetApi = {
     return await axiosApi.post("/asset/add", serialize(_.cloneDeep(data)))
   }
 }
+
+export const assetInventoryApi = {
+  async postAddInventory(data) {
+    return await axiosApi.post(
+      "/asset-inventories/add-new-inventory",
+      serialize(_.cloneDeep(data))
+    )
+  },
+
+  async getListInventory(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosApi.get(
+      "/asset-inventories/get-list-inventory?" + stringFilters
+    )
+  },
+
+  async getInventory(id) {
+    return await axiosApi.get("/asset-inventories/get-inventory/" + id)
+  },
+
+  async getListInventoryDetail(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosApi.get(
+      "/asset-inventories/get-list-inventory-detail?" + stringFilters
+    )
+  },
+
+  async getAssetDetail(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosApi.get(
+      "/asset-inventories/get-asset-detail?" + stringFilters
+    )
+  },
+
+  async postSaveInventoryDetail(params) {
+    return await axiosApi.post(
+      "/asset-inventories/save-inventory-detail",
+      serialize(_.cloneDeep(params)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  }
+}
