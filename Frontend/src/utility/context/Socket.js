@@ -1,15 +1,17 @@
 import SwAlert from "@apps/utility/SwAlert"
 import useJwt from "@src/auth/jwt/useJwt"
 import React, { useEffect } from "react"
-import { useSelector } from "react-redux"
+import { IdleTimerProvider } from "react-idle-timer"
+import { useDispatch, useSelector } from "react-redux"
+import { updateOnlineUsers } from "redux/app/users"
 import socketio from "socket.io-client"
-
 const SocketContext = React.createContext()
 
 export const SocketContextWrap = (props) => {
   const socket = socketio.connect(process.env.REACT_APP_NODE_API_URL, {
     autoConnect: false,
-    reconnection: false,
+    reconnection: true,
+    reconnectionAttempts: 2,
     auth: {
       token:
         !_.isNull(useJwt.getToken()) && !_.isEmpty(useJwt.getToken())
@@ -17,14 +19,12 @@ export const SocketContextWrap = (props) => {
           : null
     }
   })
+  const dispatch = useDispatch()
   const settingSocket =
-    useSelector((state) => state.auth.settings.sockets) || false
-
+    useSelector((state) => state?.auth?.settings?.sockets) || false
+  let errorAlert = false
   useEffect(() => {
     if (!_.isNull(useJwt.getToken()) && !_.isEmpty(useJwt.getToken())) {
-      socket.on("connect_error", (err) => {
-        console.log("connected")
-      })
       socket.on("connect_error", (err) => {
         const refreshToken = useJwt.getRefreshToken()
         const isAlreadyFetchingAccessToken =
@@ -45,7 +45,7 @@ export const SocketContextWrap = (props) => {
             socket.connect()
           })
         } else {
-          SwAlert.showError({
+          errorAlert = SwAlert.showError({
             title: "Unable connect to socket server",
             text: "Try reloading the page, if the problem persists please contact technical support for assistance",
             iconHtml: <i className="fa-duotone fa-plug-circle-exclamation"></i>,
@@ -54,32 +54,55 @@ export const SocketContextWrap = (props) => {
           })
         }
       })
-      socket.on("disconnect", (err) => {
-        SwAlert.showError({
-          title: "Socket server is disconnected",
-          text: "Try reloading the page, if the problem persists please contact technical support for assistance",
-          iconHtml: <i className="fa-duotone fa-plug-circle-exclamation"></i>,
-          showConfirmButton: false,
-          allowOutsideClick: false
-        })
+      socket.on("reconnect", () => {
+        if (errorAlert !== false) {
+          errorAlert.close()
+        }
+      })
+      socket.on("connect", () => {
+        localStorage.setItem("socket", 1)
+        if (errorAlert !== false) {
+          errorAlert.close()
+        }
+      })
+      socket.on("disconnect", () => {
+        localStorage.setItem("socket", 0)
+        console.log("disconnect")
+      })
+
+      socket.on("users_online", (data) => {
+        dispatch(updateOnlineUsers(data))
       })
       if (settingSocket) {
         socket.connect()
-        socket.emit("identity", 12345667)
       } else {
         socket.close()
       }
       return () => {
         socket.off("connect_error")
+        socket.off("reconnect")
+        socket.off("users_online")
         socket.off("disconnect")
       }
     }
   }, [settingSocket, socket])
 
+  const onIdle = () => {}
+
+  const onActive = (event) => {}
+
+  const onAction = (event) => {}
+
   return (
-    <SocketContext.Provider value={socket}>
-      {props.children}
-    </SocketContext.Provider>
+    <IdleTimerProvider
+      timeout={1000 * 60}
+      onIdle={onIdle}
+      onActive={onActive}
+      onAction={onAction}>
+      <SocketContext.Provider value={socket}>
+        {props.children}
+      </SocketContext.Provider>
+    </IdleTimerProvider>
   )
 }
 

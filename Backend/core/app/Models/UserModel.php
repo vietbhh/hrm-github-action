@@ -13,7 +13,7 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 
 	protected $allowedFields = [
 		'full_name', 'username', 'email', 'phone', 'password_hash', 'reset_hash', 'reset_at', 'reset_expires', 'activate_hash', 'account_status',
-		'active', 'force_pass_reset', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'deleted_at', 'office', 'group_id', 'job_title_id', 'department_id'
+		'active', 'force_pass_reset', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'deleted_at', 'office', 'group_id', 'job_title_id', 'department_id', 'device_token'
 	];
 
 	protected $useTimestamps = true;
@@ -132,8 +132,12 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 		if (!is_numeric($identity)) {
 			$whereKey = 'username';
 		}
-		return $this->asArray()->where($whereKey, $identity)->select(['id', 'full_name', 'username', 'email', 'phone', 'account_status',
-			'active', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'office', 'group_id', 'job_title_id', 'department_id'])->first();
+		return $this->asArray()->where($whereKey, $identity)->select($this->getPublicField())->first();
+	}
+
+	public function getPublicField()
+	{
+		return ['id', 'full_name', 'username', 'email', 'phone', 'account_status', 'active', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'office', 'group_id', 'job_title_id', 'department_id', 'device_token'];
 	}
 
 }

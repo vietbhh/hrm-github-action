@@ -11,20 +11,26 @@ const App = () => {
   const appLoading = useSelector((state) => state.app.loading)
   const routes = useSelector((state) => state.app.routes)
   const appName = useSelector((state) => state.layout.app_name)
+  const userData = useSelector((state) => state.auth.userData)
   const defaultDashboardComponent = useSelector(
     (state) => state.auth.settings.dashboardComponent
   )
-
+  const appTitle = useSelector((state) => state.app.title)
   // ** effect
   useEffect(() => {
-    requestPermission()
-  }, [])
+    if (!_.isEmpty(userData)) requestPermission()
+  }, [userData])
 
   return appLoading ? (
     <AppSpinner />
   ) : (
     <Suspense fallback={null}>
-      <Helmet defaultTitle={appName} titleTemplate={`%s | ${appName}`} />
+      <Helmet
+        defaultTitle={appName}
+        titleTemplate={`%s | ${appName}`}
+        defer={false}>
+        {!_.isEmpty(appTitle) && <title>{appTitle}</title>}
+      </Helmet>
       <AppLoadingBar />
       <Notification />
       <Router

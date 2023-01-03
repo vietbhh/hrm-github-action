@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import { Badge } from "reactstrap"
 // ** Components
 import Avatar from "@apps/modules/download/pages/Avatar"
+import { getDefaultFridayLogo, timeDifference } from "@apps/utility/common"
 
 const ListNotification = (props) => {
   const {
@@ -52,26 +53,28 @@ const ListNotification = (props) => {
       <div
         key={`notification-${index}`}
         className={classnames(
-          "d-flex align-items-center justify-content-between div-noti",
-          { "bg-active": !item.seen }
+          "d-flex align-items-center div-noti app-notifications",
+          {
+            "bg-active": !item.seen
+          }
         )}>
         <div className="div-img">
-          <Avatar
-            src={sender?.avatar}
-            imgHeight="48"
-            imgWidth="48"
+          <img
+            src={item.icon ?? getDefaultFridayLogo("icon")}
             className="img"
+            width={48}
           />
-          <Fragment>{renderCategoryBadge()}</Fragment>
         </div>
-        <div className="div-text">
-          <span className="text-title">{sender?.full_name}</span>
-          <span className="text-content">
-            {item.content} on{" "}
-            <span className="text-content-blue">{item.title}</span>
-          </span>
+        <div
+          className={classnames("div-text", {
+            "has-content": item.body
+          })}>
+          {item.title}
+          {item.body && <p className="div-content">{item.body}</p>}
+          {item.created_at && (
+            <p className="div-time">{timeDifference(item.created_at)}</p>
+          )}
         </div>
-        <div className="div-time">{`${Math.floor(duration)}${suffix}`}</div>
       </div>
     )
   }
@@ -81,19 +84,13 @@ const ListNotification = (props) => {
       <Fragment>
         {listNotification.map((item, index) => {
           if (index < 10) {
-            if (item.link.trim().length === 0) {
-              return (
-                <Fragment key={index}>
-                  {renderNotificationItem(item, index)}
-                </Fragment>
-              )
-            } else {
-              return (
-                <a key={index} href={item.link} target="_blank">
-                  <Fragment>{renderNotificationItem(item, index)}</Fragment>
-                </a>
-              )
-            }
+            const Wrap = item.link ? Fragment : Link
+            const wrapProps = item.link ? {} : { to: item.link }
+            return (
+              <Wrap key={index} {...wrapProps}>
+                {renderNotificationItem(item, index)}
+              </Wrap>
+            )
           }
         })}
       </Fragment>

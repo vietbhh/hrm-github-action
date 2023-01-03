@@ -1,13 +1,12 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
-import { useMergedState, useFormatMessage } from "@apps/utility/common"
-import { notificationApi } from "../common/api"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { Fragment, useEffect } from "react"
+import { notificationApi } from "../common/api"
 // ** Styles
-import { Card, CardHeader, CardBody } from "reactstrap"
 import { Pagination } from "antd"
+import { Card, CardBody, CardHeader } from "reactstrap"
 // ** Components
-import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import notification from "@apps/utility/notification"
 import ListNotification from "../../../../layouts/components/vertical/navbar/ListNotification"
 
@@ -74,35 +73,10 @@ const NotificationIndex = (props) => {
     }
   }, [state.loading])
 
-  // ** render
-  const renderBreadcrumb = () => {
-    return (
-      <Breadcrumbs
-        list={[{ title: useFormatMessage("modules.notification.title") }]}
-      />
-    )
-  }
-
-  const renderListNotification = () => {
-    return <ListNotification listNotification={state.notifications} />
-  }
-
-  const renderPagination = () => {
-    return (
-      <Pagination
-        current={state.page}
-        onChange={onChange}
-        total={state.numberNotification}
-        defaultPageSize={numberItemPerPage}
-      />
-    )
-  }
-
   const renderComponent = () => {
     return (
       <Fragment>
         <div className="notification-page">
-          <Fragment>{renderBreadcrumb()}</Fragment>
           <Card>
             <CardHeader>
               <h3 className="ms-2">
@@ -114,10 +88,15 @@ const NotificationIndex = (props) => {
             </CardHeader>
             <CardBody>
               <div className="mb-4">
-                <Fragment>{renderListNotification()}</Fragment>
+                <ListNotification listNotification={state.notifications} />
               </div>
               <div className="ms-2">
-                <Fragment>{renderPagination()}</Fragment>
+                <Pagination
+                  current={state.page}
+                  onChange={onChange}
+                  total={state.numberNotification}
+                  defaultPageSize={numberItemPerPage}
+                />
               </div>
             </CardBody>
           </Card>

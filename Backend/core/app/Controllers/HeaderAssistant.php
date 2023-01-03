@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\AppModel;
+use App\Models\UserModel;
 
 class HeaderAssistant extends ErpController
 {
@@ -11,9 +12,11 @@ class HeaderAssistant extends ErpController
 	public function get_header_assistant_get()
 	{
 		$data_custom = $this->getHeaderAssistant();
-
-		//$result['data_birthday'] = $this->_renderBirthday([['id' => 1, 'full_name' => 'nguyen the thang']]);
-		$result['data_birthday'] = [];
+		$userModel = new UserModel();
+		$month = date('m');
+		$day = date('d');
+		$data_birthday = $userModel->select(["id", "full_name"])->where("Month(dob) = '$month'")->where("DAY(dob) = '$day'")->asArray()->findAll();
+		$result['data_birthday'] = $this->_renderBirthday($data_birthday);
 		$result['data_custom'] = $data_custom;
 		return $this->respond($result);
 	}

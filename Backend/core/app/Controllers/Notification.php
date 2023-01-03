@@ -61,7 +61,7 @@ class Notification extends ErpController
 	{
 		$posts = $this->request->getPost();
 		$ids = $posts['id'];
-		$all = isset($posts['all']) ? $posts['all'] : false;
+		$all = $posts['all'] ?? false;
 		$this->notification->read($ids, $all);
 		return $this->respond('success');
 	}

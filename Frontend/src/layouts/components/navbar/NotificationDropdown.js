@@ -8,8 +8,15 @@ import Avatar from "@components/avatar"
 import classnames from "classnames"
 import { Bell } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
+import { Link } from "react-router-dom"
 import {
-	Badge, Button, DropdownItem, DropdownMenu, DropdownToggle, Media, UncontrolledDropdown
+  Badge,
+  Button,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Media,
+  UncontrolledDropdown
 } from "reactstrap"
 
 const NotificationDropdown = () => {
@@ -28,7 +35,7 @@ const NotificationDropdown = () => {
         }}>
         {notificationsArray.map((item, index) => {
           return (
-            <a
+            <Link
               key={index}
               className="d-flex"
               href="/"
@@ -71,7 +78,7 @@ const NotificationDropdown = () => {
                   </Fragment>
                 )}
               </Media>
-            </a>
+            </Link>
           )
         })}
       </PerfectScrollbar>

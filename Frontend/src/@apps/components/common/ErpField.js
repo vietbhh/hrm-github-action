@@ -1650,7 +1650,10 @@ export const ErpImageUpload = (props) => {
     loading
   } = props
   const [state, setState] = useMergedState({
-    img: isEmpty(props.default) ? false : props.default,
+    img:
+      isEmpty(props.default) || _.isNumber(props.default)
+        ? false
+        : props.default,
     isRemote: true
   })
 
@@ -1694,13 +1697,16 @@ export const ErpImageUpload = (props) => {
       }
     } else {
       setState({
-        img: isEmpty(props.default) ? false : props.default,
+        img:
+          isEmpty(props.default) || _.isNumber(props.default)
+            ? false
+            : props.default,
         isRemote: true
       })
       if (!isUndefined(useForm)) {
         useForm.setValue(
           name,
-          isEmpty(props.default)
+          isEmpty(props.default) || _.isNumber(props.default)
             ? ""
             : isObject(props.default)
             ? props.default.url
@@ -1709,7 +1715,6 @@ export const ErpImageUpload = (props) => {
       }
     }
   }, [props.default])
-
   const handleFile = async (event) => {
     if (validateImage(event.target.files[0])) {
       const img = await readFileAsync(event.target.files[0])
@@ -1850,7 +1855,12 @@ const CustomUsersOption = ({ data, ...props }) => {
   return (
     <components.Option {...props}>
       <div className="d-flex justify-content-left align-items-center">
-        <Avatar className="my-0 me-50" size="sm" src={data.icon} />
+        <Avatar
+          userId={data.value}
+          className="my-0 me-50"
+          size="sm"
+          src={data.icon}
+        />
         <div className="d-flex flex-column">
           <p className="user-name text-truncate mb-0">
             <span className="fw-bold">{data.full_name}</span>{" "}
@@ -1869,7 +1879,12 @@ const CustomSingleUserSelect = ({ data, ...props }) => {
     <components.SingleValue {...props}>
       {!isEmpty(data) && (
         <div className="d-flex flex-wrap align-items-center">
-          <Avatar className="my-0 me-50" size="sm" src={data.icon} />
+          <Avatar
+            userId={data.value}
+            className="my-0 me-50"
+            size="sm"
+            src={data.icon}
+          />
           <span className="fw-bold">{data.full_name}</span> &nbsp;
           <small className="text-truncate text-muted mb-0">@{data.label}</small>
         </div>
@@ -1881,7 +1896,12 @@ const CustomMultiUserSelect = ({ data, ...props }) => {
   return (
     <components.MultiValueLabel {...props}>
       <div className="d-flex flex-wrap align-items-center">
-        <Avatar className="my-0 me-50" size="sm" src={data.icon} />
+        <Avatar
+          userId={data.value}
+          className="my-0 me-50"
+          size="sm"
+          src={data.icon}
+        />
         <span className="fw-bold">{data.full_name}</span> &nbsp;
         <small className="text-truncate text-username mb-0">
           @{data.label}
