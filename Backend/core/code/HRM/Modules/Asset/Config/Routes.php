@@ -30,3 +30,6 @@ $routes->post('asset-import-asset/import-asset', 'ImportAsset::import_asset_post
 $routes->post('asset-inventories/add-new-inventory', 'Inventories::add_new_inventory_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset-inventories/get-list-inventory', 'Inventories::get_list_inventory_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset-inventories/get-inventory/(:any)', 'Inventories::get_inventory_get/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-inventories/get-list-inventory-detail', 'Inventories::get_list_inventory_detail_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-inventories/get-asset-detail', 'Inventories::get_asset_detail_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-inventories/save-inventory-detail', 'Inventories::save_inventory_detail_post',['namespace' => 'HRM\Modules\Asset\Controllers']);

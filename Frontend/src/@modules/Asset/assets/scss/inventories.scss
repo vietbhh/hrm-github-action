@@ -1,13 +1,11 @@
 @import "@scss/friday";
 
 .inventories {
-  .card-header {
-    .title {
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 16px;
-      color: #32434f;
-    }
+  .title {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 16px;
+    color: #32434f;
   }
 
   .base {
@@ -38,4 +36,17 @@
     justify-content: center;
     align-items: center;
   }
+
+  .form-asset-detail {
+    .custom-radio {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
+}
+
+.modal-inventory-detail {
+  top: 0;
+  max-width: 1200px;
 }

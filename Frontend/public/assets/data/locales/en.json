@@ -3931,11 +3931,30 @@
           "add_new_inventory": "Add new inventory",
           "inventory_name": "Inventory name",
           "inventory_description": "Inventory description",
-          "inventory": "Inventory"
+          "inventory": "Inventory",
+          "asset_code": "Asset code",
+          "asset_inventory": "Asset inventory",
+          "asset_inventory_detail": "Asset inventory Detail",
+          "recent_inventories": "Recent inventories",
+          "asset_detail": "Asset detail",
+          "asset_detail_empty": "No asset information"
         },
         "button": {
-          "add": "Add"
+          "add": "Add",
+          "view_all": "View All"
+        },
+        "notification": {
+          "asset_not_found": "Asset not found"
         }
+      }
+    },
+    "asset_inventories_detail": {
+      "fields": {
+        "inventory": "Inventory",
+        "asset_code": "Asset code",
+        "current_status": "Current status",
+        "notes": "Notes",
+        "recent_image": "Recent image"
       }
     }
   },

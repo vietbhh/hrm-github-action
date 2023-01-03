@@ -8,6 +8,7 @@ import { Pagination } from "antd"
 import { assetInventoryApi } from "../common/api"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { Link } from "react-router-dom"
+import InventoryDetailModal from "../components/modals/InventoryDetailModal"
 
 const Inventories = () => {
   const [state, setState] = useMergedState({
@@ -16,11 +17,18 @@ const Inventories = () => {
     pageSize: 15,
     total: 0,
     data: [],
-    loading: true
+    loading: true,
+    modalDetail: false,
+    idModalDetail: 0,
+    nameModalDetail: ""
   })
 
   const toggleModalAdd = () => {
     setState({ modalAdd: !state.modalAdd })
+  }
+
+  const toggleModalDetail = () => {
+    setState({ modalDetail: !state.modalDetail })
   }
 
   const loadData = () => {
@@ -127,15 +135,20 @@ const Inventories = () => {
               {_.map(state.data, (value, index) => {
                 return (
                   <Col key={index} xs="12" sm="4" md="3">
-                    <Link to={`/asset/inventories/${value.id}`}>
-                      <div
-                        className={`base d-flex align-items-center cursor-pointer`}>
-                        <div className="icon me-2 d-flex align-items-center justify-content-center">
-                          <i className="fa-regular fa-box-circle-check"></i>
-                        </div>
-                        <div className="name">{value.inventory_name}</div>
+                    <div
+                      onClick={() => {
+                        setState({
+                          idModalDetail: value.id,
+                          nameModalDetail: value.inventory_name
+                        })
+                        toggleModalDetail()
+                      }}
+                      className={`base d-flex align-items-center cursor-pointer`}>
+                      <div className="icon me-2 d-flex align-items-center justify-content-center">
+                        <i className="fa-regular fa-box-circle-check"></i>
                       </div>
-                    </Link>
+                      <div className="name">{value.inventory_name}</div>
+                    </div>
                   </Col>
                 )
               })}
@@ -162,6 +175,13 @@ const Inventories = () => {
       <AddInventoriesModal
         modal={state.modalAdd}
         toggleModal={toggleModalAdd}
+      />
+
+      <InventoryDetailModal
+        modal={state.modalDetail}
+        toggleModal={toggleModalDetail}
+        id={state.idModalDetail}
+        name={state.nameModalDetail}
       />
     </Fragment>
   )
