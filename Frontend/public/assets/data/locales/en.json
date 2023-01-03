@@ -433,7 +433,14 @@
     "request": "Request",
     "jobs": "Jobs",
     "setting": "Setting",
-    "approve": "Approve"
+    "approve": "Approve",
+    "drive": {
+      "my_file": "My Files",
+      "one_drive": "One Drive",
+      "google_drive": "Google Drive",
+      "share_with_me": "Share with me",
+      "trash": "Trash"
+    }
   },
   "settings": {
     "apps": {
@@ -768,7 +775,7 @@
         }
       }
     },
-    "positions": {
+    "position`s": {
       "title": "Job titles",
       "buttons": {
         "add": "New Title"
@@ -837,6 +844,88 @@
     },
     "notification": {
       "title": "Notification"
+    },
+    "drive": {
+      "title": {
+        "index": "drive",
+        "folders": "Folders",
+        "recent": "Recent",
+        "my_files": "My Files"
+      },
+      "buttons": {
+        "new_file": "New File",
+        "upload_file": "Upload Files",
+        "upload_folder": "Upload Folder",
+        "new_folder": "New Folder",
+        "upgrade": "Upgrade",
+        "share": "Share",
+        "get_link": "Get Link",
+        "download": "Download",
+        "rename": "Rename",
+        "copy": "Copy",
+        "delete": "Delete",
+        "star": "Star",
+        "favorite": "Favorite",
+        "view_detail": "View Detail",
+        "upload": "Upload",
+        "save": "Save",
+        "cancel": "Cancel",
+        "hide": "Hide",
+        "add_more_file": "Add more file"
+      },
+      "field_options": {
+        "share_type": {
+          "share_private": "Private",
+          "share_to_everyone": "Share to everyone",
+          "share_to_user": "Share to users"
+        }
+      },
+      "text": {
+        "link_your_account": "Link your account",
+        "view_all": "View all",
+        "files": "files",
+        "folder": "Folder",
+        "file": "File",
+        "used": "Used",
+        "available_store": "Available store",
+        "browse_files_to_upload": "Browse files to upload",
+        "browse_folder_to_upload": "Browse folder to upload",
+        "sort_by": "Sort by",
+        "filter_drive": {
+          "due_date": "Due Date",
+          "name": "Name",
+          "type": "Type",
+          "size": "Size"
+        },
+        "upload_progress": "Upload Progress",
+        "warning_close_upload": {
+          "title": "Cancel upload?",
+          "content": "Your upload is not complete. Do you want to cancel the upload?"
+        },
+        "upload_successful_many": "Upload Successful, {file_number} files has been uploaded!",
+        "upload_successful": "Upload Successful!",
+        "share_file_and_folder": "Share {name}",
+        "find_user": "Find User",
+        "chosen_users": "Chosen Users",
+        "view_only": "View Only",
+        "editable": "Editable",
+        "share_file_and_folder_warning": "Editors can change permissions and share",
+        "share_type_text": {
+          "private": "Only owner can open using this content!",
+          "share_editable": "Shared users can change permissions and share!",
+          "share_view_only": "Shared users can only view the content!"
+        },
+        "confirm_delete": {
+          "title": "Remove {name}",
+          "content": "File or Folder will be moved to Trash"
+        }
+      }
+    },
+    "drive_folders": {
+      "fields": {
+        "name": "Folder name",
+        "description": "Description"
+      }
     }
   },
   "layout": {

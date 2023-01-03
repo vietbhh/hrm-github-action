@@ -62,5 +62,4 @@ class General extends ErpController
 
 		return $this->respond($result);
 	}
-
 }

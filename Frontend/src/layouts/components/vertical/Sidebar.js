@@ -21,7 +21,8 @@ const Sidebar = (props) => {
     saveQuickAccess,
     defaultMenuNav,
     settingPermits,
-    customMenuComponent
+    customMenuComponent,
+    outerCustomMenuComponent
   } = props
 
   // ** States
@@ -79,6 +80,9 @@ const Sidebar = (props) => {
           <PerfectScrollbar
             options={{ wheelPropagation: false }}
             onScrollY={(container) => scrollMenu(container)}>
+              {outerCustomMenuComponent && (
+                <Fragment>{outerCustomMenuComponent()}</Fragment>
+              )}
             <ul className="navigation navigation-main">
               {customMenuComponent && (
                 <li className="">

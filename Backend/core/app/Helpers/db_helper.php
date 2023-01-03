@@ -656,4 +656,3 @@ if (!function_exists('handleDataBeforeReturn')) {
 		return ($multiData) ? $arrayData : $arrayData[0];
 	}
 }
-?>
