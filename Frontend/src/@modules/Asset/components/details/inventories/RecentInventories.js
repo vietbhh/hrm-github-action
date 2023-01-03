@@ -36,7 +36,7 @@ const RecentInventories = (props) => {
               className="rounded"
             />
 
-            <div className="d-flex flex-column cursor ms-1">
+            <div className="d-flex flex-column ms-1">
               <p className=" text-truncate mb-0">
                 <span className="font-weight-bold name-channel-table">
                   {record?.asset_code?.label}

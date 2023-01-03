@@ -13,6 +13,7 @@ import { assetInventoryApi } from "../common/api"
 import FormAssetDetail from "../components/details/inventories/FormAssetDetail"
 import RecentInventories from "../components/details/inventories/RecentInventories"
 import InventoryDetailModal from "../components/modals/InventoryDetailModal"
+import AssetDetail from "../components/AssetDetail"
 
 const InventoriesDetail = () => {
   const [state, setState] = useMergedState({
@@ -201,15 +202,19 @@ const InventoriesDetail = () => {
 
                 {!_.isEmpty(state.dataAssetDetail) &&
                   !state.loadAssetDetail && (
-                    <FormAssetDetail
-                      dataAssetDetail={state.dataAssetDetail}
-                      setDataAssetDetail={(value) =>
-                        setState({ dataAssetDetail: value })
-                      }
-                      focusInput={focusInput}
-                      id={id}
-                      loadDataHistory={loadDataHistory}
-                    />
+                    <>
+                      <FormAssetDetail
+                        dataAssetDetail={state.dataAssetDetail}
+                        setDataAssetDetail={(value) =>
+                          setState({ dataAssetDetail: value })
+                        }
+                        focusInput={focusInput}
+                        id={id}
+                        loadDataHistory={loadDataHistory}
+                      />
+                      <hr />
+                      <AssetDetail dataDetail={state.dataAssetDetail} />
+                    </>
                   )}
               </CardBody>
             </Card>
