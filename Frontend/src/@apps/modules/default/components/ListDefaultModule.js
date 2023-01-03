@@ -380,7 +380,7 @@ const ListDefaultModule = (props) => {
 
   useEffect(() => {
     loadData()
-  }, [table.searchValue, table.tableFilters])
+  }, [table.searchValue, table.tableFilters, metas, module])
 
   let customColumnAfter = [
     {
