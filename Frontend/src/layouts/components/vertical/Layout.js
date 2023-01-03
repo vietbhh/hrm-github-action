@@ -53,7 +53,8 @@ const Layout = (props) => {
     navbar,
     className,
     fixedSidebarCollapsed,
-    customMenuComponent
+    customMenuComponent,
+    outerCustomMenuComponent
   } = props
 
   // ** Hooks
@@ -259,6 +260,7 @@ const Layout = (props) => {
         settingPermits={settingPermits}
         fixedSidebarCollapsed={fixedSidebarCollapsed}
         customMenuComponent={customMenuComponent}
+        outerCustomMenuComponent={outerCustomMenuComponent}
       />
 
       <Navbar

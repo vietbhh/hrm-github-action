@@ -9,6 +9,7 @@ import chat from "./chat"
 import app from "./app/app"
 import users from "./app/users"
 import calendar from "@apps/modules/calendar/common/reducer/calendar"
+import drive from "@apps/modules/drive/common/reducer/drive"
 import * as modules from "./modules"
 
 const rootReducer = {
@@ -19,6 +20,7 @@ const rootReducer = {
   layout,
   calendar,
   chat,
+  drive,
   users,
   ...modules
 }

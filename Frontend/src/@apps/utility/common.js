@@ -314,7 +314,7 @@ export const getOptionValue = (options, optionName, nameOptionKey) => {
 }
 
 export const getDefaultFridayLogo = (type = "icon") => {
-  const logoName = type === "text" ? "friday.png" : "friday_text.png"
+  const logoName = type === "text" ? "friday_text.png" : "friday.png"
   return process.env.REACT_APP_URL + "/assets/images/" + logoName
 }
 
