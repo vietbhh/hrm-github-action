@@ -775,7 +775,7 @@
         }
       }
     },
-    "position`s": {
+    "positions": {
       "title": "Job titles",
       "buttons": {
         "add": "New Title"
