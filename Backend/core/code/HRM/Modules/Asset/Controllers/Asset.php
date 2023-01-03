@@ -152,6 +152,8 @@ class Asset extends ErpController
 		$model = $modules->model;
 		$data['assetTotal'] = $model->countAllResults();
 		$data['assetThisMonth'] = $model->where('MONTH(date_created)', date("m"))->where('YEAR(date_created)', date("Y"))->countAllResults(true);
+		$data['assetEli_liq'] = $model->join('m_asset_status', 'm_asset_status.id = m_asset_lists.asset_status')->where('m_asset_status.status_code', 'eliminate')->orWhere('m_asset_status.status_code', 'liquidated')->countAllResults(true);
+		$data['assetRe_bro'] = $model->join('m_asset_status', 'm_asset_status.id = m_asset_lists.asset_status')->where('m_asset_status.status_code', 'repair')->orWhere('m_asset_status.status_code', 'broken')->countAllResults(true);
 
 		if (isset($getPara['filters'])) {
 
@@ -198,9 +200,6 @@ class Asset extends ErpController
 		$assetListModel = new AssetListModel();
 
 		$insertHis = $assetListModel->insertHistory($dataSave, $filesData);
-		echo "<pre>";
-		print_r($insertHis);
-		echo "</pre>";
 
 		return $this->respond(ACTION_SUCCESS);
 	}
@@ -250,5 +249,22 @@ class Asset extends ErpController
 		$history = $model->orderBy('created_at', 'desc')->findAll($getPara['limit'] * $getPara['page'], 0);
 		$dataReturn['history'] = handleDataBeforeReturn('asset_history', $history, true);
 		return $this->respond($dataReturn);
+	}
+
+	public function detail_by_code_get()
+	{
+		$modules = \Config\Services::modules('asset_lists');
+		$model = $modules->model;
+		$getGet = $this->request->getGet();
+		if (!isset($getGet['code']) || !$getGet['code']) {
+			return $this->fail(null);
+		}
+		$code = $getGet['code'];
+		$info = $model->asArray()->where('asset_code', $code)->first();
+		if(!$info){
+			return $this->fail(null);
+		}
+		$befoReturn = handleDataBeforeReturn('asset_lists', $info);
+		return $this->respond($befoReturn);
 	}
 }
