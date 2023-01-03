@@ -169,6 +169,6 @@ class AssetListModel extends AppModel
 				return $this->fail(FAILED_SAVE . '_' . $e->getMessage());
 			}
 		}
-		return $id;
+		return $data;
 	}
 }
