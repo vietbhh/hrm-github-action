@@ -45,6 +45,7 @@ class AssetListModel extends AppModel
 
 	public function insertAssetList($data)
 	{
+		helper('app_select_option');
 		$assetType = isset($data['asset_type']) ? $data['asset_type'] : 0;
 
 		if (empty($assetType)) {
@@ -107,6 +108,13 @@ class AssetListModel extends AppModel
 		$modelAssetType->setAllowedFields(array_keys($dataUpdate));
 		$modelAssetType->save($dataUpdate);
 
+		// ** insert log
+		$this->insertHistory([
+			'asset_code' => $idAssetList,
+			'type' => getOptionValue('asset_history', 'type', 'warehouse'),
+			'owner_current' => isset($data['owner']) ? $data['owner'] : user_id()
+		]);
+		
 		return $idAssetList;
 	}
 
