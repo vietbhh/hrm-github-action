@@ -24,7 +24,7 @@ const FilterSort = (props) => {
   const filterItem = [
     {
       label: "due_date",
-      value: "due_date"
+      value: "created_at"
     },
     {
       label: "name",

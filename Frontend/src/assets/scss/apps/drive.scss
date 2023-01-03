@@ -37,6 +37,10 @@
     }
 }
 
+.custom-text-primary {
+    color: #377dff !important;
+}
+
 .btn-custom-white {
     border-radius: 12px;
     background-color: #ffffff !important;
@@ -67,6 +71,20 @@
 
 .drive-cancel-uploading-icon {
     cursor: pointer;
+}
+
+.drive-rounded-icon {
+    text-align: center;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.07);
+    padding: 2px;
+}
+
+.drive-rounded-icon-lg {
+    height: 32px;
+    width: 32px;
 }
 
 .drive-filter-container {
@@ -407,6 +425,46 @@
     width: 473px;
 }
 
+.drive-share-modal {
+    width: 600px;
+
+    .modal-body {
+        .warning-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .form-check-input:checked {
+            background-color: #377dff;
+            border-color: #377dff;
+            box-shadow: unset !important;
+        }
+
+        .list-chosen-share-user {
+            .chosen-share-user-item {
+                p {
+                    font-size: 13px;
+                    font-weight: bold;
+                    line-height: 1rem !important;
+                }
+
+                small {
+                    font-size: 11px;
+                }
+            }
+        }
+
+        .share-type-container {
+            .chose-share-type-item {
+                span {
+                    font-weight: 600;
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}
+
 .drive-uploading-notification {
     height: auto;
     width: 400px;
@@ -447,7 +505,7 @@
             font-size: 12px;
 
             .content-name {
-                text-overflow: ellipsis
+                text-overflow: ellipsis;
             }
         }
     }

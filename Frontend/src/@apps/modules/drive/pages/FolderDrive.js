@@ -9,6 +9,8 @@ import { setReloadPage } from "../common/reducer/drive"
 // ** Styles
 // ** Components
 import FolderDriveHeader from "../components/details/FolderDrive/FolderDriveHeader"
+import FolderDriveBody from "../components/details/FolderDrive/FolderDriveBody"
+import FolderDriveFooter from "../components/details/FolderDrive/FolderDriveFooter"
 import UploadModal from "../components/modals/UploadModal/UploadModal"
 import NewFolderModal from "../components/modals/NewFolderModal"
 import UploadingNotification from "../components/details/UploadingNotification/UploadingNotification"
@@ -22,13 +24,16 @@ const FolderDrive = (props) => {
   const [state, setState] = useMergedState({
     loading: true,
     infoFolder: {},
-    listFile: [],
-    listSubFolder: [],
-    listParentFolder: []
+    listParentFolder: [],
+    listFileAndFolder: [],
+    pagination: {
+      page: 1,
+      per_page: 20
+    }
   })
 
   const driveState = useSelector((state) => state.drive)
-  const { reloadPage } = driveState
+  const { reloadPage, filter } = driveState
 
   const dispatch = useDispatch()
 
@@ -40,7 +45,9 @@ const FolderDrive = (props) => {
     })
 
     const params = {
-      id: id
+      id: id,
+      ...state.pagination,
+      sort_by: filter.sort.value
     }
 
     driveApi
@@ -48,8 +55,7 @@ const FolderDrive = (props) => {
       .then((res) => {
         setState({
           infoFolder: res.data.info_folder,
-          listFile: res.data.list_file,
-          listSubFolder: res.data.list_sub_folder,
+          listFileAndFolder: res.data.list_file_and_folder,
           listParentFolder: res.data.list_parent_folder,
           loading: false
         })
@@ -58,8 +64,7 @@ const FolderDrive = (props) => {
       .catch((err) => {
         setState({
           infoFolder: {},
-          listFile: [],
-          listSubFolder: [],
+          listFileAndFolder: [],
           listParentFolder: [],
           loading: false
         })
@@ -84,6 +89,14 @@ const FolderDrive = (props) => {
     return <FolderDriveHeader listParentFolder={state.listParentFolder} />
   }
 
+  const renderFolderDriveBody = () => {
+    return <FolderDriveBody listFileAndFolder={state.listFileAndFolder} />
+  }
+
+  const renderFolderDriveFooter = () => {
+    return <FolderDriveFooter />
+  }
+
   const renderUploadModal = () => {
     return <UploadModal />
   }
@@ -106,6 +119,12 @@ const FolderDrive = (props) => {
         <div className="ps-4 pt-2 pe-4 folder-drive-page">
           <div className="mb-4 folder-drive-header-container">
             <Fragment>{renderFolderDriveHeader()}</Fragment>
+          </div>
+          <div className="mb-4 folder-drive-body-container">
+            <Fragment>{renderFolderDriveBody()}</Fragment>
+          </div>
+          <div className="mb-4 folder-drive-footer-container">
+            <Fragment>{renderFolderDriveFooter()}</Fragment>
           </div>
         </div>
         <Fragment>{renderUploadingNotification()}</Fragment>

@@ -10,7 +10,7 @@ const initialState = {
   filter: {
     sort: {
       label: "due_date",
-      value: "due_date"
+      value: "created_at"
     },
     layout: "list" // [list, grid]
   },
@@ -18,7 +18,10 @@ const initialState = {
   isUploadingFileAndFolder: false,
   listUploadingFile: {},
   showUploadNotification: false,
-  axiosTokenSource: {}
+  axiosTokenSource: {},
+  recentFileAndFolder: {},
+  modalShare: false,
+  modalDataShare: {}
 }
 
 const driveSlice = createSlice({
@@ -76,6 +79,23 @@ const driveSlice = createSlice({
       listKey.map((item) => {
         state[item] = initialState[item]
       })
+    },
+    setRecentFileAndFolder: (state, action) => {
+      if (action.payload.pushType === "new") {
+        state.recentFileAndFolder = action.payload.data
+      } else if (action.payload.pushType === "update") {
+        const payload = action.payload
+        state.recentFileAndFolder = {
+          ...state.recentFileAndFolder,
+          [payload.key]: payload.data
+        }
+      }
+    },
+    toggleModalShare: (state) => {
+      state.modalShare = !state.modalShare
+    },
+    setModalDataShare: (state, action) => {
+      state.modalDataShare = action.payload
     }
   }
 })
@@ -92,7 +112,10 @@ export const {
   updateUploadingProgress,
   setShowUploadNotification,
   setAxiosTokenSource,
-  resetDriveState
+  resetDriveState,
+  setRecentFileAndFolder,
+  toggleModalShare,
+  setModalDataShare
 } = driveSlice.actions
 
 export default driveSlice.reducer

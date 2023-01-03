@@ -158,6 +158,10 @@ $routes->post('drive/create-drive-folder', 'Drive::create_drive_folder_post', ['
 $routes->get('drive/get-drive-folder-detail', 'Drive::get_drive_folder_detail', ['namespace' => 'App\Controllers']);
 $routes->post('drive/upload-file-drive', 'Drive::upload_file_drive_post', ['namespace' => 'App\Controllers']);
 $routes->post('drive/get-upload-progress', 'Drive::get_upload_progress_get', ['namespace' => 'App\Controllers']);
+$routes->post('drive/share-file-and-folder', 'Drive::share_file_and_folder_post', ['namespace' => 'App\Controllers']);
+$routes->get('drive/get-file-and-folder-permission', 'Drive::get_file_and_folder_permission_get', ['namespace' => 'App\Controllers']);
+$routes->post('drive/update-favorite', 'Drive::update_favorite_post', ['namespace' => 'App\Controllers']);
+$routes->post('drive/remove-drive-content', 'Drive::remove_drive_content_post', ['namespace' => 'App\Controllers']);
 
 /*** Route for Search ****/
 $routes->get('search/get_data_user', 'Search::get_data_employee_search_get', ['namespace' => 'App\Controllers']);

@@ -864,12 +864,20 @@
         "copy": "Copy",
         "delete": "Delete",
         "star": "Star",
+        "favorite": "Favorite",
         "view_detail": "View Detail",
         "upload": "Upload",
         "save": "Save",
         "cancel": "Cancel",
         "hide": "Hide",
         "add_more_file": "Add more file"
+      },
+      "field_options": {
+        "share_type": {
+          "share_private": "Private",
+          "share_to_everyone": "Share to everyone",
+          "share_to_user": "Share to users"
+        }
       },
       "text": {
         "link_your_account": "Link your account",
@@ -894,7 +902,22 @@
           "content": "Your upload is not complete. Do you want to cancel the upload?"
         },
         "upload_successful_many": "Upload Successful, {file_number} files has been uploaded!",
-        "upload_successful": "Upload Successful!"
+        "upload_successful": "Upload Successful!",
+        "share_file_and_folder": "Share {name}",
+        "find_user": "Find User",
+        "chosen_users": "Chosen Users",
+        "view_only": "View Only",
+        "editable": "Editable",
+        "share_file_and_folder_warning": "Editors can change permissions and share",
+        "share_type_text": {
+          "private": "Only owner can open using this content!",
+          "share_editable": "Shared users can change permissions and share!",
+          "share_view_only": "Shared users can only view the content!"
+        },
+        "confirm_delete": {
+          "title": "Remove {name}",
+          "content": "File or Folder will be moved to Trash"
+        }
       }
     },
     "drive_folders": {

@@ -35,5 +35,29 @@ export const driveApi = {
         ...config
       }
     )
+  },
+  async shareFileAndFolder(data) {
+    return await axiosApi.post(
+      "/drive/share-file-and-folder",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async getFileAndFolderPermission(param) {
+    const strParam = object2QueryString(param)
+    return await axiosApi.get(
+      `/drive/get-file-and-folder-permission?get${strParam}`
+    )
+  },
+  async updateFavorite(data) {
+    return await axiosApi.post(
+      `/drive/update-favorite`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async removeDriveContent(data) {
+    return await axiosApi.post(
+      `/drive/remove-drive-content`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

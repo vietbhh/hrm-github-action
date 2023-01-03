@@ -2,61 +2,30 @@
 import { Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
-import { Row, Col } from "reactstrap"
 // ** Components
-import ItemRecentFileAndFolder from "./ItemRecentFileAndFolder"
+import ListFileAndFolderDrive from "../../Common/ListFileAndFolderDrive/ListFileAndFolderDrive"
 
 const ListRecentFileAndFolder = (props) => {
   const {
     // ** props
+    loadingRecentFileAndFolder,
+    recentFileAndFolder,
     // ** methods
+    handleAfterUpdateFavorite
   } = props
-
-  const mockData = [
-    {
-      type: "file",
-      name: "My report.docx",
-      file_extension: "docx",
-      file_size: 7
-    },
-    {
-      type: "file",
-      name: "Backsound.mp3",
-      file_extension: "mp3",
-      file_size: 5.6
-    },
-    {
-      type: "file",
-      name: "Artboard-1.png",
-      file_extension: "png",
-      file_size: 5.6
-    },
-    {
-      type: "file",
-      name: "Final Present.mp4",
-      file_extension: "mp4",
-      file_size: 154
-    },
-    {
-      type: "folder",
-      name: "Work",
-      total_size: 162816
-    }
-  ]
 
   // ** render
   const renderListRecentFileAndFolder = () => {
+    if (loadingRecentFileAndFolder) {
+      return ""
+    }
+
     return (
       <Fragment>
-        <Row>
-          {mockData.map((item, index) => {
-            return (
-              <Col sm={12} key={`recent-file-and-folder-item-${index}`}>
-                <ItemRecentFileAndFolder item={item} />
-              </Col>
-            )
-          })}
-        </Row>
+        <ListFileAndFolderDrive
+          data={recentFileAndFolder}
+          handleAfterUpdateFavorite={handleAfterUpdateFavorite}
+        />
       </Fragment>
     )
   }
@@ -68,7 +37,7 @@ const ListRecentFileAndFolder = (props) => {
           <h4>{useFormatMessage("modules.drive.title.recent")}</h4>
         </div>
         <div>
-            <Fragment>{renderListRecentFileAndFolder()}</Fragment>
+          <Fragment>{renderListRecentFileAndFolder()}</Fragment>
         </div>
       </div>
     </Fragment>

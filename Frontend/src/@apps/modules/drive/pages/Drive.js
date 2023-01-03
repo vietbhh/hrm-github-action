@@ -4,7 +4,7 @@ import { driveApi } from "../common/api"
 import { useMergedState } from "@apps/utility/common"
 // ** redux
 import { useSelector, useDispatch } from "react-redux"
-import { setListFolder } from "../common/reducer/drive"
+import { setRecentFileAndFolder } from "../common/reducer/drive"
 // ** Styles
 // ** Components
 import DriveContent from "../components/details/DriveContent/DriveContent"
@@ -14,12 +14,69 @@ import UploadingNotification from "../components/details/UploadingNotification/U
 
 const Drive = (props) => {
   const [state, setState] = useMergedState({
-    loading: true
+    loading: true,
+    loadingRecentFileAndFolder: true
   })
+
+  const driveState = useSelector((state) => state.drive)
+  const { recentFileAndFolder } = driveState
 
   const dispatch = useDispatch()
 
-  const loadInitDrive = () => {}
+  const loadInitDrive = () => {
+    setState({
+      loading: true,
+      loadingRecentFileAndFolder: true
+    })
+
+    driveApi
+      .getInitDrive()
+      .then((res) => {
+        dispatch(
+          setRecentFileAndFolder({
+            pushType: "new",
+            data: res.data.list_recent_file_and_folder
+          })
+        )
+
+        setState({
+          loading: false,
+          loadingRecentFileAndFolder: false
+        })
+      })
+      .catch((err) => {
+        dispatch(
+          setRecentFileAndFolder({
+            pushType: "new",
+            data: []
+          })
+        )
+
+        setState({
+          loading: false,
+          loadingRecentFileAndFolder: false
+        })
+      })
+  }
+
+  const handleAfterUpload = () => {
+    console.log("zsdaf")
+  }
+
+  const handleAfterUpdateFavorite = (data) => {
+    const newData = {
+      ...data,
+      is_favorite: !data.is_favorite
+    }
+
+    dispatch(
+      setRecentFileAndFolder({
+        pushType: "update",
+        data: newData,
+        key: data.key
+      })
+    )
+  }
 
   // ** effect
   useEffect(() => {
@@ -28,34 +85,36 @@ const Drive = (props) => {
 
   // ** render
   const renderDriveContent = () => {
-    return <DriveContent />
+    return (
+      <DriveContent
+        loadingRecentFileAndFolder={state.loadingRecentFileAndFolder}
+        recentFileAndFolder={recentFileAndFolder}
+        handleAfterUpdateFavorite={handleAfterUpdateFavorite}
+      />
+    )
   }
 
-  const renderUploadModal = () => {
-    return <UploadModal />
-  }
+  const renderComponent = () => {
+    if (state.loading) {
+      return ""
+    }
 
-  const renderNewFolderModal = () => {
-    return <NewFolderModal />
-  }
-
-  const renderUploadingNotification = () => {
-    return <UploadingNotification />
-  }
-
-  return (
-    <Fragment>
-      <div>
-        <div className="ps-4 pt-2 pe-4">
-          <Fragment>{renderDriveContent()}</Fragment>
-          <div></div>
+    return (
+      <Fragment>
+        <div>
+          <div className="ps-4 pt-2 pe-4">
+            <Fragment>{renderDriveContent()}</Fragment>
+            <div></div>
+          </div>
         </div>
-      </div>
-      <Fragment>{renderUploadingNotification()}</Fragment>
-      <Fragment>{renderUploadModal()}</Fragment>
-      <Fragment>{renderNewFolderModal()}</Fragment>
-    </Fragment>
-  )
+        <UploadingNotification />
+        <UploadModal handleAfterUpload={handleAfterUpload} />
+        <NewFolderModal />
+      </Fragment>
+    )
+  }
+
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default Drive

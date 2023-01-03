@@ -27,6 +27,7 @@ const UploadModal = (props) => {
   const {
     // ** props
     // ** methods
+    handleAfterUpload
   } = props
 
   const [state, setState] = useMergedState({
@@ -116,10 +117,16 @@ const UploadModal = (props) => {
           .catch((err) => {})
       })
     } else if (modalUploadType === "folder") {
+      const filePathClient = []
+      state.listFileUpload.map((item) => {
+        filePathClient.push(item.webkitRelativePath)
+      })
+
       const values = {
         folder_id: id === undefined ? 0 : id,
         file: state.listFileUpload,
         upload_type: modalUploadType,
+        file_path_client: filePathClient,
         PHP_SESSION_UPLOAD_PROGRESS: "upload_drive"
       }
 
@@ -177,7 +184,7 @@ const UploadModal = (props) => {
   }, [modalUpload])
 
   useEffect(() => {
-    if (Object.keys(listUploadingFile).length > 0) {
+    if (Object.keys(listUploadingFile).length > 0) { 
       const isCloseModal = _getUploadProcess(listUploadingFile)
 
       if (isCloseModal) {
@@ -191,6 +198,10 @@ const UploadModal = (props) => {
               : useFormatMessage("modules.drive.text.upload_successful")
         })
         resetListUploadingFile()
+
+        if (typeof handleAfterUpload === "function") {
+          handleAfterUpload()
+        }
       }
     }
   }, [listUploadingFile])

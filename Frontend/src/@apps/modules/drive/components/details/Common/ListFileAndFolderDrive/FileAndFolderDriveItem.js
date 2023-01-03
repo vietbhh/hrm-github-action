@@ -1,17 +1,22 @@
 // ** React Imports
 import { Fragment } from "react"
-import { getFileAndFolderIcon } from "../../../../common/common"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  getFileAndFolderIcon,
+  formatBytes
+} from "@apps/modules/drive/common/common"
+import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 import { Card, CardBody, Row, Col } from "reactstrap"
 // ** Components
-import ActionFileAndFolder from "../../Common/ListFileAndFolderDrive/ActionFileAndFolder"
+import ActionFileAndFolder from "./ActionFileAndFolder"
 
-const ItemRecentFileAndFolder = (props) => {
+const FileAndFolderDriveItem = (props) => {
   const {
     // ** props
-    item
+    index,
+    item,
     // ** methods
+    handleAfterUpdateFavorite
   } = props
 
   // ** render
@@ -23,7 +28,7 @@ const ItemRecentFileAndFolder = (props) => {
     }
 
     return (
-      <Fragment>{`${item.file_extension.toUpperCase()} ${useFormatMessage(
+      <Fragment>{`${item.file_type.toUpperCase()} ${useFormatMessage(
         "modules.drive.text.file"
       )}`}</Fragment>
     )
@@ -31,14 +36,10 @@ const ItemRecentFileAndFolder = (props) => {
 
   const renderSize = () => {
     if (item.type === "folder") {
-      return <Fragment>{Math.floor(item.total_size / 1024)} GB</Fragment>
+      return <Fragment>{formatBytes(item.total_size)}</Fragment>
     }
 
-    return <Fragment>{item.file_size} MB</Fragment>
-  }
-
-  const renderAction = () => {
-    return <ActionFileAndFolder />
+    return <Fragment>{formatBytes(item.file_size)}</Fragment>
   }
 
   return (
@@ -48,11 +49,11 @@ const ItemRecentFileAndFolder = (props) => {
           <Row>
             <Col sm={1}>
               <div className="d-flex align-items-center justify-content-center me-2 icon-file-and-folder">
-                {getFileAndFolderIcon(item.type, item?.file_extension)}
+                {getFileAndFolderIcon(item.type, item?.file_type)}
               </div>
             </Col>
             <Col sm={4} className="d-flex align-items-center">
-              <h6 className="mb-0 name-file-and-folder">{item.name}</h6>
+              <Fragment>{item.name}</Fragment>
             </Col>
             <Col sm={3} className="d-flex align-items-center">
               <p className="mb-0 extension-file-and-folder">
@@ -65,7 +66,11 @@ const ItemRecentFileAndFolder = (props) => {
               </p>
             </Col>
             <Col sm={1} className="d-flex align-items-center">
-              <Fragment>{renderAction()}</Fragment>
+              <ActionFileAndFolder
+                index={index}
+                item={item}
+                handleAfterUpdateFavorite={handleAfterUpdateFavorite}
+              />
             </Col>
           </Row>
         </CardBody>
@@ -74,4 +79,4 @@ const ItemRecentFileAndFolder = (props) => {
   )
 }
 
-export default ItemRecentFileAndFolder
+export default FileAndFolderDriveItem

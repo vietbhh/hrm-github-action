@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import { driveApi } from "@apps/modules/drive/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
@@ -14,6 +14,7 @@ import menuDrive from "../@apps/modules/drive/components/details/LeftMenu/menuDr
 // ** import component
 import Navbar2 from "./components/custom/Navbar2"
 import NewFiles from "../@apps/modules/drive/components/details/LeftMenu/NewFiles"
+import ShareFileAndFolderDriveModal from "../@apps/modules/drive/components/modals/ShareModal/ShareFileAndFolderDriveModal"
 
 // ** redux
 import { useSelector, useDispatch } from "react-redux"
@@ -103,19 +104,33 @@ const DriveLayout = (props) => {
   }, [])
 
   // ** render
-  return !state.loading ? (
-    <Layout
-      menuData={[...myFolderMenu, ...menuDrive]}
-      navbar={(navProps) => <Navbar2 {...navProps} />}
-      outerCustomMenuComponent={(customProps) => <NewFiles {...customProps} />}
-      className="navbar-2 drive-page"
-      fixedSidebar={true}
-      {...props}>
-      <Outlet />
-    </Layout>
-  ) : (
-    ""
-  )
+  const renderShareFileAndFolderDriveModal = () => {
+    return <ShareFileAndFolderDriveModal />
+  }
+
+  const renderComponent = () => {
+    if (state.loading) {
+      return ""
+    }
+
+    return (
+      <Layout
+        menuData={[...myFolderMenu, ...menuDrive]}
+        navbar={(navProps) => <Navbar2 {...navProps} />}
+        outerCustomMenuComponent={(customProps) => (
+          <NewFiles {...customProps} />
+        )}
+        className="navbar-2 drive-page"
+        fixedSidebar={true}
+        {...props}>
+        <Outlet />
+
+        <Fragment>{renderShareFileAndFolderDriveModal()}</Fragment>
+      </Layout>
+    )
+  }
+
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default DriveLayout

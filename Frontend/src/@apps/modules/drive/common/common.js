@@ -159,3 +159,17 @@ export const _getUploadProcess = (listUploadingFile) => {
 
   return isUploadComplete
 }
+
+export const getItemType = (item) => {
+  if (Object.keys(item).length === 0) {
+    return ""
+  }
+
+  const itemType =
+    item.file_size !== undefined &&
+    item.file_type !== undefined
+      ? "file"
+      : "folder"
+
+  return itemType
+}

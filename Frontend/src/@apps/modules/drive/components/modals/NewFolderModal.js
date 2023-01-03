@@ -21,7 +21,6 @@ import {
   Row,
   Spinner
 } from "reactstrap"
-import { Space } from "antd"
 // ** Components
 import { ErpInput } from "@apps/components/common/ErpField"
 import notification from "@apps/utility/notification"
@@ -58,7 +57,7 @@ const NewFolderModal = (props) => {
       loading: true
     })
 
-    values.parent = id
+    values.parent = id === undefined ? 0 : id
     driveApi
       .createDriveFolder(values)
       .then((res) => {
