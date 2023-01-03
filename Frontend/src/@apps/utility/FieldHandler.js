@@ -410,7 +410,6 @@ export const FieldHandleBase = (props) => {
                 if (!isLoadPaginate) {
                   optionsLists = [...optionsLists, newOpt]
                 }
-                console.log(optionsLists)
               })
               .catch((err) => {
                 console.log(err)
