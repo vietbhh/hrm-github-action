@@ -1,10 +1,11 @@
 // ** React Imports
-import { ErpCheckbox } from "@apps/components/common/ErpField"
-import Photo from "@apps/modules/download/pages/Photo"
+import { Fragment, useState } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 // ** Components
-import { Table } from "rsuite"
+import { Table, Pagination } from "rsuite"
+import { ErpCheckbox } from "@apps/components/common/ErpField"
+import Photo from "@apps/modules/download/pages/Photo"
 
 const { Column, HeaderCell, Cell } = Table
 
@@ -17,6 +18,9 @@ const TableAssetList = (props) => {
     // ** methods
     setChosenAssetList
   } = props
+
+  const [limit, setLimit] = useState(30)
+  const [page, setPage] = useState(1)
 
   const handleCheckAll = (checked) => {
     const newChosen = checked
@@ -34,9 +38,21 @@ const TableAssetList = (props) => {
           return item.id !== value.id
         })
 
-    console.log(newChosen)
     setChosenAssetList(newChosen)
   }
+
+  const handleChangeLimit = (dataKey) => {
+    setPage(1)
+    setLimit(dataKey)
+  }
+
+  const data = listData.filter((value, index) => {
+    {
+      const start = limit * (page - 1)
+      const end = start + limit
+      return index >= start && index < end
+    }
+  })
 
   // ** render
   const AssetNameCell = ({ rowData, dataKey, ...props }) => {
@@ -97,52 +113,73 @@ const TableAssetList = (props) => {
   }
 
   return (
-    <Table
-      data={listData}
-      autoHeight={true}
-      rowHeight={90}
-      affixHorizontalScrollbar>
-      {displayCheckbox && (
-        <Column width={50} align="center" fixed verticalAlign="middle">
+    <Fragment>
+      <Table
+        data={data}
+        autoHeight={true}
+        rowHeight={90}
+        affixHorizontalScrollbar>
+        {displayCheckbox && (
+          <Column width={50} align="center" fixed verticalAlign="middle">
+            <HeaderCell>
+              <div style={{ lineHeight: "40px" }}>
+                <ErpCheckbox
+                  id="select_all_row"
+                  name="select_all_row"
+                  inline
+                  defaultChecked={false}
+                  onChange={(e) => {
+                    handleCheckAll(e.target.checked)
+                  }}
+                />
+              </div>
+            </HeaderCell>
+            <CheckCell
+              dataKey="id"
+              chosenAssetList={chosenAssetList}
+              onChange={handleCheck}
+            />
+          </Column>
+        )}
+        <Column width={320} align="left" fixed verticalAlign="middle">
           <HeaderCell>
-            <div style={{ lineHeight: "40px" }}>
-              <ErpCheckbox
-                id="select_all_row"
-                name="select_all_row"
-                inline
-                defaultChecked={false}
-                onChange={(e) => {
-                  handleCheckAll(e.target.checked)
-                }}
-              />
-            </div>
+            {useFormatMessage("modules.asset_lists.fields.asset_name")}
           </HeaderCell>
-          <CheckCell
-            dataKey="id"
-            chosenAssetList={chosenAssetList}
-            onChange={handleCheck}
-          />
+          <AssetNameCell />
         </Column>
-      )}
-      <Column width={320} align="left" fixed verticalAlign="middle">
-        <HeaderCell>
-          {useFormatMessage("modules.asset_lists.fields.asset_name")}
-        </HeaderCell>
-        <AssetNameCell />
-      </Column>
-      <Column width={200} align="left" fixed verticalAlign="middle">
-        <HeaderCell>
-          {useFormatMessage("modules.asset_brands.fields.brand_name")}
-        </HeaderCell>
-        <Cell dataKey="brand_name" />
-      </Column>
-      <Column flexGrow={1} align="left" fixed verticalAlign="middle">
-        <HeaderCell>
-          {useFormatMessage("modules.asset_lists.fields.asset_status")}
-        </HeaderCell>
-        <Cell dataKey="status_name" />
-      </Column>
-    </Table>
+        <Column width={200} align="left" fixed verticalAlign="middle">
+          <HeaderCell>
+            {useFormatMessage("modules.asset_brands.fields.brand_name")}
+          </HeaderCell>
+          <Cell dataKey="brand_name" />
+        </Column>
+        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+          <HeaderCell>
+            {useFormatMessage("modules.asset_lists.fields.asset_status")}
+          </HeaderCell>
+          <Cell dataKey="status_name" />
+        </Column>
+      </Table>
+      <div className="mt-1">
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={5}
+          size="xs"
+          layout={["total", "-", "limit", "|", "pager", "skip"]}
+          total={listData.length}
+          limitOptions={[10, 30, 50]}
+          limit={limit}
+          activePage={page}
+          onChangePage={setPage}
+          onChangeLimit={handleChangeLimit}
+        />
+      </div>
+    </Fragment>
   )
 }
 

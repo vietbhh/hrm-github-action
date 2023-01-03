@@ -126,6 +126,8 @@ const BarcodeGenerator = () => {
             </div>
             <div>
               <ReactToPrint
+                pageStyle=""
+                copyStyles={false}
                 trigger={() => {
                   return (
                     <Button.Ripple color="primary">

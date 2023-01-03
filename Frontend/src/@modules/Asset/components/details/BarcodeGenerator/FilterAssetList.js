@@ -94,6 +94,7 @@ const FilterAssetList = (props) => {
             name="owner"
             id="owner"
             nolabel={true}
+            isClearable={true}
             onChange={(e) => handleChangeFilter("owner", e?.value)}
           />
         </Col>
