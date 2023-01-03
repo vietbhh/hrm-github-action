@@ -8,7 +8,7 @@ import defaultAvatar from "@src/assets/images/portrait/small/avatar-s-11.jpg"
 //import Avatar from '@components/avatar'
 // ** Utils
 import { isUserLoggedIn } from "@utils"
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useContext, useEffect, useState } from "react"
 import { Airplay, HelpCircle, Lock, Power, User } from "react-feather"
 
 // ** Store & Actions
@@ -23,6 +23,7 @@ import {
   UncontrolledDropdown
 } from "reactstrap"
 import { handleLogout } from "redux/authentication"
+import SocketContext from "utility/context/Socket"
 import ChangePasswordModal from "./ChangePasswordModal"
 
 const UserDropdown = ({
@@ -36,7 +37,7 @@ const UserDropdown = ({
 }) => {
   // ** Store Vars
   const dispatch = useDispatch()
-
+  const socket = useContext(SocketContext)
   // ** State
   const [userData, setUserData] = useState(null)
   const [changePwdModal, setchangePwdModal] = useState(false)
@@ -137,9 +138,12 @@ const UserDropdown = ({
             <span className="align-middle">FAQ</span>
           </DropdownItem>
           <DropdownItem
-            tag={Link}
-            to="/login"
-            onClick={() => dispatch(handleLogout())}>
+            onClick={() => {
+              dispatch(handleLogout())
+              if (socket.connected) {
+                socket.close()
+              }
+            }}>
             <Power size={14} className="me-75" />
             <span className="align-middle">
               {useFormatMessage("auth.logout")}

@@ -1,10 +1,19 @@
 // ** Redux Imports
-import { createSlice } from "@reduxjs/toolkit"
+import { userApi } from "@apps/modules/users/common/api"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 // ** UseJWT import to get config
 import useJwt from "@src/auth/jwt/useJwt"
 
 const config = useJwt.jwtConfig
+
+export const handleLogout = createAsyncThunk(
+  "authentication/handleLogout",
+  async () => {
+    await userApi.removeDeviceToken()
+    return true
+  }
+)
 
 export const authSlice = createSlice({
   name: "authentication",
@@ -42,8 +51,19 @@ export const authSlice = createSlice({
       // ** Update user in localStorage
       localStorage.setItem("userData", JSON.stringify(userData))
       localStorage.setItem("settings", JSON.stringify(settings))
+    }
+  },
+  extraReducers: {
+    [handleLogout.fulfilled]: (state, action) => {
+      state.userData = {}
+      state.settings = {}
+      state.permits = []
+      state[config.storageTokenKeyName] = null
+      state[config.storageRefreshTokenKeyName] = null
+      // ** Remove user, accessToken & refreshToken from localStorage
+      localStorage.clear()
     },
-    handleLogout: (state) => {
+    [handleLogout.rejected]: (state, action) => {
       state.userData = {}
       state.settings = {}
       state.permits = []
@@ -55,7 +75,6 @@ export const authSlice = createSlice({
   }
 })
 
-export const { handleLogin, handleFetchProfile, handleLogout } =
-  authSlice.actions
+export const { handleLogin, handleFetchProfile } = authSlice.actions
 
 export default authSlice.reducer

@@ -41,6 +41,16 @@ export const downloadApi = {
       )
     })
   },
+  getAvatarByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      resolve(
+        axiosApi.get("/download/avatar?user=" + userId, {
+          disableLoading: true,
+          responseType: "blob"
+        })
+      )
+    })
+  },
   getFile(file) {
     return new Promise((resolve, reject) => {
       resolve(

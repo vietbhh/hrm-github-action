@@ -36,7 +36,6 @@ use App\Libraries\Dump\Mysqldump;
 use App\Models\AppOptionModel;
 use CodeIgniter\Model;
 use Config\Database;
-use Halo\Modules\Config\Module as ModulesConfig;
 use Halo\Modules\Entities\Module;
 use Halo\Modules\Exceptions\ModulesException;
 use Halo\Modules\Models\EmptyModel;
@@ -48,27 +47,20 @@ use Tatter\Permits\Models\PermitModel;
 /*** CLASS ***/
 class ModulesManager
 {
-	/**
-	 * Our configuration instance.
-	 *
-	 * @var ModulesConfig
-	 */
-	protected $config;
 
+	protected $config;
 	/**
 	 * The model for fetching module.
 	 *
 	 * @var ModuleModel
 	 */
 	protected Model $moduleModel;
-
 	/**
 	 * The model for fetching route.
 	 *
 	 * @var RouteModel
 	 */
 	protected Model $routeModel;
-
 	/**
 	 * The model for fetching meta.
 	 *
@@ -76,163 +68,55 @@ class ModulesManager
 	 */
 	protected Model $metaModel;
 
-
 	/**
 	 * Current module model
 	 */
 	public Model $model;
-
-
 	public string $module;
-
 	public $moduleData;
 
-	protected $route = [
-		'default' => [
-			'/{moduleName}/:action?/:id?' => 'default_route'
-		],
-		'extend' => []
-	];
-	protected $permits = [
-		'manage' => 'Allow manage full resource of this module',
-		'access' => 'Allow access to this module',
-		'list' => 'Allow view data on this module (only data that their are owner or has view/edit permission)',
-		'listAll' => 'Allow view all data on this module',
-		'add' => 'Allow create new data',
-		'update' => 'Allow update data (only data that their are owner or has edit permission)',
-		'updateAll' => 'Allow update all data on this module',
-		'delete' => 'Allow delete data (only data that their are owner)',
-		'deleteAll' => 'Allow delete all data on this module',
-		'export' => 'Allow export data on this module'
-	];
-
+	protected $route;
+	protected $permits;
 	//Declare default fields for database
-	protected $defaultFields = [
-		'fields' => [
-			'id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-			'owner' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
-			'created_by' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
-			'updated_by' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
-			'created_at' => ['type' => 'datetime', 'null' => true],
-			'updated_at' => ['type' => 'datetime', 'null' => true],
-			'deleted_at' => ['type' => 'datetime', 'null' => true],
-			'view_permissions' => ['type' => 'json', 'null' => true],
-			'update_permissions' => ['type' => 'json', 'null' => true]
-		],
-		'keys' => [
-			'id' => ['primary' => true, 'unique' => true]
-		],
-		'foreignKeys' => [
-			'owner' => ['refTable' => 'users', 'refField' => 'id', 'onDelete' => 'NO ACTION', 'onUpdate' => 'CASCADE'],
-			'created_by' => ['refTable' => 'users', 'refField' => 'id', 'onDelete' => 'NO ACTION', 'onUpdate' => 'CASCADE'],
-			'updated_by' => ['refTable' => 'users', 'refField' => 'id', 'onDelete' => 'NO ACTION', 'onUpdate' => 'CASCADE'],
-		]
-	];
+	protected $defaultFields;
 	//Declare default fields for erp app
-	protected $defaultMetasFields = [
-		['field' => 'owner', 'field_type' => 'select_module', 'field_filter_show' => true, 'field_options' => [], 'field_select_module' => 'users', 'field_select_field_show' => 'username'],
-		['field' => 'created_by', 'field_type' => 'select_module', 'field_filter_show' => true, 'field_options' => [], 'field_select_module' => 'users', 'field_select_field_show' => 'username'],
-		['field' => 'updated_by', 'field_type' => 'select_module', 'field_filter_show' => true, 'field_options' => [], 'field_select_module' => 'users', 'field_select_field_show' => 'username'],
-		['field' => 'created_at', 'field_type' => 'datetime', 'field_filter_show' => true, 'field_options' => []],
-		['field' => 'updated_at', 'field_type' => 'datetime', 'field_filter_show' => true, 'field_options' => []],
-		['field' => 'deleted_at', 'field_type' => 'datetime', 'field_filter_show' => false, 'field_options' => []],
-		['field' => 'view_permissions', 'field_type' => 'select_module', 'field_filter_show' => true, 'field_options' => [], 'field_select_module' => 'users', 'field_select_field_show' => 'username'],
-		['field' => 'update_permissions', 'field_type' => 'select_module', 'field_filter_show' => true, 'field_options' => [], 'field_select_module' => 'users', 'field_select_field_show' => 'username']
-	];
+	protected $defaultMetasFields;
 	//Declare properties for each type of field
-	protected $fieldTypeDef = [
-		'text' => ['type' => 'varchar', 'constraint' => '255', 'null' => true, 'default' => ''],
-		'number_int' => ['type' => 'int', 'constraint' => 11, 'null' => true, 'default' => 0],
-		'number_dec' => ['type' => 'decimal', 'constraint' => '10,2', 'null' => true, 'default' => 0.00],
-		'textarea' => ['type' => 'longtext', 'null' => true],
-		'date' => ['type' => 'date', 'null' => true],
-		'datetime' => ['type' => 'datetime', 'null' => true],
-		'time' => ['type' => 'time', 'null' => true],
-		'select_option' => ['type' => 'json', 'null' => true],
-		'select_module' => ['type' => 'json', 'null' => true],
-		'checkbox' => ['type' => 'json', 'null' => true],
-		'checkbox_module' => ['type' => 'json', 'null' => true],
-		'radio' => ['type' => 'smallint', 'unsigned' => true, 'null' => true, 'default' => 0],
-		'radio_module' => ['type' => 'smallint', 'unsigned' => true, 'null' => true, 'default' => 0],
-		'switch' => ['type' => 'tinyint', 'constraint' => '1', 'null' => true, 'default' => 0],
-		'upload_one' => ['type' => 'text', 'null' => true, 'default' => ''],
-		'upload_multiple' => ['type' => 'json', 'null' => true],
-		'upload_image' => ['type' => 'text', 'null' => true, 'default' => ''],
-		'other' => ['type' => 'varchar', 'constraint' => '255', 'null' => true, 'default' => ''],
-	];
+	protected $fieldTypeDef;
 	//Declare filter properties for each field type
-	protected $fieldTypeFilterDef = [
-		'text' => [
-			'operator' => ['=', '!=', 'contains', '!contains', 'startswith', '!startswith', 'endswith', '!endswith']
-		],
-		'number_int' => [
-			'operator' => ['=', '!=', '>', '<', '>=', '<=', 'between']
-		],
-		'number_dec' => [
-			'operator' => ['=', '!=', '>', '<', '>=', '<=', 'between']
-		],
-		'textarea' => [
-			'operator' => ['=', '!=', 'contains', '!contains', 'startswith', '!startswith', 'endswith', '!endswith']
-		],
-		'date' => [
-			'operator' => ['=', '!=', '>', '<', '>=', '<=', 'between']
-		],
-		'datetime' => [
-			'operator' => ['=', '!=', '>', '<', '>=', '<=', 'between']
-		],
-		'time' => [
-			'operator' => ['=', '!=', '>', '<', '>=', '<=', 'between']
-		],
-		'select_option' => [
-			'operator' => ['=', '!=']
-		],
-		'select_module' => [
-			'operator' => ['=', '!=']
-		],
-		'checkbox' => [
-			'operator' => ['=', '!=']
-		],
-		'checkbox_module' => [
-			'operator' => ['=', '!=']
-		],
-		'radio' => [
-			'operator' => ['=', '!=']
-		],
-		'radio_module' => [
-			'operator' => ['=', '!=']
-		],
-		'switch' => [
-			'operator' => ['=']
-		],
-		'upload_one' => [
-			'operator' => ['=', '!=', 'contains', '!contains']
-		],
-		'upload_multiple' => [
-			'operator' => ['=', '!=', 'contains', '!contains']
-		],
-		'upload_image' => [
-			'operator' => ['=', '!=', 'contains', '!contains']
-		]
-	];
-
-	protected $bannedMetaWords = ['id', 'owner', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'view_permissions', 'update_permissions'];
-
+	protected $fieldTypeFilterDef;
+	protected $bannedMetaWords;
+	protected $systemModules;
 	protected $forge;
 
 	/**
 	 * Stores dependencies
 	 *
 	 * @param $module
-	 * @param ModulesConfig $config
 	 * @param ModuleModel $model
 	 */
-	public function __construct($module, ModulesConfig $config, ModuleModel $model, RouteModel $routeModel, MetaModel $metaModel)
+	public function __construct($module, ModuleModel $model, RouteModel $routeModel, MetaModel $metaModel)
 	{
-		$this->config = $config;
 		$this->moduleModel = $model;
 		$this->routeModel = $routeModel;
 		$this->metaModel = $metaModel;
 		$this->forge = \Config\Database::forge();
+
+		//load config
+		$config_base = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "Config" . DIRECTORY_SEPARATOR . "config_base.json"), true);
+
+		$config_system_modules = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "Config" . DIRECTORY_SEPARATOR . "config_system_modules.json"), true);
+
+		$this->config = $config_base;
+		$this->route = $config_base['route'];
+		$this->permits = $config_base['permits'];
+		$this->defaultFields = $config_base['defaultFields'];
+		$this->defaultMetasFields = $config_base['defaultMetasFields'];
+		$this->fieldTypeDef = $config_base['fieldTypeDef'];
+		$this->fieldTypeFilterDef = $config_base['fieldTypeFilterDef'];
+		$this->bannedMetaWords = $config_base['bannedMetaWords'];
+		$this->systemModules = $config_system_modules;
+
 		if (!empty($module)) {
 			$this->setModule($module);
 		}
@@ -241,27 +125,27 @@ class ModulesManager
 
 	public function getModuleTablePrefix(): string
 	{
-		return $this->config->moduleTablePrefix;
+		return $this->config['moduleTablePrefix'];
 	}
 
 	public function getRouteModuleNameVar(): string
 	{
-		return $this->config->routeModuleNameVar;
+		return $this->config['routeModuleNameVar'];
 	}
 
 	public function getMetaFieldsAllowOptionSelection(): array
 	{
-		return $this->config->metaFieldsAllowOptionSelection;
+		return $this->config['metaFieldsAllowOptionSelection'];
 	}
 
 	public function getMetaFieldsAllowModuleSelectionNoPaginate(): array
 	{
-		return $this->config->metaFieldsAllowModuleSelectionNoPaginate;
+		return $this->config['metaFieldsAllowModuleSelectionNoPaginate'];
 	}
 
 	public function getMetaFieldsAllowModuleSelectionPaginate(): array
 	{
-		return $this->config->metaFieldsAllowModuleSelectionPaginate;
+		return $this->config['metaFieldsAllowModuleSelectionPaginate'];
 	}
 
 	public function getMetaFieldsAllowModuleSelection(): array
@@ -271,7 +155,7 @@ class ModulesManager
 
 	public function getUploadField(): array
 	{
-		return $this->config->metaFieldsUpload;
+		return $this->config['metaFieldsUpload'];
 	}
 
 	public function getFieldTypeDef(): array
@@ -296,12 +180,12 @@ class ModulesManager
 
 	public function getDefaultMetasFieldAttributes(): array
 	{
-		return $this->config->defaultMetaAttr;
+		return $this->config['defaultMetaAttr'];
 	}
 
 	public function getSystemModule(): array
 	{
-		return $this->config->systemModule;
+		return $this->systemModules;
 	}
 
 	/**
@@ -317,7 +201,6 @@ class ModulesManager
 		if (!function_exists('logged_in')) {
 			helper('auth');
 		}
-		//$userId = session($this->config->sessionUserId);
 		$userId = user_id() ?? 0;
 		return $userId ?? 0;
 
@@ -337,7 +220,7 @@ class ModulesManager
 			return cache()->delete($key);
 		}
 
-		if ($duration = $this->config->cacheDuration) {
+		if ($duration = $this->config['cacheDuration']) {
 			cache()->save($key, $content, $duration);
 		}
 
@@ -396,10 +279,10 @@ class ModulesManager
 
 	protected function handleTableNamePrefix($tableName): string
 	{
-		if (strpos($tableName, $this->config->moduleTablePrefix) === 0) {
+		if (strpos($tableName, $this->config['moduleTablePrefix']) === 0) {
 			return $tableName;
 		} else {
-			return $this->config->moduleTablePrefix . $tableName;
+			return $this->config['moduleTablePrefix'] . $tableName;
 		}
 	}
 
@@ -428,7 +311,7 @@ class ModulesManager
 	{
 		$identify = ($identify) ? $identify : $this->module;
 		if (empty($identify)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();
@@ -451,7 +334,7 @@ class ModulesManager
 			$module->user_options = (isset($module->id) && is_numeric($module->id)) ? $this->moduleModel->getModuleUserOptions($module->id) : [];
 		}
 		//check if it's system module
-		$systemModule = $this->config->systemModule;
+		$systemModule = $this->getSystemModule();
 		if (!empty($systemModule[$identify])) {
 			$module = (object)$systemModule[$identify];
 		}
@@ -602,7 +485,7 @@ class ModulesManager
 			$arrayMetasForeignKeys = $metasFields = [];
 			foreach ($data['metas'] as $field) {
 				if (empty($field['field'])) {
-					if ($this->config->silent) {
+					if ($this->config['silent']) {
 						continue;
 					} else {
 						throw ModulesException::forMissingParams('field_name');
@@ -611,7 +494,7 @@ class ModulesManager
 				$fieldType = ($field['field_type']) ? $field['field_type'] : 'other';
 				$metasFields[$field['field']] = $this->fieldTypeDef[$fieldType];
 				if ($metasFields[$field['field']]['type'] === 'json') $metasFields[$field['field']]['type'] = 'longtext';
-				if (in_array($fieldType, $this->config->metaFieldsAllowOptionSelection) && $this->config->foreignKeyForMetaFieldsAllowOption) {
+				if (in_array($fieldType, $this->getMetaFieldsAllowOptionSelection()) && $this->config['foreignKeyForMetaFieldsAllowOption']) {
 					$arrayMetasForeignKeys[$field['field']] = ['refTable' => 'app_options', 'refField' => 'id', 'onDelete' => 'SET NULL', 'onUpdate' => 'NO ACTION'];
 				}
 			}
@@ -689,7 +572,7 @@ class ModulesManager
 		}
 		$data['tableName'] = $this->handleTableNamePrefix($data['tableName']);
 
-		if (!$this->config->usingMigrate) {
+		if (!$this->config['usingMigrate']) {
 			return $this->_createModule($data);
 		}
 
@@ -760,7 +643,7 @@ EOD;
 				$needCreate[$item['field']] = $this->fieldTypeDef[$fieldType];
 				if ($needCreate[$item['field']]['type'] === 'json') $needCreate[$item['field']]['type'] = 'longtext';
 				//Add foreign if new type is option
-				if (in_array($fieldType, $this->config->metaFieldsAllowOptionSelection) && $this->config->foreignKeyForMetaFieldsAllowOption) {
+				if (in_array($fieldType, $this->getMetaFieldsAllowOptionSelection()) && $this->config['foreignKeyForMetaFieldsAllowOption']) {
 					$addForeignKeys[$item['field']] = ['refTable' => 'app_options', 'refField' => 'id', 'onDelete' => 'SET NULL', 'onUpdate' => 'NO ACTION'];
 				}
 			} else {
@@ -777,16 +660,16 @@ EOD;
 				}
 				if ($fieldType !== $oldItem->field_type || $item['field'] !== $oldItem->field) {
 					//Drop foreign if old type is option
-					if (in_array($oldItem->field_type, $this->config->metaFieldsAllowOptionSelection) && $this->config->foreignKeyForMetaFieldsAllowOption) {
+					if (in_array($oldItem->field_type, $this->getMetaFieldsAllowOptionSelection()) && $this->config['foreignKeyForMetaFieldsAllowOption']) {
 						$dropForeignKeys[] = $oldItem->field;
 
-						if (!in_array($fieldType, $this->config->metaFieldsAllowOptionSelection)) {
+						if (!in_array($fieldType, $this->getMetaFieldsAllowOptionSelection())) {
 							$dropIndexes[] = $oldItem->field;
 						}
 
 					}
 					//Add foreign if new type is option
-					if (in_array($fieldType, $this->config->metaFieldsAllowOptionSelection) && $this->config->foreignKeyForMetaFieldsAllowOption) {
+					if (in_array($fieldType, $this->getMetaFieldsAllowOptionSelection()) && $this->config['foreignKeyForMetaFieldsAllowOption']) {
 						$addForeignKeys[$item['field']] = ['refTable' => 'app_options', 'refField' => 'id', 'onDelete' => 'SET NULL', 'onUpdate' => 'NO ACTION'];
 					}
 
@@ -798,7 +681,7 @@ EOD;
 		}
 
 		foreach ($dataOldMetas as $item) {
-			if (in_array($item->field_type, $this->config->metaFieldsAllowOptionSelection) && $this->config->foreignKeyForMetaFieldsAllowOption) {
+			if (in_array($item->field_type, $this->getMetaFieldsAllowOptionSelection()) && $this->config['foreignKeyForMetaFieldsAllowOption']) {
 				$dropForeignKeys[] = $item->field;
 			}
 		}
@@ -1027,7 +910,7 @@ EOD;
 			throw ModulesException::forMissingTableName();
 		}
 
-		if (!$this->config->usingMigrate) {
+		if (!$this->config['usingMigrate']) {
 			return $this->_updateModule($data, $id);
 		}
 
@@ -1112,14 +995,14 @@ EOD;
 	public function deleteModule($moduleId, $permanent = false)
 	{
 		if (empty($moduleId)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('module_id');
 			}
 		}
 
-		if (!$this->config->usingMigrate) {
+		if (!$this->config['usingMigrate']) {
 			return $this->_deleteModule($moduleId, $permanent);
 		}
 		$moduleInfo = (is_array($moduleId)) ? 'multi_' . $this->getModule($moduleId[0])->tableName : $this->getModule($moduleId)->tableName;
@@ -1172,7 +1055,7 @@ EOD;
 	{
 		$name = ($name) ? $name : $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();
@@ -1204,14 +1087,14 @@ EOD;
 	{
 		$name = ($name) ? $name : $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('module_name');
 			}
 		}
 		if (empty($routeData)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('route_data');
@@ -1220,7 +1103,7 @@ EOD;
 		$module = $this->getModule($name);
 		$exist = $this->routeModel->isRoutePathExists($module->id, $routeData['routePath']);
 		if (!isset($routeData['id']) && $exist) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forExistsData('route_path');
@@ -1258,14 +1141,14 @@ EOD;
 	{
 		$name = ($name) ? $name : $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();
 			}
 		}
 		if (empty($routeId)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('route_id');
@@ -1291,7 +1174,7 @@ EOD;
 	{
 		$name = ($name) ? $name : $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();
@@ -1307,14 +1190,14 @@ EOD;
 	{
 		$name = ($name) ? $name : $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('module_name');
 			}
 		}
 		if (empty($permitData)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('permit_data');
@@ -1324,7 +1207,7 @@ EOD;
 		$permitModel = new PermitModel();
 		$exist = $permitModel->where(['module' => $module->id, 'name' => $permitData['name']])->first();
 		if (!isset($permitData['id']) && $exist) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forExistsData('module_permit');
@@ -1354,7 +1237,7 @@ EOD;
 	public function deletePermits($permitId)
 	{
 		if (empty($permitId)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('permit_id');
@@ -1436,7 +1319,7 @@ EOD;
 	{
 		$identify = ($identify) ? $identify : $this->module;
 		if (empty($identify)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();
@@ -1520,7 +1403,7 @@ EOD;
 	{
 		$name = ($name) ? $name : $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();
@@ -1528,7 +1411,7 @@ EOD;
 		}
 
 		if (empty($data)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('metas_data');
@@ -1542,7 +1425,7 @@ EOD;
 		$exist = $this->metaModel->isMetaFieldExists($module->id, $data['field']);
 
 		if (!isset($data['id']) && $exist) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forExistsData('field_name');
@@ -1584,7 +1467,7 @@ EOD;
 	public function deleteMeta($metaId)
 	{
 		if (empty($metaId)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingParams('meta_id');
@@ -1610,7 +1493,7 @@ EOD;
 	{
 		$name = ($name) ?: $this->module;
 		if (empty($name)) {
-			if ($this->config->silent) {
+			if ($this->config['silent']) {
 				return null;
 			} else {
 				throw ModulesException::forMissingName();

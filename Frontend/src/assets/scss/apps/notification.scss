@@ -1,127 +1,152 @@
 @import "@scss/friday";
 
-.notification-page {
-    width: 70%;
-    margin: auto;
-
-    .bg-active {
-        background: lighten($primary-bg, 17%) !important;
-        margin-bottom: 2px;
-
-        .div-text {
-            .text-content {
-                color: #32434f !important;
-            }
-
-            .text-content-blue {
-                color: #32434f !important;
-            }
-        }
-
-        .div-time {
-            color: #32434f !important;
-        }
-    }
-
-    .div-noti {
-        height: 80px;
-        width: 100%;
-        border-radius: $border-radius;
-        padding: 16px;
-
-        &:hover {
-            background: rgba(228, 228, 228, 0.25);
-        }
-
-        .div-img {
-            position: relative;
-            top: 12px;
-            margin-right: 15px;
-
-            .badge-up {
-                background: #3f8cff !important;
-
-                border: 2px solid #ffffff;
-                right: unset !important;
-                position: relative;
-                top: -55px;
-                left: 32px;
-                width: 20px;
-                height: 20px;
-
-                .icon {
-                    position: absolute;
-                    width: 10px;
-                    height: 10px;
-                    top: calc(50% - 5px);
-                    left: calc(50% - 4.7px);
-                    font-size: 10px;
-                }
-            }
-
-            .badge-up-green {
-                background: #7fba7a !important;
-            }
-
-            .badge-up-purple {
-                background: #6c5dd3 !important;
-            }
-
-            .badge-up-orange {
-                background: #ff754c !important;
-            }
-
-            .badge-up-primary {
-                background: $primary !important;
-            }
-        }
-
-        .div-text {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            justify-content: space-evenly;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-
-            .text-title {
-                font-weight: 600;
-                font-size: 13px;
-                line-height: 18px;
-                color: #11142d;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .text-content {
-                font-weight: 500;
-                font-size: 12px;
-                line-height: 16px;
-                color: #b2b3bd;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .text-content-blue {
-                color: #5f75ee;
-            }
-        }
-
-        .div-time {
-            margin-left: auto;
-            font-weight: 600;
-            font-size: 13px;
-            line-height: 18px;
-            text-align: right;
-            color: #b2b3bd;
-            padding-left: 10px;
-        }
-    }
-
-    .ant-pagination {
+.react-hot-toast {
+  min-width: 300px;
+  div {
+    display: block;
+    .body {
+      position: relative;
+      a.noti-link {
+        color: unset;
+      }
+      .noti-remove {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        cursor: pointer;
+      }
+      .noti-title {
+        font-weight: 600 !important;
+        margin-bottom: 0 !important;
+      }
+      .noti-text {
+        font-weight: 600 !important;
+        margin-bottom: 0 !important;
+      }
+      .image {
+        background-color: unset !important;
+        border-radius: 50%;
+        cursor: pointer;
         text-align: center;
+      }
+      .noti-title + .noti-text {
+        font-size: 12px;
+        font-weight: normal !important;
+        margin-top: 0 !important;
+      }
+      &.has-title,
+      &.has-text {
+        .image {
+          max-width: 30px;
+          max-height: 30px;
+        }
+      }
+      &.has-title.has-text {
+        .image {
+          max-width: 50px;
+          max-height: 50px;
+        }
+      }
     }
+  }
+}
+
+.notification-page {
+  width: 70%;
+  margin: auto;
+
+  .bg-active {
+    background: lighten($primary-bg, 17%) !important;
+    margin-bottom: 2px;
+
+    .div-text {
+      .text-content {
+        color: #32434f !important;
+      }
+
+      .text-content-blue {
+        color: #32434f !important;
+      }
+    }
+
+    .div-time {
+      color: #32434f !important;
+    }
+  }
+
+  .div-noti {
+    height: 80px;
+    width: 100%;
+    border-radius: $border-radius;
+    padding: 16px;
+
+    &:hover {
+      background: rgba(228, 228, 228, 0.25);
+    }
+  }
+
+  .ant-pagination {
+    text-align: center;
+  }
+}
+
+.app-notifications {
+  .div-img {
+    position: relative;
+    margin-right: 15px;
+
+    .badge-up {
+      background: #3f8cff !important;
+
+      border: 2px solid #ffffff;
+      right: unset !important;
+      position: relative;
+      top: -55px;
+      left: 32px;
+      width: 20px;
+      height: 20px;
+
+      .icon {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        top: calc(50% - 5px);
+        left: calc(50% - 4.7px);
+        font-size: 10px;
+      }
+    }
+
+    .badge-up-green {
+      background: #7fba7a !important;
+    }
+
+    .badge-up-purple {
+      background: #6c5dd3 !important;
+    }
+
+    .badge-up-orange {
+      background: #ff754c !important;
+    }
+
+    .badge-up-primary {
+      background: $primary !important;
+    }
+  }
+  .div-text {
+    margin-top: 10px;
+    color: #11142d;
+    & + .has-content {
+    }
+    .div-content {
+      margin: 2px 0 0 0;
+      font-size: 12px;
+    }
+
+    .div-time {
+      margin: 2px 0 0 0;
+      font-size: 11px;
+      color: #8e8e8e;
+      font-weight: 400;
+    }
+  }
 }

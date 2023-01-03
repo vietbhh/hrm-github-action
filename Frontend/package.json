@@ -90,6 +90,7 @@
     "react-hot-toast": "2.2.0",
     "react-html-parser": "^2.0.2",
     "react-i18next": "^11.16.9",
+    "react-idle-timer": "^5.4.2",
     "react-json-view": "^1.21.3",
     "react-map-interaction": "^2.1.0",
     "react-organizational-chart": "^2.1.1",
