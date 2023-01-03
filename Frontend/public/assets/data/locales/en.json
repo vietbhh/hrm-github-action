@@ -660,8 +660,8 @@
       "import": "Import Asset",
       "code_generator": "Asset QR Code Generator",
       "information": "Asset Information",
-      "qrCodeGenerator": "QrCode Generator",
-      "inventories": "Inventories",
+      "qrCodeGenerator": "QRCode Generator",
+      "inventories": "Inventory",
       "assetGroups": "Asset Groups",
       "assetTypes": "Asset Types"
     }
@@ -3978,8 +3978,8 @@
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
         "this_month": "This month",
-        "eli_liq" : "Eliminate / Liquidated",
-        "re_bro" : "Repair / Broken"
+        "eli_liq": "Eliminate / Liquidated",
+        "re_bro": "Repair / Broken"
       },
       "buttons": {
         "new_asset": "New Asset",
@@ -3991,9 +3991,9 @@
         "edit": "Asset Edit",
         "update_stt": "Update Status"
       },
-      "notification" :{
+      "notification": {
         "is_owner": "The user already owns this Asset",
-        "asset_not_exist" :"Asset does not exist"
+        "asset_not_exist": "Asset does not exist"
       }
     },
     "asset_groups": {
@@ -4076,17 +4076,6 @@
         "text": {
           "search_asset_name_or_code": "Search by asset name or asset code"
         }
-      }
-    },
-    "asset_types": {
-      "fields": {
-        "asset_type_group": "Asset Group",
-        "asset_type_code": "Asset Type Code"
-      }
-    },
-    "asset_groups": {
-      "fields": {
-        "asset_group_code": "Asset Group Code"
       }
     },
     "asset_brands": {
