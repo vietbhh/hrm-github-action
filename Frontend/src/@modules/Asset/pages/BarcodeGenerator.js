@@ -1,8 +1,10 @@
 // ** React Imports
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useContext } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { assetApi } from "../common/api"
+import { AbilityContext } from "utility/context/Can"
 import ReactToPrint from "react-to-print"
+import { Navigate } from "react-router-dom"
 // ** redux
 import { useSelector } from "react-redux"
 // ** Styles
@@ -37,6 +39,15 @@ const BarcodeGenerator = () => {
   const metasAssetType = assetTypeState.metas
 
   const optionModules = useSelector((state) => state.app.optionModules)
+
+  const ability = useContext(AbilityContext)
+  if (ability.can("accessBarcodeGenerator", moduleNameAssetList) === false) {
+    return (
+      <>
+        <Navigate to="/not-found" replace={true} />
+      </>
+    )
+  }
 
   const componentRef = useRef()
 
@@ -112,14 +123,14 @@ const BarcodeGenerator = () => {
                 </h5>
               </div>
               <div className="w-100 d-flex">
-                <div className="w-50">
+                <div className="w-50 me-1">
                   <ChoseAsset
                     assetList={state.assetList}
                     chosenAssetList={state.chosenAssetList}
                     setChosenAssetList={setChosenAssetList}
                   />
                 </div>
-                <div className="w-50">
+                <div className="w-50 ms-1">
                   <ChosenAsset chosenAssetList={state.chosenAssetList} />
                 </div>
               </div>
@@ -131,7 +142,7 @@ const BarcodeGenerator = () => {
                 trigger={() => {
                   return (
                     <Button.Ripple color="primary">
-                      <i className="fas fa-qrcode me-50" /> Generate
+                      <i className="fas fa-qrcode me-50" /> {useFormatMessage("modules.asset_lists.buttons.generate")}
                     </Button.Ripple>
                   )
                 }}

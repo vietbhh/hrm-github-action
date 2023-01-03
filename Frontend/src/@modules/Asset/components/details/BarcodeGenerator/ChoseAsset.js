@@ -14,14 +14,12 @@ const ChoseAsset = (props) => {
 
   // ** render
   return (
-    <div className="me-1">
-      <TableAssetList
-        displayCheckbox={true}
-        listData={assetList}
-        chosenAssetList={chosenAssetList}
-        setChosenAssetList={setChosenAssetList}
-      />
-    </div>
+    <TableAssetList
+      displayCheckbox={true}
+      listData={assetList}
+      chosenAssetList={chosenAssetList}
+      setChosenAssetList={setChosenAssetList}
+    />
   )
 }
 

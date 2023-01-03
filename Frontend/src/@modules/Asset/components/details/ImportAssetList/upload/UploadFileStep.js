@@ -70,7 +70,6 @@ const UploadFileStep = (props) => {
     assetApi
       .getMappingFields(data)
       .then((res) => {
-        console.log(res.data.arr_col)
         setListFieldImport(res.data.arr_col)
         setListFieldSelect(res.data.arr_field_select)
         setFileUploadContent(fileContent)

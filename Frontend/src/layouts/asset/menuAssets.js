@@ -24,12 +24,12 @@ const assetMenu = [
     exactActive: true
   },
   {
-    id: "asset-barcode-generator",
+    id: "asset-qr-code-generator",
     title: "menu.asset.code_generator",
     icon: <i className="iconly-Folder"></i>,
     action: "access",
     resource: "asset",
-    navLink: "/asset/barcode-generator",
+    navLink: "/asset/qr-code-generator",
     exactActive: true
   }
 ]

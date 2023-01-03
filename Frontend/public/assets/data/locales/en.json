@@ -971,6 +971,33 @@
             "news": "News",
             "news_des": "View, create, edit, publish, delete news"
           },
+          "assets": {
+            "assets": "Assets",
+            "asset_list": {
+              "title": "Asset List",
+              "description": "Access Asset List"
+            },
+            "asset_inventory": {
+              "title": "Asset Inventory",
+              "description": "Access Asset Inventory"
+            },
+            "asset_import": {
+              "title": "Import Asset",
+              "description": "Import Asset List"
+            },
+            "asset_generate_qr_code": {
+              "title": "Generate QR Code",
+              "description": "Access Generate Asset QR Code"
+            },
+            "asset_types": {
+              "title": "Asset Type",
+              "description": "Manage Asset Type"
+            },
+            "asset_groups": {
+              "title": "Asset Group",
+              "description": "Manage Asset Group"
+            }
+          },
           "reports": {
             "reports": "Reports",
             "report_view_des": "View report",
@@ -3837,6 +3864,76 @@
         "period": "Period"
       }
     },
+    "asset_lists": {
+      "fields": {
+        "asset_code": "Code",
+        "asset_type": "Type",
+        "asset_name": "Name",
+        "asset_brand": "Brand",
+        "asset_properties": "Properties",
+        "asset_descriptions": "Descriptions",
+        "asset_notes": "Notes",
+        "date_created": "Created",
+        "asset_warranty_expires": "Warranty expires",
+        "asset_status": "Status",
+        "recent_image": "Recent image",
+        "owner": "Owner"
+      },
+      "text": {
+        "total_asset": "Total Asset",
+        "new_asset": "New asset this month",
+        "this_month": "This month"
+      },
+      "buttons": {
+        "new_asset": "New Asset",
+        "generate": "Generate"
+      },
+      "title": {
+        "detail": "Asset Detail",
+        "new": "New Asset",
+        "edit": "Asset Edit",
+        "update_stt": "Update Status"
+      },
+      "notification" :{
+        "is_owner": "The user already owns this Asset"
+      }
+    },
+    "asset_history": {
+      "fields": {
+        "asset_code": "Code",
+        "type": "Type",
+        "owner_current": "Owner Current",
+        "owner_change": "Owner Change",
+        "status_current": "Current",
+        "status_change": "Change",
+        "history_image": "Image",
+        "history_files": "Files",
+        "notes": "Notes"
+      },
+      "text": {
+        "total_asset": "Total Asset",
+        "new_asset": "New asset this month",
+        "this_month": "This month"
+      },
+      "buttons": {
+        "new_asset": "New Asset"
+      },
+      "title": {
+        "detail": "Asset Detail",
+        "edit": "Asset Edit",
+        "update_stt": "Update Status",
+        "handover": "Handover",
+        "error": "Error"
+      },
+      "app_options": {
+        "type": {
+          "handover": "Handover",
+          "other": "Other",
+          "warehouse": "Warehouse",
+          "inventory": "Inventory"
+        }
+      }
+    },
     "asset": {
       "import_asset": {
         "title": {
@@ -3875,14 +3972,6 @@
     "asset_groups": {
       "fields": {
         "asset_group_code": "Asset Group Code"
-      }
-    },
-    "asset_lists": {
-      "fields": {
-        "asset_code": "Asset Code",
-        "asset_name": "Asset Name",
-        "asset_type": "Asset Type",
-        "asset_status": "Asset Status"
       }
     },
     "asset_brands": {

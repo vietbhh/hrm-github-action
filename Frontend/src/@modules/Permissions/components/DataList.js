@@ -312,6 +312,59 @@ export const features_list = [
     ]
   },
   {
+    title: useFormatMessage(`modules.permissions.text.features.assets.assets`),
+    content: [
+      {
+        title: useFormatMessage(`modules.permissions.text.features.assets.asset_list.title`),
+        name: "asset_list",
+        des: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_list.description`
+        ),
+        child: []
+      },
+      {
+        title: useFormatMessage(`modules.permissions.text.features.assets.asset_inventory.title`),
+        name: "asset_inventory",
+        des: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_inventory.description`
+        ),
+        child: []
+      },
+      {
+        title: useFormatMessage(`modules.permissions.text.features.assets.asset_import.title`),
+        name: "asset_import",
+        des: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_import.description`
+        ),
+        child: []
+      },
+      {
+        title: useFormatMessage(`modules.permissions.text.features.assets.asset_generate_qr_code.title`),
+        name: "asset_qr_code_generator",
+        des: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_generate_qr_code.description`
+        ),
+        child: []
+      },
+      {
+        title: useFormatMessage(`modules.permissions.text.features.assets.asset_types.title`),
+        name: "asset_type",
+        des: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_types.description`
+        ),
+        child: []
+      },
+      {
+        title: useFormatMessage(`modules.permissions.text.features.assets.asset_groups.title`),
+        name: "asset_group",
+        des: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_groups.description`
+        ),
+        child: []
+      }
+    ]
+  },
+  {
     title: useFormatMessage(
       `modules.permissions.text.features.reports.reports`
     ),
