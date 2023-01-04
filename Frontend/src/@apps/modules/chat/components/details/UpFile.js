@@ -15,8 +15,10 @@ import {
   Modal,
   ModalBody,
   ModalFooter,
+  ModalHeader,
   Row
 } from "reactstrap"
+import { useEffect } from "react"
 
 const UpFile = (props) => {
   const {
@@ -30,6 +32,21 @@ const UpFile = (props) => {
     handleSaveFile,
     changeFile
   } = props
+
+  // ** listen enter image
+  useEffect(() => {
+    const handle = (event) => {
+      if (event.keyCode === 13 && modal === true) {
+        handleSaveFile(file)
+        toggleModal()
+      }
+    }
+    window.addEventListener("keydown", handle)
+
+    return () => {
+      window.removeEventListener("keydown", handle)
+    }
+  }, [modal, file])
 
   return (
     <>
@@ -55,7 +72,10 @@ const UpFile = (props) => {
       <Modal
         isOpen={modal}
         toggle={toggleModal}
-        className="modal-dialog-centered">
+        className="modal-dialog-centered chat-application">
+        <ModalHeader toggle={() => toggleModal()}>
+          {useFormatMessage("modules.chat.text.image_preview")}
+        </ModalHeader>
         <ModalBody>
           <Row>
             <Col sm="12" className={`avtCustomize text-center`}>

@@ -18,6 +18,8 @@ import ModalAvatarPreview from "./modals/ModalAvatarPreview"
 import ModalBackgroundPreview from "./modals/ModalBackgroundPreview"
 import { Button, Spinner } from "reactstrap"
 import { FormProvider, useForm } from "react-hook-form"
+import facebookIcon from "../assets/images/facebook.png"
+import { Link } from "react-router-dom"
 
 const { Panel } = Collapse
 
@@ -439,7 +441,7 @@ const UserProfileSidebar = (props) => {
                           if (refInputFullName.current) {
                             refInputFullName.current.focus()
                           }
-                        }, 300)
+                        }, 100)
                       }
                     }}>
                     {state.selectedGroup?.fullName}
@@ -490,7 +492,7 @@ const UserProfileSidebar = (props) => {
                           if (refInputDes.current) {
                             refInputDes.current.focus()
                           }
-                        }, 300)
+                        }, 100)
                       }
                     }}>
                     {user?.type === "employee"
@@ -544,41 +546,25 @@ const UserProfileSidebar = (props) => {
                 <ul className="list-unstyled">
                   <li className="mb-50">
                     <a
-                      href=""
-                      onClick={(e) => e.preventDefault()}
+                      href={`${user?.personalInfo?.social_facebook}`}
+                      target="_blank"
+                      onClick={(e) => {
+                        if (!user?.personalInfo?.social_facebook) {
+                          e.preventDefault()
+                        }
+                      }}
                       className="social-icon">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlnsXlink="http://www.w3.org/1999/xlink"
-                        width="25"
-                        height="25"
-                        viewBox="0 0 25 25"
-                        fill="none">
-                        <rect width="25" height="25" fill="url(#pattern0)" />
-                        <defs>
-                          <pattern
-                            id="pattern0"
-                            patternContentUnits="objectBoundingBox"
-                            width="1"
-                            height="1">
-                            <use
-                              xlinkHref="#image0_871_8321"
-                              transform="scale(0.015625)"
-                            />
-                          </pattern>
-                          <image
-                            id="image0_871_8321"
-                            width="64"
-                            height="64"
-                            xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAABuwAAAbsBOuzj4gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHiSURBVHic7Zm9SgNBFIXPzDoWVqnEBF9AIRhJfCbB2h9ICiuVdNY2WuU5UgvbRPANXMG0qSR6LWJAgpjEnZmzA/crA7n3zLczw83GiAhY7JyNtk1mjyDoQNC2RjoC1P/6TtFvGp8ZNnwWWxVznLtGzfUya7oi4mYfAoxHEV3A7vlzq17bfBDgIHbv37Axm9UvRidiPh5RkcUDEQXsnj+3LMytAC5Wz1WIIsAc5+7TTO+rtnggkoBGzfUA04rRa12CC9g5G20Dphu6z38JLsBk9qiKW39O+CMg6ATvUYLwc4CgjTVnNwEKK3L67txwfLX3GibYjOACvsfblRGgQDZtvVwfjoOF+kHwI7Bstl/Eipy+Rlo8EHkSXIV354Yx+1VOQOgzv0jlBMRGBbADsFEB7ABsVAA7ABtT9q1w4+KJ91oZyIt+s9SPrdR3wF3ZAikLmEy3skHZIikLGLxd7k/KFklXgC2//Wdl0iQvbpq5j0KpCvDy9IE0BXi5/OakKMDL5TcnPQGeLr85pSfBZaw7Kfr+/38Z6e0Az6gAdgA2KoAdgI0KYAdgowLYAdioAHYANiqAHYCNCmAHYKMC2AHYqAB2ADYqgB2AjQpgB2CjAtgB2KgAdgA2KoAdgI0KYAdg8wV8mGO354B+uwAAAABJRU5ErkJggg=="
-                          />
-                        </defs>
-                      </svg>
+                      <img src={facebookIcon} />
                     </a>
 
                     <a
-                      href=""
-                      onClick={(e) => e.preventDefault()}
+                      href={user?.personalInfo?.social_instagram}
+                      target="_blank"
+                      onClick={(e) => {
+                        if (!user?.personalInfo?.social_instagram) {
+                          e.preventDefault()
+                        }
+                      }}
                       className="social-icon">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -610,8 +596,13 @@ const UserProfileSidebar = (props) => {
                     </a>
 
                     <a
-                      href=""
-                      onClick={(e) => e.preventDefault()}
+                      href={user?.personalInfo?.social_telegram}
+                      target="_blank"
+                      onClick={(e) => {
+                        if (!user?.personalInfo?.social_telegram) {
+                          e.preventDefault()
+                        }
+                      }}
                       className="social-icon">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -643,8 +634,13 @@ const UserProfileSidebar = (props) => {
                     </a>
 
                     <a
-                      href=""
-                      onClick={(e) => e.preventDefault()}
+                      href={user?.personalInfo?.social_twitter}
+                      target="_blank"
+                      onClick={(e) => {
+                        if (!user?.personalInfo?.social_twitter) {
+                          e.preventDefault()
+                        }
+                      }}
                       className="social-icon">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -676,8 +672,13 @@ const UserProfileSidebar = (props) => {
                     </a>
 
                     <a
-                      href=""
-                      onClick={(e) => e.preventDefault()}
+                      href={user?.personalInfo?.social_youtube}
+                      target="_blank"
+                      onClick={(e) => {
+                        if (!user?.personalInfo?.social_youtube) {
+                          e.preventDefault()
+                        }
+                      }}
                       className="social-icon">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

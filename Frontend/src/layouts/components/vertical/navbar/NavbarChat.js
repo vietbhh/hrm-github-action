@@ -64,26 +64,38 @@ const NavbarChat = () => {
 
       const unsubscribe = onSnapshot(q, async (querySnapshot) => {
         querySnapshot.docChanges().forEach((change) => {
+          const docData = change.doc
+          const data = docData.data()
+          const mute = data.mute
+          const index = mute.indexOf(userId)
           if (change.type === "added") {
-            unseen++
+            if (index === -1) {
+              unseen++
+            }
           }
           if (change.type === "modified") {
           }
           if (change.type === "removed") {
-            unseen--
+            if (index === -1) {
+              unseen--
+            }
           }
         })
 
         setUnseen(unseen)
         dispatch(handleUnseen(unseen))
-        if (unseen === 0) {
-          dispatch(handleTitleChat(""))
-        } else {
+        const url = window.location.pathname
+        if (
+          (url.includes("/chat") === false && unseen > 0) ||
+          (unseen > 0 && document.hidden === true)
+        ) {
           dispatch(
             handleTitleChat(
               useFormatMessage("modules.chat.text.new_message", { num: unseen })
             )
           )
+        } else {
+          dispatch(handleTitleChat(""))
         }
       })
 

@@ -143,6 +143,11 @@ const SidebarLeft = (props) => {
                         : new Date()
                     )
 
+                    let mute = false
+                    if (item.mute.indexOf(userId) !== -1) {
+                      mute = true
+                    }
+
                     const items = [
                       {
                         key: "1",
@@ -161,10 +166,41 @@ const SidebarLeft = (props) => {
                               }
                               handleUpdateGroup(item.id, dataUPdate)
                             }}>
-                            <i className="fa-regular fa-thumbtack me-75"></i>
+                            <i className="fa-regular fa-thumbtack icon"></i>
                             {useFormatMessage(
                               `modules.chat.text.${
                                 pin === true ? "un_pin" : "pin"
+                              }`
+                            )}
+                          </a>
+                        )
+                      },
+                      {
+                        key: "2",
+                        label: (
+                          <a
+                            href="/"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              let dataUPdate = {
+                                mute: arrayUnion(userId)
+                              }
+                              if (mute === true) {
+                                dataUPdate = {
+                                  mute: arrayRemove(userId)
+                                }
+                              }
+                              handleUpdateGroup(item.id, dataUPdate)
+                            }}>
+                            {mute === true ? (
+                              <i className="fa-regular fa-bell-slash icon"></i>
+                            ) : (
+                              <i className="fa-regular fa-bell icon"></i>
+                            )}
+
+                            {useFormatMessage(
+                              `modules.chat.text.${
+                                mute === true ? "un_mute" : "mute"
                               }`
                             )}
                           </a>
@@ -204,6 +240,12 @@ const SidebarLeft = (props) => {
                                 : groups[groups.length - 1].message}
                             </CardText>
                           </div>
+                          {mute && (
+                            <div className="d-flex align-items-center me-25 div-mute">
+                              <i className="fa-solid fa-bell-slash"></i>
+                            </div>
+                          )}
+
                           <div className="chat-meta text-nowrap">
                             {item.chat.unseenMsgs > 0 ? (
                               <Badge className="float-end" color="danger" pill>

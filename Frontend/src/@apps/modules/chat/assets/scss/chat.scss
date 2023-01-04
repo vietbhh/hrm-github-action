@@ -19,6 +19,10 @@ $btn-background-color: #377dff;
 }
 
 .chat-application {
+  .btn {
+    border-radius: 12px;
+  }
+
   .btn-primary {
     border-color: $btn-background-color !important;
     background-color: $btn-background-color !important;
@@ -52,6 +56,12 @@ $btn-background-color: #377dff;
     border-color: var(--bs-btn-disabled-border-color);
   }
 
+  .form-check-input:checked {
+    border-color: $btn-background-color !important;
+    background-color: $btn-background-color !important;
+    color: #fff !important;
+  }
+
   .input-group-merge {
     &:hover,
     &:focus-within {
@@ -61,6 +71,21 @@ $btn-background-color: #377dff;
         border-color: #007aeb !important;
       }
     }
+  }
+
+  .modal-content {
+    .modal-header {
+      border-bottom: none !important;
+
+      .btn-close {
+        transform: none !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  .ant-image-mask-info {
+    display: none;
   }
 
   .content-area-wrapper {
@@ -266,17 +291,12 @@ $btn-background-color: #377dff;
                     color: #616161;
                   }
                 }
-              }
 
-              .group-option-dropdown-menu {
-                padding-top: 7px !important;
-
-                .ant-dropdown-arrow {
-                  top: 1px;
-                }
-
-                li {
-                  min-width: 100px;
+                .div-mute {
+                  i {
+                    color: #b4b7bd;
+                    font-size: 16px;
+                  }
                 }
               }
             }
@@ -675,7 +695,10 @@ $btn-background-color: #377dff;
                 }
 
                 .chat-content-parent.highlight {
-                  background-color: lighten($color: $primary-bg, $amount: 20);
+                  background-color: lighten(
+                    $color: $btn-background-color,
+                    $amount: 32
+                  );
                   padding: 5px;
                   border-radius: 12px;
                 }
@@ -810,11 +833,11 @@ $btn-background-color: #377dff;
                     }
 
                     p.text {
-                      margin-right: 40px;
                       word-break: break-word;
                       font-family: Helvetica;
-                      font-size: 0.9375rem;
+                      font-size: 15px;
                       font-weight: unset;
+                      margin-top: 2px;
 
                       a {
                         &:hover {
@@ -824,7 +847,8 @@ $btn-background-color: #377dff;
                     }
 
                     p.text.has-seen {
-                      margin-right: 60px;
+                      margin-right: 25px;
+                      margin-top: 3px;
                     }
 
                     p.time {
@@ -1130,6 +1154,76 @@ $btn-background-color: #377dff;
                       padding: 10px;
 
                       // emoji
+                      .EmojiPickerReact.epr-dark-theme {
+                        --epr-highlight-color: #007aeb;
+                        --epr-hover-bg-color: #f1f8ff;
+                        --epr-focus-bg-color: #e0f0ff;
+                        --epr-text-color: #858585;
+                        --epr-search-input-bg-color: #f6f6f6;
+                        --epr-picker-border-color: #e7e7e7;
+                        --epr-bg-color: #fff;
+                        --epr-category-icon-active-color: #6aa8de;
+                        --epr-skin-tone-picker-menu-color: #ffffff95;
+                        --epr-horizontal-padding: 10px;
+                        --epr-picker-border-radius: 8px;
+                        --epr-search-border-color: var(--epr-highlight-color);
+                        --epr-header-padding: 15px var(--epr-horizontal-padding);
+                        --epr-active-skin-tone-indicator-border-color: var(
+                          --epr-highlight-color
+                        );
+                        --epr-active-skin-hover-color: var(
+                          --epr-hover-bg-color
+                        );
+                        --epr-search-input-bg-color-active: var(
+                          --epr-search-input-bg-color
+                        );
+                        --epr-search-input-padding: 0 30px;
+                        --epr-search-input-border-radius: 8px;
+                        --epr-search-input-height: 40px;
+                        --epr-search-input-text-color: var(--epr-text-color);
+                        --epr-search-input-placeholder-color: var(
+                          --epr-text-color
+                        );
+                        --epr-search-bar-inner-padding: var(
+                          --epr-horizontal-padding
+                        );
+                        --epr-category-navigation-button-size: 30px;
+                        --epr-emoji-variation-picker-height: 45px;
+                        --epr-emoji-variation-picker-bg-color: var(
+                          --epr-bg-color
+                        );
+                        --epr-preview-height: 70px;
+                        --epr-preview-text-size: 14px;
+                        --epr-preview-text-padding: 0
+                          var(--epr-horizontal-padding);
+                        --epr-preview-border-color: var(
+                          --epr-picker-border-color
+                        );
+                        --epr-preview-text-color: var(--epr-text-color);
+                        --epr-category-padding: 0 var(--epr-horizontal-padding);
+                        --epr-category-label-bg-color: #ffffffe6;
+                        --epr-category-label-text-color: var(--epr-text-color);
+                        --epr-category-label-padding: 0
+                          var(--epr-horizontal-padding);
+                        --epr-category-label-height: 40px;
+                        --epr-emoji-size: 30px;
+                        --epr-emoji-padding: 5px;
+                        --epr-emoji-fullsize: calc(
+                          var(--epr-emoji-size) + var(--epr-emoji-padding) * 2
+                        );
+                        --epr-emoji-hover-color: var(--epr-hover-bg-color);
+                        --epr-emoji-variation-indicator-color: var(
+                          --epr-picker-border-color
+                        );
+                        --epr-emoji-variation-indicator-color-hover: var(
+                          --epr-text-color
+                        );
+                        --epr-header-overlay-z-index: 3;
+                        --epr-emoji-variations-indictator-z-index: 1;
+                        --epr-category-label-z-index: 2;
+                        --epr-skin-variation-picker-z-index: 5;
+                        --epr-preview-z-index: 6;
+                      }
                       .epr-main {
                         width: 390px !important;
                         border-width: 0;
@@ -1259,10 +1353,12 @@ $btn-background-color: #377dff;
 
               .editor-message {
                 background-color: #fff;
-                padding: 0.571rem 1rem;
+                padding: 0.571rem 0;
                 border: none !important;
                 border-radius: 0 !important;
                 height: auto;
+                font-family: Helvetica;
+                font-size: 15px;
 
                 .DraftEditor-root {
                   min-height: 39px;
@@ -1273,7 +1369,7 @@ $btn-background-color: #377dff;
                   overflow-y: auto;
 
                   .public-DraftEditorPlaceholder-root {
-                    width: 170px;
+                    min-width: 170px;
                   }
                   .public-DraftEditorPlaceholder-root.public-DraftEditorPlaceholder-hasFocus {
                     display: none;
@@ -1960,6 +2056,25 @@ $btn-background-color: #377dff;
 
     .ant-dropdown-menu-title-content {
       display: flex;
+    }
+  }
+}
+
+.group-option-dropdown-menu {
+  padding-top: 7px !important;
+
+  .ant-dropdown-arrow {
+    top: 1px;
+  }
+
+  li {
+    min-width: 100px;
+
+    .icon {
+      text-align: center;
+      font-size: 14px;
+      width: 20px;
+      margin-right: 10px;
     }
   }
 }

@@ -161,6 +161,7 @@ const AppChat = (props) => {
   const settingChat = auth.settings.chat
   const settingUser = auth.userData
   const userId = settingUser.id
+  const userFullName = settingUser.full_name
 
   // ** redux
   const dispatch = useDispatch()
@@ -572,21 +573,25 @@ const AppChat = (props) => {
       : ""
     const link = `/chat/${groupId}`
     const skipUrls = `/chat`
+    const fullNameSplit = userFullName.split(" ")
+    const fullNameSplitGroupMsg = fullNameSplit[fullNameSplit.length - 1]
     if (dataGroups.type === "employee") {
-      const idEmployee = _.isArray(receivers) ? receivers[0] : receivers
-      const index_employee = state.dataEmployees.findIndex(
-        (item) => item.id === idEmployee
-      )
-      if (index_employee !== -1) {
-        notification_name = state.dataEmployees[index_employee].full_name
-        icon = idEmployee * 1
-        //skipUrls = `/chat/${groupId},/chat/${state.dataEmployees[index_employee].username}`
-      }
+      icon = userId * 1
+      notification_name = userFullName
     }
     let _msg = msg
     _msg = _msg.replace(/<[^>]*>/g, "")
-    const dot = msg.length > 30 ? "..." : ""
-    _msg = _msg.slice(0, 30) + dot
+
+    if (dataGroups.type === "group") {
+      const fullNameSplit = userFullName.split(" ")
+      const fullNameSplitGroupMsg = fullNameSplit[fullNameSplit.length - 1]
+      const dot = msg.length > 25 ? "..." : ""
+      _msg = _msg.slice(0, 25) + dot
+      _msg = fullNameSplitGroupMsg + ": " + _msg
+    } else {
+      const dot = msg.length > 30 ? "..." : ""
+      _msg = _msg.slice(0, 30) + dot
+    }
     socket.emit("chat_notification", {
       receivers: receivers,
       payload: {
@@ -1415,9 +1420,11 @@ const AppChat = (props) => {
       } else {
         dispatch(
           handleTitleChat(
-            useFormatMessage("modules.chat.text.new_message", {
-              num: reduxUnseen
-            })
+            reduxUnseen > 0
+              ? useFormatMessage("modules.chat.text.new_message", {
+                  num: reduxUnseen
+                })
+              : ""
           )
         )
       }

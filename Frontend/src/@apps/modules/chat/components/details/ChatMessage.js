@@ -381,7 +381,9 @@ const ChatMessage = (props) => {
           <>
             <div className="chat-content-sender-name">
               {renderSenderName(chat, index_message)}
-              <div className="chat-content chat-content-img">
+              <div
+                className="chat-content chat-content-img"
+                title={formatTime(chat.time)}>
                 <Photo
                   className="chat-img"
                   src={`/modules/chat/${
@@ -399,7 +401,9 @@ const ChatMessage = (props) => {
         return (
           <div className="chat-content-sender-name">
             {renderSenderName(chat, index_message)}
-            <div className="chat-content chat-content-video">
+            <div
+              className="chat-content chat-content-video"
+              title={formatTime(chat.time)}>
               <VideoComponent
                 src={`/modules/chat/${
                   data?.forward?.forward_id_from
@@ -415,7 +419,9 @@ const ChatMessage = (props) => {
         return (
           <div className="chat-content-sender-name">
             {renderSenderName(chat, index_message)}
-            <div className="chat-content chat-content-audio">
+            <div
+              className="chat-content chat-content-audio"
+              title={formatTime(chat.time)}>
               <AudioComponent
                 src={`/modules/chat/${
                   data?.forward?.forward_id_from
@@ -432,7 +438,8 @@ const ChatMessage = (props) => {
           <div
             className={`chat-content chat-content-file ${className} ${
               chat.seen.length > 0 && chat.senderId === userId ? "has-seen" : ""
-            }`}>
+            }`}
+            title={formatTime(chat.time)}>
             {renderSenderName(chat, index_message)}
             <DownloadFile
               className="align-items-center"
@@ -447,9 +454,9 @@ const ChatMessage = (props) => {
                 <span className="align-middle ms-50">{data.file}</span>
               </Badge>
             </DownloadFile>
-            <p className="time">
-              {formatTime(chat.time)}
-              {chat.seen.length > 0 && chat.senderId === userId && (
+            {chat.seen.length > 0 && chat.senderId === userId && (
+              <p className="time">
+                {/* {formatTime(chat.time)} */}
                 <svg
                   className="ms-25"
                   xmlns="http://www.w3.org/2000/svg"
@@ -466,8 +473,8 @@ const ChatMessage = (props) => {
                     fill="white"
                   />
                 </svg>
-              )}
-            </p>
+              </p>
+            )}
             {index2 === chat.file.length - 1 && renderHasReaction(chat)}
           </div>
         )
@@ -493,9 +500,9 @@ const ChatMessage = (props) => {
                   )
                 : ReactHtmlParser(data.msg)}
             </p>
-            <p className="time">
-              {formatTime(data.time)}
-              {data.seen.length > 0 && data.senderId === userId && (
+            {data.seen.length > 0 && data.senderId === userId && (
+              <p className="time">
+                {/* {formatTime(data.time)} */}
                 <svg
                   className="ms-25"
                   xmlns="http://www.w3.org/2000/svg"
@@ -512,8 +519,8 @@ const ChatMessage = (props) => {
                     fill="white"
                   />
                 </svg>
-              )}
-            </p>
+              </p>
+            )}
           </>
         )
       } else if (data.type === "link") {
@@ -533,9 +540,9 @@ const ChatMessage = (props) => {
               }`}>
               {ReactHtmlParser(messageLink)}
             </p>
-            <p className="time">
-              {formatTime(data.time)}
-              {data.seen.length > 0 && data.senderId === userId && (
+            {data.seen.length > 0 && data.senderId === userId && (
+              <p className="time">
+                {/* {formatTime(data.time)} */}
                 <svg
                   className="ms-25"
                   xmlns="http://www.w3.org/2000/svg"
@@ -552,8 +559,8 @@ const ChatMessage = (props) => {
                     fill="white"
                   />
                 </svg>
-              )}
-            </p>
+              </p>
+            )}
           </>
         )
       } else {
@@ -585,7 +592,9 @@ const ChatMessage = (props) => {
           chat.status === "error"
         ) {
           return (
-            <div className={`chat-content ${className}`}>
+            <div
+              className={`chat-content ${className}`}
+              title={formatTime(chat.time)}>
               {renderSenderName(chat, index_message)}
               {renderMessage(chat)}
               {renderHasReaction(chat)}
@@ -593,7 +602,10 @@ const ChatMessage = (props) => {
           )
         } else if (chat.type === "gif") {
           return (
-            <div key={index} className="chat-content-sender-name">
+            <div
+              key={index}
+              className="chat-content-sender-name"
+              title={formatTime(chat.time)}>
               {renderSenderName(chat, index_message)}
               <div className={`chat-content chat-content-gif`}>
                 <img src={chat.msg} />
@@ -606,7 +618,9 @@ const ChatMessage = (props) => {
             <Fragment key={index}>
               <div className="chat-content-sender-name">
                 {renderSenderName(chat, index_message)}
-                <div className={`chat-content chat-content-img`}>
+                <div
+                  className={`chat-content chat-content-img`}
+                  title={formatTime(chat.time)}>
                   <Image.PreviewGroup>
                     {_.map(chat.file, (val, index2) => {
                       return (
@@ -974,7 +988,6 @@ const ChatMessage = (props) => {
                       ? chat?.forward?.forward_id_from
                       : ""
                   })
-                  //focusInputMsg()
 
                   handleHeight(true, false)
                 }}

@@ -860,7 +860,9 @@
         "recent": "Recent",
         "pinned": "Pinned",
         "pin": "Pin",
-        "un_pin": "Un pin",
+        "un_pin": "Unpin",
+        "mute": "Mute",
+        "un_mute": "Unmute",
         "reply": "Reply",
         "forward": "Forward",
         "copy_text": "Copy text",
@@ -905,7 +907,8 @@
         "social": "Social",
         "change_name": "Change name",
         "change_description": "Change description",
-        "new_message": "{num} new messages"
+        "new_message": "{num} new messages",
+        "image_preview": "Image preview"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",
