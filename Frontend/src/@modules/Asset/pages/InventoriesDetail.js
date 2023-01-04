@@ -1,4 +1,3 @@
-import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import { ErpInput } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
@@ -10,10 +9,10 @@ import { useParams } from "react-router-dom"
 import { Card, CardBody, CardHeader, Col, Row } from "reactstrap"
 import "../assets/scss/inventories.scss"
 import { assetInventoryApi } from "../common/api"
+import AssetDetail from "../components/AssetDetail"
 import FormAssetDetail from "../components/details/inventories/FormAssetDetail"
 import RecentInventories from "../components/details/inventories/RecentInventories"
 import InventoryDetailModal from "../components/modals/InventoryDetailModal"
-import AssetDetail from "../components/AssetDetail"
 
 const InventoriesDetail = () => {
   const [state, setState] = useMergedState({
@@ -23,6 +22,7 @@ const InventoriesDetail = () => {
     showMoreHistory: false,
     modalDetail: false,
     dataAssetDetail: {},
+    dataInventoryDetail: {},
     loadAssetDetail: false
   })
   const id = useParams().id
@@ -45,10 +45,18 @@ const InventoriesDetail = () => {
 
   const onSubmitInput = (values) => {
     setState({ loadAssetDetail: true })
+    const params = {
+      id: id,
+      ...values
+    }
     assetInventoryApi
-      .getAssetDetail(values)
+      .getAssetDetail(params)
       .then((res) => {
-        setState({ dataAssetDetail: res.data, loadAssetDetail: false })
+        setState({
+          dataAssetDetail: res.data.asset,
+          dataInventoryDetail: res.data.detail,
+          loadAssetDetail: false
+        })
         setValue("asset_code", "")
       })
       .catch((err) => {
@@ -57,7 +65,11 @@ const InventoriesDetail = () => {
             "modules.asset.inventory.notification.asset_not_found"
           )
         })
-        setState({ dataAssetDetail: [], loadAssetDetail: false })
+        setState({
+          dataAssetDetail: {},
+          dataInventoryDetail: {},
+          loadAssetDetail: false
+        })
         setValue("asset_code", "")
       })
   }
@@ -79,6 +91,7 @@ const InventoriesDetail = () => {
 
   const loadDataHistory = () => {
     const params = {
+      id: id,
       perPage: 5,
       page: 1
     }
@@ -106,21 +119,6 @@ const InventoriesDetail = () => {
 
   return (
     <Fragment>
-      <Breadcrumbs
-        className="team-attendance-breadcrumbs"
-        list={[
-          {
-            title: useFormatMessage("modules.asset.title"),
-            link: "/asset"
-          },
-          {
-            title: useFormatMessage("modules.asset.inventory.title"),
-            link: "/asset/inventory"
-          },
-          { title: state.data?.inventory_name }
-        ]}
-      />
-
       {state.loading && (
         <Row>
           <Col xs="12">
@@ -211,6 +209,7 @@ const InventoriesDetail = () => {
                         focusInput={focusInput}
                         id={id}
                         loadDataHistory={loadDataHistory}
+                        dataInventoryDetail={state.dataInventoryDetail}
                       />
                       <hr />
                       <AssetDetail dataDetail={state.dataAssetDetail} />

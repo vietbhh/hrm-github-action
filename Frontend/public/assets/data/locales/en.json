@@ -4161,7 +4161,11 @@
           "asset_inventory_detail": "Asset inventory Detail",
           "recent_inventory": "Recent inventory",
           "asset_detail": "Asset detail",
-          "asset_detail_empty": "No asset information"
+          "asset_detail_empty": "No asset information",
+          "normal": "Normal",
+          "repair": "Repair",
+          "broken": "Broken",
+          "asset_inventoried": "This asset is already inventoried"
         },
         "button": {
           "add": "Add",
