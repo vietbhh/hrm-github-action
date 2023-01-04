@@ -458,19 +458,31 @@ const ChatMessage = (props) => {
               <p className="time">
                 {/* {formatTime(chat.time)} */}
                 <svg
-                  className="ms-25"
+                  version="1.1"
+                  id="Layer_1"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none">
-                  <path
-                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
-                    fill="white"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  width="14px"
+                  height="8px"
+                  viewBox="0 0 16 8"
+                  enableBackground="new 0 0 16 8"
+                  xmlSpace="preserve">
+                  <image
+                    id="image0"
+                    width="16"
+                    height="8"
+                    x="0"
+                    y="0"
+                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAQAAABaf7ccAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
+cwAACxMAAAsTAQCanBgAAAAHdElNRQfnAQQJLQfECMu+AAAAh0lEQVQY02XOLYpCAQDE8YleYtNm
+u4fZssUmPDQKNjEvNlHR4heIuOEZPcAmm80beIWfQVzFx4QZ+DPDRCr6dvEpYmxfxV+4qokhdu+4
+ibOIGSYSR6N/3MafiA1+RKJEX0QPUxEHDO6liDUKLfxqqCvRfazebQHmYgWK56tH2FqK+HDSeb19
+A2U4p3hqPKvqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTA0VDA5OjQ1OjA3KzAwOjAwIvWL
+zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0wNFQwOTo0NTowNyswMDowMFOoM3EAAAAASUVO
+RK5CYII="
                   />
                 </svg>
               </p>
@@ -504,19 +516,31 @@ const ChatMessage = (props) => {
               <p className="time">
                 {/* {formatTime(data.time)} */}
                 <svg
-                  className="ms-25"
+                  version="1.1"
+                  id="Layer_1"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none">
-                  <path
-                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
-                    fill="white"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  width="14px"
+                  height="8px"
+                  viewBox="0 0 16 8"
+                  enableBackground="new 0 0 16 8"
+                  xmlSpace="preserve">
+                  <image
+                    id="image0"
+                    width="16"
+                    height="8"
+                    x="0"
+                    y="0"
+                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAQAAABaf7ccAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
+cwAACxMAAAsTAQCanBgAAAAHdElNRQfnAQQJLQfECMu+AAAAh0lEQVQY02XOLYpCAQDE8YleYtNm
+u4fZssUmPDQKNjEvNlHR4heIuOEZPcAmm80beIWfQVzFx4QZ+DPDRCr6dvEpYmxfxV+4qokhdu+4
+ibOIGSYSR6N/3MafiA1+RKJEX0QPUxEHDO6liDUKLfxqqCvRfazebQHmYgWK56tH2FqK+HDSeb19
+A2U4p3hqPKvqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTA0VDA5OjQ1OjA3KzAwOjAwIvWL
+zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0wNFQwOTo0NTowNyswMDowMFOoM3EAAAAASUVO
+RK5CYII="
                   />
                 </svg>
               </p>
@@ -544,19 +568,31 @@ const ChatMessage = (props) => {
               <p className="time">
                 {/* {formatTime(data.time)} */}
                 <svg
-                  className="ms-25"
+                  version="1.1"
+                  id="Layer_1"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none">
-                  <path
-                    d="M15.1056 4.16496C15.3827 4.40741 15.4108 4.82859 15.1683 5.10568L9.33501 11.7723C9.21537 11.9091 9.0451 11.9911 8.8636 11.9993C8.6821 12.0076 8.50509 11.9414 8.37352 11.8161L6.69527 10.2178L5.33501 11.7723C5.21537 11.9091 5.0451 11.9911 4.8636 11.9993C4.6821 12.0076 4.50509 11.9414 4.37352 11.8161L0.873524 8.48277C0.606904 8.22884 0.596611 7.80686 0.850535 7.54024C1.10446 7.27362 1.52644 7.26333 1.79306 7.51725L4.7895 10.371L5.72889 9.29741L4.87352 8.48277C4.6069 8.22884 4.59661 7.80686 4.85054 7.54024C5.10446 7.27362 5.52644 7.26333 5.79306 7.51725L8.7895 10.371L14.1649 4.22767C14.4074 3.95058 14.8285 3.9225 15.1056 4.16496Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M11.1683 5.10568C11.4108 4.82859 11.3827 4.40741 11.1056 4.16496C10.8285 3.9225 10.4074 3.95058 10.1649 4.22767L7.83158 6.89434C7.58912 7.17143 7.6172 7.59261 7.89429 7.83506C8.17138 8.07752 8.59256 8.04944 8.83501 7.77235L11.1683 5.10568Z"
-                    fill="white"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  width="14px"
+                  height="8px"
+                  viewBox="0 0 16 8"
+                  enableBackground="new 0 0 16 8"
+                  xmlSpace="preserve">
+                  <image
+                    id="image0"
+                    width="16"
+                    height="8"
+                    x="0"
+                    y="0"
+                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAQAAABaf7ccAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
+cwAACxMAAAsTAQCanBgAAAAHdElNRQfnAQQJLQfECMu+AAAAh0lEQVQY02XOLYpCAQDE8YleYtNm
+u4fZssUmPDQKNjEvNlHR4heIuOEZPcAmm80beIWfQVzFx4QZ+DPDRCr6dvEpYmxfxV+4qokhdu+4
+ibOIGSYSR6N/3MafiA1+RKJEX0QPUxEHDO6liDUKLfxqqCvRfazebQHmYgWK56tH2FqK+HDSeb19
+A2U4p3hqPKvqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTA0VDA5OjQ1OjA3KzAwOjAwIvWL
+zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0wNFQwOTo0NTowNyswMDowMFOoM3EAAAAASUVO
+RK5CYII="
                   />
                 </svg>
               </p>

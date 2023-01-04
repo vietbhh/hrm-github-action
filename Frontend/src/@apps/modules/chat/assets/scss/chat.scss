@@ -21,6 +21,10 @@ $btn-background-color: #377dff;
 .chat-application {
   .btn {
     border-radius: 12px;
+
+    &:hover {
+      box-shadow: unset !important;
+    }
   }
 
   .btn-primary {
@@ -255,7 +259,8 @@ $btn-background-color: #377dff;
                   }
 
                   p {
-                    color: #171616;
+                    color: $btn-background-color;
+                    font-weight: 600;
                   }
                 }
 
@@ -295,7 +300,7 @@ $btn-background-color: #377dff;
                 .div-mute {
                   i {
                     color: #b4b7bd;
-                    font-size: 16px;
+                    font-size: 14px;
                   }
                 }
               }
@@ -933,7 +938,7 @@ $btn-background-color: #377dff;
 
                   .chat-content-file.has-seen {
                     > span {
-                      margin-right: 60px;
+                      margin-right: 25px;
                     }
                   }
 
@@ -1019,6 +1024,20 @@ $btn-background-color: #377dff;
                 right: 419px;
                 bottom: 160px;
                 transition: all 0.5s ease;
+
+                button {
+                  min-width: 40px;
+                  min-height: 40px;
+                  padding: 0;
+                  border-radius: 50%;
+                  font-size: 18px;
+                  background-color: #fff !important;
+                  border-color: #fff !important;
+
+                  i {
+                    color: $btn-background-color;
+                  }
+                }
               }
             }
 
@@ -1486,6 +1505,10 @@ $btn-background-color: #377dff;
 
                   .div-avatar {
                     position: relative;
+
+                    [class*="avatar-status-"] {
+                      right: 10px;
+                    }
                   }
 
                   .div-avatar:hover {

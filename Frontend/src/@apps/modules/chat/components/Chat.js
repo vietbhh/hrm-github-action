@@ -767,7 +767,7 @@ const ChatLog = (props) => {
                         }}>
                         <i className="fa-sharp fa-solid fa-arrow-down"></i>
                       </button>
-                      {unread && unread > 0 ? (
+                      {/* {unread && unread > 0 ? (
                         <Badge
                           pill
                           color="success"
@@ -786,7 +786,7 @@ const ChatLog = (props) => {
                         </Badge>
                       ) : (
                         ""
-                      )}
+                      )} */}
                     </div>
                   )}
                 </ChatWrapper>

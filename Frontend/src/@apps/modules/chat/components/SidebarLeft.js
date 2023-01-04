@@ -242,7 +242,7 @@ const SidebarLeft = (props) => {
                           </div>
                           {mute && (
                             <div className="d-flex align-items-center me-25 div-mute">
-                              <i className="fa-solid fa-bell-slash"></i>
+                              <i className="fa-regular fa-bell-slash"></i>
                             </div>
                           )}
 
