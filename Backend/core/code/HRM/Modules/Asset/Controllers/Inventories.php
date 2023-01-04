@@ -39,7 +39,7 @@ class Inventories extends ErpController
 		$modules = \Config\Services::modules($moduleName);
 		$model = $modules->model;
 		$recordsTotal = $model->countAllResults(false);
-		$data = $model->asArray()->findAll($length, $start);
+		$data = $model->asArray()->orderBy('id', 'desc')->findAll($length, $start);
 
 		$result['data'] = $data;
 		$result['recordsTotal'] = $recordsTotal;
@@ -57,14 +57,15 @@ class Inventories extends ErpController
 	public function get_list_inventory_detail_get()
 	{
 		$getPara = $this->request->getGet();
+		$idInventory = $getPara['id'];
 		$page = (isset($getPara['page'])) ? $getPara['page'] : 1;
 		$length = (isset($getPara['perPage'])) ? $getPara['perPage'] : 0;
 		$start = ($page - 1) * $length;
 		$moduleName = "asset_inventories_detail";
 		$modules = \Config\Services::modules($moduleName);
 		$model = $modules->model;
-		$recordsTotal = $model->countAllResults(false);
-		$data = $model->asArray()->join("m_asset_lists", "m_asset_lists.id = m_asset_inventories_detail.asset_code")->select(["m_asset_inventories_detail.*", "m_asset_lists.asset_name as asset_name"])->orderBy('m_asset_inventories_detail.id', 'desc')->findAll($length, $start);
+		$recordsTotal = $model->where('m_asset_inventories_detail.inventory', $idInventory)->countAllResults(false);
+		$data = $model->asArray()->join("m_asset_lists", "m_asset_lists.id = m_asset_inventories_detail.asset_code")->select(["m_asset_inventories_detail.*", "m_asset_lists.asset_name as asset_name"])->where('m_asset_inventories_detail.inventory', $idInventory)->orderBy('m_asset_inventories_detail.id', 'desc')->findAll($length, $start);
 
 		$result['results'] = handleDataBeforeReturn($modules, $data, true);
 		$result['recordsTotal'] = $recordsTotal;
@@ -75,14 +76,28 @@ class Inventories extends ErpController
 	{
 		$getPara = $this->request->getGet();
 		$asset_code = $getPara['asset_code'];
+		$idInventory = $getPara['id'];
 		$moduleName = "asset_lists";
-		$modules = \Config\Services::modules($moduleName);
-		$model = $modules->model;
-		$data = $model->where("asset_code", $asset_code)->first();
-		if (empty($data)) {
+		$modulesAsset = \Config\Services::modules($moduleName);
+		$modelAsset = $modulesAsset->model;
+		$dataAsset = $modelAsset->where("asset_code", $asset_code)->first();
+		if (empty($dataAsset)) {
 			return $this->failNotFound();
 		}
-		return $this->respond(handleDataBeforeReturn($modules, $data));
+		$out['asset'] = handleDataBeforeReturn($modulesAsset, $dataAsset);
+
+		$moduleName = "asset_inventories_detail";
+		$modules = \Config\Services::modules($moduleName);
+		$model = $modules->model;
+		$dataDetail = $model->where("inventory", $idInventory)->where("asset_code", $dataAsset->id)->orderBy('id', 'desc')->first();
+
+
+		$out['detail'] = [];
+		if ($dataDetail) {
+			$out['detail'] = handleDataBeforeReturn($modules, $dataDetail);;
+		}
+
+		return $this->respond($out);
 	}
 
 	public function save_inventory_detail_post()
@@ -128,7 +143,10 @@ class Inventories extends ErpController
 
 		helper('app_select_option');
 		$assetListModel = new AssetListModel();
-		$filesData = ['history_image' => $file['recent_image']];
+		$filesData = [];
+		if (!empty($file)) {
+			$filesData = ['history_image' => $file['recent_image']];
+		}
 		$dataHistory = [
 			"asset_code" => $idAsset,
 			"type" => getOptionValue('asset_history', 'type', 'inventory'),
