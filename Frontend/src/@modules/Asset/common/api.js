@@ -74,5 +74,49 @@ export const assetApi = {
   },
   async addAsset(data) {
     return await axiosApi.post("/asset/add", serialize(_.cloneDeep(data)))
+  },
+
+  // ** asset group api
+  async createAssetGroup(data) {
+    return await axiosApi.post(
+      "asset-groups/create",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async getDataAssetGroup(params) {
+    const strParam = object2QueryString(params)
+    return await axiosApi.get(
+      `asset-groups/get-data-asset-group?get${strParam}`
+    )
+  },
+  async updateAssetGroup(id, data) {
+    return await axiosApi.post(
+      `asset-groups/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async deleteAssetGroup(id) {
+    return await axiosApi.post(`asset-groups/delete/${id}`)
+  },
+
+  // ** asset type api
+  async createAssetType(data) {
+    return await axiosApi.post(
+      "asset-types/create",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async getDataAssetType(params) {
+    const strParam = object2QueryString(params)
+    return await axiosApi.get(`asset-types/get-data-asset-type?get${strParam}`)
+  },
+  async updateAssetType(id, data) {
+    return await axiosApi.post(
+      `asset-types/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async deleteAssetType(id) {
+    return await axiosApi.post(`asset-types/delete/${id}`)
   }
 }

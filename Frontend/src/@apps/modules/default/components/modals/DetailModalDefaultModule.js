@@ -33,7 +33,7 @@ const DetailModalDefaultModule = (props) => {
 
   return (
     <Fragment>
-      <Modal isOpen={modal} toggle={() => handleModal()} className="modal-lg">
+      <Modal isOpen={modal} toggle={() => handleModal()} className="drive-modal modal-lg">
         <ModalHeader toggle={() => handleModal()}>
           {useFormatMessage("app.detail")}
         </ModalHeader>
