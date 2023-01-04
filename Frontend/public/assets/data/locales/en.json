@@ -3972,7 +3972,8 @@
         "asset_warranty_expires": "Warranty expires",
         "asset_status": "Status",
         "recent_image": "Recent image",
-        "owner": "Owner"
+        "owner": "Owner",
+        "created_at": "Created at"
       },
       "text": {
         "total_asset": "Total Asset",

@@ -14,7 +14,13 @@ import SwAlert from "@apps/utility/SwAlert"
 import { cellHandle } from "@apps/utility/TableHandler"
 import { Dropdown } from "antd"
 import { isEmpty } from "lodash"
-import React, { Fragment, useContext, useEffect, useRef } from "react"
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback
+} from "react"
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { Navigate, NavLink } from "react-router-dom"
@@ -181,13 +187,7 @@ const List = (props) => {
       }
     })
   }
-  const checkPer = (owner) => {
-    if (owner === userId) {
-      return false
-    } else {
-      return true
-    }
-  }
+
   const handleUpdateSTT = (id) => {
     if (id) {
       setState({
@@ -237,6 +237,7 @@ const List = (props) => {
       setState({ assetErrorModal: !state.assetErrorModal })
     }
   }
+
   const menu = (data) => {
     return [
       {
@@ -266,8 +267,7 @@ const List = (props) => {
           </div>
         ),
         key: "btn_delete",
-        onClick: () => handleDelete(data?.id),
-        disabled: checkPer(data?.owner.value)
+        onClick: () => handleDelete(data?.id)
       }
     ]
   }
@@ -318,41 +318,45 @@ const List = (props) => {
       setState({ assetDetail: res.data.data, assetDetailModal: true })
     })
   }
-  const CellDisplay = (props) => {
-    const { field, rowData, cellProps } = props
-    switch (field.field) {
-      case "asset_name":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <Photo
-              src={!isEmpty(rowData.recent_image) && rowData.recent_image?.url}
-              width="60px"
-              className="rounded"
-            />
 
-            <div className="d-flex flex-column cursor ms-1">
-              <p className=" text-truncate mb-0">
-                <span
-                  className="font-weight-bold name-channel-table"
-                  onClick={() => handleDetail(rowData?.id)}>
-                  {rowData?.asset_name}
-                </span>
-                <br />
-                <span
-                  style={{
-                    color: "rgba(162, 160, 158, 0.7)",
-                    fontSize: "12px"
-                  }}>
-                  {rowData?.asset_group_name}
-                </span>
-              </p>
+  const CellDisplay = useCallback(
+    (props) => {
+      const { field, rowData, cellProps } = props
+      switch (field.field) {
+        case "asset_name":
+          return (
+            <div className="d-flex justify-content-left align-items-center text-dark">
+              <Photo
+                src={rowData?.recent_image?.url}
+                width="60px"
+                className="rounded"
+              />
+
+              <div className="d-flex flex-column cursor ms-1">
+                <p className=" text-truncate mb-0">
+                  <span
+                    className="font-weight-bold name-channel-table"
+                    onClick={() => handleDetail(rowData?.id)}>
+                    {rowData?.asset_name}
+                  </span>
+                  <br />
+                  <span
+                    style={{
+                      color: "rgba(162, 160, 158, 0.7)",
+                      fontSize: "12px"
+                    }}>
+                    {rowData?.asset_group_name}
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
-        )
-      default:
-        return cellHandle(field, rowData, cellProps)
-    }
-  }
+          )
+        default:
+          return cellHandle(field, rowData, cellProps)
+      }
+    },
+    [state.data, metas]
+  )
 
   const typingTimeoutRef = useRef(null)
   const handleFilterText = (e) => {
@@ -389,7 +393,27 @@ const List = (props) => {
       setState({ assetEditModal: !state.assetEditModal })
     }
   }
-
+  const handleDeleteSelect = () => {
+    SwAlert.showWarning({
+      confirmButtonText: useFormatMessage("button.delete")
+    }).then((res) => {
+      if (res.value) {
+        defaultModuleApi
+          .delete("asset_lists", state.selectedRows)
+          .then((res) => {
+            setState({ selectedRows: [] })
+            loadData()
+            notification.showSuccess({
+              text: useFormatMessage("notification.save.success")
+            })
+          })
+          .catch((err) => {
+            setState({ loading: false })
+            notification.showError(useFormatMessage("notification.save.error"))
+          })
+      }
+    })
+  }
   return (
     <Fragment>
       <Row>
@@ -433,6 +457,14 @@ const List = (props) => {
             nolabel
           />
         </div>
+        {state.selectedRows.length > 0 && (
+          <div className="ms-1">
+            <span style={{ color: "red" }} onClick={() => handleDeleteSelect()}>
+              Delete
+            </span>
+          </div>
+        )}
+
         <div className="col-2 ms-auto">
           <ErpUserSelect
             nolabel
@@ -516,6 +548,7 @@ const List = (props) => {
             }}
             onSortColumn={false}
             onSelectedRow={(rows) => {
+              console.log("rows", rows)
               setState({
                 selectedRows: rows
               })

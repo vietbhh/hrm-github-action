@@ -168,38 +168,47 @@ const AssetDetail = (props) => {
           className="d-flex justify-content-center  align-content-center">
           <Photo src={dataDetail?.recent_image?.url} className="rounded" />
         </Col>
-        <Col sm={9} className="d-flex info-candidate">
-          <div className="content-left mt-2">
-            <div className="name d-flex align-items-center">
-              {dataDetail?.asset_name}{" "}
-              {dataDetail?.asset_status && (
-                <span className="status ms-1 btn-light btn-sm">
-                  {dataDetail?.asset_status?.label}
-                </span>
-              )}
-            </div>
+        <Col sm={9} className="info-asset">
+          <div className="name d-flex align-items-center">
+            {dataDetail?.asset_name}{" "}
+            {dataDetail?.asset_status && (
+              <span className="status ms-1 btn-light btn-sm">
+                {dataDetail?.asset_status?.label}
+              </span>
+            )}
+          </div>
 
-            <div className="time-request mt-50">
-              <div className="create-date text-dark">
+          <div className="mt-50">
+            <div className="text-dark">
+              <small>
                 {useFormatMessage("modules.asset_lists.fields.asset_code")}:
                 <span> {dataDetail?.asset_code}</span>
-              </div>
-              <div className="create-date text-dark mt-50">
+              </small>
+            </div>
+            <div className="text-dark">
+              <small>
                 {useFormatMessage("modules.asset_lists.fields.owner")}:
                 <span> {dataDetail?.owner?.label}</span>
-              </div>
-              <div className="create-date text-dark mt-50">
-                {useFormatMessage("modules.recruitments.fields.created_at")}:
+              </small>
+            </div>
+            <div className="text-dark">
+              <small>
+                {useFormatMessage("modules.asset_lists.fields.created_at")}:
                 <span> {formatDate(dataDetail?.created_at)}</span>
-              </div>
+              </small>
+            </div>
+            <div className="text-dark">
+              <small>
+                {useFormatMessage(
+                  "modules.asset_lists.fields.asset_warranty_expires"
+                )}
+                :<span> {formatDate(dataDetail?.asset_warranty_expires)}</span>
+              </small>
             </div>
           </div>
-          <div className="content-right ms-auto mt-2"></div>
         </Col>
       </Row>
-      <hr className="invoice-spacing" />
       <Row className="mt-2">
-        <Col sm={12}></Col>
         <Col sm={12} className="mb-1">
           <div className="div-tab-content">
             <Row>

@@ -55,7 +55,22 @@
   }
 }
 
-.modal-asset-detail {
+.modal-asset {
+  .modal-content{
+    .modal-header{
+      border-bottom: none !important;
+    }
+  }
+}
+.info-asset {
+  
+  .name {
+    font-size: 25px;
+    font-weight: 600;
+    color: #130f26;
+  }
+
+
   .status {
     font-size: 12px;
     padding: 3px 8px;
@@ -72,62 +87,6 @@
   }
 }
 
-.youtube {
-  .timepicker_fri {
-    border-radius: 6px;
-    padding: 8px 12px 8px;
-    border: 0.5px solid #f2f7fb;
-    background: #EDEFF2;
-    height: 0;
-    padding: 0;
-    position: absolute;
-    visibility: hidden;
-  }
-
-  .hidden_dash {
-    border-radius: 6px;
-    padding: 8px 12px 8px;
-    border: 0.5px solid #f2f7fb;
-    background: #EDEFF2;
-    position: absolute;
-    visibility: hidden;
-    margin-left: 10rem;
-  }
-
-  .input-group-text {
-    background-color: #EDEFF2 !important;
-  }
-
-  .field-locked input:not([type=checkbox]) {
-    background-color: #EDEFF2 !important;
-  }
-
-  .input-tool-weight {
-    background-color: #EDEFF2 !important;
-  }
-
-  .input-tool-height {
-    height: 55px !important;
-  }
-
-  .select-date {
-    color: #000000;
-    background-color: #edeff2;
-    padding: 0px 12px;
-    border-radius: 12px;
-    min-height: 40px;
-    cursor: pointer;
-
-    .label {
-      font-size: 8px;
-    }
-
-    .value {
-      font-size: 12px;
-      font-weight: 500;
-    }
-  }
-}
 
 .modal-yt-tool {
   top: 60px;
@@ -196,184 +155,6 @@
   &:active,
   &:focus {
     background-color: #377DFF !important;
-  }
-}
-
-.card-top-video {
-  .hidden-text {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 200px;
-  }
-
-  .title-video {
-    font-size: 14px;
-    color: #32434F;
-    font-weight: 500;
-  }
-
-  .channel-name {
-    font-size: 12px;
-    color: #808191;
-  }
-
-  .result {
-    font-weight: 500;
-    line-height: 20px;
-    color: #32434F;
-  }
-
-  .name-video {
-    font-weight: 500;
-    font-size: 15px;
-    color: #000000;
-  }
-}
-
-.name-channel-table {
-  font-weight: 400;
-  font-size: 15px;
-  color: #000000;
-}
-
-.base {
-  &:hover {
-    background: rgba(241, 241, 245, 0.66);
-
-    .icon-dropdown {
-      display: block;
-    }
-  }
-
-  border-radius: 12px;
-  padding: 6px;
-
-  .icon {
-    background: #5398FF;
-    width: 50px;
-    height: 50px;
-    border-radius: 20px;
-  }
-
-  .name {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    color: #32434F;
-  }
-
-  a {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    color: #32434F;
-  }
-
-  .icon-dropdown {
-    display: none;
-  }
-
-  .tag-color {
-    width: 30px;
-    height: 30px;
-  }
-
-  .name-total {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 19px;
-    /* text/active */
-    color: #11142D;
-
-    .date-view {
-      font-size: 12px;
-      line-height: 16px;
-      color: #808191;
-      margin-top: 5px;
-
-    }
-  }
-
-  .result {
-    font-size: 16px;
-    line-height: 19px;
-    text-align: right;
-    color: #7FBA7A;
-  }
-}
-
-.active-base {
-  background: rgba(241, 241, 245, 0.66);
-
-  .icon-dropdown {
-    display: block;
-  }
-}
-
-.analytic-chart {
-  .apexcharts-canvas {
-    svg {
-      border-radius: 12px;
-    }
-  }
-
-  .apexcharts-text {
-    font-size: 11px;
-
-    tspan {
-      fill: #FFFFFF !important;
-    }
-  }
-}
-
-.dashboard-dropdown-menu {
-  .ant-dropdown-menu {
-    li {
-      a {
-        display: flex;
-        align-items: center;
-
-        i,
-        svg {
-          width: 16px;
-          height: 16px;
-
-          tspan {
-            color: #ffffff;
-          }
-        }
-      }
-    }
-  }
-}
-
-.dropdown-base {
-  padding-left: 28px;
-  padding-right: 28px;
-
-  .base-option {
-    a {
-      display: block;
-      margin-top: 1rem;
-      color: #25546F;
-    }
-  }
-}
-
-.share-base-div {
-  width: 100%;
-  text-align: center;
-  border-bottom: 1px solid #EDEFF2;
-  line-height: 0.1em;
-  margin: 10px 0 20px;
-
-  span {
-    background: #fff;
-    padding: 0 10px;
   }
 }
 
@@ -592,9 +373,12 @@
     padding: 1.5rem 1rem !important;
 }
 .box-detail-asset{
-  margin-left: auto;
+    margin-left: auto;
     margin-right: auto;
     max-width: 700px;
+    .btn-load-more{
+      cursor: pointer;
+    }
 }
 
 

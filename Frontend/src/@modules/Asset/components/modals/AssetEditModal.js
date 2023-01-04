@@ -10,10 +10,12 @@ import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
 import { assetApi } from "@modules/Asset/common/api"
 import { toArray } from "lodash-es"
+import moment from "moment"
 import { Fragment, useContext } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import {
+  Alert,
   Button,
   Col,
   Modal,
@@ -36,7 +38,7 @@ const AssetEditModal = (props) => {
     dataReviews: [],
     modalAssign: false,
     currentJob: "",
-    typeCoppy: false
+    typeChange: false
   })
   const arrFields = useSelector(
     (state) => state.app.modules["asset_lists"].metas
@@ -72,6 +74,7 @@ const AssetEditModal = (props) => {
         isOpen={modal}
         toggle={() => handleDetail("")}
         backdrop={"static"}
+        className="modal-asset"
         size="lg"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
@@ -91,15 +94,18 @@ const AssetEditModal = (props) => {
               <div className="div-tab-content">
                 <FormProvider {...methods}>
                   <Row>
-                    <Col lg={6}>
-                      <ErpUserSelect
-                        label="Owner"
-                        name="owner"
-                        required
-                        readOnly={dataDetail?.id}
-                        useForm={methods}
-                      />
-                    </Col>
+                    {!dataDetail?.id && (
+                      <Col lg={6}>
+                        <ErpUserSelect
+                          label="Owner"
+                          name="owner"
+                          required
+                          readOnly={dataDetail?.id}
+                          useForm={methods}
+                        />
+                      </Col>
+                    )}
+
                     {dataFields
                       .filter(
                         (field) => field.field_form_show && field.field_enable
@@ -112,41 +118,66 @@ const AssetEditModal = (props) => {
                         const fieldAuth = { ...field }
                         const nameField = field.field
                         if (
+                          (nameField === "asset_code" ||
+                            nameField === "asset_status") &&
+                          dataDetail?.id
+                        ) {
+                          return ""
+                        }
+                        if (nameField === "asset_status") {
+                          return ""
+                        }
+                        if (
                           nameField === "asset_code" ||
                           nameField === "asset_status"
                         ) {
                           fieldAuth.field_readonly = true
                         }
+                        if (nameField === "date_created" && !dataDetail?.id) {
+                          fieldAuth.field_default_value = moment()
+                        }
                         if (nameField === "date_created" && dataDetail?.id) {
                           fieldAuth.field_readonly = true
+                          return ""
                         }
+
                         const fieldProps = {
                           module: "asset_lists",
                           fieldData: fieldAuth,
                           useForm: methods,
                           options
                         }
-
-                        if (nameField !== "recruitment_proposal") {
-                          return (
-                            <Col
-                              lg={field.field_form_col_size}
-                              className="mb-1"
-                              key={key}>
-                              <Fragment>
-                                <FieldHandle
-                                  updateDataId={dataDetail?.id}
-                                  label={useFormatMessage(
-                                    "modules.asset_lists.fields." + field.field
-                                  )}
-                                  updateData={dataDetail?.[field.field]}
-                                  {...fieldProps}
-                                />
-                              </Fragment>
-                            </Col>
-                          )
-                        }
+                        return (
+                          <Col
+                            lg={field.field_form_col_size}
+                            className="mb-1"
+                            key={key}>
+                            <Fragment>
+                              <FieldHandle
+                                updateDataId={dataDetail?.id}
+                                label={useFormatMessage(
+                                  "modules.asset_lists.fields." + field.field
+                                )}
+                                updateData={dataDetail?.[field.field]}
+                                {...fieldProps}
+                              />
+                            </Fragment>
+                          </Col>
+                        )
                       })}
+                    {dataDetail?.id && (
+                      <Col sm={12}>
+                        <Alert color="warning">
+                          {" "}
+                          <div className="alert-body">
+                            <span>
+                              Changing the Asset type will generate a new Asset
+                              code
+                            </span>
+                          </div>
+                        </Alert>
+                      </Col>
+                    )}
 
                     <Col sm={12}>
                       <div className="row pt-2">

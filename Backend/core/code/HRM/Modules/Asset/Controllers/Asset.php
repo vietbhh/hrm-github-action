@@ -78,10 +78,17 @@ class Asset extends ErpController
 
 	public function add_post()
 	{
+
 		helper(['app_select_option']);
+		helper('HRM\Modules\Asset\Helpers\asset_helper');
 		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$postData = $this->request->getPost();
 		$filesData = $this->request->getFiles();
+
+		if (!isset($postData['id'])) {
+			$postData['asset_status'] = getAssetStatus('normal');
+		}
+
 		$dataHandle = handleDataBeforeSave('asset_lists', $postData, $filesData);
 		$uploadFieldsArray = $dataHandle['uploadFieldsArray'];
 		$dataSave = $dataHandle['data'];
@@ -90,15 +97,11 @@ class Asset extends ErpController
 		if (isset($postData['id'])) {
 			$assetListModel->save($dataSave);
 		}
+
+
 		$id = isset($postData['id']) ? $postData['id'] : $assetListModel->insertAssetList($dataSave);
 
-		// history
-		if (!isset($postData['id'])) {
-			$history['asset_code'] = $id;
-			$history['type'] = getOptionValue('asset_history', 'type', 'warehouse');
-			$history['owner_current'] = $postData['owner'];
-			$assetListModel->insertHistory($history);
-		}
+
 		if ($filesData) {
 			foreach ($filesData as $key => $files) {
 				if (empty($files)) continue;
@@ -261,7 +264,7 @@ class Asset extends ErpController
 		}
 		$code = $getGet['code'];
 		$info = $model->asArray()->where('asset_code', $code)->first();
-		if(!$info){
+		if (!$info) {
 			return $this->fail(null);
 		}
 		$befoReturn = handleDataBeforeReturn('asset_lists', $info);
