@@ -4045,6 +4045,27 @@
         "asset_group_code": "Asset group code",
         "asset_group_name": "Asset group name",
         "asset_group_descriptions": "Asset group description"
+      },
+      "buttons": {
+        "create": "Create Asset Group",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "new_asset_group": "New Asset Group",
+        "action": "Action",
+        "warning_asset_group_code": "You have changed the asset group code, do you want to update the assets code already in this group?",
+        "warning_asset_type_code": "You have changed the asset type code, do you want to update the assets code already in this group?",
+        "yes": "Yes",
+        "no": "No",
+        "warning_delete_asset_group": {
+          "title": "Are you sure?",
+          "content": "All Assset Type and Asset List of this Asset Group will be deleted!"
+        },
+        "warning_delete_asset_type": {
+          "title": "Are you sure?",
+          "content": "All Asset List of this Asset Group will be deleted!"
+        }
       }
     },
     "asset_types": {
@@ -4054,6 +4075,22 @@
         "asset_type_name": "Asset type name",
         "asset_type_descriptions": "Asset type description",
         "asset_type_group": "Asset group"
+      },
+      "buttons": {
+        "create": "Create Asset Type",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "new_asset_type": "New Asset Type",
+        "action": "Action",
+        "warning_asset_type_code": "You have changed the asset type code, do you want to update the assets code already in this type?",
+        "yes": "Yes",
+        "no": "No",
+        "warning_delete_asset_type": {
+          "title": "Are you sure?",
+          "content": "All Asset List of this Asset Group will be deleted!"
+        }
       }
     },
     "asset_history": {

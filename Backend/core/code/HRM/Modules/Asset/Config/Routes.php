@@ -20,6 +20,18 @@ $routes->post('asset/error', 'Asset::error_post',['namespace' => 'HRM\Modules\As
 $routes->get('asset/load-history', 'Asset::load_history_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset/detail-by-code', 'Asset::detail_by_code_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 
+	/*** Route for AssetGroup ***/
+$routes->post('asset-asset-group/create', 'AssetGroup::create_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-asset-group/get-data-asset-group', 'AssetGroup::get_data_asset_group_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-asset-group/update/(:any)', 'AssetGroup::update_post/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-asset-group/delete/(:any)', 'AssetGroup::delete_post/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
+
+	/*** Route for AssetType ***/
+$routes->post('asset-asset-type/create', 'AssetType::create_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-asset-type/get-data-asset-type', 'AssetType::get_data_asset_type_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-asset-type/update/(:any)', 'AssetType::update_post/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-asset-type/delete/(:any)', 'AssetType::delete_post/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
+
 	/*** Route for ImportAsset ***/
 $routes->get('asset-import-asset', 'ImportAsset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset-import-asset/index', 'ImportAsset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
