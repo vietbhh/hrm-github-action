@@ -1,6 +1,6 @@
 @import "@scss/friday";
 
-.btn-custom-primary {
+.drive-btn-custom-primary {
     border-radius: 12px;
     color: #ffffff !important;
     background-color: #377dff !important;
@@ -18,7 +18,7 @@
     }
 }
 
-.btn-custom-primary-outline {
+.drive-btn-custom-primary-outline {
     border-radius: 12px;
     border-color: #377dff !important;
     color: #377dff !important;
@@ -37,11 +37,11 @@
     }
 }
 
-.custom-text-primary {
+.drive-custom-text-primary {
     color: #377dff !important;
 }
 
-.btn-custom-white {
+.drive-btn-custom-white {
     border-radius: 12px;
     background-color: #ffffff !important;
     border: none;
@@ -332,8 +332,8 @@
     }
 }
 
-.dropdown-action-file-and-folder,
-.dropdown-filter-sort-drive {
+.drive-dropdown-action-file-and-folder,
+.drive-dropdown-filter-sort-drive {
     .ant-dropdown-menu {
         border-radius: 12px !important;
         padding: 7px;

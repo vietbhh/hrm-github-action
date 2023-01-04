@@ -94,7 +94,7 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Admin tools",
+    "admin_tools": "Navigation",
     "tools": "Tools",
     "quick": "Quick",
     "notification": {
@@ -430,6 +430,7 @@
     "more": "more",
     "files": "Files",
     "ago": "ago",
+    "few_seconds_ago": "few seconds ago",
     "time": "time",
     "hours": "hours",
     "minutes": "minutes",
@@ -660,8 +661,8 @@
       "import": "Import Asset",
       "code_generator": "Asset QR Code Generator",
       "information": "Asset Information",
-      "qrCodeGenerator": "QrCode Generator",
-      "inventories": "Inventories",
+      "qrCodeGenerator": "QRCode Generator",
+      "inventories": "Inventory",
       "assetGroups": "Asset Groups",
       "assetTypes": "Asset Types"
     }
@@ -704,6 +705,51 @@
         "maxImageSize": "Max Image Size Allow"
       }
     }
+  },
+  "about": {
+    "title": "Company Info"
+  },
+  "announcement": {
+    "title": "Announcements"
+  },
+  "month": {
+    "1": "Jan",
+    "2": "Feb",
+    "3": "Mar",
+    "4": "Apr",
+    "5": "May",
+    "6": "Jun",
+    "7": "Jul",
+    "8": "Aug",
+    "9": "Sep",
+    "10": "Oct",
+    "11": "Nov",
+    "12": "Dec"
+  },
+  "day_in_week": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
+  "calculate_monthly": {
+    "text": "Calculate Monthly Salary Based On",
+    "1": "Actual calendar days",
+    "2": "Actual working days",
+    "21": "21 working days",
+    "22": "22 working days",
+    "23": "23 working days",
+    "24": "24 working days",
+    "25": "25 working days",
+    "26": "26 working days"
+  },
+  "search": {
+    "pages": "Pages",
+    "users": "Users",
+    "employees_import": "Import Employee"
   },
   "module": {
     "default": {
@@ -768,9 +814,6 @@
         "importSuccess": "Successfully imported {num} records"
       }
     }
-  },
-  "about": {
-    "title": "Company Info"
   },
   "modules": {
     "dashboard": {
@@ -3978,8 +4021,8 @@
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
         "this_month": "This month",
-        "eli_liq" : "Eliminate / Liquidated",
-        "re_bro" : "Repair / Broken"
+        "eli_liq": "Eliminate / Liquidated",
+        "re_bro": "Repair / Broken"
       },
       "buttons": {
         "new_asset": "New Asset",
@@ -3991,9 +4034,9 @@
         "edit": "Asset Edit",
         "update_stt": "Update Status"
       },
-      "notification" :{
+      "notification": {
         "is_owner": "The user already owns this Asset",
-        "asset_not_exist" :"Asset does not exist"
+        "asset_not_exist": "Asset does not exist"
       }
     },
     "asset_groups": {
@@ -4087,6 +4130,7 @@
       }
     },
     "asset": {
+      "title": "Asset",
       "import_asset": {
         "title": {
           "index": "Import Asset",
@@ -4104,6 +4148,29 @@
           "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import."
         }
       },
+      "inventory": {
+        "title": "Inventory",
+        "text": {
+          "add_more_asset_inventory": "Add more asset inventory",
+          "add_new_inventory": "Add new inventory",
+          "inventory_name": "Inventory name",
+          "inventory_description": "Inventory description",
+          "inventory": "Inventory",
+          "asset_code": "Asset code",
+          "asset_inventory": "Asset inventory",
+          "asset_inventory_detail": "Asset inventory Detail",
+          "recent_inventory": "Recent inventory",
+          "asset_detail": "Asset detail",
+          "asset_detail_empty": "No asset information"
+        },
+        "button": {
+          "add": "Add",
+          "view_all": "View All"
+        },
+        "notification": {
+          "asset_not_found": "Asset not found"
+        }
+      },
       "asset_code_generator": {
         "title": {
           "index": "Asset QR Code Generator",
@@ -4113,6 +4180,15 @@
         "text": {
           "search_asset_name_or_code": "Search by asset name or asset code"
         }
+      }
+    },
+    "asset_inventories_detail": {
+      "fields": {
+        "inventory": "Inventory",
+        "asset_code": "Asset code",
+        "current_status": "Current status",
+        "notes": "Notes",
+        "recent_image": "Recent image"
       }
     },
     "asset_brands": {
@@ -4125,47 +4201,5 @@
         "status_name": "Status Name"
       }
     }
-  },
-  "announcement": {
-    "title": "Announcements"
-  },
-  "month": {
-    "1": "Jan",
-    "2": "Feb",
-    "3": "Mar",
-    "4": "Apr",
-    "5": "May",
-    "6": "Jun",
-    "7": "Jul",
-    "8": "Aug",
-    "9": "Sep",
-    "10": "Oct",
-    "11": "Nov",
-    "12": "Dec"
-  },
-  "day_in_week": {
-    "0": "Sunday",
-    "1": "Monday",
-    "2": "Tuesday",
-    "3": "Wednesday",
-    "4": "Thursday",
-    "5": "Friday",
-    "6": "Saturday"
-  },
-  "calculate_monthly": {
-    "text": "Calculate Monthly Salary Based On",
-    "1": "Actual calendar days",
-    "2": "Actual working days",
-    "21": "21 working days",
-    "22": "22 working days",
-    "23": "23 working days",
-    "24": "24 working days",
-    "25": "25 working days",
-    "26": "26 working days"
-  },
-  "search": {
-    "pages": "Pages",
-    "users": "Users",
-    "employees_import": "Import Employee"
   }
 }
