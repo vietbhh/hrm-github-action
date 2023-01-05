@@ -13,13 +13,12 @@ import { canDeleteData, canUpdateData } from "@apps/utility/permissions"
 import SwAlert from "@apps/utility/SwAlert"
 import { cellHandle } from "@apps/utility/TableHandler"
 import { Dropdown } from "antd"
-import { isEmpty } from "lodash"
 import React, {
   Fragment,
+  useCallback,
   useContext,
   useEffect,
-  useRef,
-  useCallback
+  useRef
 } from "react"
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"

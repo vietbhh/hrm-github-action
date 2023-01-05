@@ -161,7 +161,7 @@ const AssetType = () => {
                 optionModules={optionModule}
                 nolabel={true}
                 onChange={(value) =>
-                  setFilter("asset_type_group", value?.value)
+                  setFilter("asset_type_group", value?.value ?? "")
                 }
                 style={{
                   width: "200px"
