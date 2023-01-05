@@ -105,6 +105,9 @@ const AppChat = (props) => {
   const [activeFullName, setActiveFullName] = useState("")
   const socket = useContext(SocketContext)
 
+  const imageGroup =
+    process.env.REACT_APP_URL + "/assets/images/default_chat_group.webp"
+
   // ** params
   const { id } = useParams()
   useEffect(() => {
@@ -571,7 +574,7 @@ const AppChat = (props) => {
       ? getPublicDownloadUrl(
           `modules/chat/${groupId}/avatar/${dataGroups.avatar}`
         )
-      : ""
+      : imageGroup
     const link = `/chat/${groupId}`
     const skipUrls = `/chat`
     if (dataGroups.type === "employee") {
@@ -1535,6 +1538,7 @@ const AppChat = (props) => {
           userId={userId}
           handleUpdateGroup={handleUpdateGroup}
           setDataUnseenDetail={setDataUnseenDetail}
+          imageGroup={imageGroup}
         />
         <div className="content-right">
           <div className="content-wrapper">
@@ -1582,6 +1586,7 @@ const AppChat = (props) => {
                 dataChatScrollBottom={state.dataChatScrollBottom}
                 checkShowDataChat={state.checkShowDataChat}
                 getChatScrollBottom={getChatScrollBottom}
+                imageGroup={imageGroup}
               />
 
               <UserProfileSidebar
@@ -1596,6 +1601,7 @@ const AppChat = (props) => {
                 setDataUnseenDetail={setDataUnseenDetail}
                 setActive={setActive}
                 setActiveFullName={setActiveFullName}
+                imageGroup={imageGroup}
               />
             </div>
           </div>

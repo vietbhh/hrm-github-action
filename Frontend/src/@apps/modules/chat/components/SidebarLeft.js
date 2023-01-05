@@ -24,7 +24,6 @@ import {
   InputGroupText,
   Label
 } from "reactstrap"
-import { Link } from "react-router-dom"
 
 const SidebarLeft = (props) => {
   // ** Props & Store
@@ -42,7 +41,8 @@ const SidebarLeft = (props) => {
     handleAddNewGroup,
     userId,
     handleUpdateGroup,
-    setDataUnseenDetail
+    setDataUnseenDetail,
+    imageGroup
   } = props
   const { groups, contacts, userProfile } = store
   const [state, setState] = useMergedState({
@@ -68,14 +68,28 @@ const SidebarLeft = (props) => {
 
   // ** Renders Chat
   const renderAvatar = (item) => {
-    if (item.type && item.type === "group" && item.avatar) {
-      return (
-        <Avatar
-          src={`/modules/chat/${item.id}/avatar/${item.avatar}`}
-          imgHeight="50"
-          imgWidth="50"
-        />
-      )
+    if (item.type && item.type === "group") {
+      if (item.avatar) {
+        return (
+          <Avatar
+            src={`/modules/chat/${item.id}/avatar/${item.avatar}`}
+            imgHeight="50"
+            imgWidth="50"
+          />
+        )
+      } else {
+        return (
+          <div className="avatar rounded-circle">
+            <img
+              className=""
+              src={imageGroup}
+              alt="avatarImg"
+              height="50"
+              width="50"
+            />
+          </div>
+        )
+      }
     }
 
     return (

@@ -36,7 +36,8 @@ const UserProfileSidebar = (props) => {
     handleUpdateGroup,
     setDataUnseenDetail,
     setActive,
-    setActiveFullName
+    setActiveFullName,
+    imageGroup
   } = props
 
   const [state, setState] = useMergedState({
@@ -230,16 +231,30 @@ const UserProfileSidebar = (props) => {
   }
 
   const renderAvatar = () => {
-    if (user.type && user.type === "group" && state.selectedGroup.avatar) {
-      return (
-        <Avatar
-          className="box-shadow-1 avatar-border"
-          size="xl"
-          src={`/modules/chat/${state.selectedGroup.id}/avatar/${state.selectedGroup.avatar}`}
-          imgHeight="70"
-          imgWidth="70"
-        />
-      )
+    if (user.type && user.type === "group") {
+      if (state.selectedGroup.avatar) {
+        return (
+          <Avatar
+            className="box-shadow-1 avatar-border"
+            size="xl"
+            src={`/modules/chat/${state.selectedGroup.id}/avatar/${state.selectedGroup.avatar}`}
+            imgHeight="70"
+            imgWidth="70"
+          />
+        )
+      } else {
+        return (
+          <div className="avatar box-shadow-1 avatar-border rounded-circle avatar-xl">
+            <img
+              className=""
+              src={imageGroup}
+              alt="avatarImg"
+              height="32"
+              width="32"
+            />
+          </div>
+        )
+      }
     }
 
     return (

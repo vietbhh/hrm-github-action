@@ -62,9 +62,10 @@ const ChatLog = (props) => {
     setCheckAddMessage,
     handleSearchMessage,
     hasMoreChat,
-    getChatScrollBottom
+    getChatScrollBottom,
+    imageGroup
   } = props
-  const { userProfile, selectedUser } = store
+  const { userProfile, selectedUser, groups } = store
 
   // ** State
   const [state, setState] = useMergedState({
@@ -567,6 +568,51 @@ const ChatLog = (props) => {
       ? PerfectScrollbar
       : "div"
 
+  const renderAvatar = () => {
+    if (selectedUser.contact.type && selectedUser.contact.type === "group") {
+      const index_group = groups.findIndex(
+        (item) => item.id === selectedUser.chat.id
+      )
+      if (index_group !== -1 && groups[index_group].avatar) {
+        return (
+          <Avatar
+            imgHeight="36"
+            imgWidth="36"
+            src={`/modules/chat/${selectedUser.chat.id}/avatar/${groups[index_group].avatar}`}
+            className="avatar-border user-profile-toggle m-0 me-1"
+            onClick={() => handleAvatarClick(selectedUser.contact)}
+          />
+        )
+      } else {
+        return (
+          <div
+            className="avatar avatar-border user-profile-toggle m-0 me-1 rounded-circle"
+            onClick={() => handleAvatarClick(selectedUser.contact)}>
+            <img
+              className=""
+              src={imageGroup}
+              alt="avatarImg"
+              height="36"
+              width="36"
+            />
+            <span className="avatar-status-online"></span>
+          </div>
+        )
+      }
+    }
+
+    return (
+      <Avatar
+        imgHeight="36"
+        imgWidth="36"
+        src={selectedUser.contact.avatar}
+        userId={selectedUser.contact.idEmployee}
+        className="avatar-border user-profile-toggle m-0 me-1"
+        onClick={() => handleAvatarClick(selectedUser.contact)}
+      />
+    )
+  }
+
   return (
     <Fragment>
       <div ref={divChatRef} className="chat-app-window">
@@ -596,14 +642,7 @@ const ChatLog = (props) => {
                     onClick={handleSidebar}>
                     <MenuIcon size={21} />
                   </div>
-                  <Avatar
-                    imgHeight="36"
-                    imgWidth="36"
-                    src={selectedUser.contact.avatar}
-                    userId={selectedUser.contact.idEmployee}
-                    className="avatar-border user-profile-toggle m-0 me-1"
-                    onClick={() => handleAvatarClick(selectedUser.contact)}
-                  />
+                  {renderAvatar()}
                   <div className="chat-header-name">
                     <h6
                       className="mb-0 cursor-pointer"
