@@ -10,7 +10,7 @@ const assetMenu = [
     title: "menu.asset.list",
     icon: <i className="iconly-Folder"></i>,
     action: "access",
-    resource: "asset",
+    resource: "asset_lists",
     navLink: "/asset/list"
   },
   {
@@ -18,23 +18,23 @@ const assetMenu = [
     title: "menu.asset.information",
     icon: <i className="iconly-Search icli"></i>,
     action: "access",
-    resource: "asset",
+    resource: "asset_lists",
     navLink: "/asset/information"
   },
   {
     id: "asset-code-generator",
     title: "menu.asset.qrCodeGenerator",
     icon: <i className="iconly-Scan icli"></i>,
-    action: "access",
-    resource: "asset",
+    action: "accessBarcodeGenerator",
+    resource: "asset_lists",
     navLink: "/asset/qr-code-generator"
   },
   {
     id: "asset-inventories",
     title: "menu.asset.inventories",
     icon: <i className="iconly-Tick-Square icli"></i>,
-    action: "access",
-    resource: "asset",
+    action: "accessAssetInventory",
+    resource: "asset_lists",
     navLink: "/asset/inventories"
   },
   {
@@ -47,19 +47,19 @@ const assetMenu = [
         id: "asset-groups",
         title: "menu.asset.assetGroups",
         type: "item",
-        action: "access",
-        resource: "asset",
+        action: "manage",
+        resource: "asset_groups",
         icon: <Icon.Circle size={6} />,
-        navLink: "/asset-groups"
+        navLink: "/asset/groups"
       },
       {
         id: "asset-types",
         title: "menu.asset.assetTypes",
         type: "item",
-        action: "access",
-        resource: "asset",
+        action: "manage",
+        resource: "asset_types",
         icon: <Icon.Circle size={6} />,
-        navLink: "/asset-types"
+        navLink: "/asset/types"
       }
     ]
   }

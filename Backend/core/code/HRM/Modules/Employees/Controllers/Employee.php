@@ -234,7 +234,7 @@ class Employee extends ErpController
 		$validation = \Config\Services::validation();
 		$updateUser = false;
 		$data['id'] = $id;
-		$userFields = ['id', 'username', 'full_name', 'email', 'phone', 'dob'];
+		$userFields = ['id', 'username', 'full_name', 'email', 'phone', 'dob', 'office', 'group_id', 'job_title_id', 'department_id'];
 		$dataUser = [];
 		foreach ($userFields as $item) {
 			if (isset($data[$item]) && !empty($data[$item])) {
@@ -246,8 +246,7 @@ class Employee extends ErpController
 		}
 		if ($updateUser) {
 			$this->setModule('users');
-			$fieldValidateUser = (count($fieldValidate) > 0) ? $fieldValidate : $userFields;
-			$dataHandleUser = handleDataBeforeSave($this->module, $dataUser, [], $fieldValidateUser);
+			$dataHandleUser = handleDataBeforeSave($this->module, $dataUser, [], array_keys($dataUser));
 			if (!empty($dataHandleUser['validate'])) {
 				if (!$validation->reset()->setRules($dataHandleUser['validate'])->run($dataHandleUser['data'])) {
 					throw new Exception(json_encode($validation->getErrors()));

@@ -13,6 +13,7 @@ import AssetTypeModal from "../components/modals/AssetTypeModal/AssetTypeModal"
 import SwAlert from "@apps/utility/SwAlert"
 import notification from "@apps/utility/notification"
 import { ErpInput } from "@apps/components/common/ErpField"
+import { FieldHandle } from "@apps/utility/FieldHandler"
 
 const AssetType = () => {
   const [state, setState] = useMergedState({
@@ -25,7 +26,8 @@ const AssetType = () => {
     filter: {
       page: 1,
       limit: 30,
-      text: ""
+      text: "",
+      asset_type_group: ""
     }
   })
 
@@ -145,16 +147,30 @@ const AssetType = () => {
       </div>
       <Card>
         <CardBody>
-          <div className="mb-2 d-flex align-items-center justify-content-between">
-            <div>
+          <div className="mb-2 row">
+            <div className="col-md-3">
               <Button.Ripple color="primary" onClick={() => handleClickAdd()}>
                 <i className="fas fa-plus me-50" />
                 {useFormatMessage("modules.asset_types.buttons.create")}
               </Button.Ripple>
             </div>
-            <div>
+            <div className="col-md-3 ms-auto">
+              <FieldHandle
+                module={moduleName}
+                fieldData={metas.asset_type_group}
+                optionModules={optionModule}
+                nolabel={true}
+                onChange={(value) =>
+                  setFilter("asset_type_group", value?.value)
+                }
+                style={{
+                  width: "200px"
+                }}
+              />
+            </div>
+            <div className="col-md-3">
               <ErpInput
-                nolabel={false}
+                nolabel
                 prepend={<i className="fas fa-search" />}
                 placeholder={useFormatMessage("app.search")}
                 onChange={(e) => handleSearchVal(e)}

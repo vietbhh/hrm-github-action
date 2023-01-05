@@ -36,7 +36,6 @@ const TableAssetGroup = (props) => {
     setLimit(dataKey)
   }
 
-
   // ** render
   const ActionCell = ({ rowData, dataKey, ...props }) => {
     return (
@@ -57,21 +56,23 @@ const TableAssetGroup = (props) => {
       <Table
         data={listData}
         autoHeight={true}
-        rowHeight={60}
+        headerHeight={60}
+        rowHeight={40}
+        wordWrap="break-word"
         affixHorizontalScrollbar>
-        <Column width={250} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage("modules.asset_groups.fields.asset_group_code")}
           </HeaderCell>
           <Cell dataKey="asset_group_code" />
         </Column>
-        <Column width={300} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage("modules.asset_groups.fields.asset_group_name")}
           </HeaderCell>
           <Cell dataKey="asset_group_name" />
         </Column>
-        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage(
               "modules.asset_groups.fields.asset_group_descriptions"

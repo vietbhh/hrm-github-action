@@ -56,21 +56,29 @@ const TableAssetGroup = (props) => {
       <Table
         data={listData}
         autoHeight={true}
-        rowHeight={60}
+        headerHeight={60}
+        rowHeight={40}
+        wordWrap="break-word"
         affixHorizontalScrollbar>
-        <Column width={250} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage("modules.asset_types.fields.asset_type_code")}
           </HeaderCell>
           <Cell dataKey="asset_type_code" />
         </Column>
-        <Column width={300} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage("modules.asset_types.fields.asset_type_name")}
           </HeaderCell>
           <Cell dataKey="asset_type_name" />
         </Column>
-        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
+          <HeaderCell>
+            {useFormatMessage("modules.asset_types.fields.asset_type_group")}
+          </HeaderCell>
+          <Cell>{(rowData) => rowData?.asset_type_group?.label}</Cell>
+        </Column>
+        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage(
               "modules.asset_types.fields.asset_type_descriptions"

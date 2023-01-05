@@ -154,7 +154,7 @@ const AssetGroup = () => {
               </div>
               <div>
                 <ErpInput
-                  nolabel={false}
+                  nolabel
                   prepend={<i className="fas fa-search" />}
                   placeholder={useFormatMessage("app.search")}
                   onChange={(e) => handleSearchVal(e)}
