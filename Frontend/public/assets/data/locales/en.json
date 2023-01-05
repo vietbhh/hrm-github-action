@@ -3984,7 +3984,9 @@
       },
       "buttons": {
         "new_asset": "New Asset",
-        "generate": "Generate"
+        "generate": "Generate",
+        "error":"Error",
+        "edit" : "Edit"
       },
       "title": {
         "detail": "Asset Detail",
@@ -4029,10 +4031,15 @@
       "text": {
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
-        "this_month": "This month"
+        "this_month": "This month",
+        "history": "History",
+        "owner_from" :"Owner from",
+        "status_from" :"Status from",
+        "update" :"Update"
       },
       "buttons": {
-        "new_asset": "New Asset"
+        "new_asset": "New Asset",
+        "load_more": "Load more"
       },
       "title": {
         "detail": "Asset Detail",

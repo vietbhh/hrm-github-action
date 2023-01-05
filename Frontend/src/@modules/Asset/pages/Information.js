@@ -24,7 +24,6 @@ import AssetHandoverModal from "../components/modals/AssetHandoverModal"
 import AssetErrorModal from "../components/modals/AssetErrorModal"
 
 const Information = (props) => {
-  const input = document.querySelector("input.input_barcode_asset")
   const inputElement = useRef()
 
   const [state, setState] = useMergedState({
@@ -40,9 +39,8 @@ const Information = (props) => {
 
   const moduleData = useSelector((state) => state.app.modules.asset_lists)
   const module = moduleData.config
-  // filter type, gorup , owwner
   const ability = useContext(AbilityContext)
-  if (!ability.can("accessAssetList", "assets_lists")) {
+  if (!ability.can("access", "assets_lists")) {
     return (
       <>
         <Navigate to="/not-found" replace={true} />
@@ -63,22 +61,21 @@ const Information = (props) => {
   } = methods
 
   const loadDetail = (barcode) => {
+    setValue("code", "")
     setState({ loading: true })
     assetApi
       .detailAssetByCode(barcode)
       .then((res) => {
-        setState({ dataDetail: res.data, loading: false })
-        input.value = ""
+        setState({ dataDetail: res.data, barcode: barcode, loading: false })
       })
       .catch(function (err) {
+        console.log("inputElement", inputElement.current.value)
         notification.showError({
           text: useFormatMessage(
             "modules.asset_lists.notification.asset_not_exist"
           )
         })
         setState({ loading: false })
-        input.value = ""
-        inputElement.current.focus()
       })
   }
   const handleAssetEdit = (id = 0) => {
@@ -141,12 +138,11 @@ const Information = (props) => {
     }
   }
 
-  const onSubmitFrm = (values) => {}
-  useEffect(() => {
-    if (state.barcode) {
-      loadDetail(state.barcode)
+  const onSubmitFrm = (values) => {
+    if (values.code) {
+      loadDetail(values.code)
     }
-  }, [state.barcode])
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -154,12 +150,11 @@ const Information = (props) => {
         inputElement.current.focus()
       }
     }, 500)
-
-    const interval = setInterval(() => {
-      inputElement.current.focus()
-    }, 3000)
-    return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    inputElement.current.focus()
+  }, [state.loading])
   return (
     <Fragment>
       <Row>
@@ -267,26 +262,28 @@ const Information = (props) => {
       </Row>
       <AssetEditModal
         modal={state.assetEditModal}
-        loadData={loadDetail}
+        loadData={() => loadDetail(state.barcode)}
         dataDetail={state.dataDetail}
         handleDetail={handleAssetEdit}
       />
       <AssetUpdateStatusModal
         modal={state.assetUpdateSTTModal}
         dataDetail={state.dataDetail}
-        loadData={loadDetail}
+        loadData={() => loadDetail(state.barcode)}
         handleDetail={handleUpdateSTT}
       />
       <AssetHandoverModal
         modal={state.assetHandoverModal}
         dataDetail={state.dataDetail}
         handleDetail={handleHandover}
+        loadData={() => loadDetail(state.barcode)}
       />
 
       <AssetErrorModal
         modal={state.assetErrorModal}
         dataDetail={state.assetDetail}
         handleDetail={handleError}
+        loadData={() => loadDetail(state.barcode)}
       />
     </Fragment>
   )

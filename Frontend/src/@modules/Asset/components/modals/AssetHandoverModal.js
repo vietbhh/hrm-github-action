@@ -56,6 +56,7 @@ const AssetHandoverModal = (props) => {
         text: useFormatMessage("notification.save.success")
       })
       handleDetail("")
+      loadData()
     })
   }
 

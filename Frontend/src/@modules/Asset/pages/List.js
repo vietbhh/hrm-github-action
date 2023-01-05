@@ -75,14 +75,6 @@ const List = (props) => {
   // filter type, gorup , owwner
   const ability = useContext(AbilityContext)
 
-  if (!ability.can("accessAssetList", "assets_lists")) {
-    return (
-      <>
-        <Navigate to="/not-found" replace={true} />
-      </>
-    )
-  }
-
   const methods = useForm({
     mode: "onSubmit"
   })
@@ -243,7 +235,8 @@ const List = (props) => {
       {
         label: (
           <div className="d-flex align-items-center">
-            <i className="fa-regular fa-pen-to-square me-50"></i> Edit
+            <i className="fa-regular fa-pen-to-square me-50"></i>{" "}
+            {useFormatMessage("modules.asset_lists.buttons.edit")}
           </div>
         ),
         key: "btn_edit",
@@ -252,7 +245,8 @@ const List = (props) => {
       {
         label: (
           <div className="d-flex align-items-center">
-            <i className="fa-regular fa-triangle-exclamation me-50"></i> Error
+            <i className="fa-regular fa-triangle-exclamation me-50"></i>{" "}
+            {useFormatMessage("modules.asset_lists.buttons.error")}
           </div>
         ),
         key: "btn_error",
@@ -459,9 +453,15 @@ const List = (props) => {
         </div>
         {state.selectedRows.length > 0 && (
           <div className="ms-1">
-            <span style={{ color: "red" }} onClick={() => handleDeleteSelect()}>
-              Delete
-            </span>
+            <Button.Ripple
+              title={`Update status`}
+              color="flat-danger"
+              size="sm"
+              className="btn_stt me-50"
+              key={"btn_stt"}
+              onClick={() => handleDeleteSelect()}>
+              {useFormatMessage("app.delete")}
+            </Button.Ripple>
           </div>
         )}
 

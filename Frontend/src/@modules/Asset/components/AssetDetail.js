@@ -11,7 +11,6 @@ import React, { Fragment, useEffect } from "react"
 import { Badge, Col, Row } from "reactstrap"
 import { assetApi } from "../common/api"
 import DownloadFile from "@apps/modules/download/pages/DownloadFile"
-import PerfectScrollbar from "react-perfect-scrollbar"
 const AssetDetail = (props) => {
   const { dataDetail } = props
   const [state, setState] = useMergedState({
@@ -86,11 +85,21 @@ const AssetDetail = (props) => {
               {useFormatMessage(value?.type?.label)}{" "}
               <span className="time-history ms-auto">
                 {timeDifference(value?.created_at)}
+                <br />
               </span>
             </h6>
-            Owner from : {value?.owner_current?.full_name}{" "}
-            <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
-            {value?.owner_change?.full_name}
+            <div className="d-flex align-items-start">
+              <div>
+                {useFormatMessage("modules.asset_history.text.owner_from")} :{" "}
+                {value?.owner_current?.full_name}{" "}
+                <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
+                {value?.owner_change?.full_name}
+              </div>
+
+              <h6 className="ms-auto mb-0">
+                <small>({value?.owner.label})</small>
+              </h6>
+            </div>
           </Timeline.Item>
         )
       }
@@ -98,16 +107,24 @@ const AssetDetail = (props) => {
         return (
           <Timeline.Item key={index}>
             <h6 className="d-flex">
-              Update{" "}
+              {useFormatMessage("modules.asset_history.text.update")}
               <span className="time-history ms-auto">
                 {timeDifference(value?.created_at)}
               </span>
             </h6>
-            Status from : {value?.status_current?.label}{" "}
-            <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
-            {value?.status_change?.label}
-            <br />
-            <span className="mt-50 fw-blod">Notes : {value?.notes}</span>
+            <div className="d-flex align-items-start">
+              <div>
+                {useFormatMessage("modules.asset_history.text.status_from")} :{" "}
+                {value?.status_current?.label}{" "}
+                <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
+                {value?.status_change?.label}
+                <br />
+                <span className="mt-50 fw-blod">Notes : {value?.notes}</span>
+              </div>
+              <h6 className="ms-auto mb-0">
+                <small>({value?.owner.label})</small>
+              </h6>
+            </div>
             <div className="mt-50">{RenderFiles(value?.history_files)}</div>
             <div className="mt-50">
               {value?.history_image && RenderImage([value?.history_image])}
@@ -120,12 +137,22 @@ const AssetDetail = (props) => {
         return (
           <Timeline.Item key={index}>
             <h6 className="d-flex">
-              Warehouse{" "}
+              {useFormatMessage(
+                "modules.asset_history.app_options.type.warehouse"
+              )}
               <span className="time-history ms-auto">
                 {timeDifference(value?.created_at)}
               </span>
             </h6>
-            Owner : {value?.owner_current?.full_name}
+            <div className="d-flex align-items-start">
+              <div>
+                {useFormatMessage("modules.asset_lists.fields.owner")} :{" "}
+                {value?.owner_current?.full_name}
+              </div>
+              <h6 className="ms-auto mb-0">
+                <small>({value?.owner.label})</small>
+              </h6>
+            </div>
           </Timeline.Item>
         )
       }
@@ -137,7 +164,15 @@ const AssetDetail = (props) => {
               {timeDifference(value?.created_at)}
             </span>
           </h6>
-          Notes : {value?.notes}
+          <div className="d-flex align-items-start">
+            <div>
+              {useFormatMessage("modules.asset_history.fields.notes")} :{" "}
+              {value?.notes}
+            </div>
+            <h6 className="ms-auto mb-0">
+              <small>({value?.owner.label})</small>
+            </h6>
+          </div>
         </Timeline.Item>
       )
     })
@@ -241,7 +276,9 @@ const AssetDetail = (props) => {
       </Row>
       <div className="history-asset">
         <hr />
-        <h5 className="mb-2">History</h5>
+        <h5 className="mb-2">
+          {useFormatMessage("modules.asset_history.text.history")}
+        </h5>
         <Timeline>{renderHistory(state.historyData)}</Timeline>
 
         <Row>
@@ -251,7 +288,7 @@ const AssetDetail = (props) => {
                 <span
                   className="text-primary btn-load-more"
                   onClick={() => handleLoadMore()}>
-                  Load more
+                  {useFormatMessage("modules.asset_history.buttons.load_more")}
                 </span>
               </Col>
             )}

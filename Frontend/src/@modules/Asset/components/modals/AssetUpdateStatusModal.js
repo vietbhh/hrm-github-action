@@ -136,9 +136,8 @@ const AssetUpdateStatusModal = (props) => {
                         )}
                         required
                         fieldData={arrFields.notes}
-                        module="notes"
+                        module="asset_history"
                         useForm={methods}
-                        options
                       />
                     </Col>
                     <Col lg={12} className="mb-1">

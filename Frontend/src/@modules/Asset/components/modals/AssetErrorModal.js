@@ -47,6 +47,7 @@ const AssetErrorModal = (props) => {
         text: useFormatMessage("notification.save.success")
       })
       handleDetail("")
+      loadData()
     })
   }
 
