@@ -402,7 +402,16 @@ class Permissions extends ErpController
 		],
 		[
 			'name' => 'asset_list',
-			'value' => ['modules.asset_lists.accessAssetList']
+			'value' => [
+				'modules.asset_lists.access',
+				'modules.asset_lists.list',
+				'modules.asset_lists.listAll',
+				'modules.asset_lists.add',
+				'modules.asset_lists.updateAll',
+				'modules.asset_lists.delete',
+				'modules.asset_lists.deleteAll',
+				'modules.asset_lists.export'
+			]
 		],
 		[
 			'name' => 'asset_inventory',

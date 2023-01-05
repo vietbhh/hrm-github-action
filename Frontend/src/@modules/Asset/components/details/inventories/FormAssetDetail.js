@@ -6,7 +6,7 @@ import { assetInventoryApi } from "@modules/Asset/common/api"
 import React, { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
-import { Button, Col, Row, Spinner } from "reactstrap"
+import { Alert, Button, Col, Row, Spinner } from "reactstrap"
 import broken from "../../../assets/image/broken.jpg"
 import normal from "../../../assets/image/normal.jpg"
 import repair from "../../../assets/image/repair.jpg"
@@ -17,7 +17,8 @@ const FormAssetDetail = (props) => {
     focusInput,
     id,
     loadDataHistory,
-    setDataAssetDetail
+    setDataAssetDetail,
+    dataInventoryDetail
   } = props
   const [state, setState] = useMergedState({
     loading: false
@@ -39,6 +40,21 @@ const FormAssetDetail = (props) => {
   useEffect(() => {
     setValue("current_status", "normal")
   }, [])
+
+  useEffect(() => {
+    setValue("current_status", "normal")
+    if (!_.isEmpty(dataInventoryDetail)) {
+      if (
+        dataInventoryDetail.current_status &&
+        dataInventoryDetail.current_status.label
+      ) {
+        setValue(
+          "current_status",
+          dataInventoryDetail.current_status.label.toLowerCase()
+        )
+      }
+    }
+  }, [dataInventoryDetail])
 
   const onSubmitForm = (values) => {
     setState({ loading: true })
@@ -69,29 +85,64 @@ const FormAssetDetail = (props) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmitForm)} className="form-asset-detail">
+        <Row>
+          <Col sm="12">
+            {!_.isEmpty(dataInventoryDetail) && (
+              <Alert color="warning" style={{ padding: "7px" }}>
+                {useFormatMessage(
+                  "modules.asset.inventory.text.asset_inventoried"
+                )}
+              </Alert>
+            )}
+          </Col>
+        </Row>
         <Row className="mb-2">
           <Col sm="4">
             <ErpRadio
               name="current_status"
-              label={<img src={normal} />}
+              label={
+                <div className="d-flex flex-column align-items-center mb-50">
+                  <img src={normal} />
+                  <span>
+                    {useFormatMessage("modules.asset.inventory.text.normal")}
+                  </span>
+                </div>
+              }
               useForm={methods}
               defaultValue={"normal"}
+              defaultChecked={false}
             />
           </Col>
           <Col sm="4">
             <ErpRadio
               name="current_status"
-              label={<img src={repair} />}
+              label={
+                <div className="d-flex flex-column align-items-center mb-50">
+                  <img src={repair} />
+                  <span>
+                    {useFormatMessage("modules.asset.inventory.text.repair")}
+                  </span>
+                </div>
+              }
               useForm={methods}
               defaultValue={"repair"}
+              defaultChecked={true}
             />
           </Col>
           <Col sm="4">
             <ErpRadio
               name="current_status"
-              label={<img src={broken} />}
+              label={
+                <div className="d-flex flex-column align-items-center mb-50">
+                  <img src={broken} />
+                  <span>
+                    {useFormatMessage("modules.asset.inventory.text.broken")}
+                  </span>
+                </div>
+              }
               useForm={methods}
               defaultValue={"broken"}
+              defaultChecked={false}
             />
           </Col>
         </Row>

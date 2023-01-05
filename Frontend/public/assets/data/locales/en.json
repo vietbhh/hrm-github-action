@@ -94,7 +94,7 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Admin tools",
+    "admin_tools": "Navigation",
     "tools": "Tools",
     "quick": "Quick",
     "notification": {
@@ -430,6 +430,7 @@
     "more": "more",
     "files": "Files",
     "ago": "ago",
+    "few_seconds_ago": "few seconds ago",
     "time": "time",
     "hours": "hours",
     "minutes": "minutes",
@@ -705,6 +706,51 @@
       }
     }
   },
+  "about": {
+    "title": "Company Info"
+  },
+  "announcement": {
+    "title": "Announcements"
+  },
+  "month": {
+    "1": "Jan",
+    "2": "Feb",
+    "3": "Mar",
+    "4": "Apr",
+    "5": "May",
+    "6": "Jun",
+    "7": "Jul",
+    "8": "Aug",
+    "9": "Sep",
+    "10": "Oct",
+    "11": "Nov",
+    "12": "Dec"
+  },
+  "day_in_week": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
+  "calculate_monthly": {
+    "text": "Calculate Monthly Salary Based On",
+    "1": "Actual calendar days",
+    "2": "Actual working days",
+    "21": "21 working days",
+    "22": "22 working days",
+    "23": "23 working days",
+    "24": "24 working days",
+    "25": "25 working days",
+    "26": "26 working days"
+  },
+  "search": {
+    "pages": "Pages",
+    "users": "Users",
+    "employees_import": "Import Employee"
+  },
   "module": {
     "default": {
       "linkedModule": {
@@ -768,9 +814,6 @@
         "importSuccess": "Successfully imported {num} records"
       }
     }
-  },
-  "about": {
-    "title": "Company Info"
   },
   "modules": {
     "dashboard": {
@@ -4005,6 +4048,27 @@
         "asset_group_code": "Asset group code",
         "asset_group_name": "Asset group name",
         "asset_group_descriptions": "Asset group description"
+      },
+      "buttons": {
+        "create": "Create Asset Group",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "new_asset_group": "New Asset Group",
+        "action": "Action",
+        "warning_asset_group_code": "You have changed the asset group code, do you want to update the assets code already in this group?",
+        "warning_asset_type_code": "You have changed the asset type code, do you want to update the assets code already in this group?",
+        "yes": "Yes",
+        "no": "No",
+        "warning_delete_asset_group": {
+          "title": "Are you sure?",
+          "content": "All Assset Type and Asset List of this Asset Group will be deleted!"
+        },
+        "warning_delete_asset_type": {
+          "title": "Are you sure?",
+          "content": "All Asset List of this Asset Group will be deleted!"
+        }
       }
     },
     "asset_types": {
@@ -4014,6 +4078,22 @@
         "asset_type_name": "Asset type name",
         "asset_type_descriptions": "Asset type description",
         "asset_type_group": "Asset group"
+      },
+      "buttons": {
+        "create": "Create Asset Type",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "new_asset_type": "New Asset Type",
+        "action": "Action",
+        "warning_asset_type_code": "You have changed the asset type code, do you want to update the assets code already in this type?",
+        "yes": "Yes",
+        "no": "No",
+        "warning_delete_asset_type": {
+          "title": "Are you sure?",
+          "content": "All Asset List of this Asset Group will be deleted!"
+        }
       }
     },
     "asset_history": {
@@ -4089,7 +4169,11 @@
           "asset_inventory_detail": "Asset inventory Detail",
           "recent_inventory": "Recent inventory",
           "asset_detail": "Asset detail",
-          "asset_detail_empty": "No asset information"
+          "asset_detail_empty": "No asset information",
+          "normal": "Normal",
+          "repair": "Repair",
+          "broken": "Broken",
+          "asset_inventoried": "This asset is already inventoried"
         },
         "button": {
           "add": "Add",
@@ -4097,6 +4181,16 @@
         },
         "notification": {
           "asset_not_found": "Asset not found"
+        }
+      },
+      "asset_code_generator": {
+        "title": {
+          "index": "Asset QR Code Generator",
+          "filter": "Filter",
+          "asset_list": "Asset List"
+        },
+        "text": {
+          "search_asset_name_or_code": "Search by asset name or asset code"
         }
       }
     },
@@ -4109,16 +4203,6 @@
         "recent_image": "Recent image"
       }
     },
-    "asset_code_generator": {
-      "title": {
-        "index": "Asset QR Code Generator",
-        "filter": "Filter",
-        "asset_list": "Asset List"
-      },
-      "text": {
-        "search_asset_name_or_code": "Search by asset name or asset code"
-      }
-    },
     "asset_brands": {
       "fields": {
         "brand_name": "Brand Name"
@@ -4129,47 +4213,5 @@
         "status_name": "Status Name"
       }
     }
-  },
-  "announcement": {
-    "title": "Announcements"
-  },
-  "month": {
-    "1": "Jan",
-    "2": "Feb",
-    "3": "Mar",
-    "4": "Apr",
-    "5": "May",
-    "6": "Jun",
-    "7": "Jul",
-    "8": "Aug",
-    "9": "Sep",
-    "10": "Oct",
-    "11": "Nov",
-    "12": "Dec"
-  },
-  "day_in_week": {
-    "0": "Sunday",
-    "1": "Monday",
-    "2": "Tuesday",
-    "3": "Wednesday",
-    "4": "Thursday",
-    "5": "Friday",
-    "6": "Saturday"
-  },
-  "calculate_monthly": {
-    "text": "Calculate Monthly Salary Based On",
-    "1": "Actual calendar days",
-    "2": "Actual working days",
-    "21": "21 working days",
-    "22": "22 working days",
-    "23": "23 working days",
-    "24": "24 working days",
-    "25": "25 working days",
-    "26": "26 working days"
-  },
-  "search": {
-    "pages": "Pages",
-    "users": "Users",
-    "employees_import": "Import Employee"
   }
 }

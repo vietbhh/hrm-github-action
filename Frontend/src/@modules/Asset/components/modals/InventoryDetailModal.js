@@ -4,7 +4,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { cellHandle } from "@apps/utility/TableHandler"
 import { assetInventoryApi } from "@modules/Asset/common/api"
 import { Pagination } from "antd"
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import {
@@ -40,6 +40,7 @@ const InventoryDetailModal = (props) => {
   const loadData = (props) => {
     setState({ loading: true })
     const params = {
+      id: id,
       perPage: state.perPage,
       page: state.currentPage,
       ...props
@@ -66,42 +67,45 @@ const InventoryDetailModal = (props) => {
     }
   }, [modal])
 
-  const CellDisplay = (props) => {
-    const { field, rowData, cellProps } = props
-    switch (field.field) {
-      case "asset_code":
-        return (
-          <div className="d-flex justify-content-left align-items-center text-dark">
-            <Photo
-              src={
-                !_.isEmpty(rowData.recent_image) && rowData.recent_image?.url
-              }
-              width="60px"
-              height="60px"
-              className="rounded"
-            />
+  const CellDisplay = useCallback(
+    (props) => {
+      const { field, rowData, cellProps } = props
+      switch (field.field) {
+        case "asset_code":
+          return (
+            <div className="d-flex justify-content-left align-items-center text-dark">
+              <Photo
+                src={
+                  !_.isEmpty(rowData.recent_image) && rowData.recent_image?.url
+                }
+                width="60px"
+                height="60px"
+                className="rounded"
+              />
 
-            <div className="d-flex flex-column cursor ms-1">
-              <p className=" text-truncate mb-0">
-                <span className="font-weight-bold name-channel-table">
-                  {rowData?.asset_code?.label}
-                </span>
-                <br />
-                <span
-                  style={{
-                    color: "rgba(162, 160, 158, 0.7)",
-                    fontSize: "12px"
-                  }}>
-                  {rowData.asset_name}
-                </span>
-              </p>
+              <div className="d-flex flex-column cursor ms-1">
+                <p className=" text-truncate mb-0">
+                  <span className="font-weight-bold name-channel-table">
+                    {rowData?.asset_code?.label}
+                  </span>
+                  <br />
+                  <span
+                    style={{
+                      color: "rgba(162, 160, 158, 0.7)",
+                      fontSize: "12px"
+                    }}>
+                    {rowData.asset_name}
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
-        )
-      default:
-        return cellHandle(field, rowData, cellProps)
-    }
-  }
+          )
+        default:
+          return cellHandle(field, rowData, cellProps)
+      }
+    },
+    [state.data, metas]
+  )
 
   return (
     <Modal

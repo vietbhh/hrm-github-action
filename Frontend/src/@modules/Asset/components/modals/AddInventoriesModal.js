@@ -16,7 +16,7 @@ import {
 } from "reactstrap"
 
 const AddInventoriesModal = (props) => {
-  const { modal, toggleModal } = props
+  const { modal, toggleModal, loadData } = props
   const [state, setState] = useMergedState({
     loadingSubmit: false
   })
@@ -33,6 +33,7 @@ const AddInventoriesModal = (props) => {
     assetInventoryApi
       .postAddInventory(values)
       .then((res) => {
+        loadData()
         setState({ loadingSubmit: false })
         toggleModal()
       })

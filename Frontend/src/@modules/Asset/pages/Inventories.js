@@ -1,7 +1,7 @@
-import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Pagination } from "antd"
+import moment from "moment"
 import React, { Fragment, useEffect } from "react"
 import { Card, CardBody, CardHeader, Col, Row } from "reactstrap"
 import "../assets/scss/inventories.scss"
@@ -61,19 +61,6 @@ const Inventories = () => {
 
   return (
     <Fragment>
-      <Breadcrumbs
-        className="team-attendance-breadcrumbs"
-        list={[
-          {
-            title: useFormatMessage("modules.asset.title"),
-            link: "/asset"
-          },
-          {
-            title: useFormatMessage("modules.asset.inventory.title")
-          }
-        ]}
-      />
-
       <Card className="inventories">
         <CardHeader>
           <span className="title">
@@ -146,7 +133,12 @@ const Inventories = () => {
                       <div className="icon me-2 d-flex align-items-center justify-content-center">
                         <i className="fa-regular fa-box-circle-check"></i>
                       </div>
-                      <div className="name">{value.inventory_name}</div>
+                      <div className="div-name">
+                        <span className="name">{value.inventory_name} </span>
+                        <span className="date">
+                          {moment(value.created_at).format("DD/MM/YYYY")}
+                        </span>
+                      </div>
                     </div>
                   </Col>
                 )
@@ -174,6 +166,7 @@ const Inventories = () => {
       <AddInventoriesModal
         modal={state.modalAdd}
         toggleModal={toggleModalAdd}
+        loadData={loadData}
       />
 
       <InventoryDetailModal
