@@ -1,6 +1,7 @@
 // ** React Imports
+import { Fragment } from "react"
 // ** Styles
-import { Space } from "antd"
+import { Trash } from "react-feather"
 import { Button } from "reactstrap"
 // ** Components
 
@@ -27,20 +28,22 @@ const AssetGroupAction = (props) => {
 
   // ** render
   return (
-    <Space>
+    <Fragment>
       <Button.Ripple
-        color="flat-danger"
-        className="btn-icon"
+        color="flat-dark"
+        size="sm"
+        className="btn-edit"
         onClick={() => handleClickDelete()}>
-        <i className="fas fa-trash-alt" />
+        <i className="iconly-Edit-Square icli"></i>
       </Button.Ripple>
       <Button.Ripple
-        color="flat-primary"
-        className="btn-icon"
+        color="flat-dark"
+        size="sm"
+        className="btn-delete"
         onClick={() => handleClickEdit()}>
-        <i className="fas fa-edit" />
+        <Trash size={15} />
       </Button.Ripple>
-    </Space>
+    </Fragment>
   )
 }
 

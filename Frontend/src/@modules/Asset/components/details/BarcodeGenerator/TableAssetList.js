@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from "react"
+import { Fragment, useCallback, useState } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 // ** Components
@@ -55,35 +55,41 @@ const TableAssetList = (props) => {
   })
 
   // ** render
-  const AssetNameCell = ({ rowData, dataKey, ...props }) => {
-    return (
-      <Cell {...props}>
-        <div className="d-flex justify-content-left align-items-center text-dark">
-          <Photo
-            src={!_.isEmpty(rowData.recent_image) && rowData.recent_image?.url}
-            width="60px"
-            className="rounded"
-          />
+  const AssetNameCell = useCallback(
+    (props) => {
+      const { field, rowData, cellProps } = props
+      return (
+        <Cell {...props}>
+          <div className="d-flex justify-content-left align-items-center text-dark">
+            <Photo
+              src={
+                !_.isEmpty(rowData.recent_image) && rowData.recent_image?.url
+              }
+              width="60px"
+              className="rounded"
+            />
 
-          <div className="d-flex flex-column cursor ms-1">
-            <p className="text-truncate mb-0">
-              <span className="font-weight-bold name-asset-table">
-                {rowData?.asset_name}
-              </span>
-              <br />
-              <span className="font-weight-bold name-asset-table">
-                {rowData?.asset_code}
-              </span>
-              <br />
-              <span className="font-weight-bold name-asset-table">
-                {rowData?.asset_group_code}
-              </span>
-            </p>
+            <div className="d-flex flex-column cursor ms-1">
+              <p className="text-truncate mb-0">
+                <span className="font-weight-bold name-asset-table">
+                  {rowData?.asset_name}
+                </span>
+                <br />
+                <span className="font-weight-bold name-asset-table">
+                  {rowData?.asset_code}
+                </span>
+                <br />
+                <span className="font-weight-bold name-asset-table">
+                  {rowData?.asset_group_code}
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-      </Cell>
-    )
-  }
+        </Cell>
+      )
+    },
+    [listData]
+  )
 
   const CheckCell = ({
     rowData,

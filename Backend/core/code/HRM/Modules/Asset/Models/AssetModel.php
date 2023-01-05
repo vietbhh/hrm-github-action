@@ -9,6 +9,10 @@ class AssetModel extends AppModel
     protected function getNewAssetListCode($oldAssetGroupCode, $newAssetGroupCode, &$assetCode, $indexStr = 0)
     {
         $arrIndex = $this->_getIndexInString($assetCode, $oldAssetGroupCode);
+        if (count($arrIndex) == 0) {
+            return $assetCode;
+        }
+        
         $index = null;
         if (count($arrIndex) > 1) {
             $index = isset($arrIndex[$indexStr]) ? $arrIndex[$indexStr] : null;

@@ -18,7 +18,7 @@ class AssetTypeModel extends AssetModel
         'asset_type_group',
         'asset_type_descriptions',
         'asset_type_auto_increment_list',
-        'asset_list_display'
+        'asset_type_display'
     ];
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
@@ -38,7 +38,7 @@ class AssetTypeModel extends AssetModel
         $code = isset($data['asset_type_code']) ? $data['asset_type_code'] : '';
         $name = isset($data['asset_type_name']) ? $data['asset_type_name'] : '';
 
-        $data['asset_list_display'] = implode(' - ', [$code, $name]);
+        $data['asset_type_display'] = implode(' - ', [$code, $name]);
 
         $this->insert($data);
 
@@ -62,7 +62,7 @@ class AssetTypeModel extends AssetModel
         // ** update asset group
         $code = isset($updateData['asset_type_code']) ? $updateData['asset_type_code'] : '';
         $name = isset($updateData['asset_type_name']) ? $updateData['asset_type_name'] : '';
-        $updateData['asset_list_display'] = implode(' - ', [$code, $name]);
+        $updateData['asset_type_display'] = implode(' - ', [$code, $name]);
         $this->update($id, $updateData);
 
         if (!$updateAssetListCode) {
@@ -106,13 +106,25 @@ class AssetTypeModel extends AssetModel
                 'asset_type_descriptions'
             ]);
 
-        if (count($params) > 0) {
-            foreach ($params as $field => $value) {
-                $builder->where($field, $value);
-            }
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $limit = isset($params['limit']) ? $params['limit'] : 30;
+        $start = ($page - 1) * $limit;
+        $text = (isset($params['text']) && strlen(trim($params['text'])) > 0) ? $params['text'] : '';
+
+        if ($text != '') {
+            $builder->groupStart()
+                ->like('asset_type_code', $text, 'after')
+                ->orLike('asset_type_name', $text, 'after')
+                ->groupEnd();
         }
 
-        return $builder->orderBy('id', 'DESC')->findAll();
+        $totalRecord = $builder->countAllResults(false);
+        $listData = $builder->orderBy('id', 'DESC')->findAll($limit, $start);
+
+        return [
+            'total' => $totalRecord,
+            'data' => $listData
+        ];
     }
 
     public function deleteAssetType($id)
