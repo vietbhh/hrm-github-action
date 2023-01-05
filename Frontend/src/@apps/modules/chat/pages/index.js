@@ -44,6 +44,7 @@ import {
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
 import "../assets/scss/chat.scss"
+import moment from "moment"
 
 const AppChat = (props) => {
   const [store, setStore] = useMergedState({
@@ -573,8 +574,6 @@ const AppChat = (props) => {
       : ""
     const link = `/chat/${groupId}`
     const skipUrls = `/chat`
-    const fullNameSplit = userFullName.split(" ")
-    const fullNameSplitGroupMsg = fullNameSplit[fullNameSplit.length - 1]
     if (dataGroups.type === "employee") {
       icon = userId * 1
       notification_name = userFullName
@@ -607,10 +606,83 @@ const AppChat = (props) => {
     })
   }
 
+  const decodeHTMLEntities = (text) => {
+    const entities = [
+      ["amp", "&"],
+      ["apos", "'"],
+      ["#x27", "'"],
+      ["#x2F", "/"],
+      ["#39", "'"],
+      ["#47", "/"],
+      ["lt", "<"],
+      ["gt", ">"],
+      ["nbsp", " "],
+      ["quot", '"']
+    ]
+
+    for (let i = 0, max = entities.length; i < max; ++i)
+      text = text.replace(
+        new RegExp("&" + entities[i][0] + ";", "g"),
+        entities[i][1]
+      )
+
+    return text
+  }
+
+  const handleBreakType = (timestamp) => {
+    let break_type = ""
+    if (!_.isEmpty(chats)) {
+      const _chat = chats[chats.length - 1]
+      const pre_timestamp = _chat.time
+      const senderId = _chat.senderId
+      const minute_diff = moment(timestamp).diff(
+        moment(pre_timestamp),
+        "minutes"
+      )
+
+      if (0 < minute_diff && minute_diff < 20) {
+        if (senderId === userId) {
+          break_type = "minute"
+        }
+      } else if (minute_diff >= 20) {
+        break_type = "line_time"
+      }
+    }
+
+    return break_type
+  }
+
+  const handleTimestampFile = (data) => {
+    let timestamp_link = 0
+    let timestamp_image = 0
+    let timestamp_file = 0
+    if (data.status && (data.status === "loading" || data.status === "error")) {
+      return { timestamp_link, timestamp_image, timestamp_file }
+    }
+
+    if (data.type === "link") {
+      timestamp_link = data.timestamp
+    }
+    if (data.type === "image" || data.type === "image_gif") {
+      timestamp_image = data.timestamp
+    }
+    if (
+      data.type === "file" ||
+      data.type === "video" ||
+      data.type === "audio"
+    ) {
+      timestamp_file = data.timestamp
+    }
+
+    return { timestamp_link, timestamp_image, timestamp_file }
+  }
+
   const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
-
+    msg = decodeHTMLEntities(msg)
+    const timestamp = Date.now()
     const file_count = handleCountFile(groupId, dataAddFile.type)
+    const break_type = handleBreakType(timestamp)
 
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id
@@ -624,22 +696,22 @@ const AppChat = (props) => {
           unseen.splice(index, 1)
         }
         const unseen_detail = dataGroups.unseen_detail
-        const timestamp = Date.now()
 
         const docData = {
           message: msg,
           sender_id: userId,
           timestamp: timestamp,
           type: "text",
+          break_type: break_type,
           ...dataAddFile
         }
         if (docData.type === "text") {
           docData["_smeta"] = triGram(msg.slice(0, 500))
         }
-        setDoc(
-          doc(collection(db, `${firestoreDb}/chat_messages/${groupId}`)),
-          docData
-        )
+        setDoc(doc(collection(db, `${firestoreDb}/chat_messages/${groupId}`)), {
+          ...docData,
+          ...handleTimestampFile(docData)
+        })
 
         // ** notification
         const mute = dataGroups.mute.filter((item) => item !== userId)
@@ -688,7 +760,6 @@ const AppChat = (props) => {
 
       setState({ loadingMessage: true })
       const type = dataAddFile.type ? dataAddFile.type : "text"
-      const timestamp = Date.now()
       let docData = {
         last_message: handleLastMessage(type, msg),
         last_user: userId,
@@ -719,6 +790,7 @@ const AppChat = (props) => {
           sender_id: userId,
           timestamp: timestamp,
           type: "text",
+          break_type: break_type,
           ...dataAddFile
         }
         if (docDataMessage.type === "text") {
@@ -730,7 +802,10 @@ const AppChat = (props) => {
 
         setDoc(
           doc(collection(db, `${firestoreDb}/chat_messages/${newGroupId}`)),
-          docDataMessage
+          {
+            ...docDataMessage,
+            ...handleTimestampFile(docDataMessage)
+          }
         )
         setState({ loadingMessage: false })
       })
@@ -754,10 +829,10 @@ const AppChat = (props) => {
           docId = docData.id
         })
         if (dem > 0) {
-          updateDoc(
-            doc(db, `${firestoreDb}/chat_messages/${groupId}`, docId),
-            dataUpdate
-          )
+          updateDoc(doc(db, `${firestoreDb}/chat_messages/${groupId}`, docId), {
+            ...dataUpdate,
+            ...handleTimestampFile(dataUpdate)
+          })
           if (dataUpdate.status === "success") {
             const file_count = handleCountFile(groupId, dataUpdate.type)
             if (!_.isEmpty(file_count)) {
@@ -1309,7 +1384,8 @@ const AppChat = (props) => {
                 file: data.file,
                 react: data.react,
                 reply: data.reply,
-                forward: data.forward
+                forward: data.forward,
+                break_type: data.break_type
               }
             ]
           }
@@ -1329,7 +1405,8 @@ const AppChat = (props) => {
                 file: data.file,
                 react: data.react,
                 reply: data.reply,
-                forward: data.forward
+                forward: data.forward,
+                break_type: data.break_type
               }
               chat = chat_new
               dispatch(
@@ -1415,18 +1492,20 @@ const AppChat = (props) => {
         }
       })
 
-      if (event.target.hidden === false) {
-        dispatch(handleTitleChat(""))
-      } else {
-        dispatch(
-          handleTitleChat(
-            reduxUnseen > 0
-              ? useFormatMessage("modules.chat.text.new_message", {
-                  num: reduxUnseen
-                })
-              : ""
+      if (reduxUnseen > 0) {
+        if (event.target.hidden === false) {
+          dispatch(handleTitleChat(""))
+        } else {
+          dispatch(
+            handleTitleChat(
+              reduxUnseen > 0
+                ? useFormatMessage("modules.chat.text.new_message", {
+                    num: reduxUnseen
+                  })
+                : ""
+            )
           )
-        )
+        }
       }
       localStorage.setItem("chatAppHidden", event.target.hidden)
       localStorage.setItem("chatAppFocus", checkIssetDiv)

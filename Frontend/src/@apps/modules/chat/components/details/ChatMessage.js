@@ -144,14 +144,30 @@ const ChatMessage = (props) => {
           seen.push(value.user_id)
         }
       })
-      if (chatMessageSenderId === msg.senderId) {
-        msgGroup.messages.push({
-          msg: msg.message,
+
+      if (msg.break_type === "line_time") {
+        chatMessageSenderId = msg.senderId
+        formattedChatLog.push(msgGroup)
+
+        formattedChatLog.push({
+          senderId: msg.senderId,
+          line_time: true,
           time: msg.time,
-          seen: seen,
-          ...msg
+          messages: []
         })
-      } else {
+
+        msgGroup = {
+          senderId: msg.senderId,
+          messages: [
+            {
+              msg: msg.message,
+              time: msg.time,
+              seen: seen,
+              ...msg
+            }
+          ]
+        }
+      } else if (msg.break_type === "minute") {
         chatMessageSenderId = msg.senderId
         formattedChatLog.push(msgGroup)
         msgGroup = {
@@ -164,6 +180,29 @@ const ChatMessage = (props) => {
               ...msg
             }
           ]
+        }
+      } else {
+        if (chatMessageSenderId === msg.senderId) {
+          msgGroup.messages.push({
+            msg: msg.message,
+            time: msg.time,
+            seen: seen,
+            ...msg
+          })
+        } else {
+          chatMessageSenderId = msg.senderId
+          formattedChatLog.push(msgGroup)
+          msgGroup = {
+            senderId: msg.senderId,
+            messages: [
+              {
+                msg: msg.message,
+                time: msg.time,
+                seen: seen,
+                ...msg
+              }
+            ]
+          }
         }
       }
       if (index === chatLog.length - 1) formattedChatLog.push(msgGroup)
@@ -375,6 +414,44 @@ const ChatMessage = (props) => {
       return ""
     }
 
+    const renderIconSeen = () => {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          height="15"
+          width="15">
+          <path
+            clipRule="evenodd"
+            d="m6 15.586 9.293-9.293 1.414 1.414-10 10a1 1 0 0 1-1.414 0l-4-4 1.414-1.414L6 15.586ZM12 15.586l9.293-9.293 1.414 1.414-10 10a1 1 0 0 1-1.414 0l-1.5-1.5 1.414-1.414.793.793Z"
+            fill="#ffffff"
+            fillRule="evenodd"
+            className="fill-000000"
+          />
+        </svg>
+      )
+    }
+
+    const renderIconUnSeen = () => {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          height="15"
+          width="15">
+          <path
+            clipRule="evenodd"
+            d="m9 15.586 9.293-9.293 1.414 1.414-10 10a1 1 0 0 1-1.414 0l-4-4 1.414-1.414L9 15.586Z"
+            fill="#ffffff"
+            fillRule="evenodd"
+            className="fill-000000"
+          />
+        </svg>
+      )
+    }
+
     const renderFile = (data, className, chat, index2, index_message) => {
       if (data.type === "image" || data.type === "image_gif") {
         return (
@@ -436,8 +513,8 @@ const ChatMessage = (props) => {
       } else {
         return (
           <div
-            className={`chat-content chat-content-file ${className} ${
-              chat.seen.length > 0 && chat.senderId === userId ? "has-seen" : ""
+            className={`chat-content chat-content-file ${
+              chat.senderId === userId ? "has-seen" : ""
             }`}
             title={formatTime(chat.time)}>
             {renderSenderName(chat, index_message)}
@@ -454,37 +531,10 @@ const ChatMessage = (props) => {
                 <span className="align-middle ms-50">{data.file}</span>
               </Badge>
             </DownloadFile>
-            {chat.seen.length > 0 && chat.senderId === userId && (
+            {/* {formatTime(data.time)} */}
+            {chat.senderId === userId && (
               <p className="time">
-                {/* {formatTime(chat.time)} */}
-                <svg
-                  version="1.1"
-                  id="Layer_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  width="14px"
-                  height="8px"
-                  viewBox="0 0 16 8"
-                  enableBackground="new 0 0 16 8"
-                  xmlSpace="preserve">
-                  <image
-                    id="image0"
-                    width="16"
-                    height="8"
-                    x="0"
-                    y="0"
-                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAQAAABaf7ccAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
-cwAACxMAAAsTAQCanBgAAAAHdElNRQfnAQQJLQfECMu+AAAAh0lEQVQY02XOLYpCAQDE8YleYtNm
-u4fZssUmPDQKNjEvNlHR4heIuOEZPcAmm80beIWfQVzFx4QZ+DPDRCr6dvEpYmxfxV+4qokhdu+4
-ibOIGSYSR6N/3MafiA1+RKJEX0QPUxEHDO6liDUKLfxqqCvRfazebQHmYgWK56tH2FqK+HDSeb19
-A2U4p3hqPKvqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTA0VDA5OjQ1OjA3KzAwOjAwIvWL
-zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0wNFQwOTo0NTowNyswMDowMFOoM3EAAAAASUVO
-RK5CYII="
-                  />
-                </svg>
+                {chat.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
               </p>
             )}
             {index2 === chat.file.length - 1 && renderHasReaction(chat)}
@@ -497,12 +547,7 @@ RK5CYII="
       if (data.type === "text") {
         return (
           <>
-            <p
-              className={`text ${
-                data.seen.length > 0 && data.senderId === userId
-                  ? "has-seen"
-                  : ""
-              }`}>
+            <p className={`text ${data.senderId === userId ? "has-seen" : ""}`}>
               {search_message_highlight_timestamp === data.time
                 ? ReactHtmlParser(
                     highlightText(
@@ -512,37 +557,10 @@ RK5CYII="
                   )
                 : ReactHtmlParser(data.msg)}
             </p>
-            {data.seen.length > 0 && data.senderId === userId && (
+
+            {data.senderId === userId && (
               <p className="time">
-                {/* {formatTime(data.time)} */}
-                <svg
-                  version="1.1"
-                  id="Layer_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  width="14px"
-                  height="8px"
-                  viewBox="0 0 16 8"
-                  enableBackground="new 0 0 16 8"
-                  xmlSpace="preserve">
-                  <image
-                    id="image0"
-                    width="16"
-                    height="8"
-                    x="0"
-                    y="0"
-                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAQAAABaf7ccAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
-cwAACxMAAAsTAQCanBgAAAAHdElNRQfnAQQJLQfECMu+AAAAh0lEQVQY02XOLYpCAQDE8YleYtNm
-u4fZssUmPDQKNjEvNlHR4heIuOEZPcAmm80beIWfQVzFx4QZ+DPDRCr6dvEpYmxfxV+4qokhdu+4
-ibOIGSYSR6N/3MafiA1+RKJEX0QPUxEHDO6liDUKLfxqqCvRfazebQHmYgWK56tH2FqK+HDSeb19
-A2U4p3hqPKvqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTA0VDA5OjQ1OjA3KzAwOjAwIvWL
-zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0wNFQwOTo0NTowNyswMDowMFOoM3EAAAAASUVO
-RK5CYII="
-                  />
-                </svg>
+                {data.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
               </p>
             )}
           </>
@@ -556,45 +574,12 @@ RK5CYII="
         )
         return (
           <>
-            <p
-              className={`text ${
-                data.seen.length > 0 && data.senderId === userId
-                  ? "has-seen"
-                  : ""
-              }`}>
+            <p className={`text ${data.senderId === userId ? "has-seen" : ""}`}>
               {ReactHtmlParser(messageLink)}
             </p>
-            {data.seen.length > 0 && data.senderId === userId && (
+            {data.senderId === userId && (
               <p className="time">
-                {/* {formatTime(data.time)} */}
-                <svg
-                  version="1.1"
-                  id="Layer_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  width="14px"
-                  height="8px"
-                  viewBox="0 0 16 8"
-                  enableBackground="new 0 0 16 8"
-                  xmlSpace="preserve">
-                  <image
-                    id="image0"
-                    width="16"
-                    height="8"
-                    x="0"
-                    y="0"
-                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAQAAABaf7ccAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
-cwAACxMAAAsTAQCanBgAAAAHdElNRQfnAQQJLQfECMu+AAAAh0lEQVQY02XOLYpCAQDE8YleYtNm
-u4fZssUmPDQKNjEvNlHR4heIuOEZPcAmm80beIWfQVzFx4QZ+DPDRCr6dvEpYmxfxV+4qokhdu+4
-ibOIGSYSR6N/3MafiA1+RKJEX0QPUxEHDO6liDUKLfxqqCvRfazebQHmYgWK56tH2FqK+HDSeb19
-A2U4p3hqPKvqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTA0VDA5OjQ1OjA3KzAwOjAwIvWL
-zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0wNFQwOTo0NTowNyswMDowMFOoM3EAAAAASUVO
-RK5CYII="
-                  />
-                </svg>
+                {data.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
               </p>
             )}
           </>
@@ -1085,51 +1070,58 @@ RK5CYII="
         <div
           key={index}
           className={classnames("chat", {
-            "chat-left": item.senderId !== userId
+            "chat-left": !item.line_time && item.senderId !== userId,
+            "chat-line-break": item.line_time === true
           })}>
-          {item.senderId !== userId && (
-            <div className="chat-avatar">
-              <Avatar
-                imgWidth={36}
-                imgHeight={36}
-                className="box-shadow-1 cursor-pointer"
-                src={_avatar}
-              />
-            </div>
-          )}
-
-          <div className="chat-body">
-            {item.messages.map((chat, index) => {
-              return (
-                <div
-                  key={index}
-                  id={chat.time}
-                  className={`chat-content-parent ${
-                    !_.isEmpty(chat.react) ? "has-reaction" : ""
-                  }`}>
-                  {renderReply(chat)}
-                  <div
-                    className={`chat-content-message ${
-                      !_.isEmpty(chat.reply) ? "has-reply" : ""
-                    }`}>
-                    {item.senderId === userId && renderReaction(chat)}
-                    {renderChatContent(
-                      chat,
-                      item.messages.length > 1
-                        ? index === 0
-                          ? "chat-content-first"
-                          : index === item.messages.length - 1
-                          ? "chat-content-last"
-                          : "chat-content-middle"
-                        : "chat-content-one",
-                      index
-                    )}
-                    {item.senderId !== userId && renderReaction(chat)}
-                  </div>
+          {item.line_time ? (
+            <span className="line-time">{formatTime(item.time)}</span>
+          ) : (
+            <>
+              {item.senderId !== userId && (
+                <div className="chat-avatar">
+                  <Avatar
+                    imgWidth={36}
+                    imgHeight={36}
+                    className="box-shadow-1 cursor-pointer"
+                    src={_avatar}
+                  />
                 </div>
-              )
-            })}
-          </div>
+              )}
+
+              <div className="chat-body">
+                {item.messages.map((chat, index) => {
+                  return (
+                    <div
+                      key={index}
+                      id={chat.time}
+                      className={`chat-content-parent ${
+                        !_.isEmpty(chat.react) ? "has-reaction" : ""
+                      }`}>
+                      {renderReply(chat)}
+                      <div
+                        className={`chat-content-message ${
+                          !_.isEmpty(chat.reply) ? "has-reply" : ""
+                        }`}>
+                        {item.senderId === userId && renderReaction(chat)}
+                        {renderChatContent(
+                          chat,
+                          item.messages.length > 1
+                            ? index === 0
+                              ? "chat-content-first"
+                              : index === item.messages.length - 1
+                              ? "chat-content-last"
+                              : "chat-content-middle"
+                            : "chat-content-one",
+                          index
+                        )}
+                        {item.senderId !== userId && renderReaction(chat)}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )}
         </div>
       )
     })

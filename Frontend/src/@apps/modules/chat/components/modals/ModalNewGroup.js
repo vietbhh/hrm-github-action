@@ -114,13 +114,13 @@ const ModalNewGroup = (props) => {
               {state.loading && <Spinner size="sm" className="me-50" />}
               {useFormatMessage("button.create")}
             </Button.Ripple>
-            <Button.Ripple
+            {/* <Button.Ripple
               color="flat-danger"
               onClick={() => {
                 toggleModal()
               }}>
               {useFormatMessage("button.cancel")}
-            </Button.Ripple>
+            </Button.Ripple> */}
           </ModalFooter>
         </form>
       </FormProvider>

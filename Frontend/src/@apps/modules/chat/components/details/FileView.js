@@ -17,7 +17,7 @@ import { formatTime } from "@apps/modules/chat/common/common"
 import { Image } from "antd"
 import Photo from "./Photo"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 const index = (props) => {
   const { handleShowFileView, handleShowTab, selectedGroup, tabView, active } =
@@ -47,7 +47,6 @@ const index = (props) => {
   const queryLimit = 20
 
   // ** redux
-  const dispatch = useDispatch()
   const chat = useSelector((state) => state.chat)
   const chats = chat.chats
 
@@ -76,25 +75,24 @@ const index = (props) => {
     })
   }, [active])
 
-  const handleQueryInFile = (tabView) => {
-    let queryIn = ["file", "video", "audio"]
+  const handleColumnQuery = (tabView) => {
+    let columnQuery = "timestamp_file"
     if (tabView === "image") {
-      queryIn = ["image", "image_gif"]
+      columnQuery = "timestamp_image"
     }
     if (tabView === "link") {
-      queryIn = ["link"]
+      columnQuery = "timestamp_link"
     }
 
-    return queryIn
+    return columnQuery
   }
 
   const getDataFile = async (tabView) => {
-    const queryIn = handleQueryInFile(tabView)
+    const columnQuery = handleColumnQuery(tabView)
     const q = query(
       collection(db, `${firestoreDb}/chat_messages/${selectedGroup.id}`),
-      orderBy("timestamp", "desc"),
-      where("type", "in", queryIn),
-      where("status", "==", "success"),
+      orderBy(columnQuery, "desc"),
+      where(columnQuery, ">", 0),
       limit(queryLimit)
     )
 
@@ -102,12 +100,11 @@ const index = (props) => {
   }
 
   const getDataFileMore = async (tabView, timestamp) => {
-    const queryIn = handleQueryInFile(tabView)
+    const columnQuery = handleColumnQuery(tabView)
     const q = query(
       collection(db, `${firestoreDb}/chat_messages/${selectedGroup.id}`),
-      orderBy("timestamp", "desc"),
-      where("type", "in", queryIn),
-      where("status", "==", "success"),
+      orderBy(columnQuery, "desc"),
+      where(columnQuery, ">", 0),
       limit(queryLimit + 1),
       startAt(timestamp)
     )

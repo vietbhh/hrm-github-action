@@ -66,17 +66,18 @@ const NavbarChat = () => {
         querySnapshot.docChanges().forEach((change) => {
           const docData = change.doc
           const data = docData.data()
+          const user = data.user
           const mute = data.mute
           const index = mute.indexOf(userId)
           if (change.type === "added") {
-            if (index === -1) {
+            if (index === -1 && user[0] !== userId && user[1] !== userId) {
               unseen++
             }
           }
           if (change.type === "modified") {
           }
           if (change.type === "removed") {
-            if (index === -1) {
+            if (index === -1 && user[0] !== userId && user[1] !== userId) {
               unseen--
             }
           }

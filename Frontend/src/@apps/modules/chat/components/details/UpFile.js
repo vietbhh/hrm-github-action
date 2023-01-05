@@ -110,13 +110,13 @@ const UpFile = (props) => {
             }}>
             {useFormatMessage("modules.chat.text.send")}
           </Button.Ripple>
-          <Button.Ripple
+          {/*  <Button.Ripple
             color="flat-danger"
             onClick={() => {
               toggleModal()
             }}>
             {useFormatMessage("button.cancel")}
-          </Button.Ripple>
+          </Button.Ripple> */}
         </ModalFooter>
       </Modal>
     </>

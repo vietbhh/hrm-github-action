@@ -86,9 +86,17 @@ $btn-background-color: #377dff;
         box-shadow: none !important;
       }
     }
+
+    .modal-footer {
+      justify-content: center !important;
+    }
   }
 
-  .ant-image-mask-info {
+  .ant-image-img {
+    cursor: pointer;
+  }
+
+  .ant-image-mask {
     display: none;
   }
 
@@ -852,7 +860,7 @@ $btn-background-color: #377dff;
                     }
 
                     p.text.has-seen {
-                      margin-right: 25px;
+                      margin-right: 17px;
                       margin-top: 3px;
                     }
 
@@ -863,6 +871,7 @@ $btn-background-color: #377dff;
                       margin-top: -17px;
                       font-weight: 0;
                       font-weight: 200;
+                      margin-right: -5px;
                     }
                   }
 
@@ -923,7 +932,7 @@ $btn-background-color: #377dff;
 
                   .chat-content-file {
                     > span {
-                      margin-right: 40px;
+                      margin-right: 0;
                     }
 
                     span,
@@ -938,7 +947,7 @@ $btn-background-color: #377dff;
 
                   .chat-content-file.has-seen {
                     > span {
-                      margin-right: 25px;
+                      margin-right: 17px;
                     }
                   }
 
@@ -1015,6 +1024,17 @@ $btn-background-color: #377dff;
 
                   .chat-content-last {
                     border-radius: 4px 20px 20px 20px;
+                  }
+                }
+
+                .chat-line-break {
+                  text-align: center;
+
+                  .line-time {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #65676b;
+                    font-family: Helvetica;
                   }
                 }
               }

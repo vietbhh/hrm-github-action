@@ -76,13 +76,13 @@ const ModalAvatarPreview = (props) => {
           {avatarPreviewLoading && <Spinner size="sm" className="me-50" />}
           {useFormatMessage("button.confirm")}
         </Button>
-        <Button.Ripple
+        {/* <Button.Ripple
           color="flat-danger"
           onClick={() => {
             toggleModal()
           }}>
           {useFormatMessage("button.cancel")}
-        </Button.Ripple>
+        </Button.Ripple> */}
       </ModalFooter>
     </Modal>
   )
