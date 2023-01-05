@@ -47,6 +47,7 @@ const AssetErrorModal = (props) => {
         text: useFormatMessage("notification.save.success")
       })
       handleDetail("")
+      loadData()
     })
   }
 
@@ -91,6 +92,7 @@ const AssetErrorModal = (props) => {
         toggle={() => handleDetail("")}
         backdrop={"static"}
         size="sm"
+        className="modal-asset"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>

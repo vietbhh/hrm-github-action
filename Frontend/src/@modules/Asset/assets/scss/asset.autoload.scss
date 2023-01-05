@@ -55,7 +55,22 @@
   }
 }
 
-.modal-asset-detail {
+.modal-asset {
+  .modal-content{
+    .modal-header{
+      border-bottom: none !important;
+    }
+  }
+}
+.info-asset {
+  
+  .name {
+    font-size: 25px;
+    font-weight: 600;
+    color: #130f26;
+  }
+
+
   .status {
     font-size: 12px;
     padding: 3px 8px;
@@ -72,62 +87,6 @@
   }
 }
 
-.youtube {
-  .timepicker_fri {
-    border-radius: 6px;
-    padding: 8px 12px 8px;
-    border: 0.5px solid #f2f7fb;
-    background: #EDEFF2;
-    height: 0;
-    padding: 0;
-    position: absolute;
-    visibility: hidden;
-  }
-
-  .hidden_dash {
-    border-radius: 6px;
-    padding: 8px 12px 8px;
-    border: 0.5px solid #f2f7fb;
-    background: #EDEFF2;
-    position: absolute;
-    visibility: hidden;
-    margin-left: 10rem;
-  }
-
-  .input-group-text {
-    background-color: #EDEFF2 !important;
-  }
-
-  .field-locked input:not([type=checkbox]) {
-    background-color: #EDEFF2 !important;
-  }
-
-  .input-tool-weight {
-    background-color: #EDEFF2 !important;
-  }
-
-  .input-tool-height {
-    height: 55px !important;
-  }
-
-  .select-date {
-    color: #000000;
-    background-color: #edeff2;
-    padding: 0px 12px;
-    border-radius: 12px;
-    min-height: 40px;
-    cursor: pointer;
-
-    .label {
-      font-size: 8px;
-    }
-
-    .value {
-      font-size: 12px;
-      font-weight: 500;
-    }
-  }
-}
 
 .modal-yt-tool {
   top: 60px;
@@ -182,61 +141,6 @@
     box-shadow: 0px 4px 24px rgba(221, 218, 235, 0.4);
   }
 }
-
-.btn-tool {
-  color: #FFFFFF !important;
-  background-color: #377DFF !important;
-  border-color: #377DFF !important;
-  font-weight: 500;
-
-  &:hover {
-    box-shadow: 0 8px 25px -8px #377dff !important;
-  }
-
-  &:active,
-  &:focus {
-    background-color: #377DFF !important;
-  }
-}
-
-.card-top-video {
-  .hidden-text {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 200px;
-  }
-
-  .title-video {
-    font-size: 14px;
-    color: #32434F;
-    font-weight: 500;
-  }
-
-  .channel-name {
-    font-size: 12px;
-    color: #808191;
-  }
-
-  .result {
-    font-weight: 500;
-    line-height: 20px;
-    color: #32434F;
-  }
-
-  .name-video {
-    font-weight: 500;
-    font-size: 15px;
-    color: #000000;
-  }
-}
-
-.name-channel-table {
-  font-weight: 400;
-  font-size: 15px;
-  color: #000000;
-}
-
 .base {
   &:hover {
     background: rgba(241, 241, 245, 0.66);
@@ -314,42 +218,8 @@
   }
 }
 
-.analytic-chart {
-  .apexcharts-canvas {
-    svg {
-      border-radius: 12px;
-    }
-  }
 
-  .apexcharts-text {
-    font-size: 11px;
 
-    tspan {
-      fill: #FFFFFF !important;
-    }
-  }
-}
-
-.dashboard-dropdown-menu {
-  .ant-dropdown-menu {
-    li {
-      a {
-        display: flex;
-        align-items: center;
-
-        i,
-        svg {
-          width: 16px;
-          height: 16px;
-
-          tspan {
-            color: #ffffff;
-          }
-        }
-      }
-    }
-  }
-}
 
 .dropdown-base {
   padding-left: 28px;
@@ -374,6 +244,22 @@
   span {
     background: #fff;
     padding: 0 10px;
+  }
+}
+
+.btn-tool {
+  color: #FFFFFF !important;
+  background-color: #377DFF !important;
+  border-color: #377DFF !important;
+  font-weight: 500;
+
+  &:hover {
+    box-shadow: 0 8px 25px -8px #377dff !important;
+  }
+
+  &:active,
+  &:focus {
+    background-color: #377DFF !important;
   }
 }
 
@@ -592,9 +478,12 @@
     padding: 1.5rem 1rem !important;
 }
 .box-detail-asset{
-  margin-left: auto;
+    margin-left: auto;
     margin-right: auto;
     max-width: 700px;
+    .btn-load-more{
+      cursor: pointer;
+    }
 }
 
 

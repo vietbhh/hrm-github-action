@@ -4015,18 +4015,25 @@
         "asset_warranty_expires": "Warranty expires",
         "asset_status": "Status",
         "recent_image": "Recent image",
-        "owner": "Owner"
+        "owner": "Owner",
+        "created_at": "Created at"
       },
       "text": {
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
         "this_month": "This month",
         "eli_liq": "Eliminate / Liquidated",
-        "re_bro": "Repair / Broken"
+        "re_bro": "Repair / Broken",
+        "asset_information" : "Asset Information",
+        "barcode_qr" : "Barcode / QR code"
       },
       "buttons": {
         "new_asset": "New Asset",
-        "generate": "Generate"
+        "generate": "Generate",
+        "error":"Error",
+        "edit" : "Edit",
+        "handover" :"Handover",
+        "update":"Update"
       },
       "title": {
         "detail": "Asset Detail",
@@ -4108,10 +4115,15 @@
       "text": {
         "total_asset": "Total Asset",
         "new_asset": "New asset this month",
-        "this_month": "This month"
+        "this_month": "This month",
+        "history": "History",
+        "owner_from" :"Owner from",
+        "status_from" :"Status from",
+        "update" :"Update"
       },
       "buttons": {
-        "new_asset": "New Asset"
+        "new_asset": "New Asset",
+        "load_more": "Load more"
       },
       "title": {
         "detail": "Asset Detail",

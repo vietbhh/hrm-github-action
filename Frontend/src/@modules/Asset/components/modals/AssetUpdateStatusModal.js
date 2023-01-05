@@ -100,6 +100,7 @@ const AssetUpdateStatusModal = (props) => {
         toggle={() => handleDetail("")}
         backdrop={"static"}
         size="sm"
+        className="modal-asset"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader toggle={() => handleDetail("")}>
@@ -135,9 +136,8 @@ const AssetUpdateStatusModal = (props) => {
                         )}
                         required
                         fieldData={arrFields.notes}
-                        module="notes"
+                        module="asset_history"
                         useForm={methods}
-                        options
                       />
                     </Col>
                     <Col lg={12} className="mb-1">
