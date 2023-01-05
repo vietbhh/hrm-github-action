@@ -206,10 +206,10 @@ const TableDefaultModule = (props) => {
         <div>
           <Table
             affixHorizontalScrollbar
-            virtualized
             headerHeight={45}
             autoHeight={true}
             data={data}
+            wordWrap="break-word"
             renderLoading={() => {
               return loading ? <TableLoader rows="15" /> : ""
             }}
