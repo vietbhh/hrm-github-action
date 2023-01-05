@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import { assetApi } from "../common/api"
 // ** redux
@@ -12,14 +12,21 @@ import TableAssetType from "../components/details/AssetType/TableAssetType"
 import AssetTypeModal from "../components/modals/AssetTypeModal/AssetTypeModal"
 import SwAlert from "@apps/utility/SwAlert"
 import notification from "@apps/utility/notification"
+import { ErpInput } from "@apps/components/common/ErpField"
 
 const AssetType = () => {
   const [state, setState] = useMergedState({
     loading: true,
     modal: false,
     listData: [],
+    totalData: 0,
     isEditing: false,
-    editData: {}
+    editData: {},
+    filter: {
+      page: 1,
+      limit: 30,
+      text: ""
+    }
   })
 
   const assetTypeState = useSelector((state) => state.app.modules.asset_types)
@@ -46,6 +53,15 @@ const AssetType = () => {
     })
   }
 
+  const setFilter = (key, value) => {
+    setState({
+      filter: {
+        ...state.filter,
+        [key]: value
+      }
+    })
+  }
+
   const handleClickAdd = () => {
     setIsEditing(false)
     setEditData({})
@@ -58,16 +74,18 @@ const AssetType = () => {
     })
 
     assetApi
-      .getDataAssetType({})
+      .getDataAssetType(state.filter)
       .then((res) => {
         setState({
           listData: res.data.results,
+          totalData: res.data.total,
           loading: false
         })
       })
       .catch((err) => {
         setState({
           listData: [],
+          totalData: 0,
           loading: false
         })
       })
@@ -96,10 +114,21 @@ const AssetType = () => {
     })
   }
 
+  const debounceSearch = useRef(
+    _.debounce((nextValue) => {
+      setFilter("text", nextValue)
+    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+  ).current
+
+  const handleSearchVal = (e) => {
+    const value = e.target.value
+    debounceSearch(value.toLowerCase())
+  }
+
   // ** effect
   useEffect(() => {
     loadData()
-  }, [])
+  }, [state.filter])
 
   // ** render
   return (
@@ -116,17 +145,31 @@ const AssetType = () => {
       </div>
       <Card>
         <CardBody>
-          <div className="mb-2">
-            <Button.Ripple color="primary" onClick={() => handleClickAdd()}>
-              <i className="fas fa-plus me-50" />
-              {useFormatMessage("modules.asset_types.buttons.create")}
-            </Button.Ripple>
+          <div className="mb-2 d-flex align-items-center justify-content-between">
+            <div>
+              <Button.Ripple color="primary" onClick={() => handleClickAdd()}>
+                <i className="fas fa-plus me-50" />
+                {useFormatMessage("modules.asset_types.buttons.create")}
+              </Button.Ripple>
+            </div>
+            <div>
+              <ErpInput
+                nolabel={false}
+                prepend={<i className="fas fa-search" />}
+                placeholder={useFormatMessage("app.search")}
+                onChange={(e) => handleSearchVal(e)}
+              />
+            </div>
           </div>
           <div>
             <TableAssetType
               listData={state.listData}
+              totalData={state.totalData}
+              page={state.filter.page}
+              limit={state.filter.limit}
               setIsEditing={setIsEditing}
               setEditData={setEditData}
+              setFilter={setFilter}
               toggleModal={toggleModal}
               handleDeleteAssetType={handleDeleteAssetType}
             />

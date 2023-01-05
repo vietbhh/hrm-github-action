@@ -46,7 +46,8 @@ class AssetGroup extends ErpController
         $listAssetGroup = $model->getList($params);
 
         return $this->respond([
-            'results' => handleDataBeforeReturn($modules, $listAssetGroup, true)
+            'results' => handleDataBeforeReturn($modules, $listAssetGroup['data'], true),
+            'total' => $listAssetGroup['total']
         ]);
     }
 

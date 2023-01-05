@@ -12,28 +12,30 @@ const TableAssetGroup = (props) => {
   const {
     // ** props
     listData,
+    totalData,
+    page,
+    limit,
     // ** methods
     setIsEditing,
     setEditData,
+    setFilter,
     toggleModal,
     handleDeleteAssetGroup
   } = props
 
-  const [limit, setLimit] = useState(30)
-  const [page, setPage] = useState(1)
+  const setLimit = (dataKey) => {
+    setFilter("limit", dataKey)
+  }
+
+  const setPage = (currentPage) => {
+    setFilter("page", currentPage)
+  }
 
   const handleChangeLimit = (dataKey) => {
     setPage(1)
     setLimit(dataKey)
   }
 
-  const data = listData.filter((value, index) => {
-    {
-      const start = limit * (page - 1)
-      const end = start + limit
-      return index >= start && index < end
-    }
-  })
 
   // ** render
   const ActionCell = ({ rowData, dataKey, ...props }) => {
@@ -53,7 +55,7 @@ const TableAssetGroup = (props) => {
   return (
     <Fragment>
       <Table
-        data={data}
+        data={listData}
         autoHeight={true}
         rowHeight={60}
         affixHorizontalScrollbar>
@@ -95,7 +97,7 @@ const TableAssetGroup = (props) => {
           maxButtons={5}
           size="xs"
           layout={["total", "-", "limit", "|", "pager", "skip"]}
-          total={listData.length}
+          total={totalData}
           limitOptions={[10, 30, 50]}
           limit={limit}
           activePage={page}

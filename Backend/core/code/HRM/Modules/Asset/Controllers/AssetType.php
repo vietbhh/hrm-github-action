@@ -43,10 +43,11 @@ class AssetType extends ErpController
         $params = $this->request->getGet();
         unset($params['get']);
 
-        $listAssetGroup = $model->getList($params);
+        $listAssetType = $model->getList($params);
 
         return $this->respond([
-            'results' => handleDataBeforeReturn($modules, $listAssetGroup, true)
+            'results' => handleDataBeforeReturn($modules, $listAssetType['data'], true),
+            'total' => $listAssetType['total']
         ]);
     }
 

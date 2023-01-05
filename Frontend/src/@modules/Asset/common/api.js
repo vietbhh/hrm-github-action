@@ -86,7 +86,10 @@ export const assetApi = {
   async getDataAssetGroup(params) {
     const strParam = object2QueryString(params)
     return await axiosApi.get(
-      `asset-asset-group/get-data-asset-group?get${strParam}`
+      `asset-asset-group/get-data-asset-group?get${strParam}`,
+      {
+        disableLoading: true
+      }
     )
   },
   async updateAssetGroup(id, data) {
@@ -109,7 +112,10 @@ export const assetApi = {
   async getDataAssetType(params) {
     const strParam = object2QueryString(params)
     return await axiosApi.get(
-      `asset-asset-type/get-data-asset-type?get${strParam}`
+      `asset-asset-type/get-data-asset-type?get${strParam}`,
+      {
+        disableLoading: true
+      }
     )
   },
   async updateAssetType(id, data) {

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import { assetApi } from "../common/api"
 // ** redux
@@ -12,14 +12,21 @@ import TableAssetGroup from "../components/details/AssetGroup/TableAssetGroup"
 import AssetGroupModal from "../components/modals/AssetGroupModal/AssetGroupModal"
 import SwAlert from "@apps/utility/SwAlert"
 import notification from "@apps/utility/notification"
+import { ErpInput } from "@apps/components/common/ErpField"
 
 const AssetGroup = () => {
   const [state, setState] = useMergedState({
     loading: true,
     modal: false,
     listData: [],
+    totalData: 0,
     isEditing: false,
-    editData: {}
+    editData: {},
+    filter: {
+      page: 1,
+      limit: 30,
+      text: ""
+    }
   })
 
   const assetGroupState = useSelector((state) => state.app.modules.asset_groups)
@@ -46,6 +53,15 @@ const AssetGroup = () => {
     })
   }
 
+  const setFilter = (key, value) => {
+    setState({
+      filter: {
+        ...state.filter,
+        [key]: value
+      }
+    })
+  }
+
   const handleClickAdd = () => {
     setIsEditing(false)
     setEditData({})
@@ -58,16 +74,18 @@ const AssetGroup = () => {
     })
 
     assetApi
-      .getDataAssetGroup({})
+      .getDataAssetGroup(state.filter)
       .then((res) => {
         setState({
           listData: res.data.results,
+          totalData: res.data.total,
           loading: false
         })
       })
       .catch((err) => {
         setState({
           listData: [],
+          totalData: 0,
           loading: false
         })
       })
@@ -95,11 +113,21 @@ const AssetGroup = () => {
       }
     })
   }
+  const debounceSearch = useRef(
+    _.debounce((nextValue) => {
+      setFilter("text", nextValue)
+    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+  ).current
+
+  const handleSearchVal = (e) => {
+    const value = e.target.value
+    debounceSearch(value.toLowerCase())
+  }
 
   // ** effect
   useEffect(() => {
     loadData()
-  }, [])
+  }, [state.filter])
 
   // ** render
   return (
@@ -117,16 +145,32 @@ const AssetGroup = () => {
       <Card>
         <CardBody>
           <div className="mb-2">
-            <Button.Ripple color="primary" onClick={() => handleClickAdd()}>
-              <i className="fas fa-plus me-50" />
-              {useFormatMessage("modules.asset_groups.buttons.create")}
-            </Button.Ripple>
+            <div className="mb-2 d-flex align-items-center justify-content-between">
+              <div>
+                <Button.Ripple color="primary" onClick={() => handleClickAdd()}>
+                  <i className="fas fa-plus me-50" />
+                  {useFormatMessage("modules.asset_groups.buttons.create")}
+                </Button.Ripple>
+              </div>
+              <div>
+                <ErpInput
+                  nolabel={false}
+                  prepend={<i className="fas fa-search" />}
+                  placeholder={useFormatMessage("app.search")}
+                  onChange={(e) => handleSearchVal(e)}
+                />
+              </div>
+            </div>
           </div>
           <div>
             <TableAssetGroup
               listData={state.listData}
+              totalData={state.totalData}
+              page={state.filter.page}
+              limit={state.filter.limit}
               setIsEditing={setIsEditing}
               setEditData={setEditData}
+              setFilter={setFilter}
               toggleModal={toggleModal}
               handleDeleteAssetGroup={handleDeleteAssetGroup}
             />

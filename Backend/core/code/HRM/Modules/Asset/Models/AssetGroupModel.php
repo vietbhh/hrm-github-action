@@ -70,7 +70,6 @@ class AssetGroupModel extends AssetModel
             return $id;
         }
 
-
         $newAssetGroupCode = isset($updateData['asset_group_code']) ? $updateData['asset_group_code'] : '';
 
         // ** update asset list code
@@ -102,13 +101,25 @@ class AssetGroupModel extends AssetModel
         $builder = $this->asArray()
             ->select(['id', 'asset_group_code', 'asset_group_name', 'asset_group_descriptions']);
 
-        if (count($params) > 0) {
-            foreach ($params as $field => $value) {
-                $builder->where($field, $value);
-            }
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $limit = isset($params['limit']) ? $params['limit'] : 30;
+        $start = ($page - 1) * $limit;
+        $text = (isset($params['text']) && strlen(trim($params['text'])) > 0) ? $params['text'] : '';
+
+        if ($text != '') {
+            $builder->groupStart()
+                ->like('asset_group_code', $text, 'after')
+                ->orLike('asset_group_name', $text, 'after')
+                ->groupEnd();
         }
 
-        return $builder->orderBy('id', 'DESC')->findAll();
+        $totalRecord = $builder->countAllResults(false);
+        $listData = $builder->orderBy('id', 'DESC')->findAll($limit, $start);
+
+        return [
+            'total' => $totalRecord,
+            'data' => $listData
+        ];
     }
 
     public function deleteAssetGroup($id)
