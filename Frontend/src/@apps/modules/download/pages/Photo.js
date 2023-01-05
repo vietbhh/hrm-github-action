@@ -14,8 +14,18 @@ function stringify(val) {
 }
 
 const Photo = (props) => {
-  const { placeholder, alt, src, width, height, className, ...rest } = props
-  const defaultImg = _.isUndefined(src) ? noimg : false
+  const {
+    placeholder,
+    alt,
+    src,
+    width,
+    height,
+    className,
+    defaultPhoto,
+    ...rest
+  } = props
+  let defaultImg = _.isUndefined(src) ? defaultPhoto : false
+  defaultImg = _.isUndefined(defaultPhoto) ? noimg : false
   const [image, setImage] = useState(defaultImg)
 
   useEffect(() => {
