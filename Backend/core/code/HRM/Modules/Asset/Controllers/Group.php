@@ -10,7 +10,7 @@ namespace HRM\Modules\Asset\Controllers;
 use App\Controllers\ErpController;
 use HRM\Modules\Asset\Models\AssetGroupModel;
 
-class AssetGroup extends ErpController
+class Group extends ErpController
 {
     public function create_post()
     {
@@ -58,7 +58,7 @@ class AssetGroup extends ErpController
         $model = new AssetGroupModel();
 
         $postData = $this->request->getPost();
-        $acceptChangeAssetCode = $postData['accept_change_asset_code'];
+        $acceptChangeAssetCode = filter_var($postData['accept_change_asset_code'], FILTER_VALIDATE_BOOLEAN);
         unset($postData['accept_change_asset_code']);
         $dataHandle = handleDataBeforeSave($modules, $postData);
         if (!empty($dataHandle['validate'])) {
