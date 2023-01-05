@@ -8,25 +8,25 @@ import {
 
 export const assetApi = {
   async getAssetTemplate() {
-    return await axiosApi.get("asset-import-asset/get-asset-template", {
+    return await axiosApi.get("asset-import/get-asset-template", {
       responseType: "blob"
     })
   },
   async getMappingFields(data) {
     return await axiosApi.post(
-      "/asset-import-asset/get-mapping-fields",
+      "/asset-import/get-mapping-fields",
       serialize(_.cloneDeep(data))
     )
   },
   async getImportData(data) {
     return await axiosApi.post(
-      "/asset-import-asset/get-import-data",
+      "/asset-import/get-import-data",
       serialize(_.cloneDeep(data))
     )
   },
   async importAsset(data) {
     return await axiosApi.post(
-      "/asset-import-asset/import-asset",
+      "/asset-import/import-asset",
       serialize(_.cloneDeep(data))
     )
   },
@@ -79,14 +79,14 @@ export const assetApi = {
   // ** asset group api
   async createAssetGroup(data) {
     return await axiosApi.post(
-      "asset-asset-group/create",
+      "asset-group/create",
       serialize(_.cloneDeep(data))
     )
   },
   async getDataAssetGroup(params) {
     const strParam = object2QueryString(params)
     return await axiosApi.get(
-      `asset-asset-group/get-data-asset-group?get${strParam}`,
+      `asset-group/get-data-asset-group?get${strParam}`,
       {
         disableLoading: true
       }
@@ -94,25 +94,25 @@ export const assetApi = {
   },
   async updateAssetGroup(id, data) {
     return await axiosApi.post(
-      `asset-asset-group/update/${id}`,
+      `asset-group/update/${id}`,
       serialize(_.cloneDeep(data))
     )
   },
   async deleteAssetGroup(id) {
-    return await axiosApi.post(`asset-asset-group/delete/${id}`)
+    return await axiosApi.post(`asset-group/delete/${id}`)
   },
 
   // ** asset type api
   async createAssetType(data) {
     return await axiosApi.post(
-      "asset-asset-type/create",
+      "asset-type/create",
       serialize(_.cloneDeep(data))
     )
   },
   async getDataAssetType(params) {
     const strParam = object2QueryString(params)
     return await axiosApi.get(
-      `asset-asset-type/get-data-asset-type?get${strParam}`,
+      `asset-type/get-data-asset-type?get${strParam}`,
       {
         disableLoading: true
       }
@@ -120,12 +120,12 @@ export const assetApi = {
   },
   async updateAssetType(id, data) {
     return await axiosApi.post(
-      `asset-asset-type/update/${id}`,
+      `asset-type/update/${id}`,
       serialize(_.cloneDeep(data))
     )
   },
   async deleteAssetType(id) {
-    return await axiosApi.post(`asset-asset-type/delete/${id}`)
+    return await axiosApi.post(`asset-type/delete/${id}`)
   }
 }
 

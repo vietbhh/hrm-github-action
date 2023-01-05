@@ -11,7 +11,7 @@ use App\Controllers\ErpController;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use HRM\Modules\Asset\Models\AssetListModel;
 
-class ImportAsset extends ErpController
+class Import extends ErpController
 {
     public function index_get()
     {

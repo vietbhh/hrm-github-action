@@ -26,13 +26,13 @@ $routes->get('asset-group/get-data-asset-group', 'Group::get_data_asset_group_ge
 $routes->post('asset-group/update/(:any)', 'Group::update_post/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->post('asset-group/delete/(:any)', 'Group::delete_post/$1',['namespace' => 'HRM\Modules\Asset\Controllers']);
 
-	/*** Route for ImportAsset ***/
-$routes->get('asset-import-asset', 'ImportAsset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
-$routes->get('asset-import-asset/index', 'ImportAsset::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
-$routes->get('asset-import-asset/get-asset-template', 'ImportAsset::get_asset_template_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
-$routes->post('asset-import-asset/get-mapping-fields', 'ImportAsset::get_mapping_fields_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
-$routes->post('asset-import-asset/get-import-data', 'ImportAsset::get_import_data_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
-$routes->post('asset-import-asset/import-asset', 'ImportAsset::import_asset_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+	/*** Route for Import ***/
+$routes->get('asset-import', 'Import::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-import/index', 'Import::index_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset-import/get-asset-template', 'Import::get_asset_template_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-import/get-mapping-fields', 'Import::get_mapping_fields_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-import/get-import-data', 'Import::get_import_data_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->post('asset-import/import-asset', 'Import::import_asset_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 
 	/*** Route for Inventories ***/
 $routes->post('asset-inventories/add-new-inventory', 'Inventories::add_new_inventory_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
