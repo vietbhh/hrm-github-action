@@ -8,7 +8,7 @@ import {
 import { Timeline } from "antd"
 import { isEmpty, map } from "lodash-es"
 import React, { Fragment, useEffect } from "react"
-import { Badge, Col, Row } from "reactstrap"
+import { Badge, Button, Col, Row } from "reactstrap"
 import { assetApi } from "../common/api"
 import DownloadFile from "@apps/modules/download/pages/DownloadFile"
 const AssetDetail = (props) => {
@@ -285,11 +285,12 @@ const AssetDetail = (props) => {
           {state.historyData?.length > 0 &&
             state.historyData?.length < state.recordsTotal && (
               <Col className="text-center">
-                <span
-                  className="text-primary btn-load-more"
+                <Button.Ripple
+                  color="flat-primary"
+                  size="sm"
                   onClick={() => handleLoadMore()}>
                   {useFormatMessage("modules.asset_history.buttons.load_more")}
-                </span>
+                </Button.Ripple>
               </Col>
             )}
         </Row>

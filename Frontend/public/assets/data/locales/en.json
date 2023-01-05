@@ -4023,13 +4023,17 @@
         "new_asset": "New asset this month",
         "this_month": "This month",
         "eli_liq": "Eliminate / Liquidated",
-        "re_bro": "Repair / Broken"
+        "re_bro": "Repair / Broken",
+        "asset_information" : "Asset Information",
+        "barcode_qr" : "Barcode / QR code"
       },
       "buttons": {
         "new_asset": "New Asset",
         "generate": "Generate",
         "error":"Error",
-        "edit" : "Edit"
+        "edit" : "Edit",
+        "handover" :"Handover",
+        "update":"Update"
       },
       "title": {
         "detail": "Asset Detail",

@@ -40,7 +40,8 @@ const Information = (props) => {
   const moduleData = useSelector((state) => state.app.modules.asset_lists)
   const module = moduleData.config
   const ability = useContext(AbilityContext)
-  if (!ability.can("access", "assets_lists")) {
+
+  if (!ability.can("access", "asset_lists")) {
     return (
       <>
         <Navigate to="/not-found" replace={true} />
@@ -69,7 +70,6 @@ const Information = (props) => {
         setState({ dataDetail: res.data, barcode: barcode, loading: false })
       })
       .catch(function (err) {
-        console.log("inputElement", inputElement.current.value)
         notification.showError({
           text: useFormatMessage(
             "modules.asset_lists.notification.asset_not_exist"
@@ -164,7 +164,9 @@ const Information = (props) => {
             <CardBody className="pt-0 ">
               <Row>
                 <Col lg={12}>
-                  <h3>Barcode / QR code</h3>
+                  <h3>
+                    {useFormatMessage("modules.asset_lists.text.barcode_qr")}
+                  </h3>
                 </Col>
               </Row>
               <FormProvider {...methods}>
@@ -193,7 +195,9 @@ const Information = (props) => {
                       className="fa-regular fa-file-pen mb-50"
                       style={{ fontSize: "18px" }}></i>
                     <br />
-                    <span className="mt-50">Update</span>
+                    <span className="mt-50">
+                      {useFormatMessage("modules.asset_lists.buttons.update")}
+                    </span>
                   </Button>
                 </Col>
                 <Col sm={6}>
@@ -206,7 +210,7 @@ const Information = (props) => {
                       className="fa-regular fa-repeat mb-50"
                       style={{ fontSize: "18px" }}></i>
                     <br />
-                    Handover
+                    {useFormatMessage("modules.asset_lists.buttons.handover")}
                   </Button>
                 </Col>
                 <Col sm={6}>
@@ -219,7 +223,7 @@ const Information = (props) => {
                       className="fa-regular fa-pen-to-square mb-50"
                       style={{ fontSize: "18px" }}></i>
                     <br />
-                    Edit
+                    {useFormatMessage("modules.asset_lists.buttons.edit")}
                   </Button>
                 </Col>
                 <Col sm={6}>
@@ -232,7 +236,7 @@ const Information = (props) => {
                       className="fa-regular fa-triangle-exclamation mb-50"
                       style={{ fontSize: "18px" }}></i>
                     <br />
-                    Error
+                    {useFormatMessage("modules.asset_lists.buttons.error")}
                   </Button>
                 </Col>
               </Row>
@@ -249,7 +253,11 @@ const Information = (props) => {
                 <>
                   <Row>
                     <Col sm="12">
-                      <h5>Asset Information</h5>
+                      <h5>
+                        {useFormatMessage(
+                          "modules.asset_lists.text.asset_information"
+                        )}
+                      </h5>
                       <hr />
                     </Col>
                   </Row>

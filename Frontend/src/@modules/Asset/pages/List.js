@@ -72,9 +72,15 @@ const List = (props) => {
   const moduleName = module.name
   const metas = moduleData.metas
   const options = moduleData.options
-  // filter type, gorup , owwner
   const ability = useContext(AbilityContext)
 
+  if (!ability.can("access", "asset_lists")) {
+    return (
+      <>
+        <Navigate to="/not-found" replace={true} />
+      </>
+    )
+  }
   const methods = useForm({
     mode: "onSubmit"
   })
@@ -454,7 +460,6 @@ const List = (props) => {
         {state.selectedRows.length > 0 && (
           <div className="ms-1">
             <Button.Ripple
-              title={`Update status`}
               color="flat-danger"
               size="sm"
               className="btn_stt me-50"
@@ -530,7 +535,8 @@ const List = (props) => {
             loading={state.loading}
             pagination={false}
             CustomCell={CellDisplay}
-            rowHeight={80}
+            autoHeight={true}
+            rowHeight={100}
             onChangePage={(page) => {
               loadData({
                 page: page
@@ -548,7 +554,6 @@ const List = (props) => {
             }}
             onSortColumn={false}
             onSelectedRow={(rows) => {
-              console.log("rows", rows)
               setState({
                 selectedRows: rows
               })
