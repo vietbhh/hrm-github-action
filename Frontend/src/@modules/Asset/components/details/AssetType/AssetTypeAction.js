@@ -33,14 +33,14 @@ const AssetGroupAction = (props) => {
         color="flat-dark"
         size="sm"
         className="btn-edit"
-        onClick={() => handleClickDelete()}>
+        onClick={() => handleClickEdit()}>
         <i className="iconly-Edit-Square icli"></i>
       </Button.Ripple>
       <Button.Ripple
         color="flat-dark"
         size="sm"
         className="btn-delete"
-        onClick={() => handleClickEdit()}>
+        onClick={() => handleClickDelete()}>
         <Trash size={15} />
       </Button.Ripple>
     </Fragment>
