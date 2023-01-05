@@ -94,6 +94,8 @@ class AssetGroupModel extends AssetModel
         if (count($dataUpdateAssetList) > 0) {
             $this->assetListModel->updateBatch($dataUpdateAssetList, 'id');
         }
+
+        return true;
     }
 
     public function getList($params = [])
