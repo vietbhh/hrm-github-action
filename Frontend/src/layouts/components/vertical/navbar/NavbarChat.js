@@ -69,15 +69,19 @@ const NavbarChat = () => {
           const user = data.user
           const mute = data.mute
           const index = mute.indexOf(userId)
+          let check_chat_my_self = false
+          if (user.length === 2 && user[0] === user[1]) {
+            check_chat_my_self = true
+          }
           if (change.type === "added") {
-            if (index === -1 && user[0] !== userId && user[1] !== userId) {
+            if (index === -1 && check_chat_my_self === false) {
               unseen++
             }
           }
           if (change.type === "modified") {
           }
           if (change.type === "removed") {
-            if (index === -1 && user[0] !== userId && user[1] !== userId) {
+            if (index === -1 && check_chat_my_self === false) {
               unseen--
             }
           }

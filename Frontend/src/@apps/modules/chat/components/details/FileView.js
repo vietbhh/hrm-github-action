@@ -24,19 +24,19 @@ const index = (props) => {
     props
 
   const [state, setState] = useMergedState({
-    loadingFile: false,
+    loadingFile: true,
     dataFile: [],
     firstTimestampFile: 0,
     lastTimestampFile: 0,
     loadMoreFile: false,
 
-    loadingImage: false,
+    loadingImage: true,
     dataImage: [],
     firstTimestampImage: 0,
     lastTimestampImage: 0,
     loadMoreImage: false,
 
-    loadingLink: false,
+    loadingLink: true,
     dataLink: [],
     firstTimestampLink: 0,
     lastTimestampLink: 0,
@@ -375,59 +375,71 @@ const index = (props) => {
             <PerfectScrollbar
               className={`div-content-perfect-scrollbar`}
               options={{ wheelPropagation: false }}>
-              {_.map(state.dataListenFile, (value, index) => {
-                return _.map(value.file, (item, key) => {
-                  return (
-                    <div key={`${index}${key}`} className="div-content-file">
-                      <DownloadFile
-                        className="align-items-center"
-                        src={`/modules/chat/${
-                          value?.forward?.forward_id_from
-                            ? value?.forward?.forward_id_from
-                            : selectedGroup.id
-                        }/other/${item.file}`}
-                        fileName={item.file}>
-                        <Badge color="light-secondary" pill>
-                          <Link2 size={12} />
-                          <span
-                            className="align-middle ms-50"
-                            title={item.file}>
-                            {item.file}
-                          </span>
-                        </Badge>
-                      </DownloadFile>
-                      <p className="time">{formatTime(value.timestamp)}</p>
-                    </div>
-                  )
-                })
-              })}
+              {_.isEmpty(state.dataListenFile) && _.isEmpty(state.dataFile) ? (
+                <div className="text-center mt-50 text-muted">
+                  {useFormatMessage("modules.chat.text.empty_file")}
+                </div>
+              ) : (
+                <>
+                  {_.map(state.dataListenFile, (value, index) => {
+                    return _.map(value.file, (item, key) => {
+                      return (
+                        <div
+                          key={`${index}${key}`}
+                          className="div-content-file">
+                          <DownloadFile
+                            className="align-items-center"
+                            src={`/modules/chat/${
+                              value?.forward?.forward_id_from
+                                ? value?.forward?.forward_id_from
+                                : selectedGroup.id
+                            }/other/${item.file}`}
+                            fileName={item.file}>
+                            <Badge color="light-secondary" pill>
+                              <Link2 size={12} />
+                              <span
+                                className="align-middle ms-50"
+                                title={item.file}>
+                                {item.file}
+                              </span>
+                            </Badge>
+                          </DownloadFile>
+                          <p className="time">{formatTime(value.timestamp)}</p>
+                        </div>
+                      )
+                    })
+                  })}
 
-              {_.map(state.dataFile, (value, index) => {
-                return _.map(value.file, (item, key) => {
-                  return (
-                    <div key={`${index}${key}`} className="div-content-file">
-                      <DownloadFile
-                        className="align-items-center"
-                        src={`/modules/chat/${
-                          value?.forward?.forward_id_from
-                            ? value?.forward?.forward_id_from
-                            : selectedGroup.id
-                        }/other/${item.file}`}
-                        fileName={item.file}>
-                        <Badge color="light-secondary" pill>
-                          <Link2 size={12} />
-                          <span
-                            className="align-middle ms-50"
-                            title={item.file}>
-                            {item.file}
-                          </span>
-                        </Badge>
-                      </DownloadFile>
-                      <p className="time">{formatTime(value.timestamp)}</p>
-                    </div>
-                  )
-                })
-              })}
+                  {_.map(state.dataFile, (value, index) => {
+                    return _.map(value.file, (item, key) => {
+                      return (
+                        <div
+                          key={`${index}${key}`}
+                          className="div-content-file">
+                          <DownloadFile
+                            className="align-items-center"
+                            src={`/modules/chat/${
+                              value?.forward?.forward_id_from
+                                ? value?.forward?.forward_id_from
+                                : selectedGroup.id
+                            }/other/${item.file}`}
+                            fileName={item.file}>
+                            <Badge color="light-secondary" pill>
+                              <Link2 size={12} />
+                              <span
+                                className="align-middle ms-50"
+                                title={item.file}>
+                                {item.file}
+                              </span>
+                            </Badge>
+                          </DownloadFile>
+                          <p className="time">{formatTime(value.timestamp)}</p>
+                        </div>
+                      )
+                    })
+                  })}
+                </>
+              )}
 
               {state.loadingFile && (
                 <div className="text-center mt-50">
@@ -454,39 +466,46 @@ const index = (props) => {
             <PerfectScrollbar
               className={`div-content-perfect-scrollbar`}
               options={{ wheelPropagation: false }}>
-              <div className="div-content-image">
-                <Image.PreviewGroup>
-                  {_.map(state.dataListenImage, (value, index) => {
-                    return _.map(value.file, (item, key) => {
-                      return (
-                        <Photo
-                          key={`${index}${key}`}
-                          src={`/modules/chat/${
-                            value?.forward?.forward_id_from
-                              ? value?.forward?.forward_id_from
-                              : selectedGroup.id
-                          }/other/${item.file}`}
-                        />
-                      )
-                    })
-                  })}
+              {_.isEmpty(state.dataListenImage) &&
+              _.isEmpty(state.dataImage) ? (
+                <div className="text-center mt-50 text-muted">
+                  {useFormatMessage("modules.chat.text.empty_image")}
+                </div>
+              ) : (
+                <div className="div-content-image">
+                  <Image.PreviewGroup>
+                    {_.map(state.dataListenImage, (value, index) => {
+                      return _.map(value.file, (item, key) => {
+                        return (
+                          <Photo
+                            key={`${index}${key}`}
+                            src={`/modules/chat/${
+                              value?.forward?.forward_id_from
+                                ? value?.forward?.forward_id_from
+                                : selectedGroup.id
+                            }/other/${item.file}`}
+                          />
+                        )
+                      })
+                    })}
 
-                  {_.map(state.dataImage, (value, index) => {
-                    return _.map(value.file, (item, key) => {
-                      return (
-                        <Photo
-                          key={`${index}${key}`}
-                          src={`/modules/chat/${
-                            value?.forward?.forward_id_from
-                              ? value?.forward?.forward_id_from
-                              : selectedGroup.id
-                          }/other/${item.file}`}
-                        />
-                      )
-                    })
-                  })}
-                </Image.PreviewGroup>
-              </div>
+                    {_.map(state.dataImage, (value, index) => {
+                      return _.map(value.file, (item, key) => {
+                        return (
+                          <Photo
+                            key={`${index}${key}`}
+                            src={`/modules/chat/${
+                              value?.forward?.forward_id_from
+                                ? value?.forward?.forward_id_from
+                                : selectedGroup.id
+                            }/other/${item.file}`}
+                          />
+                        )
+                      })
+                    })}
+                  </Image.PreviewGroup>
+                </div>
+              )}
 
               {state.loadingImage && (
                 <div className="text-center mt-50">
@@ -513,31 +532,49 @@ const index = (props) => {
             <PerfectScrollbar
               className={`div-content-perfect-scrollbar`}
               options={{ wheelPropagation: false }}>
-              {_.map(state.dataListenLink, (value, index) => {
-                return _.map(value.file, (item, key) => {
-                  return (
-                    <div key={`${index}${key}`} className="div-content-link">
-                      <a href={item.file} target={"_blank"} title={item.file}>
-                        {item.file}
-                      </a>
-                      <p className="time">{formatTime(value.timestamp)}</p>
-                    </div>
-                  )
-                })
-              })}
+              {_.isEmpty(state.dataListenLink) && _.isEmpty(state.dataLink) ? (
+                <div className="text-center mt-50 text-muted">
+                  {useFormatMessage("modules.chat.text.empty_link")}
+                </div>
+              ) : (
+                <>
+                  {_.map(state.dataListenLink, (value, index) => {
+                    return _.map(value.file, (item, key) => {
+                      return (
+                        <div
+                          key={`${index}${key}`}
+                          className="div-content-link">
+                          <a
+                            href={item.file}
+                            target={"_blank"}
+                            title={item.file}>
+                            {item.file}
+                          </a>
+                          <p className="time">{formatTime(value.timestamp)}</p>
+                        </div>
+                      )
+                    })
+                  })}
 
-              {_.map(state.dataLink, (value, index) => {
-                return _.map(value.file, (item, key) => {
-                  return (
-                    <div key={`${index}${key}`} className="div-content-link">
-                      <a href={item.file} target={"_blank"} title={item.file}>
-                        {item.file}
-                      </a>
-                      <p className="time">{formatTime(value.timestamp)}</p>
-                    </div>
-                  )
-                })
-              })}
+                  {_.map(state.dataLink, (value, index) => {
+                    return _.map(value.file, (item, key) => {
+                      return (
+                        <div
+                          key={`${index}${key}`}
+                          className="div-content-link">
+                          <a
+                            href={item.file}
+                            target={"_blank"}
+                            title={item.file}>
+                            {item.file}
+                          </a>
+                          <p className="time">{formatTime(value.timestamp)}</p>
+                        </div>
+                      )
+                    })
+                  })}
+                </>
+              )}
 
               {state.loadingLink && (
                 <div className="text-center mt-50">

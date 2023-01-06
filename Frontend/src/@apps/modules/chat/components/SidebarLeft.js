@@ -8,7 +8,7 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import classnames from "classnames"
 import { Search, X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { formatTime } from "../common/common"
+import { formatTime, replaceTextMessage } from "../common/common"
 import ModalNewGroup from "./modals/ModalNewGroup"
 
 // ** Reactstrap Imports
@@ -247,9 +247,8 @@ const SidebarLeft = (props) => {
                                 ? item.chat.lastUser + ": "
                                 : ""}
                               {item.chat.lastMessage
-                                ? item.chat.lastMessage.message.replace(
-                                    /<[^>]*>/g,
-                                    ""
+                                ? replaceTextMessage(
+                                    item.chat.lastMessage.message
                                   )
                                 : groups[groups.length - 1].message}
                             </CardText>

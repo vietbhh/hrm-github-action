@@ -333,7 +333,7 @@
   },
   "errors": {
     "common": {
-      "function_contruction": "This function is under construction,sorry about this inconvenience."
+      "function_contruction": "This function is under construction, sorry about this inconvenience."
     }
   },
   "notification": {
@@ -907,7 +907,10 @@
         "change_name": "Change name",
         "change_description": "Change description",
         "new_message": "{num} new messages",
-        "image_preview": "Image preview"
+        "image_preview": "Image preview",
+        "empty_image": "Empty image",
+        "empty_file": "Empty file",
+        "empty_link": "Empty link"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",

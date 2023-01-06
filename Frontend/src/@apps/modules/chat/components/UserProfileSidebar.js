@@ -1,25 +1,24 @@
 import { ErpInput, ErpSwitch } from "@apps/components/common/ErpField"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import SwAlert from "@apps/utility/SwAlert"
 import { Collapse, Dropdown } from "antd"
 import classnames from "classnames"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Fragment, useEffect, useRef } from "react"
 import { X } from "react-feather"
+import { FormProvider, useForm } from "react-hook-form"
 import PerfectScrollbar from "react-perfect-scrollbar"
+import { Button, Spinner } from "reactstrap"
 import BackgroundProfile from "../assets/images/Bitmap.png"
-import ModalAddMember from "./modals/ModalAddMember"
-import SwAlert from "@apps/utility/SwAlert"
-import { arrayRemove, arrayUnion } from "firebase/firestore"
-import FileViewComponent from "./details/FileView"
-import notification from "@apps/utility/notification"
+import facebookIcon from "../assets/images/facebook.png"
 import { ChatApi } from "../common/api"
+import FileViewComponent from "./details/FileView"
 import Photo from "./details/Photo"
+import ModalAddMember from "./modals/ModalAddMember"
 import ModalAvatarPreview from "./modals/ModalAvatarPreview"
 import ModalBackgroundPreview from "./modals/ModalBackgroundPreview"
-import { Button, Spinner } from "reactstrap"
-import { FormProvider, useForm } from "react-hook-form"
-import facebookIcon from "../assets/images/facebook.png"
-import { Link } from "react-router-dom"
 
 const { Panel } = Collapse
 
@@ -834,7 +833,13 @@ const UserProfileSidebar = (props) => {
             </div>
           </div>
 
-          <div className="profile-div">
+          <div
+            className="profile-div"
+            onClick={() =>
+              notification.showWarning({
+                text: useFormatMessage("errors.common.function_contruction")
+              })
+            }>
             <span className="title">
               {useFormatMessage("modules.chat.text.more_options")}
             </span>
@@ -970,6 +975,11 @@ const UserProfileSidebar = (props) => {
                                 e.preventDefault()
                                 setActive(idGroup)
                                 setActiveFullName(username)
+                                window.history.replaceState(
+                                  null,
+                                  "",
+                                  `/chat/${username}`
+                                )
                               }}>
                               <i className="fa-regular fa-eye"></i>
                               <span>

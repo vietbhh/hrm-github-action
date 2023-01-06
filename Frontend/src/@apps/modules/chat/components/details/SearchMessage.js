@@ -24,8 +24,12 @@ const SearchMessage = (props) => {
     show_search_message_x: false,
     loading_search_message: false,
     arr_search_message_result: [],
-    search_message_groupId: null
+    arr_search_message_result_page: [],
+    search_message_groupId: null,
+    current_page: 1
   })
+
+  const limit = 10
 
   useEffect(() => {
     if (state.search_message_groupId !== selectedUser.chat.id) {
@@ -33,7 +37,8 @@ const SearchMessage = (props) => {
       setState({
         show_search_message: false,
         show_search_message_result: false,
-        arr_search_message_result: []
+        arr_search_message_result: [],
+        current_page: 1
       })
       setSearchMessageHighlight(0, "")
     }
@@ -120,7 +125,8 @@ const SearchMessage = (props) => {
 
         setState({
           show_search_message_result: false,
-          arr_search_message_result: []
+          arr_search_message_result: [],
+          current_page: 1
         })
         setSearchMessageHighlight(0, "")
       }
@@ -151,10 +157,13 @@ const SearchMessage = (props) => {
           })
         })
 
+        dataSearch.sort((a, b) => b.timestamp - a.timestamp)
         setState({
           show_search_message_result: true,
           arr_search_message_result: dataSearch,
-          loading_search_message: false
+          arr_search_message_result_page: [],
+          loading_search_message: false,
+          current_page: 1
         })
       }
     )
@@ -168,6 +177,18 @@ const SearchMessage = (props) => {
 
     return _message
   }
+
+  useEffect(() => {
+    const result = []
+    const start = (state.current_page - 1) * limit
+    const end = start + limit
+    _.forEach(state.arr_search_message_result, (item, index) => {
+      if (0 <= index && index < end) {
+        result.push(item)
+      }
+    })
+    setState({ arr_search_message_result_page: result })
+  }, [state.arr_search_message_result, state.current_page])
 
   return (
     <Fragment>
@@ -265,7 +286,8 @@ const SearchMessage = (props) => {
                       setState({
                         show_search_message: false,
                         show_search_message_result: false,
-                        arr_search_message_result: []
+                        arr_search_message_result: [],
+                        current_page: 1
                       })
                       setSearchMessageHighlight(0, "")
                     }}>
@@ -288,7 +310,18 @@ const SearchMessage = (props) => {
             }`}
             ref={refDivSearchMessageResult}>
             <div className="arrow"></div>
-            <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <PerfectScrollbar
+              options={{ wheelPropagation: false }}
+              onScrollY={(container) => {
+                if (
+                  container.scrollHeight -
+                    container.scrollTop -
+                    container.clientHeight ===
+                  0
+                ) {
+                  setState({ current_page: state.current_page + 1 })
+                }
+              }}>
               <ul className="ul-message-search">
                 {_.isEmpty(state.arr_search_message_result) && (
                   <li className="li-message-search justify-content-center">
@@ -296,37 +329,43 @@ const SearchMessage = (props) => {
                   </li>
                 )}
 
-                {!_.isEmpty(state.arr_search_message_result) &&
-                  _.map(state.arr_search_message_result, (value, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className="li-message-search"
-                        onClick={() => {
-                          setSearchMessageHighlight(
-                            value.timestamp,
-                            getValues("_searchMessage")
-                          )
-
-                          scrollToMessage(value.timestamp, selectedUser.chat.id)
-                        }}>
-                        <span className="text">
-                          {ReactHtmlParser(
-                            highlightText(
-                              renderTextSearchResult(
-                                value.message,
-                                getValues("_searchMessage")
-                              ),
+                {!_.isEmpty(state.arr_search_message_result_page) &&
+                  _.map(
+                    state.arr_search_message_result_page,
+                    (value, index) => {
+                      return (
+                        <li
+                          key={index}
+                          className="li-message-search"
+                          onClick={() => {
+                            setSearchMessageHighlight(
+                              value.timestamp,
                               getValues("_searchMessage")
                             )
-                          )}
-                        </span>
-                        <span className="time">
-                          {formatTime(value.timestamp)}
-                        </span>
-                      </li>
-                    )
-                  })}
+
+                            scrollToMessage(
+                              value.timestamp,
+                              selectedUser.chat.id
+                            )
+                          }}>
+                          <span className="text">
+                            {ReactHtmlParser(
+                              highlightText(
+                                renderTextSearchResult(
+                                  value.message,
+                                  getValues("_searchMessage")
+                                ),
+                                getValues("_searchMessage")
+                              )
+                            )}
+                          </span>
+                          <span className="time">
+                            {formatTime(value.timestamp)}
+                          </span>
+                        </li>
+                      )
+                    }
+                  )}
               </ul>
             </PerfectScrollbar>
           </div>

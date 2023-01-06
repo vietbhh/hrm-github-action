@@ -15,7 +15,20 @@ export const formatTime = (time, date_time = false) => {
   }
 }
 
+export const replaceTextMessage = (txt) => {
+  const mapObj = {
+    "<br>": " "
+  }
+  txt = txt.replace(/<br>/gi, function (matched) {
+    return mapObj[matched]
+  })
+
+  return txt
+}
+
 export const triGram = (txt) => {
+  txt = txt.slice(0, 500)
+  txt = replaceTextMessage(txt)
   const map = {}
   const s1 = (txt || "").toLowerCase()
   const n = 3

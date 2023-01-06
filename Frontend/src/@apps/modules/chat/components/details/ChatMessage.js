@@ -14,7 +14,11 @@ import { useFormatMessage } from "@apps/utility/common"
 import { Dropdown, Image, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Badge, Spinner } from "reactstrap"
-import { formatTime, highlightText } from "../../common/common"
+import {
+  formatTime,
+  highlightText,
+  replaceTextMessage
+} from "../../common/common"
 
 const ChatMessage = (props) => {
   const {
@@ -990,12 +994,7 @@ const ChatMessage = (props) => {
               <svg
                 onClick={() => {
                   let message = chat.message
-                  const mapObj = {
-                    "<br>": " "
-                  }
-                  message = message.replace(/<br>/gi, function (matched) {
-                    return mapObj[matched]
-                  })
+                  message = replaceTextMessage(message)
                   setReplying({
                     replying: true,
                     replying_message: message,

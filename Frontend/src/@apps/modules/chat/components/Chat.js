@@ -6,8 +6,6 @@ import ReactDOM from "react-dom"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import ChatMessage from "./details/ChatMessage"
 import SearchMessage from "./details/SearchMessage"
-import UpFile from "./details/UpFile"
-import EmotionsComponent from "./emotions/index"
 import ModalForward from "./modals/ModalForward"
 
 // ** Third Party Components
@@ -16,21 +14,13 @@ import classnames from "classnames"
 import { Menu as MenuIcon, MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
-import { ErpInput } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import notification from "@apps/utility/notification"
 import { FormProvider, useForm } from "react-hook-form"
+import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
-import { Badge, InputGroup, InputGroupText } from "reactstrap"
 import { ChatApi } from "../common/api"
 import InputMessage from "./details/InputMessage"
-import {
-  ContentState,
-  convertFromRaw,
-  convertToRaw,
-  EditorState
-} from "draft-js"
-import ReactHtmlParser from "react-html-parser"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -665,7 +655,15 @@ const ChatLog = (props) => {
                     scrollToMessage={props.scrollToMessage}
                   />
 
-                  <button className="chat-header-btn-border left">
+                  <button
+                    className="chat-header-btn-border left"
+                    onClick={() =>
+                      notification.showWarning({
+                        text: useFormatMessage(
+                          "errors.common.function_contruction"
+                        )
+                      })
+                    }>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="15"
@@ -682,7 +680,15 @@ const ChatLog = (props) => {
                       />
                     </svg>
                   </button>
-                  <button className="chat-header-btn-border right">
+                  <button
+                    className="chat-header-btn-border right"
+                    onClick={() =>
+                      notification.showWarning({
+                        text: useFormatMessage(
+                          "errors.common.function_contruction"
+                        )
+                      })
+                    }>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="15"
@@ -695,7 +701,15 @@ const ChatLog = (props) => {
                       />
                     </svg>
                   </button>
-                  <button className={`btn-icon-more`}>
+                  <button
+                    className={`btn-icon-more`}
+                    onClick={() =>
+                      notification.showWarning({
+                        text: useFormatMessage(
+                          "errors.common.function_contruction"
+                        )
+                      })
+                    }>
                     <MoreVertical size="28" className="icon-more" />
                   </button>
                 </div>

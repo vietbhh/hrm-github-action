@@ -709,7 +709,7 @@ const AppChat = (props) => {
           ...dataAddFile
         }
         if (docData.type === "text") {
-          docData["_smeta"] = triGram(msg.slice(0, 500))
+          docData["_smeta"] = triGram(msg)
         }
         setDoc(doc(collection(db, `${firestoreDb}/chat_messages/${groupId}`)), {
           ...docData,
@@ -797,7 +797,7 @@ const AppChat = (props) => {
           ...dataAddFile
         }
         if (docDataMessage.type === "text") {
-          docDataMessage["_smeta"] = triGram(msg.slice(0, 500))
+          docDataMessage["_smeta"] = triGram(msg)
         }
 
         // ** notification

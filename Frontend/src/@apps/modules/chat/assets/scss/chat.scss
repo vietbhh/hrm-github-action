@@ -370,8 +370,8 @@ $btn-background-color: #377dff;
 
           .chat-app-window {
             .highlight-text {
-              background-color: $primary-bg;
-              color: #fff;
+              //background-color: $primary-bg;
+              //color: #fff;
             }
 
             .start-chat-area {
@@ -484,7 +484,7 @@ $btn-background-color: #377dff;
                       border: 1px solid #f3f3f3;
                       border-right: 0;
                       padding: 0;
-                      transition: width 0.3s ease;
+                      //transition: width 0.3s ease;
                       display: none;
 
                       svg {
@@ -512,8 +512,7 @@ $btn-background-color: #377dff;
                         border-right: 0;
                         border-top-right-radius: 0;
                         border-bottom-right-radius: 0;
-                        transition: width 0.3s ease;
-
+                        //transition: width 0.3s ease;
                         width: 0;
                         padding: 0;
                         border-right: 0;
