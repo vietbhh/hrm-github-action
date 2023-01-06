@@ -460,7 +460,7 @@ const ChatMessage = (props) => {
               {renderSenderName(chat, index_message)}
               <div
                 className="chat-content chat-content-img"
-                title={formatTime(chat.time)}>
+                title={formatTime(chat.time, true)}>
                 <Photo
                   className="chat-img"
                   src={`/modules/chat/${
@@ -480,7 +480,7 @@ const ChatMessage = (props) => {
             {renderSenderName(chat, index_message)}
             <div
               className="chat-content chat-content-video"
-              title={formatTime(chat.time)}>
+              title={formatTime(chat.time, true)}>
               <VideoComponent
                 src={`/modules/chat/${
                   data?.forward?.forward_id_from
@@ -498,7 +498,7 @@ const ChatMessage = (props) => {
             {renderSenderName(chat, index_message)}
             <div
               className="chat-content chat-content-audio"
-              title={formatTime(chat.time)}>
+              title={formatTime(chat.time, true)}>
               <AudioComponent
                 src={`/modules/chat/${
                   data?.forward?.forward_id_from
@@ -516,7 +516,7 @@ const ChatMessage = (props) => {
             className={`chat-content chat-content-file ${
               chat.senderId === userId ? "has-seen" : ""
             }`}
-            title={formatTime(chat.time)}>
+            title={formatTime(chat.time, true)}>
             {renderSenderName(chat, index_message)}
             <DownloadFile
               className="align-items-center"
@@ -615,7 +615,7 @@ const ChatMessage = (props) => {
           return (
             <div
               className={`chat-content ${className}`}
-              title={formatTime(chat.time)}>
+              title={formatTime(chat.time, true)}>
               {renderSenderName(chat, index_message)}
               {renderMessage(chat)}
               {renderHasReaction(chat)}
@@ -626,7 +626,7 @@ const ChatMessage = (props) => {
             <div
               key={index}
               className="chat-content-sender-name"
-              title={formatTime(chat.time)}>
+              title={formatTime(chat.time, true)}>
               {renderSenderName(chat, index_message)}
               <div className={`chat-content chat-content-gif`}>
                 <img src={chat.msg} />
@@ -641,7 +641,7 @@ const ChatMessage = (props) => {
                 {renderSenderName(chat, index_message)}
                 <div
                   className={`chat-content chat-content-img`}
-                  title={formatTime(chat.time)}>
+                  title={formatTime(chat.time, true)}>
                   <Image.PreviewGroup>
                     {_.map(chat.file, (val, index2) => {
                       return (
@@ -1074,7 +1074,9 @@ const ChatMessage = (props) => {
             "chat-line-break": item.line_time === true
           })}>
           {item.line_time ? (
-            <span className="line-time">{formatTime(item.time)}</span>
+            <div className="chat-body">
+              <span className="line-time">{formatTime(item.time, true)}</span>
+            </div>
           ) : (
             <>
               {item.senderId !== userId && (

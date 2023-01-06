@@ -1,13 +1,17 @@
 import { formatDateToMonthShort } from "@utils"
 import moment from "moment"
 
-export const formatTime = (time) => {
+export const formatTime = (time, date_time = false) => {
   const today = moment().format("YYYY-MM-DD")
   const day = moment(time).format("YYYY-MM-DD")
   if (today === day) {
     return moment(time).format("HH:mm")
   } else {
-    return formatDateToMonthShort(time)
+    if (date_time === true) {
+      return moment(time).format("HH:mm, DD/MM/YYYY")
+    } else {
+      return formatDateToMonthShort(time)
+    }
   }
 }
 
