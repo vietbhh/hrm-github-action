@@ -21,6 +21,8 @@ import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { ChatApi } from "../common/api"
 import InputMessage from "./details/InputMessage"
+import { detectUrl } from "../common/common"
+import { validateFile } from "@apps/utility/validate"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -290,10 +292,7 @@ const ChatLog = (props) => {
 
       // ** check message type link
       let dataAddLink = {}
-      const arr_link = []
-      msg.replace(/(?:https?|ftp):\/\/[\n\S]+/g, function (url) {
-        arr_link.push({ file: url, type: "link" })
-      })
+      const arr_link = detectUrl(msg, true)
       if (!_.isEmpty(arr_link)) {
         dataAddLink = { type: "link", file: arr_link }
       }
@@ -405,6 +404,18 @@ const ChatLog = (props) => {
   }
 
   const handleSubmitSaveFile = (file) => {
+    let validateFile_ = true
+    if (file.length > 0) {
+      _.forEach(file, (item) => {
+        validateFile_ = validateFile(item.file)
+        if (validateFile_ === false) {
+          return false
+        }
+      })
+    }
+    if (validateFile_ === false) {
+      return false
+    }
     const data = {
       groupId: selectedUser.chat.id,
       file: file,
@@ -474,7 +485,7 @@ const ChatLog = (props) => {
   const handleDrag = function (e) {
     e.preventDefault()
     e.stopPropagation()
-    if (e.dataTransfer.effectAllowed === "copyLink") {
+    if (e.dataTransfer.effectAllowed === "all") {
       if (e.type === "dragenter" || e.type === "dragover") {
         setDragActive(true)
       } else {

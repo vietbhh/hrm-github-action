@@ -15,6 +15,7 @@ import { Dropdown, Image, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Badge, Spinner } from "reactstrap"
 import {
+  detectUrl,
   formatTime,
   highlightText,
   replaceTextMessage
@@ -570,12 +571,7 @@ const ChatMessage = (props) => {
           </>
         )
       } else if (data.type === "link") {
-        const messageLink = data.msg.replace(
-          /(?:https?|ftp):\/\/[\n\S]+/g,
-          function (url) {
-            return '<a href="' + url + '" target="_blank">' + url + "</a>"
-          }
-        )
+        const messageLink = detectUrl(data.msg)
         return (
           <>
             <p className={`text ${data.senderId === userId ? "has-seen" : ""}`}>

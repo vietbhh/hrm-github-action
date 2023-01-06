@@ -81,6 +81,12 @@ $btn-background-color: #377dff;
     color: $btn-background-color;
   }
 
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   .modal-content {
     .modal-header {
       border-bottom: none !important;
@@ -854,12 +860,6 @@ $btn-background-color: #377dff;
                       font-size: 15px;
                       font-weight: unset;
                       margin-top: 2px;
-
-                      a {
-                        &:hover {
-                          text-decoration: underline;
-                        }
-                      }
                     }
 
                     p.text.has-seen {
@@ -1002,6 +1002,10 @@ $btn-background-color: #377dff;
 
                       p.time {
                         font-weight: 300;
+                      }
+
+                      a {
+                        color: $btn-background-color;
                       }
                     }
 

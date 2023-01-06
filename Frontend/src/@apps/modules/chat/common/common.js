@@ -51,3 +51,24 @@ export const highlightText = (text, textSearch) => {
     text.substring(index + textSearch.length)
   )
 }
+
+export const detectUrl = (txt, onlyGetLink = false) => {
+  if (onlyGetLink === false) {
+    const link = txt.replace(
+      /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim,
+      function (url) {
+        return '<a href="' + url + '" target="_blank">' + url + "</a>"
+      }
+    )
+    return link
+  } else {
+    const arr_link = []
+    txt.replace(
+      /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim,
+      function (url) {
+        arr_link.push({ file: url, type: "link" })
+      }
+    )
+    return arr_link
+  }
+}
