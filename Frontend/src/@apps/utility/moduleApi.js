@@ -45,6 +45,23 @@ export const defaultModuleApi = {
       }
     )
   },
+  async exportTemplate(module) {
+    return await axiosApi.get(`/module/${module}/export-template`, {
+      responseType: "blob"
+    })
+  },
+  async getMappingFields(module, data) {
+    return await axiosApi.post(
+      `/module/${module}/get-mapping-fields`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async getImportData(module, data) {
+    return await axiosApi.post(
+      `/module/${module}/get-import-data`,
+      serialize(_.cloneDeep(data))
+    )
+  },
   async postValidate(m, data, url = "") {
     const pathUrl = isEmpty(url) ? "/module/" + m + "/validate" : url
     return await axiosApi.post(pathUrl, serialize(_.cloneDeep(data)), {

@@ -256,7 +256,7 @@
     "more": "more",
     "files": "Files",
     "ago": "ago",
-    "few_seconds_ago" : "few seconds ago",
+    "few_seconds_ago": "few seconds ago",
     "time": "time",
     "hours": "hours",
     "minutes": "minutes",
@@ -541,7 +541,77 @@
         "formatLabel": "Format this module before import",
         "notice": "This module will be format,all data will be erase before import.",
         "relateModuleFormat": " The following relate modules will also be formatted",
-        "importSuccess": "Successfully imported {num} records"
+        "importSuccess": "Successfully imported {num} records",
+        "title": {
+          "index": "Import Asset",
+          "download_asset_template": "Download Asset Template",
+          "upload_file_step": {
+            "select_data": "Select data to import",
+            "upload": "Upload your completed spreadsheet"
+          },
+          "map_fields_step": {
+            "default_fields_mapping": "Default Fields Mapping"
+          }
+        },
+        "text": {
+          "step_1": "UPLOAD FILE",
+          "step_2": "MAP FIELDS",
+          "step_3": "PREVIEW & IMPORT",
+          "warning_import": {
+            "title": "Instructions to import successfully",
+            "text": "Download the template and fill it in with your asset data."
+          },
+          "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import.",
+          "upload_file_step": {
+            "message": "This template spreadsheet has been configured to help you fill out information easily and works best with Excel",
+            "upload_file": "Upload File",
+            "file_format": "File format: xlsx. Max file size: 2MB."
+          },
+          "map_fields_step": {
+            "field": "Field",
+            "mapping": "Mapping",
+            "upload_file_header": "Upload File Headers",
+            "mapping_fields_header": "Mapping your uploaded file headers"
+          },
+          "preview_and_import": {
+            "record": "Record",
+            "records": "Records",
+            "ready_to_create": "ready to created",
+            "duplicated": "duplicated",
+            "duplicate": "Duplicat",
+            "skipped": "skipped",
+            "unmapped": "Unmapped",
+            "fields": "fields",
+            "descriptions": {
+              "duplicated": "Duplicate record has been found. Select the records that you want to import.",
+              "skipped": "The record does not allow for import. The following is a list of errors, details for the error that help you check the data.",
+              "unmapped": "These fields in your uploaded file have not been mapped to any field. The data in these fields will be ignored during the import."
+            },
+            "row": "Row",
+            "error": "errors",
+            "field": "Field",
+            "upload_file_header": "Upload File Header",
+            "value": "Value",
+            "not_exist": "This value is not exist",
+            "required_field": "Missing value in required fields.",
+            "duplicate_data_for": "Duplicate data for",
+            "chosen": "Chosen",
+            "import_success": "Import Success",
+            "import_fail": "Import Fail"
+          }
+        },
+        "warning_format_module_import": {
+          "title": "Confirm Import",
+          "description": "\"Format and import\" will format all table data and related table data."
+        },
+        "buttons": {
+          "format_and_import": "Format and Import",
+          "import": "Import",
+          "asset_template": "Asset Template.xlsx",
+          "mapping_fields": "Mapping fields",
+          "back": "Back",
+          "preview": "Preview"
+        }
       }
     }
   },
