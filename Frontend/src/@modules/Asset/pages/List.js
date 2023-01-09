@@ -73,6 +73,9 @@ const List = (props) => {
   const options = moduleData.options
   const ability = useContext(AbilityContext)
 
+  const moduleAssetType = useSelector((state) => state.app.modules.asset_types)
+  const metasAssetType = moduleAssetType.metas
+
   if (!ability.can("access", "asset_lists")) {
     return (
       <>
@@ -311,6 +314,10 @@ const List = (props) => {
     )
   }
 
+  const OwnerCell = ({ rowData, ...props }) => {
+    return <Cell {...props}>{rowData.owner?.label}</Cell>
+  }
+
   const handleDetail = (id) => {
     assetApi.detailAsset(id).then((res) => {
       //res.data.data
@@ -413,6 +420,7 @@ const List = (props) => {
       }
     })
   }
+
   return (
     <Fragment>
       <Row>
@@ -484,7 +492,7 @@ const List = (props) => {
             }}
           />
         </div>
-        <div className="col-2 ms-1">
+        <div className="col-1 ms-1">
           <FieldHandle
             module={moduleName}
             nolabel
@@ -498,6 +506,43 @@ const List = (props) => {
             onChange={(e) => {
               loadData({
                 filters: { ...state.filters, asset_type: e ? e.value : 0 }
+              })
+            }}
+          />
+        </div>
+        <div className="col-1 ms-1">
+          <FieldHandle
+            module={moduleName}
+            nolabel
+            formGroupClass="mb-0"
+            isclearable={true}
+            prepend={<i className="fa-light fa-filter"></i>}
+            className="select-tool-weight"
+            fieldData={{
+              ...metasAssetType.asset_type_group
+            }}
+            placeholder={useFormatMessage("modules.asset_types.text.asset_type_group_short")}
+            onChange={(e) => {
+              loadData({
+                filters: { ...state.filters, asset_group: e ? e.value : 0 }
+              })
+            }}
+          />
+        </div>
+        <div className="col-1 ms-1">
+          <FieldHandle
+            module={moduleName}
+            nolabel
+            formGroupClass="mb-0"
+            isclearable={true}
+            prepend={<i className="fa-light fa-filter"></i>}
+            className="select-tool-weight"
+            fieldData={{
+              ...metas.asset_status
+            }}
+            onChange={(e) => {
+              loadData({
+                filters: { ...state.filters, asset_status: e ? e.value : 0 }
               })
             }}
           />
@@ -560,6 +605,17 @@ const List = (props) => {
             onDragColumn={false}
             onResize={false}
             customColumnAfter={[
+              {
+                props: {
+                  width: 200,
+                  align: "center",
+                  verticalAlign: "middle"
+                },
+                header: useFormatMessage("modules.asset_lists.fields.owner"),
+                cellComponent: (cellProps) => {
+                  return <OwnerCell {...cellProps} />
+                }
+              },
               {
                 props: {
                   width: 120,

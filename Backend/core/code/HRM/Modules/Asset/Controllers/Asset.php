@@ -159,13 +159,13 @@ class Asset extends ErpController
 		$data['assetRe_bro'] = $model->join('m_asset_status', 'm_asset_status.id = m_asset_lists.asset_status')->where('m_asset_status.status_code', 'repair')->orWhere('m_asset_status.status_code', 'broken')->countAllResults(true);
 
 		if (isset($getPara['filters'])) {
-
-
 			foreach ($getPara['filters'] as $key => $val) {
 				if ($key === 'owner') {
 					if ($val) {
 						$model->where('m_asset_lists.owner', $val);
 					}
+				} elseif ($key === 'asset_group' && $val) {
+					$model->where('m_asset_types.asset_type_group', $val);
 				} else {
 					if ($val) {
 						$model->where($key, $val);
@@ -183,11 +183,15 @@ class Asset extends ErpController
 			$model->orLike('asset_notes', $getPara['search']);
 			$model->groupEnd();
 		}
-		$data['recordsTotal'] = $model->countAllResults(false);
-		$list = $model->select('*,m_asset_lists.id as id,m_asset_lists.owner as owner')
+		
+		$model->select('*,m_asset_lists.id as id,m_asset_lists.owner as owner')
 			->join('m_asset_types', 'm_asset_types.id = m_asset_lists.asset_type', 'left')
-			->join('m_asset_groups', 'm_asset_groups.id = m_asset_types.asset_type_group', 'left')->orderBy('date_created', 'DESC')->asArray()->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
-		$data['asset_list'] = handleDataBeforeReturn($modules, $list, true);
+			->join('m_asset_groups', 'm_asset_groups.id = m_asset_types.asset_type_group', 'left');
+
+		$data['recordsTotal'] = $model->countAllResults(false);
+
+		$assetList = $model->asArray()->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
+		$data['asset_list'] = handleDataBeforeReturn($modules, $assetList, true);
 		$data['page'] = $getPara['page'];
 		return $this->respond($data);
 	}
