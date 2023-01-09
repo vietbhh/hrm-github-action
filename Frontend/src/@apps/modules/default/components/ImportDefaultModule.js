@@ -42,6 +42,9 @@ import PermissionModalDefaultModule, {
   handlePermissionArray
 } from "./modals/PermissionModalDefaultModule"
 
+import ImportStep from "../components/import/ImportStep"
+import HandleImportStep from "../components/import/HandleImportStep"
+
 const skipFields = [
   "owner",
   "created_by",
@@ -114,8 +117,15 @@ const ImportDefaultModule = (props) => {
     errors: {},
     linkedModule: [],
     linkedModuleModal: false,
-    formatModule: []
+    formatModule: [],
+    currentStep: "upload_file"
   })
+
+  const setCurrentStep = (step) => {
+    setState({
+      currentStep: step
+    })
+  }
 
   const tooglePermissionModal = () =>
     setState({
@@ -376,11 +386,6 @@ const ImportDefaultModule = (props) => {
     }
   })
 
-  const downloadTemplate = () => {
-    const exportData = headerHandle(module.name, metas, defaultFields)
-    ExportData(`import_template_${module.name}`, "xlsx", exportData)
-  }
-
   const handleFilter = (e) => {
     const data = state.tableData
     let filteredData = []
@@ -423,7 +428,6 @@ const ImportDefaultModule = (props) => {
     setState({
       loading: true
     })
-    console.log(state.insertData)
     defaultModuleApi
       .postImport(module.name, {
         data: state.insertData,
@@ -490,167 +494,18 @@ const ImportDefaultModule = (props) => {
         updateBtn={false}
         deleteBtn={false}
       />
-      <Row className="import-component">
-        <Col sm="12" className="ms-50 mb-1">
-          <p
-            className="font-medium-5 mt-1 extension-title"
-            data-tour="extension-title">
-            {useFormatMessage("app.import")}
-          </p>
-          <p className="text-primary cursor-pointer" onClick={downloadTemplate}>
-            {useFormatMessage("module.default.import.template")}
-          </p>
-          <p className="text-secondary">
-            {useFormatMessage("module.default.import.description")}
-          </p>
-        </Col>
-
-        <Col sm="12">
-          <Card>
-            <CardBody>
-              <Row>
-                <Col sm="12">
-                  <DragDrop uppy={uppy} />
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col sm="12">
-          <UILoader blocking={state.loading} loader={<DefaultSpinner />}>
-            {state.tableData.length ? (
-              <Card>
-                <CardHeader className="justify-content-between flex-wrap">
-                  <CardTitle tag="h4">{state.name}</CardTitle>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Label for="search-input" className="me-1">
-                      {useFormatMessage("app.search")}
-                    </Label>
-                    <Input
-                      id="search-input"
-                      type="text"
-                      size="sm"
-                      value={state.value}
-                      onChange={(e) => handleFilter(e)}
-                    />
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  {!isEmpty(state.errors) && (
-                    <Alert color="danger">
-                      <div className="alert-body">
-                        <AlertCircle size={15} />
-                        <span>
-                          {useFormatMessage("module.default.import.error")}
-                        </span>
-                      </div>
-                    </Alert>
-                  )}
-
-                  <Table size="sm" striped bordered hover responsive>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        {renderTableHead()}
-                      </tr>
-                    </thead>
-                    <tbody>{renderTableBody()}</tbody>
-                  </Table>
-                </CardBody>
-                {state.format && (
-                  <CardFooter>
-                    <Alert color="warning" className="m-0">
-                      <div className="alert-body">
-                        <AlertTriangle size={15} />{" "}
-                        <span className="ms-1">
-                          {useFormatMessage("module.default.import.notice")}
-                        </span>
-                        {state.formatModule.length > 0 && (
-                          <Fragment>
-                            <br />
-                            {useFormatMessage(
-                              "module.default.import.relateModuleFormat"
-                            )}
-                            {state.formatModule &&
-                              state.formatModule.map((item, index) => (
-                                <span
-                                  key={index}
-                                  className="fw-bolder text-primary">
-                                  {" "}
-                                  <Link to={`/${item}`} target="blank">
-                                    {item}
-                                  </Link>
-                                </span>
-                              ))}
-                          </Fragment>
-                        )}
-                      </div>
-                    </Alert>
-                  </CardFooter>
-                )}
-
-                <CardFooter className="d-flex">
-                  <div className="d-flex align-middle align-items-center me-auto">
-                    <UncontrolledTooltip target="permission_btn">
-                      {useFormatMessage("app.permissions")}
-                    </UncontrolledTooltip>
-                    <Button.Ripple
-                      size="sm"
-                      id="permission_btn"
-                      className="btn-icon rounded-circle py-0"
-                      outline
-                      color="flat-secondary"
-                      onClick={tooglePermissionModal}>
-                      <Settings className="align-middle" size={15} />
-                    </Button.Ripple>
-                    {state.listPermission.length > 0 && (
-                      <AvatarList
-                        size="sm"
-                        data={state.listPermission}
-                        moreOnclick={tooglePermissionModal}
-                      />
-                    )}
-                  </div>
-                  {userSetting.developer && (
-                    <Fragment>
-                      <ErpCheckbox
-                        id="truncate"
-                        name="truncate"
-                        label={useFormatMessage(
-                          "module.default.import.formatLabel"
-                        )}
-                        className="ms-2 mt-50"
-                        value={state.format}
-                        onChange={handleFormatClick}
-                      />
-                    </Fragment>
-                  )}
-                  <Button.Ripple
-                    color="primary"
-                    type="button"
-                    onClick={handleImport}
-                    disabled={!isEmpty(state.errors) || state.loading}>
-                    {state.loading && <Spinner size="sm" className="me-50" />}
-                    {useFormatMessage("app.import")}
-                  </Button.Ripple>
-                </CardFooter>
-              </Card>
-            ) : null}
-          </UILoader>
-        </Col>
-      </Row>
-      <PermissionModalDefaultModule
-        modal={state.permissionModal}
-        handleModal={tooglePermissionModal}
-        handleSubmit={handlePermission}
-        permissions={state.permissions}
-      />
-      <LinkedModuleModalDefaultModule
-        modal={state.linkedModuleModal}
-        handleModal={toogleLinkedModuleModal}
-        handleSubmit={handleLinkedModule}
-        linkedModule={state.linkedModule}
-      />
+      <div className="import-component-page">
+        <div>
+          <ImportStep currentStep={state.currentStep} />
+        </div>
+        <div>
+          <HandleImportStep
+          module={module}
+            currentStep={state.currentStep}
+            setCurrentStep={setCurrentStep}
+          />
+        </div>
+      </div>
     </Fragment>
   )
 }
