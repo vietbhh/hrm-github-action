@@ -37,7 +37,7 @@ export const ListCode = React.forwardRef((props, ref) => {
               value={item.asset_code}
               viewBox={`0 0 256 256`}
             />
-            <span className="mt-50">{item.asset_code}</span>
+            <span style={{ marginTop: "15px" }}>{item.asset_code}</span>
           </div>
         )
       })}

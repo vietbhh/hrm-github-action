@@ -4081,14 +4081,14 @@
         "asset_type_code": "Asset type code",
         "asset_type_name": "Asset type name",
         "asset_type_descriptions": "Asset type description",
-        "asset_type_group": "Asset group"
-      },
+        "asset_type_group": "Asset group"      },
       "buttons": {
         "create": "Create Asset Type",
         "save": "Save",
         "update": "Update"
       },
       "text": {
+        "asset_type_group_short": "Group",
         "new_asset_type": "New Asset Type",
         "action": "Action",
         "warning_asset_type_code": "You have changed the asset type code, do you want to update the assets code already in this type?",
