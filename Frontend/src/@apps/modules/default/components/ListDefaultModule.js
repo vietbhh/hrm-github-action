@@ -483,6 +483,9 @@ const ListDefaultModule = (props) => {
   )
     ? defaultCanResizeColumnWidth
     : module.user_options?.table?.resizeColumnWidth
+
+  const overrideTableOpts = moduleOptions?.overrideTableOpts ?? {}
+
   return (
     <Fragment>
       {breadcrumb && (
@@ -688,6 +691,7 @@ const ListDefaultModule = (props) => {
                   }
                 : false
             }
+            {...overrideTableOpts}
           />
         </CardBody>
       </Card>
