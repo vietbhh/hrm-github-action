@@ -496,10 +496,10 @@ const SidebarLeft = (props) => {
             {/* <div className="sidebar-close-icon" onClick={handleSidebar}>
               <X size={14} />
             </div> */}
-            <div className="div-chat-logo">
+            {/* <div className="div-chat-logo">
               <span className="chat-title">Chat</span>
               <span className="chat-title chat-dot">.</span>
-            </div>
+            </div> */}
             <div className="chat-fixed-search">
               <div className="d-flex align-items-center w-100">
                 {/*                 <div

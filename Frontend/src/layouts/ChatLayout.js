@@ -22,7 +22,8 @@ const ChatLayout = (props) => {
       )} */
       className="navbar-2 chat"
       fixedSidebarCollapsed={true}
-      {...props}>
+      {...props}
+      logoLeft={true}>
       <Outlet />
     </Layout>
   )

@@ -80,12 +80,11 @@ const NavbarUser = (props) => {
 
   return (
     <ul className="nav navbar-nav align-items-center ms-auto">
-      {removeSearch !== true && (
-        <NavbarSearch
-          checkLayout="vertical"
-          saveQuickAccess={saveQuickAccess}
-        />
-      )}
+      <NavbarSearch
+        checkLayout="vertical"
+        saveQuickAccess={saveQuickAccess}
+        removeSearch={removeSearch}
+      />
       <AppDrawer />
       {renderBookmarks()}
       {!_.isEmpty(settingPermits) && (

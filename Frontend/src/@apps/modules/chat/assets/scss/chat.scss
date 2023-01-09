@@ -16,6 +16,22 @@ $btn-background-color: #377dff;
   .main-menu {
     box-shadow: 0px 2px 8px rgb(95 125 149 / 15%) !important;
   }
+
+  .div-chat-logo {
+    margin-left: calc((3.75rem - 1.286rem) * -1);
+    margin-bottom: -35px;
+
+    .chat-title {
+      font-weight: 600;
+      font-size: 35px;
+      line-height: 16px;
+      color: #32434f;
+    }
+
+    .chat-dot {
+      color: #fd3b4c;
+    }
+  }
 }
 
 .chat-application {
@@ -115,34 +131,13 @@ $btn-background-color: #377dff;
     overflow: visible !important;
 
     .sidebar-left {
-      margin-top: -70px;
-      z-index: 999;
+      z-index: 11;
+      /* margin-top: -70px;
+      z-index: 999; */
 
       .sidebar-content {
         border-width: 0;
         width: $width-sidebar;
-
-        .div-chat-logo {
-          padding: 2rem 1.286rem 1rem 1.286rem;
-
-          .chat-title {
-            font-weight: 600;
-            font-size: 35px;
-            line-height: 16px;
-            color: #32434f;
-          }
-
-          .chat-dot {
-            color: #fd3b4c;
-          }
-
-          .btn-new-group {
-            cursor: pointer;
-            float: right;
-            margin-right: 20px;
-            font-size: 20px;
-          }
-        }
 
         .chat-fixed-search {
           border-bottom: none;

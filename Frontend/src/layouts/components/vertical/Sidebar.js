@@ -65,7 +65,8 @@ const Sidebar = (props) => {
             "menu-dark": skin === "semi-dark" || skin === "dark"
           }
         )}
-        onMouseEnter={onMouseEnter}
+        //onMouseEnter={onMouseEnter}
+        onClick={onMouseEnter}
         onMouseLeave={() => setMenuHover(false)}>
         {/* Vertical Menu Header */}
         <VerticalMenuHeader
@@ -80,9 +81,9 @@ const Sidebar = (props) => {
           <PerfectScrollbar
             options={{ wheelPropagation: false }}
             onScrollY={(container) => scrollMenu(container)}>
-              {outerCustomMenuComponent && (
-                <Fragment>{outerCustomMenuComponent()}</Fragment>
-              )}
+            {outerCustomMenuComponent && (
+              <Fragment>{outerCustomMenuComponent()}</Fragment>
+            )}
             <ul className="navigation navigation-main">
               {customMenuComponent && (
                 <li className="">

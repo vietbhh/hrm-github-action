@@ -632,12 +632,9 @@ const AppChat = (props) => {
     return text
   }
 
-  const handleBreakType = (timestamp) => {
-    let break_type = ""
-    if (!_.isEmpty(chats)) {
-      const _chat = chats[chats.length - 1]
-      const pre_timestamp = _chat.time
-      const senderId = _chat.senderId
+  const handleBreakType = async (groupId, timestamp, data) => {
+    const calculate_time_break = (timestamp, pre_timestamp, senderId) => {
+      let break_type = ""
       const minute_diff = moment(timestamp).diff(
         moment(pre_timestamp),
         "minutes"
@@ -648,6 +645,50 @@ const AppChat = (props) => {
           break_type = "minute"
         }
       } else if (minute_diff >= 20) {
+        break_type = "line_time"
+      }
+
+      return break_type
+    }
+
+    let break_type = ""
+    // ** check forward
+    if (data.forward && !_.isEmpty(data.forward)) {
+      if (groupId === "") {
+        break_type = "line_time"
+      } else {
+        const q = query(
+          collection(db, `${firestoreDb}/chat_messages/${groupId}`),
+          orderBy("timestamp", "desc"),
+          limit(1)
+        )
+        await getDocs(q).then((res) => {
+          let dem = 0
+          res.forEach((docData) => {
+            dem++
+            if (dem === 1) {
+              const data_message = docData.data()
+              const pre_timestamp = data_message.timestamp
+              const senderId = data_message.sender_id
+              break_type = calculate_time_break(
+                timestamp,
+                pre_timestamp,
+                senderId
+              )
+            }
+          })
+          if (dem === 0) {
+            break_type = "line_time"
+          }
+        })
+      }
+    } else {
+      if (!_.isEmpty(chats)) {
+        const _chat = chats[chats.length - 1]
+        const pre_timestamp = _chat.time
+        const senderId = _chat.senderId
+        break_type = calculate_time_break(timestamp, pre_timestamp, senderId)
+      } else {
         break_type = "line_time"
       }
     }
@@ -680,12 +721,12 @@ const AppChat = (props) => {
     return { timestamp_link, timestamp_image, timestamp_file }
   }
 
-  const sendMessage = (groupId = "", msg, dataAddFile = {}) => {
+  const sendMessage = async (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
     msg = decodeHTMLEntities(msg)
     const timestamp = Date.now()
     const file_count = handleCountFile(groupId, dataAddFile.type)
-    const break_type = handleBreakType(timestamp)
+    const break_type = await handleBreakType(groupId, timestamp, dataAddFile)
 
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id

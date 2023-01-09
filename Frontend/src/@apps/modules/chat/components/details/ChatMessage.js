@@ -463,11 +463,35 @@ const ChatMessage = (props) => {
           <>
             <div className="chat-content-sender-name">
               {renderSenderName(chat, index_message)}
-              <div
-                className="chat-content chat-content-img"
-                title={formatTime(chat.time, true)}>
-                <Photo
-                  className="chat-img"
+              <Tooltip
+                title={formatTime(chat.time, true)}
+                mouseEnterDelay={0.5}
+                placement={`${chat.senderId === userId ? "left" : "right"}`}>
+                <div className="chat-content chat-content-img">
+                  <Photo
+                    className="chat-img"
+                    src={`/modules/chat/${
+                      data?.forward?.forward_id_from
+                        ? data?.forward?.forward_id_from
+                        : selectedUser.chat.id
+                    }/other/${data.file}`}
+                  />
+                  {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+                </div>
+              </Tooltip>
+            </div>
+          </>
+        )
+      } else if (data.type === "video") {
+        return (
+          <div className="chat-content-sender-name">
+            {renderSenderName(chat, index_message)}
+            <Tooltip
+              title={formatTime(chat.time, true)}
+              mouseEnterDelay={0.5}
+              placement={`${chat.senderId === userId ? "left" : "right"}`}>
+              <div className="chat-content chat-content-video">
+                <VideoComponent
                   src={`/modules/chat/${
                     data?.forward?.forward_id_from
                       ? data?.forward?.forward_id_from
@@ -476,74 +500,63 @@ const ChatMessage = (props) => {
                 />
                 {index2 === chat.file.length - 1 && renderHasReaction(chat)}
               </div>
-            </div>
-          </>
-        )
-      } else if (data.type === "video") {
-        return (
-          <div className="chat-content-sender-name">
-            {renderSenderName(chat, index_message)}
-            <div
-              className="chat-content chat-content-video"
-              title={formatTime(chat.time, true)}>
-              <VideoComponent
-                src={`/modules/chat/${
-                  data?.forward?.forward_id_from
-                    ? data?.forward?.forward_id_from
-                    : selectedUser.chat.id
-                }/other/${data.file}`}
-              />
-              {index2 === chat.file.length - 1 && renderHasReaction(chat)}
-            </div>
+            </Tooltip>
           </div>
         )
       } else if (data.type === "audio") {
         return (
           <div className="chat-content-sender-name">
             {renderSenderName(chat, index_message)}
+            <Tooltip
+              title={formatTime(chat.time, true)}
+              mouseEnterDelay={0.5}
+              placement={`${chat.senderId === userId ? "left" : "right"}`}>
+              <div className="chat-content chat-content-audio">
+                <AudioComponent
+                  src={`/modules/chat/${
+                    data?.forward?.forward_id_from
+                      ? data?.forward?.forward_id_from
+                      : selectedUser.chat.id
+                  }/other/${data.file}`}
+                />
+                {index2 === chat.file.length - 1 && renderHasReaction(chat)}
+              </div>
+            </Tooltip>
+          </div>
+        )
+      } else {
+        return (
+          <Tooltip
+            title={formatTime(chat.time, true)}
+            mouseEnterDelay={0.5}
+            placement={`${chat.senderId === userId ? "left" : "right"}`}>
             <div
-              className="chat-content chat-content-audio"
-              title={formatTime(chat.time, true)}>
-              <AudioComponent
+              className={`chat-content chat-content-file ${
+                chat.senderId === userId ? "has-seen" : ""
+              }`}>
+              {renderSenderName(chat, index_message)}
+              <DownloadFile
+                className="align-items-center"
                 src={`/modules/chat/${
                   data?.forward?.forward_id_from
                     ? data?.forward?.forward_id_from
                     : selectedUser.chat.id
                 }/other/${data.file}`}
-              />
+                fileName={data.file}>
+                <Badge color="light-secondary" pill>
+                  <Link2 size={12} />
+                  <span className="align-middle ms-50">{data.file}</span>
+                </Badge>
+              </DownloadFile>
+              {/* {formatTime(data.time)} */}
+              {chat.senderId === userId && (
+                <p className="time">
+                  {chat.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
+                </p>
+              )}
               {index2 === chat.file.length - 1 && renderHasReaction(chat)}
             </div>
-          </div>
-        )
-      } else {
-        return (
-          <div
-            className={`chat-content chat-content-file ${
-              chat.senderId === userId ? "has-seen" : ""
-            }`}
-            title={formatTime(chat.time, true)}>
-            {renderSenderName(chat, index_message)}
-            <DownloadFile
-              className="align-items-center"
-              src={`/modules/chat/${
-                data?.forward?.forward_id_from
-                  ? data?.forward?.forward_id_from
-                  : selectedUser.chat.id
-              }/other/${data.file}`}
-              fileName={data.file}>
-              <Badge color="light-secondary" pill>
-                <Link2 size={12} />
-                <span className="align-middle ms-50">{data.file}</span>
-              </Badge>
-            </DownloadFile>
-            {/* {formatTime(data.time)} */}
-            {chat.senderId === userId && (
-              <p className="time">
-                {chat.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
-              </p>
-            )}
-            {index2 === chat.file.length - 1 && renderHasReaction(chat)}
-          </div>
+          </Tooltip>
         )
       }
     }
@@ -613,52 +626,60 @@ const ChatMessage = (props) => {
           chat.status === "error"
         ) {
           return (
-            <div
-              className={`chat-content ${className}`}
-              title={formatTime(chat.time, true)}>
-              {renderSenderName(chat, index_message)}
-              {renderMessage(chat)}
-              {renderHasReaction(chat)}
-            </div>
+            <Tooltip
+              title={formatTime(chat.time, true)}
+              mouseEnterDelay={0.5}
+              placement={`${chat.senderId === userId ? "left" : "right"}`}>
+              <div className={`chat-content ${className}`}>
+                {renderSenderName(chat, index_message)}
+                {renderMessage(chat)}
+                {renderHasReaction(chat)}
+              </div>
+            </Tooltip>
           )
         } else if (chat.type === "gif") {
           return (
-            <div
-              key={index}
-              className="chat-content-sender-name"
-              title={formatTime(chat.time, true)}>
-              {renderSenderName(chat, index_message)}
-              <div className={`chat-content chat-content-gif`}>
-                <img src={chat.msg} />
-                {renderHasReaction(chat)}
+            <Tooltip
+              title={formatTime(chat.time, true)}
+              mouseEnterDelay={0.5}
+              placement={`${chat.senderId === userId ? "left" : "right"}`}>
+              <div key={index} className="chat-content-sender-name">
+                {renderSenderName(chat, index_message)}
+                <div className={`chat-content chat-content-gif`}>
+                  <img src={chat.msg} />
+                  {renderHasReaction(chat)}
+                </div>
               </div>
-            </div>
+            </Tooltip>
           )
         } else if (chat.type === "image" || chat.type === "image_gif") {
           return (
             <Fragment key={index}>
-              <div className="chat-content-sender-name">
-                {renderSenderName(chat, index_message)}
-                <div
-                  className={`chat-content chat-content-img`}
-                  title={formatTime(chat.time, true)}>
-                  <Image.PreviewGroup>
-                    {_.map(chat.file, (val, index2) => {
-                      return (
-                        <Photo
-                          key={index2}
-                          src={`/modules/chat/${
-                            chat?.forward?.forward_id_from
-                              ? chat?.forward?.forward_id_from
-                              : selectedUser.chat.id
-                          }/other/${val.file}`}
-                        />
-                      )
-                    })}
-                  </Image.PreviewGroup>
-                  {renderHasReaction(chat)}
+              <Tooltip
+                title={formatTime(chat.time, true)}
+                mouseEnterDelay={0.5}
+                placement={`${chat.senderId === userId ? "left" : "right"}`}>
+                <div className="chat-content-sender-name">
+                  {renderSenderName(chat, index_message)}
+                  <div className={`chat-content chat-content-img`}>
+                    <Image.PreviewGroup>
+                      {_.map(chat.file, (val, index2) => {
+                        return (
+                          <Photo
+                            key={index2}
+                            src={`/modules/chat/${
+                              chat?.forward?.forward_id_from
+                                ? chat?.forward?.forward_id_from
+                                : selectedUser.chat.id
+                            }/other/${val.file}`}
+                          />
+                        )
+                      })}
+                    </Image.PreviewGroup>
+                    {renderHasReaction(chat)}
+                  </div>
                 </div>
-              </div>
+              </Tooltip>
             </Fragment>
           )
         } else {

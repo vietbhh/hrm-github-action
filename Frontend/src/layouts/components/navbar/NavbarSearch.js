@@ -28,7 +28,8 @@ const NavbarSearch = ({
   saveQuickAccess,
   icon,
   iconRight,
-  dataSearch
+  dataSearch,
+  removeSearch
 }) => {
   const ability = useContext(AbilityContext)
 
@@ -164,7 +165,11 @@ const NavbarSearch = ({
   }
 
   return (
-    <NavItem className="nav-search" onClick={() => setNavbarSearch(true)}>
+    <NavItem
+      className={classnames("nav-search", {
+        "d-xl-none": removeSearch === true
+      })}
+      onClick={() => setNavbarSearch(true)}>
       <NavLink className="nav-link-search">
         {icon ? (
           icon
