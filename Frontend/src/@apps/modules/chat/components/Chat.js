@@ -11,18 +11,18 @@ import ModalForward from "./modals/ModalForward"
 // ** Third Party Components
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classnames from "classnames"
-import { Menu as MenuIcon, MessageSquare, MoreVertical } from "react-feather"
+import { MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import notification from "@apps/utility/notification"
+import { validateFile } from "@apps/utility/validate"
 import { FormProvider, useForm } from "react-hook-form"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { ChatApi } from "../common/api"
-import InputMessage from "./details/InputMessage"
 import { detectUrl } from "../common/common"
-import { validateFile } from "@apps/utility/validate"
+import InputMessage from "./details/InputMessage"
 
 const ChatLog = (props) => {
   // ** Props & Store

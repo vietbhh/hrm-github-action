@@ -1,26 +1,20 @@
 import { Fragment } from "react"
 
 import Avatar from "@apps/modules/download/pages/Avatar"
-import DownloadFileComponent from "./DownloadFile"
 import AudioComponent from "./Audio"
+import DownloadFileComponent from "./DownloadFile"
 import Photo from "./Photo"
 import VideoComponent from "./Video"
 
 import classnames from "classnames"
-import { Link2 } from "react-feather"
 import ReactHtmlParser from "react-html-parser"
 
 import { useFormatMessage } from "@apps/utility/common"
 import { Dropdown, Image, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
-import { Badge, Spinner } from "reactstrap"
-import {
-  detectUrl,
-  formatTime,
-  highlightText,
-  replaceTextMessage
-} from "../../common/common"
 import { ReactTinyLink } from "react-tiny-link"
+import { Spinner } from "reactstrap"
+import { detectUrl, formatTime, replaceTextMessage } from "../../common/common"
 
 const ChatMessage = (props) => {
   const {
@@ -567,14 +561,7 @@ const ChatMessage = (props) => {
         return (
           <>
             <p className={`text ${data.senderId === userId ? "has-seen" : ""}`}>
-              {search_message_highlight_timestamp === data.time
-                ? ReactHtmlParser(
-                    highlightText(
-                      data.msg,
-                      search_message_highlight_text_search
-                    )
-                  )
-                : ReactHtmlParser(data.msg)}
+              {ReactHtmlParser(data.msg)}
             </p>
 
             {data.senderId === userId && (

@@ -1,13 +1,13 @@
-import { Fragment, useEffect, useRef } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { X } from "react-feather"
 import { ErpInput } from "@apps/components/common/ErpField"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { Fragment, useEffect, useRef } from "react"
+import { X } from "react-feather"
 import { FormProvider, useForm } from "react-hook-form"
+import ReactHtmlParser from "react-html-parser"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { InputGroup, InputGroupText, Spinner } from "reactstrap"
-import notification from "@apps/utility/notification"
-import { formatTime, highlightText } from "../../common/common"
-import ReactHtmlParser from "react-html-parser"
+import { formatTime } from "../../common/common"
 
 const SearchMessage = (props) => {
   const {
@@ -349,15 +349,7 @@ const SearchMessage = (props) => {
                             )
                           }}>
                           <span className="text">
-                            {ReactHtmlParser(
-                              highlightText(
-                                renderTextSearchResult(
-                                  value.message,
-                                  getValues("_searchMessage")
-                                ),
-                                getValues("_searchMessage")
-                              )
-                            )}
+                            {ReactHtmlParser(value.message)}
                           </span>
                           <span className="time">
                             {formatTime(value.timestamp)}

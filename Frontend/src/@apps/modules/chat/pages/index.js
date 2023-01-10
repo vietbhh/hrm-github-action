@@ -9,12 +9,11 @@ import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 import { IdleTimerProvider } from "react-idle-timer"
 import { useDispatch, useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
 import { handleChats, handleTitleChat } from "redux/chat"
+import SocketContext from "utility/context/Socket"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
-import SocketContext from "utility/context/Socket"
-import { useParams } from "react-router-dom"
-import notification from "@apps/utility/notification"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -43,8 +42,8 @@ import {
 // ** style
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
-import "../assets/scss/chat.scss"
 import moment from "moment"
+import "../assets/scss/chat.scss"
 
 const AppChat = (props) => {
   const [store, setStore] = useMergedState({
