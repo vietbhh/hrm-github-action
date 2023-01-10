@@ -2,6 +2,7 @@
 
 $width-sidebar: 370px;
 $btn-background-color: #377dff;
+$font-family: Helvetica;
 
 .navbar-2 {
   .chat-application .content-area-wrapper {
@@ -35,6 +36,75 @@ $btn-background-color: #377dff;
 }
 
 .chat-application {
+  .file-component {
+    margin-right: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: $font-family;
+
+    .file-icon {
+      font-size: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      color: #222b32;
+      min-width: 35px;
+      min-height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .file-content {
+      display: flex;
+      flex-direction: column;
+      color: #050505;
+
+      .file-text {
+        font-size: 14px;
+      }
+
+      .file-size {
+        color: #65676b;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .react_tinylink_card {
+    margin-top: 0.5rem;
+    height: 100px;
+    border-radius: 12px;
+    box-shadow: unset;
+
+    &:hover {
+      background: transparent;
+    }
+
+    .react_tinylink_card_media {
+      flex: 0 0 100px;
+      filter: unset !important;
+      border-radius: 12px;
+    }
+
+    .react_tinylink_card_content_header_description {
+      font-size: 14px;
+    }
+
+    .react_tinylink_card_content_description {
+      font-size: 12px;
+    }
+
+    .react_tinylink_footer {
+      display: none;
+    }
+
+    .react_tinylink_card_content_wrapper {
+      flex: 0 0 100%;
+      padding-right: 110px;
+    }
+  }
+
   .btn {
     border-radius: 12px;
 
@@ -251,7 +321,7 @@ $btn-background-color: #377dff;
                   text-overflow: ellipsis;
                   white-space: nowrap;
                   margin-top: 0;
-                  font-family: Helvetica;
+                  font-family: $font-family;
 
                   h5 {
                     font-size: 16px;
@@ -411,6 +481,10 @@ $btn-background-color: #377dff;
 
                   .chat-header-name-status.status-offline {
                     color: #ff4d4f;
+                  }
+
+                  .chat-header-name-status.status-away {
+                    color: #ff9f43;
                   }
                 }
 
@@ -851,7 +925,7 @@ $btn-background-color: #377dff;
 
                     p.text {
                       word-break: break-word;
-                      font-family: Helvetica;
+                      font-family: $font-family;
                       font-size: 15px;
                       font-weight: unset;
                       margin-top: 2px;
@@ -874,6 +948,10 @@ $btn-background-color: #377dff;
 
                     a {
                       color: #fff;
+                    }
+
+                    .react_tinylink_card {
+                      border-width: 0;
                     }
                   }
 
@@ -933,22 +1011,19 @@ $btn-background-color: #377dff;
                   }
 
                   .chat-content-file {
-                    > span {
-                      margin-right: 0;
-                    }
+                    background-color: rgb(152 157 163 / 14%);
 
-                    span,
-                    svg {
-                      color: #ffffff;
-                    }
-
-                    .badge {
-                      border: 1px solid #acb8d1;
+                    .file-component {
+                      .file-content {
+                        .file-text {
+                          margin-bottom: -5px;
+                        }
+                      }
                     }
                   }
 
                   .chat-content-file.has-seen {
-                    > span {
+                    .file-component {
                       margin-right: 17px;
                     }
                   }
@@ -1005,10 +1080,7 @@ $btn-background-color: #377dff;
                     }
 
                     .chat-content-file {
-                      span,
-                      svg {
-                        color: #6e6b7b;
-                      }
+                      background-color: rgb(152 157 163 / 14%);
                     }
 
                     .chat-content-parent {
@@ -1040,7 +1112,7 @@ $btn-background-color: #377dff;
                     font-size: 12px;
                     font-weight: 500;
                     color: #65676b;
-                    font-family: Helvetica;
+                    font-family: $font-family;
                   }
                 }
               }
@@ -1402,7 +1474,7 @@ $btn-background-color: #377dff;
                 border: none !important;
                 border-radius: 0 !important;
                 height: auto;
-                font-family: Helvetica;
+                font-family: $font-family;
                 font-size: 15px;
 
                 .DraftEditor-root {
@@ -1814,6 +1886,7 @@ $btn-background-color: #377dff;
 
                 .body-content {
                   height: 100%;
+                  font-family: $font-family;
 
                   .div-content {
                     height: 100%;
@@ -1828,15 +1901,22 @@ $btn-background-color: #377dff;
                       margin-top: 10px;
                       align-items: center;
 
-                      > span {
+                      .file-component {
                         width: calc(100% - 46px);
 
-                        > span {
+                        .file-content {
                           overflow: hidden;
                           text-overflow: ellipsis;
                           white-space: nowrap;
                           width: 100%;
                           text-align: left;
+
+                          .file-text {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            text-align: left;
+                          }
                         }
                       }
 
@@ -2055,7 +2135,7 @@ $btn-background-color: #377dff;
     .chat-info {
       margin-top: 0.3rem;
       padding: 0 0.75rem;
-      font-family: Helvetica;
+      font-family: $font-family;
 
       .card-text,
       p {

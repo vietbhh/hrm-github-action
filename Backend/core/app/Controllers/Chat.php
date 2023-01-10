@@ -39,10 +39,7 @@ class Chat extends ErpController
 					return $this->failServerError('error');
 				}
 
-				$out[] = [
-					'type' => $arrFileType[$key]['type'],
-					'file' => $result['arr_upload_file'][0]['filename']
-				];
+				$out[] = $this->_handleResultFile($arrFileType, $key, $result);
 			}
 		} else {
 			foreach ($file as $key => $item) {
@@ -52,10 +49,7 @@ class Chat extends ErpController
 					return $this->failServerError('error');
 				}
 
-				$out[] = [
-					'type' => $arrFileType[$key]['type'],
-					'file' => $result['arr_upload_file'][0]['filename']
-				];
+				$out[] = $this->_handleResultFile($arrFileType, $key, $result);
 			}
 		}
 
@@ -188,5 +182,28 @@ class Chat extends ErpController
 		];
 		$pathUpload = getModuleUploadPath($moduleName, $groupId, false) . $folder . "/";
 		return $uploadService->uploadFile($pathUpload, $filesUpload, true);
+	}
+
+	private function _handleResultFile($arrFileType, $key, $result)
+	{
+		$size = $result['arr_upload_file'][0]['size'] / 1024;
+		$size_type = "KB";
+		if ($size >= 1024) {
+			$size = $size / 1024;
+			$size_type = "MB";
+		}
+		$size = round($size, 2);
+		$file_name = $result['arr_upload_file'][0]['filename'];
+		$file_name_arr = explode(".", $file_name);
+		$fileType =
+			count($file_name_arr) > 1 ? $file_name_arr[count($file_name_arr) - 1] : "";
+
+		return [
+			'type' => $arrFileType[$key]['type'],
+			'file' => $result['arr_upload_file'][0]['filename'],
+			'file_type' => $fileType,
+			'size' => $size,
+			'size_type' => $size_type
+		];
 	}
 }

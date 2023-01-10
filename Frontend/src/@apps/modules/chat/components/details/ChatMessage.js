@@ -1,7 +1,7 @@
 import { Fragment } from "react"
 
 import Avatar from "@apps/modules/download/pages/Avatar"
-import DownloadFile from "@apps/modules/download/pages/DownloadFile"
+import DownloadFileComponent from "./DownloadFile"
 import AudioComponent from "./Audio"
 import Photo from "./Photo"
 import VideoComponent from "./Video"
@@ -20,6 +20,7 @@ import {
   highlightText,
   replaceTextMessage
 } from "../../common/common"
+import { ReactTinyLink } from "react-tiny-link"
 
 const ChatMessage = (props) => {
   const {
@@ -341,7 +342,10 @@ const ChatMessage = (props) => {
             }
           }
         }
-        if (chat.reply.replying_type === "text") {
+        if (
+          chat.reply.replying_type === "text" ||
+          chat.reply.replying_type === "link"
+        ) {
           reply_content = chat.reply.replying_message
         } else if (chat.reply.replying_type === "image") {
           reply_content = (
@@ -389,7 +393,7 @@ const ChatMessage = (props) => {
                 {reply_to}
               </div>
               <div className="chat-content-reply-text chat-content-img">
-                {reply_content}
+                {ReactHtmlParser(reply_content)}
               </div>
             </div>
           </div>
@@ -535,19 +539,16 @@ const ChatMessage = (props) => {
                 chat.senderId === userId ? "has-seen" : ""
               }`}>
               {renderSenderName(chat, index_message)}
-              <DownloadFile
-                className="align-items-center"
+              <DownloadFileComponent
                 src={`/modules/chat/${
                   data?.forward?.forward_id_from
                     ? data?.forward?.forward_id_from
                     : selectedUser.chat.id
                 }/other/${data.file}`}
-                fileName={data.file}>
-                <Badge color="light-secondary" pill>
-                  <Link2 size={12} />
-                  <span className="align-middle ms-50">{data.file}</span>
-                </Badge>
-              </DownloadFile>
+                fileName={data.file}
+                fileType={data.file_type}
+                fileSize={data.size}
+                fileSizeType={data.size_type}></DownloadFileComponent>
               {/* {formatTime(data.time)} */}
               {chat.senderId === userId && (
                 <p className="time">
@@ -587,14 +588,23 @@ const ChatMessage = (props) => {
         const messageLink = detectUrl(data.msg)
         return (
           <>
-            <p className={`text ${data.senderId === userId ? "has-seen" : ""}`}>
+            <p className={`text ${data.senderId === userId ? "" : ""}`}>
               {ReactHtmlParser(messageLink)}
             </p>
-            {data.senderId === userId && (
+            {/* {data.senderId === userId && (
               <p className="time">
                 {data.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
               </p>
-            )}
+            )} */}
+            <ReactTinyLink
+              cardSize="small"
+              showGraphic={true}
+              maxLine={2}
+              minLine={1}
+              url={data?.file?.[0]?.file}
+              loadSecureUrl={true}
+              defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+            />
           </>
         )
       } else {
@@ -1011,7 +1021,11 @@ const ChatMessage = (props) => {
               <svg
                 onClick={() => {
                   let message = chat.message
+                  if (chat.type === "link") {
+                    message = detectUrl(chat.message)
+                  }
                   message = replaceTextMessage(message)
+
                   setReplying({
                     replying: true,
                     replying_message: message,

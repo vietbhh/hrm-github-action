@@ -1,4 +1,7 @@
+import { formatTime } from "@apps/modules/chat/common/common"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { Image } from "antd"
+import { db } from "firebase"
 import {
   collection,
   getDocs,
@@ -9,15 +12,12 @@ import {
   where
 } from "firebase/firestore"
 import React, { Fragment, useEffect } from "react"
-import { db } from "firebase"
-import DownloadFile from "@apps/modules/download/pages/DownloadFile"
-import { Badge, Button, Spinner } from "reactstrap"
-import { Link2 } from "react-feather"
-import { formatTime } from "@apps/modules/chat/common/common"
-import { Image } from "antd"
-import Photo from "./Photo"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
+import { ReactTinyLink } from "react-tiny-link"
+import { Button, Spinner } from "reactstrap"
+import DownloadFileComponent from "./DownloadFile"
+import Photo from "./Photo"
 
 const index = (props) => {
   const { handleShowFileView, handleShowTab, selectedGroup, tabView, active } =
@@ -387,23 +387,18 @@ const index = (props) => {
                         <div
                           key={`${index}${key}`}
                           className="div-content-file">
-                          <DownloadFile
-                            className="align-items-center"
+                          <DownloadFileComponent
                             src={`/modules/chat/${
                               value?.forward?.forward_id_from
                                 ? value?.forward?.forward_id_from
                                 : selectedGroup.id
                             }/other/${item.file}`}
-                            fileName={item.file}>
-                            <Badge color="light-secondary" pill>
-                              <Link2 size={12} />
-                              <span
-                                className="align-middle ms-50"
-                                title={item.file}>
-                                {item.file}
-                              </span>
-                            </Badge>
-                          </DownloadFile>
+                            fileName={item.file}
+                            fileType={item.file_type}
+                            fileSize={item.size}
+                            fileSizeType={
+                              item.size_type
+                            }></DownloadFileComponent>
                           <p className="time">{formatTime(value.timestamp)}</p>
                         </div>
                       )
@@ -416,23 +411,18 @@ const index = (props) => {
                         <div
                           key={`${index}${key}`}
                           className="div-content-file">
-                          <DownloadFile
-                            className="align-items-center"
+                          <DownloadFileComponent
                             src={`/modules/chat/${
                               value?.forward?.forward_id_from
                                 ? value?.forward?.forward_id_from
                                 : selectedGroup.id
                             }/other/${item.file}`}
-                            fileName={item.file}>
-                            <Badge color="light-secondary" pill>
-                              <Link2 size={12} />
-                              <span
-                                className="align-middle ms-50"
-                                title={item.file}>
-                                {item.file}
-                              </span>
-                            </Badge>
-                          </DownloadFile>
+                            fileName={item.file}
+                            fileType={item.file_type}
+                            fileSize={item.size}
+                            fileSizeType={
+                              item.size_type
+                            }></DownloadFileComponent>
                           <p className="time">{formatTime(value.timestamp)}</p>
                         </div>
                       )
@@ -541,17 +531,16 @@ const index = (props) => {
                   {_.map(state.dataListenLink, (value, index) => {
                     return _.map(value.file, (item, key) => {
                       return (
-                        <div
+                        <ReactTinyLink
                           key={`${index}${key}`}
-                          className="div-content-link">
-                          <a
-                            href={item.file}
-                            target={"_blank"}
-                            title={item.file}>
-                            {item.file}
-                          </a>
-                          <p className="time">{formatTime(value.timestamp)}</p>
-                        </div>
+                          cardSize="small"
+                          showGraphic={true}
+                          maxLine={2}
+                          minLine={1}
+                          url={item.file}
+                          loadSecureUrl={true}
+                          defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                        />
                       )
                     })
                   })}
@@ -559,17 +548,16 @@ const index = (props) => {
                   {_.map(state.dataLink, (value, index) => {
                     return _.map(value.file, (item, key) => {
                       return (
-                        <div
+                        <ReactTinyLink
                           key={`${index}${key}`}
-                          className="div-content-link">
-                          <a
-                            href={item.file}
-                            target={"_blank"}
-                            title={item.file}>
-                            {item.file}
-                          </a>
-                          <p className="time">{formatTime(value.timestamp)}</p>
-                        </div>
+                          cardSize="small"
+                          showGraphic={true}
+                          maxLine={2}
+                          minLine={1}
+                          url={item.file}
+                          loadSecureUrl={true}
+                          defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                        />
                       )
                     })
                   })}

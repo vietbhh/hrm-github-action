@@ -106,7 +106,7 @@ const ChatLog = (props) => {
     if (selectedUser?.contact?.type === "group") {
       const online = _.filter(onlineRedux, (item) => {
         const index = selectedUser?.contact?.user.findIndex(
-          (val) => val === item.id.toString()
+          (val) => val === item.id.toString() && item.online_status === "online"
         )
         return index > -1
       })
@@ -114,10 +114,11 @@ const ChatLog = (props) => {
         !_.isEmpty(online) && online.length >= 2 ? "online" : "offline"
       setState({ status: status })
     } else {
-      const online = _.filter(onlineRedux, (item) => {
-        return item.id.toString() === selectedUser?.contact?.idEmployee
-      })
-      const status = !_.isEmpty(online) ? "online" : "offline"
+      const status = !_.isUndefined(
+        onlineRedux?.[selectedUser?.contact?.idEmployee]
+      )
+        ? onlineRedux?.[selectedUser?.contact?.idEmployee].online_status
+        : "offline"
       setState({ status: status })
     }
   }, [onlineRedux, selectedUser])
@@ -318,7 +319,7 @@ const ChatLog = (props) => {
     }
 
     let replying_content = state.replying_message
-    if (state.replying_type !== "text") {
+    if (state.replying_type !== "text" && state.replying_type !== "link") {
       replying_content = state.replying_type
     }
 
@@ -459,7 +460,6 @@ const ChatLog = (props) => {
   const handleChangeFile = (file) => {
     setState({ file: file })
     const _file = handleFile(file)
-
     if (_file.file_type === "image") {
       const _linkPreview = []
       _.forEach(file, (val) => {
@@ -651,9 +651,10 @@ const ChatLog = (props) => {
                       {selectedUser.contact.fullName}
                     </h6>
                     <span
-                      className={`chat-header-name-status ${
-                        state.status === "offline" ? "text-muted" : ""
-                      }`}>
+                      className={classnames("chat-header-name-status", {
+                        "text-muted": state.status === "offline",
+                        "status-away": state.status === "away"
+                      })}>
                       {state.status}
                     </span>
                   </div>
