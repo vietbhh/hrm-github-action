@@ -641,7 +641,7 @@ const ChatLog = (props) => {
                   <div
                     className="sidebar-toggle d-block d-lg-none me-1"
                     onClick={handleSidebar}>
-                    <MenuIcon size={21} />
+                    <i className="fa-regular fa-arrow-left-to-line"></i>
                   </div>
                   {renderAvatar()}
                   <div className="chat-header-name">
