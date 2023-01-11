@@ -54,7 +54,8 @@ const Layout = (props) => {
     className,
     fixedSidebarCollapsed,
     customMenuComponent,
-    outerCustomMenuComponent
+    outerCustomMenuComponent,
+    logoLeft
   } = props
 
   // ** Hooks
@@ -270,7 +271,10 @@ const Layout = (props) => {
         className={classnames(
           `header-navbar navbar align-items-center ${
             navbarClasses[navbarType] || "floating-nav"
-          } navbar-shadow navbar-height`
+          } navbar-shadow navbar-height`,
+          {
+            "logo-left": logoLeft === true
+          }
         )}>
         <div className="navbar-container d-flex content">
           {navbar ? (
@@ -283,7 +287,8 @@ const Layout = (props) => {
               full_name: full_name,
               saveQuickAccess: saveQuickAccess,
               defaultMenuNav: defaultMenuNav,
-              settingPermits: settingPermits
+              settingPermits: settingPermits,
+              logoLeft: logoLeft
             })
           ) : (
             <NavbarComponent
@@ -296,6 +301,7 @@ const Layout = (props) => {
               saveQuickAccess={saveQuickAccess}
               defaultMenuNav={defaultMenuNav}
               settingPermits={settingPermits}
+              logoLeft={logoLeft}
             />
           )}
         </div>
