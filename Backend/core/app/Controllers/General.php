@@ -32,6 +32,7 @@ class General extends ErpController
 		if (isset($data['excepts']) && !empty($data['excepts'])) {
 			$model = $model->whereNotIn('id', $data['excepts']);
 		}
+
 		$result = loadData($model, $data, ['email', 'username', 'full_name', 'phone']);
 
 		$module->setModule('users');

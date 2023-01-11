@@ -8,17 +8,46 @@ import NavbarSearch from "../navbar/NavbarSearch"
 
 // ** import
 import "./scss/navbar2.scss"
+import classNames from "classnames"
+import * as Icon from "react-feather"
+import { NavItem, NavLink } from "reactstrap"
+import { Link } from "react-router-dom"
 
 const Navbar2 = (props) => {
   // ** Props
-  const { saveQuickAccess, defaultMenuNav, settingPermits } = props
+  const {
+    saveQuickAccess,
+    defaultMenuNav,
+    settingPermits,
+    logoLeft,
+    setMenuVisibility
+  } = props
 
   const customSettingMenu =
     useSelector((state) => state.auth.settings).top_menu_config || {}
 
   return (
     <Fragment>
-      <div className="navbar2-div-search">
+      <ul className="navbar-nav d-lg-none d-xl-none">
+        <NavItem className="mobile-menu me-auto">
+          <NavLink
+            className="nav-menu-main menu-toggle hidden-xs is-active"
+            onClick={() => setMenuVisibility(true)}>
+            <Icon.Menu className="ficon" />
+          </NavLink>
+        </NavItem>
+      </ul>
+
+      {logoLeft === true && (
+        <Link to={"/"} className=" d-none d-lg-block d-xl-block">
+          <div className="div-chat-logo">
+            <span className="chat-title">Chat</span>
+            <span className="chat-title chat-dot">.</span>
+          </div>
+        </Link>
+      )}
+
+      <div className={classNames("navbar2-div-search d-none d-xl-flex")}>
         <NavbarSearch
           checkLayout="vertical"
           saveQuickAccess={saveQuickAccess}

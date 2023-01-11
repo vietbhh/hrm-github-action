@@ -4,6 +4,13 @@
   right: calc(((540px / 2) - (90px / 2)) * -1);
 }
 
+.navbar-2.chat.menu-hide {
+  > .navbar.logo-left > .navbar-container {
+    display: grid !important;
+    grid-template-columns: 25% 75%;
+  }
+}
+
 .navbar-2 {
   background-color: #ffffff;
 
@@ -38,6 +45,16 @@
       > div {
         border-radius: 12px;
       }
+    }
+  }
+
+  > .navbar.logo-left > .navbar-container {
+    display: grid !important;
+    grid-template-columns: 25% 50% 25%;
+
+    > .navbar2-div-search {
+      right: 0;
+      margin: auto;
     }
   }
 
