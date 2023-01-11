@@ -24,7 +24,7 @@ import {
 } from "reactstrap"
 
 const OffboardingModal = (props) => {
-  const { toggleAssignChecklistModal, setAssignType } = props
+  const { toggleAssignChecklistModal, setAssignType, loadDataOverView } = props
   const offboardingState = useSelector((state) => state.offboarding)
   const subordinates = useSelector((state) => state.offboarding.subordinates)
   const { modal, user } = offboardingState
@@ -51,6 +51,9 @@ const OffboardingModal = (props) => {
         props.onComplete()
         setAssignType("offboarding")
         toggleAssignChecklistModal()
+        if (typeof loadDataOverView === "function") {
+          loadDataOverView()
+        }
       })
       .catch((err) => {
         setState({ submitting: false })

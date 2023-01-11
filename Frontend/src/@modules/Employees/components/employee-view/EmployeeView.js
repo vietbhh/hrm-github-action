@@ -179,7 +179,7 @@ const EmployeeView = (props) => {
           overlayClassName="employee-view-popover">
           <div className="employee-view-text">
             <span>{state.employeeViewTitle}</span>
-            <i className="fa-regular fa-angle-down"></i>
+            <i className="fas fa-sort-down mb-50" />
           </div>
         </Popover>
         <div className="employee-view-des">{state.employeeViewDescription}</div>

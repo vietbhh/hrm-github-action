@@ -328,6 +328,7 @@ class Checklist extends ErpController
 				break;
 			}
 		}
+
 		if ($isExistLineManager && empty($postData['employee']['line_manager'])) {
 			return $this->failNotFound();
 		}

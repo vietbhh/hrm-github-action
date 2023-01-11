@@ -284,7 +284,7 @@ const TableList = (props) => {
               const cellProps = field_options?.table?.cellProps
               const canDrag = field_options?.table?.drag
               return (
-                <Column {...colProps} {...cellProps}>
+                <Column {...colProps} {...cellProps} fullText>
                   {canDrag === false ? (
                     <HeaderCell
                       className={classNames(

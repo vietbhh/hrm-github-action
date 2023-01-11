@@ -396,6 +396,20 @@ export const employeesApi = {
       `/employees/update-auto-generate-code/${id}`,
       serialize(_.cloneDeep(data))
     )
+  },
+  async updateEmployeeStatus(id, data) {
+    return await axiosApi.post(
+      `/employees/update-employee-status/${id}`,
+      serialize(_.cloneDeep(data)),
+      {
+        disableLoading: true
+      }
+    )
+  },
+  async getOverViewEmployee() {
+    return await axiosApi.get("/employees/get-over-view-employee", {
+      disableLoading: true
+    })
   }
 }
 
