@@ -1615,6 +1615,26 @@
       },
       "text": {
         "additional_information": "Additional Information"
+      },
+      "list_employee": {
+        "overview": {
+          "total_employee": {
+            "title": "Total Employees",
+            "description": "Compare to last month"
+          },
+          "new_employee": {
+            "title": "New Employees",
+            "description": "In last 30 days"
+          },
+          "onboarding": {
+            "title": "Onboarding",
+            "description": "On this month"
+          },
+          "turn_over_rate": {
+            "title": "Turn Over Rate",
+            "description": "Compare to last month"
+          }
+        }
       }
     },
     "tasks_tags": {

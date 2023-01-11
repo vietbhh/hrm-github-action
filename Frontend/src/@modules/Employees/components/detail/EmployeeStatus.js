@@ -1,6 +1,7 @@
 import { DownOutlined } from "@ant-design/icons"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { employeesApi } from "@modules/Employees/common/api"
 import notification from "@apps/utility/notification"
 import { Dropdown } from "antd"
 import classnames from "classnames"
@@ -11,8 +12,14 @@ import { Button } from "reactstrap"
 const { Fragment } = require("react")
 
 const EmployeeStatus = (props) => {
-  const { defaultValue, employeeId, className, afterUpdateStatus, readOnly } =
-    props
+  const {
+    defaultValue,
+    employeeId,
+    className,
+    afterUpdateStatus,
+    readOnly,
+    loadDataOverView
+  } = props
   const modules = useSelector((state) => state.app.modules)
   const status = modules.employees.options.status
   const disableStatus =
@@ -22,15 +29,10 @@ const EmployeeStatus = (props) => {
     opt: {}
   })
   const changeStatus = (status) => {
-    defaultModuleApi
-      .postSave(
-        "employees",
-        {
-          id: employeeId,
-          status: parseInt(status.value)
-        },
-        true
-      )
+    employeesApi
+      .updateEmployeeStatus(employeeId, {
+        status: parseInt(status.value)
+      })
       .then((res) => {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
@@ -41,7 +43,9 @@ const EmployeeStatus = (props) => {
         if (!isUndefined(afterUpdateStatus)) {
           afterUpdateStatus(status)
         }
+        loadDataOverView()
       })
+      .catch((err) => {})
   }
   useEffect(() => {
     setState({
