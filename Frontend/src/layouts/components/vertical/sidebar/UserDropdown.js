@@ -33,7 +33,8 @@ const UserDropdown = ({
   menuHover,
   menuCollapsed,
   windowWidth,
-  windowWidthMin
+  windowWidthMin,
+  icon
 }) => {
   // ** Store Vars
   const dispatch = useDispatch()
@@ -79,28 +80,32 @@ const UserDropdown = ({
                   @{userData && userData.username}
                 </span>
               </div>
-              <svg
-                className="ms-auto"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M8 9L12 5L16 9"
-                  stroke="#11142D"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M16 15L12 19L8 15"
-                  stroke="#11142D"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              {icon ? (
+                icon
+              ) : (
+                <svg
+                  className="ms-auto"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M8 9L12 5L16 9"
+                    stroke="#11142D"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M16 15L12 19L8 15"
+                    stroke="#11142D"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
             </>
           )}
         </DropdownToggle>
@@ -108,7 +113,11 @@ const UserDropdown = ({
           <DropdownItem
             tag={Link}
             to="/profile"
-            onClick={() => saveQuickAccess("/profile")}>
+            onClick={() => {
+              if (_.isFunction(saveQuickAccess)) {
+                saveQuickAccess("/profile")
+              }
+            }}>
             <User size={14} className="me-75" />
             <span className="align-middle">
               {useFormatMessage("app.profile")}

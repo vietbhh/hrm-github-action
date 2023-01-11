@@ -63,7 +63,11 @@ const NavbarUser = (props) => {
                 tag={Link}
                 to={item.link}
                 id={item.target}
-                onClick={() => saveQuickAccess(item.link)}>
+                onClick={() => {
+                  if (_.isFunction(saveQuickAccess)) {
+                    saveQuickAccess(item.link)
+                  }
+                }}>
                 {item.icon}
                 <UncontrolledTooltip target={item.target}>
                   {item.title}
@@ -110,7 +114,11 @@ const NavbarUser = (props) => {
                   key={item.id}
                   tag={Link}
                   to={item.navLink}
-                  onClick={() => saveQuickAccess(item.navLink)}>
+                  onClick={() => {
+                    if (_.isFunction(saveQuickAccess)) {
+                      saveQuickAccess(item.navLink)
+                    }
+                  }}>
                   <i className={`${item.icon} me-75`}></i>
                   <span className="align-middle">
                     {useFormatMessage(item.title)}

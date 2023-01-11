@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Third Party Components
+import { useFormatMessage } from "@apps/utility/common"
 import classnames from "classnames"
 import { ArrowUp } from "react-feather"
 
@@ -40,7 +41,6 @@ import { DashboardApi } from "@apps/modules/dashboard/main/common/api"
 import Customizer from "./sidebar/customizer"
 
 // ** Styles
-import { useFormatMessage } from "@apps/utility/common"
 import "@styles/base/core/menu/menu-types/vertical-menu.scss"
 import "@styles/base/core/menu/menu-types/vertical-overlay-menu.scss"
 import "./scss/vertical.scss"
