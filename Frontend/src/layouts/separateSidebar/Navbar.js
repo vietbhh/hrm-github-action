@@ -3,8 +3,8 @@ import classNames from "classnames"
 import { NavLink } from "react-router-dom"
 
 // ** Reactstrap Imports
-import { Navbar, NavItem } from "reactstrap"
 import * as Icon from "react-feather"
+import { Navbar } from "reactstrap"
 
 // ** Custom Components
 import Logo from "@apps/modules/download/pages/Logo"
@@ -65,7 +65,8 @@ const NavbarComponent = (props) => {
 
         {windowWidth < windowWidthMin && (
           <NavLink
-            className="nav-menu-main menu-toggle hidden-xs is-active"
+            className="nav-menu-main menu-toggle hidden-xs"
+            style={{ color: "#32434F" }}
             to={"#"}
             onClick={(e) => {
               e.preventDefault()

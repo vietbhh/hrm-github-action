@@ -55,10 +55,10 @@ const Notification = lazy(() =>
   import("@apps/modules/notification/pages/NotificationIndex")
 )
 const Test1 = lazy(() =>
-  import("@src/layouts/other/separateSidebar/components/test/test1")
+  import("@src/layouts/separateSidebar/components/test/test1")
 )
 const Test2 = lazy(() =>
-  import("@src/layouts/other/separateSidebar/components/test/test2")
+  import("@src/layouts/separateSidebar/components/test/test2")
 )
 
 const CoreRoutes = [
@@ -297,7 +297,7 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: "",
-      layout: "homepage"
+      layout: "separateSidebar"
     }
   },
   {
@@ -307,7 +307,7 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: "",
-      layout: "homepage"
+      layout: "separateSidebar"
     }
   }
 ]

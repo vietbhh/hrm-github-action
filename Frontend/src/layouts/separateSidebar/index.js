@@ -8,8 +8,8 @@ import Layout from "../components/vertical/Layout"
 
 import navigation from "./menu"
 import { useFormatMessage } from "@apps/utility/common"
-import Navbar from "../other/separateSidebar/components/Navbar"
-import "../other/separateSidebar/assets/scss/layout.scss"
+import Navbar from "./Navbar"
+import "./assets/scss/layout.scss"
 
 const index = (props) => {
   const menuYourProjects = [
