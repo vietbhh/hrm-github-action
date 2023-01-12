@@ -22,7 +22,9 @@ const Sidebar = (props) => {
     defaultMenuNav,
     settingPermits,
     customMenuComponent,
-    outerCustomMenuComponent
+    outerCustomMenuComponent,
+    hideQuickAccess,
+    hideVerticalMenuHeader
   } = props
 
   // ** States
@@ -69,11 +71,13 @@ const Sidebar = (props) => {
         onClick={onMouseEnter}
         onMouseLeave={() => setMenuHover(false)}>
         {/* Vertical Menu Header */}
-        <VerticalMenuHeader
-          setGroupOpen={setGroupOpen}
-          menuHover={menuHover}
-          {...props}
-        />
+        {hideVerticalMenuHeader !== true && (
+          <VerticalMenuHeader
+            setGroupOpen={setGroupOpen}
+            menuHover={menuHover}
+            {...props}
+          />
+        )}
         {/* Vertical Menu Header Shadow */}
         <div className="shadow-bottom" ref={shadowRef}></div>
         {/* Perfect Scrollbar */}
@@ -115,22 +119,25 @@ const Sidebar = (props) => {
           </PerfectScrollbar>
 
           <div className="div-sidebar-bottom">
-            <div className="div-hr">
-              <hr />
-            </div>
-
-            <div className="div-quick-access">
-              <QuickAccess
-                menuHover={menuHover}
-                menuCollapsed={menuCollapsed}
-                windowWidth={windowWidth}
-                windowWidthMin={windowWidthMin}
-                menuData={menuData}
-                saveQuickAccess={saveQuickAccess}
-                settingPermits={settingPermits}
-                defaultMenuNav={defaultMenuNav}
-              />
-            </div>
+            {hideQuickAccess !== true && (
+              <>
+                <div className="div-hr">
+                  <hr />
+                </div>
+                <div className="div-quick-access">
+                  <QuickAccess
+                    menuHover={menuHover}
+                    menuCollapsed={menuCollapsed}
+                    windowWidth={windowWidth}
+                    windowWidthMin={windowWidthMin}
+                    menuData={menuData}
+                    saveQuickAccess={saveQuickAccess}
+                    settingPermits={settingPermits}
+                    defaultMenuNav={defaultMenuNav}
+                  />
+                </div>
+              </>
+            )}
 
             <div className="div-user-dropdown">
               <UserDropdown
