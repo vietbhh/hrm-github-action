@@ -122,16 +122,26 @@ class Dashboard extends ErpController
 		$modules->setModule('employees');
 		$employeeModel = $modules->model;
 		$arrParent = [];
+
+		$dashboard_department_show = preference('dashboard_department_show');
+		$arrShow = $dashboard_department_show ? $dashboard_department_show : [];
+
 		foreach ($listDepartment as $key => $item) {
-			if (!$item['parent'] && count($arrParent) < 3) {
+			if ($arrShow && in_array($item['id'], $arrShow) ) {
+				$item['employees'] = [];
+				$arrParent[] = $item;
+				continue;
+			}
+
+			if (!$arrShow && !$item['parent'] && count($arrParent) < 3) {
 				$item['employees'] = [];
 				$arrParent[] = $item;
 			}
 		}
+
 		foreach ($arrParent as $key => $val) {
 			$departmentChild = $this->getDepartmentChilds($listDepartment, $val['id']);
 			$departmentChild[] = $val;
-
 
 			foreach (array_column($departmentChild, 'id') as $idDep) {
 				$employees = $employeeModel->asArray()->select('id,full_name,avatar')->where('department_id', $idDep)->findAll();
@@ -205,6 +215,21 @@ class Dashboard extends ErpController
 		$result['work_schedule_today'] = $arrWorkingDay[date('w')];
 
 		return $this->respond($result);
+	}
+
+	public function update_view_department()
+	{
+		$postData = $this->request->getPost();
+		if (isset($postData['department']) && isset($postData['id']) && $postData['id']) {
+			if (!preference('dashboard_department_show')) {
+				preference('dashboard_department_show', '', true);
+				preference('dashboard_department_show', $postData['department'], false, $postData['id']);
+			} else {
+				preference('dashboard_department_show', $postData['department'], false, $postData['id']);
+			}
+
+		}
+		return $this->respond(ACTION_SUCCESS);
 	}
 
 	/**

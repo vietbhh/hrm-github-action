@@ -70,5 +70,16 @@ export const DashboardApi = {
 
   async getAttendanceToday() {
     return await axiosApi.get("/dashboard/get-attendance-today")
+  },
+
+  async updateShowDepartment(data) {
+    return await axiosApi.post("/dashboard/update-view-department",
+    serialize(_.cloneDeep(data)),
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  )
   }
 }

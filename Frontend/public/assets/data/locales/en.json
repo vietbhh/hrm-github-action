@@ -858,7 +858,8 @@
         "placeholder_input": "Notepad Title",
         "pin": "Pin",
         "un_pin": "Un pin"
-      }
+      },
+      "st_show_department" : "Setting show department"
     },
     "users": {
       "buttons": {
