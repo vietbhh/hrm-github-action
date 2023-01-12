@@ -3,19 +3,26 @@ import { EmptyContent } from "@apps/components/common/EmptyContent"
 import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { isObject } from "@apps/utility/handleData"
-import { Col } from "antd"
+import { Col, Tooltip } from "antd"
 import { isEmpty, map } from "lodash"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { CardBody } from "reactstrap"
 import { DashboardApi } from "../common/api"
-
+import SettingShowDepartmentModal from "./modals/SettingShowDepartmentModal"
+const array_column = (arr, col) => {
+  const column = []
+  for (let i = 0; i < arr.length; i++) {
+    column.push(arr[i][col])
+  }
+  return column
+}
 const CardEmployees = (props) => {
   const [state, setState] = useMergedState({
     loading: false,
-    data: []
+    data: [],
+    modalSetting: false
   })
-
   const loadData = () => {
     setState({ loading: true })
     DashboardApi.getDepartment()
@@ -37,10 +44,13 @@ const CardEmployees = (props) => {
         }
       })
   }
-
   useEffect(() => {
     loadData()
   }, [])
+
+  const handleSetting = () => {
+    setState({ modalSetting: !state.modalSetting })
+  }
   const object2QueryStringUrl = (data, pre = "") => {
     let string = ""
     map(data, (value, key) => {
@@ -65,6 +75,14 @@ const CardEmployees = (props) => {
         title: useFormatMessage("modules.dashboard.employees"),
         isRemoveWidget: true,
         classIconBg: "bg-icon-green",
+        customRight: (
+          <>
+            <i
+              className="fa-sharp fa-solid fa-gear me-1"
+              onClick={() => handleSetting()}
+              style={{ fontSize: "18px" }}></i>
+          </>
+        ),
         icon: (
           <svg
             className="icon"
@@ -168,6 +186,13 @@ const CardEmployees = (props) => {
           )}
         </div>
       </CardBody>
+      <SettingShowDepartmentModal
+        modal={state.modalSetting}
+        toggleModal={handleSetting}
+        idNotepad={state.idNotepad}
+        loadData={loadData}
+        idChecked={array_column(state.data, "id")}
+      />
     </LayoutDashboard>
   )
 }
