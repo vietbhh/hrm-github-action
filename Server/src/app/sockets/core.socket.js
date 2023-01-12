@@ -60,17 +60,23 @@ const coreSocket = () => {
     global._io.to("friday").emit("users_online", getOnlineUsers())
     socket.on("disconnect", () => {
       socket.leave("friday")
-      delete socketUsers[socket.user.id]
+      if (!isUndefined(socketUsers[socket.user.id])) {
+        delete socketUsers[socket.user.id]
+      }
       global._io.to("friday").emit("users_online", getOnlineUsers())
     })
 
     socket.on("user_status_away", async () => {
-      socketUsers[socket.user.id].online_status = "away"
-      global._io.to("friday").emit("users_online", getOnlineUsers())
+      if (!isUndefined(socketUsers[socket.user.id])) {
+        socketUsers[socket.user.id].online_status = "away"
+        global._io.to("friday").emit("users_online", getOnlineUsers())
+      }
     })
     socket.on("user_status_online", async () => {
-      socketUsers[socket.user.id].online_status = "online"
-      global._io.to("friday").emit("users_online", getOnlineUsers())
+      if (!isUndefined(socketUsers[socket.user.id])) {
+        socketUsers[socket.user.id].online_status = "online"
+        global._io.to("friday").emit("users_online", getOnlineUsers())
+      }
     })
 
     //Handle Send data between client
