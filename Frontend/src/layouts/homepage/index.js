@@ -3,11 +3,13 @@ import { Outlet } from "react-router-dom"
 
 // ** Core Layout Import
 // !Do not remove the Layout import
-import Layout from "../other/separateSidebar/Layout"
+//import Layout from "../other/separateSidebar/Layout"
+import Layout from "../components/vertical/Layout"
 
-// ** Menu Items Array
 import navigation from "./menu"
 import { useFormatMessage } from "@apps/utility/common"
+import Navbar from "../other/separateSidebar/components/Navbar"
+import "../other/separateSidebar/assets/scss/layout.scss"
 
 const index = (props) => {
   const menuYourProjects = [
@@ -160,11 +162,13 @@ const index = (props) => {
   return (
     <Layout
       menuData={[...navigation, ...menuYourProjects, ...menuYourWorkgroup]}
-      //navbar={(navProps) => <Navbar2 {...navProps} />}
+      navbar={(navProps) => <Navbar {...navProps} />}
       /* customMenuComponent={(customProps) => (
         <CustomMenuComponent {...customProps} />
       )} */
-      className=""
+      className="separate-sidebar-layout"
+      hideQuickAccess={true}
+      hideVerticalMenuHeader={true}
       {...props}>
       <Outlet />
     </Layout>

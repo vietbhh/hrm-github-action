@@ -1,6 +1,6 @@
 @import "@scss/friday";
 
-.homepage-layout {
+.separate-sidebar-layout {
   background-color: #f8f8f8;
 
   .header-navbar {
@@ -8,6 +8,7 @@
     filter: drop-shadow(0px 2px 8px rgba(95, 125, 149, 0.15));
     position: fixed;
     width: 100%;
+    left: 0;
 
     .navbar-container {
       padding: 0 60px;
@@ -17,8 +18,8 @@
         align-items: center;
 
         .navbar-brand {
-          transition: all 0.2s ease;
-
+          display: flex;
+          align-items: center;
           .logo-default {
             width: 148px;
             height: 40px;
@@ -294,20 +295,21 @@
     }
   }
 
-  .menu-content {
+  .main-menu {
     background: #ffffff;
     border-radius: 14px;
     padding: 15px;
     position: fixed;
-    width: 300px;
+    width: 300px !important;
     height: calc(100% - 90px - 30px - 50px);
     margin-top: calc(90px + 30px);
     margin-left: 60px;
 
     .main-menu-content {
-      height: 100%;
+      height: 100% !important;
       display: flex;
       flex-direction: column;
+      padding-top: 0;
 
       .scrollbar-container {
         height: calc(100% - 80px);
@@ -318,10 +320,13 @@
           .navigation-header {
             padding: 15px 15px 10px 15px;
             text-transform: unset;
+            margin: 0 !important;
           }
 
           li {
             list-style: none;
+            margin: 0;
+            transition: unset;
 
             a {
               padding: 0 15px;
@@ -331,6 +336,14 @@
               line-height: 29px;
               color: #32434f !important;
               transition: unset;
+              margin: 0;
+
+              &:hover {
+                > div,
+                > span {
+                  transform: unset;
+                }
+              }
 
               &.active {
                 background-color: #ffe658;
@@ -378,9 +391,11 @@
       .div-sidebar-bottom {
         margin-top: auto;
         border-top: 1px #f1f1f5 solid;
+        margin-bottom: 0;
 
         .div-user-dropdown {
           padding: 20px 10px 10px 10px;
+          margin: 0;
 
           .dropdown-user {
             > a {
@@ -427,10 +442,28 @@
   }
 
   .app-content {
-    padding: calc(90px + 30px) 60px 30px 30px !important;
+    padding: calc(90px + 30px) 0 30px 0 !important;
     margin: 0;
     min-height: 100%;
-    margin-left: calc(300px + 60px);
+    margin-left: calc(300px + 60px + 30px);
+    margin-right: 60px;
+
+    .content-wrapper {
+      padding: 0;
+    }
+  }
+
+  &.menu-hide,
+  &.menu-open {
+    .app-content {
+      margin-left: 60px;
+    }
+  }
+
+  &.menu-open {
+    .main-menu {
+      margin-left: 0;
+    }
   }
 
   .customizer {
@@ -459,6 +492,17 @@
   @media (max-width: 1900px) {
     .header-navbar .navbar-container .bookmark-wrapper {
       margin-left: 40px;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .navbar-container {
+      padding: 0 30px !important;
+    }
+
+    .app-content {
+      margin-left: 30px !important;
+      margin-right: 30px !important;
     }
   }
 }

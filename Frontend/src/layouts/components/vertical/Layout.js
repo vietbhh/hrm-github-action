@@ -55,7 +55,9 @@ const Layout = (props) => {
     fixedSidebarCollapsed,
     customMenuComponent,
     outerCustomMenuComponent,
-    logoLeft
+    logoLeft,
+    hideQuickAccess,
+    hideVerticalMenuHeader
   } = props
 
   // ** Hooks
@@ -262,6 +264,8 @@ const Layout = (props) => {
         fixedSidebarCollapsed={fixedSidebarCollapsed}
         customMenuComponent={customMenuComponent}
         outerCustomMenuComponent={outerCustomMenuComponent}
+        hideQuickAccess={hideQuickAccess}
+        hideVerticalMenuHeader={hideVerticalMenuHeader}
       />
 
       <Navbar
