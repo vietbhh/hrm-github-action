@@ -275,6 +275,7 @@ const AssignChecklistModal = (props) => {
         </Button>
       )
     }
+    
     return (
       <Button type="button" color="primary" disabled={true}>
         {(state.loading ||

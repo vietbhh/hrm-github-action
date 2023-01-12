@@ -24,7 +24,7 @@ const Avatar = (props) => {
   const onlineList = useSelector((state) => state.users.online)
   const onlineStatus =
     userId !== false && !_.isUndefined(onlineList?.[userId])
-      ? { status: "online" }
+      ? { status: onlineList[userId].online_status }
       : {}
 
   useEffect(() => {

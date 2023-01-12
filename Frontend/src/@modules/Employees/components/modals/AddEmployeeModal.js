@@ -29,7 +29,8 @@ const AddEmployeeModal = (props) => {
     module,
     fillData,
     modalTitle,
-    params
+    params,
+    loadDataOverView
   } = props
   const moduleName = module.name
   const [state, setState] = useMergedState({
@@ -45,12 +46,12 @@ const AddEmployeeModal = (props) => {
         })
         handleModal()
         loadData(params)
+        loadDataOverView()
         setState({ loading: false })
       })
       .catch((err) => {
         //props.submitError();
         setState({ loading: false })
-        console.log(err)
         notification.showError({
           text: useFormatMessage("notification.save.error")
         })

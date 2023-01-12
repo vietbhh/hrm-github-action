@@ -146,28 +146,29 @@ if (!function_exists('loadData')) {
 		$isPaginate = !((isset($data['isPaginate']) && !(filter_var($data['isPaginate'], FILTER_VALIDATE_BOOLEAN))));
 		if (!empty($data['tableFilters'])) $model = handleModuleTableFilters($model, $data['tableFilters']);
 		$query = $model->orderBy($orderCol, $orderType);
+		$builder = $query->builder();
+
 		if ($isLoadOptions) {
-			$textFieldFilter = [$isLoadOptions];
+			if (!in_array($isLoadOptions, $textFieldFilter)) $textFieldFilter[] = $isLoadOptions;
 			if (!empty($defaultOptions)) {
 				if (!is_array($defaultOptions)) $defaultOptions = explode(',', $defaultOptions);
-				$query = $query->orWhereIn('id', $defaultOptions);
+				$builder = $builder->orWhereIn('id', $defaultOptions);
 			}
 		}
 
 		if ($search && $textFieldFilter) {
-			$query = $query->groupStart();
+			$builder = $builder->groupStart();
 			foreach ($textFieldFilter as $item) {
-				$query = $query->orLike($item, $search);
+				$builder = $builder->orLike('LOWER(' . $item . ')', strtolower($search));
 			}
-			$query = $query->groupEnd();
+			$builder = $builder->groupEnd();
 		}
 
 		if (!empty($data['filters'])) $data['filters'] = array_filter($data['filters']);
 
 		if (isset($data['filters']) && !empty($data['filters'])) {
-			$query = $query->where($data['filters']);
+			$query = $builder->where($data['filters']);
 		}
-
 		$result['recordsTotal'] = $query->countAllResults(false);
 
 		$page = (isset($data['page'])) ? $data['page'] : 1;

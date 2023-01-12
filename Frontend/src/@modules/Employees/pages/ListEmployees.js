@@ -31,9 +31,11 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Col,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  Row,
   UncontrolledButtonDropdown
 } from "reactstrap"
 import { updateStateModule } from "redux/app/app"
@@ -48,9 +50,12 @@ import AddEmployeeModal from "../components/modals/AddEmployeeModal"
 import OffboardingModal from "../components/modals/OffboardingModal"
 import RehireModal from "../components/modals/RehireModal"
 import TableList from "../components/table/TableList"
+import OverViewTemplate from "../components/listEmployee/EmployeeOverView/OverViewTemplate"
 import SettingTableModalEmployee from "./SettingTableModalEmployee"
 const { Fragment, useEffect, useContext } = require("react")
 const { Cell } = Table
+const { SHOW_PARENT } = TreeSelect
+
 const FilterDisplay = ({ filters, onDeleteFilter }) => {
   {
     const typeNeedFormat = ["select_option", "checkbox", "radio"]
@@ -105,6 +110,18 @@ const { TreeNode } = TreeSelect
 const ListEmployees = (props) => {
   const [state, setState] = useMergedState({
     data: [],
+    totalEmployeeNumber: 0,
+    totalEmployeeRate: 0,
+    totalEmployeeGrow: false,
+    newEmployeeNumber: 0,
+    newEmployeeRate: 0,
+    newEmployeeGrow: false,
+    onboardingNumber: 0,
+    onboardingRate: 0,
+    onboardingGrow: false,
+    turnOverNumber: 0,
+    turnOverRate: 0,
+    turnOverGrow: false,
     loading: true,
     perPage: 15,
     recordsTotal: 0,
@@ -149,6 +166,7 @@ const ListEmployees = (props) => {
     _.map(arr, (item) => {
       item.title = item.name
       item.value = item.id
+      item.key = item.id
       const itemParent = item.parent ? item.parent.value : 0
       if (itemParent === parent) {
         item.children = buildTree(arr, item?.id)
@@ -342,6 +360,7 @@ const ListEmployees = (props) => {
               afterUpdateStatus={(newStatus) => {
                 state.data[dataKey].status = newStatus
               }}
+              loadDataOverView={loadDataOverView}
             />
           </Fragment>
         )
@@ -412,6 +431,47 @@ const ListEmployees = (props) => {
       })
       .catch((err) => {})
   }
+
+  const loadDataOverView = () => {
+    employeesApi
+      .getOverViewEmployee()
+      .then((res) => {
+        setState({
+          totalEmployeeNumber: res.data.total_employee_number,
+          totalEmployeeRate: res.data.total_employee_rate,
+          totalEmployeeGrow: res.data.total_employee_grow,
+          newEmployeeNumber: res.data.new_employee_number,
+          newEmployeeRate: res.data.new_employee_rate,
+          newEmployeeGrow: res.data.new_employee_grow,
+          onboardingNumber: res.data.onboarding_number,
+          onboardingRate: res.data.onboarding_rate,
+          onboardingGrow: res.data.onboarding_grow,
+          turnOverNumber: res.data.turn_over_number,
+          turnOverRate: res.data.turn_over_rate,
+          turnOverGrow: res.data.turn_over_grow
+        })
+      })
+      .catch((err) => {
+        setState({
+          totalEmployeeNumber: 0,
+          totalEmployeeRate: 0,
+          totalEmployeeGrow: false,
+          newEmployeeNumber: 0,
+          newEmployeeRate: 0,
+          newEmployeeGrow: false,
+          onboardingNumber: 0,
+          onboardingRate: 0,
+          onboardingGrow: false,
+          turnOverNumber: 0,
+          turnOverRate: 0,
+          turnOverGrow: false
+        })
+      })
+  }
+
+  useEffect(() => {
+    loadDataOverView()
+  }, [])
 
   useEffect(() => {
     if (state.loadingEmployeeView === false) {
@@ -496,16 +556,24 @@ const ListEmployees = (props) => {
     ),
     ...customColumnAfter
   ]
-  const addBtn = ability.can("add", moduleName) ? (
-    <Button.Ripple color="primary" onClick={toggleAddModal}>
-      <i className="icpega Actions-Plus"></i> &nbsp;
-      <span className="align-self-center">
-        {useFormatMessage("modules.employees.buttons.add")}
-      </span>
-    </Button.Ripple>
-  ) : (
-    ""
-  )
+
+  const renderAddButton = () => {
+    if (ability.can("add", moduleName)) {
+      return (
+        <Button.Ripple
+          color="primary"
+          onClick={toggleAddModal}
+          className="custom-button">
+          <i className="icpega Actions-Plus"></i> &nbsp;
+          <span className="align-self-center">
+            {useFormatMessage("modules.employees.buttons.add")}
+          </span>
+        </Button.Ripple>
+      )
+    }
+
+    return ""
+  }
 
   const setLoadingEmployeeView = (loading) => {
     setState({
@@ -513,302 +581,368 @@ const ListEmployees = (props) => {
       loading: loading
     })
   }
+
+  const renderEmployeeOverView = () => {
+    return (
+      <Row>
+        <Col sm={3}>
+          <OverViewTemplate
+            title={useFormatMessage(
+              "modules.employees.list_employee.overview.total_employee.title"
+            )}
+            number={state.totalEmployeeNumber}
+            rate={state.totalEmployeeRate}
+            isGrow={state.totalEmployeeGrow}
+            description={useFormatMessage(
+              "modules.employees.list_employee.overview.total_employee.description"
+            )}
+          />
+        </Col>
+        <Col sm={3}>
+          <OverViewTemplate
+            title={useFormatMessage(
+              "modules.employees.list_employee.overview.new_employee.title"
+            )}
+            number={state.newEmployeeNumber}
+            rate={state.newEmployeeRate}
+            isGrow={state.newEmployeeGrow}
+            description={useFormatMessage(
+              "modules.employees.list_employee.overview.new_employee.description"
+            )}
+          />
+        </Col>
+        <Col sm={3}>
+          <OverViewTemplate
+            title={useFormatMessage(
+              "modules.employees.list_employee.overview.onboarding.title"
+            )}
+            number={state.onboardingNumber}
+            rate={state.onboardingRate}
+            isGrow={state.onboardingGrow}
+            description={useFormatMessage(
+              "modules.employees.list_employee.overview.onboarding.description"
+            )}
+          />
+        </Col>
+        <Col sm={3}>
+          <OverViewTemplate
+            title={useFormatMessage(
+              "modules.employees.list_employee.overview.turn_over_rate.title"
+            )}
+            number={state.turnOverNumber}
+            rate={state.turnOverRate}
+            isGrow={state.turnOverGrow}
+            description={useFormatMessage(
+              "modules.employees.list_employee.overview.turn_over_rate.description"
+            )}
+          />
+        </Col>
+      </Row>
+    )
+  }
+
   return (
     <Fragment>
-      <Breadcrumbs
-        list={[
-          {
-            title: useFormatMessage("modules.employees.title")
-          }
-        ]}
-        custom={addBtn}
-      />
-      <Card className="employees_list_tbl">
-        <CardHeader className="pb-0">
-          <div className="d-flex flex-wrap w-100">
-            <div className={`filter-dropdown department-filter`}>
-              <ErpSelect
-                nolabel
-                formGroupClass="mb-0"
-                render={(renderProps, controlProps) => {
-                  return (
-                    <TreeSelect
-                      treeCheckable={true}
-                      treeCheckStrictly
-                      multiple={true}
-                      treeExpandAction={true}
-                      className={`departments_tree`}
-                      placeholder={"All Departments"}
-                      loading={state.groupLoading}
-                      maxTagCount={1}
-                      maxTagPlaceholder={(omittedValues) =>
-                        "+" + omittedValues.length
-                      }
-                      treeData={buildTree(state.listDepartment)}
-                      defaultValue={state.listDepartment && filterDepartment}
-                      onChange={(value) => {
-                        setFilters({ department_id: value })
-                      }}
-                    />
-                  )
-                }}
-              />
-            </div>
-            <div className="filter-dropdown department-filter">
-              <FieldHandle
-                module={moduleName}
-                fieldData={{
-                  ...metas.office,
-                  field_form_require: false
-                }}
-                nolabel
-                id="filter_office"
-                name="filter_office"
-                formGroupClass="mb-0 w-100"
-                placeholder="All Offices"
-                isClearable={true}
-                onChange={(e) => {
-                  setFilters({
-                    office: e?.value || ""
-                  })
-                }}
-                loading={state.loadingEmployeeView}
-                updateData={optionsModules.offices.name.filter(
-                  (val) => val.value.toString() === filters.office.toString()
-                )}
-              />
-            </div>
-            <div className="filter-dropdown department-filter">
-              <FieldHandle
-                module={moduleName}
-                fieldData={{
-                  ...metas.status,
-                  field_form_require: false,
-                  field_options_values: ""
-                }}
-                options={options}
-                nolabel
-                id="filter_status"
-                name="filter_status"
-                formGroupClass="mb-0 w-100"
-                placeholder="All Status"
-                isClearable={true}
-                onChange={(e) => {
-                  setFilters({
-                    status: e?.value || ""
-                  })
-                }}
-                loading={state.loadingEmployeeView}
-                updateData={options.status.filter(
-                  (val) => val.value.toString() === filters.status.toString()
-                )}
-              />
-            </div>
-            <div className="filter-dropdown title-filter">
-              <FieldHandle
-                module={moduleName}
-                fieldData={{
-                  ...metas.job_title_id,
-                  field_form_require: false
-                }}
-                nolabel
-                id="filter_job_title_id"
-                name="filter_job_title_id"
-                formGroupClass="mb-0"
-                placeholder="All Job Titles"
-                isClearable={true}
-                onChange={(e) => {
-                  setFilters({
-                    job_title_id: e?.value || ""
-                  })
-                }}
-                loading={state.loadingEmployeeView}
-                updateData={optionsModules.job_titles.name.filter(
-                  (val) =>
-                    val.value.toString() === filters.job_title_id.toString()
-                )}
-              />
-            </div>
-            <div className="filter-dropdown">
-              <ErpInput
-                onKeyUp={(e) => {
-                  handleSearchVal(e.target.value)
-                }}
-                formGroupClass="search-filter"
-                placeholder="Search"
-                prepend={<i className="iconly-Search icli"></i>}
-                nolabel
-                loading={state.loadingEmployeeView}
-              />
-            </div>
-            <div className="d-block ms-1">
-              {(ability.can("delete", module) ||
-                ability.can("deleteAll", module)) &&
-                state.selectedRows.length > 0 && (
-                  <Fragment>
-                    <Button.Ripple
-                      color="flat-danger"
-                      onClick={() => {
-                        handleDeleteClick(state.selectedRows)
-                      }}>
-                      <Trash2 size={15} /> {useFormatMessage("app.delete")}
-                    </Button.Ripple>
-                  </Fragment>
-                )}
-            </div>
-            <div className="d-flex ms-auto">
-              <EmployeeView
-                filters={filters}
-                tableFilters={state.tableFilters}
-                setLoadingEmployeeView={setLoadingEmployeeView}
-                setFiltersAfterLoadEmployeeView={
-                  setFiltersAfterLoadEmployeeView
-                }
-                settingEmployeeView={settingEmployeeView}
-                setReduxAuth={setReduxAuth}
-                updateModules={updateModules}
-              />
-
-              <UncontrolledButtonDropdown className="d-block ms-1">
-                <DropdownToggle
-                  color="flat-primary"
-                  tag="div"
-                  className="text-primary btn-table-more">
-                  <i className="iconly-Filter icli"></i>
-                </DropdownToggle>
-                <DropdownMenu end>
-                  <DropdownItem
-                    className="w-100"
-                    onClick={() => toggleFilterModal()}>
-                    <i className="iconly-Filter-2 icli"></i>
-                    <span className="align-middle ms-50">
-                      {useFormatMessage("button.advFilter")}
-                    </span>
-                  </DropdownItem>
-                  {ability.can("add", moduleName) && (
-                    <DropdownItem
-                      className="w-100"
-                      tag={Link}
-                      to={`/${moduleName}/import`}>
-                      <Upload size={15} />
-                      <span className="align-middle ms-50">
-                        {useFormatMessage("app.import")}
-                      </span>
-                    </DropdownItem>
-                  )}
-
-                  {ability.can("export", moduleName) && (
-                    <DropdownItem
-                      className="w-100"
-                      onClick={() => toggleExportModal()}>
-                      <Download size={15} />
-                      <span className="align-middle ms-50">
-                        {useFormatMessage("app.export")}
-                      </span>
-                    </DropdownItem>
-                  )}
-                  <DropdownItem
-                    className="w-100"
-                    onClick={() => toggleSettingModal()}>
-                    <Settings size={15} />
-                    <span className="align-middle ms-50">
-                      {useFormatMessage("app.setting")}
-                    </span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledButtonDropdown>
-            </div>
-          </div>
-          <div className="d-flex flex-wrap w-100 pb-1">
-            {!isEmpty(state.tableFilters) && (
-              <Fragment>
-                <FilterDisplay
-                  filters={state.tableFilters}
-                  onDeleteFilter={(index) => {
-                    const listFilters = [...state.tableFilters]
-                    listFilters.splice(index, 1)
-                    setState({
-                      tableFilters: listFilters
-                    })
+      <div className="p-4 list-employee-page">
+        <div className="mb-3 d-flex align-items-center justify-content-between">
+          <p className="mb-0 page-title">
+            {useFormatMessage("modules.employees.title")}
+            <span className="dot">.</span>
+          </p>
+          <div>{renderAddButton()}</div>
+        </div>
+        <div className="mb-2 employee-over-view-container">
+          <Fragment>{renderEmployeeOverView()}</Fragment>
+        </div>
+        <Card className="employees_list_tbl">
+          <CardHeader className="pb-0">
+            <div className="d-flex flex-wrap w-100">
+              <div className="filter-dropdown">
+                <ErpInput
+                  onKeyUp={(e) => {
+                    handleSearchVal(e.target.value)
+                  }}
+                  formGroupClass="search-filter"
+                  placeholder="Search"
+                  prepend={<i className="iconly-Search icli"></i>}
+                  nolabel
+                  loading={state.loadingEmployeeView}
+                />
+              </div>
+              <div className={`filter-dropdown department-filter`}>
+                <ErpSelect
+                  nolabel
+                  formGroupClass="mb-0"
+                  render={(renderProps, controlProps) => {
+                    return (
+                      <TreeSelect
+                        treeCheckable={true}
+                        //treeCheckStrictly
+                        multiple={true}
+                        treeExpandAction={true}
+                        className={`departments_tree`}
+                        placeholder={"All Departments"}
+                        showCheckedStrategy={SHOW_PARENT}
+                        loading={state.groupLoading}
+                        maxTagCount={1}
+                        maxTagPlaceholder={(omittedValues) =>
+                          "+" + omittedValues.length
+                        }
+                        treeData={buildTree(state.listDepartment)}
+                        defaultValue={state.listDepartment && filterDepartment}
+                        onChange={(value) => {
+                          setFilters({ department_id: value })
+                        }}
+                      />
+                    )
                   }}
                 />
-              </Fragment>
-            )}
-          </div>
-        </CardHeader>
-        <CardBody className="pt-0">
-          <TableList
-            metas={metas}
-            data={state.data}
-            recordsTotal={state.recordsTotal}
-            currentPage={state.currentPage}
-            perPage={state.perPage}
-            module={module}
-            loading={state.loading}
-            CustomCell={CellDisplay}
-            allowSelectRow={false}
-            customColumnAfter={customColumnAfter}
-            onChangePage={(page) => {
-              loadData({
-                page: page
-              })
-            }}
-            onChangeLength={(length) => {
-              loadData(
-                {
-                  perPage: length
-                },
-                {
-                  perPage: length
-                }
-              )
-            }}
-            onSortColumn={(key, type) => {
-              setState({
-                orderCol: key,
-                orderType: type
-              })
-              loadData({ orderCol: key, orderType: type })
-              updateEmployeeView({
-                sortColumn: { orderCol: key, orderType: type }
-              })
-            }}
-            onSelectedRow={(rows) => {
-              setState({
-                selectedRows: rows
-              })
-            }}
-            onDragColumn={(values) => {
-              employeesApi
-                .postUpdateEmployeeUserMetas({ data: values })
-                .then((res) => {
-                  updateModules(res.data.modules)
+              </div>
+              <div className="filter-dropdown department-filter">
+                <FieldHandle
+                  module={moduleName}
+                  fieldData={{
+                    ...metas.office,
+                    field_form_require: false
+                  }}
+                  nolabel
+                  id="filter_office"
+                  name="filter_office"
+                  formGroupClass="filter-select mb-0 w-100"
+                  placeholder="All Offices"
+                  isClearable={true}
+                  onChange={(e) => {
+                    setFilters({
+                      office: e?.value || ""
+                    })
+                  }}
+                  loading={state.loadingEmployeeView}
+                  updateData={optionsModules.offices.name.filter(
+                    (val) => val.value.toString() === filters.office.toString()
+                  )}
+                />
+              </div>
+              <div className="filter-dropdown department-filter">
+                <FieldHandle
+                  module={moduleName}
+                  fieldData={{
+                    ...metas.status,
+                    field_form_require: false,
+                    field_options_values: ""
+                  }}
+                  options={options}
+                  nolabel
+                  id="filter_status"
+                  name="filter_status"
+                  formGroupClass="filter-select mb-0 w-100"
+                  placeholder="All Status"
+                  isClearable={true}
+                  onChange={(e) => {
+                    setFilters({
+                      status: e?.value || ""
+                    })
+                  }}
+                  loading={state.loadingEmployeeView}
+                  updateData={options.status.filter(
+                    (val) => val.value.toString() === filters.status.toString()
+                  )}
+                />
+              </div>
+              <div className="filter-dropdown title-filter">
+                <FieldHandle
+                  module={moduleName}
+                  fieldData={{
+                    ...metas.job_title_id,
+                    field_form_require: false
+                  }}
+                  nolabel
+                  id="filter_job_title_id"
+                  name="filter_job_title_id"
+                  formGroupClass="filter-select mb-0"
+                  placeholder="All Job Titles"
+                  isClearable={true}
+                  onChange={(e) => {
+                    setFilters({
+                      job_title_id: e?.value || ""
+                    })
+                  }}
+                  loading={state.loadingEmployeeView}
+                  updateData={optionsModules.job_titles.name.filter(
+                    (val) =>
+                      val.value.toString() === filters.job_title_id.toString()
+                  )}
+                />
+              </div>
+
+              <div className="d-block ms-1">
+                {(ability.can("delete", module) ||
+                  ability.can("deleteAll", module)) &&
+                  state.selectedRows.length > 0 && (
+                    <Fragment>
+                      <Button.Ripple
+                        color="flat-danger"
+                        onClick={() => {
+                          handleDeleteClick(state.selectedRows)
+                        }}>
+                        <Trash2 size={15} /> {useFormatMessage("app.delete")}
+                      </Button.Ripple>
+                    </Fragment>
+                  )}
+              </div>
+              <div className="d-flex ms-auto">
+                <EmployeeView
+                  filters={filters}
+                  tableFilters={state.tableFilters}
+                  setLoadingEmployeeView={setLoadingEmployeeView}
+                  setFiltersAfterLoadEmployeeView={
+                    setFiltersAfterLoadEmployeeView
+                  }
+                  settingEmployeeView={settingEmployeeView}
+                  setReduxAuth={setReduxAuth}
+                  updateModules={updateModules}
+                />
+
+                <UncontrolledButtonDropdown className="d-block ms-1">
+                  <DropdownToggle
+                    color="flat-primary"
+                    tag="div"
+                    className="btn-table-more">
+                    <i className="iconly-Filter icli"></i>
+                  </DropdownToggle>
+                  <DropdownMenu end>
+                    <DropdownItem
+                      className="w-100"
+                      onClick={() => toggleFilterModal()}>
+                      <i className="iconly-Filter-2 icli"></i>
+                      <span className="align-middle ms-50">
+                        {useFormatMessage("button.advFilter")}
+                      </span>
+                    </DropdownItem>
+                    {ability.can("add", moduleName) && (
+                      <DropdownItem
+                        className="w-100"
+                        tag={Link}
+                        to={`/${moduleName}/import`}>
+                        <Upload size={15} />
+                        <span className="align-middle ms-50">
+                          {useFormatMessage("app.import")}
+                        </span>
+                      </DropdownItem>
+                    )}
+
+                    {ability.can("export", moduleName) && (
+                      <DropdownItem
+                        className="w-100"
+                        onClick={() => toggleExportModal()}>
+                        <Download size={15} />
+                        <span className="align-middle ms-50">
+                          {useFormatMessage("app.export")}
+                        </span>
+                      </DropdownItem>
+                    )}
+                    <DropdownItem
+                      className="w-100"
+                      onClick={() => toggleSettingModal()}>
+                      <Settings size={15} />
+                      <span className="align-middle ms-50">
+                        {useFormatMessage("app.setting")}
+                      </span>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledButtonDropdown>
+              </div>
+            </div>
+            <div className="d-flex flex-wrap w-100 pb-1">
+              {!isEmpty(state.tableFilters) && (
+                <Fragment>
+                  <FilterDisplay
+                    filters={state.tableFilters}
+                    onDeleteFilter={(index) => {
+                      const listFilters = [...state.tableFilters]
+                      listFilters.splice(index, 1)
+                      setState({
+                        tableFilters: listFilters
+                      })
+                    }}
+                  />
+                </Fragment>
+              )}
+            </div>
+          </CardHeader>
+          <CardBody className="pt-0">
+            <TableList
+              metas={metas}
+              data={state.data}
+              recordsTotal={state.recordsTotal}
+              currentPage={state.currentPage}
+              perPage={state.perPage}
+              module={module}
+              loading={state.loading}
+              CustomCell={CellDisplay}
+              allowSelectRow={false}
+              customColumnAfter={customColumnAfter}
+              onChangePage={(page) => {
+                loadData({
+                  page: page
                 })
-                .catch((err) => {})
-            }}
-            onResize={(field, width) => {
-              employeesApi
-                .postUpdateEmployeeUserMetas({
-                  data: [
-                    {
-                      module_id: field.module,
-                      module_meta_id: field.id,
-                      field_table_width: width
-                    }
-                  ]
+              }}
+              onChangeLength={(length) => {
+                loadData(
+                  {
+                    perPage: length
+                  },
+                  {
+                    perPage: length
+                  }
+                )
+              }}
+              onSortColumn={(key, type) => {
+                setState({
+                  orderCol: key,
+                  orderType: type
                 })
-                .then((res) => {
-                  updateModules(res.data.modules)
+                loadData({ orderCol: key, orderType: type })
+                updateEmployeeView({
+                  sortColumn: { orderCol: key, orderType: type }
                 })
-                .catch((err) => {})
-            }}
-            currentSort={{
-              sortColumn: state.orderCol,
-              sortType: state.orderType
-            }}
-          />
-        </CardBody>
-      </Card>
+              }}
+              onSelectedRow={(rows) => {
+                setState({
+                  selectedRows: rows
+                })
+              }}
+              onDragColumn={(values) => {
+                employeesApi
+                  .postUpdateEmployeeUserMetas({ data: values })
+                  .then((res) => {
+                    updateModules(res.data.modules)
+                  })
+                  .catch((err) => {})
+              }}
+              onResize={(field, width) => {
+                employeesApi
+                  .postUpdateEmployeeUserMetas({
+                    data: [
+                      {
+                        module_id: field.module,
+                        module_meta_id: field.id,
+                        field_table_width: width
+                      }
+                    ]
+                  })
+                  .then((res) => {
+                    updateModules(res.data.modules)
+                  })
+                  .catch((err) => {})
+              }}
+              currentSort={{
+                sortColumn: state.orderCol,
+                sortType: state.orderType
+              }}
+            />
+          </CardBody>
+        </Card>
+      </div>
       <AddEmployeeModal
         modal={state.addModal}
         handleModal={toggleAddModal}
@@ -817,6 +951,7 @@ const ListEmployees = (props) => {
         options={options}
         module={module}
         optionsModules={optionsModules}
+        loadDataOverView={loadDataOverView}
       />
 
       <FilterModalDefaultModule
@@ -862,6 +997,7 @@ const ListEmployees = (props) => {
         }}
         toggleAssignChecklistModal={toggleAssignChecklistModal}
         setAssignType={setAssignType}
+        loadDataOverView={loadDataOverView}
       />
       <AssignChecklistModal
         modal={state.assignChecklistModal}

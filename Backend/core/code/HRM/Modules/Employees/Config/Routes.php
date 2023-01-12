@@ -53,6 +53,8 @@ $routes->post('employees/update-custom-field/(:any)', 'Employees::update_custom_
 $routes->post('employees/delete-custom-field/(:any)', 'Employees::delete_custom_field_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->get('employees/load-auto-generate-code', 'Employees::load_auto_generate_code_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/update-auto-generate-code/(:any)', 'Employees::update_auto_generate_code_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
+$routes->post('employees/update-employee-status/(:any)', 'Employees::update_employee_status_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
+$routes->get('employees/get-over-view-employee', 'Employees::get_over_view_employee_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->add('employees/-handle-set-employee-contract-active/(:any)/(:any)/(:any)/?(:any)?', 'Employees::_handleSetEmployeeContractActive/$1/$2/$3/$4',['namespace' => 'HRM\Modules\Employees\Controllers']);
 
 	/*** Route for Profiles ***/
