@@ -1,19 +1,11 @@
-import React, { useEffect, useRef } from "react"
-import {
-  ContentState,
-  convertFromRaw,
-  convertToRaw,
-  EditorState,
-  Modifier
-} from "draft-js"
-import { Editor } from "react-draft-wysiwyg"
 import { useMergedState } from "@apps/utility/common"
-import htmlToDraft from "html-to-draftjs"
-import ReactHtmlParser from "react-html-parser"
+import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import EmotionsComponent from "../emotions/index"
+import React, { useEffect } from "react"
+import { Editor } from "react-draft-wysiwyg"
 import { InputGroup, InputGroupText } from "reactstrap"
 import UpFile from "../details/UpFile"
+import EmotionsComponent from "../emotions/index"
 
 const InputMessage = (props) => {
   const {
@@ -67,6 +59,8 @@ const InputMessage = (props) => {
       "insert-characters"
     )
 
+    localStorage.setItem("formChatFocus", true)
+
     return EditorState.forceSelection(
       newEditorState,
       newContent.getSelectionAfter()
@@ -77,6 +71,7 @@ const InputMessage = (props) => {
     const editorStateEmpty = EditorState.createEmpty()
     const newEditorState = insertCharacter("", editorStateEmpty)
     setState({ editorState: newEditorState })
+    handleHeight(replying, true, 58)
   }
 
   const handleInsertEditorState = (characterToInsert) => {
@@ -102,7 +97,6 @@ const InputMessage = (props) => {
       (removeLastChar === false && html.length <= num_slice / 2)
     ) {
       setEmptyEditorState()
-      handleHeight(replying, true, 58)
     } else {
       if (removeLastChar === true) {
         html = html.slice(0, -num_slice / 2)
@@ -110,10 +104,11 @@ const InputMessage = (props) => {
       const values = { message: html }
       handleSendMsg(values)
       setEmptyEditorState()
-      handleHeight(replying, true, 58)
     }
     setState({ showEmotion: false })
   }
+
+  const handleKeyCommand = (command, editorState, eventTimeStamp) => {}
 
   // ** listen
   useEffect(() => {
@@ -152,6 +147,10 @@ const InputMessage = (props) => {
     handleInsertEditorState("")
   }, [replying_timestamp])
 
+  useEffect(() => {
+    setEmptyEditorState()
+  }, [selectedUser])
+
   return (
     <>
       <InputGroup className="input-group-merge form-send-message">
@@ -185,6 +184,7 @@ const InputMessage = (props) => {
           editorClassName="editor-message"
           editorState={state.editorState}
           onEditorStateChange={onChange}
+          //handleKeyCommand={handleKeyCommand}
           stripPastedStyles={true}
           editorRef={setEditorReference}
           placeholder="Type a message ..."

@@ -255,7 +255,9 @@ const ChatLog = (props) => {
 
     setMsg("")
     setReplyingDefault()
-    focusInputMsg()
+    //focusInputMsg()
+    localStorage.setItem("chatAppFocus", true)
+    localStorage.setItem("formChatFocus", true)
   }, [selectedUser, loadingMessage])
 
   // ** Opens right sidebar & handles its data

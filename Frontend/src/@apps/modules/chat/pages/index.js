@@ -1515,25 +1515,52 @@ const AppChat = (props) => {
   }
 
   const onAction = (event) => {
+    localStorage.setItem("chatAppHidden", event.target.hidden)
     // Do something when a user triggers a watched event
-    if (event.type !== "mousemove") {
+    if (event.type === "mousedown") {
       let checkIssetDiv = false
       let checkFocusFormChat = false
-      _.forEach(event.path, (item) => {
+      const _className_2 =
+        event?.toElement?.offsetParent?.offsetParent?.className
+      if (!_.isUndefined(_className_2)) {
+        const check_div_li_chat = _className_2.includes("div-li-chat")
+        const check_list_group = _className_2.includes("list-group")
+        const check_user_chats = _className_2.includes("user-chats")
+        const check_chat_content_parent = _className_2.includes(
+          "chat-content-parent"
+        )
+        const check_chat_app_form = _className_2.includes("chat-app-form")
         if (
-          item.className === "div-li-chat" ||
-          item.className === "chat-app-window"
+          check_div_li_chat === true ||
+          check_list_group === true ||
+          check_user_chats === true ||
+          check_chat_content_parent === true ||
+          check_chat_app_form === true
         ) {
           checkIssetDiv = true
         }
-
-        if (
-          item.className === "chat-app-form " ||
-          item.className === "chat-app-form replying"
-        ) {
+        if (check_chat_app_form === true) {
           checkFocusFormChat = true
         }
-      })
+      }
+
+      if (!_.isUndefined(event.path)) {
+        _.forEach(event.path, (item) => {
+          if (
+            item.className === "div-li-chat" ||
+            item.className === "chat-app-window"
+          ) {
+            checkIssetDiv = true
+          }
+
+          if (
+            item.className === "chat-app-form " ||
+            item.className === "chat-app-form replying"
+          ) {
+            checkFocusFormChat = true
+          }
+        })
+      }
 
       if (reduxUnseen > 0) {
         if (event.target.hidden === false) {
@@ -1550,7 +1577,7 @@ const AppChat = (props) => {
           )
         }
       }
-      localStorage.setItem("chatAppHidden", event.target.hidden)
+
       localStorage.setItem("chatAppFocus", checkIssetDiv)
       localStorage.setItem("formChatFocus", checkFocusFormChat)
     }
