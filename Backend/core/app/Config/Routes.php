@@ -197,6 +197,9 @@ $routes->post('chat/post-up-file', 'Chat::post_up_file_post', ['namespace' => 'A
 $routes->post('chat/post-up-background', 'Chat::post_up_background', ['namespace' => 'App\Controllers']);
 $routes->post('chat/post-up-avatar', 'Chat::post_up_avatar', ['namespace' => 'App\Controllers']);
 
+/*** Route for LinkPreview */
+$routes->post('link-preview/get-link-content', 'LinkPReview::get_link_content_post', ['namespace' => 'App\Controllers']);
+
 $routes->get('fri/test', 'Test::index_get');
 $routes->post('fri/test', 'Test::index_post');
 /**

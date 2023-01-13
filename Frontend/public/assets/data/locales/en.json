@@ -909,7 +909,8 @@
         "add": "Add notepad",
         "placeholder_input": "Notepad Title",
         "pin": "Pin",
-        "un_pin": "Un pin"
+        "un_pin": "Un pin",
+        "my_notes": "My notes"
       }
     },
     "notification": {
