@@ -12,7 +12,12 @@ const SettingLayout = (props) => {
   useEffect(() => {
     if (window !== undefined) {
       setWindowWidth(window.innerWidth)
-      window.addEventListener("resize", setWindowWidth(window.innerWidth))
+      window.addEventListener("resize", setWindowWidth(window.innerWidth), {
+        passive: true
+      })
+      return () => {
+        window.removeEventListener("resize", setWindowWidth(window.innerWidth))
+      }
     }
   }, [])
   const customSettingMenu =

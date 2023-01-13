@@ -37,7 +37,13 @@ import { Link } from "react-router-dom"
 
 const NavbarBookmarks = (props) => {
   // ** Props
-  const { setMenuVisibility, windowWidth, windowWidthMin, full_name } = props
+  const {
+    setMenuVisibility,
+    windowWidth,
+    windowWidthMin,
+    full_name,
+    hideIconVisibility
+  } = props
   const [good, setGood] = useState("")
   const [isRtl] = useRTL()
   const params = {
@@ -145,15 +151,18 @@ const NavbarBookmarks = (props) => {
 
   return (
     <Fragment>
-      <ul className="navbar-nav d-xl-none">
-        <NavItem className="mobile-menu me-auto">
-          <NavLink
-            className="nav-menu-main menu-toggle hidden-xs is-active"
-            onClick={() => setMenuVisibility(true)}>
-            <Icon.Menu className="ficon" />
-          </NavLink>
-        </NavItem>
-      </ul>
+      {hideIconVisibility !== true && (
+        <ul className="navbar-nav d-xl-none">
+          <NavItem className="mobile-menu me-auto">
+            <NavLink
+              className="nav-menu-main menu-toggle hidden-xs is-active"
+              onClick={() => setMenuVisibility(true)}>
+              <Icon.Menu className="ficon" />
+            </NavLink>
+          </NavItem>
+        </ul>
+      )}
+
       {windowWidth >= windowWidthMin && (
         <>
           <div className="nav-welcome">

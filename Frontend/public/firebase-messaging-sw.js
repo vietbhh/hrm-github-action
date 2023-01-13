@@ -31,8 +31,3 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
-console.log(messaging)
-
-self.addEventListener("notificationclick", (event) => {
-  console.log(event)
-})
