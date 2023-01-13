@@ -9,13 +9,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { Col, Modal, ModalBody, ModalHeader, Row } from "reactstrap"
 import { NotepadApi } from "../../../common/api"
 
-const AddModal = ({
-  modal,
-  toggleModal,
-  idNotepad,
-  loadData,
-  handleLayouts
-}) => {
+const AddModal = ({ modal, toggleModal, idNotepad, loadData }) => {
   const [state, setState] = useMergedState({
     loadingModal: false,
     loading: false,
@@ -48,10 +42,6 @@ const AddModal = ({
               })
             }
             setValue("title", res.data.title ? res.data.title : "")
-
-            if (_.isFunction(handleLayouts)) {
-              handleLayouts()
-            }
           })
           .catch((err) => {
             setState({ loadingModal: false })

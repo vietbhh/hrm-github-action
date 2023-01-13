@@ -382,11 +382,10 @@
     }
 
     .body-content {
-      padding-bottom: 10px;
-
       .scrollbar-container {
         max-height: 280px;
         margin: -10px;
+        margin-bottom: 10px;
       }
 
       .div-body-notepad {

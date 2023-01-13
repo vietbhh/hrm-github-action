@@ -71,7 +71,10 @@ const MainDashboard = ({
     countWidget: -1,
     loadingOnChange: false,
     loadingRemove: false,
-    breakPoints: "lg"
+    breakPoints: "lg",
+
+    // check handleWidget
+    check_is_handleWidget: false
   })
   const widgetMargin = [0, 30]
   const widgetRowHeight = 10
@@ -87,10 +90,9 @@ const MainDashboard = ({
   })
 
   const handleWidget = (id, action = "remove", params = {}) => {
-    console.log(id, action, params)
     const data = listComponent
-      ? listComponent({ handleWidget })
-      : ListComponentConfig({ handleWidget })
+      ? listComponent({ handleWidget, handleLayouts })
+      : ListComponentConfig({ handleWidget, handleLayouts })
 
     const _settingWidget = JSON.parse(localStorage.getItem("dashboard_widget"))
     if (_settingWidget !== undefined && !_.isEmpty(_settingWidget)) {
@@ -137,8 +139,11 @@ const MainDashboard = ({
               }
             }
           }
-          console.log(dataLayout)
-          setState({ data: data, layouts: dataLayout })
+          setState({
+            data: data,
+            layouts: dataLayout,
+            check_is_handleWidget: true
+          })
         } else {
           _.forEach(dataLayout, (val, key_val) => {
             _.forEach(val, (value, key) => {
@@ -162,7 +167,11 @@ const MainDashboard = ({
               }
             }
           }
-          setState({ data: data, layouts: dataLayout })
+          setState({
+            data: data,
+            layouts: dataLayout,
+            check_is_handleWidget: false
+          })
         }
       } else {
         setState({ loadingRemove: true })
@@ -228,56 +237,56 @@ const MainDashboard = ({
   }
 
   const handleDataLayout = (dataComponent, dataLayout) => {
-    const dataLayout_ = { ...dataLayout }
-    _.forEach(dataLayout_, (val, key_val) => {
-      if (key_val === state.breakPoints) {
-        const val_layout = [...val]
-        _.forEach(val_layout, (value, key) => {
-          const index = dataComponent.findIndex((item) => item.id === value.i)
-          if (index > -1) {
-            let h =
-              dataComponent[index]["data_grid"]["h"] <
-              dataComponent[index]["data_grid"]["minH"]
-                ? dataComponent[index]["data_grid"]["minH"]
-                : dataComponent[index]["data_grid"]["h"]
-            if (
-              global.widget["widget_" + value.i] &&
-              global.widget["widget_" + value.i].current
-            ) {
-              h =
-                Math.ceil(
-                  (global.widget["widget_" + value.i].current.clientHeight -
-                    widgetMargin[1]) /
-                    (widgetRowHeight + widgetMargin[1])
-                ) + 1
-            }
-            if (h < dataComponent[index]["data_grid"]["minH"]) {
-              h = dataComponent[index]["data_grid"]["minH"]
-            }
+    if (state.check_is_handleWidget === false) {
+      const dataLayout_ = { ...dataLayout }
+      _.forEach(dataLayout_, (val, key_val) => {
+        if (key_val === state.breakPoints) {
+          const val_layout = [...val]
+          _.forEach(val_layout, (value, key) => {
+            const index = dataComponent.findIndex((item) => item.id === value.i)
+            if (index > -1) {
+              let h =
+                dataComponent[index]["data_grid"]["h"] <
+                dataComponent[index]["data_grid"]["minH"]
+                  ? dataComponent[index]["data_grid"]["minH"]
+                  : dataComponent[index]["data_grid"]["h"]
+              if (
+                global.widget["widget_" + value.i] &&
+                global.widget["widget_" + value.i].current
+              ) {
+                h =
+                  Math.ceil(
+                    (global.widget["widget_" + value.i].current.clientHeight -
+                      widgetMargin[1]) /
+                      (widgetRowHeight + widgetMargin[1])
+                  ) + 1
+              }
+              if (h < dataComponent[index]["data_grid"]["minH"]) {
+                h = dataComponent[index]["data_grid"]["minH"]
+              }
 
-            dataComponent[index] = {
-              ...dataComponent[index],
-              data_grid: {
-                ...value,
-                minW: dataComponent[index]["data_grid"]["minW"],
-                minH: dataComponent[index]["data_grid"]["minH"],
-                maxW: dataComponent[index]["data_grid"]["maxW"],
-                static: !customizeDashboard,
-                isDraggable: customizeDashboard,
-                h: h
-              },
-              show: true
+              dataComponent[index] = {
+                ...dataComponent[index],
+                data_grid: {
+                  ...value,
+                  minW: dataComponent[index]["data_grid"]["minW"],
+                  minH: dataComponent[index]["data_grid"]["minH"],
+                  maxW: dataComponent[index]["data_grid"]["maxW"],
+                  static: !customizeDashboard,
+                  isDraggable: customizeDashboard,
+                  h: h
+                },
+                show: true
+              }
+
+              val_layout[key] = dataComponent[index]["data_grid"]
             }
-
-            val_layout[key] = dataComponent[index]["data_grid"]
-          }
-        })
-        dataLayout_[key_val] = val_layout
-      }
-    })
-
-    console.log("dataLayout_", dataLayout_)
-    setState({ data: dataComponent, layouts: dataLayout_ })
+          })
+          dataLayout_[key_val] = val_layout
+        }
+      })
+      setState({ data: dataComponent, layouts: dataLayout_ })
+    }
   }
 
   useEffect(() => {
@@ -332,8 +341,11 @@ const MainDashboard = ({
   }
 
   const onLayoutChange = (layout, layouts) => {
-    if (!state.loadingOnChange && !state.loadingRemove) {
-      console.log("layouts...", layouts)
+    if (
+      !state.loadingOnChange &&
+      !state.loadingRemove &&
+      !state.check_is_handleWidget
+    ) {
       const newData = [...state.data]
       const _settingWidget = layouts
       handleDataLayout(newData, _settingWidget)
