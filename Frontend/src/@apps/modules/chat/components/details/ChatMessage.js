@@ -15,6 +15,7 @@ import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { ReactTinyLink } from "react-tiny-link"
 import { Spinner } from "reactstrap"
 import { detectUrl, formatTime, replaceTextMessage } from "../../common/common"
+import LinkPreview from "../../../../components/link-preview/LinkPreview"
 
 const ChatMessage = (props) => {
   const {
@@ -583,7 +584,14 @@ const ChatMessage = (props) => {
                 {data.seen.length > 0 ? renderIconSeen() : renderIconUnSeen()}
               </p>
             )} */}
-            <ReactTinyLink
+
+            <LinkPreview
+              url={data?.file?.[0]?.file}
+              maxLine={2}
+              minLine={1}
+              showGraphic={true}
+            />
+            {/* <ReactTinyLink
               cardSize="small"
               showGraphic={true}
               maxLine={2}
@@ -591,7 +599,7 @@ const ChatMessage = (props) => {
               url={data?.file?.[0]?.file}
               loadSecureUrl={true}
               defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
-            />
+            /> */}
           </>
         )
       } else {
