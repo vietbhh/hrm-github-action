@@ -1086,6 +1086,11 @@
     "chat": "Chat",
     "calendar": "Calendar",
     "setting": "Setting",
+    "collaboration": "Collaboration",
+    "drive": "Drive",
+    "workgroup": "Workgroup",
+    "your_projects": "Your Projects",
+    "your_workgroup": "Your Workgroup",
     "header": {
       "welcome": {
         "morning": {

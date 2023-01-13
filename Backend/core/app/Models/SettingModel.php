@@ -20,7 +20,8 @@ class SettingModel extends Model
 
 	public function getDefaultSettings(): array
 	{
-		$data = $this->groupBy(['key', 'class'])->where('context IS NULL')->findAll();
+		$this->builder()->groupBy('key, class')->where('context IS NULL');
+		$data = $this->findAll();
 		if (is_array($data)) {
 			foreach ($data as $key => $item) {
 				if (is_array($item)) {

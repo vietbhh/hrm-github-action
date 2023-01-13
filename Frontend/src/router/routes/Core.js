@@ -55,6 +55,12 @@ const Notification = lazy(() =>
   import("@apps/modules/notification/pages/NotificationIndex")
 )
 const Chat = lazy(() => import("@apps/modules/chat/pages/index"))
+const Test1 = lazy(() =>
+  import("@src/layouts/separateSidebar/components/test/test1")
+)
+const Test2 = lazy(() =>
+  import("@src/layouts/separateSidebar/components/test/test2")
+)
 
 const CoreRoutes = [
   {
@@ -293,6 +299,26 @@ const CoreRoutes = [
       action: "login",
       resource: "app",
       className: ""
+    }
+  },
+  {
+    path: "/homepage",
+    element: <Test1 />,
+    meta: {
+      action: "login",
+      resource: "app",
+      className: "",
+      layout: "separateSidebar"
+    }
+  },
+  {
+    path: "/test2",
+    element: <Test2 />,
+    meta: {
+      action: "login",
+      resource: "app",
+      className: "",
+      layout: "separateSidebar"
     }
   }
 ]
