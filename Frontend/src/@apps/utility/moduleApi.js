@@ -222,5 +222,11 @@ export const defaultModuleApi = {
         }
       }
     )
+  },
+  async getLinkContent(data) {
+    return await axiosApi.post(
+      `link-preview/get-link-content`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }
