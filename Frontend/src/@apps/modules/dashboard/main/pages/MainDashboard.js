@@ -1,13 +1,13 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import { ErpSwitch } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { updateLoadingDashboard } from "@store/layout"
 import "@styles/react/libs/charts/apex-charts.scss"
 import { Drawer, Skeleton } from "antd"
 import classNames from "classnames"
-import { Fragment, useContext, useEffect, useRef, useState } from "react"
+import { Fragment, useContext, useEffect, useRef } from "react"
 import { Responsive, WidthProvider } from "react-grid-layout"
 import { useDispatch, useSelector } from "react-redux"
-import { updateLoadingDashboard } from "@store/layout"
 import { Col, Row } from "reactstrap"
 import { handleFetchProfile } from "redux/authentication"
 import { AbilityContext } from "utility/context/Can"
@@ -45,7 +45,12 @@ const LoadingComponent = () => {
 
 const MainDashboard = ({
   listComponent,
-  key_dashboard_widget = "dashboard_widget_default"
+  key_dashboard_widget = "dashboard_widget_default",
+  breakpoints = { lg: 996, md: 768, sm: 480, xs: 10, xxs: 0 },
+  cols = { lg: 3, md: 2, sm: 1, xs: 1, xxs: 1 },
+  resizeHandles = ["e"],
+  customButtonPosition = "top", // top or bottom
+  placementDrawer = "right" // right or left
 }) => {
   const auth = useSelector((state) => state.auth)
   const dataDashboardWidget = { ...auth.settings.dashboard_widget }
@@ -55,8 +60,6 @@ const MainDashboard = ({
   const ability = useContext(AbilityContext)
   const customizeDashboard = auth.settings.widget_dnd
   const [state, setState] = useMergedState({
-    windowWidthDefault: window.innerWidth,
-
     // widget
     visible: false,
     data_drop: { i: "", w: 4, h: 2 },
@@ -68,9 +71,11 @@ const MainDashboard = ({
     countWidget: -1,
     loadingOnChange: false,
     loadingRemove: false,
-    breakPoints: "lg"
+    breakPoints: "lg",
+
+    // check handleWidget
+    check_is_handleWidget: false
   })
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const widgetMargin = [0, 30]
   const widgetRowHeight = 10
 
@@ -84,25 +89,10 @@ const MainDashboard = ({
     global.widget["widget_" + val.id] = useRef(null)
   })
 
-  // ** Update Window Width
-  const handleWindowWidth = () => {
-    setWindowWidth(window.innerWidth)
-  }
-  //** Sets Window Size & Layout Props
-  useEffect(() => {
-    if (window !== undefined) {
-      window.addEventListener("resize", handleWindowWidth, { passive: true })
-
-      return () => {
-        window.removeEventListener("resize", handleWindowWidth)
-      }
-    }
-  }, [windowWidth])
-
   const handleWidget = (id, action = "remove", params = {}) => {
     const data = listComponent
-      ? listComponent({ handleWidget })
-      : ListComponentConfig({ handleWidget })
+      ? listComponent({ handleWidget, handleLayouts })
+      : ListComponentConfig({ handleWidget, handleLayouts })
 
     const _settingWidget = JSON.parse(localStorage.getItem("dashboard_widget"))
     if (_settingWidget !== undefined && !_.isEmpty(_settingWidget)) {
@@ -149,7 +139,11 @@ const MainDashboard = ({
               }
             }
           }
-          setState({ data: data, layouts: dataLayout })
+          setState({
+            data: data,
+            layouts: dataLayout,
+            check_is_handleWidget: true
+          })
         } else {
           _.forEach(dataLayout, (val, key_val) => {
             _.forEach(val, (value, key) => {
@@ -173,7 +167,11 @@ const MainDashboard = ({
               }
             }
           }
-          setState({ data: data, layouts: dataLayout })
+          setState({
+            data: data,
+            layouts: dataLayout,
+            check_is_handleWidget: false
+          })
         }
       } else {
         setState({ loadingRemove: true })
@@ -239,55 +237,56 @@ const MainDashboard = ({
   }
 
   const handleDataLayout = (dataComponent, dataLayout) => {
-    const dataLayout_ = { ...dataLayout }
-    _.forEach(dataLayout_, (val, key_val) => {
-      if (key_val === state.breakPoints) {
-        const val_layout = [...val]
-        _.forEach(val_layout, (value, key) => {
-          const index = dataComponent.findIndex((item) => item.id === value.i)
-          if (index > -1) {
-            let h =
-              dataComponent[index]["data_grid"]["h"] <
-              dataComponent[index]["data_grid"]["minH"]
-                ? dataComponent[index]["data_grid"]["minH"]
-                : dataComponent[index]["data_grid"]["h"]
-            if (
-              global.widget["widget_" + value.i] &&
-              global.widget["widget_" + value.i].current
-            ) {
-              h =
-                Math.ceil(
-                  (global.widget["widget_" + value.i].current.clientHeight -
-                    widgetMargin[1]) /
-                    (widgetRowHeight + widgetMargin[1])
-                ) + 1
-            }
-            if (h < dataComponent[index]["data_grid"]["minH"]) {
-              h = dataComponent[index]["data_grid"]["minH"]
-            }
+    if (state.check_is_handleWidget === false) {
+      const dataLayout_ = { ...dataLayout }
+      _.forEach(dataLayout_, (val, key_val) => {
+        if (key_val === state.breakPoints) {
+          const val_layout = [...val]
+          _.forEach(val_layout, (value, key) => {
+            const index = dataComponent.findIndex((item) => item.id === value.i)
+            if (index > -1) {
+              let h =
+                dataComponent[index]["data_grid"]["h"] <
+                dataComponent[index]["data_grid"]["minH"]
+                  ? dataComponent[index]["data_grid"]["minH"]
+                  : dataComponent[index]["data_grid"]["h"]
+              if (
+                global.widget["widget_" + value.i] &&
+                global.widget["widget_" + value.i].current
+              ) {
+                h =
+                  Math.ceil(
+                    (global.widget["widget_" + value.i].current.clientHeight -
+                      widgetMargin[1]) /
+                      (widgetRowHeight + widgetMargin[1])
+                  ) + 1
+              }
+              if (h < dataComponent[index]["data_grid"]["minH"]) {
+                h = dataComponent[index]["data_grid"]["minH"]
+              }
 
-            dataComponent[index] = {
-              ...dataComponent[index],
-              data_grid: {
-                ...value,
-                minW: dataComponent[index]["data_grid"]["minW"],
-                minH: dataComponent[index]["data_grid"]["minH"],
-                maxW: dataComponent[index]["data_grid"]["maxW"],
-                static: !customizeDashboard,
-                isDraggable: customizeDashboard,
-                h: h
-              },
-              show: true
+              dataComponent[index] = {
+                ...dataComponent[index],
+                data_grid: {
+                  ...value,
+                  minW: dataComponent[index]["data_grid"]["minW"],
+                  minH: dataComponent[index]["data_grid"]["minH"],
+                  maxW: dataComponent[index]["data_grid"]["maxW"],
+                  static: !customizeDashboard,
+                  isDraggable: customizeDashboard,
+                  h: h
+                },
+                show: true
+              }
+
+              val_layout[key] = dataComponent[index]["data_grid"]
             }
-
-            val_layout[key] = dataComponent[index]["data_grid"]
-          }
-        })
-        dataLayout_[key_val] = val_layout
-      }
-    })
-
-    setState({ data: dataComponent, layouts: dataLayout_ })
+          })
+          dataLayout_[key_val] = val_layout
+        }
+      })
+      setState({ data: dataComponent, layouts: dataLayout_ })
+    }
   }
 
   useEffect(() => {
@@ -342,7 +341,11 @@ const MainDashboard = ({
   }
 
   const onLayoutChange = (layout, layouts) => {
-    if (!state.loadingOnChange && !state.loadingRemove) {
+    if (
+      !state.loadingOnChange &&
+      !state.loadingRemove &&
+      !state.check_is_handleWidget
+    ) {
       const newData = [...state.data]
       const _settingWidget = layouts
       handleDataLayout(newData, _settingWidget)
@@ -379,43 +382,45 @@ const MainDashboard = ({
     return (
       <Fragment>
         <div id="dashboard-analytics" className="mb-5">
-          <div className="d-flex mb-1">
-            <a
-              className="ms-auto"
-              href="/"
-              onClick={(e) => {
-                e.preventDefault()
-                setState({ visible: !state.visible })
-              }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M4.23 11.25H8.27C10.28 11.25 11.25 10.27 11.25 8.27V4.23C11.25 2.22 10.27 1.25 8.27 1.25H4.23C2.22 1.25 1.25 2.23 1.25 4.23V8.27C1.25 10.27 2.23 11.25 4.23 11.25ZM8.27 2.75C9.45 2.75 9.75 3.05 9.75 4.23V8.27C9.75 9.45 9.45 9.75 8.27 9.75H4.23C3.05 9.75 2.75 9.45 2.75 8.27V4.23C2.75 3.05 3.05 2.75 4.23 2.75H8.27Z"
-                  fill="#32434F"
-                />
-                <path
-                  d="M15.73 11.25H19.77C21.78 11.25 22.75 10.36 22.75 8.52V3.98C22.75 2.14 21.77 1.25 19.77 1.25H15.73C13.72 1.25 12.75 2.14 12.75 3.98V8.51C12.75 10.36 13.73 11.25 15.73 11.25ZM19.77 2.75C21.11 2.75 21.25 3.13 21.25 3.98V8.51C21.25 9.37 21.11 9.74 19.77 9.74H15.73C14.39 9.74 14.25 9.36 14.25 8.51V3.98C14.25 3.12 14.39 2.75 15.73 2.75H19.77Z"
-                  fill="#32434F"
-                />
-                <path
-                  d="M15.73 22.75H19.77C21.78 22.75 22.75 21.77 22.75 19.77V15.73C22.75 13.72 21.77 12.75 19.77 12.75H15.73C13.72 12.75 12.75 13.73 12.75 15.73V19.77C12.75 21.77 13.73 22.75 15.73 22.75ZM19.77 14.25C20.95 14.25 21.25 14.55 21.25 15.73V19.77C21.25 20.95 20.95 21.25 19.77 21.25H15.73C14.55 21.25 14.25 20.95 14.25 19.77V15.73C14.25 14.55 14.55 14.25 15.73 14.25H19.77Z"
-                  fill="#32434F"
-                />
-                <path
-                  d="M3.5 18.25H9.5C9.91 18.25 10.25 17.91 10.25 17.5C10.25 17.09 9.91 16.75 9.5 16.75H3.5C3.09 16.75 2.75 17.09 2.75 17.5C2.75 17.91 3.09 18.25 3.5 18.25Z"
-                  fill="#32434F"
-                />
-                <path
-                  d="M6.5 21.25C6.91 21.25 7.25 20.91 7.25 20.5V14.5C7.25 14.09 6.91 13.75 6.5 13.75C6.09 13.75 5.75 14.09 5.75 14.5V20.5C5.75 20.91 6.09 21.25 6.5 21.25Z"
-                  fill="#32434F"
-                />
-              </svg>
-            </a>
-          </div>
+          {customButtonPosition === "top" && (
+            <div className="d-flex mb-1">
+              <a
+                className="ms-auto"
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setState({ visible: !state.visible })
+                }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path
+                    d="M4.23 11.25H8.27C10.28 11.25 11.25 10.27 11.25 8.27V4.23C11.25 2.22 10.27 1.25 8.27 1.25H4.23C2.22 1.25 1.25 2.23 1.25 4.23V8.27C1.25 10.27 2.23 11.25 4.23 11.25ZM8.27 2.75C9.45 2.75 9.75 3.05 9.75 4.23V8.27C9.75 9.45 9.45 9.75 8.27 9.75H4.23C3.05 9.75 2.75 9.45 2.75 8.27V4.23C2.75 3.05 3.05 2.75 4.23 2.75H8.27Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M15.73 11.25H19.77C21.78 11.25 22.75 10.36 22.75 8.52V3.98C22.75 2.14 21.77 1.25 19.77 1.25H15.73C13.72 1.25 12.75 2.14 12.75 3.98V8.51C12.75 10.36 13.73 11.25 15.73 11.25ZM19.77 2.75C21.11 2.75 21.25 3.13 21.25 3.98V8.51C21.25 9.37 21.11 9.74 19.77 9.74H15.73C14.39 9.74 14.25 9.36 14.25 8.51V3.98C14.25 3.12 14.39 2.75 15.73 2.75H19.77Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M15.73 22.75H19.77C21.78 22.75 22.75 21.77 22.75 19.77V15.73C22.75 13.72 21.77 12.75 19.77 12.75H15.73C13.72 12.75 12.75 13.73 12.75 15.73V19.77C12.75 21.77 13.73 22.75 15.73 22.75ZM19.77 14.25C20.95 14.25 21.25 14.55 21.25 15.73V19.77C21.25 20.95 20.95 21.25 19.77 21.25H15.73C14.55 21.25 14.25 20.95 14.25 19.77V15.73C14.25 14.55 14.55 14.25 15.73 14.25H19.77Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M3.5 18.25H9.5C9.91 18.25 10.25 17.91 10.25 17.5C10.25 17.09 9.91 16.75 9.5 16.75H3.5C3.09 16.75 2.75 17.09 2.75 17.5C2.75 17.91 3.09 18.25 3.5 18.25Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M6.5 21.25C6.91 21.25 7.25 20.91 7.25 20.5V14.5C7.25 14.09 6.91 13.75 6.5 13.75C6.09 13.75 5.75 14.09 5.75 14.5V20.5C5.75 20.91 6.09 21.25 6.5 21.25Z"
+                    fill="#32434F"
+                  />
+                </svg>
+              </a>
+            </div>
+          )}
 
           <Row className="match-height dnd">
             <Col sm="12">
@@ -431,13 +436,13 @@ const MainDashboard = ({
                 className="layout"
                 ref={refLayout}
                 layouts={state.layouts}
-                breakpoints={{ lg: 996, md: 768, sm: 480, xs: 10, xxs: 0 }}
-                cols={{ lg: 3, md: 2, sm: 1, xs: 1, xxs: 1 }}
+                breakpoints={breakpoints}
+                cols={cols}
                 autoSize={true}
                 margin={widgetMargin}
                 containerPadding={[0, 0]}
                 rowHeight={widgetRowHeight}
-                resizeHandles={["e"]}
+                resizeHandles={resizeHandles ? resizeHandles : ["se"]}
                 onLayoutChange={onLayoutChange}
                 onBreakpointChange={onBreakpointChange}
                 onDrop={onDrop}
@@ -507,6 +512,46 @@ const MainDashboard = ({
               </ResponsiveReactGridLayout>
             </Col>
           </Row>
+
+          {customButtonPosition === "bottom" && (
+            <div className="d-flex mb-1">
+              <a
+                className="ms-auto"
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setState({ visible: !state.visible })
+                }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path
+                    d="M4.23 11.25H8.27C10.28 11.25 11.25 10.27 11.25 8.27V4.23C11.25 2.22 10.27 1.25 8.27 1.25H4.23C2.22 1.25 1.25 2.23 1.25 4.23V8.27C1.25 10.27 2.23 11.25 4.23 11.25ZM8.27 2.75C9.45 2.75 9.75 3.05 9.75 4.23V8.27C9.75 9.45 9.45 9.75 8.27 9.75H4.23C3.05 9.75 2.75 9.45 2.75 8.27V4.23C2.75 3.05 3.05 2.75 4.23 2.75H8.27Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M15.73 11.25H19.77C21.78 11.25 22.75 10.36 22.75 8.52V3.98C22.75 2.14 21.77 1.25 19.77 1.25H15.73C13.72 1.25 12.75 2.14 12.75 3.98V8.51C12.75 10.36 13.73 11.25 15.73 11.25ZM19.77 2.75C21.11 2.75 21.25 3.13 21.25 3.98V8.51C21.25 9.37 21.11 9.74 19.77 9.74H15.73C14.39 9.74 14.25 9.36 14.25 8.51V3.98C14.25 3.12 14.39 2.75 15.73 2.75H19.77Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M15.73 22.75H19.77C21.78 22.75 22.75 21.77 22.75 19.77V15.73C22.75 13.72 21.77 12.75 19.77 12.75H15.73C13.72 12.75 12.75 13.73 12.75 15.73V19.77C12.75 21.77 13.73 22.75 15.73 22.75ZM19.77 14.25C20.95 14.25 21.25 14.55 21.25 15.73V19.77C21.25 20.95 20.95 21.25 19.77 21.25H15.73C14.55 21.25 14.25 20.95 14.25 19.77V15.73C14.25 14.55 14.55 14.25 15.73 14.25H19.77Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M3.5 18.25H9.5C9.91 18.25 10.25 17.91 10.25 17.5C10.25 17.09 9.91 16.75 9.5 16.75H3.5C3.09 16.75 2.75 17.09 2.75 17.5C2.75 17.91 3.09 18.25 3.5 18.25Z"
+                    fill="#32434F"
+                  />
+                  <path
+                    d="M6.5 21.25C6.91 21.25 7.25 20.91 7.25 20.5V14.5C7.25 14.09 6.91 13.75 6.5 13.75C6.09 13.75 5.75 14.09 5.75 14.5V20.5C5.75 20.91 6.09 21.25 6.5 21.25Z"
+                    fill="#32434F"
+                  />
+                </svg>
+              </a>
+            </div>
+          )}
         </div>
 
         <Drawer
@@ -518,7 +563,7 @@ const MainDashboard = ({
               </span>
             </>
           }
-          placement="right"
+          placement={placementDrawer}
           width={360}
           className="dnd widget-drawer"
           mask={false}
