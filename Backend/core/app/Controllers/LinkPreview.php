@@ -21,9 +21,9 @@ class LinkPreview extends ErpController
         }
 
         if ($dataCache = cache($code)) {
-            return $this->respond([
+            /*return $this->respond([
                 'result' => $dataCache
-            ]);
+            ]);*/
         }
 
         $previewClient = new Client($link);
