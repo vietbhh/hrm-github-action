@@ -8,6 +8,14 @@
     padding: 15px;
     border-radius: 15px;
 
+    .ant-skeleton-image {
+        border-radius: 15px;
+    }
+
+    .ant-skeleton-title, .ant-skeleton-paragraph li {
+        border-radius: 5px;
+    }
+
     .image-link-container {
         padding: 15px;
         border-radius: 15px;
