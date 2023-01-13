@@ -8,7 +8,7 @@
     width: 100%;
 
     > div {
-      border-radius: 15px;
+      border-radius: 14px;
     }
   }
 
@@ -16,7 +16,7 @@
     min-width: 332px;
 
     > div {
-      border-radius: 15px;
+      border-radius: 14px;
     }
   }
 }
@@ -31,6 +31,16 @@
     > .card-body {
       padding: 20px 25px !important;
       padding-top: 0px !important;
+    }
+  }
+
+  #dashboard-analytics {
+    margin-bottom: 0 !important;
+
+    .react-grid-item {
+      > div {
+        margin: 0 !important;
+      }
     }
   }
 }

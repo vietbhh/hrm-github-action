@@ -16,6 +16,7 @@ import { Swiper, SwiperSlide } from "swiper/react/swiper-react"
 import { NotepadApi } from "../common/api"
 import AddModal from "./details/notepad/AddModal"
 import LayoutDashboard from "./LayoutDashboard"
+import PerfectScrollbar from "react-perfect-scrollbar"
 
 // ** Init Swiper Functions
 SwiperCore.use([Grid, Pagination, Lazy])
@@ -122,6 +123,7 @@ const Notepad = (props) => {
           `modules.dashboard.notepad.${action === "pin" ? "pin" : "un_pin"}`
         )}>
         <svg
+          className="icon-start"
           onClick={() => {
             if (action === "pin") {
               return handlePin($id)
@@ -245,7 +247,7 @@ const Notepad = (props) => {
         ),
         customRight: (
           <>
-            {!_.isEmpty(state.arrTick) && (
+            {!props.layoutSmall && !_.isEmpty(state.arrTick) && (
               <Tooltip title={useFormatMessage(`app.delete`)}>
                 <i
                   className="fa-solid fa-trash me-1 cursor-pointer"
@@ -253,31 +255,33 @@ const Notepad = (props) => {
               </Tooltip>
             )}
 
-            <Tooltip title={useFormatMessage(`app.add`)}>
-              <svg
-                onClick={() => toggleModal()}
-                className="me-1 cursor-pointer"
-                xmlns="http://www.w3.org/2000/svg"
-                width="35"
-                height="35"
-                viewBox="0 0 35 35"
-                fill="none">
-                <path
-                  d="M11.6666 17.5H23.3333"
-                  stroke="#32434F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M17.5 23.3333V11.6667"
-                  stroke="#32434F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Tooltip>
+            {!props.layoutSmall && (
+              <Tooltip title={useFormatMessage(`app.add`)}>
+                <svg
+                  onClick={() => toggleModal()}
+                  className="me-1 cursor-pointer"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="35"
+                  height="35"
+                  viewBox="0 0 35 35"
+                  fill="none">
+                  <path
+                    d="M11.6666 17.5H23.3333"
+                    stroke="#32434F"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M17.5 23.3333V11.6667"
+                    stroke="#32434F"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Tooltip>
+            )}
           </>
         ),
         ...props
@@ -341,7 +345,7 @@ const Notepad = (props) => {
             />
           )}
 
-        {!state.loading && (
+        {!props.layoutSmall && !state.loading && (
           <>
             {!_.isEmpty(state.data_pin) && (
               <>
@@ -351,32 +355,36 @@ const Notepad = (props) => {
                       {_.map(state.data_pin, (value, index) => {
                         return (
                           <SwiperSlide key={index}>
-                            <div
-                              onClick={() => toggleModal(value.id)}
-                              className={classNames(
-                                "div-notepad div-notepad-pin",
-                                {
-                                  "no-title":
-                                    value.title === null ||
-                                    value.title === "" ||
-                                    value.title === " ",
-                                  title:
-                                    value.title !== null &&
-                                    value.title !== "" &&
-                                    value.title !== " "
-                                }
-                              )}>
-                              <span className="text-title">{value.title}</span>
-                              <span className="text-content">
-                                {renderContent(value.content)}
-                              </span>
-                              <span className="text-time">
-                                {renderTime(value.created_at)}
-                              </span>
-                            </div>
+                            <div className="div-body-notepad">
+                              <div
+                                onClick={() => toggleModal(value.id)}
+                                className={classNames(
+                                  "div-notepad div-notepad-pin",
+                                  {
+                                    "no-title":
+                                      value.title === null ||
+                                      value.title === "" ||
+                                      value.title === " ",
+                                    title:
+                                      value.title !== null &&
+                                      value.title !== "" &&
+                                      value.title !== " "
+                                  }
+                                )}>
+                                <span className="text-title">
+                                  {value.title}
+                                </span>
+                                <span className="text-content">
+                                  {renderContent(value.content)}
+                                </span>
+                                <span className="text-time">
+                                  {renderTime(value.created_at)}
+                                </span>
+                              </div>
 
-                            {renderStar("un_pin", value.id)}
-                            {renderTick(value.id)}
+                              {renderStar("un_pin", value.id)}
+                              {renderTick(value.id)}
+                            </div>
                           </SwiperSlide>
                         )
                       })}
@@ -386,6 +394,7 @@ const Notepad = (props) => {
                 <hr />
               </>
             )}
+
             {!_.isEmpty(state.data_un_pin) && (
               <>
                 <Row>
@@ -394,25 +403,29 @@ const Notepad = (props) => {
                       {_.map(state.data_un_pin, (value, index) => {
                         return (
                           <SwiperSlide key={index}>
-                            <div
-                              onClick={() => toggleModal(value.id)}
-                              className={classNames("div-notepad", {
-                                "no-title":
-                                  value.title === null ||
-                                  value.title === "" ||
-                                  value.title === " "
-                              })}>
-                              <span className="text-title">{value.title}</span>
-                              <span className="text-content">
-                                {renderContent(value.content)}
-                              </span>
-                              <span className="text-time">
-                                {renderTime(value.created_at)}
-                              </span>
-                            </div>
+                            <div className="div-body-notepad">
+                              <div
+                                onClick={() => toggleModal(value.id)}
+                                className={classNames("div-notepad", {
+                                  "no-title":
+                                    value.title === null ||
+                                    value.title === "" ||
+                                    value.title === " "
+                                })}>
+                                <span className="text-title">
+                                  {value.title}
+                                </span>
+                                <span className="text-content">
+                                  {renderContent(value.content)}
+                                </span>
+                                <span className="text-time">
+                                  {renderTime(value.created_at)}
+                                </span>
+                              </div>
 
-                            {renderStar("pin", value.id)}
-                            {renderTick(value.id)}
+                              {renderStar("pin", value.id)}
+                              {renderTick(value.id)}
+                            </div>
                           </SwiperSlide>
                         )
                       })}
@@ -423,6 +436,117 @@ const Notepad = (props) => {
             )}
           </>
         )}
+
+        {props.layoutSmall && !state.loading && (
+          <>
+            <div className="body-header">
+              <div className="body-header-left">
+                <span className="text-my-note">
+                  {useFormatMessage("modules.dashboard.notepad.my_notes")}
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="5"
+                  viewBox="0 0 9 5"
+                  fill="none">
+                  <path
+                    opacity="0.6"
+                    d="M8 1L4.5 4.5L1 1"
+                    stroke="#32434F"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="body-header-right">
+                {!_.isEmpty(state.arrTick) && (
+                  <Tooltip title={useFormatMessage(`app.delete`)}>
+                    <i
+                      className="fa-solid fa-trash me-50 cursor-pointer"
+                      onClick={() => deleteMultiple()}></i>
+                  </Tooltip>
+                )}
+
+                <Tooltip title={useFormatMessage(`app.add`)}>
+                  <svg
+                    onClick={() => toggleModal()}
+                    className="cursor-pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="35"
+                    viewBox="0 0 35 35"
+                    fill="none">
+                    <path
+                      d="M11.6666 17.5H23.3333"
+                      stroke="#32434F"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M17.5 23.3333V11.6667"
+                      stroke="#32434F"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Tooltip>
+              </div>
+            </div>
+
+            <div className="body-content">
+              <PerfectScrollbar options={{ wheelPropagation: false }}>
+                {!_.isEmpty(state.data_pin) &&
+                  _.map(state.data_pin, (value, index) => {
+                    return (
+                      <div key={index} className="div-body-notepad">
+                        <div
+                          onClick={() => toggleModal(value.id)}
+                          className={classNames("div-notepad div-notepad-pin")}>
+                          <span className="text-title">
+                            {value.title
+                              ? value.title
+                              : renderContent(value.content)}
+                          </span>
+                          <span className="text-time">
+                            {renderTime(value.created_at)}
+                          </span>
+                        </div>
+
+                        {renderStar("un_pin", value.id)}
+                        {renderTick(value.id)}
+                      </div>
+                    )
+                  })}
+
+                {!_.isEmpty(state.data_un_pin) &&
+                  _.map(state.data_un_pin, (value, index) => {
+                    return (
+                      <div key={index} className="div-body-notepad">
+                        <div
+                          onClick={() => toggleModal(value.id)}
+                          className={classNames("div-notepad")}>
+                          <span className="text-title">
+                            {value.title
+                              ? value.title
+                              : renderContent(value.content)}
+                          </span>
+                          <span className="text-time">
+                            {renderTime(value.created_at)}
+                          </span>
+                        </div>
+
+                        {renderStar("pin", value.id)}
+                        {renderTick(value.id)}
+                      </div>
+                    )
+                  })}
+              </PerfectScrollbar>
+            </div>
+          </>
+        )}
       </CardBody>
 
       <AddModal
@@ -430,6 +554,7 @@ const Notepad = (props) => {
         toggleModal={toggleModal}
         idNotepad={state.idNotepad}
         loadData={loadData}
+        handleLayouts={props.handleLayouts}
       />
     </LayoutDashboard>
   )

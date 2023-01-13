@@ -43,7 +43,7 @@ const DashboardHeader = (props) => {
     <CardHeader>
       <div className="d-flex flex-wrap align-items-center w-100">
         <TitleTag {...(titleLink && { to: titleLink })} className="card-title">
-          {noIcon !== true && (
+          {!noIcon && (
             <span
               className={`dashboard-title-icon ${
                 classIconBg ? classIconBg : "news-bg-icon"
@@ -103,7 +103,7 @@ const DashboardHeader = (props) => {
             trigger={["click"]}
             className="cursor-pointer"
             overlayClassName="dashboard-dropdown-menu">
-            {noIcon === true ? (
+            {noIcon ? (
               <svg
                 className="btn-icon-right"
                 xmlns="http://www.w3.org/2000/svg"

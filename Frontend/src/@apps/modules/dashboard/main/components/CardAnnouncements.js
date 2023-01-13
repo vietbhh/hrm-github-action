@@ -10,7 +10,6 @@ const CardAnnouncements = (props) => {
         id: "announcement",
         title: useFormatMessage("modules.dashboard.announcement.title"),
         isRemoveWidget: true,
-        noIcon: true,
         ...props
       }}>
       <CardBody>

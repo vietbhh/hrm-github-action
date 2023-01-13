@@ -1,12 +1,13 @@
 import MainDashboard from "@apps/modules/dashboard/main/pages/MainDashboard"
 import React from "react"
 import "./scss/widget.scss"
+import { ListComponentConfig } from "./components/ListComponentConfig"
 
 const SidebarWidget = ({ listComponent }) => {
   return (
     <div className="sidebar-widget">
       <MainDashboard
-        listComponent={listComponent}
+        listComponent={listComponent ? listComponent : ListComponentConfig}
         key_dashboard_widget="widget_sidebar"
         breakpoints={{ lg: 0, md: 99999, sm: 99999, xs: 99999, xxs: 99999 }}
         cols={{ lg: 1, md: 1, sm: 1, xs: 1, xxs: 1 }}

@@ -87,6 +87,7 @@ const MainDashboard = ({
   })
 
   const handleWidget = (id, action = "remove", params = {}) => {
+    console.log(id, action, params)
     const data = listComponent
       ? listComponent({ handleWidget })
       : ListComponentConfig({ handleWidget })
@@ -136,6 +137,7 @@ const MainDashboard = ({
               }
             }
           }
+          console.log(dataLayout)
           setState({ data: data, layouts: dataLayout })
         } else {
           _.forEach(dataLayout, (val, key_val) => {
@@ -274,6 +276,7 @@ const MainDashboard = ({
       }
     })
 
+    console.log("dataLayout_", dataLayout_)
     setState({ data: dataComponent, layouts: dataLayout_ })
   }
 
@@ -330,6 +333,7 @@ const MainDashboard = ({
 
   const onLayoutChange = (layout, layouts) => {
     if (!state.loadingOnChange && !state.loadingRemove) {
+      console.log("layouts...", layouts)
       const newData = [...state.data]
       const _settingWidget = layouts
       handleDataLayout(newData, _settingWidget)
