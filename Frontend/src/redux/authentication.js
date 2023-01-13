@@ -53,25 +53,26 @@ export const authSlice = createSlice({
       localStorage.setItem("settings", JSON.stringify(settings))
     }
   },
-  extraReducers: {
-    [handleLogout.fulfilled]: (state, action) => {
-      state.userData = {}
-      state.settings = {}
-      state.permits = []
-      state[config.storageTokenKeyName] = null
-      state[config.storageRefreshTokenKeyName] = null
-      // ** Remove user, accessToken & refreshToken from localStorage
-      localStorage.clear()
-    },
-    [handleLogout.rejected]: (state, action) => {
-      state.userData = {}
-      state.settings = {}
-      state.permits = []
-      state[config.storageTokenKeyName] = null
-      state[config.storageRefreshTokenKeyName] = null
-      // ** Remove user, accessToken & refreshToken from localStorage
-      localStorage.clear()
-    }
+  extraReducers: (builder) => {
+    builder
+      .addCase(handleLogout.fulfilled, (state, action) => {
+        state.userData = {}
+        state.settings = {}
+        state.permits = []
+        state[config.storageTokenKeyName] = null
+        state[config.storageRefreshTokenKeyName] = null
+        // ** Remove user, accessToken & refreshToken from localStorage
+        localStorage.clear()
+      })
+      .addCase(handleLogout.rejected, (state, action) => {
+        state.userData = {}
+        state.settings = {}
+        state.permits = []
+        state[config.storageTokenKeyName] = null
+        state[config.storageRefreshTokenKeyName] = null
+        // ** Remove user, accessToken & refreshToken from localStorage
+        localStorage.clear()
+      })
   }
 })
 

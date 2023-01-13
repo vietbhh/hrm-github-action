@@ -67,7 +67,6 @@ export const SocketContextWrap = (props) => {
       })
       socket.on("disconnect", () => {
         localStorage.setItem("socket", 0)
-        console.log("socket-disconnect")
       })
 
       socket.on("users_online", (data) => {
@@ -95,14 +94,11 @@ export const SocketContextWrap = (props) => {
     socket.emit("user_status_online")
   }
 
-  const onAction = (event) => {}
-
   return (
     <IdleTimerProvider
       timeout={1000 * 60} //1m
       onIdle={onIdle}
-      onActive={onActive}
-      onAction={onAction}>
+      onActive={onActive}>
       <SocketContext.Provider value={socket}>
         {props.children}
       </SocketContext.Provider>
