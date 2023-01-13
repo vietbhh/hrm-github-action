@@ -191,6 +191,8 @@ $routes->post('header-assistant/save-header-assistant', 'HeaderAssistant::save_h
 $routes->get('header-assistant/get-delete-header-assistant/(:alphanum)', 'HeaderAssistant::get_delete_header_assistant_get/$1', ['namespace' => 'App\Controllers']);
 $routes->get('header-assistant/get-data-header-assistant/(:alphanum)', 'HeaderAssistant::get_data_header_assistant_get/$1', ['namespace' => 'App\Controllers']);
 
+/*** Route for LinkPreview */
+$routes->get('link-preview/get-link-content', 'LinkPReview::get_link_content_get', ['namespace' => 'App\Controllers']);
 
 $routes->get('fri/test', 'Test::index_get');
 $routes->post('fri/test', 'Test::index_post');

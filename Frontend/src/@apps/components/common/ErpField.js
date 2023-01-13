@@ -2180,6 +2180,7 @@ export const ErpPassword = (props) => {
                 {...defaultProps}
                 {...rest}
                 type={inputVisibility === false ? "password" : "text"}
+                autoComplete="on"
               />
             )}
           />
