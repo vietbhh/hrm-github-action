@@ -22,8 +22,6 @@ const LinkPreview = (props) => {
     // ** methods
   } = props
 
-  console.log(minLine)
-
   const [state, setState] = useMergedState({
     loading: true,
     data: {}
