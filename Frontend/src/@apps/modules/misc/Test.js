@@ -1,3 +1,4 @@
+import { axiosNodeApi } from "@apps/utility/api"
 import {
   getAvatarUrl,
   getPublicDownloadUrl,
@@ -47,7 +48,23 @@ const Test = (props) => {
   }, [socket])
 
   const testNoti = () => {
-    notification.show({
+    axiosNodeApi
+      .post(
+        "/notification/send",
+        {
+          test: "testOk"
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      )
+      .then((res) => {
+        console.log(res)
+      })
+
+    /* notification.show({
       title: "bạn nhận được thông báo",
       config: {
         duration: 10000000
@@ -76,7 +93,7 @@ const Test = (props) => {
       config: {
         duration: 10000000
       }
-    })
+    }) */
   }
 
   return (
