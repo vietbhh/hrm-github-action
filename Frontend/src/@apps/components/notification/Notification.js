@@ -16,7 +16,6 @@ const Notification = (props) => {
   const listNotificationStore = notificationStore.listNotification
   const numberNotificationStore = notificationStore.numberNotification
   const dispatch = useDispatch()
-  // const play = useSo
   const socket = useContext(SocketContext)
 
   const addNotificationToStore = (notificationData) => {
@@ -76,13 +75,17 @@ const Notification = (props) => {
     socket.on("app_notification", (data) => {
       const { payload, isSave } = data
       const sound = new Audio(NotificationSound)
-      sound.addEventListener("canplaythrough", (event) => {
-        // the audio is now playable; play it if permissions allow
-        const playedPromise = sound.play()
-        if (playedPromise) {
-          playedPromise.catch((e) => {}).then(() => {})
-        }
-      })
+      sound.addEventListener(
+        "canplaythrough",
+        (event) => {
+          // the audio is now playable; play it if permissions allow
+          const playedPromise = sound.play()
+          if (playedPromise) {
+            playedPromise.catch((e) => {}).then(() => {})
+          }
+        },
+        { passive: true }
+      )
       //show notification
       showNotificationPopup(payload)
       //If save to db,update bell badge and list notification
@@ -107,41 +110,22 @@ const Notification = (props) => {
         })
         if (!checkUrlStart) {
           const sound = new Audio(ChatSound)
-          sound.addEventListener("canplaythrough", (event) => {
-            // the audio is now playable; play it if permissions allow
-            const playedPromise = sound.play()
-            if (playedPromise) {
-              playedPromise.catch((e) => {}).then(() => {})
-            }
-          })
+          sound.addEventListener(
+            "canplaythrough",
+            (event) => {
+              // the audio is now playable; play it if permissions allow
+              const playedPromise = sound.play()
+              if (playedPromise) {
+                playedPromise.catch((e) => {}).then(() => {})
+              }
+            },
+            { passive: true }
+          )
           showNotificationPopup(payload, "chat_notification")
         }
       }
     })
   }, [socket])
-
-  /* navigator.serviceWorker.addEventListener("message", function (event) {
-    const { data } = event
-    if (data?.isFirebaseMessaging) {
-      const payload = data?.notification
-      const otherData = data?.data
-      const emitKey = otherData?.emitKey ?? ""
-      const isSave = otherData?.isSave
-      console.log(localStorage.getItem("socket"))
-      console.log(socket)
-      if (!socket.connected) {
-        //showNotificationPopup(payload, emitKey)
-        if (isSave === "true") {
-          const { id, sender_id } = otherData
-          addNotificationToStore({
-            id,
-            sender_id,
-            ...payload
-          })
-        }
-      }
-    }
-  }) */
 
   return <Fragment></Fragment>
 }

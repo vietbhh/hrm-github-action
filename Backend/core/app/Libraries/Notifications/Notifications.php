@@ -16,6 +16,9 @@ class Notifications
 		$this->model = new NotificationModel();
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function add($content = [])
 	{
 		return $this->model->insert($content);
@@ -68,7 +71,7 @@ class Notifications
 		return $id;
 	}
 
-	public function handleNotificationData($data, $isMultidimensionalArray = true)
+	public function handleNotificationData($data, $isMultidimensionalArray = true): array
 	{
 		$modules = \Config\Services::modules('users');
 		$model = $modules->model;

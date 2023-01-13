@@ -91,7 +91,11 @@ const MainDashboard = ({
   //** Sets Window Size & Layout Props
   useEffect(() => {
     if (window !== undefined) {
-      window.addEventListener("resize", handleWindowWidth)
+      window.addEventListener("resize", handleWindowWidth, { passive: true })
+
+      return () => {
+        window.removeEventListener("resize", handleWindowWidth)
+      }
     }
   }, [windowWidth])
 
