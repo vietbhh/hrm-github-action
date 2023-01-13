@@ -174,7 +174,7 @@ class App extends ErpController
 		return $this->respond($result ?: true);
 	}
 
-	public function linked_get($name)
+	public function linked_get($n1ame)
 	{
 		$module = \Config\Services::modules($name);
 		$linked = $module->getLinkedModule();
