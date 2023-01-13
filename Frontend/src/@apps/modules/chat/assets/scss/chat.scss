@@ -256,7 +256,7 @@ $font-family: Helvetica;
 
         .list-group {
           width: $width-sidebar;
-          height: calc(100% - 115px);
+          height: calc(100% - 50px);
 
           .chat-list {
             .div-li-chat {
@@ -806,13 +806,14 @@ $font-family: Helvetica;
 
                     &:hover {
                       .chat-content-reaction {
-                        display: flex;
+                        visibility: visible;
                       }
                     }
 
                     .chat-content-reaction {
-                      display: none;
+                      display: flex;
                       align-items: center;
+                      visibility: hidden;
 
                       .reaction {
                         cursor: pointer;
@@ -888,6 +889,7 @@ $font-family: Helvetica;
                     .chat-content-sender-name {
                       display: flex;
                       flex-direction: column;
+                      max-width: 65%;
 
                       .text-sender-name {
                         margin-left: 1rem;
@@ -905,7 +907,7 @@ $font-family: Helvetica;
                   }
 
                   .chat-content {
-                    max-width: 75%;
+                    max-width: 65%;
                     background: rgb(0, 132, 255);
                     min-height: 37px;
                     border-radius: 20px;
@@ -1991,8 +1993,37 @@ $font-family: Helvetica;
     height: 120px;
     min-height: 120px;
 
-    .content-link-container {
-      padding-top: 0 !important;
+    .medium-preview-card {
+      display: flex;
+
+      .detail-link {
+        gap: 1rem;
+        width: 100%;
+
+        .image-link-container {
+          min-width: 90px;
+          min-height: 90px;
+          width: 90px;
+          height: 90px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 0;
+
+          .image-link {
+            width: 90px;
+            height: 90px;
+            border-radius: 15px;
+          }
+        }
+
+        .content-link-container {
+          padding: 0 !important;
+          display: flex;
+          flex-direction: column;
+          min-width: 70%;
+        }
+      }
     }
   }
 

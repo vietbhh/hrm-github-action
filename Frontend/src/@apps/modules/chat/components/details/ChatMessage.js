@@ -585,14 +585,14 @@ const ChatMessage = (props) => {
               </p>
             )} */}
 
-            <LinkPreview
+            {/* <LinkPreview
               url={data?.file?.[0]?.file}
               maxLine={2}
               minLine={2}
               showGraphic={true}
               defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
               componentClassName="link-preview"
-            />
+            /> */}
             <ReactTinyLink
               cardSize="small"
               showGraphic={true}
@@ -976,7 +976,7 @@ const ChatMessage = (props) => {
                 height="18"
                 viewBox="0 0 18 18"
                 fill="none">
-                <g clipPath="url(#clip0_885_2584)">
+                <g clipPath={`url(#react_icon_${chat.time}`}>
                   <circle
                     cx="9"
                     cy="9"
@@ -1007,7 +1007,7 @@ const ChatMessage = (props) => {
                   />
                 </g>
                 <defs>
-                  <clipPath id="clip0_885_2584">
+                  <clipPath id={`react_icon_${chat.time}`}>
                     <rect width="18" height="18" fill="white" />
                   </clipPath>
                 </defs>
