@@ -3,6 +3,7 @@ import { Fragment, useEffect } from "react"
 import { useMergedState } from "@apps/utility/common"
 import classNames from "classnames"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { Skeleton, Space } from "antd"
 // ** Styles
 // ** Components
 
@@ -56,6 +57,48 @@ const LinkPreview = (props) => {
   }, [url])
 
   // ** render
+  const renderMediumLoading = () => {
+    return (
+      <div className="h-100 d-flex w-100">
+        <div className="me-2">
+          <Skeleton.Image active={state.loading} round={true} />
+        </div>
+        <div className="w-75 d-flex flex-column align-items-start justify-content-start h-100">
+          <Skeleton
+            paragraph={{
+              rows: 2
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  const renderLargeLoading = () => {
+    return (
+      <div className="h-100 d-flex flex-column w-100">
+        <div className="mb-1">
+          <Skeleton.Image
+            active={state.loading}
+            className="w-100"
+            round={true}
+          />
+        </div>
+        <div className="w-75 d-flex flex-column align-items-start justify-content-start h-100">
+          <Skeleton
+            paragraph={{
+              rows: 1
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  const renderLoading = () => {
+    return cardSize === "medium" ? renderMediumLoading() : renderLargeLoading()
+  }
+
   const renderImage = () => {
     if (!showGraphic) {
       return ""
@@ -87,7 +130,7 @@ const LinkPreview = (props) => {
         className={`preview-link-component ${classNames(componentClassName)}`}>
         {state.loading ? (
           loadingComponent === undefined ? (
-            ""
+            renderLoading()
           ) : (
             loadingComponent
           )
@@ -101,15 +144,20 @@ const LinkPreview = (props) => {
             <div className="d-flex detail-link">
               <Fragment>{renderImage()}</Fragment>
               <div className="ps-2 pt-1 content-link-container">
-                <h6 style={{
+                <h6
+                  style={{
                     overflow: "hidden",
                     width: "100%",
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
                     WebkitLineClamp: minLine === undefined ? 1 : minLine,
                     lineHeight: "1.5em",
-                    maxHeight: `${(maxLine === undefined ? 1 : maxLine) * 1.5}em`
-                  }}>{state.data?.title}</h6>
+                    maxHeight: `${
+                      (maxLine === undefined ? 1 : maxLine) * 1.5
+                    }em`
+                  }}>
+                  {state.data?.title}
+                </h6>
                 <p
                   className="description"
                   style={{
@@ -119,7 +167,9 @@ const LinkPreview = (props) => {
                     WebkitBoxOrient: "vertical",
                     WebkitLineClamp: minLine === undefined ? 2 : minLine,
                     lineHeight: "1.5em",
-                    maxHeight: `${(maxLine === undefined ? 2 : maxLine) * 1.5}em`
+                    maxHeight: `${
+                      (maxLine === undefined ? 2 : maxLine) * 1.5
+                    }em`
                   }}>
                   {state.data?.description}
                 </p>

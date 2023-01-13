@@ -8,9 +8,9 @@ use stdClass;
 class LinkPreview extends ErpController
 {
 
-    public function get_link_content_post()
+    public function get_link_content_get()
     {
-        $postData = $this->request->getPost();
+        $postData = $this->request->getGet();
         $link = isset($postData['link']) ? $postData['link'] : '';
         $code =  base64_encode($link);
 
@@ -28,14 +28,10 @@ class LinkPreview extends ErpController
 
         $previewClient = new Client($link);
 
-        // Get previews from all available parsers
-        $previews = $previewClient->getPreviews();
-
         // Get a preview from specific parser
         $preview = $previewClient->getPreview('general');
 
         $result = $preview->toArray();
-        $result['description'] = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s';
         cache()->save($code, $result, getenv('default_cache_time'));
 
         return $this->respond([
