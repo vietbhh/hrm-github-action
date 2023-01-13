@@ -12,7 +12,7 @@ class LinkPreview extends ErpController
     {
         $postData = $this->request->getGet();
         $link = isset($postData['link']) ? $postData['link'] : '';
-        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '',$link));
+        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $link));
 
         if (strlen(trim($link)) == 0) {
             return $this->respond([

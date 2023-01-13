@@ -104,13 +104,18 @@ const LinkPreview = (props) => {
 
     if (
       (defaultImage === "" || defaultImage === undefined) &&
-      (state.data?.images === undefined || state.data?.images.length === 0)
+      (state.data?.images === undefined || state.data?.images.length === 0) &&
+      state.data?.cover === ""
     ) {
       return ""
     }
 
     const imgHref =
-      state.data.images.length === 0 ? defaultImage : [state.data?.images]
+      (state.data.images.length === 0 && state.data?.cover === "")
+        ? defaultImage
+        : state.data?.images.length === 0
+        ? state.data?.cover
+        : [state.data?.images]
 
     return (
       <div className="image-link-container">
