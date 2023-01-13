@@ -588,10 +588,12 @@ const ChatMessage = (props) => {
             <LinkPreview
               url={data?.file?.[0]?.file}
               maxLine={2}
-              minLine={1}
+              minLine={2}
               showGraphic={true}
+              defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+              componentClassName="link-preview"
             />
-            {/* <ReactTinyLink
+            <ReactTinyLink
               cardSize="small"
               showGraphic={true}
               maxLine={2}
@@ -599,7 +601,7 @@ const ChatMessage = (props) => {
               url={data?.file?.[0]?.file}
               loadSecureUrl={true}
               defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
-            /> */}
+            />
           </>
         )
       } else {

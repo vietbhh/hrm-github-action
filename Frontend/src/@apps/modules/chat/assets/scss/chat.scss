@@ -1985,6 +1985,22 @@ $font-family: Helvetica;
       }
     }
   }
+
+  .link-preview {
+    margin-top: 10px;
+    height: 120px;
+    min-height: 120px;
+
+    .content-link-container {
+      padding-top: 0 !important;
+    }
+  }
+
+  .chat-left {
+    .link-preview {
+      background-color: #f5f5f5;
+    }
+  }
 }
 
 .chat-content-reaction-dropdown-react {
