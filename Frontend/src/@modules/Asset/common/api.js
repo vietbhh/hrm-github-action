@@ -111,12 +111,9 @@ export const assetApi = {
   },
   async getDataAssetType(params) {
     const strParam = object2QueryString(params)
-    return await axiosApi.get(
-      `asset-type/get-data-asset-type?get${strParam}`,
-      {
-        disableLoading: true
-      }
-    )
+    return await axiosApi.get(`asset-type/get-data-asset-type?get${strParam}`, {
+      disableLoading: true
+    })
   },
   async updateAssetType(id, data) {
     return await axiosApi.post(
@@ -126,6 +123,14 @@ export const assetApi = {
   },
   async deleteAssetType(id) {
     return await axiosApi.post(`asset-type/delete/${id}`)
+  },
+  async exportExcel(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosApi.get("/asset/export-excel?" + stringFilters, {
+      responseType: "blob"
+    })
   }
 }
 
