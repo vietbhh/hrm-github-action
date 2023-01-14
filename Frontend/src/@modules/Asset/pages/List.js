@@ -23,7 +23,15 @@ import React, {
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { Navigate, NavLink } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader, Col, Row } from "reactstrap"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Spinner
+} from "reactstrap"
 import { Table } from "rsuite"
 import { AbilityContext } from "utility/context/Can"
 import { assetApi } from "../common/api"
@@ -166,7 +174,49 @@ const List = (props) => {
       </NavLink>
     )
   }
-
+  const exportExcel = () => {
+    setState({
+      loading: true
+    })
+    const params = {
+      search: state.search,
+      filters: state.filters
+    }
+    assetApi.exportExcel(params).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.success")
+      })
+      setState({
+        loading: false
+      })
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement("a")
+      link.href = url
+      link.setAttribute("download", `AssetList.xlsx`)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode.removeChild(link)
+    })
+  }
+  const exportButton = () => {
+    return (
+      <Button.Ripple
+        color="primary"
+        onClick={exportExcel}
+        disabled={state.loading}
+        className="rounded btn-tool d-flex align-items-center">
+        {state.loading ? (
+          <Spinner size="sm" />
+        ) : (
+          <i className="far fa-download"></i>
+        )}{" "}
+        &nbsp;
+        <span className="align-self-center ms-50" style={{ fontSize: "14px" }}>
+          {useFormatMessage("app.export")}
+        </span>
+      </Button.Ripple>
+    )
+  }
   const handleDelete = (id) => {
     SwAlert.showWarning({
       confirmButtonText: useFormatMessage("button.delete")
@@ -521,7 +571,9 @@ const List = (props) => {
             fieldData={{
               ...metasAssetType.asset_type_group
             }}
-            placeholder={useFormatMessage("modules.asset_types.text.asset_type_group_short")}
+            placeholder={useFormatMessage(
+              "modules.asset_types.text.asset_type_group_short"
+            )}
             onChange={(e) => {
               loadData({
                 filters: { ...state.filters, asset_group: e ? e.value : 0 }
@@ -564,6 +616,8 @@ const List = (props) => {
         <div className="ms-1 text-end">{addButton()}</div>
 
         <div className="ms-1 text-end">{importButton()}</div>
+
+        <div className="ms-1 text-end">{exportButton()}</div>
       </div>
 
       <Card className="rounded ">
