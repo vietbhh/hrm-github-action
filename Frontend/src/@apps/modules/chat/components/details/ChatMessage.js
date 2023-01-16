@@ -585,14 +585,14 @@ const ChatMessage = (props) => {
               </p>
             )} */}
 
-            <LinkPreview
+            {/* <LinkPreview
               url={data?.file?.[0]?.file}
               maxLine={2}
               minLine={2}
               showGraphic={true}
               defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
               componentClassName="link-preview"
-            />
+            /> */}
             <ReactTinyLink
               cardSize="small"
               showGraphic={true}
