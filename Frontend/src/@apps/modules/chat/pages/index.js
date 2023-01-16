@@ -762,7 +762,12 @@ const AppChat = (props) => {
           .filter((x) => !unseen.includes(x))
           .concat(unseen.filter((x) => !mute.includes(x)))
         if (!_.isEmpty(receivers)) {
-          handleSendNotification(groupId, msg, dataGroups, receivers)
+          handleSendNotification(
+            groupId,
+            handleLastMessage(docData.type, msg),
+            dataGroups,
+            receivers
+          )
         }
         let dataGroup = {
           last_message: handleLastMessage(docData.type, msg),
@@ -841,7 +846,12 @@ const AppChat = (props) => {
         }
 
         // ** notification
-        handleSendNotification(newGroupId, msg, docData, idEmployee)
+        handleSendNotification(
+          newGroupId,
+          handleLastMessage(type, msg),
+          docData,
+          idEmployee
+        )
 
         setDoc(
           doc(collection(db, `${firestoreDb}/chat_messages/${newGroupId}`)),

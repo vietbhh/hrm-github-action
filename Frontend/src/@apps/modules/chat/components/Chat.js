@@ -598,7 +598,6 @@ const ChatLog = (props) => {
               height="36"
               width="36"
             />
-            <span className="avatar-status-online"></span>
           </div>
         )
       }
