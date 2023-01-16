@@ -117,7 +117,7 @@ const LinkPreview = (props) => {
         : state.data?.images.length === 0
         ? state.data?.cover
         : _.first(state.data?.images)
-        console.log(imgHref)
+        
     return (
       <div className="image-link-container">
         <div

@@ -1,4 +1,3 @@
-import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { useMergedState } from "@apps/utility/common"
 import { isEmpty } from "lodash"
@@ -69,16 +68,6 @@ const Profile = (props) => {
         page="profile"
         api={api}
       />
-      <div className="w-25">
-        <LinkPreview
-          url="https://hello.lifestud.io/dashboard"
-          showGraphic={true}
-          defaultImage="https://hello.lifestud.io/assets/images/link.png"
-          minLine={2}
-          maxLine={4}
-          cardSize="medium"
-        />
-      </div>
     </Fragment>
   )
 }
