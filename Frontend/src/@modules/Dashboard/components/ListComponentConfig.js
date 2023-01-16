@@ -11,6 +11,7 @@ import ClockInOutWidget from "./details/clock/ClockInOutWidget"
 import FollowUp from "./details/follow/FollowUp"
 import MyTimeOff from "./MyTimeOff"
 import PendingApproval from "./PendingApproval"
+import CardStatistic from "./CardStatistic"
 
 const BackgroundWidget = () => {
   return <img className="img" src={WidgetPreview1} />
@@ -24,6 +25,27 @@ export const ListComponentConfig = (props) => {
       component: <CardCalendar showCalendarDescription={false} {...props} />,
       data_grid: {
         i: "upcoming_events",
+        x: 0,
+        y: 0,
+        w: 2,
+        h: 10,
+        minW: 1,
+        minH: 6,
+        maxW: 2,
+        static: false,
+        isDraggable: true
+      },
+      background: <BackgroundWidget />,
+      show: false,
+      action: "login",
+      resource: "app"
+    },
+    {
+      id: "statistic",
+      title: useFormatMessage("modules.dashboard.statistic"),
+      component: <CardStatistic {...props} />,
+      data_grid: {
+        i: "statistic",
         x: 0,
         y: 0,
         w: 2,
