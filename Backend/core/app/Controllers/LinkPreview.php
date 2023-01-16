@@ -25,6 +25,8 @@ class LinkPreview extends ErpController
         }
 
         $url = $match[0][0];
+        $host = parse_url($url)['host'];
+        $sourceUrl = (!$this->_checkValidUrl($host)) ? parse_url($url)['scheme'] . '://' . $host : $host;
 
         $client = new Client();
 
@@ -39,8 +41,24 @@ class LinkPreview extends ErpController
 
             $statusCode = $client->getResponse()->getStatusCode();
             if ($statusCode == 200) {
+                if ($this->_isImageUrl($url)) {
+                    $urlExtension = strtolower(strrchr($url, '.'));
+                    $imageData = base64_encode(file_get_contents($url));
+                    $results['title'] = $url;
+                    $results['cover'] = '';
+                    $results['url'] = $url;
+                    $results['host'] = $host;
+                    $results['description'] = '';
+                    $results['images'] = ["data:image/" . $urlExtension . ";base64," . $imageData];
+
+                    cache()->save($code, json_encode($results), getenv('default_cache_time'));
+
+                    return $this->respond([
+                        'result' => $results
+                    ]);
+                }
+
                 $title = $crawler->filter('title')->text();
-                $host = parse_url($url)['host'];
 
                 if ($crawler->filterXpath('//meta[@name="description"]')->count()) {
                     $description = $crawler->filterXpath('//meta[@name="description"]')->attr('content');
@@ -62,8 +80,8 @@ class LinkPreview extends ErpController
 
                         $image = array_values($imageTemp);
                         foreach ($image as $key => $row) {
-                            if (strpos($image[$key], 'https') === false) {
-                                $image[$key] = $host . $image[$key];
+                            if (!$this->_checkValidUrl($image[$key])) {
+                                $image[$key] = $sourceUrl . $image[$key];
                             }
                         }
                     } else {
@@ -74,8 +92,9 @@ class LinkPreview extends ErpController
                 if (count($image) == 0) {
                     $doc = new DOMDocument();
                     $doc->strictErrorChecking = FALSE;
-                    libxml_use_internal_errors(false);
+                    libxml_use_internal_errors(true);
                     $doc->loadHTML(file_get_contents($url));
+                    libxml_clear_errors();
                     $xml = simplexml_import_dom($doc);
                     $arr = $xml->xpath('//link[@rel="shortcut icon"]');
                     $image = isset($arr[0]['href']) ? array_values(json_decode(json_encode($arr[0]['href']), true)) : [];
@@ -101,5 +120,33 @@ class LinkPreview extends ErpController
         } catch (Exception $e) {
             return $this->fail($e->getMessage());
         }
+    }
+
+    // ** support function
+    private function _checkValidUrl($url)
+    {
+        if (strpos($url, 'https') === false || strpos($url, 'https') === '') {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function _isImageUrl($url)
+    {
+        $imageExtensions = array(
+            '.jpg',
+            '.jpeg',
+            '.gif',
+            '.png',
+            '.flv'
+        );
+        $urlExtension = strtolower(strrchr($url, '.'));
+        
+        if (in_array($urlExtension, $imageExtensions)) {
+            return true;
+        }
+
+        return false;
     }
 }

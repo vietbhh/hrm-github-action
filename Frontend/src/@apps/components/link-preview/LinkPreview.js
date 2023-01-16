@@ -153,7 +153,19 @@ const LinkPreview = (props) => {
                 }}>
                 {useFormatMessage("modules.link_preview.text.page_not_found")}
               </h6>
-              <p className="description">{url}</p>
+              <p
+                className="description"
+                style={{
+                  overflow: "hidden",
+                  width: "100%",
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: minLine === undefined ? 2 : minLine,
+                  lineHeight: "1.5em",
+                  maxHeight: `${(maxLine === undefined ? 2 : maxLine) * 1.5}em`
+                }}>
+                {url}
+              </p>
             </div>
           </div>
         </a>
