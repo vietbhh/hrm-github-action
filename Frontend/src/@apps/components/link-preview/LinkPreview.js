@@ -1,6 +1,6 @@
 // ** React Imports
 import { Fragment, useEffect } from "react"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classNames from "classnames"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { Skeleton, Space } from "antd"
@@ -44,6 +44,7 @@ const LinkPreview = (props) => {
       })
       .catch((err) => {
         setState({
+          data: {},
           loading: false
         })
       })
@@ -111,12 +112,12 @@ const LinkPreview = (props) => {
     }
 
     const imgHref =
-      (state.data.images.length === 0 && state.data?.cover === "")
+      state.data?.images.length === 0 && state.data?.cover === ""
         ? defaultImage
         : state.data?.images.length === 0
         ? state.data?.cover
-        : [state.data?.images]
-
+        : _.first(state.data?.images)
+        console.log(imgHref)
     return (
       <div className="image-link-container">
         <div
@@ -127,59 +128,89 @@ const LinkPreview = (props) => {
     )
   }
 
+  const renderLinkContent = () => {
+    if (Object.keys(state.data).length === 0) {
+      return (
+        <a
+          href={url}
+          className={classNames({
+            "medium-preview-card min-size": cardSize === "medium",
+            "large-preview-card min-size": cardSize === "large"
+          })}
+          target="_blank">
+          <div className="d-flex detail-link">
+            <div className="ps-2 pt-1 content-link-container">
+              <h6
+                className="mb-0"
+                style={{
+                  overflow: "hidden",
+                  width: "100%",
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: minLine === undefined ? 1 : minLine,
+                  lineHeight: "1.5em",
+                  maxHeight: `${(maxLine === undefined ? 1 : maxLine) * 1.5}em`
+                }}>
+                {useFormatMessage("modules.link_preview.text.page_not_found")}
+              </h6>
+              <p className="description">{url}</p>
+            </div>
+          </div>
+        </a>
+      )
+    }
+
+    return (
+      <a
+        href={url}
+        className={classNames({
+          "medium-preview-card": cardSize === "medium",
+          "large-preview-card": cardSize === "large"
+        })}
+        target="_blank">
+        <div className="d-flex detail-link">
+          <Fragment>{renderImage()}</Fragment>
+          <div className="ps-2 pt-1 content-link-container">
+            <h6
+              style={{
+                overflow: "hidden",
+                width: "100%",
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: minLine === undefined ? 1 : minLine,
+                lineHeight: "1.5em",
+                maxHeight: `${(maxLine === undefined ? 1 : maxLine) * 1.5}em`
+              }}>
+              {state.data?.title}
+            </h6>
+            <p
+              className="description"
+              style={{
+                overflow: "hidden",
+                width: "100%",
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: minLine === undefined ? 2 : minLine,
+                lineHeight: "1.5em",
+                maxHeight: `${(maxLine === undefined ? 2 : maxLine) * 1.5}em`
+              }}>
+              {state.data?.description}
+            </p>
+          </div>
+        </div>
+      </a>
+    )
+  }
+
   const renderComponent = () => {
     return (
       <div
         className={`preview-link-component ${classNames(componentClassName)}`}>
-        {state.loading ? (
-          loadingComponent === undefined ? (
-            renderLoading()
-          ) : (
-            loadingComponent
-          )
-        ) : (
-          <a
-            href={url}
-            className={classNames({
-              "medium-preview-card": cardSize === "medium",
-              "large-preview-card": cardSize === "large"
-            })}>
-            <div className="d-flex detail-link">
-              <Fragment>{renderImage()}</Fragment>
-              <div className="ps-2 pt-1 content-link-container">
-                <h6
-                  style={{
-                    overflow: "hidden",
-                    width: "100%",
-                    display: "-webkit-box",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: minLine === undefined ? 1 : minLine,
-                    lineHeight: "1.5em",
-                    maxHeight: `${
-                      (maxLine === undefined ? 1 : maxLine) * 1.5
-                    }em`
-                  }}>
-                  {state.data?.title}
-                </h6>
-                <p
-                  className="description"
-                  style={{
-                    overflow: "hidden",
-                    width: "100%",
-                    display: "-webkit-box",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: minLine === undefined ? 2 : minLine,
-                    lineHeight: "1.5em",
-                    maxHeight: `${
-                      (maxLine === undefined ? 2 : maxLine) * 1.5
-                    }em`
-                  }}>
-                  {state.data?.description}
-                </p>
-              </div>
-            </div>
-          </a>
-        )}
+        {state.loading
+          ? loadingComponent === undefined
+            ? renderLoading()
+            : loadingComponent
+          : renderLinkContent()}
       </div>
     )
   }

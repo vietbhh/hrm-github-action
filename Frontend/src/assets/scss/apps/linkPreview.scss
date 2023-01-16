@@ -12,7 +12,8 @@
         border-radius: 15px;
     }
 
-    .ant-skeleton-title, .ant-skeleton-paragraph li {
+    .ant-skeleton-title,
+    .ant-skeleton-paragraph li {
         border-radius: 5px;
     }
 
@@ -82,5 +83,9 @@
                 }
             }
         }
+    }
+
+    .min-size {
+        height: auto !important;
     }
 }

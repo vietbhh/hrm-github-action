@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use DOMDocument;
 use Goutte\Client;
 use Exception;
 use stdClass;
@@ -28,9 +29,9 @@ class LinkPreview extends ErpController
         $client = new Client();
 
         if ($dataCache = cache($code)) {
-            return $this->respond([
-                'result' => $dataCache
-            ]);
+            /*return $this->respond([
+                'result' => json_decode($dataCache, true)
+            ]);*/
         }
 
         try {
@@ -39,29 +40,55 @@ class LinkPreview extends ErpController
             $statusCode = $client->getResponse()->getStatusCode();
             if ($statusCode == 200) {
                 $title = $crawler->filter('title')->text();
+                $host = parse_url($url)['host'];
 
                 if ($crawler->filterXpath('//meta[@name="description"]')->count()) {
                     $description = $crawler->filterXpath('//meta[@name="description"]')->attr('content');
                 }
 
+                $image = [];
                 if ($crawler->filterXpath('//meta[@name="og:image"]')->count()) {
-                    $image = $crawler->filterXpath('//meta[@name="og:image"]')->attr('content');
+                    $image[] = $crawler->filterXpath('//meta[@name="og:image"]')->attr('content');
                 } elseif ($crawler->filterXpath('//meta[@name="twitter:image"]')->count()) {
-                    $image = $crawler->filterXpath('//meta[@name="twitter:image"]')->attr('content');
+                    $image[] = $crawler->filterXpath('//meta[@name="twitter:image"]')->attr('content');
                 } else {
                     if ($crawler->filter('img')->count()) {
-                        $image = $crawler->filter('img')->attr('src');
+                        $imageTemp = $crawler->filter('img')->each(function ($item) {
+                            return $item->attr('src');
+                        });
+                        $imageTemp = array_filter($imageTemp, function ($value) {
+                            return !is_null($value) && $value !== '';
+                        });
+
+                        $image = array_values($imageTemp);
+                        foreach ($image as $key => $row) {
+                            if (strpos($image[$key], 'https') === false) {
+                                $image[$key] = $host . $image[$key];
+                            }
+                        }
                     } else {
-                        $image = 'no_image';
+                        $image = [];
                     }
+                }
+
+                if (count($image) == 0) {
+                    $doc = new DOMDocument();
+                    $doc->strictErrorChecking = FALSE;
+                    libxml_use_internal_errors(false);
+                    $doc->loadHTML(file_get_contents($url));
+                    $xml = simplexml_import_dom($doc);
+                    $arr = $xml->xpath('//link[@rel="shortcut icon"]');
+                    $image = isset($arr[0]['href']) ? array_values(json_decode(json_encode($arr[0]['href']), true)) : [];
                 }
 
                 $results['title'] = $title;
                 $results['cover'] = '';
                 $results['url'] = $url;
-                $results['host'] = parse_url($url)['host'];
+                $results['host'] = $host;
                 $results['description'] = isset($description) ? $description : '';
                 $results['images'] = $image;
+
+                cache()->save($code, json_encode($results), getenv('default_cache_time'));
 
                 return $this->respond([
                     'result' => $results
