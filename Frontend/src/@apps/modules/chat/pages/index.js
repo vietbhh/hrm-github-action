@@ -1527,23 +1527,27 @@ const AppChat = (props) => {
     localStorage.setItem("formChatFocus", false)
   }, [])
 
-  // ** idleTimer
-  const onIdle = () => {
-    // Close Modal Prompt
-    // Do some idle action like log out your user
-  }
-
-  const onActive = (event) => {
-    // Close Modal Prompt
-    // Do some active action
-  }
-
   const onAction = (event) => {
     localStorage.setItem("chatAppHidden", event.target.hidden)
     // Do something when a user triggers a watched event
     if (event.type === "mousedown") {
+    }
+  }
+
+  useEffect(() => {
+    function handle(event) {
       let checkIssetDiv = false
       let checkFocusFormChat = false
+      const _className_1 = event?.toElement?.offsetParent?.className
+      if (!_.isUndefined(_className_1)) {
+        const check_form_send_message =
+          _className_1.includes("form-send-message")
+        if (check_form_send_message === true) {
+          checkIssetDiv = true
+          checkFocusFormChat = true
+        }
+      }
+
       const _className_2 =
         event?.toElement?.offsetParent?.offsetParent?.className
       if (!_.isUndefined(_className_2)) {
@@ -1554,16 +1558,18 @@ const AppChat = (props) => {
           "chat-content-parent"
         )
         const check_chat_app_form = _className_2.includes("chat-app-form")
+        const check_DraftEditor_root = _className_2.includes("DraftEditor-root")
         if (
           check_div_li_chat === true ||
           check_list_group === true ||
           check_user_chats === true ||
           check_chat_content_parent === true ||
-          check_chat_app_form === true
+          check_chat_app_form === true ||
+          check_DraftEditor_root === true
         ) {
           checkIssetDiv = true
         }
-        if (check_chat_app_form === true) {
+        if (check_chat_app_form === true || check_DraftEditor_root === true) {
           checkFocusFormChat = true
         }
       }
@@ -1605,15 +1611,17 @@ const AppChat = (props) => {
       localStorage.setItem("chatAppFocus", checkIssetDiv)
       localStorage.setItem("formChatFocus", checkFocusFormChat)
     }
-  }
+
+    document.addEventListener("mousedown", handle)
+
+    return () => {
+      document.addEventListener("mousedown", handle)
+    }
+  }, [])
 
   return (
     <Fragment>
-      <IdleTimerProvider
-        timeout={1000 * 60}
-        onIdle={onIdle}
-        onActive={onActive}
-        onAction={onAction}>
+      <IdleTimerProvider timeout={1000 * 60} onAction={onAction}>
         <Sidebar
           store={store}
           sidebar={sidebar}
