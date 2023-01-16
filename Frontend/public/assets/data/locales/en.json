@@ -997,6 +997,11 @@
         "name": "Folder name",
         "description": "Description"
       }
+    },
+    "link_preview": {
+      "text": {
+        "page_not_found": "Page not found"
+      }
     }
   },
   "layout": {
