@@ -988,7 +988,8 @@
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",
-        "user_is_not_active": "User is not active"
+        "user_is_not_active": "User is not active",
+        "leave_group_error": "Please add another admin before leaving the group"
       }
     },
     "drive": {

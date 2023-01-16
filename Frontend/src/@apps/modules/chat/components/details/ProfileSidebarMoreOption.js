@@ -1,10 +1,61 @@
 import { useFormatMessage } from "@apps/utility/common"
-import React, { Fragment } from "react"
+import notification from "@apps/utility/notification"
+import SwAlert from "@apps/utility/SwAlert"
+import { arrayRemove } from "firebase/firestore"
+import { Fragment } from "react"
 
 const ProfileSidebarMoreOption = (props) => {
-  const { handleShowMoreOption } = props
+  const {
+    handleShowMoreOption,
+    selectedGroup,
+    handleUpdateGroup,
+    userId,
+    setActive,
+    setActiveFullName,
+    handleDeleteGroup
+  } = props
 
-  const handleDeleteChat = () => {}
+  const handleUpdateLeaveChat = () => {
+    const timestamp = Date.now()
+    const docData = {
+      last_message: useFormatMessage("modules.chat.text.leave_chat"),
+      last_user: userId,
+      timestamp: timestamp,
+      user: arrayRemove(userId),
+      admin: arrayRemove(userId),
+      mute: arrayRemove(userId),
+      pin: arrayRemove(userId),
+      unseen: arrayRemove(userId)
+    }
+    handleUpdateGroup(selectedGroup.id, docData)
+    window.history.replaceState(null, "", `/chat`)
+    setActive(0)
+    setActiveFullName("")
+  }
+
+  const handleLeaveChat = () => {
+    SwAlert.showWarning({
+      confirmButtonText: useFormatMessage("button.confirm"),
+      html: ""
+    }).then((res) => {
+      if (res.value) {
+        if (selectedGroup.admin.length === 1) {
+          if (selectedGroup.user.length > 1) {
+            notification.showWarning({
+              text: useFormatMessage(
+                "modules.chat.notification.leave_group_error"
+              )
+            })
+          } else {
+            handleUpdateLeaveChat()
+            handleDeleteGroup(selectedGroup.id)
+          }
+        } else {
+          handleUpdateLeaveChat()
+        }
+      }
+    })
+  }
 
   return (
     <Fragment>
@@ -19,13 +70,17 @@ const ProfileSidebarMoreOption = (props) => {
         </div>
       </div>
       <div className="file-view-body more-option-body">
-        <div className="more-option-body-div-child more-option-body-div-bg">
-          <div className="more-option-body-div-content">
-            <span className="text-left">
-              {useFormatMessage("modules.chat.text.leave_chat")}
-            </span>
+        {selectedGroup?.type === "group" && (
+          <div className="more-option-body-div-child more-option-body-div-bg">
+            <div
+              className="more-option-body-div-content"
+              onClick={() => handleLeaveChat()}>
+              <span className="text-left text-color-red">
+                {useFormatMessage("modules.chat.text.leave_chat")}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Fragment>
   )

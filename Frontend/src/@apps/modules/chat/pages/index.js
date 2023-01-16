@@ -26,6 +26,7 @@ import {
   addDoc,
   arrayRemove,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -203,6 +204,12 @@ const AppChat = (props) => {
 
   // ** Set user function for Right Sidebar
   const handleUser = (obj) => setUser(obj)
+
+  const handleDefault = () => {
+    setStore({ selectedUser: {} })
+    handleUser({})
+    handleOverlayClick()
+  }
 
   // ** function
   const setUnread = (num) => {
@@ -412,6 +419,10 @@ const AppChat = (props) => {
       doc(db, `${firestoreDb}/chat_groups/groups`, groupId),
       dataUpdate
     )
+  }
+
+  const handleDeleteGroup = (groupId) => {
+    deleteDoc(doc(db, `${firestoreDb}/chat_groups/groups`, groupId))
   }
 
   const handleLastMessage = (type, msg) => {
@@ -1309,6 +1320,9 @@ const AppChat = (props) => {
     setEmptyHistory()
     setEmptyDataScrollBottom()
     setUnread(0)
+    if (_.isEmpty(active) && _.isEmpty(activeFullName)) {
+      handleDefault()
+    }
     if (_.isEmpty(active) && !_.isEmpty(activeFullName)) {
       const employeeIndex = store.contacts.findIndex(
         (item) => item.username === activeFullName
@@ -1679,6 +1693,7 @@ const AppChat = (props) => {
                 setActive={setActive}
                 setActiveFullName={setActiveFullName}
                 imageGroup={imageGroup}
+                handleDeleteGroup={handleDeleteGroup}
               />
             </div>
           </div>
