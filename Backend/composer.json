@@ -18,8 +18,9 @@
     "google/apiclient": "^2.12.1",
     "google/cloud-storage": "dev-main",
     "guzzlehttp/guzzle": "7.5.x-dev",
+    "phpoffice/phpspreadsheet": "dev-master",
     "dusterio/link-preview": "dev-master",
-    "phpoffice/phpspreadsheet": "dev-master"
+    "fabpot/goutte": "dev-master"
   },
   "require-dev": {
     "mikey179/vfsstream": "1.6.*",

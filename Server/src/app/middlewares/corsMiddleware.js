@@ -1,4 +1,5 @@
 export default (req, res, next) => {
+  console.log(req)
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader(
     "Access-Control-Allow-Methods",
