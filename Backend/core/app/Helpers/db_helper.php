@@ -152,22 +152,22 @@ if (!function_exists('loadData')) {
 			if (!in_array($isLoadOptions, $textFieldFilter)) $textFieldFilter[] = $isLoadOptions;
 			if (!empty($defaultOptions)) {
 				if (!is_array($defaultOptions)) $defaultOptions = explode(',', $defaultOptions);
-				$builder = $builder->orWhereIn('id', $defaultOptions);
+				$builder->orWhereIn('id', $defaultOptions);
 			}
 		}
 
 		if ($search && $textFieldFilter) {
-			$builder = $builder->groupStart();
+			$builder->groupStart();
 			foreach ($textFieldFilter as $item) {
-				$builder = $builder->orLike('LOWER(' . $item . ')', strtolower($search));
+				$builder->orLike('LOWER(' . $item . ')', strtolower($search));
 			}
-			$builder = $builder->groupEnd();
+			$builder->groupEnd();
 		}
 
 		if (!empty($data['filters'])) $data['filters'] = array_filter($data['filters']);
 
 		if (isset($data['filters']) && !empty($data['filters'])) {
-			$query = $builder->where($data['filters']);
+			$builder->where($data['filters']);
 		}
 		$result['recordsTotal'] = $query->countAllResults(false);
 

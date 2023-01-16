@@ -194,7 +194,9 @@ class Notifications
 		$isSocketEnable = preference('sockets');
 		if ($isSocketEnable) {
 			$nodeServer = \Config\Services::nodeServer();
-			$result = $nodeServer->node->get('/notification/send');
+			$result = $nodeServer->node->post('/notification/send',[
+
+			]);
 			echo "<pre>";
 			print_r($nodeServer->node);
 			echo "</pre>";
