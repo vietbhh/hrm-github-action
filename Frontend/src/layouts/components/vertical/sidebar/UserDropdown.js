@@ -33,7 +33,8 @@ const UserDropdown = ({
   menuHover,
   menuCollapsed,
   windowWidth,
-  windowWidthMin
+  windowWidthMin,
+  userId
 }) => {
   // ** Store Vars
   const dispatch = useDispatch()
@@ -67,7 +68,7 @@ const UserDropdown = ({
             src={userAvatar}
             imgHeight="40"
             imgWidth="40"
-            status="online"
+            userId={userId}
           />
           {!sidebarCollapsed && (
             <>

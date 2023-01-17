@@ -22,14 +22,14 @@ class LinkPreview extends ErpController
             ]);
         }
 
-        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $url));
+        $code = urlencode(preg_replace('/[^A-Za-z0-9\-]/', '', $url));
         $results = [];
         $host = parse_url($url)['host'];
         $sourceUrl = (!$this->_checkValidUrl($host)) ? parse_url($url)['scheme'] . '://' . $host : $host;
 
         $client = new Client();
 
-        if ($dataCache = cache($code)) {
+        if ($dataCache = $this->_getCacheLinkPreview($code)) {
             return $this->respond([
                 'result' => json_decode($dataCache, true)
             ]);
@@ -52,7 +52,7 @@ class LinkPreview extends ErpController
                     $results['description'] = '';
                     $results['images'] = ["data:image/" . $urlExtension . ";base64," . $imageData];
 
-                    cache()->save($code, json_encode($results), 150);
+                    $this->_handleCacheLinkPreview($code, $results);
 
                     return $this->respond([
                         'result' => $results
@@ -109,18 +109,20 @@ class LinkPreview extends ErpController
                 $results['description'] = !empty($description) ? $description : $url;
                 $results['images'] = $image;
 
-                cache()->save($code, json_encode($results), 150);
+                $this->_handleCacheLinkPreview($code, $results);
 
                 return $this->respond([
                     'result' => $results
                 ]);
             } else {
-                
+                $this->_handleCacheLinkPreview($code, new stdClass());
+
                 return $this->respond([
                     'result' => new stdClass()
                 ]);
             }
         } catch (Exception $e) {
+            $this->_handleCacheLinkPreview($code, new stdClass());
             
             return $this->fail($e->getMessage());
         }
@@ -152,5 +154,26 @@ class LinkPreview extends ErpController
         }
 
         return false;
+    }
+
+    private function _handleCacheLinkPreview($code, $result)
+    {
+        $dataCache = $this->_getCacheLinkPreview();
+        $dataCache[$code] = $result;
+
+        cache()->save('link_preview_cache', json_encode($dataCache), 150);
+
+        return true;
+    }
+
+    private function _getCacheLinkPreview($code = '')
+    {
+        $dataCache = json_decode(cache('link_preview_cache'), true);
+
+        if ($code != '') {
+            return isset($dataCache[$code]) ? $dataCache[$code] : false;
+        }   
+
+        return $dataCache;
     }
 }
