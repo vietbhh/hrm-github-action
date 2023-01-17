@@ -1,3 +1,4 @@
+import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { formatTime } from "@apps/modules/chat/common/common"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Image } from "antd"
@@ -531,16 +532,16 @@ const index = (props) => {
                   {_.map(state.dataListenLink, (value, index) => {
                     return _.map(value.file, (item, key) => {
                       return (
-                        <ReactTinyLink
-                          key={`${index}${key}`}
-                          cardSize="small"
-                          showGraphic={true}
-                          maxLine={2}
-                          minLine={1}
-                          url={item.file}
-                          loadSecureUrl={true}
-                          defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
-                        />
+                        <Fragment key={`${index}${key}`}>
+                          <LinkPreview
+                            url={item.file}
+                            maxLine={1}
+                            minLine={1}
+                            showGraphic={true}
+                            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                            componentClassName="link-preview link-preview-profile-sidebar"
+                          />
+                        </Fragment>
                       )
                     })
                   })}
@@ -548,16 +549,26 @@ const index = (props) => {
                   {_.map(state.dataLink, (value, index) => {
                     return _.map(value.file, (item, key) => {
                       return (
-                        <ReactTinyLink
-                          key={`${index}${key}`}
-                          cardSize="small"
-                          showGraphic={true}
-                          maxLine={2}
-                          minLine={1}
-                          url={item.file}
-                          loadSecureUrl={true}
-                          defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
-                        />
+                        <Fragment key={`${index}${key}`}>
+                          <LinkPreview
+                            url={item.file}
+                            maxLine={1}
+                            minLine={1}
+                            showGraphic={true}
+                            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                            componentClassName="link-preview link-preview-profile-sidebar"
+                          />
+
+                          {/* <ReactTinyLink
+                            cardSize="small"
+                            showGraphic={true}
+                            maxLine={2}
+                            minLine={1}
+                            url={item.file}
+                            loadSecureUrl={true}
+                            defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                          /> */}
+                        </Fragment>
                       )
                     })
                   })}

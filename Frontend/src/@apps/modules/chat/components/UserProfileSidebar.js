@@ -79,8 +79,12 @@ const UserProfileSidebar = (props) => {
     if (values.editFullName) {
       dataUpdate = { ...dataUpdate, name: values.editFullName }
     }
-    if (values.editDes) {
-      dataUpdate = { ...dataUpdate, des: values.editDes }
+    if (state.showInputDes) {
+      if (values.editDes) {
+        dataUpdate = { ...dataUpdate, des: values.editDes }
+      } else {
+        dataUpdate = { ...dataUpdate, des: "Never settle!" }
+      }
     }
 
     handleUpdateGroup(state.selectedGroup.id, {

@@ -2044,6 +2044,7 @@ $font-family: Helvetica;
       .detail-link {
         gap: 1rem;
         width: 100%;
+        justify-content: start;
 
         .image-link-container {
           min-width: 90px;
@@ -2063,6 +2064,7 @@ $font-family: Helvetica;
         }
 
         .content-link-container {
+          width: auto;
           padding: 0 !important;
           display: flex;
           flex-direction: column;
@@ -2070,11 +2072,100 @@ $font-family: Helvetica;
         }
       }
     }
+
+    // * loading
+    &.component-loading {
+      > div {
+        align-items: center;
+
+        > div {
+          margin-right: 1rem !important;
+
+          > .ant-skeleton {
+            .ant-skeleton-image {
+              min-width: 90px;
+              min-height: 90px;
+              width: 90px;
+              height: 90px;
+            }
+          }
+        }
+      }
+    }
+
+    &.no-image {
+      height: 70px;
+      min-height: 70px;
+    }
   }
 
   .chat-left {
     .link-preview {
       background-color: #f5f5f5;
+    }
+  }
+
+  .link-preview-profile-sidebar {
+    border: 1px solid rgb(225, 232, 237);
+    height: 60px !important;
+    min-height: 60px !important;
+    padding: 0 5px;
+    margin-top: 5px;
+
+    .medium-preview-card {
+      .detail-link {
+        .image-link-container {
+          min-width: 50px;
+          min-height: 50px;
+          width: 50px;
+          height: 50px;
+
+          .image-link {
+            width: 50px;
+            height: 50px;
+          }
+        }
+
+        .content-link-container {
+          p,
+          h6 {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    // * loading
+    &.component-loading {
+      > div {
+        > div {
+          > .ant-skeleton {
+            margin-top: 3px;
+
+            .ant-skeleton-image {
+              min-width: 50px;
+              min-height: 50px;
+              width: 50px;
+              height: 50px;
+              padding: 10px;
+            }
+          }
+        }
+
+        > .h-100 {
+          .ant-skeleton {
+            .ant-skeleton-content {
+              .ant-skeleton-title {
+                display: none;
+              }
+
+              .ant-skeleton-paragraph {
+                margin-top: 2px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
