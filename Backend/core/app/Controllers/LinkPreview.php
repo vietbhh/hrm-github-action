@@ -31,7 +31,7 @@ class LinkPreview extends ErpController
 
         if ($dataCache = $this->_getCacheLinkPreview($code)) {
             return $this->respond([
-                'result' => json_decode($dataCache, true)
+                'result' => $dataCache
             ]);
         }
 
