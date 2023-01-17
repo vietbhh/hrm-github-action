@@ -2035,8 +2035,10 @@ $font-family: Helvetica;
 
   .link-preview {
     margin-top: 10px;
-    height: 120px;
-    min-height: 120px;
+    margin-bottom: 5px;
+    height: 110px;
+    min-height: 110px;
+    padding: 10px;
 
     .medium-preview-card {
       display: flex;
