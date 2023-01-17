@@ -13,20 +13,17 @@ class LinkPreview extends ErpController
     public function get_link_content_get()
     {
         header('Content-Type: text/html; charset=utf-8');
-
+        
         $postData = $this->request->getGet();
-        $content  = isset($postData['link']) ? $postData['link'] : '';
-        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $content));
-        $urls = preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match);
-        $results = [];
-
-        if ($urls <= 0) {
+        $url  = isset($postData['link']) ? $postData['link'] : '';
+        if ($url == '') {
             return $this->respond([
                 'result' => new stdClass
             ]);
         }
 
-        $url = $match[0][0];
+        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $url));
+        $results = [];
         $host = parse_url($url)['host'];
         $sourceUrl = (!$this->_checkValidUrl($host)) ? parse_url($url)['scheme'] . '://' . $host : $host;
 
