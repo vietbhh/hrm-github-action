@@ -13,20 +13,17 @@ class LinkPreview extends ErpController
     public function get_link_content_get()
     {
         header('Content-Type: text/html; charset=utf-8');
-
+        
         $postData = $this->request->getGet();
-        $content  = isset($postData['link']) ? $postData['link'] : '';
-        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $content));
-        $urls = preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match);
-        $results = [];
-
-        if ($urls <= 0) {
+        $url  = isset($postData['link']) ? $postData['link'] : '';
+        if ($url == '') {
             return $this->respond([
                 'result' => new stdClass
             ]);
         }
 
-        $url = $match[0][0];
+        $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $url));
+        $results = [];
         $host = parse_url($url)['host'];
         $sourceUrl = (!$this->_checkValidUrl($host)) ? parse_url($url)['scheme'] . '://' . $host : $host;
 
@@ -44,7 +41,7 @@ class LinkPreview extends ErpController
             ]);
             $crawler = $client->request('GET', $url);
             $statusCode = $client->getResponse()->getStatusCode();
-            if ($statusCode == 200) {
+            if ($statusCode == 200 || $statusCode == 404) {
                 if ($this->_isImageUrl($url)) {
                     $urlExtension = strtolower(strrchr($url, '.'));
                     $imageData = base64_encode(file_get_contents($url));
@@ -55,7 +52,7 @@ class LinkPreview extends ErpController
                     $results['description'] = '';
                     $results['images'] = ["data:image/" . $urlExtension . ";base64," . $imageData];
 
-                    cache()->save($code, json_encode($results), getenv('default_cache_time'));
+                    cache()->save($code, json_encode($results), 150);
 
                     return $this->respond([
                         'result' => $results
@@ -112,17 +109,19 @@ class LinkPreview extends ErpController
                 $results['description'] = !empty($description) ? $description : $url;
                 $results['images'] = $image;
 
-                cache()->save($code, json_encode($results), getenv('default_cache_time'));
+                cache()->save($code, json_encode($results), 150);
 
                 return $this->respond([
                     'result' => $results
                 ]);
             } else {
+                
                 return $this->respond([
                     'result' => new stdClass()
                 ]);
             }
         } catch (Exception $e) {
+            
             return $this->fail($e->getMessage());
         }
     }
@@ -130,7 +129,7 @@ class LinkPreview extends ErpController
     // ** support function
     private function _checkValidUrl($url)
     {
-        if (strpos($url, 'https') === false || strpos($url, 'https') === '') {
+        if ((strpos($url, 'https') === false || strpos($url, 'https') === '') && (strpos($url, 'base64') === false || strpos($url, 'base64') === '')) {
             return false;
         }
 

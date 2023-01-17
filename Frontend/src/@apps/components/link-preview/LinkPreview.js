@@ -24,7 +24,7 @@ const LinkPreview = (props) => {
 
   const [state, setState] = useMergedState({
     loading: true,
-    isExistImage: false,
+    isEmptyImage: false,
     data: {}
   })
 
@@ -69,7 +69,7 @@ const LinkPreview = (props) => {
       .catch((err) => {
         setState({
           data: {},
-          isExistImage: false,
+          isEmptyImage: true,
           loading: false
         })
       })
@@ -84,7 +84,7 @@ const LinkPreview = (props) => {
     if (state.loading === false && Object.keys(state.data).length > 0) {
       const imgHref = _getImageHref()
       setState({
-        isExistImage: imgHref === "" || imgHref === undefined
+        isEmptyImage: imgHref === "" || imgHref === undefined
       })
     }
   }, [state.data, state.loading])
@@ -157,7 +157,7 @@ const LinkPreview = (props) => {
           className={classNames({
             "medium-preview-card min-size": cardSize === "medium",
             "large-preview-card min-size": cardSize === "large",
-            "no-image": state.isExistImage
+            "no-image": state.isEmptyImage
           })}
           target="_blank">
           <div className="d-flex detail-link">
@@ -200,7 +200,7 @@ const LinkPreview = (props) => {
         className={classNames({
           "medium-preview-card": cardSize === "medium",
           "large-preview-card": cardSize === "large",
-          "no-image": state.isExistImage
+          "no-image": state.isEmptyImage
         })}
         target="_blank">
         <div className="d-flex detail-link">
