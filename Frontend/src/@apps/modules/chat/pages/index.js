@@ -307,7 +307,8 @@ const AppChat = (props) => {
                     file: data.file,
                     react: data.react,
                     reply: data.reply,
-                    forward: data.forward
+                    forward: data.forward,
+                    recalled: data.recalled
                   },
                   ...chat
                 ]
@@ -552,24 +553,30 @@ const AppChat = (props) => {
     return []
   }
 
-  const handleCountFile = (groupId, type) => {
+  const handleCountFile = (groupId, type, action = "plus") => {
     const index_groups = store.groups.findIndex((item) => item.id === groupId)
     let file_count = {}
     if (index_groups !== 1) {
       const group_file_count = store.groups[index_groups]?.file_count || {}
       if (type === "link") {
         const count_link = group_file_count?.link
-          ? group_file_count?.link + 1
+          ? action === "plus"
+            ? group_file_count?.link + 1
+            : group_file_count?.link - 1
           : 1
         file_count = { ...group_file_count, link: count_link }
       } else if (type === "image" || type === "image_gif") {
         const count_image = group_file_count?.image
-          ? group_file_count?.image + 1
+          ? action === "plus"
+            ? group_file_count?.image + 1
+            : group_file_count?.image - 1
           : 1
         file_count = { ...group_file_count, image: count_image }
       } else if (type === "file" || type === "audio" || type === "video") {
         const count_file = group_file_count?.file
-          ? group_file_count?.file + 1
+          ? action === "plus"
+            ? group_file_count?.file + 1
+            : group_file_count?.file - 1
           : 1
         file_count = { ...group_file_count, file: count_file }
       }
@@ -873,7 +880,7 @@ const AppChat = (props) => {
             ...dataUpdate,
             ...handleTimestampFile(dataUpdate)
           })
-          if (dataUpdate.status === "success") {
+          if (dataUpdate.status && dataUpdate.status === "success") {
             const file_count = handleCountFile(groupId, dataUpdate.type)
             if (!_.isEmpty(file_count)) {
               handleUpdateGroup(groupId, {
@@ -904,6 +911,7 @@ const AppChat = (props) => {
         res.forEach((docData) => {
           dem++
           const data = docData.data()
+
           chat = [
             ...chat,
             {
@@ -915,7 +923,8 @@ const AppChat = (props) => {
               file: data.file,
               react: data.react,
               reply: data.reply,
-              forward: data.forward
+              forward: data.forward,
+              recalled: data.recalled
             }
           ]
         })
@@ -957,6 +966,7 @@ const AppChat = (props) => {
             const data = docData.data()
             if (data.timestamp < state.lastTimeMessageChat) {
               dem_chat++
+
               chat = [
                 ...chat,
                 {
@@ -968,7 +978,8 @@ const AppChat = (props) => {
                   file: data.file,
                   react: data.react,
                   reply: data.reply,
-                  forward: data.forward
+                  forward: data.forward,
+                  recalled: data.recalled
                 }
               ]
             }
@@ -1010,6 +1021,7 @@ const AppChat = (props) => {
             const data = docData.data()
             if (data.timestamp < state.lastTimeMessageChat) {
               dem_chat++
+
               chat = [
                 ...chat,
                 {
@@ -1021,7 +1033,8 @@ const AppChat = (props) => {
                   file: data.file,
                   react: data.react,
                   reply: data.reply,
-                  forward: data.forward
+                  forward: data.forward,
+                  recalled: data.recalled
                 }
               ]
             }
@@ -1428,7 +1441,8 @@ const AppChat = (props) => {
                 react: data.react,
                 reply: data.reply,
                 forward: data.forward,
-                break_type: data.break_type
+                break_type: data.break_type,
+                recalled: data.recalled
               }
             ]
           }
@@ -1449,7 +1463,8 @@ const AppChat = (props) => {
                 react: data.react,
                 reply: data.reply,
                 forward: data.forward,
-                break_type: data.break_type
+                break_type: data.break_type,
+                recalled: data.recalled
               }
               chat = chat_new
               dispatch(
@@ -1662,6 +1677,8 @@ const AppChat = (props) => {
                 checkShowDataChat={state.checkShowDataChat}
                 getChatScrollBottom={getChatScrollBottom}
                 imageGroup={imageGroup}
+                handleUpdateGroup={handleUpdateGroup}
+                handleCountFile={handleCountFile}
               />
 
               <UserProfileSidebar

@@ -10,12 +10,12 @@ import classnames from "classnames"
 import ReactHtmlParser from "react-html-parser"
 
 import { useFormatMessage } from "@apps/utility/common"
+import SwAlert from "@apps/utility/SwAlert"
 import { Dropdown, Image, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
-import { ReactTinyLink } from "react-tiny-link"
 import { Spinner } from "reactstrap"
-import { detectUrl, formatTime, replaceTextMessage } from "../../common/common"
 import LinkPreview from "../../../../components/link-preview/LinkPreview"
+import { detectUrl, formatTime, replaceTextMessage } from "../../common/common"
 
 const ChatMessage = (props) => {
   const {
@@ -50,7 +50,9 @@ const ChatMessage = (props) => {
     search_message_highlight_text_search,
     dataChatScrollBottom,
     checkShowDataChat,
-    handleHeight
+    handleHeight,
+    handleUpdateGroup,
+    handleCountFile
   } = props
   const { userProfile, selectedUser, groups } = store
 
@@ -101,6 +103,9 @@ const ChatMessage = (props) => {
         chatLog = [...chatHistory, ...dataChatScrollBottom]
       }
     }
+    chatLog = _.filter(chatLog, (value) => {
+      return value.recalled !== 1
+    })
 
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
@@ -855,7 +860,7 @@ const ChatMessage = (props) => {
                   className="react_more"
                   onClick={(e) => {
                     e.preventDefault()
-                    navigator.clipboard.writeText(chat.msg)
+                    navigator.clipboard.writeText(chat.msg.slice(0, -4))
                     focusInputMsg()
                   }}>
                   <svg
@@ -923,7 +928,30 @@ const ChatMessage = (props) => {
             {
               key: "3",
               label: (
-                <div className="react_more">
+                <div
+                  className="react_more"
+                  onClick={() => {
+                    SwAlert.showWarning({
+                      confirmButtonText: useFormatMessage("button.delete"),
+                      html: ""
+                    }).then((res) => {
+                      if (res.value) {
+                        updateMessage(selectedUser.chat.id, chat.time, {
+                          recalled: 1
+                        })
+                        const file_count = handleCountFile(
+                          selectedUser.chat.id,
+                          chat.type,
+                          "minus"
+                        )
+                        if (!_.isEmpty(file_count)) {
+                          handleUpdateGroup(selectedUser.chat.id, {
+                            file_count: file_count
+                          })
+                        }
+                      }
+                    })
+                  }}>
                   <i className="fa-regular fa-delete-right"></i>
                   <span>{useFormatMessage("modules.chat.text.delete")}</span>
                 </div>

@@ -2216,6 +2216,12 @@ $font-family: Helvetica;
         display: flex;
         align-items: center;
         gap: 1rem;
+
+        i {
+          width: 17px;
+          height: 17px;
+          font-size: 16px;
+        }
       }
     }
   }
