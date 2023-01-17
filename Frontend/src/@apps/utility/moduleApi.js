@@ -226,6 +226,8 @@ export const defaultModuleApi = {
   async getLinkContent(data) {
     return await axiosApi.get(
       `link-preview/get-link-content?link=${data.link}`
-    )
+    , {
+      disableLoading: true
+    })
   }
 }
