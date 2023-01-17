@@ -33,9 +33,9 @@ class LinkPreview extends ErpController
         $client = new Client();
 
         if ($dataCache = cache($code)) {
-            /*return $this->respond([
+            return $this->respond([
                 'result' => json_decode($dataCache, true)
-            ]);*/
+            ]);
         }
 
         try {
@@ -110,7 +110,7 @@ class LinkPreview extends ErpController
                 $results['url'] = $url;
                 $results['host'] = $host;
                 $results['description'] = !empty($description) ? $description : $url;
-                $results['images'] = [];
+                $results['images'] = $image;
 
                 cache()->save($code, json_encode($results), getenv('default_cache_time'));
 

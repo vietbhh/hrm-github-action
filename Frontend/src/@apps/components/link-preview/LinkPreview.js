@@ -1,10 +1,10 @@
 // ** React Imports
-import { Fragment, useEffect, useRef } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classNames from "classnames"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
-import { Skeleton, Space } from "antd"
 // ** Styles
+import { Skeleton } from "antd"
 // ** Components
 
 const LinkPreview = (props) => {
