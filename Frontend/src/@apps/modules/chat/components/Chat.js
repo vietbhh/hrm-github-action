@@ -21,7 +21,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { ChatApi } from "../common/api"
-import { detectUrl } from "../common/common"
+import { decodeHTMLEntities, detectUrl } from "../common/common"
 import InputMessage from "./details/InputMessage"
 
 const ChatLog = (props) => {
@@ -277,9 +277,11 @@ const ChatLog = (props) => {
   }
   // ** Sends New Msg
   const handleSendMsg = (values) => {
-    const msg = values.message
+    let msg = values.message
     if (loadingMessage) return
     if (msg.trim().length) {
+      msg = decodeHTMLEntities(msg)
+
       const reply = state.replying
         ? {
             reply: {

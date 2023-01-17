@@ -619,29 +619,6 @@ const AppChat = (props) => {
     })
   }
 
-  const decodeHTMLEntities = (text) => {
-    const entities = [
-      ["amp", "&"],
-      ["apos", "'"],
-      ["#x27", "'"],
-      ["#x2F", "/"],
-      ["#39", "'"],
-      ["#47", "/"],
-      ["lt", "<"],
-      ["gt", ">"],
-      ["nbsp", " "],
-      ["quot", '"']
-    ]
-
-    for (let i = 0, max = entities.length; i < max; ++i)
-      text = text.replace(
-        new RegExp("&" + entities[i][0] + ";", "g"),
-        entities[i][1]
-      )
-
-    return text
-  }
-
   const handleBreakType = async (groupId, timestamp, data) => {
     const calculate_time_break = (timestamp, pre_timestamp, senderId) => {
       let break_type = ""
@@ -733,7 +710,6 @@ const AppChat = (props) => {
 
   const sendMessage = async (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
-    msg = decodeHTMLEntities(msg)
     const timestamp = Date.now()
     const file_count = handleCountFile(groupId, dataAddFile.type)
     const break_type = await handleBreakType(groupId, timestamp, dataAddFile)
