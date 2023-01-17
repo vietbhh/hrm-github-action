@@ -44,5 +44,17 @@ export const ChatApi = {
         }
       }
     )
+  },
+
+  async postDeleteChatMessage(data) {
+    return await axiosApi.post(
+      "/chat/delete-message",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
   }
 }

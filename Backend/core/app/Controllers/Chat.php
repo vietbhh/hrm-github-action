@@ -56,7 +56,7 @@ class Chat extends ErpController
 		return $this->respond($out);
 	}
 
-	public function post_up_background()
+	public function post_up_background_post()
 	{
 		$out = "";
 		$getPara = $this->request->getPost();
@@ -91,7 +91,7 @@ class Chat extends ErpController
 		return $this->respond($out);
 	}
 
-	public function post_up_avatar()
+	public function post_up_avatar_post()
 	{
 		$out = "";
 		$getPara = $this->request->getPost();
@@ -124,6 +124,15 @@ class Chat extends ErpController
 		}
 
 		return $this->respond($out);
+	}
+
+	public function post_delete_message_post()
+	{
+		$getPara = $this->request->getPost();
+		echo "<pre>";
+		print_r($getPara);
+		echo "</pre>";
+
 	}
 
 	/** support function */
