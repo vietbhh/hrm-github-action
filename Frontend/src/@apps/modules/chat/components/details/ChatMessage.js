@@ -924,6 +924,18 @@ const ChatMessage = (props) => {
               key: "3",
               label: (
                 <div className="react_more">
+                  <i className="fa-regular fa-delete-right"></i>
+                  <span>{useFormatMessage("modules.chat.text.delete")}</span>
+                </div>
+              )
+            },
+            {
+              type: "divider"
+            },
+            {
+              key: "4",
+              label: (
+                <div className="react_more">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="17"

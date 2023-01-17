@@ -984,7 +984,8 @@
         "empty_file": "Empty file",
         "empty_link": "Empty link",
         "leave_chat": "Leave chat",
-        "delete_chat": "Delete chat"
+        "delete_chat": "Delete chat",
+        "delete": "Delete"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",
