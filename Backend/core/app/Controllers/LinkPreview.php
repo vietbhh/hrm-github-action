@@ -12,6 +12,8 @@ class LinkPreview extends ErpController
 
     public function get_link_content_get()
     {
+        header('Content-Type: text/html; charset=utf-8');
+
         $postData = $this->request->getGet();
         $content  = isset($postData['link']) ? $postData['link'] : '';
         $code =  base64_encode(preg_replace('/[^A-Za-z0-9\-]/', '', $content));
@@ -37,8 +39,10 @@ class LinkPreview extends ErpController
         }
 
         try {
+            $client->setServerParameters([
+                'HTTP_USER_AGENT' => $_SERVER["HTTP_USER_AGENT"]
+            ]);
             $crawler = $client->request('GET', $url);
-
             $statusCode = $client->getResponse()->getStatusCode();
             if ($statusCode == 200) {
                 if ($this->_isImageUrl($url)) {
@@ -59,6 +63,7 @@ class LinkPreview extends ErpController
                 }
 
                 $title = $crawler->filter('title')->text();
+                iconv(mb_detect_encoding($title, mb_detect_order(), true), "UTF-8", $title);
 
                 if ($crawler->filterXpath('//meta[@name="description"]')->count()) {
                     $description = $crawler->filterXpath('//meta[@name="description"]')->attr('content');
@@ -104,7 +109,7 @@ class LinkPreview extends ErpController
                 $results['cover'] = '';
                 $results['url'] = $url;
                 $results['host'] = $host;
-                $results['description'] = isset($description) ? $description : '';
+                $results['description'] = !empty($description) ? $description : $url;
                 $results['images'] = $image;
 
                 cache()->save($code, json_encode($results), getenv('default_cache_time'));
@@ -142,7 +147,7 @@ class LinkPreview extends ErpController
             '.flv'
         );
         $urlExtension = strtolower(strrchr($url, '.'));
-        
+
         if (in_array($urlExtension, $imageExtensions)) {
             return true;
         }
