@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classNames from "classnames"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
@@ -24,8 +24,32 @@ const LinkPreview = (props) => {
 
   const [state, setState] = useMergedState({
     loading: true,
+    isExistImage: false,
     data: {}
   })
+
+  const _getImageHref = () => {
+    if (!showGraphic) {
+      return ""
+    }
+
+    if (
+      (defaultImage === "" || defaultImage === undefined) &&
+      (state.data?.images === undefined || state.data?.images.length === 0) &&
+      state.data?.cover === ""
+    ) {
+      return ""
+    }
+
+    const imgHref =
+      state.data?.images.length === 0 && state.data?.cover === ""
+        ? defaultImage
+        : state.data?.images.length === 0
+        ? state.data?.cover
+        : _.first(state.data?.images)
+
+    return imgHref
+  }
 
   const getLinkContent = () => {
     setState({
@@ -45,6 +69,7 @@ const LinkPreview = (props) => {
       .catch((err) => {
         setState({
           data: {},
+          isExistImage: false,
           loading: false
         })
       })
@@ -54,6 +79,15 @@ const LinkPreview = (props) => {
   useEffect(() => {
     getLinkContent()
   }, [url])
+
+  useEffect(() => {
+    if (state.loading === false && Object.keys(state.data).length > 0) {
+      const imgHref = _getImageHref()
+      setState({
+        isExistImage: imgHref === "" || imgHref === undefined
+      })
+    }
+  }, [state.data, state.loading])
 
   // ** render
   const renderMediumLoading = () => {
@@ -99,25 +133,12 @@ const LinkPreview = (props) => {
   }
 
   const renderImage = () => {
-    if (!showGraphic) {
+    const imgHref = _getImageHref()
+
+    if (imgHref === "" || imgHref === undefined) {
       return ""
     }
 
-    if (
-      (defaultImage === "" || defaultImage === undefined) &&
-      (state.data?.images === undefined || state.data?.images.length === 0) &&
-      state.data?.cover === ""
-    ) {
-      return ""
-    }
-
-    const imgHref =
-      state.data?.images.length === 0 && state.data?.cover === ""
-        ? defaultImage
-        : state.data?.images.length === 0
-        ? state.data?.cover
-        : _.first(state.data?.images)
-        
     return (
       <div className="image-link-container">
         <div
@@ -135,7 +156,8 @@ const LinkPreview = (props) => {
           href={url}
           className={classNames({
             "medium-preview-card min-size": cardSize === "medium",
-            "large-preview-card min-size": cardSize === "large"
+            "large-preview-card min-size": cardSize === "large",
+            "no-image": state.isExistImage
           })}
           target="_blank">
           <div className="d-flex detail-link">
@@ -177,7 +199,8 @@ const LinkPreview = (props) => {
         href={url}
         className={classNames({
           "medium-preview-card": cardSize === "medium",
-          "large-preview-card": cardSize === "large"
+          "large-preview-card": cardSize === "large",
+          "no-image": state.isExistImage
         })}
         target="_blank">
         <div className="d-flex detail-link">
@@ -217,7 +240,9 @@ const LinkPreview = (props) => {
   const renderComponent = () => {
     return (
       <div
-        className={`preview-link-component ${classNames(componentClassName)}`}>
+        className={`preview-link-component ${classNames(componentClassName, {
+          "component-loading": state.loading
+        })}`}>
         {state.loading
           ? loadingComponent === undefined
             ? renderLoading()
