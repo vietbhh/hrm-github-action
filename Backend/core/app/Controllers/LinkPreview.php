@@ -112,7 +112,7 @@ class LinkPreview extends ErpController
                 $results['description'] = !empty($description) ? $description : $url;
                 $results['images'] = $image;
 
-                cache()->save($code, json_encode($results), getenv('default_cache_time'));
+                cache()->save($code, json_encode($results), 150);
 
                 return $this->respond([
                     'result' => $results
