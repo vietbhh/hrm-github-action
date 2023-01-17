@@ -41,7 +41,7 @@ class LinkPreview extends ErpController
             ]);
             $crawler = $client->request('GET', $url);
             $statusCode = $client->getResponse()->getStatusCode();
-            if ($statusCode == 200) {
+            if ($statusCode == 200 || $statusCode == 404) {
                 if ($this->_isImageUrl($url)) {
                     $urlExtension = strtolower(strrchr($url, '.'));
                     $imageData = base64_encode(file_get_contents($url));
@@ -115,11 +115,13 @@ class LinkPreview extends ErpController
                     'result' => $results
                 ]);
             } else {
+                
                 return $this->respond([
                     'result' => new stdClass()
                 ]);
             }
         } catch (Exception $e) {
+            
             return $this->fail($e->getMessage());
         }
     }
@@ -127,7 +129,7 @@ class LinkPreview extends ErpController
     // ** support function
     private function _checkValidUrl($url)
     {
-        if (strpos($url, 'https') === false || strpos($url, 'https') === '') {
+        if ((strpos($url, 'https') === false || strpos($url, 'https') === '') && (strpos($url, 'base64') === false || strpos($url, 'base64') === '')) {
             return false;
         }
 
