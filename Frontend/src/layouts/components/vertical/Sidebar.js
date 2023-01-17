@@ -24,7 +24,8 @@ const Sidebar = (props) => {
     customMenuComponent,
     outerCustomMenuComponent,
     hideQuickAccess,
-    hideVerticalMenuHeader
+    hideVerticalMenuHeader,
+    userId
   } = props
 
   // ** States
@@ -148,6 +149,7 @@ const Sidebar = (props) => {
                 menuCollapsed={menuCollapsed}
                 windowWidth={windowWidth}
                 windowWidthMin={windowWidthMin}
+                userId={userId}
               />
             </div>
           </div>

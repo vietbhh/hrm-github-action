@@ -83,6 +83,7 @@ const Layout = (props) => {
   const auth = useSelector((state) => state.auth)
   const userData = auth.userData
   const full_name = userData.full_name
+  const userId = userData.id
 
   // ** Update Window Width
   const handleWindowWidth = () => {
@@ -266,6 +267,7 @@ const Layout = (props) => {
         outerCustomMenuComponent={outerCustomMenuComponent}
         hideQuickAccess={hideQuickAccess}
         hideVerticalMenuHeader={hideVerticalMenuHeader}
+        userId={userId}
       />
 
       <Navbar
