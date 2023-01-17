@@ -109,8 +109,8 @@ class LinkPreview extends ErpController
                 $results['cover'] = '';
                 $results['url'] = $url;
                 $results['host'] = $host;
-                $results['description'] = isset($description) ? $description : '';
-                $results['images'] = $image;
+                $results['description'] = !empty($description) ? $description : $url;
+                $results['images'] = [];
 
                 cache()->save($code, json_encode($results), getenv('default_cache_time'));
 
