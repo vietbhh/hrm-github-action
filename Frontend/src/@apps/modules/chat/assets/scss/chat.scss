@@ -2095,7 +2095,7 @@ $font-family: Helvetica;
       }
     }
 
-    &.no-image {
+    &:has(> .no-image) {
       height: 70px;
       min-height: 70px;
     }
