@@ -58,6 +58,7 @@ const Profile = (props) => {
   useEffect(() => {
     loadData()
   }, [identity])
+  
   return (
     <Fragment>
       <UserLayout
