@@ -198,7 +198,7 @@ $routes->post('chat/post-up-avatar', 'Chat::post_up_avatar_post', ['namespace' =
 $routes->post('chat/delete-message', 'Chat::post_delete_message_post', ['namespace' => 'App\Controllers']);
 
 /*** Route for LinkPreview */
-$routes->get('link-preview/get-link-content', 'LinkPReview::get_link_content_get', ['namespace' => 'App\Controllers']);
+$routes->get('link-preview/get-link-content', 'LinkPreview::get_link_content_get', ['namespace' => 'App\Controllers']);
 
 $routes->get('fri/test', 'Test::index_get');
 $routes->post('fri/test', 'Test::index_post');
