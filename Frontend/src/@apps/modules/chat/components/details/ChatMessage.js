@@ -103,9 +103,6 @@ const ChatMessage = (props) => {
         chatLog = [...chatHistory, ...dataChatScrollBottom]
       }
     }
-    chatLog = _.filter(chatLog, (value) => {
-      return value.recalled !== 1
-    })
 
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
@@ -563,7 +560,13 @@ const ChatMessage = (props) => {
     }
 
     const renderMessage = (data) => {
-      if (data.type === "text") {
+      if (data.unsent === 1) {
+        return (
+          <p className="fst-italic">
+            {useFormatMessage("modules.chat.text.unsent_message")}
+          </p>
+        )
+      } else if (data.type === "text") {
         return (
           <>
             <p className={`text ${data.senderId === userId ? "has-seen" : ""}`}>
@@ -603,14 +606,14 @@ const ChatMessage = (props) => {
       } else {
         if (data.status === "loading") {
           return (
-            <span>
+            <span className="fst-italic">
               {useFormatMessage("modules.chat.text.sending")} {data.type}...
               <Spinner size="sm" className="ms-50" />
             </span>
           )
         } else if (data.status === "error") {
           return (
-            <p>
+            <p className="fst-italic">
               {data.type} {useFormatMessage("modules.chat.text.sent_error")}
             </p>
           )
@@ -626,7 +629,8 @@ const ChatMessage = (props) => {
           chat.type === "text" ||
           chat.type === "link" ||
           chat.status === "loading" ||
-          chat.status === "error"
+          chat.status === "error" ||
+          chat.unsent === 1
         ) {
           return (
             <Tooltip
@@ -932,12 +936,14 @@ const ChatMessage = (props) => {
                   className="react_more"
                   onClick={() => {
                     SwAlert.showWarning({
-                      confirmButtonText: useFormatMessage("button.delete"),
+                      confirmButtonText: useFormatMessage(
+                        "modules.chat.text.unsent"
+                      ),
                       html: ""
                     }).then((res) => {
                       if (res.value) {
                         updateMessage(selectedUser.chat.id, chat.time, {
-                          recalled: 1
+                          unsent: 1
                         })
                         const file_count = handleCountFile(
                           selectedUser.chat.id,
@@ -953,7 +959,7 @@ const ChatMessage = (props) => {
                     })
                   }}>
                   <i className="fa-regular fa-delete-right"></i>
-                  <span>{useFormatMessage("modules.chat.text.delete")}</span>
+                  <span>{useFormatMessage("modules.chat.text.unsent")}</span>
                 </div>
               )
             },
@@ -1162,7 +1168,11 @@ const ChatMessage = (props) => {
                         className={`chat-content-message ${
                           !_.isEmpty(chat.reply) ? "has-reply" : ""
                         }`}>
-                        {item.senderId === userId && renderReaction(chat)}
+                        {item.senderId === userId &&
+                          chat.status !== "loading" &&
+                          chat.status !== "error" &&
+                          chat.unsent !== 1 &&
+                          renderReaction(chat)}
                         {renderChatContent(
                           chat,
                           item.messages.length > 1
@@ -1174,7 +1184,11 @@ const ChatMessage = (props) => {
                             : "chat-content-one",
                           index
                         )}
-                        {item.senderId !== userId && renderReaction(chat)}
+                        {item.senderId !== userId &&
+                          chat.status !== "loading" &&
+                          chat.status !== "error" &&
+                          chat.unsent !== 1 &&
+                          renderReaction(chat)}
                       </div>
                     </div>
                   )

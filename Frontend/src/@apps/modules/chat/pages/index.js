@@ -308,7 +308,7 @@ const AppChat = (props) => {
                     react: data.react,
                     reply: data.reply,
                     forward: data.forward,
-                    recalled: data.recalled
+                    unsent: data.unsent
                   },
                   ...chat
                 ]
@@ -924,7 +924,7 @@ const AppChat = (props) => {
               react: data.react,
               reply: data.reply,
               forward: data.forward,
-              recalled: data.recalled
+              unsent: data.unsent
             }
           ]
         })
@@ -979,7 +979,7 @@ const AppChat = (props) => {
                   react: data.react,
                   reply: data.reply,
                   forward: data.forward,
-                  recalled: data.recalled
+                  unsent: data.unsent
                 }
               ]
             }
@@ -1034,7 +1034,7 @@ const AppChat = (props) => {
                   react: data.react,
                   reply: data.reply,
                   forward: data.forward,
-                  recalled: data.recalled
+                  unsent: data.unsent
                 }
               ]
             }
@@ -1449,7 +1449,7 @@ const AppChat = (props) => {
                 reply: data.reply,
                 forward: data.forward,
                 break_type: data.break_type,
-                recalled: data.recalled
+                unsent: data.unsent
               }
             ]
           }
@@ -1471,7 +1471,7 @@ const AppChat = (props) => {
                 reply: data.reply,
                 forward: data.forward,
                 break_type: data.break_type,
-                recalled: data.recalled
+                unsent: data.unsent
               }
               chat = chat_new
               dispatch(

@@ -123,9 +123,7 @@ const index = (props) => {
           dem++
           if (dem > 1) {
             const data = docData.data()
-            if (data.recalled !== 1) {
-              _data = [..._data, data]
-            }
+            _data = [..._data, data]
           }
         })
         if (_data.length === queryLimit) {
@@ -154,9 +152,7 @@ const index = (props) => {
           dem++
           if (dem > 1) {
             const data = docData.data()
-            if (data.recalled !== 1) {
-              _data = [..._data, data]
-            }
+            _data = [..._data, data]
           }
         })
         if (_data.length === queryLimit) {
@@ -185,9 +181,7 @@ const index = (props) => {
           dem++
           if (dem > 1) {
             const data = docData.data()
-            if (data.recalled !== 1) {
-              _data = [..._data, data]
-            }
+            _data = [..._data, data]
           }
         })
         if (_data.length === queryLimit) {
@@ -216,9 +210,7 @@ const index = (props) => {
           let _data = []
           res.forEach((docData) => {
             const data = docData.data()
-            if (data.recalled !== 1) {
-              _data = [..._data, data]
-            }
+            _data = [..._data, data]
           })
           if (_data.length === queryLimit) {
             setState({ loadMoreFile: true })
@@ -248,9 +240,7 @@ const index = (props) => {
           let _data = []
           res.forEach((docData) => {
             const data = docData.data()
-            if (data.recalled !== 1) {
-              _data = [..._data, data]
-            }
+            _data = [..._data, data]
           })
           if (_data.length === queryLimit) {
             setState({ loadMoreImage: true })
@@ -280,9 +270,7 @@ const index = (props) => {
           let _data = []
           res.forEach((docData) => {
             const data = docData.data()
-            if (data.recalled !== 1) {
-              _data = [..._data, data]
-            }
+            _data = [..._data, data]
           })
           if (_data.length === queryLimit) {
             setState({ loadMoreLink: true })
@@ -317,7 +305,7 @@ const index = (props) => {
           value.type === "audio") &&
         value.time > state.firstTimestampFile &&
         state.firstTimestampFile !== 0 &&
-        value.recalled !== 1
+        value.unsent !== 1
       ) {
         _dataListenFile = [
           { ...value, timestamp: value.time },
@@ -329,7 +317,7 @@ const index = (props) => {
         (value.type === "image" || value.type === "image_gif") &&
         value.time > state.firstTimestampImage &&
         state.firstTimestampImage !== 0 &&
-        value.recalled !== 1
+        value.unsent !== 1
       ) {
         _dataListenImage = [
           { ...value, timestamp: value.time },
@@ -341,7 +329,7 @@ const index = (props) => {
         value.type === "link" &&
         value.time > state.firstTimestampLink &&
         state.firstTimestampLink !== 0 &&
-        value.recalled !== 1
+        value.unsent !== 1
       ) {
         _dataListenLink = [
           { ...value, timestamp: value.time },
