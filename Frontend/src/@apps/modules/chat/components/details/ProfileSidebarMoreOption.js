@@ -3,6 +3,7 @@ import notification from "@apps/utility/notification"
 import SwAlert from "@apps/utility/SwAlert"
 import { arrayRemove } from "firebase/firestore"
 import { Fragment } from "react"
+import { ChatApi } from "../../common/api"
 
 const ProfileSidebarMoreOption = (props) => {
   const {
@@ -14,6 +15,8 @@ const ProfileSidebarMoreOption = (props) => {
     setActiveFullName,
     handleDeleteGroup
   } = props
+
+  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
 
   const handleUpdateLeaveChat = () => {
     const timestamp = Date.now()

@@ -14,6 +14,7 @@ import { handleChats, handleTitleChat } from "redux/chat"
 import SocketContext from "utility/context/Socket"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
+import moment from "moment"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -43,7 +44,6 @@ import {
 // ** style
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
-import moment from "moment"
 import "../assets/scss/chat.scss"
 
 const AppChat = (props) => {

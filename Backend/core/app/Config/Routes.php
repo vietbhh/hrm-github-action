@@ -196,6 +196,7 @@ $routes->get('chat/get-employees', 'Chat::get_employees_get', ['namespace' => 'A
 $routes->post('chat/post-up-file', 'Chat::post_up_file_post', ['namespace' => 'App\Controllers']);
 $routes->post('chat/post-up-background', 'Chat::post_up_background_post', ['namespace' => 'App\Controllers']);
 $routes->post('chat/post-up-avatar', 'Chat::post_up_avatar_post', ['namespace' => 'App\Controllers']);
+$routes->post('chat/delete-message', 'Chat::post_delete_message_post', ['namespace' => 'App\Controllers']);
 
 /*** Route for LinkPreview */
 $routes->get('link-preview/get-link-content', 'LinkPReview::get_link_content_get', ['namespace' => 'App\Controllers']);

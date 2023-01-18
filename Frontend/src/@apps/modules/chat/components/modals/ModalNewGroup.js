@@ -66,6 +66,7 @@ const ModalNewGroup = (props) => {
         const newGroupId = res.id
         setActive(newGroupId)
         setActiveFullName("")
+        window.history.replaceState(null, "", `/chat/${newGroupId}`)
         toggleModal()
         setState({ loading: false })
       }, 500)

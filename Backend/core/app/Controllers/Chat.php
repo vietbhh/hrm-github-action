@@ -129,9 +129,7 @@ class Chat extends ErpController
 	public function post_delete_message_post()
 	{
 		$getPara = $this->request->getPost();
-		echo "<pre>";
-		print_r($getPara);
-		echo "</pre>";
+		$collectionName = $getPara['collectionName'];
 
 	}
 
