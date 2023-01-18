@@ -34,8 +34,7 @@ const UserProfileSidebar = (props) => {
     setDataUnseenDetail,
     setActive,
     setActiveFullName,
-    imageGroup,
-    handleDeleteGroup
+    imageGroup
   } = props
 
   const [state, setState] = useMergedState({
@@ -582,7 +581,7 @@ const UserProfileSidebar = (props) => {
             userId={userId}
             setActive={setActive}
             setActiveFullName={setActiveFullName}
-            handleDeleteGroup={handleDeleteGroup}
+            setDataUnseenDetail={setDataUnseenDetail}
           />
         </div>
       </div>

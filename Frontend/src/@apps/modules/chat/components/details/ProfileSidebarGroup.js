@@ -167,6 +167,9 @@ const ProfileSidebarGroup = (props) => {
                               timestamp: timestamp,
                               user: arrayRemove(value),
                               unseen: arrayRemove(value),
+                              admin: arrayRemove(value),
+                              mute: arrayRemove(value),
+                              pin: arrayRemove(value),
                               unseen_detail: setDataUnseenDetail(
                                 "delete_member",
                                 userId,

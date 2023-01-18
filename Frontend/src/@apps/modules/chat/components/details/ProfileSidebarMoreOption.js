@@ -3,7 +3,6 @@ import notification from "@apps/utility/notification"
 import SwAlert from "@apps/utility/SwAlert"
 import { arrayRemove } from "firebase/firestore"
 import { Fragment } from "react"
-import { ChatApi } from "../../common/api"
 
 const ProfileSidebarMoreOption = (props) => {
   const {
@@ -13,12 +12,10 @@ const ProfileSidebarMoreOption = (props) => {
     userId,
     setActive,
     setActiveFullName,
-    handleDeleteGroup
+    setDataUnseenDetail
   } = props
 
-  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
-
-  const handleUpdateLeaveChat = () => {
+  const handleUpdateLeaveChat = (props) => {
     const timestamp = Date.now()
     const docData = {
       last_message: useFormatMessage("modules.chat.text.leave_chat"),
@@ -28,7 +25,17 @@ const ProfileSidebarMoreOption = (props) => {
       admin: arrayRemove(userId),
       mute: arrayRemove(userId),
       pin: arrayRemove(userId),
-      unseen: arrayRemove(userId)
+      unseen: arrayRemove(userId),
+      unseen_detail: setDataUnseenDetail(
+        "delete_member",
+        userId,
+        timestamp,
+        selectedGroup.chat.unseen_detail,
+        [],
+        [],
+        userId
+      ),
+      ...props
     }
     handleUpdateGroup(selectedGroup.id, docData)
     window.history.replaceState(null, "", `/chat`)
@@ -42,7 +49,10 @@ const ProfileSidebarMoreOption = (props) => {
       html: ""
     }).then((res) => {
       if (res.value) {
-        if (selectedGroup.admin.length === 1) {
+        if (
+          selectedGroup.admin.length === 1 &&
+          selectedGroup.admin[0] === userId
+        ) {
           if (selectedGroup.user.length > 1) {
             notification.showWarning({
               text: useFormatMessage(
@@ -50,8 +60,7 @@ const ProfileSidebarMoreOption = (props) => {
               )
             })
           } else {
-            handleUpdateLeaveChat()
-            handleDeleteGroup(selectedGroup.id)
+            handleUpdateLeaveChat({ is_delete: 1 })
           }
         } else {
           handleUpdateLeaveChat()

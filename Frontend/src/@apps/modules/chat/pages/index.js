@@ -5,6 +5,7 @@ import {
   useMergedState
 } from "@apps/utility/common"
 import classnames from "classnames"
+import moment from "moment"
 import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 import { IdleTimerProvider } from "react-idle-timer"
@@ -14,7 +15,6 @@ import { handleChats, handleTitleChat } from "redux/chat"
 import SocketContext from "utility/context/Socket"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
-import moment from "moment"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -1231,51 +1231,58 @@ const AppChat = (props) => {
           }
 
           if (change.type === "added") {
-            listGroup = [
-              {
-                ...dataGroupEmployee,
-                chat: {
-                  unseenMsgs: unseen,
-                  lastMessage: {
-                    message: data.last_message ? data.last_message : "",
-                    time: data.timestamp ? data.timestamp : ""
-                  },
-                  lastUser: lastUser,
-                  unseen: data.unseen,
-                  unseen_detail: data.unseen_detail
-                }
-              },
-              ...listGroup
-            ]
+            if (data.is_delete !== 1) {
+              listGroup = [
+                {
+                  ...dataGroupEmployee,
+                  chat: {
+                    unseenMsgs: unseen,
+                    lastMessage: {
+                      message: data.last_message ? data.last_message : "",
+                      time: data.timestamp ? data.timestamp : ""
+                    },
+                    lastUser: lastUser,
+                    unseen: data.unseen,
+                    unseen_detail: data.unseen_detail
+                  }
+                },
+                ...listGroup
+              ]
 
-            listGroup.sort(
-              (a, b) => b.chat.lastMessage.time - a.chat.lastMessage.time
-            )
+              listGroup.sort(
+                (a, b) => b.chat.lastMessage.time - a.chat.lastMessage.time
+              )
 
-            setGroups(listGroup)
+              setGroups(listGroup)
+            }
           }
           if (change.type === "modified") {
             const group_new = [...listGroup]
-            const index_group = group_new.findIndex((item) => item.id === id)
-            if (index_group > -1) {
-              group_new[index_group] = {
-                ...dataGroupEmployee,
-                chat: {
-                  unseenMsgs: unseen,
-                  lastMessage: {
-                    message: data.last_message ? data.last_message : "",
-                    time: data.timestamp ? data.timestamp : ""
-                  },
-                  lastUser: lastUser,
-                  unseen: data.unseen,
-                  unseen_detail: data.unseen_detail
-                }
-              }
-              group_new.sort(
-                (a, b) => b.chat.lastMessage.time - a.chat.lastMessage.time
-              )
-              listGroup = group_new
+            if (data.is_delete === 1) {
+              listGroup = group_new.filter((item) => item.id !== id)
               setGroups(listGroup)
+            } else {
+              const index_group = group_new.findIndex((item) => item.id === id)
+              if (index_group > -1) {
+                group_new[index_group] = {
+                  ...dataGroupEmployee,
+                  chat: {
+                    unseenMsgs: unseen,
+                    lastMessage: {
+                      message: data.last_message ? data.last_message : "",
+                      time: data.timestamp ? data.timestamp : ""
+                    },
+                    lastUser: lastUser,
+                    unseen: data.unseen,
+                    unseen_detail: data.unseen_detail
+                  }
+                }
+                group_new.sort(
+                  (a, b) => b.chat.lastMessage.time - a.chat.lastMessage.time
+                )
+                listGroup = group_new
+                setGroups(listGroup)
+              }
             }
           }
           if (change.type === "removed") {
@@ -1694,7 +1701,6 @@ const AppChat = (props) => {
                 setActive={setActive}
                 setActiveFullName={setActiveFullName}
                 imageGroup={imageGroup}
-                handleDeleteGroup={handleDeleteGroup}
               />
             </div>
           </div>
