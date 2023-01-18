@@ -1,5 +1,7 @@
 // ** React Imports
+import { useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { DashboardApi } from "../common/api"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
@@ -7,6 +9,7 @@ import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashb
 import TotalPayment from "../components/details/statistic/TotalPayment/TotalPayment"
 import GrossTaxChart from "../components/details/statistic/GrossTaxChart/GrossTaxChart"
 import EmployeeOverview from "../components/details/statistic/EmployeeOverview/EmployeeOverview"
+import { ErpSelect } from "@apps/components/common/ErpField"
 
 const CardStatistic = (props) => {
   const {
@@ -16,10 +19,35 @@ const CardStatistic = (props) => {
 
   const [state, setState] = useMergedState({
     loading: false,
-    data: {}
+    dataEmployeeOverview: {},
+    filter: {}
   })
 
+  const loadStatisticData = () => {
+    setState({
+      loading: true
+    })
+
+    DashboardApi.getStatisticData(state.filter)
+      .then((res) => {
+        setState({
+          dataEmployeeOverview: res.data.data_employee_overview,
+          loading: false
+        })
+      })
+      .catch((err) => {})
+  }
+
+  // ** effect
+  useEffect(() => {
+    loadStatisticData()
+  }, [])
+
   // ** render
+  const renderFilter = () => {
+    return <ErpSelect name="filter-month" className="me-1"/>
+  }
+
   return (
     <LayoutDashboard
       headerProps={{
@@ -51,21 +79,23 @@ const CardStatistic = (props) => {
           </svg>
         ),
         classIconBg: "calendar-bg",
+        classNameHeader: "card-header-statistic",
         titleLink: "/statistic",
+        customRight: renderFilter(),
         ...props
       }}>
       <Card className="dashboard-card-statistic">
-        <CardBody>
-          <div className="d-flex align-items-center justify-content-between">
-            <div>
+        <CardBody className="ps-3 pe-3 pt-1 pb-3">
+          <div className="d-flex align-items-start justify-content-between mb-2">
+            <div className="w-20">
               <TotalPayment />
             </div>
-            <div>
+            <div className="w-80">
               <GrossTaxChart />
             </div>
           </div>
           <div>
-            <EmployeeOverview />
+            <EmployeeOverview data={state.dataEmployeeOverview} />
           </div>
         </CardBody>
       </Card>

@@ -232,6 +232,20 @@ class Dashboard extends ErpController
 		return $this->respond(ACTION_SUCCESS);
 	}
 
+	public function get_statistic_data_get()
+	{
+		$params = $this->request->getGet();
+
+		$employeeService = \HRM\Modules\Employees\Libraries\Employees\Config\Services::employees();
+
+		$result = [
+			'data_employee_overview' => $employeeService->getOverviewEmployee()
+		];
+		
+
+		return $this->respond($result);
+	}
+
 	/**
 	 *  support function
 	 */

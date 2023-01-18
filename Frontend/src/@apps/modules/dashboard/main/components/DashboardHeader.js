@@ -1,5 +1,6 @@
 import { useFormatMessage } from "@apps/utility/common"
 import { Dropdown, Menu } from "antd"
+import classNames from "classnames"
 import { Link } from "react-router-dom"
 import { CardHeader } from "reactstrap"
 
@@ -9,6 +10,7 @@ const DashboardHeader = (props) => {
     handleWidget,
     isRemoveWidget,
     title,
+    classNameHeader,
     classIconBg,
     icon,
     menuRight = [],
@@ -39,7 +41,7 @@ const DashboardHeader = (props) => {
   const TitleTag = titleLink ? Link : "h1"
 
   return (
-    <CardHeader>
+    <CardHeader className={classNames(classNameHeader)}>
       <div className="d-flex flex-wrap align-items-center w-100">
         <TitleTag {...(titleLink && { to: titleLink })} className="card-title">
           <span

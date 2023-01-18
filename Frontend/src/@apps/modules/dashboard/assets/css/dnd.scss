@@ -76,6 +76,15 @@
     background: lighten($primary-bg, 25%);
   }
 
+  .react-grid-item {
+    .card-header-statistic {
+      .ms-auto {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
   .droppable-element {
     width: 300px;
     cursor: grab;
