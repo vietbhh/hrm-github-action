@@ -144,8 +144,7 @@ $routes->get('task/detail/(:alphanum)', 'Task::detail_get/$1');
 $routes->get('task/list', 'Task::load_get/$1');
 
 $routes->get('notification/load', 'Notification::load_get');
-$routes->post('notification/seen', 'Notification::seen_post');
-$routes->get('notification/seen-notification', 'Notification::seen_notification_get');
+$routes->get('notification/read', 'Notification::read_get');
 $routes->get('calendar/load', 'Calendar::load_get');
 $routes->get('calendar/detail/(:alphanum)', 'Calendar::detail_get/$1');
 $routes->get('calendar/detail/(:alphanum)', 'Calendar::detail_get/$1');

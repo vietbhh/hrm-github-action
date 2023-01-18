@@ -9,7 +9,6 @@ use App\Models\UserModel;
 class Notifications
 {
 	protected $model;
-	protected $setting;
 
 	public function __construct()
 	{
@@ -24,80 +23,90 @@ class Notifications
 		return $this->model->insert($content);
 	}
 
-	public function detail($id)
+	public function read($id, $all = false): bool
 	{
-		$info = $this->model->find($id);
-		if ($info['sender_id'] != user_id()) {
-			$checkPermit = $this->model->checkPermit($id, user_id());
-			if (!$checkPermit) return false;
-		}
-		return $info;
-	}
-
-
-	public function read($id = [], $all = false)
-	{
-		$listNotification = $this->model->find($id);
 		if ($all) {
-			$notifications = $this->model->listNoti(user_id());
+			$notifications = $this->model->listNotification(0, 0, true);
 			foreach ($notifications as $val) {
-				$this->model->checkAndRead($val);
+				$this->model->markAsRead($val);
 			}
-			return;
+			return true;
 		}
+		if (!is_array($id)) $id = [$id];
+		$listNotification = $this->model->whereIn('id', $id)->findAll();
 
-		foreach ($listNotification as $val) :
-			$this->model->checkAndRead($val);
-		endforeach;
-
-		return;
-	}
-
-	public function list($user = null, $perPage = 10, $page = 1)
-	{
-		if (!$user) $user = user_id();
-		return $this->model->listNoti($user, $perPage, $page);
-	}
-
-	public function getNotificationNumber($user = null)
-	{
-		if (!$user) $user = user_id();
-		return $this->model->getNotificationNumber($user);
-	}
-
-	public function deleted($id = null)
-	{
-		$this->model->delete($id);
-		return $id;
-	}
-
-	public function handleNotificationData($data, $isMultidimensionalArray = true): array
-	{
-		$modules = \Config\Services::modules('users');
-		$model = $modules->model;
-		$listUser = $model->select([
-			'id',
-			'username',
-			'full_name',
-			'email',
-			'avatar'
-		])->asArray()->findAll();
-		$arrUser = [];
-		foreach ($listUser as $rowUser) {
-			$arrUser[$rowUser['id']] = $rowUser;
+		foreach ($listNotification as $val) {
+			$this->model->markAsRead($val);
 		}
+		return true;
+	}
+
+
+	public function getUnreadNotificationNumber()
+	{
+		return $this->model->getUnreadNotificationNumber();
+	}
+
+
+	public function list($perPage = 10, $page = 1, $removeFields = ['recipient_id', 'read_by']): array
+	{
+		return $this->_handleNotificationData($this->model->listNotification($perPage, $page), $removeFields);
+	}
+
+	// ** support function
+	private function _getDataNotification($data, $arrUser, $removeFields = [])
+	{
+		$data['sender_id'] = $arrUser[$data['sender_id']] ?? [];
+		$data['seen'] = false;
 		$userId = user_id();
-		if ($isMultidimensionalArray) {
-			foreach ($data as $key => $val) {
-				$dataPush = $this->_getDataNotification($val, $userId, $arrUser);
-				$result[] = $dataPush;
-			}
-
-			return $result;
+		if (!empty($data['read_by'])) {
+			$data['read_by'] = json_decode($data['read_by'], true);
+			if (in_array($userId, $data['read_by'])) $data['seen'] = true;
+		} else {
+			$data['read_by'] = [];
 		}
 
-		return $this->_getDataNotification($data, $userId, $arrUser);
+		foreach ($removeFields as $field) {
+			if (isset($data[$field])) unset($data[$field]);
+		}
+
+		return $data;
 	}
+
+	private function _handleNotificationData($data, $removeFields = []): array
+	{
+		$userModel = new UserModel();
+		$arrUser = $userModel->getListUsers();
+		$result = [];
+		foreach ($data as $key => $val) {
+			$dataPush = $this->_getDataNotification($val, $arrUser, $removeFields);
+			$result[] = $dataPush;
+		}
+		return $result;
+	}
+
+	/*
+	 * $receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true
+	 * */
+	public function sendNotification($receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true)
+	{
+		$isSocketEnable = preference('sockets');
+		if ($isSocketEnable) {
+			$nodeServer = \Config\Services::nodeServer();
+			$result = $nodeServer->node->post('/notification/send', [
+				'json' => [
+					'receivers' => $receivers,
+					'payload' => $payload,
+					'data' => $data,
+					'saveToDb' => $saveToDb
+				]
+			]);
+			return true;
+		} else {
+			return $this->_sendNotification($receivers, $payload, $data, $saveToDb);
+		}
+	}
+
 
 	private function _sendNotification($receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true)
 	{
@@ -187,47 +196,5 @@ class Notifications
 				'error' => $e
 			];
 		}
-	}
-
-	public function sendNotification(...$args)
-	{
-		$isSocketEnable = preference('sockets');
-		if ($isSocketEnable) {
-			$nodeServer = \Config\Services::nodeServer();
-			$result = $nodeServer->node->post('/notification/send',[
-
-			]);
-			echo "<pre>";
-			print_r($nodeServer->node);
-			echo "</pre>";
-
-			echo "<pre>";
-			print_r($result);
-			echo "</pre>";
-
-		} else {
-			return $this->_sendNotification($args);
-		}
-
-
-	}
-
-
-	// ** support function
-	private function _getDataNotification($data, $userId, $arrUser)
-	{
-		$data['sender_id'] = $arrUser[$data['sender_id']] ?? [];
-		$data['seen'] = false;
-		if (!empty($data['read_by'])) {
-			$a = array_search($userId, json_decode($data['read_by'], true));
-			if ($a || $a === 0) {
-				$data['seen'] = true;
-			}
-		}
-
-		unset($data['recipient_id']);
-		unset($data['read_by']);
-
-		return $data;
 	}
 }

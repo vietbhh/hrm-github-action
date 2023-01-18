@@ -137,6 +137,9 @@ class Auth extends ResourceController
 		$response['init']['filters'] = $modulesConstructs['filters'];
 		$response['init']['routes'] = $listRoutes;
 
+		$notification = \Config\Services::notifications();
+		$response['list_notification'] = $notification->list();
+		$response['number_notification'] = $notification->getUnreadNotificationNumber();
 
 		return $this->respond($response, 200, 'login_success');
 	}
@@ -503,9 +506,9 @@ class Auth extends ResourceController
 		$response['init']['optionsModules'] = $modulesConstructs['optionsModules'];
 		$response['init']['routes'] = $listRoutes;
 
-		$userNotification = $this->_getUserNotification();
-		$response['list_notification'] = $userNotification['list_notification'];
-		$response['number_notification'] = $userNotification['number_notification'];
+		$notification = \Config\Services::notifications();
+		$response['list_notification'] = $notification->list();
+		$response['number_notification'] = $notification->getUnreadNotificationNumber();
 
 		return $this->respond($response, 200, 'data_found');
 	}
@@ -548,49 +551,5 @@ class Auth extends ResourceController
 			'routes' => $listRoutes
 		];
 		return $this->respond($response, 200, 'data_found');
-	}
-
-	private function _getUserNotification()
-	{
-		$notification = \Config\Services::notifications();
-		$modules = \Config\Services::modules('users');
-		$model = $modules->model;
-		$listUser = $model->select([
-			'id',
-			'username',
-			'full_name',
-			'email',
-			'avatar'
-		])
-			->asArray()
-			->findAll();
-		$arrUser = [];
-		foreach ($listUser as $rowUser) {
-			$arrUser[$rowUser['id']] = $rowUser;
-		}
-		$userId = user_id();
-		$listNotification  = $notification->list($userId);
-		$result = [];
-		foreach ($listNotification as $key => $val) {
-			$dataPush = $val;
-			unset($dataPush['recipient_id']);
-			unset($dataPush['read_by']);
-			$dataPush['sender_id'] = isset($arrUser[$val['sender_id']]) ? $arrUser[$val['sender_id']] : [];
-			$dataPush['seen'] = false;
-			if (!empty($val['read_by'])) {
-				$a = array_search($userId, json_decode($val['read_by'], true));
-				if ($a || $a === 0) {
-					$dataPush['seen'] = true;
-				}
-			}
-			$result[] = $dataPush;
-		}
-		$listNotification = $listNotification;
-		$numberNotification = $notification->getNotificationNumber($userId);
-
-		return [
-			'list_notification' => $result,
-			'number_notification' => $numberNotification
-		];
 	}
 }
