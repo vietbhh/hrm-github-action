@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use Google\Cloud\Firestore\FirestoreClient;
 
 class Chat extends ErpController
 {
@@ -130,7 +129,7 @@ class Chat extends ErpController
 	public function post_delete_message_post()
 	{
 		exit;
-		$getPara = $this->request->getPost();
+		/*$getPara = $this->request->getPost();
 		$collectionName = $getPara['collectionName'];
 
 		$db = new FirestoreClient([
@@ -146,7 +145,7 @@ class Chat extends ErpController
 			$documents = $collectionReference->documents();
 		}
 
-		return $this->respond(ACTION_SUCCESS);
+		return $this->respond(ACTION_SUCCESS);*/
 	}
 
 	/** support function */

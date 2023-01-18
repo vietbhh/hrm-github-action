@@ -343,7 +343,7 @@ const ChatMessage = (props) => {
           chat.reply.replying_type === "text" ||
           chat.reply.replying_type === "link"
         ) {
-          reply_content = chat.reply.replying_message
+          reply_content = ReactHtmlParser(chat.reply.replying_message)
         } else if (chat.reply.replying_type === "image") {
           reply_content = (
             <Photo
@@ -390,7 +390,7 @@ const ChatMessage = (props) => {
                 {reply_to}
               </div>
               <div className="chat-content-reply-text chat-content-img">
-                {ReactHtmlParser(reply_content)}
+                {reply_content}
               </div>
             </div>
           </div>
