@@ -350,7 +350,7 @@ class App extends ErpController
 		}
 
 		$result = [
-			'arr_col' =>  $arrCol,
+			'arr_col' => $arrCol,
 			'arr_field_select' => $arrFieldSelect
 		];
 
@@ -370,7 +370,7 @@ class App extends ErpController
 		$unMappedField = [];
 
 		// ** get select module data
-		$arrSelectModuleData = $this->_getSelectModuleData($listField); 
+		$arrSelectModuleData = $this->_getSelectModuleData($listField);
 
 		// ** get unmapped field
 		foreach ($listField as $key => $row) {
@@ -392,7 +392,7 @@ class App extends ErpController
 
 			foreach ($header as $keyHeader => $rowHeader) {
 				$arrFieldImport = $this->_getFieldImportFromHeader($listField, $rowHeader);
-				if (count($arrFieldImport)  == 0) {
+				if (count($arrFieldImport) == 0) {
 					continue;
 				}
 
@@ -518,9 +518,9 @@ class App extends ErpController
 		$validation = \Config\Services::validation();
 
 		$importData = $data['import_data'];
-        $listFieldImport = $data['list_field_import'];
+		$listFieldImport = $data['list_field_import'];
 		// ** get select module data
-        $arrSelectModuleData = $this->_getSelectModuleData($listFieldImport);
+		$arrSelectModuleData = $this->_getSelectModuleData($listFieldImport);
 
 		$batchData = $validateErrors = $fieldInsert = [];
 		foreach ($importData as $key => $row) {
@@ -529,25 +529,25 @@ class App extends ErpController
 				if (isset($row[$rowListFieldImport['header']])) {
 					$value = $valueOrigin = $row[$rowListFieldImport['header']];
 					if ($rowListFieldImport['type'] == 'date') {
-                        $date = explode("/", $value);
-                        if (!empty($date) && isset($date[2])) {
-                            $value = "$date[2]-$date[1]-$date[0]";
-                        }
-                        $value = date('Y-m-d', strtotime($value));
-                    } else if ($rowListFieldImport['type'] == 'select_module' || $rowListFieldImport['type'] == 'select_option') {
-                        $value = 0;
-                        if (isset($arrSelectModuleData[$rowListFieldImport['header']])) {
-                            $dataSelect = $arrSelectModuleData[$rowListFieldImport['header']]['data'];
-                            foreach ($dataSelect as $rowDataSelect) {
-                                if ($rowDataSelect['label'] == $valueOrigin) {
-                                    $value = $rowDataSelect['id'];
-                                    break;
-                                }
-                            }
-                        }
-                    }
+						$date = explode("/", $value);
+						if (!empty($date) && isset($date[2])) {
+							$value = "$date[2]-$date[1]-$date[0]";
+						}
+						$value = date('Y-m-d', strtotime($value));
+					} else if ($rowListFieldImport['type'] == 'select_module' || $rowListFieldImport['type'] == 'select_option') {
+						$value = 0;
+						if (isset($arrSelectModuleData[$rowListFieldImport['header']])) {
+							$dataSelect = $arrSelectModuleData[$rowListFieldImport['header']]['data'];
+							foreach ($dataSelect as $rowDataSelect) {
+								if ($rowDataSelect['label'] == $valueOrigin) {
+									$value = $rowDataSelect['id'];
+									break;
+								}
+							}
+						}
+					}
 
-                    $dataInsert[$rowListFieldImport['field']] = $value;
+					$dataInsert[$rowListFieldImport['field']] = $value;
 				}
 			}
 
@@ -699,7 +699,7 @@ class App extends ErpController
 				$pushData['field_select_module'] = $row->field_select_module;
 				$pushData['field_select_field_show'] = $row->field_select_field_show;
 			} elseif ($row->field_type == 'select_option') {
-				$fieldOptionValue  = isset($row->field_options_values['values']) ? $row->field_options_values['values'] : [];
+				$fieldOptionValue = isset($row->field_options_values['values']) ? $row->field_options_values['values'] : [];
 				foreach ($fieldOptionValue as $keyOptionValue => $rowOptionValue) {
 					$pushData['field_options_values'][] = [
 						'id' => $rowOptionValue['id'],
@@ -786,24 +786,24 @@ class App extends ErpController
 	}
 
 	private function _isEmptyString($str)
-    {
-        if (empty($str) || strlen(trim($str)) == 0) {
-            return true;
-        }
+	{
+		if (empty($str) || strlen(trim($str)) == 0) {
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	private function _getFieldImportFromHeader($listField, $header)
-    {
-        $result = [];
+	{
+		$result = [];
 
-        foreach ($listField as $rowField) {
-            if (isset($rowField['header']) && $header == $rowField['header']) {
-                $result[] = $rowField;
-            }
-        }
+		foreach ($listField as $rowField) {
+			if (isset($rowField['header']) && $header == $rowField['header']) {
+				$result[] = $rowField;
+			}
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 }

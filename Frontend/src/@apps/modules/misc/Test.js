@@ -1,12 +1,11 @@
+import { ErpFileUpload, ErpInput } from "@apps/components/common/ErpField"
 import { axiosNodeApi } from "@apps/utility/api"
-import {
-  getAvatarUrl,
-  getPublicDownloadUrl,
-  useFormatMessage
-} from "@apps/utility/common"
-import notification from "@apps/utility/notification"
+import { getPublicDownloadUrl, useFormatMessage } from "@apps/utility/common"
+import { serialize } from "@apps/utility/handleData"
 import { socketConnect } from "@apps/utility/socketHandler"
 import { Fragment, useCallback, useContext, useEffect } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import { Button } from "reactstrap"
 import SocketContext from "utility/context/Socket"
 const Test = (props) => {
   const socketDoc = socketConnect({
@@ -47,19 +46,19 @@ const Test = (props) => {
     }) */
   }, [socket])
 
+  const onSubmit = (values) => {
+    axiosNodeApi
+      .post("/notification/send", serialize(_.cloneDeep(values)))
+      .then((res) => {
+        console.log(res)
+      })
+  }
+
   const testNoti = () => {
     axiosNodeApi
-      .post(
-        "/notification/send",
-        {
-          test: "testOk"
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }
-      )
+      .post("/notification/send", {
+        test: "testOk"
+      })
       .then((res) => {
         console.log(res)
       })
@@ -96,8 +95,21 @@ const Test = (props) => {
     }) */
   }
 
+  const methods = useForm({
+    mode: "onSubmit"
+  })
+  const { handleSubmit } = methods
   return (
     <Fragment>
+      <FormProvider {...methods}>
+        <ErpInput name="nameInpt" useForm={methods} />
+        <ErpFileUpload name="file" useForm={methods} />
+      </FormProvider>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Button type="submit" color="primary">
+          {useFormatMessage("app.save")}
+        </Button>
+      </form>
       <button onClick={testNoti}>noti</button>
     </Fragment>
   )

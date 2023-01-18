@@ -25,39 +25,35 @@ class NotificationModel extends Model
 	protected $afterUpdate = ['auditUpdate'];
 	protected $afterDelete = ['auditDelete'];
 
-	public function checkPermit($id, $user)
+	public function listNotification($perPage = 10, $page = 0, $unreadOnly = false): array
 	{
-		$this->select(" *,JSON_UNQUOTE(JSON_EXTRACT(recipient_id, '$[*]'))");
-		$this->where("JSON_SEARCH(recipient_id, 'all', '{$user}', null, '$[*]') IS NOT NULL ");
-		$this->where('id', $id);
-		return $this->get()->getRowArray();
-	}
-
-	public function listNoti($user, $perPage, $page)
-	{
+		$user = user_id();
 		$this->select("*");
-		$this->where("JSON_SEARCH(recipient_id, 'all', '{$user}', null, '$[*]') IS NOT NULL ");
-		if ($page > 1) {
-			$this->limit($perPage, $page * $perPage);
-		} else {
-			$this->limit($perPage);
+		$this->where(handleJsonQueryString("recipient_id", $user));
+		if ($unreadOnly) $this->where(handleJsonQueryString("read_by", $user, "!="));
+		if ($perPage != 0) {
+			if ($page > 0) {
+				$this->limit($perPage, $page * $perPage);
+			} else {
+				$this->limit($perPage);
+			}
 		}
-		return $this->orderBy('id', 'DESC')->get()->getResultArray();
+		return $this->orderBy('id', 'DESC')->findAll();
 	}
 
-	public function getNotificationNumber($user)
+	public function getUnreadNotificationNumber()
 	{
+		$user = user_id();
 		$this->select("id");
-		$this->where("JSON_SEARCH(recipient_id, 'all', '{$user}', null, '$[*]') IS NOT NULL ");
-		$this->where("JSON_SEARCH(read_by, 'all', '{$user}', null, '$[*]') IS NULL ");
+		$this->where(handleJsonQueryString("recipient_id", $user));
+		$this->where(handleJsonQueryString("read_by", $user, "!="));
 		return $this->countAllResults();
 	}
 
-	public function checkAndRead($data)
+	public function markAsRead($data): bool
 	{
 		$readBy = !empty($data['read_by']) ? json_decode($data['read_by']) : [];
-		$a = in_array(user_id(), $readBy);
-		if (!$a) {
+		if (!in_array(user_id(), $readBy)) {
 			$readBy[] = user_id();
 			$this->set('read_by', json_encode($readBy))->where('id', $data['id'])->update();
 		}
