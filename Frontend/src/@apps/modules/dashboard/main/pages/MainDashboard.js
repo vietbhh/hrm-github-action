@@ -106,7 +106,6 @@ const MainDashboard = ({
                 ...data[index],
                 data_grid: {
                   ...value,
-                  static: !customizeDashboard,
                   isDraggable: customizeDashboard
                 },
                 show: true
@@ -203,6 +202,26 @@ const MainDashboard = ({
     }
   }
 
+  const calculateHeightWidget = (i, data_grid_h, data_grid_minH) => {
+    let h = data_grid_h < data_grid_minH ? data_grid_minH : data_grid_h
+    if (global.widget["widget_" + i] && global.widget["widget_" + i].current) {
+      let _h =
+        (global.widget["widget_" + i].current.clientHeight - widgetMargin[1]) /
+        (widgetRowHeight + widgetMargin[1])
+      const _h_abs = Math.abs(_h)
+      const _h_decimal = _h_abs - Math.floor(_h_abs)
+      if (_h_decimal >= 0.95) {
+        _h = _h + 1
+      }
+      h = Math.ceil(_h) + 1
+    }
+    if (h < data_grid_minH) {
+      h = data_grid_minH
+    }
+
+    return h
+  }
+
   const handleLayouts = () => {
     setTimeout(() => {
       const dataLayout_ = JSON.parse(localStorage.getItem("dashboard_widget"))
@@ -210,22 +229,7 @@ const MainDashboard = ({
         if (key_val === state.breakPoints) {
           const val_layout = [...val]
           _.forEach(val_layout, (value, key) => {
-            let h = value.h < value.minH ? value.minH : value.h
-            if (
-              global.widget["widget_" + value.i] &&
-              global.widget["widget_" + value.i].current
-            ) {
-              h =
-                Math.ceil(
-                  (global.widget["widget_" + value.i].current.clientHeight -
-                    widgetMargin[1]) /
-                    (widgetRowHeight + widgetMargin[1])
-                ) + 1
-            }
-            if (h < value.minH) {
-              h = value.minH
-            }
-
+            const h = calculateHeightWidget(value.i, value.h, value.minH)
             val_layout[key] = { ...value, h: h }
           })
           dataLayout_[key_val] = val_layout
@@ -245,25 +249,11 @@ const MainDashboard = ({
           _.forEach(val_layout, (value, key) => {
             const index = dataComponent.findIndex((item) => item.id === value.i)
             if (index > -1) {
-              let h =
-                dataComponent[index]["data_grid"]["h"] <
+              const h = calculateHeightWidget(
+                value.i,
+                dataComponent[index]["data_grid"]["h"],
                 dataComponent[index]["data_grid"]["minH"]
-                  ? dataComponent[index]["data_grid"]["minH"]
-                  : dataComponent[index]["data_grid"]["h"]
-              if (
-                global.widget["widget_" + value.i] &&
-                global.widget["widget_" + value.i].current
-              ) {
-                h =
-                  Math.ceil(
-                    (global.widget["widget_" + value.i].current.clientHeight -
-                      widgetMargin[1]) /
-                      (widgetRowHeight + widgetMargin[1])
-                  ) + 1
-              }
-              if (h < dataComponent[index]["data_grid"]["minH"]) {
-                h = dataComponent[index]["data_grid"]["minH"]
-              }
+              )
 
               dataComponent[index] = {
                 ...dataComponent[index],
@@ -272,7 +262,6 @@ const MainDashboard = ({
                   minW: dataComponent[index]["data_grid"]["minW"],
                   minH: dataComponent[index]["data_grid"]["minH"],
                   maxW: dataComponent[index]["data_grid"]["maxW"],
-                  static: !customizeDashboard,
                   isDraggable: customizeDashboard,
                   h: h
                 },
