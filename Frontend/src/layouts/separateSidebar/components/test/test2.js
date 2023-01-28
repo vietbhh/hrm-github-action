@@ -5,15 +5,14 @@ import SidebarWidget from "../../../components/custom/SidebarWidget"
 
 const test2 = () => {
   const [state, setState] = useMergedState({
-    prevScrollY: 0,
-    stick_pos: 1
+    prevScrollY: 0
   })
   const offsetTop = 90
   const offsetBottom = 30
 
   const handleScroll = (e) => {
     if (window.scrollY < state.prevScrollY) {
-      scrollUpwards(state.stick_pos)
+      scrollUpwards()
     } else {
       scrollDownwards()
     }
