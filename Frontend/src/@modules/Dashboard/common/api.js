@@ -1,5 +1,5 @@
 import { axiosApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
+import { object2QueryString, serialize } from "@apps/utility/handleData"
 
 export const DashboardApi = {
   async getDashboard() {
@@ -73,13 +73,20 @@ export const DashboardApi = {
   },
 
   async updateShowDepartment(data) {
-    return await axiosApi.post("/dashboard/update-view-department",
-    serialize(_.cloneDeep(data)),
-    {
-      headers: {
-        "Content-Type": "multipart/form-data"
+    return await axiosApi.post(
+      "/dashboard/update-view-department",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
       }
-    }
-  )
+    )
+  },
+  async getStatisticData(params) {
+    const strParam = object2QueryString(params)
+    return await axiosApi.get(`/dashboard/get-statistic-data?get${strParam}`, {
+      disableLoading: true
+    })
   }
 }

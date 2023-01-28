@@ -91,10 +91,171 @@ class Employees
 		$arrDescription = explode('@', $description);
 		$result['field'] = isset($arrDescription[1]) ? $arrDescription[1] : '';
 
-		$strReplace = str_replace('changed@'.$result['field'].'@was_changed_from@ ', '', $description);
+		$strReplace = str_replace('changed@' . $result['field'] . '@was_changed_from@ ', '', $description);
 		$arrStatus = explode(' @to@ ', $strReplace);
 		$result['from'] = isset($arrStatus[0]) ? str_replace('"', '', $arrStatus[0]) : '';
 		$result['to'] = isset($arrStatus[1]) ? str_replace('"', '', $arrStatus[1]) : '';
+
+		return $result;
+	}
+
+	public function getOverviewEmployee($filter = [])
+	{
+		helper('app_select_option');
+		$employeeService = \HRM\Modules\Employees\Libraries\Employees\Config\Services::employees();
+
+		$result = [
+			'total_employee_number' => 0,
+			'total_employee_rate' => 0,
+			'total_employee_grow' => false,
+			'new_employee_number' => 0,
+			'new_employee_rate' => 0,
+			'new_employee_grow' => false,
+			'onboarding_number' => 0,
+			'onboarding_rate' => 0,
+			'onboarding_grow' => false,
+			'turn_over_number' => 0,
+			'turn_over_rate' => 0,
+			'turn_over_grow' => false
+		];
+
+		$filterMonth = isset($filter['month']) ? $filter['month'] : '';
+
+		if ($filterMonth == '') {
+			$firstDayOfCurrentMonth = date('Y-m-01');
+			$lastDayOfCurrentMonth = date('Y-m-t');
+			$firstDayOfLastMonth = date('Y-m-01', strtotime('-1 month'));
+			$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month'));
+			$currentDate = date('Y-m-d');
+		} else {
+			$firstDayOfCurrentMonth = date( $filterMonth . '-01');
+			$lastDayOfCurrentMonth = date($filterMonth . '-t');
+			$firstDayOfLastMonth = date('Y-m-01', strtotime('-1 month', strtotime(date($filterMonth . '-01'))));
+			$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month', strtotime(date($filterMonth . '-t'))));
+			$currentDate = date($filterMonth . '-d');
+		}
+
+		$modulesEmployee = \Config\Services::modules('employees');
+		$modelEmployee = $modulesEmployee->model;
+
+		// ** total employee
+		$listAllEmployee = $modelEmployee
+			->whereNotIn('status', [
+				getOptionValue('employees', 'status', 'offboarding'),
+				getOptionValue('employees', 'status', 'resigned')
+			])
+			->where('join_date <=', $lastDayOfCurrentMonth)
+			->findAll();
+		$result['total_employee_number'] = count($listAllEmployee);
+
+		$totalEmployeeLastMonth = $modelEmployee
+			->whereNotIn('status', [
+				getOptionValue('employees', 'status', 'offboarding'),
+				getOptionValue('employees', 'status', 'resigned')
+			])
+			->where('join_date <=', $lastDayOfLastMonth)
+			->where('join_date >=', $firstDayOfLastMonth)
+			->countAllResults();
+
+		$totalEmployeeCurrentMonth = $modelEmployee
+			->whereNotIn('status', [
+				getOptionValue('employees', 'status', 'offboarding'),
+				getOptionValue('employees', 'status', 'resigned')
+			])
+			->where('join_date <=', $lastDayOfCurrentMonth)
+			->where('join_date >=', $firstDayOfCurrentMonth)
+			->countAllResults();
+
+		$result['total_employee_rate'] = $this->_getRate($totalEmployeeLastMonth, $totalEmployeeCurrentMonth);
+		$result['total_employee_grow'] =  $result['total_employee_rate'] >= 0;
+
+		// ** new employee
+		$result['new_employee_number'] = $modelEmployee->whereNotIn('status', [
+			getOptionValue('employees', 'status', 'offboarding'),
+			getOptionValue('employees', 'status', 'resigned')
+		])
+			->where('join_date <=', $currentDate)
+			->where('join_date >=', date('Y-m-d', strtotime('-30 days', strtotime($currentDate))))
+			->countAllResults();
+
+		$newEmployeeLastThirtyDate = $modelEmployee->whereNotIn('status', [
+			getOptionValue('employees', 'status', 'offboarding'),
+			getOptionValue('employees', 'status', 'resigned')
+		])
+			->where('join_date <=', date('Y-m-d', strtotime('-30 days', strtotime($currentDate))))
+			->where('join_date >=', date('Y-m-d', strtotime('-60 days', strtotime($currentDate))))
+			->countAllResults();
+
+		$result['new_employee_rate'] = $this->_getRate($newEmployeeLastThirtyDate, $result['new_employee_number']);
+		$result['new_employee_grow'] =  $result['new_employee_rate'] >= 0;
+
+
+		$modulesEmployeeHistory = \Config\Services::modules('employee_histories');
+		$modelEmployeeHistory = $modulesEmployeeHistory->model;
+
+		$typeOptionUpdateStatus = getOptionValue('employee_histories', 'type', 'update_status');
+		$typeOptionJoin = getOptionValue('employee_histories', 'type', 'join');
+		$listAllHistory = $modelEmployeeHistory->asArray()
+			->where('created_at <=', $lastDayOfCurrentMonth . ' 23:59:59')
+			->where('created_at >=', $firstDayOfLastMonth . ' 00:00:00')
+			->whereIn('type', [
+				$typeOptionUpdateStatus,
+				$typeOptionJoin
+			])
+			->orderBy('created_at', 'ASC')
+			->findAll();
+
+		// ** group data by employee
+		$listAllHistoryNew = [];
+		foreach ($listAllHistory as $row) {
+			$status = 'onboarding';
+			if ($row['type'] == $typeOptionUpdateStatus) {
+				$arrStatusChange = $employeeService->getChangedField($row['description']);
+				$status = isset($arrStatusChange['to']) ? $arrStatusChange['to'] : '';
+			}
+
+			$listAllHistoryNew[$row['employee']][date('Y-m', strtotime($row['created_at']))][$status] = [
+				'id' => $row['employee'],
+				'created_at' => $row['created_at'],
+				'status' => $status
+			];
+		}
+
+		$onboardingNumberLastMonth = 0;
+		$turnOverNumberLastMonth = 0;
+		foreach ($listAllHistoryNew as $employees) {
+			foreach ($employees as $times) {
+				foreach ($times as $key => $row) {
+					$createdAt = date('Y-m-d', strtotime($row['created_at']));
+
+					if (empty($row['status'])) {
+						continue;
+					}
+
+					if ($row['status'] == 'onboarding') {
+						if (strtotime($createdAt) <= strtotime($lastDayOfCurrentMonth) && strtotime($createdAt) >= strtotime($firstDayOfCurrentMonth)) {
+							$result['onboarding_number'] += 1;
+						} elseif (strtotime($createdAt) <= strtotime($lastDayOfLastMonth) && strtotime($createdAt) >= strtotime($firstDayOfLastMonth)) {
+							$onboardingNumberLastMonth += 1;
+						}
+					} elseif ($row['status'] == 'offboarding' || $row['status'] == 'resigned') {
+						if (strtotime($createdAt) <= strtotime($lastDayOfCurrentMonth) && strtotime($createdAt) >= strtotime($firstDayOfCurrentMonth)) {
+							$result['turn_over_number'] += 1;
+						} elseif (strtotime($createdAt) <= strtotime($lastDayOfLastMonth) && strtotime($createdAt) >= strtotime($firstDayOfLastMonth)) {
+							$turnOverNumberLastMonth += 1;
+						}
+					}
+				}
+			}
+		}
+
+		// ** onboarding
+		$result['onboarding_rate'] = $this->_getRate($onboardingNumberLastMonth, $result['onboarding_number']);
+		$result['onboarding_grow'] = $result['onboarding_rate'] >= 0;
+
+		// ** turn over
+		$result['turn_over_rate'] = $this->_getRate($turnOverNumberLastMonth, $result['turn_over_number']);
+		$result['turn_over_grow'] = $result['turn_over_rate'] >= 0;
 
 		return $result;
 	}
@@ -104,5 +265,18 @@ class Employees
 	{
 		if (empty($param)) return "Unknown";
 		return $param;
+	}
+
+	private function _getRate($number1, $number2)
+	{
+		if (($number1 != 0 && $number2 != 0) && $number1 != $number2) {
+			return (($number2 - $number1) / $number1) * 100;
+		} elseif ($number1 == 0 && $number2 != 0) {
+			return $number2 * 100;
+		} elseif ($number1 != 0 && $number2 == 0) {
+			return -100;
+		}
+
+		return 0;
 	}
 }

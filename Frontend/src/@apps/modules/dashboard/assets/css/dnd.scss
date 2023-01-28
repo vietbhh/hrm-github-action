@@ -76,6 +76,37 @@
     background: lighten($primary-bg, 25%);
   }
 
+  .react-grid-item {
+    .card-header-statistic {
+      padding-bottom: 15px !important;
+
+      .ms-auto {
+        display: flex;
+        align-items: center;
+
+        .form-group {
+          width: 120px;
+
+          .ant-picker-focused,
+          .ant-picker {
+            border: none !important;
+            background-color: #F5F5F8;
+          }
+
+          .ant-picker-input input{
+            font-size: 11px !important;
+            font-weight: 500;
+            background-color: #F5F5F8;
+
+            &:focus-within {
+              background-color: #F5F5F8 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
   .droppable-element {
     width: 300px;
     cursor: grab;
