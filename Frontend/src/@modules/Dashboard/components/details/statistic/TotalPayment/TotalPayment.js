@@ -1,4 +1,6 @@
 // ** React Imports
+import { useFormatMessage } from "@apps/utility/common"
+import { convertNumberCurrency } from "@modules/Payrolls/common/common"
 // ** Styles
 // ** Components
 import TotalPaymentChart from "./TotalPaymentChart"
@@ -6,14 +8,30 @@ import TotalPaymentChart from "./TotalPaymentChart"
 const TotalPayment = (props) => {
   const {
     // ** props
+    data,
+    currentMonth,
+    currentYear
     // ** methods
   } = props
 
   // ** render
+  const renderTotalText = () => {
+    const month = `${useFormatMessage(
+      `month_full.${currentMonth}`
+    )}, ${currentYear}`
+
+    return useFormatMessage(
+      "modules.dashboard.text.card_statistic.total_payment_on",
+      {
+        month: month
+      }
+    )
+  }
+
   return (
     <div className="total-payment">
       <div className="mb-1">
-        <p className="money">$178k</p>
+        <p className="money">{convertNumberCurrency(Math.floor(data.total_payment), false, true)}</p>
       </div>
       <div className="d-flex align-items-center pb-1 mb-1 total-payment-time">
         <div>
@@ -41,11 +59,11 @@ const TotalPayment = (props) => {
           </svg>
         </div>
         <div className="">
-          <p className="total-payment-time-text mb-0">Total Payment on August, 2022</p>
+          <p className="total-payment-time-text mb-0">{renderTotalText()}</p>
         </div>
       </div>
       <div className="chart">
-        <TotalPaymentChart />
+        <TotalPaymentChart data={data} />
       </div>
     </div>
   )

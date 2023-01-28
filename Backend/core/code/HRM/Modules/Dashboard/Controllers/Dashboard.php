@@ -127,7 +127,7 @@ class Dashboard extends ErpController
 		$arrShow = $dashboard_department_show ? $dashboard_department_show : [];
 
 		foreach ($listDepartment as $key => $item) {
-			if ($arrShow && in_array($item['id'], $arrShow) ) {
+			if ($arrShow && in_array($item['id'], $arrShow)) {
 				$item['employees'] = [];
 				$arrParent[] = $item;
 				continue;
@@ -227,7 +227,6 @@ class Dashboard extends ErpController
 			} else {
 				preference('dashboard_department_show', $postData['department'], false, $postData['id']);
 			}
-
 		}
 		return $this->respond(ACTION_SUCCESS);
 	}
@@ -235,13 +234,89 @@ class Dashboard extends ErpController
 	public function get_statistic_data_get()
 	{
 		$params = $this->request->getGet();
+		$month = isset($params['month']) ? $params['month'] : date('Y-m');
+		$monthOnly = date('m', strtotime($month));
 
 		$employeeService = \HRM\Modules\Employees\Libraries\Employees\Config\Services::employees();
 
 		$result = [
-			'data_employee_overview' => $employeeService->getOverviewEmployee()
+			'data_employee_overview' => $employeeService->getOverviewEmployee([
+				'month' => $month
+			])
 		];
-		
+
+		$payrollsService = \HRM\Modules\Payrolls\Libraries\Payrolls\Config\Services::payrolls();
+		$modulesPayroll = \Config\Services::modules('payrolls');
+		$modelPayroll = $modulesPayroll->model;
+
+		$insuranceService = \HRM\Modules\Insurance\Libraries\Insurance\Config\Services::insurance();
+		$modulesInsurance = \Config\Services::modules('insurance');
+		$modelInsurance = $modulesInsurance->model;
+
+		$monthIterate = $month;
+		$arrPayrollData = [];
+		for ($i = 1; $i <= 5; $i++) {
+			$currentMonth = date('m', strtotime($monthIterate));
+			if (!isset($arrPayrollData[$currentMonth])) {
+				$arrPayrollData[$currentMonth] = [
+					'gross_salary' => 0,
+					'taxes' => 0
+				];
+			}
+
+			$infoPayroll = $modelPayroll->select(['id'])
+				->asArray()
+				->where('DATE_FORMAT(date_to, "%Y-%m")', $monthIterate)
+				->first();
+
+			if ($infoPayroll) {
+				$data = $payrollsService->getTablePayroll($infoPayroll['id']);
+				if (isset($data['data_table'])) {
+					foreach ($data['data_table'] as $rowDataTable) {
+						$arrPayrollData[$currentMonth]['gross_salary'] += isset($rowDataTable['total_comp']) ? $rowDataTable['total_comp'] : 0;
+					}
+				}
+			}
+
+			$infoInsurance = $modelInsurance->select([
+				'id',
+				'date_from',
+				'date_to',
+				'closed'
+			])
+				->asArray()
+				->where('DATE_FORMAT(date_to, "%Y-%m")', $monthIterate)
+				->first();
+
+			if ($infoInsurance) {
+				$data = $insuranceService->getInsurance($infoInsurance, $infoInsurance['id']);
+				if (isset($data['data_table']) && count($data['data_table']) > 0) {
+					foreach ($data['data_table'] as $rowDataTable) {
+						$arrPayrollData[$currentMonth]['taxes'] += isset($rowDataTable['company_pays']) ? $rowDataTable['company_pays'] : 0;
+					}
+				}
+			}
+
+			$monthIterate = date('Y-m', strtotime('-1 month', strtotime($monthIterate)));
+		}
+
+		$arrPayrollData = array_reverse($arrPayrollData, true);
+
+		$result['data_gross_tax_chart'] = [
+			'list_month' => array_keys($arrPayrollData),
+			'list_gross_salary' => array_column($arrPayrollData, 'gross_salary'),
+			'list_tax' => array_column($arrPayrollData, 'taxes')
+		];
+		$currentGrossSalary = $arrPayrollData[$monthOnly]['gross_salary'];
+		$prevMonth = date('m', strtotime('-1 month', strtotime($month)));
+		$prevGrossSalary = $arrPayrollData[$prevMonth]['gross_salary'];
+		$rate = $this->_getRate($prevGrossSalary, $currentGrossSalary);
+		$result['data_total_payment'] = [
+			'total_payment' => $currentGrossSalary,
+			'rate' => $rate,
+			'is_grow' => $rate >= 0,
+			'list_gross_salary' => array_column($arrPayrollData, 'gross_salary'),
+		];
 
 		return $this->respond($result);
 	}
@@ -255,6 +330,19 @@ class Dashboard extends ErpController
 		$employeeModel = $modules->model;
 		$month = date('m');
 		return $employeeModel->where("Month(dob) = '$month'")->select("id, full_name, dob, username, email, avatar, Day(dob) as day")->orderBy('day', 'asc')->asArray()->findAll();
+	}
+
+	private function _getRate($number1, $number2)
+	{
+		if (($number1 != 0 && $number2 != 0) && $number1 != $number2) {
+			return (($number2 - $number1) / $number1) * 100;
+		} elseif ($number1 == 0 && $number2 != 0) {
+			return $number2 * 100;
+		} elseif ($number1 != 0 && $number2 == 0) {
+			return -100;
+		}
+
+		return 0;
 	}
 
 	private function getAttendance($modules)
@@ -408,5 +496,14 @@ class Dashboard extends ErpController
 		}
 
 		return $branch;
+	}
+
+	private function _getPrevKey($key, $hash = array())
+	{
+		$keys = array_keys($hash);
+		$foundIndex = array_search($key, $keys);
+		if ($foundIndex === false || $foundIndex === 0)
+			return false;
+		return $keys[$foundIndex - 1];
 	}
 }

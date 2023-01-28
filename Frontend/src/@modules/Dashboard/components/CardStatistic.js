@@ -1,7 +1,8 @@
 // ** React Imports
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { DashboardApi } from "../common/api"
+import moment from "moment"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
@@ -9,7 +10,7 @@ import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashb
 import TotalPayment from "../components/details/statistic/TotalPayment/TotalPayment"
 import GrossTaxChart from "../components/details/statistic/GrossTaxChart/GrossTaxChart"
 import EmployeeOverview from "../components/details/statistic/EmployeeOverview/EmployeeOverview"
-import { ErpSelect } from "@apps/components/common/ErpField"
+import { ErpDate } from "@apps/components/common/ErpField"
 
 const CardStatistic = (props) => {
   const {
@@ -17,10 +18,22 @@ const CardStatistic = (props) => {
     // ** methods
   } = props
 
+  const currentMonth = new Date().getMonth() + 1
+  const currentYear = new Date().getFullYear()
+
   const [state, setState] = useMergedState({
-    loading: false,
+    loading: true,
     dataEmployeeOverview: {},
-    filter: {}
+    dataGrossTaxChart: {},
+    dataTotalPayment: {},
+    currentMonth: currentMonth,
+    currentYear: currentYear,
+    filter: {
+      month:
+        currentMonth < 10
+          ? `${currentYear}-0${currentMonth}`
+          : `${currentYear}-${currentMonth}`
+    }
   })
 
   const loadStatisticData = () => {
@@ -32,24 +45,101 @@ const CardStatistic = (props) => {
       .then((res) => {
         setState({
           dataEmployeeOverview: res.data.data_employee_overview,
+          dataGrossTaxChart: res.data.data_gross_tax_chart,
+          dataTotalPayment: res.data.data_total_payment,
           loading: false
         })
       })
       .catch((err) => {})
   }
 
+  const handleChangeFilterMonth = (el) => {
+    const month = el.month() + 1
+    const year = el.year()
+
+    setState({
+      currentMonth: month,
+      currentYear: year,
+      filter: {
+        ...state.filter,
+        month: month < 10 ? `${year}-0${month}` : `${year}-${month}`
+      }
+    })
+  }
+
   // ** effect
   useEffect(() => {
     loadStatisticData()
-  }, [])
+  }, [state.filter])
 
   // ** render
-  const renderFilter = () => {
-    return <ErpSelect name="filter-month" className="me-1"/>
+  const customFormat = (value) => {
+    const month = value.month() + 1
+    const year = value.year()
+
+    return `${useFormatMessage(`month.${month}`)}, ${year}`
+  }
+
+  const datePicker = () => {
+    return (
+      <div className="me-1">
+        <ErpDate
+          name="filter-month"
+          className="statistic-filter-month"
+          picker="month"
+          suffixIcon={<i className="far fa-chevron-down" />}
+          format={customFormat}
+          defaultValue={moment()}
+          allowClear={false}
+          onChange={(el) => handleChangeFilterMonth(el)}
+        />
+      </div>
+    )
+  }
+
+  const renderComponent = () => {
+    if (state.loading) {
+      return (
+        <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+          <div
+            className="ant-spin ant-spin-spinning"
+            aria-live="polite"
+            aria-busy="true">
+            <span className="ant-spin-dot ant-spin-dot-spin">
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <Fragment>
+        <div className="d-flex align-items-start justify-content-between mb-3">
+          <div className="w-20">
+            <TotalPayment
+              data={state.dataTotalPayment}
+              currentMonth={state.currentMonth}
+              currentYear={state.currentYear}
+            />
+          </div>
+          <div className="w-80">
+            <GrossTaxChart data={state.dataGrossTaxChart} />
+          </div>
+        </div>
+        <div>
+          <EmployeeOverview data={state.dataEmployeeOverview} />
+        </div>
+      </Fragment>
+    )
   }
 
   return (
     <LayoutDashboard
+      className="dashboard-card-statistic"
       headerProps={{
         id: "statistic",
         title: useFormatMessage("modules.dashboard.statistic"),
@@ -62,41 +152,31 @@ const CardStatistic = (props) => {
             id="Layer_1"
             x="0px"
             y="0px"
-            width="30px"
-            height="30px"
-            viewBox="0 0 30 30"
-            enableBackground="new 0 0 30 30"
+            width="18px"
+            height="18px"
+            viewBox="0 0 18 18"
+            enableBackground="new 0 0 18 18"
             xmlSpace="preserve">
             {" "}
             <image
               id="image0"
-              width="30"
-              height="30"
+              width="18"
+              height="18"
               x="0"
               y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAArlBMVEUAAAAA5G0A4WwA4WsA 4GwA4W0A4GwA4GwA4GsA4WsA5msA4WwA33AA4W4A32oA4mwA4WsA4W0A4WwA4mwA4WwQ4nUv5oc/ 6JAg5H6/99r///+f88cf5H7v/fXv/faP8r9Q65pA6ZGf9Mjf++3f++y/+Nof5X4g5X4Q43WP8b6P 8r4/6ZBA6JFg7KNv7qx/77XP+eNf7KIv54dw7qww5odP6ppP6pkw54ev9tEw54j4gK5zAAAAFHRS TlMAL2+fz9+/r99fH+8gXzCv35/Pv89T0wgAAAABYktHRBp1Z+QyAAAACXBIWXMAAAsTAAALEwEA mpwYAAAAB3RJTUUH5wEOAigJPS8deQAAATVJREFUKM91k+tCgjAYhsc4CIJYNkUHLoGpYKVpZXn/ NxbsxIT5/tm+PYx9RwCELGg7LmrkeiNogXtBB93JDzRouWggfyxpECKDQvFChMwS3H2AkdPSibTm i4RpoXjQXV6usFKa8TMPgFjQNXnd5EyboqSCjwHkm2256x7dkxXfQDBla4Vr3akDmbPVBjxdb/hd xx94J3x3TViaTwD1cF3rpsLHJuKs3eDEhJlOKC0/aZIch7ebiA/4jItL2X4ose5aRWjj8j7Pv5Rr PLBv/MPixTwfV/wrAnsWaTmxdP1dmJli/u+RSirJurCXtJBJjWSaaX3lBT3Xa1mAGABP8ELVk2wF 9fV2qG68oLdKbwd5fSift2L4AItWtsyNrCYhMo2BPkiT3gcz2JuyGE5f+AjObBjL03+7BEQb3FNR IwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wMS0xNFQwMjo0MDowOSswMDowMPSMTzQAAAAldEVY dGRhdGU6bW9kaWZ5ADIwMjMtMDEtMTRUMDI6NDA6MDkrMDA6MDCF0feIAAAAAElFTkSuQmCC"
+              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAQAAAD8x0bcAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ cwAACxMAAAsTAQCanBgAAAAHdElNRQfnARoKEjsBOQPwAAAA70lEQVQoz32SUXXCUBBE7+P0v3HA q4LgIM8BEooDcICESEgdlCpIUcBBwQMFiYPbj6SQ9EDv98ye3Z0JjFiwpOBOH85MMdr6iMYlQAAj J+CDI/3EWbAmASlcAVvz4PiL0c4WsFBrnmBtZ7GgBL6eiThT8LrgfzLw9lBkPV/gBYBSAbiEK1ix Aw/heHdVs8/swcbsyWxl5VZNg2hrMpms1Xe1sTTfjKMo/UZjZ1aXYDSZ3A2ilbqerKzt5IS1uhqe uZ/8+NNyImrGk2ztnsaSbe4B9xz4ngUcWbGhHwMGo82DonS2t6rcShfnpeMSxsk/AA/bX5TjTlwA AAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDEtMjZUMDk6MTg6NTkrMDE6MDBVowvHAAAAJXRFWHRk YXRlOm1vZGlmeQAyMDIzLTAxLTI2VDA5OjE4OjU5KzAxOjAwJP6zewAAAABJRU5ErkJggg=="
             />
           </svg>
         ),
-        classIconBg: "calendar-bg",
+        classIconBg: "statistic-bg",
         classNameHeader: "card-header-statistic",
         titleLink: "/statistic",
-        customRight: renderFilter(),
+        customRight: datePicker(),
         ...props
       }}>
-      <Card className="dashboard-card-statistic">
-        <CardBody className="ps-3 pe-3 pt-1 pb-3">
-          <div className="d-flex align-items-start justify-content-between mb-2">
-            <div className="w-20">
-              <TotalPayment />
-            </div>
-            <div className="w-80">
-              <GrossTaxChart />
-            </div>
-          </div>
-          <div>
-            <EmployeeOverview data={state.dataEmployeeOverview} />
-          </div>
+      <Card>
+        <CardBody className="ps-3 pe-3 pt-1 pb-3 card-body-statistic">
+          <Fragment>{renderComponent()}</Fragment>
         </CardBody>
       </Card>
     </LayoutDashboard>

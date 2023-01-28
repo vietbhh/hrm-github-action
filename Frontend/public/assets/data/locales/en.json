@@ -726,6 +726,20 @@
     "11": "Nov",
     "12": "Dec"
   },
+  "month_full": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  },
   "day_in_week": {
     "0": "Sunday",
     "1": "Monday",
@@ -930,7 +944,22 @@
         "pin": "Pin",
         "un_pin": "Un pin"
       },
-      "st_show_department" : "Setting show department"
+      "st_show_department" : "Setting show department",
+      "text": {
+        "card_statistic": {
+          "gross_salary": "Gross Salary",
+          "taxes": "Taxes",
+          "total_payment_on": "Total payment on {month}",
+          "increased": "increased",
+          "decreased": "decreased",
+          "total_payment_increase": "Total payment {type} over the previous month by {percent}%",
+          "employees": "Employees",
+          "new_employee": "New Employee",
+          "onboarding": "Onboarding",
+          "turn_over": "Turn Over",
+          "since_last_month": "Since last month"
+        }
+      }
     },
     "users": {
       "buttons": {

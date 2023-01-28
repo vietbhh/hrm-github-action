@@ -70,7 +70,7 @@ const OverviewTemplate = (props) => {
             </svg>
           )}
         </div>
-        <div className="rate-number">{rate}%</div>
+        <div className="rate-number">{Math.round(rate * 100) / 100}%</div>
       </div>
     )
   }
@@ -85,7 +85,7 @@ const OverviewTemplate = (props) => {
       </div>
       <div className="d-flex align-items-end justify-content-between mb-1 pt-50">
         <div>
-          <p className="mb-0 number">{number}</p>
+          <p className="mb-0 me-50 number">{number}</p>
         </div>
         <div>{renderRate()}</div>
       </div>

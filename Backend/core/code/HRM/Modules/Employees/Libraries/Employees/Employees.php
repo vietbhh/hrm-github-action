@@ -91,7 +91,7 @@ class Employees
 		$arrDescription = explode('@', $description);
 		$result['field'] = isset($arrDescription[1]) ? $arrDescription[1] : '';
 
-		$strReplace = str_replace('changed@'.$result['field'].'@was_changed_from@ ', '', $description);
+		$strReplace = str_replace('changed@' . $result['field'] . '@was_changed_from@ ', '', $description);
 		$arrStatus = explode(' @to@ ', $strReplace);
 		$result['from'] = isset($arrStatus[0]) ? str_replace('"', '', $arrStatus[0]) : '';
 		$result['to'] = isset($arrStatus[1]) ? str_replace('"', '', $arrStatus[1]) : '';
@@ -119,21 +119,35 @@ class Employees
 			'turn_over_grow' => false
 		];
 
-		$firstDayOfCurrentMonth = date('Y-m-01');
-		$lastDayOfCurrentMonth = date('Y-m-t');
-		$firstDayOfLastMonth = date('Y-m-01', strtotime('-1 month'));
-		$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month'));
-		$currentDate = date('Y-m-d');
+		$filterMonth = isset($filter['month']) ? $filter['month'] : '';
+
+		if ($filterMonth == '') {
+			$firstDayOfCurrentMonth = date('Y-m-01');
+			$lastDayOfCurrentMonth = date('Y-m-t');
+			$firstDayOfLastMonth = date('Y-m-01', strtotime('-1 month'));
+			$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month'));
+			$currentDate = date('Y-m-d');
+		} else {
+			$firstDayOfCurrentMonth = date( $filterMonth . '-01');
+			$lastDayOfCurrentMonth = date($filterMonth . '-t');
+			$firstDayOfLastMonth = date('Y-m-01', strtotime('-1 month', strtotime(date($filterMonth . '-01'))));
+			$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month', strtotime(date($filterMonth . '-t'))));
+			$currentDate = date($filterMonth . '-d');
+		}
 
 		$modulesEmployee = \Config\Services::modules('employees');
 		$modelEmployee = $modulesEmployee->model;
 
 		// ** total employee
-		$result['total_employee_number'] = $modelEmployee
+		$listAllEmployee = $modelEmployee
 			->whereNotIn('status', [
 				getOptionValue('employees', 'status', 'offboarding'),
 				getOptionValue('employees', 'status', 'resigned')
-			])->countAllResults();
+			])
+			->where('join_date <=', $lastDayOfCurrentMonth)
+			->findAll();
+		$result['total_employee_number'] = count($listAllEmployee);
+
 		$totalEmployeeLastMonth = $modelEmployee
 			->whereNotIn('status', [
 				getOptionValue('employees', 'status', 'offboarding'),
@@ -151,6 +165,7 @@ class Employees
 			->where('join_date <=', $lastDayOfCurrentMonth)
 			->where('join_date >=', $firstDayOfCurrentMonth)
 			->countAllResults();
+
 		$result['total_employee_rate'] = $this->_getRate($totalEmployeeLastMonth, $totalEmployeeCurrentMonth);
 		$result['total_employee_grow'] =  $result['total_employee_rate'] >= 0;
 
@@ -259,7 +274,7 @@ class Employees
 		} elseif ($number1 == 0 && $number2 != 0) {
 			return $number2 * 100;
 		} elseif ($number1 != 0 && $number2 == 0) {
-			return 0 - ($number1 * 100);
+			return -100;
 		}
 
 		return 0;

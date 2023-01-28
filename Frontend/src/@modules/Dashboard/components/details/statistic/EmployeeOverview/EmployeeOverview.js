@@ -1,5 +1,6 @@
 // ** React Imports
 // ** Styles
+import { useFormatMessage } from "@apps/utility/common"
 import { Card, CardBody, Row, Col } from "reactstrap"
 // ** Components
 import OverviewTemplate from "./OverviewTemplate"
@@ -43,11 +44,13 @@ const EmployeeOverview = (props) => {
                 </svg>
               }
               iconBackground="green"
-              title="Employees"
+              title={useFormatMessage("modules.dashboard.text.card_statistic.employees")}
               number={data?.total_employee_number}
               rate={data?.total_employee_rate}
               isGrow={data?.total_employee_grow}
-              description="Since last month"
+              description={useFormatMessage(
+                "modules.dashboard.text.card_statistic.since_last_month"
+              )}
             />
           </Col>
           <Col sm="3" className="col-overview">
@@ -77,11 +80,13 @@ const EmployeeOverview = (props) => {
                 </svg>
               }
               iconBackground="blue"
-              title="Off-boarding"
+              title={useFormatMessage("modules.dashboard.text.card_statistic.new_employee")}
               number={data?.new_employee_number}
               rate={data?.new_employee_rate}
               isGrow={data?.new_employee_grow}
-              description="Since last month"
+              description={useFormatMessage(
+                "modules.dashboard.text.card_statistic.since_last_month"
+              )}
             />
           </Col>
           <Col sm="3" className="col-overview">
@@ -111,11 +116,13 @@ const EmployeeOverview = (props) => {
                 </svg>
               }
               iconBackground="orange"
-              title="Onboarding"
+              title={useFormatMessage("modules.dashboard.text.card_statistic.onboarding")}
               number={data?.onboarding_number}
               rate={data?.onboarding_rate}
               isGrow={data?.onboarding_grow}
-              description="Since last month"
+              description={useFormatMessage(
+                "modules.dashboard.text.card_statistic.since_last_month"
+              )}
             />
           </Col>
           <Col sm="3" className="col-overview border-less">
@@ -145,11 +152,13 @@ const EmployeeOverview = (props) => {
                 </svg>
               }
               iconBackground="red"
-              title="Turn Over"
+              title={useFormatMessage("modules.dashboard.text.card_statistic.turn_over")}
               number={data?.turn_over_number}
               rate={data?.turn_over_rate}
               isGrow={data?.turn_over_grow}
-              description="Since last month"
+              description={useFormatMessage(
+                "modules.dashboard.text.card_statistic.since_last_month"
+              )}
             />
           </Col>
         </Row>
