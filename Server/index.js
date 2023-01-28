@@ -1,21 +1,25 @@
 import "./appInit.js"
 import { responseHelper } from "#app/helpers/responseHelper.js"
 import { isAuth } from "#app/middlewares/authMiddleware.js"
-import corsMiddleware from "#app/middlewares/corsMiddleware.js"
 import errorMiddleware from "#app/middlewares/errorMiddleware.js"
 import appSocket from "#app/sockets/socket.js"
 import bodyParser from "body-parser"
+import cors from "cors"
 import express from "express"
+import fileupload from "express-fileupload"
 import http from "http"
 import mongoose from "mongoose"
 import appRouter from "./src/app/routers/router.js"
 const app = express()
-app.use(bodyParser.json())
+
 // CORS-Middleware
-app.use(corsMiddleware)
+app.use(cors())
+
 //Add Restful Response
 app.use(responseHelper)
 
+app.use(bodyParser.json())
+app.use(fileupload())
 // Routes
 app.use("/", isAuth, appRouter)
 

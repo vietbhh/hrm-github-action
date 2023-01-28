@@ -1,10 +1,8 @@
 // ** Custom Components
-import Avatar from "@apps/modules/download/pages/Avatar"
 import ListNotification from "./ListNotification"
 
 // ** Third Party Components
 import { useFormatMessage } from "@apps/utility/common"
-import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import {
   Badge,
@@ -16,11 +14,11 @@ import {
   UncontrolledTooltip
 } from "reactstrap"
 
-import { Link } from "react-router-dom"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { Link } from "react-router-dom"
 
 // ** redux
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { handleSeenNotification } from "redux/notification"
 
 const NotificationDropdown = () => {
@@ -32,12 +30,11 @@ const NotificationDropdown = () => {
 
   const handleClick = (e) => {
     defaultModuleApi
-      .get("/notification/seen-notification")
+      .get("/notification/read")
       .then((res) => {
         const listNotificationSeen = Object.values(
           res.data.list_notification_seen
         )
-
         const numberNotificationSeen = res.data.number_notification_seen
         dispatch(
           handleSeenNotification({

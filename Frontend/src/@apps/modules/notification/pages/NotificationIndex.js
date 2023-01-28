@@ -54,7 +54,7 @@ const NotificationIndex = (props) => {
   const handleSeenNotification = () => {
     defaultModuleApi
       .get(
-        `/notification/seen-notification?page=${state.page}&per_page=${numberItemPerPage}`
+        `/notification/read?page=${state.page}&per_page=${numberItemPerPage}`
       )
       .then((res) => {})
       .catch((err) => {

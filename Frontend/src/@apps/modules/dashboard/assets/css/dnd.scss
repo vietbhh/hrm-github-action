@@ -151,6 +151,8 @@
 }
 
 .dnd.widget-drawer {
+  z-index: 1500;
+
   .ant-drawer-header {
     .ant-drawer-header-title {
       flex-direction: row-reverse;

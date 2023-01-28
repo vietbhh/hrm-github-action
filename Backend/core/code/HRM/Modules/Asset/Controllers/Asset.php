@@ -9,6 +9,8 @@ namespace HRM\Modules\Asset\Controllers;
 
 use App\Controllers\ErpController;
 use HRM\Modules\Asset\Models\AssetListModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Asset extends ErpController
 {
@@ -183,7 +185,7 @@ class Asset extends ErpController
 			$model->orLike('asset_notes', $getPara['search']);
 			$model->groupEnd();
 		}
-		
+
 		$model->select('*,m_asset_lists.id as id,m_asset_lists.owner as owner')
 			->join('m_asset_types', 'm_asset_types.id = m_asset_lists.asset_type', 'left')
 			->join('m_asset_groups', 'm_asset_groups.id = m_asset_types.asset_type_group', 'left');
@@ -273,5 +275,113 @@ class Asset extends ErpController
 		}
 		$befoReturn = handleDataBeforeReturn('asset_lists', $info);
 		return $this->respond($befoReturn);
+	}
+
+	public function export_excel_get()
+	{
+
+		$modules = \Config\Services::modules('asset_lists');
+		$getPara = $this->request->getGet();
+		$model = $modules->model;
+
+		if (isset($getPara['filters'])) {
+			foreach ($getPara['filters'] as $key => $val) {
+				if ($key === 'owner') {
+					if ($val) {
+						$model->where('m_asset_lists.owner', $val);
+					}
+				} elseif ($key === 'asset_group' && $val) {
+					$model->where('m_asset_types.asset_type_group', $val);
+				} else {
+					if ($val) {
+						$model->where($key, $val);
+					}
+				}
+			}
+		}
+
+		if (isset($getPara['search']) && $getPara['search']) {
+			$model->groupStart();
+			$model->like('asset_code', $getPara['search']);
+			$model->orLike('asset_name', $getPara['search']);
+			$model->orLike('asset_properties', $getPara['search']);
+			$model->orLike('asset_descriptions', $getPara['search']);
+			$model->orLike('asset_notes', $getPara['search']);
+			$model->groupEnd();
+		}
+
+		$model->select('*,m_asset_lists.id as id,m_asset_lists.owner as owner')
+			->join('m_asset_types', 'm_asset_types.id = m_asset_lists.asset_type', 'left')
+			->join('m_asset_groups', 'm_asset_groups.id = m_asset_types.asset_type_group', 'left');
+
+		$assetList = $model->asArray()->findAll();
+		$assetList = handleDataBeforeReturn($modules, $assetList, true);
+
+		//$data = $this->getEmployeeTimeOffRequestTable($getPara, 'export_excel');
+		$data_table = $assetList;
+
+		/*alphabet A to F*/
+		$arr_alphabet = [];
+		foreach (range('A', 'F') as $columnId) {
+			$arr_alphabet[] = $columnId;
+		}
+
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+
+		$styleArray = [
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'startColor' => [
+					'argb' => 'A9D08E',
+				],
+				'endColor' => [
+					'argb' => 'A9D08E',
+				],
+			],
+		];
+
+		$i = 1;
+		$sheet->getStyle("A$i:I$i")->applyFromArray($styleArray);
+		$sheet->setCellValue("A$i", "Name");
+		$sheet->setCellValue("B$i", "Group");
+		$sheet->setCellValue("C$i", "Code");
+		$sheet->setCellValue("D$i", "Type");
+		$sheet->setCellValue("E$i", "Brand");
+		$sheet->setCellValue("F$i", "Created");
+		$sheet->setCellValue("G$i", "Warranty expires");
+		$sheet->setCellValue("H$i", "Status");
+		$sheet->setCellValue("I$i", "Owner");
+
+		$i = 2;
+		foreach ($data_table as $item) {
+			$sheet->getStyle("F$i:G$i")->getNumberFormat()->setFormatCode('dd-mmm-yyyy');
+			//$sheet->getStyle("B$i:C$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+			$sheet->setCellValue("A$i", $item['asset_name'] ?? "-");
+			$sheet->setCellValue("B$i", $item['asset_group_name'] ?? "-");
+			$sheet->setCellValue("C$i", $item['asset_code'] ?? "-");
+			$sheet->setCellValue("D$i", $item['asset_type'] ? $item['asset_type']['label'] : "-");
+			$sheet->setCellValue("E$i", $item['asset_brand'] ? $item['asset_brand']['label'] : "-");
+			$sheet->setCellValue("F$i", date('d/m/Y', strtotime($item['date_created'])));
+			$sheet->setCellValue("G$i", date('d/m/Y', strtotime($item['asset_warranty_expires'])));
+			$sheet->setCellValue("H$i", $item['asset_status'] ? $item['asset_status']['label'] : "-");
+			$sheet->setCellValue("I$i", $item['owner']['label']);
+			$i++;
+		}
+
+		foreach ($arr_alphabet as $columnId) {
+			if ($columnId == 'A') {
+				$sheet->getColumnDimension($columnId)->setWidth(30);
+				continue;
+			}
+			$sheet->getColumnDimension($columnId)->setWidth(20);
+		}
+
+		/*export excel*/
+		$writer = new Xlsx($spreadsheet);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		$writer->save('php://output');
+
+		exit;
 	}
 }

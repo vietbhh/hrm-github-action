@@ -1,0 +1,46 @@
+@import "@scss/friday";
+
+.div-content {
+  display: flex;
+  gap: 30px;
+
+  .div-left {
+    width: 100%;
+
+    > div {
+      border-radius: 14px;
+    }
+  }
+
+  .div-right {
+    min-width: 332px;
+
+    > div {
+      border-radius: 14px;
+    }
+  }
+}
+
+.sidebar-widget {
+  .card {
+    box-shadow: unset;
+    > .card-header {
+      padding: 20px 25px !important;
+    }
+
+    > .card-body {
+      padding: 20px 25px !important;
+      padding-top: 0px !important;
+    }
+  }
+
+  #dashboard-analytics {
+    margin-bottom: 0 !important;
+
+    .react-grid-item {
+      > div {
+        margin: 0 !important;
+      }
+    }
+  }
+}

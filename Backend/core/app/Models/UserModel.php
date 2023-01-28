@@ -140,4 +140,23 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 		return ['id', 'full_name', 'username', 'email', 'phone', 'account_status', 'active', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'office', 'group_id', 'job_title_id', 'department_id', 'device_token'];
 	}
 
+	public function getListUsers($field = [])
+	{
+		$defaultFields = [
+			'id',
+			'username',
+			'full_name',
+			'email',
+			'avatar'
+		];
+		$selectFields = array_unique(array_merge($defaultFields, $field));
+		$data = $this->select($selectFields)->asArray()->findAll();
+		$users = [];
+		foreach ($data as $item) {
+			$users[$item['id']] = $item;
+		}
+		return $users;
+
+	}
+
 }

@@ -15,6 +15,6 @@ export const isAuth = (req, res, next) => {
     newError.statusCode = 401
     throw newError
   }
-  req.userId = decodedToken.userId
+  req.userId = decodedToken.id
   next()
 }

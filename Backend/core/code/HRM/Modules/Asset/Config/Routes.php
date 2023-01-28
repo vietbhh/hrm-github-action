@@ -19,6 +19,7 @@ $routes->post('asset/hand-over', 'Asset::hand_over_post',['namespace' => 'HRM\Mo
 $routes->post('asset/error', 'Asset::error_post',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset/load-history', 'Asset::load_history_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 $routes->get('asset/detail-by-code', 'Asset::detail_by_code_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
+$routes->get('asset/export-excel', 'Asset::export_excel_get',['namespace' => 'HRM\Modules\Asset\Controllers']);
 
 	/*** Route for Group ***/
 $routes->post('asset-group/create', 'Group::create_post',['namespace' => 'HRM\Modules\Asset\Controllers']);

@@ -9,6 +9,10 @@ const mysql = new Sequelize(
     port: process.env.MYSQL_PORT || 3306,
     dialect: "mysql",
     logging: false,
+    dialectOptions: {
+      timezone: "+07:00"
+    },
+    timezone: "+07:00",
     define: {
       underscored: true,
       createdAt: "created_at",
