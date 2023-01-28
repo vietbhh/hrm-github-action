@@ -100,7 +100,7 @@ const CardStatistic = (props) => {
   const renderComponent = () => {
     if (state.loading) {
       return (
-        <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+        <div className="w-100 d-flex align-items-center justify-content-center loading-content">
           <div
             className="ant-spin ant-spin-spinning"
             aria-live="polite"
