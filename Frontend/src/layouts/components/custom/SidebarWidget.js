@@ -1,7 +1,7 @@
 import MainDashboard from "@apps/modules/dashboard/main/pages/MainDashboard"
 import React from "react"
-import "./scss/widget.scss"
 import { ListComponentConfig } from "./components/ListComponentConfig"
+import "./scss/widget.scss"
 
 const SidebarWidget = ({ listComponent }) => {
   return (

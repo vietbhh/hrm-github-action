@@ -301,7 +301,7 @@
     padding: 10px 15px 15px 15px;
     position: fixed;
     width: 300px !important;
-    height: calc(100% - 90px - 30px - 50px);
+    height: calc(100% - 90px - 30px - 30px);
     margin-top: calc(90px + 30px);
     margin-left: 60px;
 
@@ -450,11 +450,39 @@
 
     .content-wrapper {
       padding: 0;
+
+      > div {
+        margin-bottom: 0;
+      }
+
+      .div-content {
+        display: flex;
+        gap: 30px;
+        position: relative;
+
+        .div-left {
+          width: 100%;
+
+          > div {
+            border-radius: 14px;
+            margin-bottom: 0;
+          }
+        }
+
+        .div-right {
+          min-width: 332px;
+          position: relative;
+
+          #div-sticky {
+            border-radius: 14px;
+            position: sticky;
+          }
+        }
+      }
     }
   }
 
-  &.menu-hide,
-  &.menu-open {
+  &.menu-hide {
     .app-content {
       margin-left: 60px;
     }
@@ -464,10 +492,18 @@
     .main-menu {
       margin-left: 0;
     }
+
+    .app-content {
+      margin-left: 60px;
+    }
   }
 
   .customizer {
     width: 410px;
+  }
+
+  .overflow-hidden {
+    overflow: unset !important;
   }
 
   @media (max-width: 1350px) {
