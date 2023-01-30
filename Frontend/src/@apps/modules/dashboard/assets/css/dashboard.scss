@@ -226,8 +226,8 @@
 
       .icon-start {
         position: absolute;
-        right: 7px;
-        top: 7px;
+        right: 15px;
+        top: 10px;
         display: none;
         cursor: pointer;
       }
@@ -307,6 +307,12 @@
           line-height: 24px;
           color: $primary-text-color;
           margin-top: auto;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
         }
       }
 
@@ -383,17 +389,17 @@
 
     .body-content {
       .scrollbar-container {
-        max-height: 280px;
+        max-height: 260px;
         margin: -10px;
         margin-bottom: 10px;
       }
 
       .div-body-notepad {
-        padding: 10px 10px 0 10px;
+        padding: 5px 10px 0 10px;
 
         .div-notepad {
           height: 60px;
-          padding: 7px 30px 5px 30px;
+          padding: 7px 25px 5px 25px;
           border: unset;
 
           .text-title {
