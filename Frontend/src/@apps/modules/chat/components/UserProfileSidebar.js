@@ -34,11 +34,11 @@ const UserProfileSidebar = (props) => {
     setDataUnseenDetail,
     setActive,
     setActiveFullName,
-    imageGroup
+    imageGroup,
+    selectedGroup
   } = props
 
   const [state, setState] = useMergedState({
-    selectedGroup: {},
     modalAddMember: false,
     showMember: true,
     checkedNotification: true,
@@ -86,7 +86,7 @@ const UserProfileSidebar = (props) => {
       }
     }
 
-    handleUpdateGroup(state.selectedGroup.id, {
+    handleUpdateGroup(selectedGroup.id, {
       last_message: useFormatMessage("modules.chat.text.change_name"),
       last_user: userId,
       timestamp: Date.now(),
@@ -148,13 +148,13 @@ const UserProfileSidebar = (props) => {
       setState({ backgroundPreviewLoading: true })
       const img = backgroundEditor.current.getImageScaledToCanvas().toDataURL()
       const data = {
-        groupId: state.selectedGroup.id,
+        groupId: selectedGroup.id,
         file: img
       }
       ChatApi.postUpBackground(data)
         .then((res) => {
           document.getElementById("input-background").value = null
-          handleUpdateGroup(state.selectedGroup.id, {
+          handleUpdateGroup(selectedGroup.id, {
             last_message: useFormatMessage(
               "modules.chat.text.change_background_image"
             ),
@@ -196,13 +196,13 @@ const UserProfileSidebar = (props) => {
       setState({ avatarPreviewLoading: true })
       const img = avatarEditor.current.getImageScaledToCanvas().toDataURL()
       const data = {
-        groupId: state.selectedGroup.id,
+        groupId: selectedGroup.id,
         file: img
       }
       ChatApi.postUpAvatar(data)
         .then((res) => {
           document.getElementById("input-avatar").value = null
-          handleUpdateGroup(state.selectedGroup.id, {
+          handleUpdateGroup(selectedGroup.id, {
             last_message: useFormatMessage(
               "modules.chat.text.change_avatar_image"
             ),
@@ -224,11 +224,11 @@ const UserProfileSidebar = (props) => {
   }
 
   const renderBackground = () => {
-    if (user.type && user.type === "group" && state.selectedGroup.background) {
+    if (user.type && user.type === "group" && selectedGroup.background) {
       return (
         <Photo
           tag="img"
-          src={`/modules/chat/${state.selectedGroup.id}/background/${state.selectedGroup.background}`}
+          src={`/modules/chat/${selectedGroup.id}/background/${selectedGroup.background}`}
         />
       )
     }
@@ -238,12 +238,12 @@ const UserProfileSidebar = (props) => {
 
   const renderAvatar = () => {
     if (user.type && user.type === "group") {
-      if (state.selectedGroup.avatar) {
+      if (selectedGroup.avatar) {
         return (
           <Avatar
             className="box-shadow-1 avatar-border"
             size="xl"
-            src={`/modules/chat/${state.selectedGroup.id}/avatar/${state.selectedGroup.avatar}`}
+            src={`/modules/chat/${selectedGroup.id}/avatar/${selectedGroup.avatar}`}
             imgHeight="70"
             imgWidth="70"
           />
@@ -279,7 +279,7 @@ const UserProfileSidebar = (props) => {
     if (type === "fullName") {
       if (action === "show") {
         setState({ showInputFullName: true })
-        setValue("editFullName", state.selectedGroup?.fullName)
+        setValue("editFullName", selectedGroup?.fullName)
       }
       if (action === "hide") {
         setState({ showInputFullName: false })
@@ -290,7 +290,7 @@ const UserProfileSidebar = (props) => {
     if (type === "des") {
       if (action === "show") {
         setState({ showInputDes: true })
-        setValue("editDes", state.selectedGroup?.des)
+        setValue("editDes", selectedGroup?.des)
       }
       if (action === "hide") {
         setState({ showInputDes: false })
@@ -303,12 +303,11 @@ const UserProfileSidebar = (props) => {
     const index = groups.findIndex((item) => item.id === active)
     if (index !== -1) {
       setState({
-        selectedGroup: groups[index],
         checkedNotification:
           groups[index].mute && groups[index].mute.indexOf(userId) === -1
       })
     } else {
-      setState({ selectedGroup: {}, checkedNotification: true })
+      setState({ checkedNotification: true })
     }
   }, [groups, active])
 
@@ -465,7 +464,7 @@ const UserProfileSidebar = (props) => {
                         }, 100)
                       }
                     }}>
-                    {state.selectedGroup?.fullName}
+                    {selectedGroup?.fullName}
                   </span>
                 </h4>
                 <span className="user-post">
@@ -517,9 +516,9 @@ const UserProfileSidebar = (props) => {
                       }
                     }}>
                     {user?.type === "employee"
-                      ? state.selectedGroup?.role
-                      : state.selectedGroup?.des
-                      ? state.selectedGroup?.des
+                      ? selectedGroup?.role
+                      : selectedGroup?.des
+                      ? selectedGroup?.des
                       : "Never settle!"}
                   </span>
                 </span>
@@ -541,7 +540,7 @@ const UserProfileSidebar = (props) => {
             }
             handleUpdateGroup={handleUpdateGroup}
             handleShowFileView={handleShowFileView}
-            selectedGroup={state.selectedGroup}
+            selectedGroup={selectedGroup}
             userId={userId}
             handleShowMoreOption={handleShowMoreOption}
           />
@@ -549,7 +548,7 @@ const UserProfileSidebar = (props) => {
           {user?.type === "group" && (
             <ProfileSidebarGroup
               setShowMember={() => setState({ showMember: !state.showMember })}
-              selectedGroup={state.selectedGroup}
+              selectedGroup={selectedGroup}
               toggleModalAddMember={toggleModalAddMember}
               dataEmployees={dataEmployees}
               groups={groups}
@@ -566,7 +565,7 @@ const UserProfileSidebar = (props) => {
           <FileViewComponent
             handleShowFileView={handleShowFileView}
             handleShowTab={(value) => setState({ tabView: value })}
-            selectedGroup={state.selectedGroup}
+            selectedGroup={selectedGroup}
             tabView={state.tabView}
             active={active}
           />
@@ -576,7 +575,7 @@ const UserProfileSidebar = (props) => {
           className={`div-more-option ${state.showMoreOption ? "" : "hide"}`}>
           <ProfileSidebarMoreOption
             handleShowMoreOption={handleShowMoreOption}
-            selectedGroup={state.selectedGroup}
+            selectedGroup={selectedGroup}
             handleUpdateGroup={handleUpdateGroup}
             userId={userId}
             setActive={setActive}
@@ -592,7 +591,7 @@ const UserProfileSidebar = (props) => {
         handleUpdateGroup={handleUpdateGroup}
         userId={userId}
         setDataUnseenDetail={setDataUnseenDetail}
-        selectedGroup={state.selectedGroup}
+        selectedGroup={selectedGroup}
       />
 
       <ModalAvatarPreview

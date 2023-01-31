@@ -55,7 +55,8 @@ const ChatLog = (props) => {
     handleSearchMessage,
     hasMoreChat,
     getChatScrollBottom,
-    imageGroup
+    imageGroup,
+    selectedGroup
   } = props
   const { userProfile, selectedUser, groups } = store
 
@@ -165,7 +166,7 @@ const ChatLog = (props) => {
 
   const handleHeight = (replying, isScroll = true, height = 0) => {
     let heightEditor =
-      document.getElementsByClassName("wrapper-message")?.[0]?.offsetHeight
+      document.getElementsByClassName("DraftEditor-root")?.[0]?.offsetHeight
     if (replying) {
       heightEditor = heightEditor + 55
     }
@@ -900,6 +901,7 @@ const ChatLog = (props) => {
                     focusInputMsg={focusInputMsg}
                     setReplyingDefault={setReplyingDefault}
                     setRefMessage={setRefMessage}
+                    msgRef={msgRef}
                     linkPreview={state.linkPreview}
                     file={state.file}
                     modal={state.modal}
@@ -911,6 +913,8 @@ const ChatLog = (props) => {
                     handleSaveFile={handleSaveFile}
                     changeFile={changeFile}
                     renderFormReply={renderFormReply}
+                    selectedGroup={selectedGroup}
+                    dataEmployees={dataEmployees}
                   />
                 </label>
                 {dragActive && (

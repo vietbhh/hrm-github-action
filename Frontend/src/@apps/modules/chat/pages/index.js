@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom"
 import { handleChats, handleTitleChat } from "redux/chat"
 import SocketContext from "utility/context/Socket"
 import { ChatApi } from "../common/api"
-import { triGram } from "../common/common"
+import { replaceHtmlMessage, triGram } from "../common/common"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -92,7 +92,10 @@ const AppChat = (props) => {
     checkShowDataChat: true,
 
     // ** params url
-    checkLoadUrlActiveId: true
+    checkLoadUrlActiveId: true,
+
+    // **
+    selectedGroup: {}
   })
 
   // ** State
@@ -598,8 +601,7 @@ const AppChat = (props) => {
       icon = userId * 1
       notification_name = userFullName
     }
-    let _msg = msg
-    _msg = _msg.replace(/<[^>]*>/g, "")
+    let _msg = replaceHtmlMessage(msg)
 
     if (dataGroups.type === "group") {
       const fullNameSplit = userFullName.split(" ")
@@ -1101,6 +1103,12 @@ const AppChat = (props) => {
       if (index_unseen_detail !== -1 && unseen.indexOf(userId) !== -1) {
         setUnread(unseen_detail[index_unseen_detail].unread_count)
       }
+
+      setState({
+        selectedGroup: store.groups[index]
+      })
+    } else {
+      setState({ selectedGroup: {} })
     }
   }, [store.groups, active])
 
@@ -1540,7 +1548,8 @@ const AppChat = (props) => {
       if (!_.isUndefined(_className_1)) {
         const check_form_send_message =
           _className_1.includes("form-send-message")
-        if (check_form_send_message === true) {
+        const check_form_mnw6qvm = _className_1.includes("mnw6qvm")
+        if (check_form_send_message === true || check_form_mnw6qvm === true) {
           checkIssetDiv = true
           checkFocusFormChat = true
         }
@@ -1557,6 +1566,8 @@ const AppChat = (props) => {
         )
         const check_chat_app_form = _className_2.includes("chat-app-form")
         const check_DraftEditor_root = _className_2.includes("DraftEditor-root")
+        const check_form_send_message_ =
+          _className_2.includes("form-send-message")
         if (
           check_div_li_chat === true ||
           check_list_group === true ||
@@ -1567,7 +1578,11 @@ const AppChat = (props) => {
         ) {
           checkIssetDiv = true
         }
-        if (check_chat_app_form === true || check_DraftEditor_root === true) {
+        if (
+          check_chat_app_form === true ||
+          check_DraftEditor_root === true ||
+          check_form_send_message_ === true
+        ) {
           checkFocusFormChat = true
         }
       }
@@ -1686,6 +1701,7 @@ const AppChat = (props) => {
                 imageGroup={imageGroup}
                 handleUpdateGroup={handleUpdateGroup}
                 handleCountFile={handleCountFile}
+                selectedGroup={state.selectedGroup}
               />
 
               <UserProfileSidebar
@@ -1701,6 +1717,7 @@ const AppChat = (props) => {
                 setActive={setActive}
                 setActiveFullName={setActiveFullName}
                 imageGroup={imageGroup}
+                selectedGroup={state.selectedGroup}
               />
             </div>
           </div>
