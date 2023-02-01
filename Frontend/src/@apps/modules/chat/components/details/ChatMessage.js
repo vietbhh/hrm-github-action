@@ -15,7 +15,13 @@ import { Dropdown, Image, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Spinner } from "reactstrap"
 import LinkPreview from "../../../../components/link-preview/LinkPreview"
-import { detectUrl, formatTime, replaceTextMessage } from "../../common/common"
+import {
+  detectUrl,
+  formatTime,
+  replaceHtmlMessage,
+  replaceMessageBreakLine,
+  replaceTextMessage
+} from "../../common/common"
 
 const ChatMessage = (props) => {
   const {
@@ -864,7 +870,9 @@ const ChatMessage = (props) => {
                   className="react_more"
                   onClick={(e) => {
                     e.preventDefault()
-                    navigator.clipboard.writeText(chat.msg.slice(0, -4))
+                    navigator.clipboard.writeText(
+                      replaceHtmlMessage(replaceMessageBreakLine(chat.msg))
+                    )
                     focusInputMsg()
                   }}>
                   <svg

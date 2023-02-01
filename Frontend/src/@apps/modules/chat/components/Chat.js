@@ -49,9 +49,7 @@ const ChatLog = (props) => {
     unread,
     handleSeenMessage,
     updateMessage,
-    userSidebarRight,
     windowWidth,
-    setUserSidebarRight,
     dataEmployees,
     queryLimit,
     checkAddMessage,
@@ -253,15 +251,6 @@ const ChatLog = (props) => {
   }, [unread])
 
   useEffect(() => {
-    const selectedUserLen = Object.keys(selectedUser).length
-    if (selectedUserLen) {
-      if (windowWidth > 1366) {
-        setUserSidebarRight(true)
-      } else {
-        setUserSidebarRight(false)
-      }
-    }
-
     setMsg("")
     setReplyingDefault()
     //focusInputMsg()
@@ -292,11 +281,6 @@ const ChatLog = (props) => {
       setState({ suggestions: [], mentions: [] })
     }
   }, [selectedGroup, dataEmployees])
-
-  // ** Opens right sidebar & handles its data
-  const handleAvatarClick = (obj) => {
-    handleUserSidebarRight()
-  }
 
   // ** On mobile screen open left sidebar on Start Conversation Click
   const handleStartConversation = () => {
@@ -631,14 +615,11 @@ const ChatLog = (props) => {
             imgWidth="36"
             src={`/modules/chat/${selectedUser.chat.id}/avatar/${groups[index_group].avatar}`}
             className="avatar-border user-profile-toggle m-0 me-1"
-            onClick={() => handleAvatarClick(selectedUser.contact)}
           />
         )
       } else {
         return (
-          <div
-            className="avatar avatar-border user-profile-toggle m-0 me-1 rounded-circle"
-            onClick={() => handleAvatarClick(selectedUser.contact)}>
+          <div className="avatar avatar-border user-profile-toggle m-0 me-1 rounded-circle">
             <img
               className=""
               src={imageGroup}
@@ -658,7 +639,6 @@ const ChatLog = (props) => {
         src={selectedUser.contact.avatar}
         userId={selectedUser.contact.idEmployee}
         className="avatar-border user-profile-toggle m-0 me-1"
-        onClick={() => handleAvatarClick(selectedUser.contact)}
       />
     )
   }
@@ -696,7 +676,7 @@ const ChatLog = (props) => {
                   <div className="chat-header-name">
                     <h6
                       className="mb-0 cursor-pointer"
-                      onClick={() => handleAvatarClick(selectedUser.contact)}>
+                      onClick={() => handleUserSidebarRight()}>
                       {selectedUser.contact.fullName}
                     </h6>
                     <span

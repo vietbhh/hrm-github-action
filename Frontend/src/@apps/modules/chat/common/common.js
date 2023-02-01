@@ -30,6 +30,17 @@ export const replaceTextMessage = (txt) => {
   return txt
 }
 
+export const replaceMessageBreakLine = (txt) => {
+  const mapObj = {
+    "<br>": "\n"
+  }
+  txt = txt.replace(/<br>/gi, function (matched) {
+    return mapObj[matched]
+  })
+
+  return txt
+}
+
 export const triGram = (txt) => {
   txt = txt.slice(0, 500)
   txt = replaceTextMessage(txt)

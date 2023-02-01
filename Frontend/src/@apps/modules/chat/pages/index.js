@@ -193,7 +193,7 @@ const AppChat = (props) => {
         setUserSidebarRight(false)
       }
     }
-  }, [windowWidth])
+  }, [windowWidth, store.selectedUser])
 
   // ** Sidebar & overlay toggle functions
   const handleSidebar = () => setSidebar(!sidebar)
@@ -1690,9 +1690,7 @@ const AppChat = (props) => {
                 unread={state.unread}
                 handleSeenMessage={handleSeenMessage}
                 updateMessage={updateMessage}
-                userSidebarRight={userSidebarRight}
                 windowWidth={windowWidth}
-                setUserSidebarRight={setUserSidebarRight}
                 dataEmployees={state.dataEmployees}
                 queryLimit={queryLimit}
                 scrollToMessage={scrollToMessage}
