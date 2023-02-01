@@ -1,23 +1,16 @@
-import { getAvatarUrl, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
 import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useMemo } from "react"
 //import { Editor } from "react-draft-wysiwyg"
 import Editor from "@draft-js-plugins/editor"
+import "@draft-js-plugins/mention/lib/plugin.css"
 import { InputGroup, InputGroupText } from "reactstrap"
 import UpFile from "../details/UpFile"
 import EmotionsComponent from "../emotions/index"
-import "@draft-js-plugins/mention/lib/plugin.css"
-
-// ** mention
-/* const mentionPlugin = createMentionPlugin()
-// eslint-disable-next-line no-shadow
-const { MentionSuggestions } = mentionPlugin
-// eslint-disable-next-line no-shadow
-const plugins = [mentionPlugin] */
 
 const InputMessage = (props) => {
   const {
@@ -40,8 +33,9 @@ const InputMessage = (props) => {
     handleSaveFile,
     changeFile,
     renderFormReply,
-    selectedGroup,
-    dataEmployees
+    suggestions,
+    setSuggestions,
+    mentions
   } = props
 
   const [state, setState] = useMergedState({
@@ -49,9 +43,7 @@ const InputMessage = (props) => {
     showEmotion: false,
 
     // mention
-    open: false,
-    mentions: [],
-    suggestions: []
+    open: false
   })
 
   const onEditorStateChange = (editorState) => {
@@ -99,9 +91,10 @@ const InputMessage = (props) => {
   }
 
   const setEmptyEditorState = () => {
-    const editorStateEmpty = EditorState.createEmpty()
-    const newEditorState = insertCharacter("", editorStateEmpty)
-    setState({ editorState: newEditorState })
+    const emptyEditorState = EditorState.moveFocusToEnd(
+      EditorState.createEmpty()
+    )
+    setState({ editorState: emptyEditorState })
     handleHeight(replying, true)
   }
 
@@ -113,13 +106,6 @@ const InputMessage = (props) => {
   const onSubmitEditor = () => {
     const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
     let html = draftToHtml(editorStateRaw)
-    _.forEach(state.mentions, (value) => {
-      html = html.replace(
-        value.name,
-        '<a href="' + value.link + '" target="_blank">@' + value.name + "</a>"
-      )
-    })
-
     const mapObj = {
       "<p>": "",
       "</p>": "",
@@ -153,9 +139,9 @@ const InputMessage = (props) => {
   }, [])
   const onSearchChange = useCallback(
     ({ value }) => {
-      setState({ suggestions: defaultSuggestionsFilter(value, state.mentions) })
+      setSuggestions(defaultSuggestionsFilter(value, mentions))
     },
-    [state.mentions]
+    [mentions]
   )
 
   // ** listen
@@ -196,29 +182,7 @@ const InputMessage = (props) => {
   }, [replying_timestamp])
 
   useEffect(() => {
-    if (selectedGroup.user) {
-      const data_mention = []
-      _.forEach(selectedGroup.user, (value) => {
-        const index_employee = dataEmployees.findIndex(
-          (item_employee) => item_employee.id === value
-        )
-        if (index_employee > -1) {
-          data_mention.push({
-            name: dataEmployees[index_employee].full_name,
-            link: `/chat/${dataEmployees[index_employee].username}`,
-            avatar: getAvatarUrl(value * 1)
-          })
-        }
-      })
-
-      setState({ suggestions: data_mention, mentions: data_mention })
-    } else {
-      setState({ suggestions: [], mentions: [] })
-    }
-  }, [selectedGroup, dataEmployees])
-
-  useEffect(() => {
-    //setEmptyEditorState()
+    setEmptyEditorState()
   }, [selectedUser])
 
   return (
@@ -281,7 +245,7 @@ const InputMessage = (props) => {
         <MentionSuggestions
           open={state.open}
           onOpenChange={onOpenChange}
-          suggestions={state.suggestions}
+          suggestions={suggestions}
           onSearchChange={onSearchChange}
           onAddMention={() => {
             // get the mention object selected

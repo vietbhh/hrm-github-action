@@ -9,7 +9,11 @@ import SearchMessage from "./details/SearchMessage"
 import ModalForward from "./modals/ModalForward"
 
 // ** Third Party Components
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  getAvatarUrl,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import classnames from "classnames"
 import { MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -82,7 +86,11 @@ const ChatLog = (props) => {
     linkPreview: "",
     file: null,
     modal: false,
-    compress_images: true
+    compress_images: true,
+
+    // mention
+    mentions: [],
+    suggestions: []
   })
 
   const msgRef = useRef(null)
@@ -261,6 +269,30 @@ const ChatLog = (props) => {
     localStorage.setItem("formChatFocus", true)
   }, [selectedUser, loadingMessage])
 
+  // ** mention
+  useEffect(() => {
+    if (selectedGroup.user) {
+      const data_mention = []
+      _.forEach(selectedGroup.user, (value) => {
+        const index_employee = dataEmployees.findIndex(
+          (item_employee) => item_employee.id === value
+        )
+        if (index_employee > -1) {
+          data_mention.push({
+            id: value,
+            name: dataEmployees[index_employee].full_name,
+            link: `/chat/${dataEmployees[index_employee].username}`,
+            avatar: getAvatarUrl(value * 1)
+          })
+        }
+      })
+
+      setState({ suggestions: data_mention, mentions: data_mention })
+    } else {
+      setState({ suggestions: [], mentions: [] })
+    }
+  }, [selectedGroup, dataEmployees])
+
   // ** Opens right sidebar & handles its data
   const handleAvatarClick = (obj) => {
     handleUserSidebarRight()
@@ -281,6 +313,19 @@ const ChatLog = (props) => {
     let msg = values.message
     if (loadingMessage) return
     if (msg.trim().length) {
+      const mention = []
+      _.forEach(state.mentions, (value) => {
+        msg = msg.replace(value.name, function (val) {
+          mention.push(value.id)
+          return (
+            '<a href="' +
+            value.link +
+            '" target="_blank">@' +
+            value.name +
+            "</a>"
+          )
+        })
+      })
       msg = decodeHTMLEntities(msg)
 
       const reply = state.replying
@@ -302,7 +347,7 @@ const ChatLog = (props) => {
       if (!_.isEmpty(arr_link)) {
         dataAddLink = { type: "link", file: arr_link }
       }
-      const dataAdd = { ...reply, ...dataAddLink }
+      const dataAdd = { ...reply, ...dataAddLink, mention: mention }
 
       sendMessage(selectedUser.chat.id, msg, dataAdd)
       setMsg("")
@@ -913,8 +958,9 @@ const ChatLog = (props) => {
                     handleSaveFile={handleSaveFile}
                     changeFile={changeFile}
                     renderFormReply={renderFormReply}
-                    selectedGroup={selectedGroup}
-                    dataEmployees={dataEmployees}
+                    suggestions={state.suggestions}
+                    setSuggestions={(value) => setState({ suggestions: value })}
+                    mentions={state.mentions}
                   />
                 </label>
                 {dragActive && (

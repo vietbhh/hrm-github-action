@@ -757,6 +757,13 @@ const AppChat = (props) => {
         const receivers = mute
           .filter((x) => !unseen.includes(x))
           .concat(unseen.filter((x) => !mute.includes(x)))
+        if (!_.isEmpty(dataAddFile.mention)) {
+          _.forEach(dataAddFile.mention, (val_mention) => {
+            if (!receivers.includes(val_mention) && val_mention !== userId) {
+              receivers.push(val_mention)
+            }
+          })
+        }
         if (!_.isEmpty(receivers)) {
           handleSendNotification(
             groupId,
