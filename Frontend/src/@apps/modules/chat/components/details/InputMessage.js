@@ -1,8 +1,13 @@
 import { useMergedState } from "@apps/utility/common"
+import createMentionPlugin, {
+  defaultSuggestionsFilter
+} from "@draft-js-plugins/mention"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import React, { useEffect } from "react"
-import { Editor } from "react-draft-wysiwyg"
+import React, { useCallback, useEffect, useMemo } from "react"
+//import { Editor } from "react-draft-wysiwyg"
+import Editor from "@draft-js-plugins/editor"
+import "@draft-js-plugins/mention/lib/plugin.css"
 import { InputGroup, InputGroupText } from "reactstrap"
 import UpFile from "../details/UpFile"
 import EmotionsComponent from "../emotions/index"
@@ -18,6 +23,7 @@ const InputMessage = (props) => {
     focusInputMsg,
     setReplyingDefault,
     setRefMessage,
+    msgRef,
     linkPreview,
     file,
     modal,
@@ -26,17 +32,34 @@ const InputMessage = (props) => {
     setCompressImages,
     handleSaveFile,
     changeFile,
-    renderFormReply
+    renderFormReply,
+    suggestions,
+    setSuggestions,
+    mentions
   } = props
 
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
-    showEmotion: false
+    showEmotion: false,
+
+    // mention
+    open: false
   })
 
-  const onChange = (editorState) => {
+  const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
     handleHeight(replying, false)
+  }
+
+  const handleReturn = (e) => {
+    // Prevent line break from being inserted
+    if (e.shiftKey || e.ctrlKey || state.open === true) {
+      return "not-handled"
+    }
+
+    e.preventDefault()
+
+    return "handled"
   }
 
   const setEditorReference = (ref) => {
@@ -68,10 +91,11 @@ const InputMessage = (props) => {
   }
 
   const setEmptyEditorState = () => {
-    const editorStateEmpty = EditorState.createEmpty()
-    const newEditorState = insertCharacter("", editorStateEmpty)
-    setState({ editorState: newEditorState })
-    handleHeight(replying, true, 58)
+    const emptyEditorState = EditorState.moveFocusToEnd(
+      EditorState.createEmpty()
+    )
+    setState({ editorState: emptyEditorState })
+    handleHeight(replying, true)
   }
 
   const handleInsertEditorState = (characterToInsert) => {
@@ -79,7 +103,7 @@ const InputMessage = (props) => {
     setState({ editorState: newEditorState })
   }
 
-  const onSubmitEditor = (removeLastChar = true) => {
+  const onSubmitEditor = () => {
     const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
     let html = draftToHtml(editorStateRaw)
     const mapObj = {
@@ -90,25 +114,35 @@ const InputMessage = (props) => {
     html = html.replace(/<p>|<\/p>|\n/gi, function (matched) {
       return mapObj[matched]
     })
-
-    const num_slice = 8
-    if (
-      (removeLastChar === true && html.length <= num_slice) ||
-      (removeLastChar === false && html.length <= num_slice / 2)
-    ) {
-      setEmptyEditorState()
-    } else {
-      if (removeLastChar === true) {
-        html = html.slice(0, -num_slice / 2)
-      }
-      const values = { message: html }
-      handleSendMsg(values)
-      setEmptyEditorState()
-    }
+    const num_slice = 4
+    html = html.slice(0, -num_slice)
+    const values = { message: html }
+    handleSendMsg(values)
+    setEmptyEditorState()
     setState({ showEmotion: false })
   }
 
-  const handleKeyCommand = (command, editorState, eventTimeStamp) => {}
+  // ** mention
+  const { MentionSuggestions, plugins } = useMemo(() => {
+    const mentionPlugin = createMentionPlugin()
+    // eslint-disable-next-line no-shadow
+    const { MentionSuggestions } = mentionPlugin
+    // eslint-disable-next-line no-shadow
+    const plugins = [mentionPlugin]
+    return { plugins, MentionSuggestions }
+  }, [])
+
+  const onOpenChange = useCallback((_open) => {
+    setTimeout(() => {
+      setState({ open: _open })
+    }, 100)
+  }, [])
+  const onSearchChange = useCallback(
+    ({ value }) => {
+      setSuggestions(defaultSuggestionsFilter(value, mentions))
+    },
+    [mentions]
+  )
 
   // ** listen
   useEffect(() => {
@@ -124,7 +158,7 @@ const InputMessage = (props) => {
           return
         }
 
-        if (event.keyCode === 13) {
+        if (event.keyCode === 13 && state.open === false) {
           onSubmitEditor()
         }
       }
@@ -141,7 +175,7 @@ const InputMessage = (props) => {
       window.removeEventListener("keydown", handle)
       window.removeEventListener("paste", handlePaste)
     }
-  }, [state.editorState])
+  }, [state.editorState, state.open, replying])
 
   useEffect(() => {
     handleInsertEditorState("")
@@ -179,12 +213,11 @@ const InputMessage = (props) => {
             setShowEmotion={(value) => setState({ showEmotion: value })}
           />
         </InputGroupText>
-        <Editor
+        {/* <Editor
           wrapperClassName="wrapper-message"
           editorClassName="editor-message"
           editorState={state.editorState}
-          onEditorStateChange={onChange}
-          //handleKeyCommand={handleKeyCommand}
+          onEditorStateChange={onEditorStateChange}
           stripPastedStyles={true}
           editorRef={setEditorReference}
           placeholder="Type a message ..."
@@ -192,6 +225,30 @@ const InputMessage = (props) => {
           editorStyle={{
             minHeight: "55px",
             maxHeight: "auto"
+          }}
+        /> */}
+        <Editor
+          editorKey={"editor"}
+          editorState={state.editorState}
+          onChange={onEditorStateChange}
+          handleReturn={handleReturn}
+          stripPastedStyles={true}
+          plugins={plugins}
+          ref={msgRef}
+          placeholder="Type a message ..."
+          toolbarHidden
+          editorStyle={{
+            minHeight: "55px",
+            maxHeight: "auto"
+          }}
+        />
+        <MentionSuggestions
+          open={state.open}
+          onOpenChange={onOpenChange}
+          suggestions={suggestions}
+          onSearchChange={onSearchChange}
+          onAddMention={() => {
+            // get the mention object selected
           }}
         />
         <InputGroupText>
@@ -218,10 +275,7 @@ const InputMessage = (props) => {
                       /> */}
       </InputGroup>
 
-      <button
-        type="button"
-        className="send"
-        onClick={() => onSubmitEditor(false)}>
+      <button type="button" className="send" onClick={() => onSubmitEditor()}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"

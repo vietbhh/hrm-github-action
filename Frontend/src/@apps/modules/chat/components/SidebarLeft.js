@@ -8,7 +8,7 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import classnames from "classnames"
 import { Search, X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { formatTime, replaceTextMessage } from "../common/common"
+import { formatTime, replaceHtmlMessage } from "../common/common"
 import ModalNewGroup from "./modals/ModalNewGroup"
 
 // ** Reactstrap Imports
@@ -247,7 +247,7 @@ const SidebarLeft = (props) => {
                                 ? item.chat.lastUser + ": "
                                 : ""}
                               {item.chat.lastMessage
-                                ? replaceTextMessage(
+                                ? replaceHtmlMessage(
                                     item.chat.lastMessage.message
                                   )
                                 : groups[groups.length - 1].message}
@@ -540,7 +540,7 @@ const SidebarLeft = (props) => {
             <PerfectScrollbar
               className="chat-user-list-wrapper list-group"
               options={{ wheelPropagation: false }}>
-              {loadingGroup && <DefaultSpinner />}
+              {loadingGroup && <DefaultSpinner className="mt-3" />}
               {!loadingGroup && (
                 <>
                   {renderChats(true)}

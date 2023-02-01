@@ -15,6 +15,10 @@ export const formatTime = (time, date_time = false) => {
   }
 }
 
+export const replaceHtmlMessage = (txt) => {
+  return txt.replace(/<[^>]*>/g, "")
+}
+
 export const replaceTextMessage = (txt) => {
   const mapObj = {
     "<br>": " "
