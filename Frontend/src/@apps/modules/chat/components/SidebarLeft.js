@@ -250,7 +250,7 @@ const SidebarLeft = (props) => {
                                 ? replaceHtmlMessage(
                                     item.chat.lastMessage.message
                                   )
-                                : groups[groups.length - 1].message}
+                                : ""}
                             </CardText>
                           </div>
                           {mute && (

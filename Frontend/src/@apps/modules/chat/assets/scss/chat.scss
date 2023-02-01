@@ -2187,9 +2187,14 @@ $font-family: Helvetica;
         }
 
         .content-link-container {
-          p,
           h6 {
             margin-bottom: 0;
+            font-size: 14px;
+          }
+
+          p {
+            margin-bottom: 0;
+            font-size: 12px;
           }
         }
       }
