@@ -5,6 +5,7 @@ import {
   useMergedState
 } from "@apps/utility/common"
 import classnames from "classnames"
+import { AES } from "crypto-js"
 import moment from "moment"
 import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
@@ -108,6 +109,7 @@ const AppChat = (props) => {
   const [activeFullName, setActiveFullName] = useState("")
   const socket = useContext(SocketContext)
 
+  const keyEncrypt = "Friday"
   const imageGroup =
     process.env.REACT_APP_URL + "/assets/images/default_chat_group.webp"
 
@@ -193,7 +195,7 @@ const AppChat = (props) => {
         setUserSidebarRight(false)
       }
     }
-  }, [windowWidth])
+  }, [windowWidth, store.selectedUser])
 
   // ** Sidebar & overlay toggle functions
   const handleSidebar = () => setSidebar(!sidebar)
@@ -311,7 +313,8 @@ const AppChat = (props) => {
                     react: data.react,
                     reply: data.reply,
                     forward: data.forward,
-                    unsent: data.unsent
+                    unsent: data.unsent,
+                    encrypt: data.encrypt
                   },
                   ...chat
                 ]
@@ -723,6 +726,11 @@ const AppChat = (props) => {
     const file_count = handleCountFile(groupId, dataAddFile.type)
     const break_type = await handleBreakType(groupId, timestamp, dataAddFile)
 
+    // ** encrypt
+    const msg_not_encrypt = msg
+    msg = AES.encrypt(msg, keyEncrypt).toString()
+    dataAddFile = { ...dataAddFile, encrypt: 1 }
+
     if (!_.isEmpty(groupId)) {
       delete dataAddFile.contact_id
 
@@ -767,13 +775,13 @@ const AppChat = (props) => {
         if (!_.isEmpty(receivers)) {
           handleSendNotification(
             groupId,
-            handleLastMessage(docData.type, msg),
+            handleLastMessage(docData.type, msg_not_encrypt),
             dataGroups,
             receivers
           )
         }
         let dataGroup = {
-          last_message: handleLastMessage(docData.type, msg),
+          last_message: handleLastMessage(docData.type, msg_not_encrypt),
           last_user: userId,
           timestamp: timestamp,
           new: 0,
@@ -812,7 +820,7 @@ const AppChat = (props) => {
       setState({ loadingMessage: true })
       const type = dataAddFile.type ? dataAddFile.type : "text"
       let docData = {
-        last_message: handleLastMessage(type, msg),
+        last_message: handleLastMessage(type, msg_not_encrypt),
         last_user: userId,
         name: "",
         timestamp: timestamp,
@@ -851,7 +859,7 @@ const AppChat = (props) => {
         // ** notification
         handleSendNotification(
           newGroupId,
-          handleLastMessage(type, msg),
+          handleLastMessage(type, msg_not_encrypt),
           docData,
           idEmployee
         )
@@ -933,7 +941,8 @@ const AppChat = (props) => {
               react: data.react,
               reply: data.reply,
               forward: data.forward,
-              unsent: data.unsent
+              unsent: data.unsent,
+              encrypt: data.encrypt
             }
           ]
         })
@@ -988,7 +997,8 @@ const AppChat = (props) => {
                   react: data.react,
                   reply: data.reply,
                   forward: data.forward,
-                  unsent: data.unsent
+                  unsent: data.unsent,
+                  encrypt: data.encrypt
                 }
               ]
             }
@@ -1043,7 +1053,8 @@ const AppChat = (props) => {
                   react: data.react,
                   reply: data.reply,
                   forward: data.forward,
-                  unsent: data.unsent
+                  unsent: data.unsent,
+                  encrypt: data.encrypt
                 }
               ]
             }
@@ -1464,7 +1475,8 @@ const AppChat = (props) => {
                 reply: data.reply,
                 forward: data.forward,
                 break_type: data.break_type,
-                unsent: data.unsent
+                unsent: data.unsent,
+                encrypt: data.encrypt
               }
             ]
           }
@@ -1486,7 +1498,8 @@ const AppChat = (props) => {
                 reply: data.reply,
                 forward: data.forward,
                 break_type: data.break_type,
-                unsent: data.unsent
+                unsent: data.unsent,
+                encrypt: data.encrypt
               }
               chat = chat_new
               dispatch(
@@ -1658,6 +1671,7 @@ const AppChat = (props) => {
           handleUpdateGroup={handleUpdateGroup}
           setDataUnseenDetail={setDataUnseenDetail}
           imageGroup={imageGroup}
+          keyEncrypt={keyEncrypt}
         />
         <div className="content-right">
           <div className="content-wrapper">
@@ -1690,9 +1704,7 @@ const AppChat = (props) => {
                 unread={state.unread}
                 handleSeenMessage={handleSeenMessage}
                 updateMessage={updateMessage}
-                userSidebarRight={userSidebarRight}
                 windowWidth={windowWidth}
-                setUserSidebarRight={setUserSidebarRight}
                 dataEmployees={state.dataEmployees}
                 queryLimit={queryLimit}
                 scrollToMessage={scrollToMessage}
@@ -1709,6 +1721,7 @@ const AppChat = (props) => {
                 handleUpdateGroup={handleUpdateGroup}
                 handleCountFile={handleCountFile}
                 selectedGroup={state.selectedGroup}
+                keyEncrypt={keyEncrypt}
               />
 
               <UserProfileSidebar

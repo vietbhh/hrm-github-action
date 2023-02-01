@@ -12,10 +12,17 @@ import ReactHtmlParser from "react-html-parser"
 import { useFormatMessage } from "@apps/utility/common"
 import SwAlert from "@apps/utility/SwAlert"
 import { Dropdown, Image, Tooltip } from "antd"
+import { AES, enc } from "crypto-js"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Spinner } from "reactstrap"
 import LinkPreview from "../../../../components/link-preview/LinkPreview"
-import { detectUrl, formatTime, replaceTextMessage } from "../../common/common"
+import {
+  detectUrl,
+  formatTime,
+  replaceHtmlMessage,
+  replaceMessageBreakLine,
+  replaceTextMessage
+} from "../../common/common"
 
 const ChatMessage = (props) => {
   const {
@@ -52,7 +59,8 @@ const ChatMessage = (props) => {
     checkShowDataChat,
     handleHeight,
     handleUpdateGroup,
-    handleCountFile
+    handleCountFile,
+    keyEncrypt
   } = props
   const { userProfile, selectedUser, groups } = store
 
@@ -148,6 +156,17 @@ const ChatMessage = (props) => {
         }
       })
 
+      const decrypted =
+        msg?.encrypt === 1
+          ? AES.decrypt(msg.message, keyEncrypt).toString(enc.Utf8)
+          : msg.message
+      const messages = {
+        msg: decrypted,
+        time: msg.time,
+        seen: seen,
+        ...msg
+      }
+
       if (msg.break_type === "line_time") {
         chatMessageSenderId = msg.senderId
         formattedChatLog.push(msgGroup)
@@ -161,50 +180,24 @@ const ChatMessage = (props) => {
 
         msgGroup = {
           senderId: msg.senderId,
-          messages: [
-            {
-              msg: msg.message,
-              time: msg.time,
-              seen: seen,
-              ...msg
-            }
-          ]
+          messages: [messages]
         }
       } else if (msg.break_type === "minute") {
         chatMessageSenderId = msg.senderId
         formattedChatLog.push(msgGroup)
         msgGroup = {
           senderId: msg.senderId,
-          messages: [
-            {
-              msg: msg.message,
-              time: msg.time,
-              seen: seen,
-              ...msg
-            }
-          ]
+          messages: [messages]
         }
       } else {
         if (chatMessageSenderId === msg.senderId) {
-          msgGroup.messages.push({
-            msg: msg.message,
-            time: msg.time,
-            seen: seen,
-            ...msg
-          })
+          msgGroup.messages.push(messages)
         } else {
           chatMessageSenderId = msg.senderId
           formattedChatLog.push(msgGroup)
           msgGroup = {
             senderId: msg.senderId,
-            messages: [
-              {
-                msg: msg.message,
-                time: msg.time,
-                seen: seen,
-                ...msg
-              }
-            ]
+            messages: [messages]
           }
         }
       }
@@ -864,7 +857,9 @@ const ChatMessage = (props) => {
                   className="react_more"
                   onClick={(e) => {
                     e.preventDefault()
-                    navigator.clipboard.writeText(chat.msg.slice(0, -4))
+                    navigator.clipboard.writeText(
+                      replaceHtmlMessage(replaceMessageBreakLine(chat.msg))
+                    )
                     focusInputMsg()
                   }}>
                   <svg
