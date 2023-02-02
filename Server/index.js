@@ -10,6 +10,8 @@ import fileupload from "express-fileupload"
 import http from "http"
 import mongoose from "mongoose"
 import appRouter from "./src/app/routers/router.js"
+import process from "node:process"
+
 const app = express()
 
 // CORS-Middleware
@@ -25,6 +27,15 @@ app.use("/", isAuth, appRouter)
 
 // Error-handling Middleware
 app.use(errorMiddleware)
+
+process
+  .on("unhandledRejection", (reason, p) => {
+    console.error(reason, "[Unhandled Rejection at Promise]", p)
+  })
+  .on("uncaughtException", (err) => {
+    console.error("[Uncaught Exception thrown]", err)
+    process.exit(1)
+  })
 
 mongoose
   .connect(process.env.MONGODB_URI, {

@@ -16,21 +16,18 @@ const notificationSlice = createSlice({
     handleSeenNotification: (state, action) => {
       const { listNotificationSeen, numberNotificationSeen } = action.payload
       const newListNotification = [...state.listNotification].map((item) => {
-        if (listNotificationSeen.includes(item.id)) {
-          return {
-            ...item,
-            seen: true
-          }
-        }
+        if (listNotificationSeen.includes(item.id.toString())) item.seen = true
         return item
       })
-      const newNumberNotification = state.numberNotification - numberNotificationSeen
+      const newNumberNotification =
+        state.numberNotification - numberNotificationSeen
       state.listNotification = newListNotification
       state.numberNotification = newNumberNotification
     }
   }
 })
 
-export const { handleNotification, handleSeenNotification } = notificationSlice.actions
+export const { handleNotification, handleSeenNotification } =
+  notificationSlice.actions
 
 export default notificationSlice.reducer

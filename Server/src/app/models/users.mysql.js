@@ -1,8 +1,8 @@
 import { isNumber } from "lodash-es"
 import { DataTypes } from "sequelize"
-import { mysql } from "../config/mysql.js"
+import appModelMysql from "./app.mysql.js"
 
-const Users = mysql.define("users", {
+const usersModel = appModelMysql("users", {
   full_name: {
     type: DataTypes.STRING
   },
@@ -62,35 +62,23 @@ const Users = mysql.define("users", {
   },
   device_token: {
     type: DataTypes.JSON
-  },
-  owner: {
-    type: DataTypes.INTEGER
-  },
-  created_by: {
-    type: DataTypes.INTEGER
-  },
-  updated_by: {
-    type: DataTypes.INTEGER
-  },
-  deleted_at: {
-    type: DataTypes.DATE
   }
 })
 
 const getUser = (identity) => {
   return isNumber(identity)
-    ? Users.findByPk(identity)
-    : Users.findOne({
+    ? usersModel.findByPk(identity)
+    : usersModel.findOne({
         username: identity
       })
 }
 
 const getUsers = (ids) => {
-  return Users.findAll({
+  return usersModel.findAll({
     where: {
       id: ids
     }
   })
 }
 
-export { getUser, getUsers, Users }
+export { getUser, getUsers, usersModel }

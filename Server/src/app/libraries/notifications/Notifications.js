@@ -1,4 +1,4 @@
-import { notificationsModel } from "#app/models/notifications.model.mysql.js"
+import { notificationsModelMysql } from "#app/models/notifications.mysql.js"
 import { sendFirebaseNotification } from "#app/services/firebaseServices.js"
 import { emitDataToOnlineUsers } from "#app/sockets/core.socket.js"
 import { getAvatarUrl, getDefaultFridayLogo } from "#app/utility/common.js"
@@ -28,19 +28,25 @@ const sendNotification = async (
   payload.icon = notificationIcon
   let notificationId = 0
   if (saveToDb) {
-    const saveNotification = await notificationsModel.friCreate(
-      {
-        sender_id: sender,
-        recipient_id: JSON.stringify(receivers),
-        type: type,
-        title: title,
-        body: body,
-        link: link,
-        icon: notificationIcon
-      },
-      sender
-    )
-    notificationId = saveNotification.id
+    try {
+      const saveNotification = await notificationsModelMysql.create(
+        {
+          sender_id: sender,
+          recipient_id: JSON.stringify(receivers),
+          type: type,
+          title: title,
+          body: body,
+          link: link,
+          icon: notificationIcon
+        },
+        {
+          userId: sender
+        }
+      )
+      notificationId = saveNotification.id
+    } catch (error) {
+      return false
+    }
   }
 
   //for case when user online,push notification via socket

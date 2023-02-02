@@ -1,20 +1,21 @@
-import mongoose from "mongoose"
+import mongoose, { model } from "mongoose"
+import baseSchema from "./base.mongo.js"
 
-mongoose.Promise = global.Promise
-
-const smartSheetSchema = new mongoose.Schema(
-  {
-    _id: mongoose.Schema.Types.ObjectId,
-    title: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    }
+const smartSheetSchema = baseSchema("m_smartsheet", {
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    auto: true,
+    required: true
   },
-  { collection: "m_smartsheet" }
-)
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  }
+})
 
-export default mongoose.model("smartSheet", smartSheetSchema)
+const smartSheetModelMongo = model("smartSheetModelMongo", smartSheetSchema)
+export default smartSheetModelMongo
