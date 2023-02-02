@@ -429,7 +429,22 @@ const ChatLog = (props) => {
   const handleSaveFile = (file) => {
     const _file = handleFile(file)
     if (_file.file_type === "image") {
-      handleSubmitSaveFile(_file.arr_file)
+      if (_file.arr_file.length > 2) {
+        let start = 0
+        for (let i = 0; i < Math.ceil(_file.arr_file.length / 2); i++) {
+          if (_file.arr_file[start] && _file.arr_file[start + 1]) {
+            handleSubmitSaveFile([
+              _file.arr_file[start],
+              _file.arr_file[start + 1]
+            ])
+          } else {
+            handleSubmitSaveFile([_file.arr_file[start]])
+          }
+          start = start + 2
+        }
+      } else {
+        handleSubmitSaveFile(_file.arr_file)
+      }
     } else {
       _.forEach(_file.arr_file, (val) => {
         handleSubmitSaveFile([val])

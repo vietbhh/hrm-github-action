@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 
 import Avatar from "@apps/modules/download/pages/Avatar"
 import AudioComponent from "./Audio"
@@ -115,11 +115,9 @@ const ChatMessage = (props) => {
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
     let user_list = []
-    let unseen_list = []
     if (index_groups !== -1) {
       unseen_detail = groups[index_groups].chat.unseen_detail
       user_list = groups[index_groups].user
-      unseen_list = groups[index_groups].chat.unseen
     }
 
     const detail = {}
@@ -146,61 +144,72 @@ const ChatMessage = (props) => {
       messages: []
     }
     chatLog.forEach((msg, index) => {
-      const seen = []
-      _.forEach(detail, (value) => {
-        if (
-          value.user_id !== msg.senderId &&
-          (value.timestamp_from === 0 || msg.time < value.timestamp_from)
-        ) {
-          seen.push(value.user_id)
-        }
-      })
-
-      const decrypted =
-        msg?.encrypt === 1
-          ? AES.decrypt(msg.message, keyEncrypt).toString(enc.Utf8)
-          : msg.message
-      const messages = {
-        msg: decrypted,
-        time: msg.time,
-        seen: seen,
-        ...msg
-      }
-
-      if (msg.break_type === "line_time") {
-        chatMessageSenderId = msg.senderId
-        formattedChatLog.push(msgGroup)
-
-        formattedChatLog.push({
-          senderId: msg.senderId,
-          line_time: true,
-          time: msg.time,
-          messages: []
+      if (
+        chatLog[index - 1] &&
+        msg.type === "image" &&
+        msg.status === "loading" &&
+        chatLog[index - 1].type === "image" &&
+        chatLog[index - 1].status === "loading"
+      ) {
+        // nothing
+      } else {
+        const seen = []
+        _.forEach(detail, (value) => {
+          if (
+            value.user_id !== msg.senderId &&
+            (value.timestamp_from === 0 || msg.time < value.timestamp_from)
+          ) {
+            seen.push(value.user_id)
+          }
         })
 
-        msgGroup = {
-          senderId: msg.senderId,
-          messages: [messages]
+        const decrypted =
+          msg?.encrypt === 1
+            ? AES.decrypt(msg.message, keyEncrypt).toString(enc.Utf8)
+            : msg.message
+        const messages = {
+          msg: decrypted,
+          time: msg.time,
+          seen: seen,
+          ...msg
         }
-      } else if (msg.break_type === "minute") {
-        chatMessageSenderId = msg.senderId
-        formattedChatLog.push(msgGroup)
-        msgGroup = {
-          senderId: msg.senderId,
-          messages: [messages]
-        }
-      } else {
-        if (chatMessageSenderId === msg.senderId) {
-          msgGroup.messages.push(messages)
-        } else {
+
+        if (msg.break_type === "line_time") {
+          chatMessageSenderId = msg.senderId
+          formattedChatLog.push(msgGroup)
+
+          formattedChatLog.push({
+            senderId: msg.senderId,
+            line_time: true,
+            time: msg.time,
+            messages: []
+          })
+
+          msgGroup = {
+            senderId: msg.senderId,
+            messages: [messages]
+          }
+        } else if (msg.break_type === "minute") {
           chatMessageSenderId = msg.senderId
           formattedChatLog.push(msgGroup)
           msgGroup = {
             senderId: msg.senderId,
             messages: [messages]
           }
+        } else {
+          if (chatMessageSenderId === msg.senderId) {
+            msgGroup.messages.push(messages)
+          } else {
+            chatMessageSenderId = msg.senderId
+            formattedChatLog.push(msgGroup)
+            msgGroup = {
+              senderId: msg.senderId,
+              messages: [messages]
+            }
+          }
         }
       }
+
       if (index === chatLog.length - 1) formattedChatLog.push(msgGroup)
     })
     return formattedChatLog
@@ -653,6 +662,26 @@ const ChatMessage = (props) => {
             </Tooltip>
           )
         } else if (chat.type === "image" || chat.type === "image_gif") {
+          const renderImage = (chat) => {
+            return (
+              <Image.PreviewGroup>
+                {_.map(chat.file, (val, index2) => {
+                  return (
+                    <Photo
+                      key={index2}
+                      src={`/modules/chat/${
+                        chat?.forward?.forward_id_from
+                          ? chat?.forward?.forward_id_from
+                          : selectedUser.chat.id
+                      }/other/${val.file}`}
+                      height={150}
+                    />
+                  )
+                })}
+              </Image.PreviewGroup>
+            )
+          }
+
           return (
             <Fragment key={index}>
               <Tooltip
@@ -662,20 +691,7 @@ const ChatMessage = (props) => {
                 <div className="chat-content-sender-name">
                   {renderSenderName(chat, index_message)}
                   <div className={`chat-content chat-content-img`}>
-                    <Image.PreviewGroup>
-                      {_.map(chat.file, (val, index2) => {
-                        return (
-                          <Photo
-                            key={index2}
-                            src={`/modules/chat/${
-                              chat?.forward?.forward_id_from
-                                ? chat?.forward?.forward_id_from
-                                : selectedUser.chat.id
-                            }/other/${val.file}`}
-                          />
-                        )
-                      })}
-                    </Image.PreviewGroup>
+                    {renderImage(chat)}
                     {renderHasReaction(chat)}
                   </div>
                 </div>
@@ -806,7 +822,7 @@ const ChatMessage = (props) => {
                     e.preventDefault()
                     toggleModalForward()
                     setDataForward({
-                      message: chat.message,
+                      message: chat.msg,
                       type: chat.type,
                       status: "success",
                       contact_id: "",
@@ -1049,9 +1065,9 @@ const ChatMessage = (props) => {
             <Tooltip title={useFormatMessage("modules.chat.text.reply")}>
               <svg
                 onClick={() => {
-                  let message = chat.message
+                  let message = chat.msg
                   if (chat.type === "link") {
-                    message = detectUrl(chat.message)
+                    message = detectUrl(chat.msg)
                   }
                   message = replaceTextMessage(message)
 

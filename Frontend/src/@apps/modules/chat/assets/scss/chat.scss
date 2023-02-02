@@ -719,7 +719,7 @@ $font-family: Helvetica;
 
             #form-chat {
               position: relative;
-              height: calc(100% - 85px - 40px - 58px); // edit
+              height: calc(100% - 85px - 40px - 55px);
 
               #label-file-upload-chat {
                 height: 100%;
@@ -989,7 +989,7 @@ $font-family: Helvetica;
                       img,
                       .ant-image-mask {
                         max-width: 300px;
-                        max-height: 150px;
+                        //max-height: 150px;
                         border-radius: 15px;
                       }
                     }

@@ -727,6 +727,9 @@ const AppChat = (props) => {
     const break_type = await handleBreakType(groupId, timestamp, dataAddFile)
 
     // ** encrypt
+    if (dataAddFile.message) {
+      delete dataAddFile.message
+    }
     const msg_not_encrypt = msg
     msg = AES.encrypt(msg, keyEncrypt).toString()
     dataAddFile = { ...dataAddFile, encrypt: 1 }
@@ -753,7 +756,7 @@ const AppChat = (props) => {
           ...dataAddFile
         }
         if (docData.type === "text") {
-          docData["_smeta"] = triGram(msg)
+          docData["_smeta"] = triGram(msg_not_encrypt)
         }
         setDoc(doc(collection(db, `${firestoreDb}/chat_messages/${groupId}`)), {
           ...docData,
@@ -853,7 +856,7 @@ const AppChat = (props) => {
           ...dataAddFile
         }
         if (docDataMessage.type === "text") {
-          docDataMessage["_smeta"] = triGram(msg)
+          docDataMessage["_smeta"] = triGram(msg_not_encrypt)
         }
 
         // ** notification
