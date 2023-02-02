@@ -1,4 +1,4 @@
-import { getUser, getUsers, Users } from "#app/models/users.model.mysql.js"
+import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
 import { getDefaultFridayLogo } from "#app/utility/common.js"
 import { cert, initializeApp } from "firebase-admin/app"
 import { getMessaging } from "firebase-admin/messaging"
@@ -97,7 +97,7 @@ export const sendFirebaseNotification = async (
               (val) => !failedTokens.includes(val)
             )
             if (tokensList.length !== workingTokens.length) {
-              Users.update(
+              usersModel.update(
                 {
                   device_token: workingTokens
                 },

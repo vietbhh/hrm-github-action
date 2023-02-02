@@ -1,5 +1,5 @@
 import { authorize } from "#app/middlewares/socket-jwt/authorize.js"
-import { Users } from "#app/models/users.model.mysql.js"
+import { usersModel } from "#app/models/users.mysql.js"
 import { walk } from "file"
 import fs from "fs"
 import path, { dirname } from "path"
@@ -29,7 +29,7 @@ class appSocket {
         onAuthentication: async (decodedToken) => {
           // return the object that you want to add to the user property
           // or throw an error if the token is unauthorized
-          const user = await Users.findByPk(decodedToken.id)
+          const user = await usersModel.findByPk(decodedToken.id)
           if (!user) {
             throw Error("user_not_found")
           }
