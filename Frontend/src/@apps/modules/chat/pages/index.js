@@ -755,7 +755,7 @@ const AppChat = (props) => {
           break_type: break_type,
           ...dataAddFile
         }
-        if (docData.type === "text") {
+        if (docData.type === "text" || docData.type === "link") {
           docData["_smeta"] = triGram(msg_not_encrypt)
         }
         setDoc(doc(collection(db, `${firestoreDb}/chat_messages/${groupId}`)), {
@@ -855,7 +855,7 @@ const AppChat = (props) => {
           break_type: break_type,
           ...dataAddFile
         }
-        if (docDataMessage.type === "text") {
+        if (docDataMessage.type === "text" || docDataMessage.type === "link") {
           docDataMessage["_smeta"] = triGram(msg_not_encrypt)
         }
 

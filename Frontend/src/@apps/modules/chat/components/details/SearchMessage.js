@@ -8,7 +8,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import ReactHtmlParser from "react-html-parser"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { InputGroup, InputGroupText, Spinner } from "reactstrap"
-import { formatTime } from "../../common/common"
+import { formatTime, replaceHtmlMessage } from "../../common/common"
 
 const SearchMessage = (props) => {
   const {
@@ -177,11 +177,11 @@ const SearchMessage = (props) => {
 
   const renderTextSearchResult = (message, textSearch) => {
     const index = message.indexOf(textSearch)
-    const l = 20
+    const l = 30
     const stringFirst = index - l > 0 ? "..." : ""
     const _message = stringFirst + message.substring(index - l)
 
-    return _message
+    return replaceHtmlMessage(_message)
   }
 
   useEffect(() => {
@@ -355,7 +355,10 @@ const SearchMessage = (props) => {
                             )
                           }}>
                           <span className="text">
-                            {ReactHtmlParser(value.message)}
+                            {renderTextSearchResult(
+                              value.message,
+                              getValues("_searchMessage")
+                            )}
                           </span>
                           <span className="time">
                             {formatTime(value.timestamp)}
