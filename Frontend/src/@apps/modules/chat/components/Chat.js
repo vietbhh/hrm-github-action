@@ -58,7 +58,8 @@ const ChatLog = (props) => {
     hasMoreChat,
     getChatScrollBottom,
     imageGroup,
-    selectedGroup
+    selectedGroup,
+    keyEncrypt
   } = props
   const { userProfile, selectedUser, groups } = store
 
@@ -709,6 +710,7 @@ const ChatLog = (props) => {
                     selectedUser={selectedUser}
                     setSearchMessageHighlight={setSearchMessageHighlight}
                     scrollToMessage={props.scrollToMessage}
+                    keyEncrypt={keyEncrypt}
                   />
 
                   <button

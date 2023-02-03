@@ -1,6 +1,7 @@
 import { ErpInput } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
+import { AES, enc } from "crypto-js"
 import { Fragment, useEffect, useRef } from "react"
 import { X } from "react-feather"
 import { FormProvider, useForm } from "react-hook-form"
@@ -14,7 +15,8 @@ const SearchMessage = (props) => {
     handleSearchMessage,
     selectedUser,
     setSearchMessageHighlight,
-    scrollToMessage
+    scrollToMessage,
+    keyEncrypt
   } = props
 
   // ** State
@@ -151,8 +153,12 @@ const SearchMessage = (props) => {
       (res) => {
         res.forEach((doc_mess) => {
           const docData = doc_mess.data()
+          const decrypted =
+            docData?.encrypt === 1
+              ? AES.decrypt(docData.message, keyEncrypt).toString(enc.Utf8)
+              : docData.message
           dataSearch.push({
-            message: docData.message,
+            message: decrypted,
             timestamp: docData.timestamp
           })
         })
