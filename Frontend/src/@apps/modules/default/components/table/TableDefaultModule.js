@@ -213,6 +213,7 @@ const TableDefaultModule = (props) => {
             renderLoading={() => {
               return loading ? <TableLoader rows="15" /> : ""
             }}
+            loading={loading}
             sortColumn={state.sortColumn}
             sortType={state.sortType}
             onSortColumn={(key, type) => {
