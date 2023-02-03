@@ -343,7 +343,7 @@ class Asset extends ErpController
 
 		$i = 1;
 		$sheet->getStyle("A$i:I$i")->applyFromArray($styleArray);
-		$sheet->setCellValue("A$i", "Name");
+		//$sheet->setCellValue("A$i", "Name");
 		$sheet->setCellValue("B$i", "Group");
 		$sheet->setCellValue("C$i", "Code");
 		$sheet->setCellValue("D$i", "Type");
@@ -357,7 +357,7 @@ class Asset extends ErpController
 		foreach ($data_table as $item) {
 			$sheet->getStyle("F$i:G$i")->getNumberFormat()->setFormatCode('dd-mmm-yyyy');
 			//$sheet->getStyle("B$i:C$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-			$sheet->setCellValue("A$i", $item['asset_name'] ?? "-");
+			//$sheet->setCellValue("A$i", $item['asset_name'] ?? "-");
 			$sheet->setCellValue("B$i", $item['asset_group_name'] ?? "-");
 			$sheet->setCellValue("C$i", $item['asset_code'] ?? "-");
 			$sheet->setCellValue("D$i", $item['asset_type'] ? $item['asset_type']['label'] : "-");
