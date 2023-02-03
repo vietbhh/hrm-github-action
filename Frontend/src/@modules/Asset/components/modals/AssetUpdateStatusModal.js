@@ -45,6 +45,9 @@ const AssetUpdateStatusModal = (props) => {
   )
 
   const onSubmitFrm = (values) => {
+    setState({
+      saving: true
+    })
     values.asset_code = dataDetail?.id
     values.type = getOptionValue(options, "type", "other")
     values.status_current = dataDetail?.asset_status?.value
@@ -52,6 +55,9 @@ const AssetUpdateStatusModal = (props) => {
     assetApi.updateSTT(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
+      })
+      setState({
+        saving: false
       })
       handleDetail("")
       loadData()
@@ -174,7 +180,7 @@ const AssetUpdateStatusModal = (props) => {
                             disabled={state.saving}>
                             <span className="align-middle d-sm-inline-block d-none">
                               {state.saving && (
-                                <Spinner size="sm" className="mr-50" />
+                                <Spinner size="sm" className="me-50" />
                               )}
                               {useFormatMessage("button.save")}
                             </span>
