@@ -50,6 +50,7 @@ const List = (props) => {
     infoBoard: {},
     total: {},
     loading: true,
+    loadingExport: false,
     perPage: 10,
     recordsTotal: 0,
     currentPage: 1,
@@ -103,7 +104,6 @@ const List = (props) => {
     setValue,
     getValues
   } = methods
-
   const loadData = (props, stateParams = {}) => {
     setState({
       loading: true
@@ -176,7 +176,7 @@ const List = (props) => {
   }
   const exportExcel = () => {
     setState({
-      loading: true
+      loadingExport: true
     })
     const params = {
       search: state.search,
@@ -187,7 +187,7 @@ const List = (props) => {
         text: useFormatMessage("notification.success")
       })
       setState({
-        loading: false
+        loadingExport: false
       })
       const url = window.URL.createObjectURL(new Blob([res.data]))
       const link = document.createElement("a")
@@ -203,9 +203,9 @@ const List = (props) => {
       <Button.Ripple
         color="primary"
         onClick={exportExcel}
-        disabled={state.loading}
+        disabled={state.loadingExport}
         className="rounded btn-tool d-flex align-items-center">
-        {state.loading ? (
+        {state.loadingExport ? (
           <Spinner size="sm" />
         ) : (
           <i className="far fa-download"></i>
@@ -393,7 +393,7 @@ const List = (props) => {
                   <span
                     className="font-weight-bold name-channel-table"
                     onClick={() => handleDetail(rowData?.id)}>
-                    {rowData?.asset_name}
+                    {rowData?.asset_type?.label}
                   </span>
                   <br />
                   <span

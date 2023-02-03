@@ -207,7 +207,7 @@ class Asset extends ErpController
 		$dataHandle = handleDataBeforeSave($modules, $postData, $filesData);
 		$dataSave = $dataHandle['data'];
 		$assetListModel = new AssetListModel();
-
+		$assetListModel->save(['asset_status' => $postData['status_change'], 'id' => $postData['asset_code']]);
 		$insertHis = $assetListModel->insertHistory($dataSave, $filesData);
 
 		return $this->respond(ACTION_SUCCESS);

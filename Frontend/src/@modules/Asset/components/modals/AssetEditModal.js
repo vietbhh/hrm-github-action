@@ -48,6 +48,7 @@ const AssetEditModal = (props) => {
   )
 
   const onSubmitFrm = (values) => {
+    setState({ saving: true })
     if (dataDetail.id) {
       values.id = dataDetail.id
     }
@@ -56,6 +57,7 @@ const AssetEditModal = (props) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
+      setState({ saving: false })
       handleDetail("")
       loadData()
     })
@@ -191,7 +193,7 @@ const AssetEditModal = (props) => {
                             disabled={state.saving}>
                             <span className="align-middle d-sm-inline-block d-none">
                               {state.saving && (
-                                <Spinner size="sm" className="mr-50" />
+                                <Spinner size="sm" className="me-50" />
                               )}
                               {useFormatMessage("button.save")}
                             </span>
