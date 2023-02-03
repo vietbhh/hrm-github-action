@@ -22,7 +22,7 @@ const Test = (props) => {
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
     //socket.on("notification", handleData)
-    socket.emit("app_notification", {
+    /* socket.emit("app_notification", {
       receivers: [1, 10],
       payload: {
         title: "Trịnh Hải Long",
@@ -30,7 +30,7 @@ const Test = (props) => {
         link: "/dashboard",
         image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
       }
-    })
+    }) */
     /* socket.emit("chat_notification", {
       receivers: 1,
       payload: {
@@ -47,11 +47,9 @@ const Test = (props) => {
   }, [socket])
 
   const onSubmit = (values) => {
-    axiosNodeApi
-      .post("/notification/send", serialize(_.cloneDeep(values)))
-      .then((res) => {
-        console.log(res)
-      })
+    axiosNodeApi.post("/test", serialize(_.cloneDeep(values))).then((res) => {
+      console.log(res)
+    })
   }
 
   const testNoti = () => {
@@ -103,7 +101,7 @@ const Test = (props) => {
     <Fragment>
       <FormProvider {...methods}>
         <ErpInput name="nameInpt" useForm={methods} />
-        <ErpFileUpload name="file" useForm={methods} />
+        <ErpFileUpload name="fileTest[]" useForm={methods} multiple />
       </FormProvider>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Button type="submit" color="primary">
