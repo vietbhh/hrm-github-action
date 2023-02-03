@@ -295,7 +295,7 @@ const ChatLog = (props) => {
   }
   // ** Sends New Msg
   const handleSendMsg = (values) => {
-    let msg = values.message
+    let msg = decodeHTMLEntities(values.message)
     if (loadingMessage) return
     if (msg.trim().length) {
       const mention = []
@@ -311,7 +311,6 @@ const ChatLog = (props) => {
           )
         })
       })
-      msg = decodeHTMLEntities(msg)
 
       const reply = state.replying
         ? {
