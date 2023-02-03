@@ -7,7 +7,7 @@ if (!function_exists('preference')) {
 	 * @param mixed|null $value
 	 *
 	 * @return mixed
-	 * @throws RuntimeException if attempting to set a preference witohut an active user
+	 * @throws RuntimeException if attempting to set a preference without an active user
 	 *
 	 */
 	function preference(string $key, $value = null, $setDefault = false, $userId = false)

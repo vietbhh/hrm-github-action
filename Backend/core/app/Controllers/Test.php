@@ -14,11 +14,11 @@ class Test extends ErpController
 		//$firestore = new FirestoreClient();
 		$notification = \Config\Services::notifications();
 		$payload = ['title' => 'test', 'body' => 'Test cai 23', 'link' => '/dashboard', 'icon' => getAvatarUrl('avatars/1/1_avatar.webp'), 'type' => 'other'];
-		/*try {
+		try {
 			$notification->sendNotification(1, $payload);
 		} catch (\Exception $e) {
 			return $this->failForbidden($e->getMessage());
-		}*/
+		}
 		return $this->respond(true);
 	}
 }

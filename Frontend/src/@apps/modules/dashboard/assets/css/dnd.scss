@@ -31,7 +31,9 @@
     }
 
     .react-grid-item {
-      cursor: grab;
+      &.react-draggable {
+        cursor: grab;
+      }
       //border: 1px solid;
 
       .card {
@@ -65,10 +67,6 @@
           opacity: 1;
         }
       }
-    }
-
-    .static {
-      cursor: unset !important;
     }
   }
 

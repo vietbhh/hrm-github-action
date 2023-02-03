@@ -1,8 +1,7 @@
 import { DataTypes } from "sequelize"
-import appModel from "./app.model.mysql.js"
+import appModelMysql from "./app.mysql.js"
 
-class notificationsModelClass extends appModel {}
-const notificationsModel = new notificationsModelClass("notifications", {
+const notificationsModelMysql = appModelMysql("notifications", {
   sender_id: {
     type: DataTypes.INTEGER
   },
@@ -30,4 +29,4 @@ const notificationsModel = new notificationsModelClass("notifications", {
     defaultValue: "[]"
   }
 })
-export { notificationsModel }
+export { notificationsModelMysql }
