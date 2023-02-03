@@ -57,7 +57,7 @@ const getSetting = async (
 }
 
 const saveSetting = async (key, value, context) => {
-  await saveSettingToDb(key, value, context)
+  return await saveSettingToDb(key, value, context)
 }
 
 export { getSetting, saveSetting }
