@@ -156,7 +156,7 @@ QmCC"
         />
       </svg>
     ),
-    permissions: ["app.login"]
+    permissions: ["asset_lists.access"]
   },
   drive: {
     enable: true,
