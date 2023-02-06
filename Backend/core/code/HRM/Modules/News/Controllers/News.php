@@ -167,15 +167,14 @@ class News extends ErpController
 
 	public function upload_image_post()
 	{
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$image = $this->request->getFiles()['data'];
 		$data['link'] = 'null';
 		if ($image) {
-			if ($image->isValid() && !$image->hasMoved()) {
+			if ($image->isValid()) {
 				$newName = $image->getRandomName();
-				if (!is_dir(WRITEPATH . 'uploads/modules/news/images')) {
-					mkdir(WRITEPATH . 'uploads/modules/news/images', 777, true);
-				}
-				$image->move(WRITEPATH . 'uploads/modules/news/images', $newName);
+				$storePath = '/modules/news/images/';
+				$uploadService->uploadFile($storePath, [$image]);
 				$data['link'] = $_ENV['app.baseURL'] . '/news/image?name=modules/news/images/' . $newName;
 			}
 		}
@@ -195,7 +194,6 @@ class News extends ErpController
 			} else {
 				$filepath = $customDefault;
 			}
-
 		}
 
 		header('Access-Control-Allow-Origin: *');

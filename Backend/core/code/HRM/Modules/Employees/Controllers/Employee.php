@@ -504,29 +504,13 @@ class Employee extends ErpController
 	 */
 	protected function postDocuments($employeeId, $filesData): array
 	{
-		helper('filesystem');
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$paths = [];
 		if ($filesData['files']) {
-			$storePath = getModuleUploadPath('employees', $employeeId) . 'data/';
-			foreach ($filesData['files'] as $key => $files) {
-				if (empty($files)) continue;
-				if (!is_array($files)) $files = [$files];
-				foreach ($files as $position => $file) {
-					try {
-						validateFiles($file);
-					} catch (Exception $e) {
-						throw new Exception($e->getMessage());
-					}
-					if (!$file->isValid()) {
-						throw new Exception($file->getErrorString() . '(' . $file->getError() . ')');
-					}
-					if (!$file->hasMoved()) {
-						$fileName = safeFileName($file->getName());
-						$paths[] = $file->move($storePath, $fileName);
-					}
-				}
-			}
+			$storePath = getModuleUploadPath('employees', $employeeId, false) . 'data/';
+			$paths = $uploadService->uploadFile($storePath, $filesData);
 		}
+
 		return $paths;
 	}
 

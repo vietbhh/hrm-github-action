@@ -706,6 +706,7 @@ class Recruitments extends ErpController
 					'email_in_job' => $this->_getListEmployeeEmail($modules, $recruitmentProposal['value'])
 				];
 			}
+
 			$fileIndex++;
 		}
 		return $this->respond([
@@ -999,15 +1000,15 @@ class Recruitments extends ErpController
 	// ** support function
 	private function _uploadDocFile($file, $fileName)
 	{
-		$storePath = WRITEPATH . 'uploads\default\candidate';
-		if (!is_dir($storePath)) {
-			mkdir($storePath, 0777);
-		}
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
+		$storePath = '/default/candidate/';
+		
 		$fileName = safeFileName($fileName);
-		$file->move($storePath, $fileName);
+		$paths = $uploadService->uploadFile($storePath, [$file], false, $fileName);
+		
 		return [
 			'url' => getenv('app.baseURL') . '/download/public/file?name=/default/candidate/' . $fileName,
-			'path' => $storePath . '/' . $fileName
+			'path' => isset($paths['arr_upload_file']) ? $paths['arr_upload_file'][0]['url'] : $storePath . '/' . $fileName
 		];
 	}
 
