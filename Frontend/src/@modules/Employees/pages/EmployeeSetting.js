@@ -41,7 +41,6 @@ const EmployeeSetting = (props) => {
     }
 
     if (navEmployeeType.includes(tab)) {
-      console.log("z")
       return <EmployeeTypeSetting tab={tab} />
     }
 

@@ -29,7 +29,6 @@ const EmployeeContracts = (props) => {
   const loadContracts = () => {
     if (!isEmpty(props.employeeData.id)) {
       api.getRelatedList("contracts").then((res) => {
-        console.log(res.data.results)
         setState({
           contractLoading: false,
           contractsList: res.data.results,
