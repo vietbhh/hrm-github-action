@@ -3,16 +3,15 @@ import { Fragment } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 import { Collapse } from "antd"
-import { Badge } from "reactstrap"
 // ** Components
-import ActionContractType from "./ActionContractType"
+import ActionEmployeeType from "./ActionEmployeeType"
 
 const { Panel } = Collapse
 
-const ContractTypeItem = (props) => {
+const EmployeeTypeItem = (props) => {
   const {
     // ** props
-    contractType,
+    employeeType,
     // ** methods
     handleModal,
     setModalData,
@@ -20,18 +19,6 @@ const ContractTypeItem = (props) => {
   } = props
 
   // ** render
-  const renderNoEndDate = () => {
-    if (contractType.no_end_date === "1") {
-      return (
-        <Badge color="primary" className="ms-1">
-          {useFormatMessage("modules.contract_type.fields.no_end_date")}
-        </Badge>
-      )
-    }
-
-    return ""
-  }
-
   const renderPanelHeader = () => {
     return (
       <Fragment>
@@ -39,13 +26,12 @@ const ContractTypeItem = (props) => {
           <div className="d-flex align-items-center">
             <p className="mb-0">
               <i className="icpega Briefcase-Portfolio me-50 text-primary" />
-              {contractType.name}
+              {employeeType.name}
             </p>
-            <Fragment>{renderNoEndDate()}</Fragment>
           </div>
           <div>
-            <ActionContractType
-              contractType={contractType}
+            <ActionEmployeeType
+              employeeType={employeeType}
               handleModal={handleModal}
               setModalData={setModalData}
               loadTabContent={loadTabContent}
@@ -73,7 +59,7 @@ const ContractTypeItem = (props) => {
             <p className="me-4">
               {useFormatMessage("modules.employee_setting.text.description")}:
             </p>
-            <p className="mt-0">{contractType.description}</p>
+            <p className="mt-0">{employeeType.description}</p>
           </div>
         </div>
       </Panel>
@@ -81,4 +67,4 @@ const ContractTypeItem = (props) => {
   )
 }
 
-export default ContractTypeItem
+export default EmployeeTypeItem

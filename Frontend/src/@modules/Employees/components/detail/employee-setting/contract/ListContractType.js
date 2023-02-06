@@ -16,17 +16,6 @@ const ListContractType = (props) => {
   } = props
 
   // ** render
-  const renderContractTypeItem = (item) => {
-    return (
-      <ContractTypeItem
-        contractType={item}
-        handleModal={handleModal}
-        setModalData={setModalData}
-        loadTabContent={loadTabContent}
-      />
-    )
-  }
-
   return (
     <Fragment>
       <Space direction="vertical" className="w-100">
@@ -34,7 +23,12 @@ const ListContractType = (props) => {
           {listContractType.map((item, index) => {
             return (
               <Fragment key={`contact_item_${index}`}>
-                {renderContractTypeItem(item)}
+                <ContractTypeItem
+                  contractType={item}
+                  handleModal={handleModal}
+                  setModalData={setModalData}
+                  loadTabContent={loadTabContent}
+                />
               </Fragment>
             )
           })}

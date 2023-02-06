@@ -2,8 +2,8 @@
 import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { FormProvider, useForm } from "react-hook-form"
-import { EmployeeSettingApi } from "@modules/Employees/common/api"
 import { useSelector } from "react-redux"
+import { EmployeeSettingApi } from "@modules/Employees/common/api"
 // ** Styles
 import {
   Button,
@@ -20,7 +20,7 @@ import { Space } from "antd"
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import notification from "@apps/utility/notification"
 
-const AddContractTypeModal = (props) => {
+const AddEmployeeTypeModal = (props) => {
   const {
     // ** props
     modal,
@@ -36,7 +36,7 @@ const AddContractTypeModal = (props) => {
     loading: false
   })
 
-  const moduleData = useSelector((state) => state.app.modules.contract_type)
+  const moduleData = useSelector((state) => state.app.modules.employee_types)
   const module = moduleData.config
   const moduleName = module.name
   const metas = moduleData.metas
@@ -51,8 +51,7 @@ const AddContractTypeModal = (props) => {
       loading: true
     })
     if (!isEditModal) {
-      EmployeeSettingApi
-        .createContractType(values)
+      EmployeeSettingApi.createEmployeeType(values)
         .then((res) => {
           notification.showSuccess({
             text: useFormatMessage("notification.create.success")
@@ -72,8 +71,7 @@ const AddContractTypeModal = (props) => {
           })
         })
     } else {
-      EmployeeSettingApi
-        .updateContractType(modalData.id, values)
+      EmployeeSettingApi.updateEmployeeType(modalData.id, values)
         .then((res) => {
           notification.showSuccess({
             text: useFormatMessage("notification.update.success")
@@ -120,10 +118,10 @@ const AddContractTypeModal = (props) => {
       <ModalHeader toggle={() => handleCloseModal()}>
         {isEditModal
           ? useFormatMessage(
-              "modules.employee_setting.modal.title.edit_contract"
+              "modules.employee_setting.modal.title.edit_employee_type"
             )
           : useFormatMessage(
-              "modules.employee_setting.modal.title.add_contract"
+              "modules.employee_setting.modal.title.add_employee_type"
             )}
       </ModalHeader>
       <ModalBody>
@@ -134,17 +132,6 @@ const AddContractTypeModal = (props) => {
                 module={moduleName}
                 fieldData={{
                   ...metas.name
-                }}
-                useForm={methods}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={12}>
-              <FieldHandle
-                module={moduleName}
-                fieldData={{
-                  ...metas.no_end_date
                 }}
                 useForm={methods}
               />
@@ -187,4 +174,4 @@ const AddContractTypeModal = (props) => {
   )
 }
 
-export default AddContractTypeModal
+export default AddEmployeeTypeModal

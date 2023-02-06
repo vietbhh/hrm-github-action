@@ -10,10 +10,10 @@ import { Button } from "reactstrap"
 import notification from "@apps/utility/notification"
 import SwAlert from "@apps/utility/SwAlert"
 
-const ActionContractType = (props) => {
+const ActionEmployeeType = (props) => {
   const {
     // ** props
-    contractType,
+    employeeType,
     // ** methods
     handleModal,
     setModalData,
@@ -22,11 +22,11 @@ const ActionContractType = (props) => {
 
   const [loading, setLoading] = useState(false)
 
-  const handleEditContractType = (e) => {
+  const handleEditEmployeeType = (e) => {
     e.stopPropagation()
     setLoading(true)
     defaultModuleApi
-      .getDetail("contract_type", contractType.id)
+      .getDetail("employee_types", employeeType.id)
       .then((res) => {
         setModalData(res.data.data)
         setLoading(false)
@@ -40,14 +40,14 @@ const ActionContractType = (props) => {
       })
   }
 
-  const handleDeleteContractType = (e) => {
+  const handleDeleteEmployeeType = (e) => {
     e.stopPropagation()
     SwAlert.showWarning({
       title: useFormatMessage(
-        "modules.employee_setting.text.warning_delete_contract_type.title"
+        "modules.employee_setting.text.warning_delete_employee_type.title"
       ),
       text: useFormatMessage(
-        "modules.employee_setting.text.warning_delete_contract_type.body"
+        "modules.employee_setting.text.warning_delete_employee_type.body"
       ),
       confirmButtonText: useFormatMessage(
         "modules.employee_setting.buttons.delete"
@@ -55,8 +55,7 @@ const ActionContractType = (props) => {
     }).then((res) => {
       if (res.isConfirmed === true) {
         setLoading(true)
-        EmployeeSettingApi
-          .deleteContractType(contractType.id)
+        EmployeeSettingApi.deleteEmployeeType(employeeType.id)
           .then((res) => {
             notification.showSuccess({
               text: useFormatMessage("notification.delete.success")
@@ -75,27 +74,25 @@ const ActionContractType = (props) => {
 
   // ** render
   return (
-    <Fragment>
-      <Space>
-        <Button.Ripple
-          className="btn-icon"
-          size="sm"
-          color="flat-primary"
-          onClick={(e) => handleEditContractType(e)}
-          disabled={loading}>
-          <i className="far fa-edit" />
-        </Button.Ripple>
-        <Button.Ripple
-          className="btn-icon"
-          size="sm"
-          color="flat-danger"
-          onClick={(e) => handleDeleteContractType(e)}
-          disabled={loading}>
-          <i className="far fa-trash-alt" />
-        </Button.Ripple>
-      </Space>
-    </Fragment>
+    <Space>
+      <Button.Ripple
+        className="btn-icon"
+        size="sm"
+        color="flat-primary"
+        onClick={(e) => handleEditEmployeeType(e)}
+        disabled={loading}>
+        <i className="far fa-edit" />
+      </Button.Ripple>
+      <Button.Ripple
+        className="btn-icon"
+        size="sm"
+        color="flat-danger"
+        onClick={(e) => handleDeleteEmployeeType(e)}
+        disabled={loading}>
+        <i className="far fa-trash-alt" />
+      </Button.Ripple>
+    </Space>
   )
 }
 
-export default ActionContractType
+export default ActionEmployeeType
