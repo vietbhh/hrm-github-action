@@ -127,18 +127,6 @@ const AutoGenerateCodeInfo = (props) => {
     )
   }
 
-  const renderEditPattern = () => {
-    return (
-      <EditPattern
-        isEdit={state.isEdit}
-        previewCode={state.previewCode}
-        methods={methods}
-        setIsEdit={setIsEdit}
-        setPreviewCode={setPreviewCode}
-      />
-    )
-  }
-
   const renderAction = () => {
     if (state.isEdit) {
       return (
@@ -173,7 +161,13 @@ const AutoGenerateCodeInfo = (props) => {
     return (
       <Fragment>
         <FormProvider {...methods}>
-          <Fragment>{renderEditPattern()}</Fragment>
+        <EditPattern
+        isEdit={state.isEdit}
+        previewCode={state.previewCode}
+        methods={methods}
+        setIsEdit={setIsEdit}
+        setPreviewCode={setPreviewCode}
+      />
         </FormProvider>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Fragment>{renderAction()}</Fragment>

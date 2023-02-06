@@ -65,6 +65,8 @@ class Careers extends ErpController
 
 	public function apply_post()
 	{
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
+		
 		$dataPost = $this->request->getPost();
 		$dataFiles = $this->request->getFiles();
 
@@ -119,7 +121,9 @@ class Careers extends ErpController
 							//$file->move($storePath, $fileName);
 						} else {
 							$fileName = safeFileName($file->getName());
-							$paths[] = $file->move($storePath, $fileName);
+							//$paths[] = $file->move($storePath, $fileName);
+							$storePathUpload = getModuleUploadPath('candidates', $id, false) . $subPath . '/';
+							$paths[] = $uploadService->uploadFile($storePathUpload, [$file], false,  $fileName);
 							if (!empty($uploadFieldsArray[$key])) {
 								if ($uploadFieldsArray[$key]->field_type == 'upload_multiple') {
 									$arrayFiles = isset($saveData[$key]) ? json_decode($saveData[$key], true) : [];

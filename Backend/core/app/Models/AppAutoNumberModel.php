@@ -26,7 +26,7 @@ class AppAutoNumberModel extends Model
 		]);
 		$result = $query->get()->getRowArray();
 		$text = $result['text_code'];
-		for ($i = 0; $i <= $result['decimals'] - strlen($result['current_num']); $i++) {
+		for ($i = 1; $i <= $result['decimals'] - strlen($result['current_num']); $i++) {
 			$text .= '0';
 		}
 		$result['result'] = $text . $result['current_num'];

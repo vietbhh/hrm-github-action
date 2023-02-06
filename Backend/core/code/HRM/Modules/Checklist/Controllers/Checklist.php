@@ -913,37 +913,10 @@ class Checklist extends ErpController
 
 	private function _uploadChecklistDetailFile($id, $filesData)
 	{
-		helper('filesystem');
-		$paths = [];
-		$storePath = getModuleUploadPath('checklist_detail', $id) . 'data/';
-		$storePathForDownLoad = '/' . $_ENV['data_folder_module'] . '/checklist_detail/' . $id . '/data/';
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
+		$storePath = getModuleUploadPath('checklist_detail', $id, false) . 'data/';
+		$paths = $uploadService->uploadFile($storePath, $filesData);
 
-		foreach ($filesData as $key => $files) {
-			if (empty($files)) continue;
-			if (!is_array($files)) $files = [$files];
-			foreach ($files as $position => $file) {
-				try {
-					validateFiles($file);
-				} catch (Exception $e) {
-					throw new Exception($e->getMessage());
-				}
-
-				if (!$file->isValid()) {
-					throw new Exception($file->getErrorString() . '(' . $file->getError() . ')');
-				}
-
-				if (!$file->hasmoved()) {
-					$fileName = safeFileName($file->getName());
-					$file->move($storePath, $fileName);
-					$infoFileUpload = getFilesProps($storePathForDownLoad . $fileName);
-					$paths[] = [
-						'fileName' => $fileName,
-						'size' => $infoFileUpload['size'],
-						'url' => $storePathForDownLoad . $fileName,
-					];
-				}
-			}
-		}
 		return $paths;
 	}
 
@@ -976,7 +949,7 @@ class Checklist extends ErpController
 		if ($listFile) {
 			foreach ($listFile as $key => $filesData) {
 				$storePath = getModuleUploadPath('checklist_detail', $checklistDetailId) . 'data/';
-				$removePath = $storePath . $filesData['fileName'];
+				$removePath = $storePath . $filesData['filename'];
 				if (is_file($removePath)) {
 					unlink($removePath);
 				}

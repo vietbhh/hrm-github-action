@@ -189,10 +189,10 @@ const CompleteTaskModal = (props) => {
             <div
               key={`file-item-${index}`}
               className="d-flex justify-content-between">
-              <p className="mt-25 mb-0">{item.fileName}</p>
+              <p className="mt-25 mb-0">{item.filename}</p>
               <DownloadFile
                 src={item.url}
-                fileName={item.fileName}
+                fileName={item.filename}
                 type="button"
                 color="flat-primary"
                 size="sm">
