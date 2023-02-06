@@ -487,3 +487,42 @@ export const InsuranceApi = {
     return await axiosApi.get("/insurance/get-table-profile?" + stringFilters)
   }
 }
+
+export const EmployeeSettingApi = {
+  async createEmployeeType(data) {
+    return await axiosApi.post(
+      "/employee-settings/create-employee-type",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async loadEmployeeType() {
+    return await axiosApi.get("/employee-settings/load-employee-type")
+  },
+  async updateEmployeeType(id, data) {
+    return await axiosApi.post(
+      `/employee-settings/update-employee-type/${id}`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async deleteEmployeeType(id) {
+    return await axiosApi.post(`/employee-settings/delete-employee-type/${id}`)
+  },
+  async createContractType(data) {
+    return await axiosApi.post(
+      "/employee-settings/create-contract-type",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async loadContractType() {
+    return await axiosApi.get("/employee-settings/load-contract-type")
+  },
+  async updateContractType(id, data) {
+    return await axiosApi.post(
+      `/employee-settings/update-contract-type/${id}`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async deleteContractType(id) {
+    return await axiosApi.post(`/employee-settings/delete-contract-type/${id}`)
+  }
+}

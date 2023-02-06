@@ -63,6 +63,18 @@ export const getNavMenuContract = (url) => {
   ]
 }
 
+export const getNavMenuEmployeeType = (url) => {
+  return [
+    {
+      id: "employee_type",
+      title: "employee_type",
+      tab: "employee-type",
+      icon: "icpega Briefcase-Portfolio",
+      navLink: `/${url}/employee-type`
+    }
+  ]
+}
+
 export const getNavMenuAutoGenerateCode = (url) => {
   return [
     {

@@ -1,16 +1,17 @@
-// ** React Imports
+// ** React Imports\
 import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { EmployeeSettingApi } from "@modules/Employees/common/api"
 // ** Styles
+import { Space } from "antd"
 import { Button } from "reactstrap"
 // ** Components
-import AddContractTypeModal from "@modules/Employees/components/modals/add-contract-type/AddContractTypeModal"
-import ListContractType from "./ListContractType"
-import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
+import AddEmployeeTypeModal from "@modules/Employees/components/modals/add-employee-type/AddEmployeeTypeModal"
+import EmployeeTypeItem from "../employee-type/EmployeeTypeItem"
 
-const ContractSetting = (props) => {
+const EmployeeTypeSetting = (props) => {
   const {
     // ** props
     tab
@@ -19,7 +20,7 @@ const ContractSetting = (props) => {
 
   const [state, setState] = useMergedState({
     loading: false,
-    listContractType: [],
+    listEmployeeType: [],
     modal: false,
     modalData: {}
   })
@@ -36,7 +37,7 @@ const ContractSetting = (props) => {
     })
   }
 
-  const handleAddContract = () => {
+  const handleAddEmployeeType = () => {
     setModalData({})
     handleModal(true)
   }
@@ -45,17 +46,17 @@ const ContractSetting = (props) => {
     setState({
       loading: true
     })
-    EmployeeSettingApi
-      .loadContractType()
+
+    EmployeeSettingApi.loadEmployeeType()
       .then((res) => {
         setState({
-          listContractType: res.data.results,
+          listEmployeeType: res.data.results,
           loading: false
         })
       })
       .catch((err) => {
         setState({
-          listContractType: [],
+          listEmployeeType: [],
           loading: false
         })
       })
@@ -67,7 +68,7 @@ const ContractSetting = (props) => {
   }, [tab])
 
   // ** render
-  const renderListContract = () => {
+  const renderListEmployeeType = () => {
     if (state.loading) {
       return (
         <Fragment>
@@ -78,7 +79,7 @@ const ContractSetting = (props) => {
       )
     }
 
-    if (state.listContractType.length === 0) {
+    if (state.listEmployeeType.length === 0) {
       return (
         <Fragment>
           <div className="mt-2">
@@ -89,18 +90,28 @@ const ContractSetting = (props) => {
     }
 
     return (
-      <ListContractType
-        listContractType={state.listContractType}
-        handleModal={handleModal}
-        setModalData={setModalData}
-        loadTabContent={loadTabContent}
-      />
+      <Space direction="vertical" className="w-100">
+        <div className="collapse-custom-field">
+          {state.listEmployeeType.map((item, index) => {
+            return (
+              <Fragment key={`contact_item_${index}`}>
+                <EmployeeTypeItem
+                  employeeType={item}
+                  handleModal={handleModal}
+                  setModalData={setModalData}
+                  loadTabContent={loadTabContent}
+                />
+              </Fragment>
+            )
+          })}
+        </div>
+      </Space>
     )
   }
 
-  const renderAddContractTypeModal = () => {
+  const renderAddEmployeeTypeModal = () => {
     return (
-      <AddContractTypeModal
+      <AddEmployeeTypeModal
         modal={state.modal}
         modalData={state.modalData}
         handleModal={handleModal}
@@ -116,28 +127,30 @@ const ContractSetting = (props) => {
           <div>
             <h4 className="mb-0">
               <i className="far fa-scroll icon-circle bg-icon-green" />
-              {useFormatMessage(`modules.employee_setting.title.tabs.${tab}`)}
+              {useFormatMessage(
+                `modules.employee_setting.title.tabs.employee_type`
+              )}
             </h4>
           </div>
           <div>
             <Button.Ripple
               size="md"
               color="primary"
-              onClick={() => handleAddContract()}>
+              onClick={() => handleAddEmployeeType()}>
               <i className="fas fa-plus me-25" />
               {useFormatMessage(
-                "modules.employee_setting.buttons.new_contract"
+                "modules.employee_setting.buttons.new_employee_type"
               )}
             </Button.Ripple>
           </div>
         </div>
         <div>
-          <Fragment>{renderListContract()}</Fragment>
+          <Fragment>{renderListEmployeeType()}</Fragment>
         </div>
       </div>
-      <Fragment>{state.modal && renderAddContractTypeModal()}</Fragment>
+      <Fragment>{state.modal && renderAddEmployeeTypeModal()}</Fragment>
     </Fragment>
   )
 }
 
-export default ContractSetting
+export default EmployeeTypeSetting

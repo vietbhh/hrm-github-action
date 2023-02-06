@@ -3792,6 +3792,7 @@
     "employee_setting": {
       "title": {
         "employee": "Employee",
+        "employees": "Employees",
         "setting": "Settings",
         "custom_fields": "Custom Fields",
         "contract": "Contracts",
@@ -3808,7 +3809,8 @@
           "contract_code": "Contract",
           "job": "Job",
           "payroll": "Payroll",
-          "offboarding": "Offboarding"
+          "offboarding": "Offboarding",
+          "employee_type": "Employee Type"
         },
         "options": "Options",
         "auto_generate_code": "Auto Generate Code",
@@ -3823,6 +3825,7 @@
         "remove": "Remove",
         "delete": "Delete",
         "new_contract": "New Contract Type",
+        "new_employee_type": "New Employee Type",
         "edit": "Edit"
       },
       "fields": {
@@ -3837,7 +3840,9 @@
           "add_custom_field": "Add Custom Field",
           "edit_custom_field": "Edit Custom Field",
           "add_contract": "New Contract",
-          "edit_contract": "Edit Contract"
+          "edit_contract": "Edit Contract",
+          "add_employee_type": "New Employee Type",
+          "edit_employee_type": "Edit Employee Type"
         },
         "description": {
           "add_custom_field": "You are about to create a new custom field in Personal Info section.",
@@ -3883,13 +3888,23 @@
         },
         "error_decimals": "Must be a number smaller than or equal to 10.",
         "employee_code": "Employee Code",
-        "contract_code": "Contract Code"
+        "contract_code": "Contract Code",
+        "warning_delete_employee_type": {
+          "title": "Delete Employee Type",
+          "body": "This Employee Type will be deleted!"
+        }
       }
     },
     "contract_type": {
       "fields": {
         "name": "Name",
         "no_end_date": "No End Date",
+        "description": "Description"
+      }
+    },
+    "employee_types": {
+      "fields": {
+        "name": "Name",
         "description": "Description"
       }
     },

@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom"
 import { useFormatMessage } from "@apps/utility/common"
 import {
   getNavMenuContract,
-  getNavMenuAutoGenerateCode
+  getNavMenuAutoGenerateCode,
+  getNavMenuEmployeeType
 } from "@modules/Employees/common/common"
 // ** Styles
 import { Card, CardBody, Row, Col } from "reactstrap"
@@ -13,29 +14,13 @@ import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import NavMenuEmployeeSetting from "../components/detail/employee-setting/custom-field/NavMenuEmployeeSetting"
 import TabContentEmployeeSetting from "../components/detail/employee-setting/custom-field/TabContentEmployeeSetting"
 import ContractSetting from "../components/detail/employee-setting/contract/ContractSetting"
+import EmployeeTypeSetting from "../components/detail/employee-setting/employee-type/EmployeeTypeSetting"
 import TabContentAutoGenerateCode from "../components/detail/employee-setting/auto-generate-code/TabContentAutoGenerateCode"
 
 const EmployeeSetting = (props) => {
   const { tab } = useParams()
 
   // ** render
-  const renderBreadcrumb = () => {
-    return (
-      <Breadcrumbs
-        list={[
-          {
-            title: useFormatMessage("modules.employee_setting.title.employee")
-          },
-          { title: useFormatMessage("modules.employee_setting.title.setting") }
-        ]}
-      />
-    )
-  }
-
-  const renderNavMenu = () => {
-    return <NavMenuEmployeeSetting />
-  }
-
   const renderTabContent = () => {
     const navContract = getNavMenuContract().map((item) => {
       return item.tab
@@ -43,6 +28,10 @@ const EmployeeSetting = (props) => {
     const navAutoGenerateCode = getNavMenuAutoGenerateCode().map((item) => {
       return item.tab
     })
+    const navEmployeeType = getNavMenuEmployeeType().map((item) => {
+      return item.tab
+    })
+
     if (navContract.includes(tab)) {
       return <ContractSetting tab={tab} />
     }
@@ -51,17 +40,29 @@ const EmployeeSetting = (props) => {
       return <TabContentAutoGenerateCode tab={tab} />
     }
 
+    if (navEmployeeType.includes(tab)) {
+      console.log("z")
+      return <EmployeeTypeSetting tab={tab} />
+    }
+
     return <TabContentEmployeeSetting tab={tab} />
   }
 
   return (
     <Fragment>
-      <Fragment>{renderBreadcrumb()}</Fragment>
+      <Breadcrumbs
+        list={[
+          {
+            title: useFormatMessage("modules.employee_setting.title.employee")
+          },
+          { title: useFormatMessage("modules.employee_setting.title.setting") }
+        ]}
+      />
       <Card className="extraWidthLayoutPage employeePage employee-setting">
         <CardBody className="p-md-0">
           <Row className="contentWrapper">
             <Col className="sideBarColumn employeeSidebar">
-              <Fragment>{renderNavMenu()}</Fragment>
+              <NavMenuEmployeeSetting />
             </Col>
             <Col className="col-md-8 mainContent">
               <Fragment>{renderTabContent()}</Fragment>

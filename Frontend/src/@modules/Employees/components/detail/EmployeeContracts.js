@@ -10,6 +10,7 @@ import { Fragment, useEffect } from "react"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import { formatDate } from "utility/Utils"
 import EmployeeContractModal from "../modals/EmployeeContractModal"
+import { convertNumberCurrency } from "@modules/Payrolls/common/common"
 
 const EmployeeContracts = (props) => {
   const { api, permits, reload } = props
@@ -28,6 +29,7 @@ const EmployeeContracts = (props) => {
   const loadContracts = () => {
     if (!isEmpty(props.employeeData.id)) {
       api.getRelatedList("contracts").then((res) => {
+        console.log(res.data.results)
         setState({
           contractLoading: false,
           contractsList: res.data.results,
@@ -190,6 +192,16 @@ const EmployeeContracts = (props) => {
                             </div>
                           </div>
                         )}
+                    </div>
+                    <div className="d-flex flex-wrap w-100 mt-0">
+                      <span className="">
+                        {item.contract_department?.label ||
+                          useFormatMessage(
+                            "modules.contracts.fields.insurance_salary"
+                          )}{" "}
+                        -{" "}
+                        {convertNumberCurrency(item.insurance_salary, item.insurance_salary < 0, true)}
+                      </span>
                     </div>
                   </CardHeader>
                 </Card>

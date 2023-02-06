@@ -3,7 +3,8 @@ import { Fragment } from "react"
 import {
   getNavMenu,
   getNavMenuContract,
-  getNavMenuAutoGenerateCode
+  getNavMenuAutoGenerateCode,
+  getNavMenuEmployeeType
 } from "@modules/Employees/common/common"
 import { Link as RRNavLink, useMatch, useResolvedPath } from "react-router-dom"
 import classNames from "classnames"
@@ -21,6 +22,7 @@ const NavMenuEmployeeSetting = (props) => {
   const navs = getNavMenu("employees/setting")
   const navsContract = getNavMenuContract("employees/setting")
   const navsAutoGenerateCode = getNavMenuAutoGenerateCode("employees/setting")
+  const navsEmployeeType = getNavMenuEmployeeType("employees/setting")
 
   // ** render
   const renderNavItem = (navigator) => {
@@ -72,6 +74,18 @@ const NavMenuEmployeeSetting = (props) => {
           <div className="nav nav-vertical employeeNav">
             <Nav className="module-menu nav-left w-100 mt-1" tabs>
               {renderNavItem(navsContract)}
+            </Nav>
+          </div>
+        </div>
+        <div className="mb-2">
+          <div>
+            <h4 className="mb-25 ps-1">
+              {useFormatMessage("modules.employee_setting.title.employees")}
+            </h4>
+          </div>
+          <div className="nav nav-vertical employeeNav">
+            <Nav className="module-menu nav-left w-100 mt-1" tabs>
+              {renderNavItem(navsEmployeeType)}
             </Nav>
           </div>
         </div>
