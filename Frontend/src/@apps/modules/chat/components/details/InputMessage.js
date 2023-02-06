@@ -35,7 +35,8 @@ const InputMessage = (props) => {
     renderFormReply,
     suggestions,
     setSuggestions,
-    mentions
+    mentions,
+    selectedGroup
   } = props
 
   const [state, setState] = useMergedState({
@@ -242,15 +243,17 @@ const InputMessage = (props) => {
             maxHeight: "auto"
           }}
         />
-        <MentionSuggestions
-          open={state.open}
-          onOpenChange={onOpenChange}
-          suggestions={suggestions}
-          onSearchChange={onSearchChange}
-          onAddMention={() => {
-            // get the mention object selected
-          }}
-        />
+        {selectedGroup?.type === "group" && (
+          <MentionSuggestions
+            open={state.open}
+            onOpenChange={onOpenChange}
+            suggestions={suggestions}
+            onSearchChange={onSearchChange}
+            onAddMention={() => {
+              // get the mention object selected
+            }}
+          />
+        )}
         <InputGroupText>
           <UpFile
             selectedUser={selectedUser}

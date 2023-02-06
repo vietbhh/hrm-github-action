@@ -264,16 +264,18 @@ const ChatLog = (props) => {
     if (selectedGroup.user) {
       const data_mention = []
       _.forEach(selectedGroup.user, (value) => {
-        const index_employee = dataEmployees.findIndex(
-          (item_employee) => item_employee.id === value
-        )
-        if (index_employee > -1) {
-          data_mention.push({
-            id: value,
-            name: dataEmployees[index_employee].full_name,
-            link: `/chat/${dataEmployees[index_employee].username}`,
-            avatar: getAvatarUrl(value * 1)
-          })
+        if (value !== userId) {
+          const index_employee = dataEmployees.findIndex(
+            (item_employee) => item_employee.id === value
+          )
+          if (index_employee > -1) {
+            data_mention.push({
+              id: value,
+              name: dataEmployees[index_employee].full_name,
+              link: `/chat/${dataEmployees[index_employee].username}`,
+              avatar: getAvatarUrl(value * 1)
+            })
+          }
         }
       })
 
@@ -957,6 +959,7 @@ const ChatLog = (props) => {
                     suggestions={state.suggestions}
                     setSuggestions={(value) => setState({ suggestions: value })}
                     mentions={state.mentions}
+                    selectedGroup={selectedGroup}
                   />
                 </label>
                 {dragActive && (
