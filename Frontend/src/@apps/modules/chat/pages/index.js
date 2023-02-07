@@ -1272,7 +1272,9 @@ const AppChat = (props) => {
                     },
                     lastUser: lastUser,
                     unseen: data.unseen,
-                    unseen_detail: data.unseen_detail
+                    unseen_detail: data.unseen_detail,
+                    typing: data.typing,
+                    typing_id: data.typing_id
                   }
                 },
                 ...listGroup
@@ -1303,7 +1305,9 @@ const AppChat = (props) => {
                     },
                     lastUser: lastUser,
                     unseen: data.unseen,
-                    unseen_detail: data.unseen_detail
+                    unseen_detail: data.unseen_detail,
+                    typing: data.typing,
+                    typing_id: data.typing_id
                   }
                 }
                 group_new.sort(
@@ -1537,6 +1541,13 @@ const AppChat = (props) => {
               chat_reverse.length > 0 ? chat_reverse[0].time : 0,
             lastTimeMessageHistory: chat.length > 0 ? chat[0].time : 0
           })
+
+          // ** remove typing
+          if (chat_reverse.length > 0) {
+            handleUpdateGroup(active, {
+              typing_id: arrayRemove(chat_reverse[0].senderId)
+            })
+          }
         }
         setState({ loadingMessage: false })
       })

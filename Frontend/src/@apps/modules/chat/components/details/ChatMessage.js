@@ -26,35 +26,18 @@ import {
 
 const ChatMessage = (props) => {
   const {
-    handleUserSidebarRight,
-    handleSidebar,
     store,
-    userSidebarLeft,
-    settingChat,
     userId,
-    sendMessage,
-    loadingMessage,
     chats,
     chatHistory,
-    getChatHistory,
     active,
-    hasMoreHistory,
-    chatArea,
-    scrollToBottom,
-    unread,
-    handleSeenMessage,
     updateMessage,
-    userSidebarRight,
-    windowWidth,
-    setUserSidebarRight,
     dataEmployees,
     setReplying,
     focusInputMsg,
     toggleModalForward,
     setDataForward,
     scrollToMessage,
-    search_message_highlight_timestamp,
-    search_message_highlight_text_search,
     dataChatScrollBottom,
     checkShowDataChat,
     handleHeight,
@@ -62,7 +45,7 @@ const ChatMessage = (props) => {
     handleCountFile,
     keyEncrypt
   } = props
-  const { userProfile, selectedUser, groups } = store
+  const { selectedUser, groups } = store
 
   // ** reaction
   const reaction = [
@@ -111,7 +94,7 @@ const ChatMessage = (props) => {
         chatLog = [...chatHistory, ...dataChatScrollBottom]
       }
     }
-
+    console.log(chatLog)
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
     let user_list = []
@@ -176,7 +159,9 @@ const ChatMessage = (props) => {
 
         if (msg.break_type === "line_time") {
           chatMessageSenderId = msg.senderId
-          formattedChatLog.push(msgGroup)
+          if (!_.isEmpty(msgGroup.messages)) {
+            formattedChatLog.push(msgGroup)
+          }
 
           formattedChatLog.push({
             senderId: msg.senderId,

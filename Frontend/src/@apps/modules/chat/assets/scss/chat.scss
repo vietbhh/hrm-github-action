@@ -743,6 +743,23 @@ $font-family: Helvetica;
               }
             }
 
+            #div-typing {
+              height: 60px;
+              padding: 5px 27px;
+              margin-bottom: -25px;
+              display: flex;
+              align-items: center;
+
+              .avatar img {
+                border: 1px solid #fff;
+              }
+
+              .avatar.avatar-sm .avatar-content {
+                width: 30px;
+                height: 32px;
+              }
+            }
+
             .drag-file-element-chat {
               position: absolute;
               width: 100%;
@@ -1166,6 +1183,7 @@ $font-family: Helvetica;
 
               .form-send-message {
                 height: 55px;
+                border-radius: 16px;
 
                 .form-group {
                   margin: 0;

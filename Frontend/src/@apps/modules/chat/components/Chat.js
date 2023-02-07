@@ -27,6 +27,8 @@ import { useSelector } from "react-redux"
 import { ChatApi } from "../common/api"
 import { decodeHTMLEntities, detectUrl } from "../common/common"
 import InputMessage from "./details/InputMessage"
+import Typing from "./details/Typing"
+import moment from "moment"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -35,12 +37,10 @@ const ChatLog = (props) => {
     handleSidebar,
     store,
     userSidebarLeft,
-    settingChat,
     userId,
     sendMessage,
     loadingMessage,
     chats,
-    chatHistory,
     getChatHistory,
     active,
     hasMoreHistory,
@@ -49,7 +49,6 @@ const ChatLog = (props) => {
     unread,
     handleSeenMessage,
     updateMessage,
-    windowWidth,
     dataEmployees,
     queryLimit,
     checkAddMessage,
@@ -59,9 +58,10 @@ const ChatLog = (props) => {
     getChatScrollBottom,
     imageGroup,
     selectedGroup,
-    keyEncrypt
+    keyEncrypt,
+    handleUpdateGroup
   } = props
-  const { userProfile, selectedUser, groups } = store
+  const { selectedUser, groups } = store
 
   // ** State
   const [state, setState] = useMergedState({
@@ -89,7 +89,10 @@ const ChatLog = (props) => {
 
     // mention
     mentions: [],
-    suggestions: []
+    suggestions: [],
+
+    // typing
+    typing: []
   })
 
   const msgRef = useRef(null)
@@ -174,8 +177,21 @@ const ChatLog = (props) => {
   const handleHeight = (replying, isScroll = true, height = 0) => {
     let heightEditor =
       document.getElementsByClassName("DraftEditor-root")?.[0]?.offsetHeight
-    if (replying) {
-      heightEditor = heightEditor + 55
+    if (replying && !_.isEmpty(state.typing)) {
+      heightEditor = heightEditor + 55 + 35 + 10
+      if (document.getElementById("div-typing")) {
+        document.getElementById("div-typing").style.marginBottom = "-15px"
+      }
+    } else {
+      if (replying) {
+        heightEditor = heightEditor + 55
+      }
+      if (!_.isEmpty(state.typing)) {
+        heightEditor = heightEditor + 35
+        if (document.getElementById("div-typing")) {
+          document.getElementById("div-typing").style.marginBottom = "-25px"
+        }
+      }
     }
     if (height !== 0) {
       heightEditor = height
@@ -259,8 +275,9 @@ const ChatLog = (props) => {
     localStorage.setItem("formChatFocus", true)
   }, [selectedUser, loadingMessage])
 
-  // ** mention
+  // ** mention and typing
   useEffect(() => {
+    // ** mention
     if (selectedGroup.user) {
       const data_mention = []
       _.forEach(selectedGroup.user, (value) => {
@@ -283,7 +300,67 @@ const ChatLog = (props) => {
     } else {
       setState({ suggestions: [], mentions: [] })
     }
+
+    // ** typing
+    handleTyping()
+    /*  const interval = setInterval(() => {
+      handleTyping()
+    }, 500)
+    return () => {
+      clearInterval(interval)
+    } */
   }, [selectedGroup, dataEmployees])
+  const handleTyping = () => {
+    if (selectedGroup.chat && selectedGroup.chat.typing_id) {
+      const typing = []
+      _.forEach(selectedGroup.chat.typing_id, (value) => {
+        if (value !== userId) {
+          const index_employee = dataEmployees.findIndex(
+            (item_employee) => item_employee.id === value
+          )
+          const index_typing = selectedGroup.chat.typing.findIndex(
+            (val) => val.id === value
+          )
+          let old_timestamp = 0
+          if (index_typing !== -1) {
+            old_timestamp = selectedGroup.chat.typing[index_typing].timestamp
+          }
+          const new_timestamp = Date.now()
+          const minute_diff = moment(new_timestamp).diff(
+            moment(old_timestamp),
+            "minutes"
+          )
+          if (index_employee > -1 && minute_diff < 1) {
+            typing.push({
+              id: value.id,
+              name: dataEmployees[index_employee].full_name,
+              avatar: dataEmployees[index_employee].avatar
+            })
+          }
+        }
+      })
+
+      setState({ typing: typing })
+    } else {
+      setState({ typing: [] })
+    }
+  }
+  // ** listen change typing
+  useEffect(() => {
+    handleHeight(state.replying, false)
+    const chatContainer = ReactDOM.findDOMNode(chatArea.current)
+    if (chatContainer) {
+      if (
+        unread === 0 &&
+        chatContainer.scrollHeight -
+          chatContainer.scrollTop -
+          chatContainer.clientHeight <=
+          35
+      ) {
+        scrollToBottom()
+      }
+    }
+  }, [state.typing])
 
   // ** On mobile screen open left sidebar on Start Conversation Click
   const handleStartConversation = () => {
@@ -561,14 +638,16 @@ const ChatLog = (props) => {
   useEffect(() => {
     if (state.replying) {
       const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-      if (
-        chatContainer.scrollHeight -
-          chatContainer.scrollTop -
-          chatContainer.clientHeight <=
-          150 ||
-        chatContainer.scrollTop === 0
-      ) {
-        scrollToBottom()
+      if (chatContainer) {
+        if (
+          chatContainer.scrollHeight -
+            chatContainer.scrollTop -
+            chatContainer.clientHeight <=
+            150 ||
+          chatContainer.scrollTop === 0
+        ) {
+          scrollToBottom()
+        }
       }
     }
   }, [state.replying])
@@ -917,6 +996,8 @@ const ChatLog = (props) => {
               )}
             </div>
 
+            {!_.isEmpty(state.typing) && <Typing typing={state.typing} />}
+
             <FormProvider {...methods}>
               <form
                 onSubmit={handleSubmit(handleSendMsg)}
@@ -943,7 +1024,6 @@ const ChatLog = (props) => {
                     selectedUser={selectedUser}
                     focusInputMsg={focusInputMsg}
                     setReplyingDefault={setReplyingDefault}
-                    setRefMessage={setRefMessage}
                     msgRef={msgRef}
                     linkPreview={state.linkPreview}
                     file={state.file}
@@ -960,6 +1040,9 @@ const ChatLog = (props) => {
                     setSuggestions={(value) => setState({ suggestions: value })}
                     mentions={state.mentions}
                     selectedGroup={selectedGroup}
+                    userId={userId}
+                    handleUpdateGroup={handleUpdateGroup}
+                    groups={groups}
                   />
                 </label>
                 {dragActive && (

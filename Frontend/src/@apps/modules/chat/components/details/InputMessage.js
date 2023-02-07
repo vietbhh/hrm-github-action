@@ -4,13 +4,16 @@ import createMentionPlugin, {
 } from "@draft-js-plugins/mention"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import React, { useCallback, useEffect, useMemo } from "react"
+import React, { useCallback, useEffect, useMemo, useRef } from "react"
 //import { Editor } from "react-draft-wysiwyg"
 import Editor from "@draft-js-plugins/editor"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import { InputGroup, InputGroupText } from "reactstrap"
 import UpFile from "../details/UpFile"
 import EmotionsComponent from "../emotions/index"
+import { decodeHTMLEntities } from "../../common/common"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
+import moment from "moment"
 
 const InputMessage = (props) => {
   const {
@@ -22,7 +25,6 @@ const InputMessage = (props) => {
     selectedUser,
     focusInputMsg,
     setReplyingDefault,
-    setRefMessage,
     msgRef,
     linkPreview,
     file,
@@ -36,7 +38,10 @@ const InputMessage = (props) => {
     suggestions,
     setSuggestions,
     mentions,
-    selectedGroup
+    selectedGroup,
+    handleUpdateGroup,
+    userId,
+    groups
   } = props
 
   const [state, setState] = useMergedState({
@@ -47,9 +52,72 @@ const InputMessage = (props) => {
     open: false
   })
 
+  const handleRemoveTyping = (groupId = "") => {
+    let group = selectedGroup
+    if (groupId !== "") {
+      const index_group = groups.findIndex((value) => value.id === groupId)
+      if (index_group !== -1) {
+        group = groups[index_group]
+      }
+    }
+    if (group.id) {
+      let arrRemove = {}
+      if (group.chat.typing) {
+        _.forEach(group.chat.typing, (value) => {
+          if (value.id === userId) {
+            arrRemove = {
+              ...arrRemove,
+              ...{ id: value.id, timestamp: value.timestamp }
+            }
+          }
+        })
+      }
+
+      if (!_.isEmpty(arrRemove)) {
+        handleUpdateGroup(group.id, {
+          typing: arrayRemove(arrRemove),
+          typing_id: arrayRemove(userId)
+        })
+      }
+    }
+  }
+
   const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
     handleHeight(replying, false)
+
+    // ** check typing
+    const html = handleMessageBeforeCallSubmitFunction(editorState)
+    const msg = decodeHTMLEntities(html)
+    if (selectedGroup.id) {
+      let old_timestamp = 0
+      if (selectedGroup.chat.typing) {
+        const index_typing = selectedGroup.chat.typing.findIndex(
+          (value) => value.id === userId
+        )
+        if (index_typing !== -1) {
+          old_timestamp = selectedGroup.chat.typing[index_typing].timestamp
+        }
+      }
+
+      const new_timestamp = Date.now()
+      if (msg.trim().length) {
+        const minute_diff = moment(new_timestamp).diff(
+          moment(old_timestamp),
+          "minutes"
+        )
+        if (minute_diff >= 1) {
+          handleRemoveTyping()
+
+          handleUpdateGroup(selectedGroup.id, {
+            typing: arrayUnion({ id: userId, timestamp: new_timestamp }),
+            typing_id: arrayUnion(userId)
+          })
+        }
+      } else {
+        handleRemoveTyping()
+      }
+    }
   }
 
   const handleReturn = (e) => {
@@ -61,10 +129,6 @@ const InputMessage = (props) => {
     e.preventDefault()
 
     return "handled"
-  }
-
-  const setEditorReference = (ref) => {
-    setRefMessage(ref)
   }
 
   const insertCharacter = (characterToInsert, editorState) => {
@@ -104,8 +168,8 @@ const InputMessage = (props) => {
     setState({ editorState: newEditorState })
   }
 
-  const onSubmitEditor = () => {
-    const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+  const handleMessageBeforeCallSubmitFunction = (editorState) => {
+    const editorStateRaw = convertToRaw(editorState.getCurrentContent())
     let html = draftToHtml(editorStateRaw)
     const mapObj = {
       "<p>": "",
@@ -117,6 +181,12 @@ const InputMessage = (props) => {
     })
     const num_slice = 4
     html = html.slice(0, -num_slice)
+
+    return html
+  }
+
+  const onSubmitEditor = () => {
+    const html = handleMessageBeforeCallSubmitFunction(state.editorState)
     const values = { message: html }
     handleSendMsg(values)
     setEmptyEditorState()
@@ -182,7 +252,20 @@ const InputMessage = (props) => {
     handleInsertEditorState("")
   }, [replying_timestamp])
 
+  const usePrevious = (value) => {
+    const ref = useRef()
+    useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
+  }
+  const preSelectedUser = usePrevious(selectedUser)
+
   useEffect(() => {
+    if (preSelectedUser?.chat?.id) {
+      handleRemoveTyping(preSelectedUser.chat.id)
+    }
+
     setEmptyEditorState()
   }, [selectedUser])
 
@@ -214,20 +297,6 @@ const InputMessage = (props) => {
             setShowEmotion={(value) => setState({ showEmotion: value })}
           />
         </InputGroupText>
-        {/* <Editor
-          wrapperClassName="wrapper-message"
-          editorClassName="editor-message"
-          editorState={state.editorState}
-          onEditorStateChange={onEditorStateChange}
-          stripPastedStyles={true}
-          editorRef={setEditorReference}
-          placeholder="Type a message ..."
-          toolbarHidden
-          editorStyle={{
-            minHeight: "55px",
-            maxHeight: "auto"
-          }}
-        /> */}
         <Editor
           editorKey={"editor"}
           editorState={state.editorState}
@@ -267,15 +336,6 @@ const InputMessage = (props) => {
             changeFile={changeFile}
           />
         </InputGroupText>
-        {/* <ErpInput
-                        innerRef={msgRef}
-                        useForm={methods}
-                        name="message"
-                        defaultValue=""
-                        placeholder="Type a message ..."
-                        nolabel
-                        autoComplete="off"
-                      /> */}
       </InputGroup>
 
       <button type="button" className="send" onClick={() => onSubmitEditor()}>
