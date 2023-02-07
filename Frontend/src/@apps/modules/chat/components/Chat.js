@@ -84,11 +84,7 @@ const ChatLog = (props) => {
     linkPreview: "",
     file: null,
     modal: false,
-    compress_images: true,
-
-    // mention
-    mentions: [],
-    suggestions: []
+    compress_images: true
   })
 
   const msgRef = useRef(null)
@@ -272,32 +268,6 @@ const ChatLog = (props) => {
     localStorage.setItem("formChatFocus", true)
   }, [selectedUser, loadingMessage])
 
-  // ** mention
-  useEffect(() => {
-    if (selectedGroup.user) {
-      const data_mention = []
-      _.forEach(selectedGroup.user, (value) => {
-        if (value !== userId) {
-          const index_employee = dataEmployees.findIndex(
-            (item_employee) => item_employee.id === value
-          )
-          if (index_employee > -1) {
-            data_mention.push({
-              id: value,
-              name: dataEmployees[index_employee].full_name,
-              link: `/chat/${dataEmployees[index_employee].username}`,
-              avatar: getAvatarUrl(value * 1)
-            })
-          }
-        }
-      })
-
-      setState({ suggestions: data_mention, mentions: data_mention })
-    } else {
-      setState({ suggestions: [], mentions: [] })
-    }
-  }, [selectedGroup, dataEmployees])
-
   // ** On mobile screen open left sidebar on Start Conversation Click
   const handleStartConversation = () => {
     if (
@@ -314,7 +284,7 @@ const ChatLog = (props) => {
     if (loadingMessage) return
     if (msg.trim().length) {
       const mention = []
-      _.forEach(state.mentions, (value) => {
+      _.forEach(values.mentions, (value) => {
         msg = msg.replace(value.name, function (val) {
           mention.push(value.id)
           return (
@@ -982,14 +952,12 @@ const ChatLog = (props) => {
                     handleSaveFile={handleSaveFile}
                     changeFile={changeFile}
                     renderFormReply={renderFormReply}
-                    suggestions={state.suggestions}
-                    setSuggestions={(value) => setState({ suggestions: value })}
-                    mentions={state.mentions}
                     selectedGroup={selectedGroup}
                     userId={userId}
                     handleUpdateGroup={handleUpdateGroup}
                     groups={groups}
                     typing={typing}
+                    dataEmployees={dataEmployees}
                   />
                 </label>
                 {dragActive && (

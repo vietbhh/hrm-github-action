@@ -1,4 +1,4 @@
-import { useMergedState } from "@apps/utility/common"
+import { getAvatarUrl, useMergedState } from "@apps/utility/common"
 import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
@@ -35,14 +35,12 @@ const InputMessage = (props) => {
     handleSaveFile,
     changeFile,
     renderFormReply,
-    suggestions,
-    setSuggestions,
-    mentions,
     selectedGroup,
     handleUpdateGroup,
     userId,
     groups,
-    typing
+    typing,
+    dataEmployees
   } = props
 
   const [state, setState] = useMergedState({
@@ -50,8 +48,39 @@ const InputMessage = (props) => {
     showEmotion: false,
 
     // mention
-    open: false
+    open: false,
+    mentions: [],
+    suggestions: []
   })
+
+  // ** mention
+  const setSuggestions = (value) => {
+    setState({ suggestions: value })
+  }
+  useEffect(() => {
+    if (selectedGroup.user) {
+      const data_mention = []
+      _.forEach(selectedGroup.user, (value) => {
+        if (value !== userId) {
+          const index_employee = dataEmployees.findIndex(
+            (item_employee) => item_employee.id === value
+          )
+          if (index_employee > -1) {
+            data_mention.push({
+              id: value,
+              name: dataEmployees[index_employee].full_name,
+              link: `/chat/${dataEmployees[index_employee].username}`,
+              avatar: getAvatarUrl(value * 1)
+            })
+          }
+        }
+      })
+
+      setState({ suggestions: data_mention, mentions: data_mention })
+    } else {
+      setState({ suggestions: [], mentions: [] })
+    }
+  }, [selectedGroup, dataEmployees])
 
   const handleRemoveTyping = (groupId = "") => {
     let group = selectedGroup
@@ -188,7 +217,7 @@ const InputMessage = (props) => {
 
   const onSubmitEditor = () => {
     const html = handleMessageBeforeCallSubmitFunction(state.editorState)
-    const values = { message: html }
+    const values = { message: html, mentions: state.mentions }
     handleSendMsg(values)
     setEmptyEditorState()
     setState({ showEmotion: false })
@@ -211,9 +240,9 @@ const InputMessage = (props) => {
   }, [])
   const onSearchChange = useCallback(
     ({ value }) => {
-      setSuggestions(defaultSuggestionsFilter(value, mentions))
+      setSuggestions(defaultSuggestionsFilter(value, state.mentions))
     },
-    [mentions]
+    [state.mentions]
   )
 
   // ** listen
@@ -317,7 +346,7 @@ const InputMessage = (props) => {
           <MentionSuggestions
             open={state.open}
             onOpenChange={onOpenChange}
-            suggestions={suggestions}
+            suggestions={state.suggestions}
             onSearchChange={onSearchChange}
             onAddMention={() => {
               // get the mention object selected
