@@ -6,7 +6,8 @@ const chatSlice = createSlice({
   initialState: {
     chats: [],
     titleChat: "",
-    unseen: 0
+    unseen: 0,
+    typing: []
   },
   reducers: {
     handleChats: (state, action) => {
@@ -18,10 +19,14 @@ const chatSlice = createSlice({
     },
     handleUnseen: (state, action) => {
       state.unseen = action.payload
+    },
+    handleTyping: (state, action) => {
+      state.typing = action.payload
     }
   }
 })
 
-export const { handleChats, handleTitleChat, handleUnseen } = chatSlice.actions
+export const { handleChats, handleTitleChat, handleUnseen, handleTyping } =
+  chatSlice.actions
 
 export default chatSlice.reducer

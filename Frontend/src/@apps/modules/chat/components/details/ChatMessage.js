@@ -94,7 +94,6 @@ const ChatMessage = (props) => {
         chatLog = [...chatHistory, ...dataChatScrollBottom]
       }
     }
-    console.log(chatLog)
     const index_groups = groups.findIndex((item) => item.id === active)
     let unseen_detail = []
     let user_list = []

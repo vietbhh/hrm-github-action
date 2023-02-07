@@ -28,7 +28,6 @@ import { ChatApi } from "../common/api"
 import { decodeHTMLEntities, detectUrl } from "../common/common"
 import InputMessage from "./details/InputMessage"
 import Typing from "./details/Typing"
-import moment from "moment"
 
 const ChatLog = (props) => {
   // ** Props & Store
@@ -89,10 +88,7 @@ const ChatLog = (props) => {
 
     // mention
     mentions: [],
-    suggestions: [],
-
-    // typing
-    typing: []
+    suggestions: []
   })
 
   const msgRef = useRef(null)
@@ -111,6 +107,7 @@ const ChatLog = (props) => {
   }
 
   // ** redux
+  const typing = useSelector((state) => state.chat.typing)
   const usersRedux = useSelector((state) => state.users)
   const onlineRedux = usersRedux.online
   useEffect(() => {
@@ -177,7 +174,7 @@ const ChatLog = (props) => {
   const handleHeight = (replying, isScroll = true, height = 0) => {
     let heightEditor =
       document.getElementsByClassName("DraftEditor-root")?.[0]?.offsetHeight
-    if (replying && !_.isEmpty(state.typing)) {
+    if (replying && !_.isEmpty(typing)) {
       heightEditor = heightEditor + 55 + 35 + 10
       if (document.getElementById("div-typing")) {
         document.getElementById("div-typing").style.marginBottom = "-15px"
@@ -186,7 +183,7 @@ const ChatLog = (props) => {
       if (replying) {
         heightEditor = heightEditor + 55
       }
-      if (!_.isEmpty(state.typing)) {
+      if (!_.isEmpty(typing)) {
         heightEditor = heightEditor + 35
         if (document.getElementById("div-typing")) {
           document.getElementById("div-typing").style.marginBottom = "-25px"
@@ -275,9 +272,8 @@ const ChatLog = (props) => {
     localStorage.setItem("formChatFocus", true)
   }, [selectedUser, loadingMessage])
 
-  // ** mention and typing
+  // ** mention
   useEffect(() => {
-    // ** mention
     if (selectedGroup.user) {
       const data_mention = []
       _.forEach(selectedGroup.user, (value) => {
@@ -300,67 +296,7 @@ const ChatLog = (props) => {
     } else {
       setState({ suggestions: [], mentions: [] })
     }
-
-    // ** typing
-    handleTyping()
-    /*  const interval = setInterval(() => {
-      handleTyping()
-    }, 500)
-    return () => {
-      clearInterval(interval)
-    } */
   }, [selectedGroup, dataEmployees])
-  const handleTyping = () => {
-    if (selectedGroup.chat && selectedGroup.chat.typing_id) {
-      const typing = []
-      _.forEach(selectedGroup.chat.typing_id, (value) => {
-        if (value !== userId) {
-          const index_employee = dataEmployees.findIndex(
-            (item_employee) => item_employee.id === value
-          )
-          const index_typing = selectedGroup.chat.typing.findIndex(
-            (val) => val.id === value
-          )
-          let old_timestamp = 0
-          if (index_typing !== -1) {
-            old_timestamp = selectedGroup.chat.typing[index_typing].timestamp
-          }
-          const new_timestamp = Date.now()
-          const minute_diff = moment(new_timestamp).diff(
-            moment(old_timestamp),
-            "minutes"
-          )
-          if (index_employee > -1 && minute_diff < 1) {
-            typing.push({
-              id: value.id,
-              name: dataEmployees[index_employee].full_name,
-              avatar: dataEmployees[index_employee].avatar
-            })
-          }
-        }
-      })
-
-      setState({ typing: typing })
-    } else {
-      setState({ typing: [] })
-    }
-  }
-  // ** listen change typing
-  useEffect(() => {
-    handleHeight(state.replying, false)
-    const chatContainer = ReactDOM.findDOMNode(chatArea.current)
-    if (chatContainer) {
-      if (
-        unread === 0 &&
-        chatContainer.scrollHeight -
-          chatContainer.scrollTop -
-          chatContainer.clientHeight <=
-          35
-      ) {
-        scrollToBottom()
-      }
-    }
-  }, [state.typing])
 
   // ** On mobile screen open left sidebar on Start Conversation Click
   const handleStartConversation = () => {
@@ -996,7 +932,17 @@ const ChatLog = (props) => {
               )}
             </div>
 
-            {!_.isEmpty(state.typing) && <Typing typing={state.typing} />}
+            <Typing
+              selectedGroup={selectedGroup}
+              dataEmployees={dataEmployees}
+              replying={state.replying}
+              unread={unread}
+              scrollToBottom={scrollToBottom}
+              typing={typing}
+              handleHeight={handleHeight}
+              chatArea={chatArea}
+              userId={userId}
+            />
 
             <FormProvider {...methods}>
               <form
@@ -1043,6 +989,7 @@ const ChatLog = (props) => {
                     userId={userId}
                     handleUpdateGroup={handleUpdateGroup}
                     groups={groups}
+                    typing={typing}
                   />
                 </label>
                 {dragActive && (

@@ -41,7 +41,8 @@ const InputMessage = (props) => {
     selectedGroup,
     handleUpdateGroup,
     userId,
-    groups
+    groups,
+    typing
   } = props
 
   const [state, setState] = useMergedState({
@@ -246,7 +247,7 @@ const InputMessage = (props) => {
       window.removeEventListener("keydown", handle)
       window.removeEventListener("paste", handlePaste)
     }
-  }, [state.editorState, state.open, replying])
+  }, [state.editorState, state.open, replying, typing])
 
   useEffect(() => {
     handleInsertEditorState("")
