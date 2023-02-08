@@ -107,6 +107,11 @@
     "chat": "Chat",
     "calendar": "Calendar",
     "setting": "Setting",
+    "collaboration": "Collaboration",
+    "drive": "Drive",
+    "workgroup": "Workgroup",
+    "your_projects": "Your Projects",
+    "your_workgroup": "Your Workgroup",
     "header": {
       "welcome": {
         "morning": {
@@ -944,7 +949,7 @@
         "pin": "Pin",
         "un_pin": "Un pin"
       },
-      "st_show_department" : "Setting show department",
+      "st_show_department": "Setting show department",
       "text": {
         "card_statistic": {
           "gross_salary": "Gross Salary",
@@ -4160,16 +4165,16 @@
         "this_month": "This month",
         "eli_liq": "Eliminate / Liquidated",
         "re_bro": "Repair / Broken",
-        "asset_information" : "Asset Information",
-        "barcode_qr" : "Barcode / QR code"
+        "asset_information": "Asset Information",
+        "barcode_qr": "Barcode / QR code"
       },
       "buttons": {
         "new_asset": "New Asset",
         "generate": "Generate",
-        "error":"Error",
-        "edit" : "Edit",
-        "handover" :"Handover",
-        "update":"Update"
+        "error": "Error",
+        "edit": "Edit",
+        "handover": "Handover",
+        "update": "Update"
       },
       "title": {
         "detail": "Asset Detail",
@@ -4217,7 +4222,8 @@
         "asset_type_code": "Asset type code",
         "asset_type_name": "Asset type name",
         "asset_type_descriptions": "Asset type description",
-        "asset_type_group": "Asset group"      },
+        "asset_type_group": "Asset group"
+      },
       "buttons": {
         "create": "Create Asset Type",
         "save": "Save",
@@ -4253,9 +4259,9 @@
         "new_asset": "New asset this month",
         "this_month": "This month",
         "history": "History",
-        "owner_from" :"Owner from",
-        "status_from" :"Status from",
-        "update" :"Update"
+        "owner_from": "Owner from",
+        "status_from": "Status from",
+        "update": "Update"
       },
       "buttons": {
         "new_asset": "New Asset",
@@ -4351,6 +4357,11 @@
     "asset_status": {
       "fields": {
         "status_name": "Status Name"
+      }
+    },
+    "workspace" : {
+      "buttons" : {
+        "create" : "Create Workspace"
       }
     }
   }
