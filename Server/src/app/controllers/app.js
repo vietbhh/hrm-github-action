@@ -7,7 +7,10 @@ export const testFn = async (req, res, next) => {
     description: "test222",
     __user: 1
   })
-  const result = await _uploadServices(path.join("feed", "post"), req.files)
+  const result = await _uploadServices(
+    path.join("modules", "feed", "post"),
+    req.files
+  )
   console.log(result)
   //const setting = await saveSetting("dashboard_widget", "deft", 1000)
   //console.log(typeof setting, setting)

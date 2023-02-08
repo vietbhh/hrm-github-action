@@ -2,6 +2,7 @@ import { forEach, isEmpty } from "lodash-es"
 import path, { dirname, resolve } from "path"
 import { getSetting } from "./settings.js"
 import fs from "fs"
+import { log } from "console"
 
 const safeFileName = (fileName) => {
   return fileName
@@ -38,28 +39,45 @@ const _localUpload = async (storePath, files) => {
   }
   const uploadSuccess = [],
     uploadError = []
-    const promises = []
+  const promises = []
   forEach(files, (file, key) => {
     const fileName = safeFileName(file.name)
     const filePath = path.join(savePath, fileName)
-    //promises.push(Promise.resolve())
-    file.mv(filePath, (err) => {
-      if (err) {
-        uploadError.push({
-          name: fileName,
-          error: err
+    promises.push(
+      new Promise((resolve, reject) => {
+        file.mv(filePath, (err) => {
+          if (err) {
+            reject({
+              name: fileName,
+              error: "ok"
+            })
+          } else {
+            resolve({
+              name: fileName,
+              path: path.join(storePath, fileName).replaceAll("\\", "/")
+            })
+          }
+        })
+      })
+    )
+  })
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (fileUpload) => {
+      if (fileUpload.status === "fulfilled") {
+        uploadSuccess.push({
+          name: fileUpload.value.name,
+          path: fileUpload.value.path
         })
       }
-      uploadSuccess.push({
-        name: fileName,
-        path: filePath
-      })
+      if (fileUpload.status === "rejected") {
+        uploadError.push({
+          name: fileUpload.reason.name,
+          error: fileUpload.reason.error
+        })
+      }
     })
   })
-  return Promise.resolve({
-    uploadSuccess,
-    uploadError
-  })
+  return { uploadSuccess, uploadError }
 }
 
 const _googleCloudUpload = (files) => {}
