@@ -75,6 +75,14 @@ export const erpSelectToValues = (obj) => {
     ) {
       return obj.value
     } else if (
+      Object.keys(obj).length === 4 &&
+      obj.hasOwnProperty("value") &&
+      obj.hasOwnProperty("label") &&
+      obj.hasOwnProperty("icon") &&
+      obj.hasOwnProperty("text")
+    ) {
+      return obj.value
+    } else if (
       Object.keys(obj).length <= 15 &&
       obj.hasOwnProperty("value") &&
       obj.hasOwnProperty("label") &&
