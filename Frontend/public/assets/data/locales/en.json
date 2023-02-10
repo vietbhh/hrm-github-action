@@ -94,7 +94,7 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Navigation",
+    "admin_tools": "Admin tools",
     "tools": "Tools",
     "quick": "Quick",
     "notification": {
@@ -107,6 +107,11 @@
     "chat": "Chat",
     "calendar": "Calendar",
     "setting": "Setting",
+    "collaboration": "Collaboration",
+    "drive": "Drive",
+    "workgroup": "Workgroup",
+    "your_projects": "Your Projects",
+    "your_workgroup": "Your Workgroup",
     "header": {
       "welcome": {
         "morning": {
@@ -942,9 +947,10 @@
         "add": "Add notepad",
         "placeholder_input": "Notepad Title",
         "pin": "Pin",
-        "un_pin": "Un pin"
+        "un_pin": "Un pin",
+        "my_notes": "My notes"
       },
-      "st_show_department" : "Setting show department",
+      "st_show_department": "Setting show department",
       "text": {
         "card_statistic": {
           "gross_salary": "Gross Salary",
@@ -4160,16 +4166,16 @@
         "this_month": "This month",
         "eli_liq": "Eliminate / Liquidated",
         "re_bro": "Repair / Broken",
-        "asset_information" : "Asset Information",
-        "barcode_qr" : "Barcode / QR code"
+        "asset_information": "Asset Information",
+        "barcode_qr": "Barcode / QR code"
       },
       "buttons": {
         "new_asset": "New Asset",
         "generate": "Generate",
-        "error":"Error",
-        "edit" : "Edit",
-        "handover" :"Handover",
-        "update":"Update"
+        "error": "Error",
+        "edit": "Edit",
+        "handover": "Handover",
+        "update": "Update"
       },
       "title": {
         "detail": "Asset Detail",
@@ -4217,7 +4223,8 @@
         "asset_type_code": "Asset type code",
         "asset_type_name": "Asset type name",
         "asset_type_descriptions": "Asset type description",
-        "asset_type_group": "Asset group"      },
+        "asset_type_group": "Asset group"
+      },
       "buttons": {
         "create": "Create Asset Type",
         "save": "Save",
@@ -4253,9 +4260,9 @@
         "new_asset": "New asset this month",
         "this_month": "This month",
         "history": "History",
-        "owner_from" :"Owner from",
-        "status_from" :"Status from",
-        "update" :"Update"
+        "owner_from": "Owner from",
+        "status_from": "Status from",
+        "update": "Update"
       },
       "buttons": {
         "new_asset": "New Asset",
@@ -4351,6 +4358,25 @@
     "asset_status": {
       "fields": {
         "status_name": "Status Name"
+      }
+    },
+    "feed": {
+      "create_post": {
+        "text": {
+          "placeholder_input": "What are you thinking?",
+          "task": "Task",
+          "event": "Event",
+          "poll": "Poll",
+          "announcement": "Announcement",
+          "workspace": "Workspace",
+          "only_me": "Only me",
+          "choose_a_background_image": "Choose a background image",
+          "attach_photo_video": "Attach photo/video",
+          "tag_your_colleagues": "Tag your colleagues",
+          "poll_vote": "Poll vote",
+          "anonymous_q_and_a": "Anonymous Q&A",
+          "post": "Post"
+        }
       }
     }
   }
