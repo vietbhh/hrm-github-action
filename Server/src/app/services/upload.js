@@ -94,9 +94,9 @@ const _googleCloudUpload = async (storePath, files) => {
       "Server",
       "service_account_file.json"
     ),
-    projectId: process.env.gcs_project_id
+    projectId: process.env.GCS_PROJECT_ID
   })
-  const bucket = storage.bucket(process.env.gcs_bucket_name)
+  const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
 
   const promises = []
   forEach(files, (file, key) => {
