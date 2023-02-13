@@ -1,16 +1,12 @@
 import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import { Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Spinner
-} from "reactstrap"
-
+import { useNavigate } from "react-router-dom"
+import { Button, Card, CardBody, CardFooter, Spinner } from "reactstrap"
+import { workspaceApi } from "../common/api"
+import ReactHtmlParser from "react-html-parser"
 const CreateWorkspace = (props) => {
   const [state, setState] = useMergedState({
     loading: false
@@ -19,10 +15,16 @@ const CreateWorkspace = (props) => {
   const methods = useForm({
     mode: "onSubmit"
   })
-  const { handleSubmit, formState, setValue, getValues, watch } = methods
-
+  const { handleSubmit, formState, reset } = methods
+  const navigate = useNavigate()
   const onSubmit = (values) => {
-    console.log(values)
+    workspaceApi.save(values).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+      reset()
+      navigate(`/workspace/${res.data._id}`)
+    })
   }
 
   const workspace_type = [
@@ -59,13 +61,21 @@ const CreateWorkspace = (props) => {
     <Fragment>
       <div className="row">
         <div className="col-md-5 offset-md-3">
-          <h2>Create Workspace</h2>
+          <h2>
+            {useFormatMessage(
+              "modules.workspace.display.create_workspace_title"
+            )}
+          </h2>
           <p>
-            <span className="fw-bold">W</span>hat is workspace ? <br />
-            <span className="fw-bold">Workspace</span> can be a department, a
-            group, a project..v.v. Together sharing video and photo,
-            conversation, make a plan, share your work and many other
-            activities.
+            {ReactHtmlParser(
+              useFormatMessage("modules.workspace.display.what_is_workspace")
+            )}
+            <br />
+            {ReactHtmlParser(
+              useFormatMessage(
+                "modules.workspace.display.workspace_description"
+              )
+            )}
           </p>
           <Card>
             <CardBody>
@@ -73,13 +83,17 @@ const CreateWorkspace = (props) => {
                 <ErpInput
                   name="workspace_name"
                   useForm={methods}
-                  label="Workspace name"
+                  label={useFormatMessage(
+                    "modules.workspace.fields.workspace_name"
+                  )}
                   required
                 />
                 <ErpSelect
                   name="workspace_type"
                   useForm={methods}
-                  label="Workspace type"
+                  label={useFormatMessage(
+                    "modules.workspace.fields.workspace_type"
+                  )}
                   options={workspace_type}
                   defaultValue={workspace_type[0]}
                   isClearable={false}
@@ -88,7 +102,9 @@ const CreateWorkspace = (props) => {
                 <ErpSelect
                   name="workspace_mode"
                   useForm={methods}
-                  label="Workspace mode"
+                  label={useFormatMessage(
+                    "modules.workspace.fields.workspace_mode"
+                  )}
                   options={workspace_mode}
                   defaultValue={workspace_mode[0]}
                   isClearable={false}

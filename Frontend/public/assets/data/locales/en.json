@@ -4359,9 +4359,24 @@
         "status_name": "Status Name"
       }
     },
-    "workspace" : {
-      "buttons" : {
-        "create" : "Create Workspace"
+    "workspace": {
+      "buttons": {
+        "create": "Create Workspace"
+      },
+      "display": {
+        "create_workspace_title": "Create Workspace",
+        "what_is_workspace": "<strong>W</strong>hat is workspace ?",
+        "workspace_description": "<strong>Workspace</strong> can be a department, a group, a project..v.v. Together sharing video and photo,conversation, make a plan, share your work and many other activities.",
+        "feed": "Feed",
+        "pinned": "Pinned",
+        "introduction": "Introduction",
+        "member": "Member",
+        "media": "Media"
+      },
+      "fields": {
+        "workspace_name": "Workspace name",
+        "workspace_type": "Workspace type",
+        "workspace_mode": "Workspace mode"
       }
     }
   }

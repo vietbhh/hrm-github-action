@@ -535,13 +535,17 @@ section.select-app-option {
   }
 }
 
-.overlay-fastedit{
-  .ant-popover-inner{
+.overlay-fastedit {
+  .ant-popover-inner {
     border-radius: 10px;
   }
 }
-.popover-fastedit{
-.text-value-fastedit{
-  cursor: pointer;
+.popover-fastedit {
+  .text-value-fastedit {
+    cursor: pointer;
+  }
 }
+
+.nav-tabs .nav-link.active {
+  color: $primary;
 }

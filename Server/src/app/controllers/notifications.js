@@ -3,7 +3,7 @@ import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 export const sendNotificationController = async (req, res, next) => {
   const { receivers, payload, data, saveToDb } = req.body
   const result = await sendNotification(
-    req.userId,
+    req.__user,
     receivers,
     payload,
     data,
