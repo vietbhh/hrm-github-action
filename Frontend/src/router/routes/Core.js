@@ -43,6 +43,7 @@ const NotAuthorized = lazy(() => import("@apps/modules/misc/NotAuthorized"))
 const Restrict = lazy(() => import("@apps/modules/misc/Restrict"))
 const Error = lazy(() => import("@apps/modules/misc/Error"))
 const Test = lazy(() => import("@apps/modules/misc/Test"))
+const TestUploadService = lazy(() => import("@apps/modules/misc/TestUploadService"))
 const Start = lazy(() => import("@apps/modules/misc/Start"))
 const Faq = lazy(() => import("@apps/modules/misc/faq/index"))
 const Tasks = lazy(() => import("@apps/modules/tasks/index"))
@@ -308,6 +309,15 @@ const CoreRoutes = [
       resource: "app",
       className: "",
       layout: "separateSidebar"
+    }
+  },
+  {
+    path: "/test-upload",
+    element: <TestUploadService />,
+    meta: {
+      action: "login",
+      resource: "app",
+      className: ""
     }
   }
 ]

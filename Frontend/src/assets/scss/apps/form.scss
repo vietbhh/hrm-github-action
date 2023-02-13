@@ -201,6 +201,11 @@ textarea.form-control {
       }
     }
   }
+  .select__menu {
+    .select__option {
+      padding: 4px 12px;
+    }
+  }
 }
 
 .custom-switch .custom-control-label::before {
@@ -343,4 +348,37 @@ textarea.form-control {
 
 .ant-select-single .ant-select-selector {
   align-items: center;
+}
+
+.erpSelect {
+  &.has-extra {
+    padding: 5px 0;
+    .text-label {
+      p {
+        font-size: 0.857rem !important;
+        line-height: normal;
+        margin-bottom: 0px;
+        font-weight: bold;
+      }
+      small {
+        font-size: 0.8rem;
+      }
+    }
+  }
+  i {
+    font-size: 22px !important;
+    margin-left: 2px !important;
+    margin-right: 10px !important;
+  }
+  p {
+    margin-bottom: 0px;
+  }
+}
+
+.erpSelectMulti {
+  &.has-extra {
+    i {
+      margin-right: 5px !important;
+    }
+  }
 }

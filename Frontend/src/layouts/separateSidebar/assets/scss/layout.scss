@@ -506,6 +506,14 @@
     overflow: unset !important;
   }
 
+  @media (max-width: 1199px) {
+    .main-menu {
+      margin-left: -27px;
+      margin-top: 0;
+      height: 100%;
+    }
+  }
+
   @media (max-width: 1350px) {
     .navbar-container {
       .navbar-nav {

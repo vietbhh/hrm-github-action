@@ -671,6 +671,83 @@ ErpTime.defaultProps = {
   format: "HH:mm"
 }
 
+const CustomErpSelectsOption = ({ data, ...props }) => {
+  return (
+    <components.Option {...props}>
+      <div
+        className={classnames(
+          "d-flex justify-content-left align-items-center erpSelect",
+          {
+            "has-extra": data?.icon || data?.text
+          }
+        )}>
+        {data?.icon && (
+          <Fragment>
+            {_.isString(data.icon) ? <i className={data.icon}></i> : data.icon}
+          </Fragment>
+        )}
+        <div className="text-label">
+          <p>{data.label}</p>
+          {data?.text && (
+            <small className="text-truncate mb-0">{data.text}</small>
+          )}
+        </div>
+      </div>
+    </components.Option>
+  )
+}
+const CustomSingleErpSelect = ({ data, ...props }) => {
+  return (
+    <components.SingleValue {...props}>
+      {!isEmpty(data) && (
+        <div
+          className={classnames(
+            "d-flex flex-wrap align-items-center erpSelect",
+            {
+              "has-extra": data?.icon || data?.text
+            }
+          )}>
+          {data?.icon && (
+            <Fragment>
+              {_.isString(data.icon) ? (
+                <i className={data.icon}></i>
+              ) : (
+                data.icon
+              )}
+            </Fragment>
+          )}
+          <div className="text-label">
+            <p>{data.label}</p>
+            {data?.text && (
+              <small className="text-truncate mb-0">{data.text}</small>
+            )}
+          </div>
+        </div>
+      )}
+    </components.SingleValue>
+  )
+}
+const CustomMultiErpSelect = ({ data, ...props }) => {
+  return (
+    <components.MultiValueLabel {...props}>
+      <div
+        className={classnames(
+          "d-flex flex-wrap align-items-center erpSelectMulti",
+          {
+            "has-extra": data?.icon
+          }
+        )}>
+        {data?.icon && (
+          <Fragment>
+            {_.isString(data.icon) ? <i className={data.icon}></i> : data.icon}
+          </Fragment>
+        )}
+        <span>{data.label}</span>
+      </div>
+    </components.MultiValueLabel>
+  )
+}
+
 export const ErpSelect = (props) => {
   const {
     name,
@@ -775,6 +852,11 @@ export const ErpSelect = (props) => {
                   classNamePrefix="select"
                   isClearable={true}
                   onCreateOption={onCreateOption}
+                  components={{
+                    Option: CustomErpSelectsOption,
+                    SingleValue: CustomSingleErpSelect,
+                    MultiValueLabel: CustomMultiErpSelect
+                  }}
                   {...renderProps}
                 />
               )

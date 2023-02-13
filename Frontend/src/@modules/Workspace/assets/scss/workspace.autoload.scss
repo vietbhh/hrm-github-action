@@ -1,0 +1,16 @@
+.workspace {
+  max-width: 1148px;
+  margin: auto;
+  .workspaceCover {
+    object-fit: cover;
+    max-height: 336px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  .workspaceInformation {
+    .workspaceName {
+      color: black;
+      font-weight: bold;
+    }
+  }
+}
