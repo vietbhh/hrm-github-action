@@ -27,3 +27,10 @@ export const testFn = async (req, res, next) => {
 export const homeController = (req, res, next) => {
   return res.respond("Thanks god,it's Friday!!!")
 }
+
+export const testUpload = async (req, res, next) => {
+  const result = await _uploadServices(path.join("feed", "post"), req.files)
+  console.log(result)
+
+  return res.respond(result)
+}
