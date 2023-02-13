@@ -17,7 +17,7 @@ class Upload
     {
         $this->uploadType = preference('upload_type');
         $this->googleCloudStorage = new GoogleCloudStorage();
-        $this->bucketName = 'friday-storage';
+        $this->bucketName = empty($_ENV['gcs_bucket_name']) ? 'friday-storage' : $_ENV['gcs_bucket_name'];
     }
 
     /**

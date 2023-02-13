@@ -10,6 +10,7 @@ import { Button } from "reactstrap"
 // ** Components
 import { ErpFileUpload, ErpInput } from "@apps/components/common/ErpField"
 import DownloadFile from "../download/pages/DownloadFile"
+import Photo from "../download/pages/Photo"
 
 const TestUploadService = (props) => {
   const methods = useForm({
@@ -25,10 +26,9 @@ const TestUploadService = (props) => {
 
   const handleClickDownload = () => {
     axiosNodeApi
-      .post("/test3/download", {
-        filePath:
-          "feed/post/17632020_1526765197334119_8163469679471153797_o.jpg"
-      })
+      .get(
+        "/download/file/?name=/feed/post/health.png"
+      )
       .then((res) => {
         console.log(res)
       })
@@ -53,8 +53,8 @@ const TestUploadService = (props) => {
         </Button>
         <DownloadFile
           className="align-items-center"
-          fileName="17632020_1526765197334119_8163469679471153797_o.jpg"
-          src="feed/post/17632020_1526765197334119_8163469679471153797_o.jpg">
+          fileName="health.png"
+          src="feed/post/health.png">
           <Button type="button" color="primary">
             Download File
           </Button>

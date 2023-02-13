@@ -12,7 +12,7 @@ class GoogleCloudStorage
 
     public function storage()
     {
-        $projectId = 'friday-351410';
+        $projectId = empty($_ENV['gcs_project_id']) ? 'friday-351410' : $_ENV['gcs_project_id'];
         $storage = new StorageClient([
             'projectId' => $projectId,
             'keyFilePath' => FCPATH . '..' . DIRECTORY_SEPARATOR . 'service_account_file.json'

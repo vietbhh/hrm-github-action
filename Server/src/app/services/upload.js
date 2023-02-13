@@ -87,16 +87,16 @@ const _googleCloudUpload = async (storePath, files) => {
   if (!files) {
     throw new Error("files_is_empty")
   }
-  const bucketName = "friday-storage"
+
   const storage = new Storage({
     keyFilename: path.join(
       dirname(global.__basedir),
       "Server",
       "service_account_file.json"
     ),
-    projectId: "friday-351410"
+    projectId: process.env.gcs_project_id
   })
-  const bucket = storage.bucket(bucketName)
+  const bucket = storage.bucket(process.env.gcs_bucket_name)
 
   const promises = []
   forEach(files, (file, key) => {
@@ -118,7 +118,7 @@ const _googleCloudUpload = async (storePath, files) => {
           const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
           uploadSuccess.push({
             name: fileName,
-            path: filePath,
+            path: path.join(storePath, fileName).replace(/\\/g, "/"),
             mime: file.mimetype,
             storagePath: publicUrl
           })
@@ -152,11 +152,10 @@ const _googleCloudUpload = async (storePath, files) => {
 
 const _uploadServices = async (storePath, files) => {
   const upload_type = await getSetting("upload_type")
-  //const upload_type = "storage"
   if (!storePath) throw new Error("missing_store_path")
   if (upload_type === "direct") {
     return _localUpload(storePath, files)
-  } else if (upload_type === "storage") {
+  } else if (upload_type === "cloud_storage") {
     return _googleCloudUpload(storePath, files)
   }
 }

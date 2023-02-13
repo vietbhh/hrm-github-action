@@ -8,5 +8,5 @@ coreRouter.get("/", homeController)
 coreRouter.post("/test", testFn)
 coreRouter.post("/notification/send", sendNotificationController)
 coreRouter.post("/test3", testUpload)
-coreRouter.post("/test3/download", downloadFile)
+coreRouter.get("/download/file", downloadFile)
 export default coreRouter
