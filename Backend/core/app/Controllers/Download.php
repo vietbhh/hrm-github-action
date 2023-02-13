@@ -25,7 +25,7 @@ class Download extends ErpController
 			}
 		}
 
-		if (empty($path) || !file_exists($filepath)) {
+		if ($downloadType == 'direct' && (empty($path) || !file_exists($filepath))) {
 			return $this->failNotFound("File $filepath does not exist");
 		}
 		if (!is_readable($filepath)) {
@@ -292,7 +292,7 @@ class Download extends ErpController
 		$path = 'default' . urldecode($name);
 		$googleCloudStorage = new GoogleCloudStorage();
 		$storage = $googleCloudStorage->storage();
-		$bucketName = 'friday-storage';
+		$bucketName = empty($_ENV['gcs_bucket_name']) ? 'friday-storage' : $_ENV['gcs_bucket_name'];
 		$bucket = $storage->bucket($bucketName);
 		try {
 			$object = $bucket->object($path);
