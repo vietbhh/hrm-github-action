@@ -4,7 +4,13 @@ import React, { Fragment, useEffect } from "react"
 import ModalEditAttachment from "./modals/ModalEditAttachment"
 
 const PreviewAttachment = (props) => {
-  const { file, setFile } = props
+  const {
+    file,
+    setFile,
+    handleAddAttachment,
+    loadingUploadAttachment,
+    setLoadingUploadAttachment
+  } = props
   const [state, setState] = useMergedState({
     modalEditAttachment: false
   })
@@ -50,8 +56,7 @@ const PreviewAttachment = (props) => {
                       height="32"
                       viewBox="0 0 32 32"
                       fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="mr-2">
+                      xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z"
                         fill="white"></path>
@@ -94,6 +99,11 @@ const PreviewAttachment = (props) => {
         <ModalEditAttachment
           modal={state.modalEditAttachment}
           toggleModal={toggleModalEditAttachment}
+          file={file}
+          setFile={setFile}
+          handleAddAttachment={handleAddAttachment}
+          loadingUploadAttachment={loadingUploadAttachment}
+          setLoadingUploadAttachment={setLoadingUploadAttachment}
         />
       </Fragment>
     )

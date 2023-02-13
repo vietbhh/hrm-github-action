@@ -4375,7 +4375,10 @@
           "tag_your_colleagues": "Tag your colleagues",
           "poll_vote": "Poll vote",
           "anonymous_q_and_a": "Anonymous Q&A",
-          "post": "Post"
+          "post": "Post",
+          "photo_video": "Photo/Video",
+          "add_photo_video": "Add Photo/Video",
+          "add_description": "Add description..."
         }
       }
     }

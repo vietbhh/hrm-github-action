@@ -1,19 +1,17 @@
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useFormatMessage } from "@apps/utility/common"
 import { Tooltip } from "antd"
+import classNames from "classnames"
 import React, { Fragment } from "react"
 import { Label } from "reactstrap"
 
 const AttachPhotoVideo = (props) => {
-  const { file, setFile } = props
-  const [state, setState] = useMergedState({})
+  const {
+    handleAddAttachment,
+    loadingUploadAttachment,
+    setLoadingUploadAttachment
+  } = props
 
   // ** function
-  const changeFile = (e) => {
-    if (!_.isUndefined(e.target.files[0])) {
-      setFile([...file, ...e.target.files])
-      document.getElementById("attach-doc").value = null
-    }
-  }
 
   // ** useEffect
 
@@ -23,10 +21,12 @@ const AttachPhotoVideo = (props) => {
         title={useFormatMessage(
           "modules.feed.create_post.text.attach_photo_video"
         )}>
-        <Label
-          className={`attachment-icon mb-0 cursor-pointer`}
-          for="attach-doc">
-          <li className="create_post_footer-li">
+        <Label className={`mb-0`} for="attach-doc">
+          <li
+            className={classNames("create_post_footer-li", {
+              "cursor-not-allowed": loadingUploadAttachment,
+              "cursor-pointer": !loadingUploadAttachment
+            })}>
             <svg
               width="22"
               height="22"
@@ -44,10 +44,11 @@ const AttachPhotoVideo = (props) => {
               type="file"
               id="attach-doc"
               accept="image/*, video/*"
+              disabled={loadingUploadAttachment}
               multiple
               hidden
               onChange={(e) => {
-                changeFile(e)
+                handleAddAttachment(e.target.files)
               }}
             />
           </li>

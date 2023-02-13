@@ -152,28 +152,6 @@
       }
     }
 
-    .btn-delete-attachment {
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      height: 32px;
-      line-height: 16px;
-      min-width: 34px;
-      position: absolute;
-      right: 12px;
-      top: 7px;
-      z-index: 90;
-      padding: 0;
-      align-items: center;
-      display: inline-flex;
-      justify-content: center;
-      border: none;
-
-      &:hover {
-        filter: brightness(130%);
-      }
-    }
-
     .btn-attachment {
       background: rgba(0, 0, 0, 0.6);
       border-radius: 8px;
@@ -194,6 +172,64 @@
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.8);
+      }
+    }
+  }
+
+  .btn-delete-attachment {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    height: 32px;
+    line-height: 16px;
+    min-width: 34px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 90;
+    padding: 0;
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    border: none;
+
+    &:hover {
+      filter: brightness(130%);
+    }
+  }
+}
+
+.modal-header-privacy-choose-dropdown {
+  .fa-solid {
+    font-weight: 900 !important;
+  }
+
+  ul {
+    border-radius: 12px;
+
+    li {
+      border-radius: 12px;
+      padding: 7px 15px;
+
+      i {
+        font-size: 16px !important;
+        width: 16px;
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+
+        .custom-radio {
+          input[type="radio"] {
+            box-shadow: none;
+
+            &:checked {
+              background-color: #377dff;
+              border-color: #377dff;
+            }
+          }
+        }
       }
     }
   }
@@ -262,7 +298,6 @@
         align-items: center;
         justify-content: center;
         border-radius: 12px;
-        cursor: pointer;
         position: relative;
 
         &:hover {
@@ -403,34 +438,116 @@
   }
 }
 
-.modal-header-privacy-choose-dropdown {
-  .fa-solid {
-    font-weight: 900 !important;
-  }
+.modal-edit-attachment {
+  max-width: 960px;
 
-  ul {
-    border-radius: 12px;
+  .modal-header {
+    border-bottom: 0.5px solid #f0f0f0 !important;
 
-    li {
-      border-radius: 12px;
-      padding: 7px 15px;
+    .modal-title {
+      display: flex;
+      align-items: center;
+      width: 100%;
 
-      i {
-        font-size: 16px !important;
-        width: 16px;
-      }
-
-      a {
+      .btn-icon {
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
+        justify-content: center;
+        background-color: #f0f3ff;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
 
-        .custom-radio {
-          input[type="radio"] {
-            box-shadow: none;
+      .header-right {
+        margin-left: auto;
 
-            &:checked {
-              background-color: #377dff;
-              border-color: #377dff;
+        .div-add-photo {
+          background-color: rgba(86, 202, 118, 0.16);
+          padding: 8px 12px;
+          color: #3ab67b;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 500;
+
+          svg {
+            color: #3ab67b;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-body {
+    .list-item-photo {
+      margin-left: -8px;
+      margin-right: -16px;
+
+      .item-photo {
+        width: calc(33% - 16px);
+        height: 386px;
+        filter: drop-shadow(0 2px 4px rgba(47, 49, 54, 0.1));
+        margin-bottom: 16px;
+        margin-left: 8px;
+        margin-right: 8px;
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+
+        .photo-view {
+          background: #f1f2f4;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+          height: 298px;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+
+          .photo-view-bg {
+            bottom: 0;
+            filter: blur(8px);
+            -webkit-filter: blur(8px);
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 10;
+            background-size: 100%;
+          }
+
+          .photo-view-img {
+            align-items: center;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 20;
+            background-size: auto 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+          }
+        }
+
+        .photo-description {
+          background-color: #fff;
+          border-bottom-left-radius: 12px;
+          border-bottom-right-radius: 12px;
+          height: 86px;
+          width: 100%;
+
+          textarea {
+            border: none;
+            width: 100%;
+            padding: 8px;
+            height: 79px;
+            resize: none;
+
+            &:focus-visible {
+              outline: none !important;
             }
           }
         }

@@ -1,15 +1,17 @@
 import { ErpRadio } from "@apps/components/common/ErpField"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import { Dropdown, Tooltip } from "antd"
+import { EditorState, Modifier } from "draft-js"
+import { useCallback, useEffect, useMemo, useRef } from "react"
+import { Editor as EditorDraft } from "react-draft-wysiwyg"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap"
-import { useEffect, useRef } from "react"
-import { Editor as EditorDraft } from "react-draft-wysiwyg"
-import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js"
-import Emoji from "../Emoji"
 import AttachPhotoVideo from "../AttachPhotoVideo"
+import Emoji from "../Emoji"
 import PreviewAttachment from "../PreviewAttachment"
+import { feedApi } from "../../../common/api"
 
 const ModalCreatePost = (props) => {
   const {
@@ -22,9 +24,9 @@ const ModalCreatePost = (props) => {
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
-    file: []
+    file: [],
+    loadingUploadAttachment: false
   })
-  const contentRef = useRef(null)
 
   const methods = useForm({
     mode: "onSubmit"
@@ -33,20 +35,11 @@ const ModalCreatePost = (props) => {
   const onSubmit = (values) => {}
 
   // ** function
-  const setContentRef = (ref) => {
-    contentRef.current = ref
-  }
-  const setEditorReference = (ref) => {
-    setContentRef(ref)
-  }
-  const focusContent = () => {
-    if (contentRef.current) {
-      contentRef.current.focus()
-    }
-  }
   const setFile = (file) => {
     setState({ file: file })
   }
+  const setLoadingUploadAttachment = (value) =>
+    setState({ loadingUploadAttachment: value })
 
   const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
@@ -82,6 +75,43 @@ const ModalCreatePost = (props) => {
   const handleInsertEditorState = (characterToInsert) => {
     const newEditorState = insertCharacter(characterToInsert, state.editorState)
     setState({ editorState: newEditorState })
+  }
+
+  // attachment
+  const handleAddAttachment = (file) => {
+    if (!_.isUndefined(file[0])) {
+      let check_type_file = true
+      _.forEach(file, (value) => {
+        const type = value.type
+        if (!type.includes("image/") && !type.includes("video/")) {
+          check_type_file = false
+        }
+      })
+      if (check_type_file === false) {
+        notification.showError({
+          text: useFormatMessage("notification.wrong_avatar_file_type")
+        })
+      } else {
+        setLoadingUploadAttachment(true)
+        const params = { file: file }
+        feedApi
+          .postUploadAttachment(params)
+          .then((res) => {
+            setLoadingUploadAttachment(false)
+          })
+          .catch((err) => {
+            setLoadingUploadAttachment(false)
+          })
+
+        setFile([...state.file, ...file])
+      }
+      if (document.getElementById("attach-doc")) {
+        document.getElementById("attach-doc").value = null
+      }
+      if (document.getElementById("attach-doc-2")) {
+        document.getElementById("attach-doc-2").value = null
+      }
+    }
   }
 
   // ** useEffect
@@ -156,6 +186,19 @@ const ModalCreatePost = (props) => {
     return ""
   }
 
+  const renderPreviewAttachment = useMemo(
+    () => (
+      <PreviewAttachment
+        file={state.file}
+        setFile={setFile}
+        handleAddAttachment={handleAddAttachment}
+        loadingUploadAttachment={state.loadingUploadAttachment}
+        setLoadingUploadAttachment={setLoadingUploadAttachment}
+      />
+    ),
+    [state.file]
+  )
+
   return (
     <Modal
       isOpen={modal}
@@ -198,7 +241,6 @@ const ModalCreatePost = (props) => {
               placeholder={useFormatMessage(
                 "modules.feed.create_post.text.placeholder_input"
               )}
-              editorRef={setEditorReference}
               editorStyle={{
                 minHeight: "150px",
                 maxHeight: "auto"
@@ -236,7 +278,7 @@ const ModalCreatePost = (props) => {
               }}
             />
 
-            <PreviewAttachment file={state.file} setFile={setFile} />
+            {renderPreviewAttachment}
 
             <ul className="create_post_footer">
               <Tooltip
@@ -250,7 +292,11 @@ const ModalCreatePost = (props) => {
                 </li>
               </Tooltip>
 
-              <AttachPhotoVideo file={state.file} setFile={setFile} />
+              <AttachPhotoVideo
+                handleAddAttachment={handleAddAttachment}
+                loadingUploadAttachment={state.loadingUploadAttachment}
+                setLoadingUploadAttachment={setLoadingUploadAttachment}
+              />
 
               <Tooltip
                 title={useFormatMessage(
