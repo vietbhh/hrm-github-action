@@ -19,9 +19,8 @@ import {
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import { Space } from "antd"
 import notification from "@apps/utility/notification"
-import WarningAssetGroupCode from "./WarningAssetGroupCode"
 
-const AssetGroupModal = (props) => {
+const AssetBrandModal = (props) => {
   const {
     // ** props
     modal,
@@ -38,8 +37,6 @@ const AssetGroupModal = (props) => {
   } = props
 
   const [loading, setLoading] = useState(false)
-  const [showWarningUpdateCode, setShowWarningUpdateCode] = useState(false)
-  const [acceptChangeAssetCode, setAcceptChangeAssetCode] = useState(false)
 
   const methods = useForm({
     mode: "onSubmit"
@@ -53,9 +50,8 @@ const AssetGroupModal = (props) => {
 
   const onSubmit = (values) => {
     if (isEditing) {
-      values.accept_change_asset_code = acceptChangeAssetCode
       assetApi
-        .updateAssetGroup(editData?.id, values)
+        .updateAssetBrand(editData?.id, values)
         .then((res) => {
           notification.showSuccess()
           toggleModal()
@@ -68,7 +64,7 @@ const AssetGroupModal = (props) => {
         })
     } else {
       assetApi
-        .createAssetGroup(values)
+        .createAssetBrand(values)
         .then((res) => {
           notification.showSuccess()
           toggleModal()
@@ -86,33 +82,15 @@ const AssetGroupModal = (props) => {
   useEffect(() => {
     if (isEditing === true) {
       defaultModuleApi
-        .getDetail("asset_groups", editData?.id)
+        .getDetail("asset_brands", editData?.id)
         .then((res) => {
           reset(res.data.data)
         })
         .catch((err) => {})
     } else {
       reset({})
-      setShowWarningUpdateCode(false)
-      setAcceptChangeAssetCode(false)
     }
   }, [isEditing, editData])
-
-  useEffect(() => {
-    if (isEditing === true) {
-      const subscription = watch((value, { name, type }) => {
-        if (name === "asset_group_code") {
-          if (value.asset_group_code !== editData.asset_group_code) {
-            setShowWarningUpdateCode(true)
-          } else {
-            setShowWarningUpdateCode(false)
-          }
-        }
-      })
-
-      return () => subscription.unsubscribe()
-    }
-  }, [isEditing, watch])
 
   // ** render
   return (
@@ -120,55 +98,36 @@ const AssetGroupModal = (props) => {
       isOpen={modal}
       toggle={() => toggleModal()}
       backdrop={"static"}
-      size="lg"
-      className="modal-asset-group"
+      size="md"
+      className="modal-asset-type"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => toggleModal()}>
-        {useFormatMessage("modules.asset_groups.text.new_asset_group")}
+        {useFormatMessage("modules.asset_brands.text.new_asset_brand")}
       </ModalHeader>
       <ModalBody className="pt-2">
         <FormProvider {...methods}>
           <Row className="mb-1">
-            <Col sm={6}>
+            <Col sm={12}>
               <FieldHandle
                 module={moduleName}
                 fieldData={{
-                  ...metas.asset_group_code
+                  ...metas.brand_name
                 }}
                 useForm={methods}
                 updateDataId={editData?.id}
               />
             </Col>
-            <Col sm={6}>
-              <FieldHandle
-                module={moduleName}
-                fieldData={{
-                  ...metas.asset_group_name
-                }}
-                useForm={methods}
-              />
-            </Col>
           </Row>
           <Row>
             <Col sm={12}>
               <FieldHandle
                 module={moduleName}
                 fieldData={{
-                  ...metas.asset_group_descriptions
+                  ...metas.description
                 }}
                 useForm={methods}
               />
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={12}>
-              {showWarningUpdateCode && (
-                <WarningAssetGroupCode
-                  acceptChangeAssetCode={acceptChangeAssetCode}
-                  setAcceptChangeAssetCode={setAcceptChangeAssetCode}
-                />
-              )}
             </Col>
           </Row>
         </FormProvider>
@@ -178,8 +137,8 @@ const AssetGroupModal = (props) => {
           <Space>
             <Button.Ripple type="submit" color="primary" disabled={loading}>
               {isEditing
-                ? useFormatMessage("modules.asset_groups.buttons.update")
-                : useFormatMessage("modules.asset_groups.buttons.save")}
+                ? useFormatMessage("modules.asset_brands.buttons.update")
+                : useFormatMessage("modules.asset_brands.buttons.save")}
             </Button.Ripple>
             <Button.Ripple
               color="flat-danger"
@@ -193,4 +152,4 @@ const AssetGroupModal = (props) => {
   )
 }
 
-export default AssetGroupModal
+export default AssetBrandModal

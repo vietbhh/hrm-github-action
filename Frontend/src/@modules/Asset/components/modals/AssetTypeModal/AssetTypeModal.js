@@ -92,6 +92,7 @@ const AssetTypeModal = (props) => {
         })
         .catch((err) => {})
     } else {
+      reset({})
       setShowWarningUpdateCode(false)
       setAcceptChangeAssetCode(false)
     }
