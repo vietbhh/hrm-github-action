@@ -100,9 +100,11 @@ const _googleCloudUpload = async (storePath, files) => {
 
   const promises = []
   forEach(files, (file, key) => {
-    const newFile = {...file, buffer: file.data}
+    const newFile = { ...file, buffer: file.data }
     const fileName = safeFileName(newFile.name)
-    const filePath = path.join("default", storePath, fileName).replace(/\\/g, "/")
+    const filePath = path
+      .join(process.env.code, storePath, fileName)
+      .replace(/\\/g, "/")
 
     const promise = new Promise((resolve, reject) => {
       const blob = bucket.file(filePath)
@@ -129,7 +131,8 @@ const _googleCloudUpload = async (storePath, files) => {
             name: fileName,
             error: err
           })
-        }).end(newFile.buffer)
+        })
+        .end(newFile.buffer)
     })
 
     promises.push(promise)
