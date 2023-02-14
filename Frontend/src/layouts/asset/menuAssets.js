@@ -60,6 +60,15 @@ const assetMenu = [
         resource: "asset_types",
         icon: <Icon.Circle size={6} />,
         navLink: "/asset/types"
+      },
+      {
+        id: "asset-brands",
+        title: "menu.asset.asset_brand",
+        type: "item",
+        action: "manage",
+        resource: "asset_brands",
+        icon: <Icon.Circle size={6} />,
+        navLink: "/asset/brands"
       }
     ]
   }

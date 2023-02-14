@@ -669,7 +669,8 @@
       "qrCodeGenerator": "QRCode Generator",
       "inventories": "Inventory",
       "assetGroups": "Asset Groups",
-      "assetTypes": "Asset Types"
+      "assetTypes": "Asset Types",
+      "asset_brand": "Asset Brands"
     }
   },
   "settings": {
@@ -4350,8 +4351,23 @@
       }
     },
     "asset_brands": {
+      "title": "Asset Brands",
       "fields": {
-        "brand_name": "Brand Name"
+        "brand_name": "Brand Name",
+        "description": "Description"
+      },
+      "buttons": {
+        "create": "Create Asset Type",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "action": "Action",
+        "new_asset_brand": "New Asset Brand",
+        "warning_delete": {
+          "title": "Are you sure?",
+          "content": "All deleted data cannot be recovered!"
+        }
       }
     },
     "asset_status": {
