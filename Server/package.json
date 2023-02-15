@@ -18,6 +18,8 @@
     "#utility/*": "./src/app/utility/*"
   },
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^1.4.2",
     "@google-cloud/storage": "^6.9.2",
     "@thream/socketio-jwt": "^3.0.1",
     "axios": "^1.1.3",
@@ -30,6 +32,7 @@
     "express-fileupload": "^1.4.0",
     "file": "^0.2.2",
     "firebase-admin": "^11.4.1",
+    "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^8.5.1",
     "lodash-es": "^4.17.21",
     "mongoose": "^6.7.1",

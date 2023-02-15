@@ -76,6 +76,7 @@
     "react-dom": "^18.1.0",
     "react-draft-wysiwyg": "^1.14.7",
     "react-dropzone": "^14.2.1",
+    "react-easy-sort": "^1.5.1",
     "react-ellipsis-text": "^1.2.1",
     "react-feather": "~2.0.3",
     "react-flatpickr": "^3.10.12",

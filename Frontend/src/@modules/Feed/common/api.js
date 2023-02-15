@@ -8,7 +8,7 @@ import {
 export const feedApi = {
   async postUploadAttachment(data) {
     return await axiosNodeApi.post(
-      "/feed/upload-attachment",
+      "/feed/upload-temp-attachment",
       serialize(_.cloneDeep(data)),
       {
         headers: {

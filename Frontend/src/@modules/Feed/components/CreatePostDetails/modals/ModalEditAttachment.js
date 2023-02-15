@@ -1,5 +1,7 @@
 import { useFormatMessage } from "@apps/utility/common"
-import { Label, Modal, ModalBody, ModalHeader } from "reactstrap"
+import { Label, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
+import SortableList, { SortableItem } from "react-easy-sort"
+import arrayMove from "array-move"
 
 const ModalEditAttachment = (props) => {
   const {
@@ -9,8 +11,13 @@ const ModalEditAttachment = (props) => {
     setFile,
     handleAddAttachment,
     loadingUploadAttachment,
-    setLoadingUploadAttachment
+    renderIconVideo
   } = props
+
+  // ** function
+  const onSortEnd = (oldIndex, newIndex) => {
+    setFile((array) => arrayMove(array, oldIndex, newIndex))
+  }
 
   return (
     <Modal
@@ -18,10 +25,8 @@ const ModalEditAttachment = (props) => {
       toggle={() => toggleModal()}
       className="modal-lg modal-dialog-centered feed modal-edit-attachment"
       modalTransition={{ timeout: 100 }}
-      backdropTransition={{ timeout: 100 }}
-      /* backdrop={"static"} */
-    >
-      <ModalHeader /* toggle={() => toggleModal()} */>
+      backdropTransition={{ timeout: 100 }}>
+      <ModalHeader>
         <button className="btn-icon" onClick={() => toggleModal()}>
           <i className="fa-solid fa-arrow-left"></i>
         </button>
@@ -63,51 +68,72 @@ const ModalEditAttachment = (props) => {
       </ModalHeader>
       <ModalBody>
         <div className="list-item-photo">
-          {_.map(file, (value, index) => {
-            return (
-              <div key={index} className="item-photo">
-                <div className="photo-view">
-                  <button
-                    className="btn btn-delete-attachment"
-                    onClick={() => {
-                      //setFile(file.splice(index, 1))
-                    }}>
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z"
-                        fill="white"></path>
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M30.6673 16.0002C30.6673 24.1003 24.1008 30.6668 16.0007 30.6668C7.90047 30.6668 1.33398 24.1003 1.33398 16.0002C1.33398 7.89999 7.90047 1.3335 16.0007 1.3335C24.1008 1.3335 30.6673 7.89999 30.6673 16.0002ZM22.2768 11.6096C22.7975 11.0889 22.7975 10.2447 22.2768 9.72402C21.7561 9.20332 20.9119 9.20332 20.3912 9.72402L16.0007 14.1145L11.6101 9.72402C11.0894 9.20332 10.2452 9.20332 9.72451 9.72402C9.20381 10.2447 9.20381 11.0889 9.72451 11.6096L14.115 16.0002L9.72451 20.3907C9.20381 20.9114 9.20381 21.7556 9.72451 22.2763C10.2452 22.797 11.0894 22.797 11.6101 22.2763L16.0007 17.8858L20.3912 22.2763C20.9119 22.797 21.7561 22.797 22.2768 22.2763C22.7975 21.7556 22.7975 20.9114 22.2768 20.3907L17.8863 16.0002L22.2768 11.6096Z"
-                        fill="#26282C"></path>
-                    </svg>
-                  </button>
-                  <div
-                    className="photo-view-bg"
-                    style={{
-                      backgroundImage: `url("${URL.createObjectURL(value)}")`
-                    }}></div>
-                  <div
-                    className="photo-view-img"
-                    style={{
-                      backgroundImage: `url("${URL.createObjectURL(value)}")`
-                    }}></div>
-                </div>
-                <div className="photo-description">
-                  <textarea
-                    placeholder={useFormatMessage(
-                      "modules.feed.create_post.text.add_description"
-                    )}></textarea>
-                </div>
+          <SortableList
+            onSortEnd={onSortEnd}
+            className="list"
+            draggedItemClassName="dragged">
+            {_.map(file, (value, index) => {
+              return (
+                <SortableItem key={index}>
+                  <div className="item-photo">
+                    <div className="photo-view">
+                      <button
+                        className="btn btn-delete-attachment"
+                        onClick={() => {
+                          const _file = [...file]
+                          _file.splice(index, 1)
+                          setFile(_file)
+                        }}>
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z"
+                            fill="white"></path>
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M30.6673 16.0002C30.6673 24.1003 24.1008 30.6668 16.0007 30.6668C7.90047 30.6668 1.33398 24.1003 1.33398 16.0002C1.33398 7.89999 7.90047 1.3335 16.0007 1.3335C24.1008 1.3335 30.6673 7.89999 30.6673 16.0002ZM22.2768 11.6096C22.7975 11.0889 22.7975 10.2447 22.2768 9.72402C21.7561 9.20332 20.9119 9.20332 20.3912 9.72402L16.0007 14.1145L11.6101 9.72402C11.0894 9.20332 10.2452 9.20332 9.72451 9.72402C9.20381 10.2447 9.20381 11.0889 9.72451 11.6096L14.115 16.0002L9.72451 20.3907C9.20381 20.9114 9.20381 21.7556 9.72451 22.2763C10.2452 22.797 11.0894 22.797 11.6101 22.2763L16.0007 17.8858L20.3912 22.2763C20.9119 22.797 21.7561 22.797 22.2768 22.2763C22.7975 21.7556 22.7975 20.9114 22.2768 20.3907L17.8863 16.0002L22.2768 11.6096Z"
+                            fill="#26282C"></path>
+                        </svg>
+                      </button>
+                      <div
+                        className="photo-view-bg"
+                        style={{
+                          backgroundImage: `url("${value.url}")`
+                        }}></div>
+                      <div
+                        className="photo-view-img"
+                        style={{
+                          backgroundImage: `url("${value.url}")`
+                        }}></div>
+                      {value.type.includes("video/") && renderIconVideo()}
+                    </div>
+                    <div className="photo-description">
+                      <textarea
+                        placeholder={useFormatMessage(
+                          "modules.feed.create_post.text.add_description"
+                        )}></textarea>
+                    </div>
+                  </div>
+                </SortableItem>
+              )
+            })}
+          </SortableList>
+
+          {loadingUploadAttachment && (
+            <div className="item-photo">
+              <div className="photo-view d-flex align-items-center justify-content-center">
+                <Spinner size="sm" />
               </div>
-            )
-          })}
+              <div className="photo-description">
+                <textarea disabled={true}></textarea>
+              </div>
+            </div>
+          )}
         </div>
       </ModalBody>
     </Modal>

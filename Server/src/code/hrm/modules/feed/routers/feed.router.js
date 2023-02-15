@@ -1,7 +1,7 @@
 import express from "express"
-import { uploadAttachmentController } from "../controllers/feed.js"
+import { uploadTempAttachmentController } from "../controllers/feed.js"
 const router = express.Router()
 
-router.post("/upload-attachment", uploadAttachmentController)
+router.post("/upload-temp-attachment", uploadTempAttachmentController)
 
 export default router

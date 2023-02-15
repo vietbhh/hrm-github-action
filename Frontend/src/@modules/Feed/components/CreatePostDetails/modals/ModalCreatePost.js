@@ -1,17 +1,18 @@
 import { ErpRadio } from "@apps/components/common/ErpField"
+import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { Dropdown, Tooltip } from "antd"
 import { EditorState, Modifier } from "draft-js"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Editor as EditorDraft } from "react-draft-wysiwyg"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap"
+import { feedApi } from "../../../common/api"
 import AttachPhotoVideo from "../AttachPhotoVideo"
 import Emoji from "../Emoji"
 import PreviewAttachment from "../PreviewAttachment"
-import { feedApi } from "../../../common/api"
 
 const ModalCreatePost = (props) => {
   const {
@@ -24,9 +25,10 @@ const ModalCreatePost = (props) => {
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
-    file: [],
+    //file: [],
     loadingUploadAttachment: false
   })
+  const [file, setFile] = useState([])
 
   const methods = useForm({
     mode: "onSubmit"
@@ -35,9 +37,9 @@ const ModalCreatePost = (props) => {
   const onSubmit = (values) => {}
 
   // ** function
-  const setFile = (file) => {
+  /* const setFile = (file) => {
     setState({ file: file })
-  }
+  } */
   const setLoadingUploadAttachment = (value) =>
     setState({ loadingUploadAttachment: value })
 
@@ -93,17 +95,43 @@ const ModalCreatePost = (props) => {
         })
       } else {
         setLoadingUploadAttachment(true)
-        const params = { file: file }
+        const timestamp = Date.now()
+        const arrFile = []
+        const arrType = []
+        _.forEach(file, (value) => {
+          const newName = timestamp + "_" + value.name
+          const newFile = new File([value], newName)
+          arrFile.push(newFile)
+          arrType.push(value.type)
+        })
+        const params = { file: arrFile, type: arrType }
         feedApi
           .postUploadAttachment(params)
           .then((res) => {
-            setLoadingUploadAttachment(false)
+            const _file = []
+            const promises = []
+            _.forEach(res.data, (value) => {
+              const promise = new Promise((resolve, reject) => {
+                downloadApi.getPhoto(value.path).then((response) => {
+                  _file.push({
+                    ...value,
+                    url: URL.createObjectURL(response.data)
+                  })
+                  resolve("success")
+                })
+              })
+
+              promises.push(promise)
+            })
+
+            Promise.all(promises).then(() => {
+              setFile([...file, ..._file])
+              setLoadingUploadAttachment(false)
+            })
           })
           .catch((err) => {
             setLoadingUploadAttachment(false)
           })
-
-        setFile([...state.file, ...file])
       }
       if (document.getElementById("attach-doc")) {
         document.getElementById("attach-doc").value = null
@@ -189,14 +217,13 @@ const ModalCreatePost = (props) => {
   const renderPreviewAttachment = useMemo(
     () => (
       <PreviewAttachment
-        file={state.file}
+        file={file}
         setFile={setFile}
         handleAddAttachment={handleAddAttachment}
         loadingUploadAttachment={state.loadingUploadAttachment}
-        setLoadingUploadAttachment={setLoadingUploadAttachment}
       />
     ),
-    [state.file]
+    [file, state.loadingUploadAttachment]
   )
 
   return (

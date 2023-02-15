@@ -122,14 +122,14 @@
       &.item-count-5 {
         &.item-1,
         &.item-2 {
-          width: calc(50% - 8px);
+          width: calc(50% - 4px);
           height: 250px;
         }
 
         &.item-3,
         &.item-4,
         &.item-5 {
-          width: calc(33% - 4px);
+          width: calc(33% - 3px);
           height: 168px;
         }
 
@@ -196,6 +196,20 @@
     &:hover {
       filter: brightness(130%);
     }
+  }
+
+  .icon-play {
+    bottom: 0;
+    color: #fff;
+    font-size: 3rem !important;
+    height: 3.5rem !important;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 3.5rem !important;
+    z-index: 25;
   }
 }
 
@@ -484,74 +498,87 @@
       margin-left: -8px;
       margin-right: -16px;
 
-      .item-photo {
-        width: calc(33% - 16px);
-        height: 386px;
-        filter: drop-shadow(0 2px 4px rgba(47, 49, 54, 0.1));
-        margin-bottom: 16px;
-        margin-left: 8px;
-        margin-right: 8px;
-        position: relative;
-        cursor: pointer;
-        display: inline-block;
-
-        .photo-view {
-          background: #f1f2f4;
-          border-top-left-radius: 12px;
-          border-top-right-radius: 12px;
-          height: 298px;
-          overflow: hidden;
-          position: relative;
-          width: 100%;
-
-          .photo-view-bg {
-            bottom: 0;
-            filter: blur(8px);
-            -webkit-filter: blur(8px);
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            z-index: 10;
-            background-size: 100%;
-          }
-
-          .photo-view-img {
-            align-items: center;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            z-index: 20;
-            background-size: auto 100%;
-            background-position: center center;
-            background-repeat: no-repeat;
-          }
-        }
-
-        .photo-description {
-          background-color: #fff;
-          border-bottom-left-radius: 12px;
-          border-bottom-right-radius: 12px;
-          height: 86px;
-          width: 100%;
-
-          textarea {
-            border: none;
-            width: 100%;
-            padding: 8px;
-            height: 79px;
-            resize: none;
-
-            &:focus-visible {
-              outline: none !important;
-            }
-          }
-        }
+      .react-grid-item {
+        cursor: grab !important;
       }
     }
   }
+}
+
+.item-photo {
+  width: 282px !important;
+  height: 386px;
+  filter: drop-shadow(0 2px 4px rgba(47, 49, 54, 0.1));
+  margin-bottom: 16px;
+  margin-left: 8px;
+  margin-right: 8px;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  cursor: grab;
+  user-select: none;
+
+  .photo-view {
+    background: #f1f2f4;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    height: 298px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    .photo-view-bg {
+      bottom: 0;
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 10;
+      background-size: 100%;
+    }
+
+    .photo-view-img {
+      align-items: center;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 20;
+      background-size: auto 100%;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+  }
+
+  .photo-description {
+    background-color: #fff;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    height: 86px;
+    width: 100%;
+
+    textarea {
+      border: none;
+      width: 100%;
+      padding: 8px;
+      height: 79px;
+      resize: none;
+
+      &:focus-visible {
+        outline: none !important;
+      }
+    }
+  }
+}
+
+.item-photo.dragged {
+  z-index: 9999;
+  cursor: grabbing;
+  border: 1px solid #377dff;
+  border-radius: 12px;
 }
