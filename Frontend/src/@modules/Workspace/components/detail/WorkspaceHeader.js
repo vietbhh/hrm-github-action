@@ -2,13 +2,24 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
+import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle } = props
-
+  const [state, setState] = useMergedState({
+    coverImage: defaultWorkspaceCover,
+    inviteModal: false
+  })
+  const onClickInvite = () => {
+    setState({ inviteModal: !state.inviteModal })
+  }
+  const saveCoverImage = (image) => {}
   return (
     <Card className="pb-0">
-      <img src={defaultWorkspaceCover} className="w-100 workspaceCover" />
-      <CoverEditor src="" />
+      <div className="image-cover">
+        <img src={defaultWorkspaceCover} className="w-100 workspaceCover" />
+        <CoverEditor src="" className="btn-cover" />
+      </div>
+
       <CardBody className="pb-0">
         <div className="d-flex justify-content-between align-content-center">
           <div className="workspaceInformation">
@@ -19,7 +30,9 @@ const WorkspaceHeader = (props) => {
             </p>
           </div>
           <div className="workspaceAction">
-            <Button className="btn btn-success">Invite</Button>
+            <Button className="btn btn-success" onClick={() => onClickInvite()}>
+              Invite
+            </Button>
           </div>
         </div>
         <hr
@@ -74,6 +87,10 @@ const WorkspaceHeader = (props) => {
             </NavLink>
           </NavItem>
         </Nav>
+        <InviteWorkspaceModal
+          modal={state.inviteModal}
+          handleModal={onClickInvite}
+        />
       </CardBody>
     </Card>
   )

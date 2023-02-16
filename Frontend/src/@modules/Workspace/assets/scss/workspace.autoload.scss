@@ -1,6 +1,23 @@
 .workspace {
   max-width: 1148px;
   margin: auto;
+  .image-cover{
+    position: relative;
+    .coverPhoto{
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      canvas{
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+      }
+    }
+    .cameraBtn{
+      position: absolute;
+      top: 4%;
+      left: 1%;
+    }
+  }
   .workspaceCover {
     object-fit: cover;
     max-height: 336px;
@@ -12,5 +29,17 @@
       color: black;
       font-weight: bold;
     }
+  }
+}
+.invite-workspace-modal{
+  .ant-tabs-tab-btn{
+    width: 100%;
+  }
+  .content-select{
+    width: 60%;
+    border-right: 0.5px solid #c5c5c5;
+  }
+  .title-tab-content{
+    font-weight: 600;
   }
 }
