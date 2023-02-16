@@ -61,35 +61,33 @@ export const ListCode = React.forwardRef((props, ref) => {
         }}>
         {chosenAssetList.map((item, index) => {
           return (
-            <Fragment>
-              <div
-                key={`code-item-${index}`}
+            <div
+              key={`code-item-${index}`}
+              style={{
+                width: "20%",
+                display: "flex",
+                justifyContent: "center",
+                justifyItems: "center",
+                alignItems: "flex-start"
+              }}>
+              <p
                 style={{
-                  width: "20%",
-                  display: "flex",
-                  justifyContent: "center",
-                  justifyItems: "center",
-                  alignItems: "flex-start"
+                  fontSize: "12px",
+                  paddingBottom: "5px",
+                  marginLeft: "5px",
+                  marginRight: "5px",
+                  textAlign: "center",
+                  width: "70px"
                 }}>
-                <p
-                  style={{
-                    fontSize: "12px",
-                    paddingBottom: "5px",
-                    marginLeft: "5px",
-                    marginRight: "5px",
-                    textAlign: "center",
-                    width: "70px"
-                  }}>
-                  {item.asset_code}
-                </p>
-                <QRCode
-                  size={100}
-                  style={{ height: "40px", width: "40px" }}
-                  value={item.asset_code}
-                  viewBox="0 0 256 256"
-                />
-              </div>
-            </Fragment>
+                {item.asset_code}
+              </p>
+              <QRCode
+                size={100}
+                style={{ height: "40px", width: "40px" }}
+                value={item.asset_code}
+                viewBox="0 0 256 256"
+              />
+            </div>
           )
         })}
       </div>

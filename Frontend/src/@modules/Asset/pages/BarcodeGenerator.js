@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useRef, useContext } from "react"
+import { useEffect, useRef, useContext, Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { assetApi } from "../common/api"
 import { AbilityContext } from "utility/context/Can"
@@ -22,15 +22,11 @@ import { Space } from "antd"
 const BarcodeGenerator = () => {
   const [state, setState] = useMergedState({
     loading: true,
+    loadingTable: true,
     assetList: [],
+    totalRecord: [],
     chosenAssetList: [],
-    filter: {
-      text: "",
-      asset_type_group: 0,
-      asset_type: 0,
-      asset_status: 0,
-      owner: 0
-    }
+    filter: {}
   })
 
   const assetListState = useSelector((state) => state.app.modules.asset_lists)
@@ -52,11 +48,15 @@ const BarcodeGenerator = () => {
     )
   }
 
-  const componentRef = useRef()
-
   const setFilter = (key, value) => {
     setState({
       filter: { ...state.filter, [key]: value }
+    })
+  }
+
+  const setFilterByObj = (obj) => {
+    setState({
+      filter: { ...state.filter, ...obj }
     })
   }
 
@@ -66,30 +66,67 @@ const BarcodeGenerator = () => {
     })
   }
 
-  const loadDataAssetList = () => {
+  const setLoadingTable = (status) => {
     setState({
-      loading: true
+      loadingTable: status
     })
+  }
+
+  const loadDataAssetList = (setLoading = true) => {
+    const stateLoad = { loadingTable: true }
+    if (setLoading) {
+      stateLoad["loading"] = true
+    }
+    setState(stateLoad)
 
     assetApi
       .getDataAssetList(state.filter)
       .then((res) => {
-        setState({
+        const resultState = {
           assetList: res.data.results,
-          loading: false
+          totalRecord: res.data.total_record,
+          loadingTable: false
+        }
+        if (setLoading) {
+          resultState["loading"] = false
+        }
+        setState(resultState)
+      })
+      .catch((err) => {
+        setState({
+          assetList: [],
+          totalRecord: 0,
+          loading: false,
+          loadingTable: false
         })
       })
-      .catch((err) => {})
   }
-
-  const handleGenerate = () => {}
 
   // ** effect
   useEffect(() => {
-    loadDataAssetList()
+    const reloadTable = Object.keys(state.filter).length === 0
+    loadDataAssetList(reloadTable)
   }, [state.filter])
 
   // ** render
+  const renderChoseAsset = () => {
+    if (state.loading) {
+      return ""
+    }
+
+    return (
+      <ChoseAsset
+        loadingTable={state.loadingTable}
+        totalRecord={state.totalRecord}
+        assetList={state.assetList}
+        chosenAssetList={state.chosenAssetList}
+        filter={state.filter}
+        setChosenAssetList={setChosenAssetList}
+        setFilterByObj={setFilterByObj}
+      />
+    )
+  }
+
   return (
     <div className="barcode-generator-page">
       <div>
@@ -127,11 +164,7 @@ const BarcodeGenerator = () => {
               </div>
               <div className="w-100 d-flex">
                 <div className="w-50 me-1">
-                  <ChoseAsset
-                    assetList={state.assetList}
-                    chosenAssetList={state.chosenAssetList}
-                    setChosenAssetList={setChosenAssetList}
-                  />
+                  <Fragment>{renderChoseAsset()}</Fragment>
                 </div>
                 <div className="w-50 ms-1">
                   <ChosenAsset chosenAssetList={state.chosenAssetList} />

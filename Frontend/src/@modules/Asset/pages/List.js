@@ -62,6 +62,7 @@ const List = (props) => {
     dataDetail: {},
     assetDetailModal: false,
     assetEditModal: false,
+    isDuplicateAsset: false,
     assetUpdateSTTModal: false,
     assetHandoverModal: false,
     filters: {
@@ -320,6 +321,16 @@ const List = (props) => {
         ),
         key: "btn_delete",
         onClick: () => handleDelete(data?.id)
+      },
+      {
+        label: (
+          <div className="d-flex align-items-center">
+            <i className="far fa-copy me-50"></i>
+            {useFormatMessage("button.duplicate")}
+          </div>
+        ),
+        key: "btn_duplicate",
+        onClick: () => handleDuplicateAsset(data?.id)
       }
     ]
   }
@@ -443,7 +454,11 @@ const List = (props) => {
   const handleAssetEdit = (id = 0) => {
     if (id) {
       assetApi.detailAsset(id).then((res) => {
-        setState({ assetDetail: res.data.data, assetEditModal: true })
+        setState({
+          assetDetail: res.data.data,
+          assetEditModal: true,
+          isDuplicateAsset: false
+        })
       })
     } else {
       setState({ assetEditModal: !state.assetEditModal })
@@ -468,6 +483,16 @@ const List = (props) => {
             notification.showError(useFormatMessage("notification.save.error"))
           })
       }
+    })
+  }
+
+  const handleDuplicateAsset = (id) => {
+    assetApi.detailAsset(id).then((res) => {
+      setState({
+        assetDetail: res.data.data,
+        assetEditModal: true,
+        isDuplicateAsset: true
+      })
     })
   }
 
@@ -707,6 +732,7 @@ const List = (props) => {
 
       <AssetEditModal
         modal={state.assetEditModal}
+        isDuplicateAsset={state.isDuplicateAsset}
         loadData={loadData}
         dataDetail={state.assetDetail}
         handleDetail={handleAssetEdit}
