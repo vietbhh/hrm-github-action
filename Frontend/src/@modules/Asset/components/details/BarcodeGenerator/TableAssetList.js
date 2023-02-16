@@ -72,7 +72,7 @@ const TableAssetList = (props) => {
             <div className="d-flex flex-column cursor ms-1">
               <p className="text-truncate mb-0">
                 <span className="font-weight-bold name-asset-table">
-                  {rowData?.asset_name}
+                  {rowData?.asset_type?.label}
                 </span>
                 <br />
                 <span className="font-weight-bold name-asset-table">

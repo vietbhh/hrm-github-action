@@ -4171,7 +4171,8 @@
       },
       "buttons": {
         "new_asset": "New Asset",
-        "generate": "Generate",
+        "generate_qr_code": "Generate QR Code",
+        "generate_barcode": "Generate Barcode",
         "error": "Error",
         "edit": "Edit",
         "handover": "Handover",

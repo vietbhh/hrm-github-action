@@ -49,10 +49,17 @@ class Import extends ErpController
 		$sheet = $spreadsheet->createSheet();
 		$sheet->setTitle("Asset list (Template)");
 		$startRow = 1;
+		$defaultData = [];
 		foreach ($arrImportColumn as $key => $row) {
 			$sheet->getStyle($arrAlphabet[$key] . $startRow . ':' . $arrAlphabet[$key] . '300')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
 			$sheet->getStyle($arrAlphabet[$key] . $startRow)->applyFromArray($styleArray);
 			$sheet->setCellValue($arrAlphabet[$key] . $startRow, $row['field']);
+
+			if ($row['type'] !== 'select_module' && $row['type'] !== 'select_option') {
+				$defaultData[$row['field']] = $row['name_default'];
+			} else {
+				$defaultData[$row['field']] = '';
+			}
 		}
 
 		foreach ($arrAlphabet as $columnId) {
@@ -75,6 +82,10 @@ class Import extends ErpController
 				foreach ($moduleData as $keyData => $rowData) {
 					$sheet->setCellValue($arrAlphabet[$startCol] . $startRow, $rowData['label']);
 
+					if (isset($defaultData[$key]) && empty($defaultData[$key])) {
+						$defaultData[$key] = $rowData['label'];
+					}
+
 					$startRow++;
 
 					if ($keyData + 1 == $row['length']) {
@@ -93,36 +104,13 @@ class Import extends ErpController
 
 		// ** fill data Asset
 		$sheet = $spreadsheet->setActiveSheetIndex(1);
-		$defaultData = [
-			[
-				'code_computer',
-				'Asus',
-				'Core i5, RAM 16GB, SSD 256, Win11 Home 64bit, 15.6 inches',
-				'',
-				'',
-				'25/06/2022',
-				'25/06/2024',
-				'',
-				'',
-				''
-			],
-			[
-				'code_computer',
-				'Dell',
-				'Core i7, RAM 16GB, SSD 256, Win11 Home 64bit, 15.6 inches',
-				'',
-				'',
-				'01/06/2022',
-				'01/06/2024',
-				'',
-				'',
-				''
-			]
+		$defaultDataList = [
+			array_values($defaultData),
+			array_values($defaultData)
 		];
-
 		$startRow = 2;
 		$startRowOrigin += 1;
-		foreach ($defaultData as $keyData => $rowData) {
+		foreach ($defaultDataList as $keyData => $rowData) {
 			foreach ($arrImportColumn as $keyColumn => $rowColumn) {
 				$value = isset($rowData[$keyColumn]) ? $rowData[$keyColumn] : '';
 				if ($rowColumn['type'] == 'select_module' || $rowColumn['type'] == 'select_option') {
@@ -252,9 +240,12 @@ class Import extends ErpController
 					}
 
 					// ** error select value
-					if ($fieldInfo['type'] == 'select_module') {
+					if (
+						$fieldInfo['type'] == 'select_module'
+						&& (isset($row[$fieldInfo['header']]) && !$this->_isEmptyString($row[$fieldInfo['header']]))
+					) {
 						$dataSelectModule = isset($arrSelectModuleData[$fieldInfo['field']]) ? $arrSelectModuleData[$fieldInfo['field']]['data'] : [];
-						$valueSelect = isset($row[$fieldInfo['header']]) ? trim($row[$fieldInfo['header']]) : '';
+						$valueSelect = trim($row[$fieldInfo['header']]);
 						$listLabel = array_column($dataSelectModule, 'label');
 
 						if (!in_array($valueSelect, $listLabel)) {
@@ -364,6 +355,7 @@ class Import extends ErpController
 			$pushData = [
 				'field' => $row->field,
 				'name' => $this->_handleFieldName($row->field, $row->field_form_require),
+				'name_default' => $this->_handleFieldName($row->field, $row->field_form_require, false),
 				'type' => $row->field_type,
 				'required' => $row->field_form_require
 			];
@@ -388,6 +380,7 @@ class Import extends ErpController
 		$result[] = [
 			'field' => 'owner',
 			'name' => 'Owner',
+			'name_default' => 'Owner',
 			'type' => 'select_module',
 			'required' => true,
 			'field_select_module' => 'users',
@@ -434,12 +427,12 @@ class Import extends ErpController
 		return $result;
 	}
 
-	private function _handleFieldName($name, $required = false)
+	private function _handleFieldName($name, $required = false, $showRequiredSymbol = true)
 	{
 		$arrName = explode('_', $name);
 		$arrName = array_map('ucfirst', $arrName);
 
-		if ($required) {
+		if ($required && $showRequiredSymbol) {
 			return implode(' ', $arrName) . ' *';
 		}
 
