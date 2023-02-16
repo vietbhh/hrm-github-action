@@ -77,6 +77,7 @@ const AssetDetail = (props) => {
   }
 
   const renderHistory = (data) => {
+    console.log("data his", data)
     return map(data, (value, index) => {
       if (value?.type?.name_option === "handover") {
         return (
@@ -153,6 +154,59 @@ const AssetDetail = (props) => {
                 <small>({value?.owner.label})</small>
               </h6>
             </div>
+          </Timeline.Item>
+        )
+      }
+      if (value?.type?.name_option === "inventory") {
+        return (
+          <Timeline.Item key={index}>
+            <h6 className="d-flex">
+              {useFormatMessage(value?.type?.label)}{" "}
+              <span className="time-history ms-auto">
+                {timeDifference(value?.created_at)}
+              </span>
+            </h6>
+            <div className="d-flex align-items-start">
+              <div>
+                {useFormatMessage("modules.asset_history.fields.notes")} :{" "}
+                {value?.notes}
+              </div>
+
+              <h6 className="ms-auto mb-0">
+                <small>({value?.owner.label})</small>
+              </h6>
+            </div>
+            {value?.owner_change?.value !== value?.owner_current?.value && (
+              <div className="d-flex align-items-start">
+                <div>
+                  {useFormatMessage("modules.asset_history.text.owner_from")} :{" "}
+                  {value?.owner_current?.full_name}{" "}
+                  <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
+                  {value?.owner_change?.full_name}
+                </div>
+              </div>
+            )}
+            {value?.status_change?.value !== value?.status_current?.value && (
+              <div className="d-flex align-items-start">
+                <div>
+                  {useFormatMessage("modules.asset_history.text.status_from")} :{" "}
+                  {value?.status_current?.label}{" "}
+                  <i className="fa-solid fa-arrow-right ms-50 me-50"></i>{" "}
+                  {value?.status_change?.label}
+                </div>
+              </div>
+            )}
+            {value?.history_image?.url && (
+              <div className="d-flex align-items-start">
+                <div>
+                  <Photo
+                    src={value?.history_image?.url}
+                    className="rounded"
+                    width="100px"
+                  />
+                </div>
+              </div>
+            )}
           </Timeline.Item>
         )
       }

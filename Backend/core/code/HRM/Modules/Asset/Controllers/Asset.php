@@ -98,8 +98,29 @@ class Asset extends ErpController
 		if (!isset($postData['id'])) {
 			$postData['asset_status'] = getAssetStatus('normal');
 		}
+		// create description
+
+		$modules = \Config\Services::modules('asset_types');
+		$description = '';
+		if (isset($postData['asset_type']) && $postData['asset_type']) {
+			$model = $modules->model;
+			$type = $model->asArray()->find($postData['asset_type']);
+			$typeName = $type['asset_type_name'];
+			$description .= $typeName;
+		}
+		if (isset($postData['asset_brands']) && $postData['asset_brands']) {
+			$modules->setModule('asset_brands');
+			$model = $modules->model;
+			$branch = $model->asArray()->find($postData['asset_brand']);
+			$branchName = $branch['brand_name'];
+			$description .= '-' . $branchName;
+		}
+
+		$description .= '-' . $postData['asset_properties'];
+		$postData['asset_descriptions'] = $description;
 
 		$dataHandle = handleDataBeforeSave('asset_lists', $postData, $filesData);
+
 		$uploadFieldsArray = $dataHandle['uploadFieldsArray'];
 		$dataSave = $dataHandle['data'];
 
