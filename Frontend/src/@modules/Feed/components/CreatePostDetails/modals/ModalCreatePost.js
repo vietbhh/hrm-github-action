@@ -25,7 +25,6 @@ const ModalCreatePost = (props) => {
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
-    //file: [],
     loadingUploadAttachment: false
   })
   const [file, setFile] = useState([])
@@ -37,9 +36,6 @@ const ModalCreatePost = (props) => {
   const onSubmit = (values) => {}
 
   // ** function
-  /* const setFile = (file) => {
-    setState({ file: file })
-  } */
   const setLoadingUploadAttachment = (value) =>
     setState({ loadingUploadAttachment: value })
 
@@ -80,10 +76,10 @@ const ModalCreatePost = (props) => {
   }
 
   // attachment
-  const handleAddAttachment = (file) => {
-    if (!_.isUndefined(file[0])) {
+  const handleAddAttachment = (attachment) => {
+    if (!_.isUndefined(attachment[0])) {
       let check_type_file = true
-      _.forEach(file, (value) => {
+      _.forEach(attachment, (value) => {
         const type = value.type
         if (!type.includes("image/") && !type.includes("video/")) {
           check_type_file = false
@@ -98,7 +94,7 @@ const ModalCreatePost = (props) => {
         const timestamp = Date.now()
         const arrFile = []
         const arrType = []
-        _.forEach(file, (value) => {
+        _.forEach(attachment, (value) => {
           const newName = timestamp + "_" + value.name
           const newFile = new File([value], newName)
           arrFile.push(newFile)

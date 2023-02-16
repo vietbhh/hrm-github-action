@@ -2,6 +2,7 @@ import { useFormatMessage } from "@apps/utility/common"
 import { Label, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
 import SortableList, { SortableItem } from "react-easy-sort"
 import arrayMove from "array-move"
+import classNames from "classnames"
 
 const ModalEditAttachment = (props) => {
   const {
@@ -33,7 +34,11 @@ const ModalEditAttachment = (props) => {
         {useFormatMessage("modules.feed.create_post.text.photo_video")}
         <div className="header-right">
           <Label className={`mb-0 cursor-pointer`} for="attach-doc-2">
-            <div className="div-add-photo">
+            <div
+              className={classNames("div-add-photo", {
+                "cursor-not-allowed": loadingUploadAttachment,
+                "cursor-pointer": !loadingUploadAttachment
+              })}>
               <svg
                 width="24"
                 height="24"
@@ -57,6 +62,7 @@ const ModalEditAttachment = (props) => {
               type="file"
               id="attach-doc-2"
               accept="image/*, video/*"
+              disabled={loadingUploadAttachment}
               multiple
               hidden
               onChange={(e) => {
@@ -75,7 +81,7 @@ const ModalEditAttachment = (props) => {
             {_.map(file, (value, index) => {
               return (
                 <SortableItem key={index}>
-                  <div className="item-photo">
+                  <div className="item-photo-feed">
                     <div className="photo-view">
                       <button
                         className="btn btn-delete-attachment"
@@ -122,18 +128,18 @@ const ModalEditAttachment = (props) => {
                 </SortableItem>
               )
             })}
-          </SortableList>
 
-          {loadingUploadAttachment && (
-            <div className="item-photo">
-              <div className="photo-view d-flex align-items-center justify-content-center">
-                <Spinner size="sm" />
+            {loadingUploadAttachment && (
+              <div className="item-photo-feed">
+                <div className="photo-view d-flex align-items-center justify-content-center">
+                  <Spinner size="sm" />
+                </div>
+                <div className="photo-description">
+                  <textarea disabled={true}></textarea>
+                </div>
               </div>
-              <div className="photo-description">
-                <textarea disabled={true}></textarea>
-              </div>
-            </div>
-          )}
+            )}
+          </SortableList>
         </div>
       </ModalBody>
     </Modal>

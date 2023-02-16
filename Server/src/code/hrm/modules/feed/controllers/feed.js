@@ -7,7 +7,7 @@ import { forEach } from "lodash-es"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
 
-export const uploadTempAttachmentController = async (req, res, next) => {
+const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
   const body = req.body
   const file = req.files
@@ -62,3 +62,5 @@ const takeOneFrameOfVid = (dir, storePath) => {
       .run()
   })
 }
+
+export { uploadTempAttachmentController }

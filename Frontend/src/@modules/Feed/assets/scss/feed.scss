@@ -482,7 +482,6 @@
           padding: 8px 12px;
           color: #3ab67b;
           border-radius: 8px;
-          cursor: pointer;
           font-weight: 500;
 
           svg {
@@ -505,7 +504,7 @@
   }
 }
 
-.item-photo {
+.item-photo-feed {
   width: 282px !important;
   height: 386px;
   filter: drop-shadow(0 2px 4px rgba(47, 49, 54, 0.1));
@@ -576,7 +575,7 @@
   }
 }
 
-.item-photo.dragged {
+.item-photo-feed.dragged {
   z-index: 9999;
   cursor: grabbing;
   border: 1px solid #377dff;
