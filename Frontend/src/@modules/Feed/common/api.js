@@ -16,5 +16,9 @@ export const feedApi = {
         }
       }
     )
+  },
+
+  async getGetAllEmployee() {
+    return await axiosNodeApi.get("/feed/get-all-employee")
   }
 }

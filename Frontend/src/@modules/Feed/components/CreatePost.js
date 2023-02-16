@@ -1,13 +1,19 @@
-import React, { Fragment } from "react"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  getAvatarUrl,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
+import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
+import { feedApi } from "../common/api"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
-  const {} = props
+  const { dataEmployee } = props
   const [state, setState] = useMergedState({
-    modalCreatePost: false
+    modalCreatePost: false,
+    dataMention: []
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -20,6 +26,34 @@ const CreatePost = (props) => {
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
+
+  // ** useEffect
+  useEffect(() => {
+    const data_mention = []
+    if (_.isEmpty(dataEmployee)) {
+      feedApi.getGetAllEmployee().then((res) => {
+        _.forEach(res.data, (value) => {
+          data_mention.push({
+            id: value.id,
+            name: value.full_name,
+            link: "#",
+            avatar: getAvatarUrl(value.id * 1)
+          })
+        })
+        setState({ dataMention: data_mention })
+      })
+    } else {
+      _.forEach(dataEmployee, (value) => {
+        data_mention.push({
+          id: value.id,
+          name: value.full_name,
+          link: "#",
+          avatar: getAvatarUrl(value.id * 1)
+        })
+      })
+      setState({ dataMention: data_mention })
+    }
+  }, [dataEmployee])
 
   return (
     <Fragment>
@@ -247,6 +281,7 @@ const CreatePost = (props) => {
         toggleModal={toggleModalCreatePost}
         avatar={avatar}
         fullName={fullName}
+        dataMention={state.dataMention}
       />
     </Fragment>
   )

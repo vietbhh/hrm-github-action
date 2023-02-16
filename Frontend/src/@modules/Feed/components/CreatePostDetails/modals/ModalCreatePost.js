@@ -3,10 +3,24 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
+import {
+  BoldButton,
+  CodeBlockButton,
+  ItalicButton,
+  OrderedListButton,
+  UnderlineButton,
+  UnorderedListButton
+} from "@draft-js-plugins/buttons"
+import Editor from "@draft-js-plugins/editor"
+import createMentionPlugin, {
+  defaultSuggestionsFilter
+} from "@draft-js-plugins/mention"
+import "@draft-js-plugins/mention/lib/plugin.css"
+import createToolbarPlugin from "@draft-js-plugins/static-toolbar"
+import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import { Dropdown, Tooltip } from "antd"
 import { EditorState, Modifier } from "draft-js"
-import { useEffect, useMemo, useState } from "react"
-import { Editor as EditorDraft } from "react-draft-wysiwyg"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap"
 import { feedApi } from "../../../common/api"
@@ -20,12 +34,18 @@ const ModalCreatePost = (props) => {
     toggleModal,
     avatar,
     fullName,
-    privacy_type = "workspace"
+    privacy_type = "workspace",
+    dataMention
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
-    loadingUploadAttachment: false
+    loadingUploadAttachment: false,
+
+    // mention
+    open: false,
+    mentions: dataMention,
+    suggestions: dataMention
   })
   const [file, setFile] = useState([])
 
@@ -73,6 +93,9 @@ const ModalCreatePost = (props) => {
   const handleInsertEditorState = (characterToInsert) => {
     const newEditorState = insertCharacter(characterToInsert, state.editorState)
     setState({ editorState: newEditorState })
+  }
+  const setSuggestions = (value) => {
+    setState({ suggestions: value })
   }
 
   // attachment
@@ -144,6 +167,30 @@ const ModalCreatePost = (props) => {
       handleInsertEditorState("")
     }
   }, [modal])
+  useEffect(() => {
+    setState({ mentions: dataMention, suggestions: dataMention })
+  }, [dataMention])
+
+  // ** mention
+  const { MentionSuggestions, Toolbar, plugins } = useMemo(() => {
+    const mentionPlugin = createMentionPlugin()
+    const { MentionSuggestions } = mentionPlugin
+    const staticToolbarPlugin = createToolbarPlugin()
+    const { Toolbar } = staticToolbarPlugin
+    const plugins = [mentionPlugin, staticToolbarPlugin]
+    return { plugins, MentionSuggestions, Toolbar }
+  }, [])
+  const onOpenChange = useCallback((_open) => {
+    setTimeout(() => {
+      setState({ open: _open })
+    }, 100)
+  }, [])
+  const onSearchChange = useCallback(
+    ({ value }) => {
+      setSuggestions(defaultSuggestionsFilter(value, state.mentions))
+    },
+    [state.mentions]
+  )
 
   // ** render
   const items = [
@@ -255,51 +302,49 @@ const ModalCreatePost = (props) => {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
-            <EditorDraft
-              editorState={state.editorState}
-              onEditorStateChange={onEditorStateChange}
-              useForm={methods}
-              nolabel
-              wrapperClassName=""
-              placeholder={useFormatMessage(
-                "modules.feed.create_post.text.placeholder_input"
-              )}
-              editorStyle={{
-                minHeight: "150px",
-                maxHeight: "auto"
-              }}
-              wrapperStyle={{
-                minHeight: "200px",
-                maxHeight: "auto"
-              }}
-              toolbar={{
-                options: ["inline", "list", "textAlign", "link"],
-                inline: {
-                  options: ["bold", "italic", "underline"]
-                },
-                list: {
-                  options: ["unordered", "ordered"]
-                },
-                textAlign: {
-                  inDropdown: false,
-                  className: undefined,
-                  component: undefined,
-                  dropdownClassName: undefined,
-                  options: ["left", "center", "right", "justify"]
-                },
-                link: {
-                  inDropdown: false,
-                  className: undefined,
-                  component: undefined,
-                  popupClassName: undefined,
-                  dropdownClassName: undefined,
-                  showOpenOptionOnHover: true,
-                  defaultTargetOption: "_self",
-                  options: ["link"],
-                  linkCallback: undefined
+            <div className="div-editor">
+              <Editor
+                editorKey={"editor"}
+                editorState={state.editorState}
+                onChange={onEditorStateChange}
+                plugins={plugins}
+                placeholder={useFormatMessage(
+                  "modules.feed.create_post.text.placeholder_input"
+                )}
+                editorStyle={{
+                  minHeight: "150px",
+                  maxHeight: "auto"
+                }}
+                wrapperStyle={{
+                  minHeight: "200px",
+                  maxHeight: "auto"
+                }}
+              />
+              <Toolbar>
+                {
+                  // may be use React.Fragment instead of div to improve perfomance after React 16
+                  (externalProps) => (
+                    <div>
+                      <BoldButton {...externalProps} />
+                      <ItalicButton {...externalProps} />
+                      <UnderlineButton {...externalProps} />
+                      <UnorderedListButton {...externalProps} />
+                      <OrderedListButton {...externalProps} />
+                      <CodeBlockButton {...externalProps} />
+                    </div>
+                  )
                 }
-              }}
-            />
+              </Toolbar>
+              <MentionSuggestions
+                open={state.open}
+                onOpenChange={onOpenChange}
+                suggestions={state.suggestions}
+                onSearchChange={onSearchChange}
+                onAddMention={() => {
+                  // get the mention object selected
+                }}
+              />
+            </div>
 
             {renderPreviewAttachment}
 

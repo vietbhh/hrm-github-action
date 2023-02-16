@@ -449,6 +449,72 @@
         background: darken($color: #377dff, $amount: 5) !important;
       }
     }
+
+    // ** editor
+    .div-editor {
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      cursor: text;
+      padding: 0.5rem 1rem 1rem 1rem;
+      margin: 0 -0.5rem 0.5rem -0.5rem;
+      border-radius: 2px;
+      box-shadow: inset 0px 1px 5px -3px #ababab;
+      background: #fefefe;
+      border-radius: 12px;
+
+      .DraftEditor-root {
+        padding-bottom: 0.5rem;
+
+        .DraftEditor-editorContainer {
+          min-height: 100px;
+
+          .public-DraftStyleDefault-block {
+            margin: 0.25em 0;
+          }
+
+          .public-DraftStyleDefault-pre {
+            margin-bottom: 0.25rem;
+            padding: 0 7px;
+            border-radius: 8px;
+
+            > pre {
+              margin-bottom: 0.25rem;
+            }
+          }
+        }
+      }
+
+      // ** mention
+      .mnw6qvm {
+        z-index: 10;
+        margin-bottom: 10px;
+        border-radius: 12px;
+      }
+
+      .m1mfvffo {
+        position: relative;
+        bottom: 7px;
+      }
+
+      .mpqdcgq {
+        position: relative;
+        top: 0;
+      }
+
+      // ** toolbar
+      .t16lpgj {
+        border-radius: 12px;
+
+        > div {
+          border-radius: 12px;
+
+          .bc4rxid {
+            padding-top: 0;
+            border-radius: 12px;
+          }
+        }
+      }
+    }
   }
 }
 

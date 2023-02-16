@@ -1,9 +1,10 @@
-import { _uploadServices, localSavePath } from "#app/services/upload.js"
-import path from "path"
+import { getUserActivated } from "#app/models/users.mysql.js"
+import { localSavePath, _uploadServices } from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import { forEach } from "lodash-es"
+import path from "path"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
 
@@ -44,6 +45,11 @@ const uploadTempAttachmentController = async (req, res, next) => {
   })
 }
 
+const getAllEmployee = async (req, res, next) => {
+  const dataUser = await getUserActivated()
+  return res.respond(dataUser)
+}
+
 // ** function
 const takeOneFrameOfVid = (dir, storePath) => {
   const savePath = path.join(localSavePath, storePath)
@@ -63,4 +69,4 @@ const takeOneFrameOfVid = (dir, storePath) => {
   })
 }
 
-export { uploadTempAttachmentController }
+export { uploadTempAttachmentController, getAllEmployee }
