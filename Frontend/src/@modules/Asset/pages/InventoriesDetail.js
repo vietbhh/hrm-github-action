@@ -3,17 +3,26 @@ import { ErpInput } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import React, { Fragment, useEffect, useRef } from "react"
+import React, { Fragment, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import BarcodeScanner from "react-qr-barcode-scanner"
 import { useParams } from "react-router-dom"
-import { Card, CardBody, CardHeader, Col, Row } from "reactstrap"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Modal,
+  ModalBody,
+  Row
+} from "reactstrap"
 import "../assets/scss/inventories.scss"
 import { assetInventoryApi } from "../common/api"
 import AssetDetail from "../components/AssetDetail"
 import FormAssetDetail from "../components/details/inventories/FormAssetDetail"
 import RecentInventories from "../components/details/inventories/RecentInventories"
 import InventoryDetailModal from "../components/modals/InventoryDetailModal"
-
 const InventoriesDetail = () => {
   const [state, setState] = useMergedState({
     loading: true,
@@ -23,8 +32,21 @@ const InventoriesDetail = () => {
     modalDetail: false,
     dataAssetDetail: {},
     dataInventoryDetail: {},
-    loadAssetDetail: false
+    loadAssetDetail: false,
+    scanModal: false
   })
+  const [stopStream, setStopStream] = useState(false)
+  const closeScanModal = () => {
+    setState({
+      scanModal: false
+    })
+  }
+  const dismissQrReader = () => {
+    // Stop the QR Reader stream (fixes issue where the browser freezes when closing the modal) and then dismiss the modal one tick later
+    setStopStream(true)
+    setTimeout(() => closeScanModal(), 0)
+  }
+
   const id = useParams().id
   const refInput = useRef(null)
 
@@ -72,6 +94,17 @@ const InventoriesDetail = () => {
         })
         setValue("asset_code", "")
       })
+  }
+
+  const onQrScan = (err, result) => {
+    if (result?.text) {
+      console.log(result?.text)
+      setValue("asset_code", result?.text)
+      onSubmitInput({
+        asset_code: result?.text
+      })
+      dismissQrReader()
+    }
   }
 
   const loadData = (id) => {
@@ -156,6 +189,11 @@ const InventoriesDetail = () => {
                         />
                       </form>
                     </FormProvider>
+                    <Button
+                      className="btn btn-success"
+                      onClick={() => setState({ scanModal: true })}>
+                      Scan QRCode
+                    </Button>
                   </CardBody>
                 </Card>
                 <div className="d-none d-md-block">
@@ -238,6 +276,17 @@ const InventoriesDetail = () => {
         name={state.data?.inventory_name}
         showButtonInventory={false}
       />
+
+      <Modal
+        isOpen={state.scanModal}
+        toggle={dismissQrReader}
+        className="modal-yt-tool modal-inventory-detail"
+        modalTransition={{ timeout: 100 }}
+        backdropTransition={{ timeout: 100 }}>
+        <ModalBody>
+          <BarcodeScanner onUpdate={onQrScan} stopStream={stopStream} />
+        </ModalBody>
+      </Modal>
     </Fragment>
   )
 }
