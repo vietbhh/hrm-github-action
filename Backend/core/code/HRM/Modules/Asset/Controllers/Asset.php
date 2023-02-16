@@ -23,11 +23,14 @@ class Asset extends ErpController
 	public function get_data_asset_list_get()
 	{
 		$getData = $this->request->getGet();
-		$text = $getData['text'];
-		$assetTypeGroup = $getData['asset_type_group'];
-		$assetType = $getData['asset_type'];
-		$assetStatus = $getData['asset_status'];
-		$owner = $getData['owner'];
+		$text = isset($getData['text']) ? $getData['text'] : '';
+		$assetTypeGroup = isset($getData['asset_type_group']) ? $getData['asset_type_group'] : 0;
+		$assetType = isset($getData['asset_type']) ? $getData['asset_type'] : 0;
+		$assetStatus = isset($getData['asset_status']) ? $getData['asset_status'] : 0;
+		$owner = isset($getData['owner']) ? $getData['owner'] : 0;
+		$page = isset($getData['page']) ? ($getData['page'] == 1 ? 0 : $getData['page'] - 1) : 0;
+		$limit = isset($getData['limit']) ? $getData['limit'] : 0;
+		$start = $page * $limit;
 
 		$modules = \Config\Services::modules('asset_lists');
 		$model = new AssetListModel();
@@ -38,7 +41,9 @@ class Asset extends ErpController
 			'm_asset_lists.asset_name',
 			'm_asset_lists.asset_type',
 			'm_asset_lists.recent_image',
+			'm_asset_lists.asset_descriptions',
 			'm_asset_brands.brand_name ',
+			'm_asset_status.status_name',
 			'm_asset_status.status_name',
 			'm_asset_types.asset_type_code',
 			'm_asset_groups.asset_group_code'
@@ -71,33 +76,61 @@ class Asset extends ErpController
 			$builder->where('m_asset_lists.owner', $owner);
 		}
 
-		$listAssetList = $builder->orderBy('m_asset_lists.id', 'ASC')->findAll();
+		$totalAssetList = $builder->countAllResults(false);
+		$listAssetList = $builder->orderBy('m_asset_lists.id', 'ASC')->findAll($limit, $start);
 
 		return $this->respond([
+			'total_record' => $totalAssetList,
 			'results' => handleDataBeforeReturn($modules, $listAssetList, true)
 		]);
 	}
 
 	public function add_post()
 	{
-
 		helper(['app_select_option']);
 		helper('HRM\Modules\Asset\Helpers\asset_helper');
 		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$postData = $this->request->getPost();
+		$isDuplicateAsset = isset($postData['is_duplicate']) ? filter_var($postData['is_duplicate'], FILTER_VALIDATE_BOOLEAN) : false;
+		unset($postData['is_duplicate']);
 		$filesData = $this->request->getFiles();
 
 		if (!isset($postData['id'])) {
 			$postData['asset_status'] = getAssetStatus('normal');
 		}
+		// create description
+
+		$modules = \Config\Services::modules('asset_types');
+		$description = '';
+		if (isset($postData['asset_type']) && $postData['asset_type']) {
+			$model = $modules->model;
+			$type = $model->asArray()->find($postData['asset_type']);
+			$typeName = $type['asset_type_name'];
+			$description .= $typeName;
+		}
+		if (isset($postData['asset_brands']) && $postData['asset_brands']) {
+			$modules->setModule('asset_brands');
+			$model = $modules->model;
+			$branch = $model->asArray()->find($postData['asset_brand']);
+			$branchName = $branch['brand_name'];
+			$description .= '-' . $branchName;
+		}
+
+		$description .= '-' . $postData['asset_properties'];
+		$postData['asset_descriptions'] = $description;
 
 		$dataHandle = handleDataBeforeSave('asset_lists', $postData, $filesData);
+
 		$uploadFieldsArray = $dataHandle['uploadFieldsArray'];
 		$dataSave = $dataHandle['data'];
 
 		$assetListModel = new AssetListModel();
 		if (isset($postData['id'])) {
-			$assetListModel->save($dataSave);
+			if (!$isDuplicateAsset) {
+				$assetListModel->save($dataSave);
+			} else {
+				$assetListModel->insertAssetList($dataSave);
+			}
 		}
 
 

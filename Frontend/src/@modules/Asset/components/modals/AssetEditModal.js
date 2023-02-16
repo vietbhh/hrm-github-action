@@ -27,7 +27,14 @@ import {
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
 const AssetEditModal = (props) => {
-  const { modal, options, dataDetail, handleDetail, loadData } = props
+  const {
+    modal,
+    isDuplicateAsset,
+    options,
+    dataDetail,
+    handleDetail,
+    loadData
+  } = props
   const ability = useContext(AbilityContext)
   const [state, setState] = useMergedState({
     readOnly: true,
@@ -51,6 +58,7 @@ const AssetEditModal = (props) => {
     setState({ saving: true })
     if (dataDetail.id) {
       values.id = dataDetail.id
+      values.is_duplicate = isDuplicateAsset
     }
 
     assetApi.addAsset(values).then((res) => {
@@ -86,7 +94,9 @@ const AssetEditModal = (props) => {
           </span>{" "}
           <span className="ms-50">
             {dataDetail?.id
-              ? useFormatMessage("modules.asset_lists.title.edit")
+              ? isDuplicateAsset
+                ? useFormatMessage("modules.asset_lists.title.duplicate")
+                : useFormatMessage("modules.asset_lists.title.edit")
               : useFormatMessage("modules.asset_lists.title.new")}
           </span>
         </ModalHeader>
