@@ -1,4 +1,4 @@
-import { ErpRadio } from "@apps/components/common/ErpField"
+import { ErpRadio, ErpUserSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import notification from "@apps/utility/notification"
@@ -23,7 +23,6 @@ const FormAssetDetail = (props) => {
   const [state, setState] = useMergedState({
     loading: false
   })
-
   const moduleData = useSelector(
     (state) => state.app.modules.asset_inventories_detail
   )
@@ -147,7 +146,17 @@ const FormAssetDetail = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col sm="6">
+          <Col md="7">
+            <ErpUserSelect
+              isClearable={false}
+              label={"Owner change"}
+              required
+              useForm={methods}
+              name={"owner_change"}
+              placeholder="Owner change"
+              nolabel
+              defaultValue={dataAssetDetail?.owner}
+            />
             <FieldHandle
               module={moduleName}
               fieldData={{
@@ -160,7 +169,8 @@ const FormAssetDetail = (props) => {
               useForm={methods}
             />
           </Col>
-          <Col sm="6">
+
+          <Col md="5">
             <FieldHandle
               module={moduleName}
               fieldData={{

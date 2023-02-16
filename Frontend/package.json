@@ -99,6 +99,7 @@
     "react-pdf": "^5.7.2",
     "react-perfect-scrollbar": "^1.5.8",
     "react-player": "^2.10.1",
+    "react-qr-barcode-scanner": "^1.0.6",
     "react-qr-code": "^2.0.11",
     "react-rating": "2.0.5",
     "react-rating-stars-component": "^2.2.0",

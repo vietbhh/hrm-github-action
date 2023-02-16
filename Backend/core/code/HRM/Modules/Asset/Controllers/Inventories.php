@@ -106,6 +106,7 @@ class Inventories extends ErpController
 		$idInventory = $getPara['idInventory'];
 		$idAsset = $getPara['idAsset'];
 		$current_status = $getPara['current_status'];
+		$owner_change = $getPara['owner_change'];
 		$notes = $getPara['notes'];
 		$file = $this->request->getFiles();
 		$modulesStatus = \Config\Services::modules("asset_status");
@@ -118,11 +119,12 @@ class Inventories extends ErpController
 		}
 		$modulesDetail = \Config\Services::modules("asset_inventories_detail");
 		$modelDetail = $modulesDetail->model;
-		$modelDetail->setAllowedFields(["inventory", "asset_code", "current_status", "notes", "recent_image"]);
+		$modelDetail->setAllowedFields(["inventory", "asset_code", "current_status", "current_owner", "notes", "recent_image"]);
 		$dataSaveDetail = [
 			"inventory" => $idInventory,
 			"asset_code" => $idAsset,
 			"current_status" => $status,
+			"current_owner" => $owner_change,
 			"notes" => $notes
 		];
 		$modelDetail->save($dataSaveDetail);
@@ -131,13 +133,18 @@ class Inventories extends ErpController
 		// update status asset
 		$modulesAsset = \Config\Services::modules("asset_lists");
 		$modelAsset = $modulesAsset->model;
-		$modelAsset->setAllowedFields(["asset_status", "recent_image"]);
+		$modelAsset->setAllowedFields(["asset_status", "recent_image", "owner"]);
 		$dataAsset = $modelAsset->find($idAsset);
 		if ($dataAsset) {
 			$dataSaveAsset = [
 				"id" => $idAsset,
 				"asset_status" => $status,
+				"owner" => $owner_change,
 			];
+			echo "<pre>";
+			print_r($dataSaveAsset);
+			echo "</pre>";
+
 			$modelAsset->save($dataSaveAsset);
 		}
 
@@ -151,7 +158,7 @@ class Inventories extends ErpController
 			"asset_code" => $idAsset,
 			"type" => getOptionValue('asset_history', 'type', 'inventory'),
 			"owner_current" => $dataAsset ? $dataAsset->owner : "",
-			"owner_change" => $dataAsset ? $dataAsset->owner : "",
+			"owner_change" => $owner_change,
 			"status_current" => $dataAsset ? $dataAsset->asset_status : 0,
 			"status_change" => $status,
 			"notes" => $notes,
