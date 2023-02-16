@@ -189,12 +189,6 @@ const EmployeeAction = (props) => {
         parseInt(employeeData?.status?.value) === 16 && canHiring,
       ...rehire
     },
-    test: {
-      title: useFormatMessage("modules.test.buttons.make_test"),
-      icon: <i className="fa-light fa-circle-question me-25"></i>,
-      condition: () => canDelete,
-      ...test
-    },
     del: {
       title: useFormatMessage("modules.employees.buttons.delete"),
       icon: <i className="iconly-Delete me-25"></i>,
@@ -215,10 +209,10 @@ const EmployeeAction = (props) => {
           key: index,
           className: "employeeStatusDropdown",
           label: (
-            <span onClick={item.onClick}>
+            <div onClick={item.onClick}>
               {item.icon}
               {item.title}
-            </span>
+            </div>
           )
         }
       }
