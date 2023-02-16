@@ -141,10 +141,6 @@ class Inventories extends ErpController
 				"asset_status" => $status,
 				"owner" => $owner_change,
 			];
-			echo "<pre>";
-			print_r($dataSaveAsset);
-			echo "</pre>";
-
 			$modelAsset->save($dataSaveAsset);
 		}
 
