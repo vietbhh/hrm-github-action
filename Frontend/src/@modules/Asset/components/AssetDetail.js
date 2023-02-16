@@ -77,7 +77,6 @@ const AssetDetail = (props) => {
   }
 
   const renderHistory = (data) => {
-    console.log("data his", data)
     return map(data, (value, index) => {
       if (value?.type?.name_option === "handover") {
         return (
