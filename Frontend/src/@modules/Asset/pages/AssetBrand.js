@@ -150,7 +150,7 @@ const AssetBrand = (props) => {
             <div className="col-md-3">
               <Button.Ripple color="primary" onClick={() => handleClickAdd()}>
                 <i className="fas fa-plus me-50" />
-                {useFormatMessage("modules.asset_brands.buttons.create")}
+                {useFormatMessage("button.create")}
               </Button.Ripple>
             </div>
             <div className="col-md-3 ms-auto">

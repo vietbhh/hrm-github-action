@@ -322,7 +322,7 @@ class Asset extends ErpController
 
 		/*alphabet A to F*/
 		$arr_alphabet = [];
-		foreach (range('A', 'F') as $columnId) {
+		foreach (range('A', 'I') as $columnId) {
 			$arr_alphabet[] = $columnId;
 		}
 
@@ -344,10 +344,11 @@ class Asset extends ErpController
 		$i = 1;
 		$sheet->getStyle("A$i:I$i")->applyFromArray($styleArray);
 		//$sheet->setCellValue("A$i", "Name");
-		$sheet->setCellValue("B$i", "Group");
-		$sheet->setCellValue("C$i", "Code");
-		$sheet->setCellValue("D$i", "Type");
-		$sheet->setCellValue("E$i", "Brand");
+		$sheet->setCellValue("A$i", "Group");
+		$sheet->setCellValue("B$i", "Code");
+		$sheet->setCellValue("C$i", "Type");
+		$sheet->setCellValue("D$i", "Brand");
+		$sheet->setCellValue("E$i", "Description");
 		$sheet->setCellValue("F$i", "Created");
 		$sheet->setCellValue("G$i", "Warranty expires");
 		$sheet->setCellValue("H$i", "Status");
@@ -358,10 +359,11 @@ class Asset extends ErpController
 			$sheet->getStyle("F$i:G$i")->getNumberFormat()->setFormatCode('dd-mmm-yyyy');
 			//$sheet->getStyle("B$i:C$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 			//$sheet->setCellValue("A$i", $item['asset_name'] ?? "-");
-			$sheet->setCellValue("B$i", $item['asset_group_name'] ?? "-");
-			$sheet->setCellValue("C$i", $item['asset_code'] ?? "-");
-			$sheet->setCellValue("D$i", $item['asset_type'] ? $item['asset_type']['label'] : "-");
-			$sheet->setCellValue("E$i", $item['asset_brand'] ? $item['asset_brand']['label'] : "-");
+			$sheet->setCellValue("A$i", $item['asset_group_name'] ?? "-");
+			$sheet->setCellValue("B$i", $item['asset_code'] ?? "-");
+			$sheet->setCellValue("C$i", $item['asset_type'] ? $item['asset_type']['label'] : "-");
+			$sheet->setCellValue("D$i", $item['asset_brand'] ? $item['asset_brand']['label'] : "-");
+			$sheet->setCellValue("E$i", $item['asset_descriptions']);
 			$sheet->setCellValue("F$i", date('d/m/Y', strtotime($item['date_created'])));
 			$sheet->setCellValue("G$i", date('d/m/Y', strtotime($item['asset_warranty_expires'])));
 			$sheet->setCellValue("H$i", $item['asset_status'] ? $item['asset_status']['label'] : "-");

@@ -131,7 +131,7 @@ const InventoriesDetail = () => {
         <Row>
           <Col sm="12">
             <Row>
-              <Col sm="5" className="order-first">
+              <Col sm="5">
                 <Card className="inventories">
                   <CardHeader>
                     <span className="title">
@@ -158,8 +158,15 @@ const InventoriesDetail = () => {
                     </FormProvider>
                   </CardBody>
                 </Card>
+                <div className="d-none d-md-block">
+                  <RecentInventories
+                    data={state.dataHistory}
+                    toggleModalDetail={toggleModalDetail}
+                    showMoreHistory={state.showMoreHistory}
+                  />
+                </div>
               </Col>
-              <Col sm="7" className="order-last">
+              <Col sm="7">
                 <Card className="inventories">
                   <CardHeader>
                     <span className="title">
@@ -210,14 +217,16 @@ const InventoriesDetail = () => {
                   </CardBody>
                 </Card>
               </Col>
-              <Col sm="5" className="order-sm-last">
+            </Row>
+            <div className="row d-block d-sm-block d-md-none">
+              <Col sm="5">
                 <RecentInventories
                   data={state.dataHistory}
                   toggleModalDetail={toggleModalDetail}
                   showMoreHistory={state.showMoreHistory}
                 />
               </Col>
-            </Row>
+            </div>
           </Col>
         </Row>
       )}
