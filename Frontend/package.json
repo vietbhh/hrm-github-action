@@ -54,6 +54,7 @@
     "jquery": "^3.6.0",
     "jsonwebtoken": "8.5.1",
     "moment": "^2.29.3",
+    "next-barcode": "^1.4.0",
     "nouislider": "^15.5.0",
     "nouislider-react": "^3.4.1",
     "postcss-rtl": "^1.5.0",

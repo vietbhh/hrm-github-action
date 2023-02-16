@@ -10628,6 +10628,11 @@ js2xmlparser@^4.0.2:
   dependencies:
     xmlcreate "^2.0.4"
 
+jsbarcode@^3.11.3:
+  version "3.11.5"
+  resolved "https://registry.yarnpkg.com/jsbarcode/-/jsbarcode-3.11.5.tgz#390b3efd0271f35b9d68c7b8af6e972445969014"
+  integrity sha512-zv3KsH51zD00I/LrFzFSM6dst7rDn0vIMzaiZFL7qusTjPZiPtxg3zxetp0RR7obmjTw4f6NyGgbdkBCgZUIrA==
+
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
@@ -11962,6 +11967,13 @@ netmask@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-2.0.2.tgz#8b01a07644065d536383835823bc52004ebac5e7"
   integrity sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==
+
+next-barcode@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/next-barcode/-/next-barcode-1.4.0.tgz#e62dcc31fae05585bad1d9e52af94d674e3c48a2"
+  integrity sha512-Sfbs/ToYPkAUQ4AgMEpRUZhCM0BXXMUF49JhquRir8YyC7KDfTGEpbF3Vu5v3JJx8aManG2k9LOVhMU9kbg11w==
+  dependencies:
+    jsbarcode "^3.11.3"
 
 next-tick@^1.1.0:
   version "1.1.0"

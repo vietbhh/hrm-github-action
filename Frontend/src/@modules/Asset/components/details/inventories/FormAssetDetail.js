@@ -97,7 +97,7 @@ const FormAssetDetail = (props) => {
           </Col>
         </Row>
         <Row className="mb-2">
-          <Col sm="4">
+          <Col sm="4" xs="4">
             <ErpRadio
               name="current_status"
               label={
@@ -113,7 +113,7 @@ const FormAssetDetail = (props) => {
               defaultChecked={false}
             />
           </Col>
-          <Col sm="4">
+          <Col sm="4" xs="4">
             <ErpRadio
               name="current_status"
               label={
@@ -129,7 +129,7 @@ const FormAssetDetail = (props) => {
               defaultChecked={true}
             />
           </Col>
-          <Col sm="4">
+          <Col sm="4" xs="4">
             <ErpRadio
               name="current_status"
               label={

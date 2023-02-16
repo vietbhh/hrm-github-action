@@ -129,9 +129,9 @@ const InventoriesDetail = () => {
 
       {!state.loading && (
         <Row>
-          <Col sm="5">
+          <Col sm="12">
             <Row>
-              <Col sm="12">
+              <Col sm="5" className="order-first">
                 <Card className="inventories">
                   <CardHeader>
                     <span className="title">
@@ -159,9 +159,58 @@ const InventoriesDetail = () => {
                   </CardBody>
                 </Card>
               </Col>
-            </Row>
-            <Row>
-              <Col sm="12">
+              <Col sm="7" className="order-last">
+                <Card className="inventories">
+                  <CardHeader>
+                    <span className="title">
+                      {useFormatMessage(
+                        "modules.asset.inventory.text.asset_detail"
+                      )}
+                    </span>
+                  </CardHeader>
+                  <CardBody>
+                    {state.loadAssetDetail && (
+                      <Row>
+                        <Col xs="12">
+                          <DefaultSpinner />
+                        </Col>
+                      </Row>
+                    )}
+
+                    {_.isEmpty(state.dataAssetDetail) &&
+                      !state.loadAssetDetail && (
+                        <EmptyContent
+                          icon={
+                            <i className="fa-regular fa-box-circle-check"></i>
+                          }
+                          title={useFormatMessage(
+                            "modules.asset.inventory.text.asset_detail_empty"
+                          )}
+                          text=""
+                        />
+                      )}
+
+                    {!_.isEmpty(state.dataAssetDetail) &&
+                      !state.loadAssetDetail && (
+                        <>
+                          <FormAssetDetail
+                            dataAssetDetail={state.dataAssetDetail}
+                            setDataAssetDetail={(value) =>
+                              setState({ dataAssetDetail: value })
+                            }
+                            focusInput={focusInput}
+                            id={id}
+                            loadDataHistory={loadDataHistory}
+                            dataInventoryDetail={state.dataInventoryDetail}
+                          />
+                          <hr />
+                          <AssetDetail dataDetail={state.dataAssetDetail} />
+                        </>
+                      )}
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col sm="5" className="order-sm-last">
                 <RecentInventories
                   data={state.dataHistory}
                   toggleModalDetail={toggleModalDetail}
@@ -169,54 +218,6 @@ const InventoriesDetail = () => {
                 />
               </Col>
             </Row>
-          </Col>
-          <Col sm="7">
-            <Card className="inventories">
-              <CardHeader>
-                <span className="title">
-                  {useFormatMessage(
-                    "modules.asset.inventory.text.asset_detail"
-                  )}
-                </span>
-              </CardHeader>
-              <CardBody>
-                {state.loadAssetDetail && (
-                  <Row>
-                    <Col xs="12">
-                      <DefaultSpinner />
-                    </Col>
-                  </Row>
-                )}
-
-                {_.isEmpty(state.dataAssetDetail) && !state.loadAssetDetail && (
-                  <EmptyContent
-                    icon={<i className="fa-regular fa-box-circle-check"></i>}
-                    title={useFormatMessage(
-                      "modules.asset.inventory.text.asset_detail_empty"
-                    )}
-                    text=""
-                  />
-                )}
-
-                {!_.isEmpty(state.dataAssetDetail) &&
-                  !state.loadAssetDetail && (
-                    <>
-                      <FormAssetDetail
-                        dataAssetDetail={state.dataAssetDetail}
-                        setDataAssetDetail={(value) =>
-                          setState({ dataAssetDetail: value })
-                        }
-                        focusInput={focusInput}
-                        id={id}
-                        loadDataHistory={loadDataHistory}
-                        dataInventoryDetail={state.dataInventoryDetail}
-                      />
-                      <hr />
-                      <AssetDetail dataDetail={state.dataAssetDetail} />
-                    </>
-                  )}
-              </CardBody>
-            </Card>
           </Col>
         </Row>
       )}

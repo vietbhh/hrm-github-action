@@ -71,7 +71,7 @@ class Asset extends ErpController
 			$builder->where('m_asset_lists.owner', $owner);
 		}
 
-		$listAssetList = $builder->orderBy('m_asset_lists.id', 'DESC')->findAll();
+		$listAssetList = $builder->orderBy('m_asset_lists.id', 'ASC')->findAll();
 
 		return $this->respond([
 			'results' => handleDataBeforeReturn($modules, $listAssetList, true)

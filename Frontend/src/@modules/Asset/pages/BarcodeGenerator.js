@@ -15,6 +15,9 @@ import FilterAssetList from "../components/details/BarcodeGenerator/FilterAssetL
 import ChoseAsset from "../components/details/BarcodeGenerator/ChoseAsset"
 import ChosenAsset from "../components/details/BarcodeGenerator/ChosenAsset"
 import { ListCode } from "../components/details/BarcodeGenerator/ListCode"
+import PrintQRCode from "../components/details/BarcodeGenerator/PrintQRCode"
+import PrintBarcode from "../components/details/BarcodeGenerator/PrintBarcode"
+import { Space } from "antd"
 
 const BarcodeGenerator = () => {
   const [state, setState] = useMergedState({
@@ -136,24 +139,9 @@ const BarcodeGenerator = () => {
               </div>
             </div>
             <div>
-              <ReactToPrint
-                pageStyle=""
-                copyStyles={false}
-                trigger={() => {
-                  return (
-                    <Button.Ripple color="primary">
-                      <i className="fas fa-qrcode me-50" /> {useFormatMessage("modules.asset_lists.buttons.generate")}
-                    </Button.Ripple>
-                  )
-                }}
-                content={() => componentRef.current}
-              />
-              <div style={{ display: "none" }}>
-                <ListCode
-                  ref={componentRef}
-                  chosenAssetList={state.chosenAssetList}
-                />
-              </div>
+              <Space>
+                <PrintQRCode chosenAssetList={state.chosenAssetList} />
+              </Space>
             </div>
           </CardBody>
         </Card>
