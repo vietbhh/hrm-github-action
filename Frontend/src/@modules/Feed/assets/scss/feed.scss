@@ -274,6 +274,8 @@
         }
 
         .modal-header-privacy-choose {
+          margin-top: 3px;
+
           .modal-header-privacy-choose-dropdown-a {
             border-radius: 10px;
             background: #f0f3ff;
@@ -281,6 +283,7 @@
 
             button {
               padding: 7px 10px;
+              border: none !important;
 
               .fa-solid {
                 font-weight: 900 !important;
@@ -479,6 +482,7 @@
 
             > pre {
               margin-bottom: 0.25rem;
+              font-size: 1rem;
             }
           }
         }
@@ -511,6 +515,15 @@
           .bc4rxid {
             padding-top: 0;
             border-radius: 12px;
+          }
+        }
+      }
+
+      // ** inline toolbar
+      .tukdd6b {
+        .bpsgbes {
+          .b181v2oy {
+            padding-top: 0;
           }
         }
       }
@@ -578,7 +591,6 @@
   margin-left: 8px;
   margin-right: 8px;
   position: relative;
-  cursor: pointer;
   display: inline-block;
   cursor: grab;
   user-select: none;
@@ -643,7 +655,7 @@
 
 .item-photo-feed.dragged {
   z-index: 9999;
-  cursor: grabbing;
+  cursor: grabbing !important;
   border: 1px solid #377dff;
   border-radius: 12px;
 }

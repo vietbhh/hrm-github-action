@@ -10,7 +10,7 @@ import { feedApi } from "../common/api"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
-  const { dataEmployee } = props
+  const { dataEmployee, workspace } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: []
@@ -30,29 +30,15 @@ const CreatePost = (props) => {
   // ** useEffect
   useEffect(() => {
     const data_mention = []
-    if (_.isEmpty(dataEmployee)) {
-      feedApi.getGetAllEmployee().then((res) => {
-        _.forEach(res.data, (value) => {
-          data_mention.push({
-            id: value.id,
-            name: value.full_name,
-            link: "#",
-            avatar: getAvatarUrl(value.id * 1)
-          })
-        })
-        setState({ dataMention: data_mention })
+    _.forEach(dataEmployee, (value) => {
+      data_mention.push({
+        id: value.id,
+        name: value.full_name,
+        link: "#",
+        avatar: getAvatarUrl(value.id * 1)
       })
-    } else {
-      _.forEach(dataEmployee, (value) => {
-        data_mention.push({
-          id: value.id,
-          name: value.full_name,
-          link: "#",
-          avatar: getAvatarUrl(value.id * 1)
-        })
-      })
-      setState({ dataMention: data_mention })
-    }
+    })
+    setState({ dataMention: data_mention })
   }, [dataEmployee])
 
   return (
@@ -282,6 +268,8 @@ const CreatePost = (props) => {
         avatar={avatar}
         fullName={fullName}
         dataMention={state.dataMention}
+        workspace={workspace}
+        userId={userId}
       />
     </Fragment>
   )

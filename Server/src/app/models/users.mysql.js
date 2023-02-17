@@ -89,4 +89,4 @@ const getUserActivated = () => {
   })
 }
 
-export { getUser, getUsers, getUserActivated, usersModel }
+export { usersModel, getUser, getUsers, getUserActivated }

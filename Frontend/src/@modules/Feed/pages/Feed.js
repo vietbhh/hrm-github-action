@@ -3,14 +3,17 @@ import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect } from "react"
 import CreatePost from "../components/CreatePost"
 import "../assets/scss/feed.scss"
+import { feedApi } from "../common/api"
 
 const Feed = () => {
   const [state, setState] = useMergedState({
-    prevScrollY: 0
+    prevScrollY: 0,
+    dataEmployee: []
   })
   const offsetTop = 90
   const offsetBottom = 30
 
+  // ** function
   const handleScroll = (e) => {
     if (window.scrollY < state.prevScrollY) {
       scrollUpwards()
@@ -35,17 +38,24 @@ const Feed = () => {
     }
   }
 
+  // ** useEffect
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
 
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
+  useEffect(() => {
+    feedApi.getGetAllEmployee().then((res) => {
+      setState({ dataEmployee: res.data })
+    })
+  }, [])
+
   return (
     <Fragment>
       <div className="div-content">
         <div className="div-left feed">
-          <CreatePost />
+          <CreatePost dataEmployee={state.dataEmployee} workspace={[]} />
         </div>
         <div className="div-right">
           <div id="div-sticky">

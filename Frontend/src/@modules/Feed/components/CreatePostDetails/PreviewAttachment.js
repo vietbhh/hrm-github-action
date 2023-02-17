@@ -88,7 +88,11 @@ const PreviewAttachment = (props) => {
         <Fragment>
           <div
             className="div-attachment"
-            onClick={() => toggleModalEditAttachment()}>
+            onClick={() => {
+              if (file.length > 1) {
+                toggleModalEditAttachment()
+              }
+            }}>
             {_.map(file, (value, index) => {
               return (
                 <div

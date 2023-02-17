@@ -120,6 +120,12 @@ const ModalEditAttachment = (props) => {
                     </div>
                     <div className="photo-description">
                       <textarea
+                        onChange={(e) => {
+                          const _file = [...file]
+                          _file[index].description = e.target.value
+                          setFile(_file)
+                        }}
+                        value={value.description}
                         placeholder={useFormatMessage(
                           "modules.feed.create_post.text.add_description"
                         )}></textarea>

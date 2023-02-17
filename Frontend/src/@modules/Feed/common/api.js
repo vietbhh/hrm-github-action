@@ -20,5 +20,9 @@ export const feedApi = {
 
   async getGetAllEmployee() {
     return await axiosNodeApi.get("/feed/get-all-employee")
+  },
+
+  async postSubmitPost(data) {
+    return await axiosNodeApi.post("/feed/submit-post", data)
   }
 }

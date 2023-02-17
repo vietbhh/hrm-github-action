@@ -39,14 +39,14 @@ const Emoji = (props) => {
   return (
     <Fragment>
       <li
-        className="create_post_footer-li ms-auto"
+        className="create_post_footer-li cursor-pointer ms-auto"
         onClick={() => {
           if (state.showEmotion === false) {
             setShowEmotion(true)
           }
         }}>
         <div
-          className={`emotions-dropdown-menu ${
+          className={`emotions-dropdown-menu shadow ${
             state.showEmotion ? "show" : ""
           }`}>
           <div className="emotions-dropdown-arrow"></div>
