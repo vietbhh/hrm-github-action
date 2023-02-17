@@ -159,10 +159,12 @@ class Asset extends ErpController
 							$removeOldFilePathForDownload = $storePath . $fileName;
 							$uploadService->removeFile($removeOldFilePathForDownload);
 							$fileName = safeFileName($fileName);
-							$uploadService->uploadFile($storePath, [$file], false, $fileName);
+							$result = $uploadService->uploadFile($storePath, [$file], false, $fileName);
+
 						} else {
 							$fileName = safeFileName($file->getName());
-							$uploadService->uploadFile($storePath, [$file], false, $fileName);
+							$result = $uploadService->uploadFile($storePath, [$file], false, $fileName, ['compressImage' => true]);
+							$fileName = $result['last_uploaded']['filename'];
 							if (!empty($uploadFieldsArray[$key])) {
 								if ($uploadFieldsArray[$key]->field_type == 'upload_multiple') {
 									$arrayFiles = isset($dataSave[$key]) ? json_decode($dataSave[$key], true) : [];
