@@ -29,7 +29,7 @@ class Asset extends ErpController
 		$assetStatus = isset($getData['asset_status']) ? $getData['asset_status'] : 0;
 		$owner = isset($getData['owner']) ? $getData['owner'] : 0;
 		$page = isset($getData['page']) ? ($getData['page'] == 1 ? 0 : $getData['page'] - 1) : 0;
-		$limit = isset($getData['limit']) ? $getData['limit'] : 0;
+		$limit = isset($getData['limit']) ? $getData['limit'] : 30;
 		$start = $page * $limit;
 
 		$modules = \Config\Services::modules('asset_lists');
@@ -94,6 +94,10 @@ class Asset extends ErpController
 		$isDuplicateAsset = isset($postData['is_duplicate']) ? filter_var($postData['is_duplicate'], FILTER_VALIDATE_BOOLEAN) : false;
 
 		unset($postData['is_duplicate']);
+		if ($isDuplicateAsset) {
+			unset($postData['id']);
+		}
+
 		$filesData = $this->request->getFiles();
 
 		if (!isset($postData['id'])) {
@@ -133,24 +137,13 @@ class Asset extends ErpController
 		}
 
 		$assetListModel = new AssetListModel();
-		$idDuplicate = 0;
-		if (isset($postData['id'])) {
-			if (!$isDuplicateAsset) {
-				$assetListModel->save($dataSave);
-			} else {
-				$idDuplicate = $assetListModel->insertAssetList($dataSave);
-			}
-		}
-
 		$id = 0;
-		if (isset($postData['id']) && !$isDuplicateAsset) {
+		if (isset($postData['id'])) {
+			$assetListModel->save($dataSave);
 			$id = $postData['id'];
-		} elseif (isset($postData['id']) && $isDuplicateAsset) {
-			$id = $idDuplicate;
 		} else {
 			$id = $assetListModel->insertAssetList($dataSave);
 		}
-
 
 		if ($filesData && !empty($id)) {
 			foreach ($filesData as $key => $files) {

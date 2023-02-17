@@ -105,13 +105,14 @@ const AssetEditModal = (props) => {
               <div className="div-tab-content">
                 <FormProvider {...methods}>
                   <Row>
-                    {!dataDetail?.id && (
+                    {(!dataDetail?.id || isDuplicateAsset) && (
                       <Col lg={6}>
                         <ErpUserSelect
                           label="Owner"
                           name="owner"
                           required
-                          readOnly={dataDetail?.id}
+                          readOnly={dataDetail?.id && !isDuplicateAsset}
+                          defaultValue={dataDetail?.id && isDuplicateAsset ? dataDetail?.owner : ""}
                           useForm={methods}
                         />
                       </Col>
@@ -148,7 +149,7 @@ const AssetEditModal = (props) => {
                         if (nameField === "date_created" && !dataDetail?.id) {
                           fieldAuth.field_default_value = moment()
                         }
-                        if (nameField === "date_created" && dataDetail?.id) {
+                        if (nameField === "date_created" && (dataDetail?.id && !isDuplicateAsset)) {
                           fieldAuth.field_readonly = true
                           return ""
                         }
@@ -185,7 +186,7 @@ const AssetEditModal = (props) => {
                           </Col>
                         )
                       })}
-                    {dataDetail?.id && (
+                    {(dataDetail?.id && !isDuplicateAsset) && (
                       <Col sm={12}>
                         <Alert color="warning">
                           {" "}

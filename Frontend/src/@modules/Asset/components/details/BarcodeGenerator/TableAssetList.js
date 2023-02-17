@@ -168,10 +168,6 @@ const TableAssetList = (props) => {
     }
   }, [page])
 
-  useEffect(() => {
-    console.log(listAssetPaginate)
-  }, [listAssetPaginate])
-
   // ** render
   const AssetNameCell = useCallback(
     (props) => {
