@@ -113,8 +113,11 @@ class Asset extends ErpController
 			$modules->setModule('asset_brands');
 			$model = $modules->model;
 			$branch = $model->asArray()->find($postData['asset_brand']);
-			$branchName = $branch['brand_name'];
-			$description .= '-' . $branchName;
+			if ($branch) {
+				$branchName = $branch['brand_name'];
+				$description .= '-' . $branchName;
+			}
+
 		}
 
 		$description .= '-' . $postData['asset_properties'];
