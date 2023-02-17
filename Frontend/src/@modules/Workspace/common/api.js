@@ -7,5 +7,11 @@ export const workspaceApi = {
       "/workspace/save",
       serialize(_.cloneDeep(data))
     )
+  },
+  async saveCoverImage(data) {
+    return await axiosNodeApi.post(
+      "/workspace/save-cover-image",
+      serialize(_.cloneDeep(data))
+    )
   }
 }

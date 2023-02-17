@@ -5,6 +5,7 @@ const saveWorkspace = async (req, res, next) => {
     name: req.body.workspace_name,
     type: req.body.workspace_type,
     mode: req.body.workspace_mode,
+    cover_image: "tttttttttttt",
     members: [req.__user],
     administrators: [req.__user],
     __user: req.__user
@@ -27,5 +28,8 @@ const getWorkspace = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
-
-export { getWorkspace, saveWorkspace }
+const saveCoverImage = async (req, res) => {
+  console.log("reqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", req.body)
+  console.log("res", res)
+}
+export { getWorkspace, saveWorkspace, saveCoverImage }

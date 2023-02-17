@@ -1,4 +1,5 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { workspaceApi } from "@modules/Workspace/common/api"
 import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
@@ -12,12 +13,23 @@ const WorkspaceHeader = (props) => {
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
-  const saveCoverImage = (image) => {}
+  const saveCoverImage = (image) => {
+    console.log("runnn")
+    setState({ coverImage: image })
+    const data = { image: image, id: 1 }
+    workspaceApi.saveCoverImage(data).then((res) => {
+      console.log("resssss", res)
+    })
+  }
   return (
     <Card className="pb-0">
       <div className="image-cover">
-        <img src={defaultWorkspaceCover} className="w-100 workspaceCover" />
-        <CoverEditor src="" className="btn-cover" />
+        <img src={state.coverImage} className="w-100 workspaceCover" />
+        <CoverEditor
+          src=""
+          className="btn-cover"
+          saveCoverImage={saveCoverImage}
+        />
       </div>
 
       <CardBody className="pb-0">
@@ -31,7 +43,7 @@ const WorkspaceHeader = (props) => {
           </div>
           <div className="workspaceAction">
             <Button className="btn btn-success" onClick={() => onClickInvite()}>
-              Invite
+              <i className="fa-regular fa-plus me-50"></i>Invite
             </Button>
           </div>
         </div>
@@ -86,6 +98,11 @@ const WorkspaceHeader = (props) => {
               {useFormatMessage("modules.workspace.display.media")}
             </NavLink>
           </NavItem>
+          <div className="ms-auto">
+            <Button color="sencondary">
+              <i className="fa-light fa-ellipsis"></i>
+            </Button>
+          </div>
         </Nav>
         <InviteWorkspaceModal
           modal={state.inviteModal}

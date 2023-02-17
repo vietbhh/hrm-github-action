@@ -20,10 +20,9 @@ const CoverEditor = (props) => {
     loading: true,
     editing: false
   })
-  const { currentCover } = props
+  const { currentCover, saveCoverImage } = props
   const photoUploader = useRef()
   const photoEditor = useRef()
-  console.log("state", state)
   const handleUploadBtnClick = (e) => {
     if (photoUploader.current) {
       photoUploader.current.click()
@@ -44,18 +43,13 @@ const CoverEditor = (props) => {
   }
 
   const handleSave = () => {
-    console.log("photoEditor", photoEditor)
     if (photoEditor.current) {
       const img = photoEditor.current.getImageScaledToCanvas().toDataURL()
-      console.log(
-        "photoEditor.current.getImageScaledToCanvas()",
-        photoEditor.current.getImageScaledToCanvas()
-      )
       setState({
         photoPreview: img,
         editing: false
       })
-
+      saveCoverImage(img)
       //props.handleSave(img)
     }
   }
@@ -144,19 +138,19 @@ const CoverEditor = (props) => {
           )}
         </div>
         {state.editing && (
-          <>
+          <div className="text-end mt-50">
             <Button className="ms-auto" size="sm" color="secondary">
-              Cancel
+              {useFormatMessage("button.cancel")}
             </Button>
 
             <Button
-              className="ms-50"
+              className="ms-50 me-1"
               size="sm"
               color="primary"
               onClick={() => handleSave()}>
-              Save
+              {useFormatMessage("button.save")}
             </Button>
-          </>
+          </div>
         )}
       </Fragment>
     )

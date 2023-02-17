@@ -14,6 +14,10 @@ const workspaceSchema = baseSchema("m_workspace", {
   description: {
     type: String
   },
+  cover_image: {
+    type: String,
+    required: false
+  },
   rules: {
     type: String
   },
