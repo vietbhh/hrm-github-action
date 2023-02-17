@@ -137,6 +137,7 @@ class Asset extends ErpController
 			if (!$isDuplicateAsset) {
 				$assetListModel->save($dataSave);
 			} else {
+				unset($dataSave['recent_image']);
 				$assetListModel->insertAssetList($dataSave);
 			}
 		}

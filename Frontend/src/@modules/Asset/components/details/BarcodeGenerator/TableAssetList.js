@@ -24,14 +24,15 @@ const TableAssetList = (props) => {
     setFilterByObj
   } = props
 
-  const [data, setData] = useState([])
   const [isReady, setIsReady] = useState(false)
   const [limit, setLimit] = useState(30)
   const [page, setPage] = useState(1)
   const [sortColumn, setSortColumn] = useState()
   const [sortType, setSortType] = useState()
   const [loading, setLoading] = useState(false)
-  
+  const [listAssetPaginate, setListAssetPaginate] = useState({})
+  const [checkAll, setCheckAll] = useState(false)
+
   const getData = () => {
     if (sortColumn && sortType) {
       return listData.sort((a, b) => {
@@ -64,12 +65,34 @@ const TableAssetList = (props) => {
   }
 
   const handleCheckAll = (checked) => {
-    const newChosen = checked
-      ? data.map((item) => {
-          return item
-        })
-      : []
-    setChosenAssetList(newChosen)
+    if (checked) {
+      setCheckAll(true)
+      const newListAssetPaginate = { ...listAssetPaginate }
+      newListAssetPaginate[page] = {
+        ...newListAssetPaginate[page],
+        checked: true
+      }
+      setListAssetPaginate(newListAssetPaginate)
+      const newChosen = [...chosenAssetList]
+      listData.map((item) => {
+        newChosen.push(item)
+      })
+      setChosenAssetList(newChosen)
+    } else {
+      setCheckAll(false)
+      const newListAssetPaginate = { ...listAssetPaginate }
+      newListAssetPaginate[page] = {
+        ...newListAssetPaginate[page],
+        checked: false
+      }
+      setListAssetPaginate(newListAssetPaginate)
+      const newChosen = [...chosenAssetList].filter((itemAssetList) => {
+        return !listData.some(
+          (itemListData) => itemListData.id === itemAssetList.id
+        )
+      })
+      setChosenAssetList(newChosen)
+    }
   }
 
   const handleCheck = (value, checked) => {
@@ -84,6 +107,7 @@ const TableAssetList = (props) => {
 
   const handleChangeLimit = (dataKey) => {
     if (loadDataFromApi === true) {
+      setListAssetPaginate({})
       setFilterByObj({
         page: 1,
         limit: dataKey
@@ -107,8 +131,8 @@ const TableAssetList = (props) => {
   // ** effect
   useEffect(() => {
     if (loadDataFromApi === true) {
-      setLimit(filter.limit)
-      setPage(filter.page)
+      setLimit(filter.limit === undefined ? 30 : filter.limit)
+      setPage(filter.page === undefined ? 1 : filter.page)
       setIsReady(true)
     } else {
       setLimit(30)
@@ -118,21 +142,35 @@ const TableAssetList = (props) => {
   }, [loadDataFromApi, filter])
 
   useEffect(() => {
-    console.log(limit, page)
-    const tempData = listData.filter((value, index) => {
-      {
-        const start = limit * (page - 1)
-        const end = start + limit
-        return index >= start && index < end
-      }
-    })
-    console.log(tempData)
-    setData(tempData)
+    if (loadDataFromApi === true) {
+      setListAssetPaginate({
+        ...listAssetPaginate,
+        [page]: {
+          checked: checkAll,
+          data: listData
+        }
+      })
+    }
   }, [listData])
 
   useEffect(() => {
-    console.log(data)
-  }, [data])
+    if (
+      loadDataFromApi === true &&
+      Object.keys(listAssetPaginate).length > 0 &&
+      page !== undefined
+    ) {
+      const currentListAssetPaginate = listAssetPaginate[page]
+      setCheckAll(
+        currentListAssetPaginate?.checked === undefined
+          ? checkAll
+          : currentListAssetPaginate.checked
+      )
+    }
+  }, [page])
+
+  useEffect(() => {
+    console.log(listAssetPaginate)
+  }, [listAssetPaginate])
 
   // ** render
   const AssetNameCell = useCallback(
@@ -181,7 +219,6 @@ const TableAssetList = (props) => {
     return (
       <Cell {...props}>
         <ErpCheckbox
-          defaultValue={rowData[dataKey]}
           inline
           onChange={(e) => {
             handleCheck(rowData, e.target.checked)
@@ -217,7 +254,7 @@ const TableAssetList = (props) => {
                   id="select_all_row"
                   name="select_all_row"
                   inline
-                  defaultChecked={false}
+                  checked={checkAll}
                   onChange={(e) => {
                     handleCheckAll(e.target.checked)
                   }}

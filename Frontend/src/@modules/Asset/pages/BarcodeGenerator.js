@@ -172,9 +172,7 @@ const BarcodeGenerator = () => {
               </div>
             </div>
             <div>
-              <Space>
-                <PrintQRCode chosenAssetList={state.chosenAssetList} />
-              </Space>
+              <PrintQRCode chosenAssetList={state.chosenAssetList} />
             </div>
           </CardBody>
         </Card>
