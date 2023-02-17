@@ -61,50 +61,48 @@ export const ListCode = React.forwardRef((props, ref) => {
         }}>
         {chosenAssetList.map((item, index) => {
           return (
-            <Fragment>
+            <div
+              key={`code-item-${index}`}
+              style={{
+                width: "20%",
+                display: "flex",
+                justifyContent: "center",
+                justifyItems: "center",
+                alignItems: "center",
+                height: "64px"
+              }}>
               <div
-                key={`code-item-${index}`}
                 style={{
-                  width: "20%",
                   display: "flex",
-                  justifyContent: "center",
-                  justifyItems: "center",
-                  alignItems: "center",
-                  height: "64px"
+                  width: "140px",
+                  height: "64px",
+                  alignItems: "flex-start"
                 }}>
-                <div
+                <p
                   style={{
-                    display: "flex",
-                    width: "140px",
-                    height: "64px",
-                    alignItems: "flex-start"
+                    fontSize: "10px",
+                    //paddingBottom: "5px",
+                    padding: "0",
+                    marginLeft: "6px",
+                    marginRight: "3px",
+                    marginBottom: "0",
+                    textAlign: "center",
+                    width: "75px"
                   }}>
-                  <p
-                    style={{
-                      fontSize: "10px",
-                      //paddingBottom: "5px",
-                      padding: "0",
-                      marginLeft: "6px",
-                      marginRight: "3px",
-                      marginBottom: "0",
-                      textAlign: "center",
-                      width: "75px"
-                    }}>
-                    {item.asset_code}
-                  </p>
-                  <QRCode
-                    size={100}
-                    style={{
-                      height: "40px",
-                      width: "40px",
-                      marginRight: "2px"
-                    }}
-                    value={item.asset_code}
-                    viewBox="0 0 256 256"
-                  />
-                </div>
+                  {item.asset_code}
+                </p>
+                <QRCode
+                  size={100}
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                    marginRight: "2px"
+                  }}
+                  value={item.asset_code}
+                  viewBox="0 0 256 256"
+                />
               </div>
-            </Fragment>
+            </div>
           )
         })}
       </div>
