@@ -105,13 +105,14 @@ const AssetEditModal = (props) => {
               <div className="div-tab-content">
                 <FormProvider {...methods}>
                   <Row>
-                    {!dataDetail?.id && (
+                    {(!dataDetail?.id || isDuplicateAsset) && (
                       <Col lg={6}>
                         <ErpUserSelect
                           label="Owner"
                           name="owner"
                           required
-                          readOnly={dataDetail?.id}
+                          readOnly={dataDetail?.id && !isDuplicateAsset}
+                          defaultValue={dataDetail?.id && isDuplicateAsset ? dataDetail?.owner : ""}
                           useForm={methods}
                         />
                       </Col>
@@ -128,6 +129,7 @@ const AssetEditModal = (props) => {
                         const options = optionsArr
                         const fieldAuth = { ...field }
                         const nameField = field.field
+                        let updateDataValue = ""
                         if (
                           (nameField === "asset_code" ||
                             nameField === "asset_status") &&
@@ -147,9 +149,17 @@ const AssetEditModal = (props) => {
                         if (nameField === "date_created" && !dataDetail?.id) {
                           fieldAuth.field_default_value = moment()
                         }
-                        if (nameField === "date_created" && dataDetail?.id) {
+                        if (nameField === "date_created" && (dataDetail?.id && !isDuplicateAsset)) {
                           fieldAuth.field_readonly = true
                           return ""
+                        }
+                        if (
+                          nameField === "recent_image" &&
+                          isDuplicateAsset === true
+                        ) {
+                          updateDataValue = {}
+                        } else {
+                          updateDataValue = dataDetail?.[field.field]
                         }
 
                         const fieldProps = {
@@ -169,14 +179,14 @@ const AssetEditModal = (props) => {
                                 label={useFormatMessage(
                                   "modules.asset_lists.fields." + field.field
                                 )}
-                                updateData={dataDetail?.[field.field]}
+                                updateData={updateDataValue}
                                 {...fieldProps}
                               />
                             </Fragment>
                           </Col>
                         )
                       })}
-                    {dataDetail?.id && (
+                    {(dataDetail?.id && !isDuplicateAsset) && (
                       <Col sm={12}>
                         <Alert color="warning">
                           {" "}
