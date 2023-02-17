@@ -98,7 +98,6 @@ const InventoriesDetail = () => {
 
   const onQrScan = (err, result) => {
     if (result?.text) {
-      console.log(result?.text)
       setValue("asset_code", result?.text)
       onSubmitInput({
         asset_code: result?.text
