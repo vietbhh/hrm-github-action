@@ -92,14 +92,15 @@ class Asset extends ErpController
 		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$postData = $this->request->getPost();
 		$isDuplicateAsset = isset($postData['is_duplicate']) ? filter_var($postData['is_duplicate'], FILTER_VALIDATE_BOOLEAN) : false;
+
 		unset($postData['is_duplicate']);
 		$filesData = $this->request->getFiles();
 
 		if (!isset($postData['id'])) {
 			$postData['asset_status'] = getAssetStatus('normal');
 		}
-		// create description
 
+		// create description
 		$modules = \Config\Services::modules('asset_types');
 		$description = '';
 		if (isset($postData['asset_type']) && $postData['asset_type']) {
@@ -108,7 +109,7 @@ class Asset extends ErpController
 			$typeName = $type['asset_type_name'];
 			$description .= $typeName;
 		}
-		if (isset($postData['asset_brands']) && $postData['asset_brands']) {
+		if (isset($postData['asset_brand']) && $postData['asset_brand']) {
 			$modules->setModule('asset_brands');
 			$model = $modules->model;
 			$branch = $model->asArray()->find($postData['asset_brand']);
@@ -123,6 +124,10 @@ class Asset extends ErpController
 
 		$uploadFieldsArray = $dataHandle['uploadFieldsArray'];
 		$dataSave = $dataHandle['data'];
+
+		if (isset($dataSave['asset_status']) && isset($postData['id'])) {
+			unset($dataSave['asset_status']);
+		}
 
 		$assetListModel = new AssetListModel();
 		if (isset($postData['id'])) {
@@ -225,7 +230,7 @@ class Asset extends ErpController
 
 		$data['recordsTotal'] = $model->countAllResults(false);
 
-		$assetList = $model->asArray()->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
+		$assetList = $model->asArray()->orderBy('m_asset_lists.id', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
 		$data['asset_list'] = handleDataBeforeReturn($modules, $assetList, true);
 		$data['page'] = $getPara['page'];
 		return $this->respond($data);

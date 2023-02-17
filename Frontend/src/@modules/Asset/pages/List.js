@@ -744,6 +744,7 @@ const List = (props) => {
       <AssetErrorModal
         modal={state.assetErrorModal}
         dataDetail={state.assetDetail}
+        loadData={loadData}
         handleDetail={handleError}
       />
     </Fragment>
