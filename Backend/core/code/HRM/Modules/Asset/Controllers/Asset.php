@@ -133,20 +133,26 @@ class Asset extends ErpController
 		}
 
 		$assetListModel = new AssetListModel();
+		$idDuplicate = 0;
 		if (isset($postData['id'])) {
 			if (!$isDuplicateAsset) {
 				$assetListModel->save($dataSave);
 			} else {
-				unset($dataSave['recent_image']);
-				$assetListModel->insertAssetList($dataSave);
+				$idDuplicate = $assetListModel->insertAssetList($dataSave);
 			}
 		}
 
+		$id = 0;
+		if (isset($postData['id']) && !$isDuplicateAsset) {
+			$id = $postData['id'];
+		} elseif (isset($postData['id']) && $isDuplicateAsset) {
+			$id = $idDuplicate;
+		} else {
+			$id = $assetListModel->insertAssetList($dataSave);
+		}
 
-		$id = isset($postData['id']) ? $postData['id'] : $assetListModel->insertAssetList($dataSave);
 
-
-		if ($filesData) {
+		if ($filesData && !empty($id)) {
 			foreach ($filesData as $key => $files) {
 				if (empty($files)) continue;
 				if (!is_array($files)) $files = [$files];

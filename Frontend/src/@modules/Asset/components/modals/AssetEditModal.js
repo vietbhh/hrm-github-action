@@ -128,6 +128,7 @@ const AssetEditModal = (props) => {
                         const options = optionsArr
                         const fieldAuth = { ...field }
                         const nameField = field.field
+                        let updateDataValue = ""
                         if (
                           (nameField === "asset_code" ||
                             nameField === "asset_status") &&
@@ -151,6 +152,14 @@ const AssetEditModal = (props) => {
                           fieldAuth.field_readonly = true
                           return ""
                         }
+                        if (
+                          nameField === "recent_image" &&
+                          isDuplicateAsset === true
+                        ) {
+                          updateDataValue = {}
+                        } else {
+                          updateDataValue = dataDetail?.[field.field]
+                        }
 
                         const fieldProps = {
                           module: "asset_lists",
@@ -169,7 +178,7 @@ const AssetEditModal = (props) => {
                                 label={useFormatMessage(
                                   "modules.asset_lists.fields." + field.field
                                 )}
-                                updateData={dataDetail?.[field.field]}
+                                updateData={updateDataValue}
                                 {...fieldProps}
                               />
                             </Fragment>
