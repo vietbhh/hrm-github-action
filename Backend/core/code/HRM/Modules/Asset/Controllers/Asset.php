@@ -92,6 +92,7 @@ class Asset extends ErpController
 		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$postData = $this->request->getPost();
 		$isDuplicateAsset = isset($postData['is_duplicate']) ? filter_var($postData['is_duplicate'], FILTER_VALIDATE_BOOLEAN) : false;
+
 		unset($postData['is_duplicate']);
 		$filesData = $this->request->getFiles();
 
@@ -99,9 +100,37 @@ class Asset extends ErpController
 			$postData['asset_status'] = getAssetStatus('normal');
 		}
 
+		// create description
+		$modules = \Config\Services::modules('asset_types');
+		$description = '';
+		if (isset($postData['asset_type']) && $postData['asset_type']) {
+			$model = $modules->model;
+			$type = $model->asArray()->find($postData['asset_type']);
+			$typeName = $type['asset_type_name'];
+			$description .= $typeName;
+		}
+		if (isset($postData['asset_brand']) && $postData['asset_brand']) {
+			$modules->setModule('asset_brands');
+			$model = $modules->model;
+			$branch = $model->asArray()->find($postData['asset_brand']);
+			if ($branch) {
+				$branchName = $branch['brand_name'];
+				$description .= '-' . $branchName;
+			}
+
+		}
+
+		$description .= '-' . $postData['asset_properties'];
+		$postData['asset_descriptions'] = $description;
+
 		$dataHandle = handleDataBeforeSave('asset_lists', $postData, $filesData);
+
 		$uploadFieldsArray = $dataHandle['uploadFieldsArray'];
 		$dataSave = $dataHandle['data'];
+
+		if (isset($dataSave['asset_status']) && isset($postData['id'])) {
+			unset($dataSave['asset_status']);
+		}
 
 		$assetListModel = new AssetListModel();
 		if (isset($postData['id'])) {
@@ -134,10 +163,12 @@ class Asset extends ErpController
 							$removeOldFilePathForDownload = $storePath . $fileName;
 							$uploadService->removeFile($removeOldFilePathForDownload);
 							$fileName = safeFileName($fileName);
-							$uploadService->uploadFile($storePath, [$file], false, $fileName);
+							$result = $uploadService->uploadFile($storePath, [$file], false, $fileName);
+
 						} else {
 							$fileName = safeFileName($file->getName());
-							$uploadService->uploadFile($storePath, [$file], false, $fileName);
+							$result = $uploadService->uploadFile($storePath, [$file], false, $fileName, ['compressImage' => true]);
+							$fileName = $result['last_uploaded']['filename'];
 							if (!empty($uploadFieldsArray[$key])) {
 								if ($uploadFieldsArray[$key]->field_type == 'upload_multiple') {
 									$arrayFiles = isset($dataSave[$key]) ? json_decode($dataSave[$key], true) : [];
@@ -205,7 +236,7 @@ class Asset extends ErpController
 
 		$data['recordsTotal'] = $model->countAllResults(false);
 
-		$assetList = $model->asArray()->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
+		$assetList = $model->asArray()->orderBy('m_asset_lists.id', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
 		$data['asset_list'] = handleDataBeforeReturn($modules, $assetList, true);
 		$data['page'] = $getPara['page'];
 		return $this->respond($data);

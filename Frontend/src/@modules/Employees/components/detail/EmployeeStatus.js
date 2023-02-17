@@ -1,8 +1,7 @@
 import { DownOutlined } from "@ant-design/icons"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
-import { employeesApi } from "@modules/Employees/common/api"
 import notification from "@apps/utility/notification"
+import { employeesApi } from "@modules/Employees/common/api"
 import { Dropdown } from "antd"
 import classnames from "classnames"
 import { isUndefined } from "lodash-es"
@@ -61,7 +60,7 @@ const EmployeeStatus = (props) => {
       .map((item, index) => ({
         key: index,
         label: (
-          <span
+          <div
             className={classnames({
               [`stt_${optClass[parseInt(item.value)]}`]: !isUndefined(
                 optClass[parseInt(item.value)]
@@ -71,7 +70,7 @@ const EmployeeStatus = (props) => {
               changeStatus(item)
             }}>
             {useFormatMessage(`${item?.label}`)}
-          </span>
+          </div>
         ),
         className: "employeeStatusDropdown"
       }))

@@ -241,9 +241,6 @@ const List = (props) => {
 
   const handleUpdateSTT = (id) => {
     if (id) {
-      setState({
-        loading: true
-      })
       assetApi.detailAsset(id).then((res) => {
         setState({
           assetDetail: res.data.data,
@@ -257,9 +254,6 @@ const List = (props) => {
   }
   const handleHandover = (id) => {
     if (id) {
-      setState({
-        loading: true
-      })
       assetApi.detailAsset(id).then((res) => {
         setState({
           assetDetail: res.data.data,
@@ -274,9 +268,6 @@ const List = (props) => {
 
   const handleError = (id) => {
     if (id) {
-      setState({
-        loading: true
-      })
       assetApi.detailAsset(id).then((res) => {
         setState({
           assetDetail: res.data.data,
@@ -746,12 +737,14 @@ const List = (props) => {
       <AssetHandoverModal
         modal={state.assetHandoverModal}
         dataDetail={state.assetDetail}
+        loadData={loadData}
         handleDetail={handleHandover}
       />
 
       <AssetErrorModal
         modal={state.assetErrorModal}
         dataDetail={state.assetDetail}
+        loadData={loadData}
         handleDetail={handleError}
       />
     </Fragment>

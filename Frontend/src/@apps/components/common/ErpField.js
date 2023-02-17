@@ -687,7 +687,13 @@ const CustomErpSelectsOption = ({ data, ...props }) => {
           </Fragment>
         )}
         <div className="text-label">
-          <p>{data.label}</p>
+          <p>
+            {_.isFunction(props.selectProps?.formatOptionLabel)
+              ? props.selectProps?.formatOptionLabel({
+                  label: data.label
+                })
+              : data.label}
+          </p>
           {data?.text && (
             <small className="text-truncate mb-0">{data.text}</small>
           )}
@@ -717,7 +723,13 @@ const CustomSingleErpSelect = ({ data, ...props }) => {
             </Fragment>
           )}
           <div className="text-label">
-            <p>{data.label}</p>
+            <p>
+              {_.isFunction(props.selectProps?.formatOptionLabel)
+                ? props.selectProps?.formatOptionLabel({
+                    label: data.label
+                  })
+                : data.label}
+            </p>
             {data?.text && (
               <small className="text-truncate mb-0">{data.text}</small>
             )}
@@ -742,7 +754,13 @@ const CustomMultiErpSelect = ({ data, ...props }) => {
             {_.isString(data.icon) ? <i className={data.icon}></i> : data.icon}
           </Fragment>
         )}
-        <span>{data.label}</span>
+        <span>
+          {_.isFunction(props.selectProps?.formatOptionLabel)
+            ? props.selectProps?.formatOptionLabel({
+                label: data.label
+              })
+            : data.label}
+        </span>
       </div>
     </components.MultiValueLabel>
   )
