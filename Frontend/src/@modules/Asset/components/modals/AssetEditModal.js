@@ -60,7 +60,6 @@ const AssetEditModal = (props) => {
       values.id = dataDetail.id
       values.is_duplicate = isDuplicateAsset
     }
-
     assetApi.addAsset(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
