@@ -114,7 +114,7 @@ class AssetListModel extends AppModel
 			'type' => getOptionValue('asset_history', 'type', 'warehouse'),
 			'owner_current' => isset($data['owner']) ? $data['owner'] : user_id()
 		]);
-		
+
 		return $idAssetList;
 	}
 
@@ -138,8 +138,9 @@ class AssetListModel extends AppModel
 					if (!$file->hasMoved()) {
 						$storePath = getModuleUploadPath('asset_history', $id, false) . 'other/';
 						$fileName = safeFileName($file->getName());
-						$uploadService->uploadFile($storePath, [$file], false, $fileName);
 
+						$result = $uploadService->uploadFile($storePath, [$file], false, $fileName, ['compressImage' => true]);
+						$fileName = $result['last_uploaded']['filename'];
 						// upload to asset
 						if ($key === 'history_image') {
 							$pathAsset = '/modules/asset_lists/' . $data['asset_code'] . '/other/';
