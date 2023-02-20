@@ -2,7 +2,6 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import cameraBtn from "@src/assets/images/erp/icons/camera.svg"
-import noAvatar from "@src/assets/images/erp/noavt.png"
 import { Image } from "antd"
 import classNames from "classnames"
 import { isEmpty } from "lodash-es"
@@ -10,6 +9,7 @@ import { Fragment, useEffect, useRef } from "react"
 import AvatarEditor from "react-avatar-editor"
 import ContentLoader from "react-content-loader"
 import defaultWorkspaceCover from "./assets/images/default_workspace_cover.webp"
+import "./assets/scss/cover.scss"
 const CoverEditor = (props) => {
   const [state, setState] = useMergedState({
     photoPreview: defaultWorkspaceCover,
@@ -72,39 +72,8 @@ const CoverEditor = (props) => {
     )
   else
     return (
-      <Fragment>
-        <div
-          onClick={handleUploadBtnClick}
-          className={classNames("coverPhoto", {
-            "overflow-hidden": props.readOnly
-          })}>
-          {!props.readOnly && (
-            <Fragment>
-              <img
-                src={state.photoPreview}
-                alt="Avatar"
-                className={`img-fluid w-100`}
-              />
-              <div className={`cameraBtn`}>
-                <img src={cameraBtn} />
-              </div>
-              <input
-                type="file"
-                ref={photoUploader}
-                style={{ display: "none" }}
-                onChange={(e) => handleFileChange(e.target.files)}
-              />
-            </Fragment>
-          )}
-          {props.readOnly && (
-            <Image
-              src={state.photoPreview}
-              alt="Avatar"
-              className={`img-fluid w-100`}
-            />
-          )}
-        </div>
-        {state.editing && (
+      <div className="coverWrapper">
+        {state.editing ? (
           <AvatarEditor
             ref={photoEditor}
             image={state.linkPreview}
@@ -116,8 +85,40 @@ const CoverEditor = (props) => {
             width={1356}
             height={366}
           />
+        ) : (
+          <div
+            onClick={handleUploadBtnClick}
+            className={classNames("coverPhoto", {
+              "overflow-hidden": props.readOnly
+            })}>
+            {!props.readOnly && (
+              <Fragment>
+                <img
+                  src={state.photoPreview}
+                  alt="Avatar"
+                  className={`img-fluid w-100`}
+                />
+                <div className={`cameraBtn`}>
+                  <img src={cameraBtn} />
+                </div>
+                <input
+                  type="file"
+                  ref={photoUploader}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleFileChange(e.target.files)}
+                />
+              </Fragment>
+            )}
+            {props.readOnly && (
+              <Image
+                src={state.photoPreview}
+                alt="Cover"
+                className={`img-fluid w-100`}
+              />
+            )}
+          </div>
         )}
-      </Fragment>
+      </div>
     )
 }
 

@@ -1,46 +1,113 @@
 // ** React Imports
-import React from "react"
+import React, { Fragment } from "react"
 import QRCode from "react-qr-code"
+import { useBarcode } from "next-barcode"
 // ** Styles
-import { Row, Col } from "reactstrap"
 // ** Components
 
 export const ListCode = React.forwardRef((props, ref) => {
   const {
     // ** props
-    chosenAssetList
+    chosenAssetList,
+    printType
     // ** methods
   } = props
 
   // ** render
-  return (
-    <div ref={ref} style={{
-      display: "flex",
-      flexWrap: "wrap"
-    }}>
-      {chosenAssetList.map((item, index) => {
-        return (
-          <div
-            key={`code-item-${index}`}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100px",
-              marginTop: "10px",
-              flex: "0 0 33.333333%"
-            }}>
-            <QRCode
-              size={256}
-              style={{ height: "60px", width: "100%" }}
-              value={item.asset_code}
-              viewBox={`0 0 256 256`}
-            />
-            <span style={{ marginTop: "15px" }}>{item.asset_code}</span>
-          </div>
-        )
-      })}
-    </div>
-  )
+  const renderComponent = () => {
+    if (printType === "barcode") {
+      return (
+        <div
+          ref={ref}
+          style={{
+            display: "flex"
+          }}>
+          {chosenAssetList.map((item, index) => {
+            const { inputRef } = useBarcode({
+              value: item.asset_code,
+              options: {
+                width: "1.7",
+                height: 90,
+                fontSize: 11
+              }
+            })
+
+            return (
+              <div
+                key={`code-item-${index}`}
+                style={{ width: "20%", height: "auto" }}>
+                <img
+                  ref={inputRef}
+                  style={{
+                    width: "100% !important"
+                  }}
+                />
+              </div>
+            )
+          })}
+        </div>
+      )
+    }
+
+    return (
+      <div
+        ref={ref}
+        style={{
+          width: "100%",
+          display: "flex",
+          flexWrap: "wrap",
+          marginTop: "15px",
+          rowGap: "1px"
+        }}>
+        {chosenAssetList.map((item, index) => {
+          return (
+            <div
+              key={`code-item-${index}`}
+              style={{
+                width: "20%",
+                display: "flex",
+                justifyContent: "center",
+                justifyItems: "center",
+                alignItems: "center",
+                height: "64px"
+              }}>
+              <div
+                style={{
+                  display: "flex",
+                  width: "140px",
+                  height: "64px",
+                  alignItems: "flex-start"
+                }}>
+                <p
+                  style={{
+                    fontSize: "10px",
+                    //paddingBottom: "5px",
+                    padding: "0",
+                    marginLeft: "6px",
+                    marginRight: "3px",
+                    marginBottom: "0",
+                    textAlign: "center",
+                    width: "75px"
+                  }}>
+                  {item.asset_code}
+                </p>
+                <QRCode
+                  size={100}
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                    marginRight: "2px"
+                  }}
+                  value={item.asset_code}
+                  viewBox="0 0 256 256"
+                />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  return <Fragment>{renderComponent()}</Fragment>
 })

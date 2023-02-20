@@ -7,7 +7,6 @@ const WorkspaceHeader = (props) => {
 
   return (
     <Card className="pb-0">
-      <img src={defaultWorkspaceCover} className="w-100 workspaceCover" />
       <CoverEditor src="" />
       <CardBody className="pb-0">
         <div className="d-flex justify-content-between align-content-center">

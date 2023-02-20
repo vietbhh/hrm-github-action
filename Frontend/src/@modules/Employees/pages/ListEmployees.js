@@ -185,7 +185,7 @@ const ListEmployees = (props) => {
   const metas = moduleData.metas
   const options = moduleData.options
   const ability = useContext(AbilityContext)
-
+  console.log(options)
   const moduleDataChecklist = useSelector(
     (state) => state.app.modules.checklist
   )

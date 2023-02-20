@@ -78,7 +78,11 @@ const RecentInventories = (props) => {
       </CardHeader>
       <CardBody>
         <Row>
-          <Col sm="12">
+          <Col
+            sm="12"
+            style={{
+              overflowX: "scroll"
+            }}>
             <Table
               dataSource={dataSource}
               columns={columns}

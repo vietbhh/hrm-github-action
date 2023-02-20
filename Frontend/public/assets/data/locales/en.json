@@ -510,7 +510,8 @@
     "view": "View",
     "edit": "Edit",
     "started": "Started",
-    "remove": "Remove"
+    "remove": "Remove",
+    "duplicate": "Duplicate"
   },
   "errors": {
     "common": {
@@ -669,7 +670,8 @@
       "qrCodeGenerator": "QRCode Generator",
       "inventories": "Inventory",
       "assetGroups": "Asset Groups",
-      "assetTypes": "Asset Types"
+      "assetTypes": "Asset Types",
+      "asset_brand": "Asset Brands"
     }
   },
   "settings": {
@@ -4171,7 +4173,8 @@
       },
       "buttons": {
         "new_asset": "New Asset",
-        "generate": "Generate",
+        "generate_qr_code": "Generate QR Code",
+        "generate_barcode": "Generate Barcode",
         "error": "Error",
         "edit": "Edit",
         "handover": "Handover",
@@ -4181,6 +4184,7 @@
         "detail": "Asset Detail",
         "new": "New Asset",
         "edit": "Asset Edit",
+        "duplicate": "Dulicate Asset",
         "update_stt": "Update Status"
       },
       "notification": {
@@ -4351,8 +4355,23 @@
       }
     },
     "asset_brands": {
+      "title": "Asset Brands",
       "fields": {
-        "brand_name": "Brand Name"
+        "brand_name": "Brand Name",
+        "description": "Description"
+      },
+      "buttons": {
+        "create": "Create Asset Type",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "action": "Action",
+        "new_asset_brand": "New Asset Brand",
+        "warning_delete": {
+          "title": "Are you sure?",
+          "content": "All deleted data cannot be recovered!"
+        }
       }
     },
     "asset_status": {

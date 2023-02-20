@@ -9,422 +9,444 @@ use ZipArchive;
 
 class Upload
 {
-    private $uploadType = '';
-    private $googleCloudStorage = '';
-    private $bucketName = '';
+	private $uploadType = '';
+	private $googleCloudStorage = '';
+	private $bucketName = '';
 
-    public function __construct()
-    {
-        $this->uploadType = preference('upload_type');
-        $this->googleCloudStorage = new GoogleCloudStorage();
-        $this->bucketName = empty($_ENV['gcs_bucket_name']) ? 'friday-storage' : $_ENV['gcs_bucket_name'];
-    }
+	public function __construct()
+	{
+		$this->uploadType = preference('upload_type');
+		$this->googleCloudStorage = new GoogleCloudStorage();
+		$this->bucketName = empty($_ENV['gcs_bucket_name']) ? 'friday-storage' : $_ENV['gcs_bucket_name'];
+	}
 
-    /**
-     *  $storePath = getModuleUploadPath($module, $id, true) . 'data/';
-     *  $storePathForDownload = '/' . $_ENV['data_folder_module'] . '/'.$module.'/' . $id . '/data/';
-     *  $listFile: list file upload
-     **/
-    public function uploadFile($storePath, $listFile, $uploadByFileContent = false, $safeFilename = '')
-    {
-        helper('filesystem');
-        if ($storePath == '') {
-            return false;
-        }
+	/**
+	 *  $storePath = getModuleUploadPath($module, $id, true) . 'data/';
+	 *  $storePathForDownload = '/' . $_ENV['data_folder_module'] . '/'.$module.'/' . $id . '/data/';
+	 *  $listFile: list file upload
+	 **/
+	public function uploadFile($storePath, $listFile, $uploadByFileContent = false, $safeFilename = '', $options = ['compressImage' => false])
+	{
+		$compressImage = $options['compressImage'] ?? false;
 
-        if ($this->uploadType == 'direct') {
-            return $this->_handleUploadDirect($storePath, $listFile, $uploadByFileContent, $safeFilename);
-        } else if ($this->uploadType == 'cloud_storage') {
-            return $this->_handleUploadCloudStorage($storePath, $listFile, $uploadByFileContent, $safeFilename);
-        }
-    }
+		helper('filesystem');
+		if ($storePath == '') {
+			return false;
+		}
 
-    public function removeFile($path)
-    {
-        if ($this->uploadType == 'direct') {
-            $storePath = WRITEPATH . $_ENV['data_folder'] . '/' . $path;
-            if (is_file($storePath)) {
-                unlink($storePath);
-            }
-        } elseif ($this->uploadType == 'cloud_storage') {
-            $storePathForDownload = $path;
-            $storage = $this->googleCloudStorage->storage();
-            $bucket = $storage->bucket($this->bucketName);
-            $object = $bucket->object('default' . $storePathForDownload);
-            $object->delete();
-        }
-    }
+		if ($this->uploadType == 'direct') {
+			return $this->_handleUploadDirect($storePath, $listFile, $uploadByFileContent, $safeFilename, $compressImage);
+		} else if ($this->uploadType == 'cloud_storage') {
+			return $this->_handleUploadCloudStorage($storePath, $listFile, $uploadByFileContent, $safeFilename);
+		}
+	}
 
-    public function copyFile($pathFrom, $pathTo, $filename)
-    {
-        if ($this->uploadType == 'direct') {
-            $storePathFrom =  WRITEPATH . $_ENV['data_folder'] . $pathFrom;
-            $storePathTo =  WRITEPATH . $_ENV['data_folder'] . $pathTo;
-            if (!is_dir($storePathTo)) {
-                mkdir($storePathTo, 0777, true);
-            }
-            $filePathFrom = $storePathFrom . $filename;
-            if (is_file($filePathFrom)) {
-                $filePathTo = $storePathTo . $filename;
-                copy($filePathFrom, $filePathTo);
-            }
-        } elseif ($this->uploadType == 'cloud_storage') {
-            $storePathForDownloadFrom = $pathFrom;
-            $storePathForDownloadTo = $pathTo;
-            $storage = $this->googleCloudStorage->storage();
-            $bucket = $storage->bucket($this->bucketName);
-            $sourceObject = $storePathForDownloadFrom . $filename;
-            $object = $bucket->object('default' . $sourceObject);
-            $content = $object->downloadAsString();
-            $size = $object->size;
-        }
-    }
+	public function removeFile($path)
+	{
+		if ($this->uploadType == 'direct') {
+			$storePath = WRITEPATH . $_ENV['data_folder'] . '/' . $path;
+			if (is_file($storePath)) {
+				unlink($storePath);
+			}
+		} elseif ($this->uploadType == 'cloud_storage') {
+			$storePathForDownload = $path;
+			$storage = $this->googleCloudStorage->storage();
+			$bucket = $storage->bucket($this->bucketName);
+			$object = $bucket->object('default' . $storePathForDownload);
+			$object->delete();
+		}
+	}
 
-    public function downloadFolder($path, $uploadFilename, $zipFilename, $arrSubFolderName = [])
-    {
-        $zipFile = $zipFilename . '.zip';
-        if ($this->uploadType == 'direct') {
-            if (count($arrSubFolderName) == 0) {
-                $this->_downloadIndividualFolder($path, $zipFile);
-            } else {
-                $this->_downloadNestedFolder($path, $zipFile, $arrSubFolderName);
-            }
-        } elseif ($this->uploadType == 'cloud_storage') {
-            $storePathForDownload = $path;
-            $storage = $this->googleCloudStorage->storage();
-            $bucket = $storage->bucket($this->bucketName);
-            $zip = new ZipArchive();
-            if ($zip->open($zipFile, (ZipArchive::CREATE | ZipArchive::OVERWRITE))) {
-                foreach ($uploadFilename as $file) {
-                    $path = 'default' . $storePathForDownload . $file['filename'];
-                    $object = $bucket->object($path);
-                    $content = $object->downloadAsString();
-                    $zip->addFromString($file['filename'], $content);
-                }
-            }
-            $zip->close();
-            header('Cache-Control: public');
-            header('Content-Description: File Transfer');
-            header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
-            header("Content-Type: application/zip");
-            header("Content-Transfer-Encoding: Binary");
-            header("Content-Length: " . filesize($zipFile));
-            header("Content-Disposition: attachment; filename=\"" . basename($zipFile) . "\"");
-            readfile($zipFile);
-            unlink($zipFile);
-            exit();
-        }
-    }
+	public function copyFile($pathFrom, $pathTo, $filename)
+	{
+		if ($this->uploadType == 'direct') {
+			$storePathFrom = WRITEPATH . $_ENV['data_folder'] . $pathFrom;
+			$storePathTo = WRITEPATH . $_ENV['data_folder'] . $pathTo;
+			if (!is_dir($storePathTo)) {
+				mkdir($storePathTo, 0777, true);
+			}
+			$filePathFrom = $storePathFrom . $filename;
+			if (is_file($filePathFrom)) {
+				$filePathTo = $storePathTo . $filename;
+				copy($filePathFrom, $filePathTo);
+			}
+		} elseif ($this->uploadType == 'cloud_storage') {
+			$storePathForDownloadFrom = $pathFrom;
+			$storePathForDownloadTo = $pathTo;
+			$storage = $this->googleCloudStorage->storage();
+			$bucket = $storage->bucket($this->bucketName);
+			$sourceObject = $storePathForDownloadFrom . $filename;
+			$object = $bucket->object('default' . $sourceObject);
+			$content = $object->downloadAsString();
+			$size = $object->size;
+		}
+	}
 
-    public function deleteFolder($path)
-    {
-        if ($this->uploadType == 'direct') {
-            $dir = WRITEPATH . $_ENV['data_folder'] . '/' . $path;
-            $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-            $files = new RecursiveIteratorIterator(
-                $it,
-                RecursiveIteratorIterator::CHILD_FIRST
-            );
-            foreach ($files as $file) {
-                if ($file->isDir()) {
-                    rmdir($file->getRealPath());
-                } else {
-                    unlink($file->getRealPath());
-                }
-            }
-            rmdir($dir);
-        } elseif ($this->uploadType == 'cloud_storage') {
-            $storePathForDownload = $path;
-            $storage = $this->googleCloudStorage->storage();
-            $bucket = $storage->bucket($this->bucketName);
-            $objects = $bucket->objects([
-                'prefix' => 'default' . $storePathForDownload
-            ]);
-            foreach ($objects as $object) {
-                $object->delete();
-            }
-        }
-    }
+	public function downloadFolder($path, $uploadFilename, $zipFilename, $arrSubFolderName = [])
+	{
+		$zipFile = $zipFilename . '.zip';
+		if ($this->uploadType == 'direct') {
+			if (count($arrSubFolderName) == 0) {
+				$this->_downloadIndividualFolder($path, $zipFile);
+			} else {
+				$this->_downloadNestedFolder($path, $zipFile, $arrSubFolderName);
+			}
+		} elseif ($this->uploadType == 'cloud_storage') {
+			$storePathForDownload = $path;
+			$storage = $this->googleCloudStorage->storage();
+			$bucket = $storage->bucket($this->bucketName);
+			$zip = new ZipArchive();
+			if ($zip->open($zipFile, (ZipArchive::CREATE | ZipArchive::OVERWRITE))) {
+				foreach ($uploadFilename as $file) {
+					$path = 'default' . $storePathForDownload . $file['filename'];
+					$object = $bucket->object($path);
+					$content = $object->downloadAsString();
+					$zip->addFromString($file['filename'], $content);
+				}
+			}
+			$zip->close();
+			header('Cache-Control: public');
+			header('Content-Description: File Transfer');
+			header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+			header("Content-Type: application/zip");
+			header("Content-Transfer-Encoding: Binary");
+			header("Content-Length: " . filesize($zipFile));
+			header("Content-Disposition: attachment; filename=\"" . basename($zipFile) . "\"");
+			readfile($zipFile);
+			unlink($zipFile);
+			exit();
+		}
+	}
 
-    // ** support function
-    private function _handleUploadDirect($path, $listFile, $uploadByFileContent = false, $safeFileName = '', $isFullPath = false)
-    {
-        $result = [];
-        $arrUploadFile = [];
-        $totalSize = 0;
+	public function deleteFolder($path)
+	{
+		if ($this->uploadType == 'direct') {
+			$dir = WRITEPATH . $_ENV['data_folder'] . '/' . $path;
+			$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+			$files = new RecursiveIteratorIterator(
+				$it,
+				RecursiveIteratorIterator::CHILD_FIRST
+			);
+			foreach ($files as $file) {
+				if ($file->isDir()) {
+					rmdir($file->getRealPath());
+				} else {
+					unlink($file->getRealPath());
+				}
+			}
+			rmdir($dir);
+		} elseif ($this->uploadType == 'cloud_storage') {
+			$storePathForDownload = $path;
+			$storage = $this->googleCloudStorage->storage();
+			$bucket = $storage->bucket($this->bucketName);
+			$objects = $bucket->objects([
+				'prefix' => 'default' . $storePathForDownload
+			]);
+			foreach ($objects as $object) {
+				$object->delete();
+			}
+		}
+	}
 
-        $storePath =  WRITEPATH . $_ENV['data_folder'] . '/' . $path;
-        $storePathForDownload = $path;
+	// ** support function
+	private function _handleUploadDirect($path, $listFile, $uploadByFileContent = false, $safeFileName = '', $compressImage = false)
+	{
+		$result = [];
+		$arrUploadFile = [];
+		$totalSize = 0;
+		$lastUploaded = [
+			'filename' => "",
+			'filename_origin' => "",
+			'size' => 0,
+			'url' => "",
+			'type' => ""
+		];
+		$storePath = WRITEPATH . $_ENV['data_folder'] . '/' . $path;
+		$storePathForDownload = $path;
 
-        if (!is_dir($storePath)) {
-            mkdir($storePath, 0777, true);
-        }
+		if (!is_dir($storePath)) {
+			mkdir($storePath, 0777, true);
+		}
 
-        if (!$uploadByFileContent) {
-            foreach ($listFile as $key => $files) {
-                if (empty($files)) continue;
-                if (!is_array($files)) $files = [$files];
-                foreach ($files as $position => $file) {
-                    $fileName = $safeFileName == '' ? safeFileName($file->getName()) : $safeFileName;
-                    try {
-                        validateFiles($file);
-                    } catch (\Exception $e) {
-                        $result['error_file'][] = [
-                            'name' => $fileName,
-                            'msg' => $e->getMessage()
-                        ];
-                        continue;
-                    }
+		if (!$uploadByFileContent) {
+			foreach ($listFile as $key => $files) {
+				if (empty($files)) continue;
+				if (!is_array($files)) $files = [$files];
+				foreach ($files as $position => $file) {
+					$fileName = $safeFileName == '' ? safeFileName($file->getName()) : $safeFileName;
+					try {
+						validateFiles($file);
+					} catch (\Exception $e) {
+						$result['error_file'][] = [
+							'name' => $fileName,
+							'msg' => $e->getMessage()
+						];
+						continue;
+					}
 
-                    if (!$file->isValid()) {
-                        $result['error_file'][] = [
-                            'name' => $fileName,
-                            'msg' => $file->getErrorString() . '(' . $file->getError() . ')'
-                        ];
-                        continue;
-                    }
+					if (!$file->isValid()) {
+						$result['error_file'][] = [
+							'name' => $fileName,
+							'msg' => $file->getErrorString() . '(' . $file->getError() . ')'
+						];
+						continue;
+					}
 
-                    if (!$file->hasmoved()) {
-                        $fileNameOrigin = $file->getName();
-                        $file->move($storePath, $fileName);
-                        $infoFileUpload = getFilesProps($storePathForDownload . $fileName);
-                        $fileSize = $infoFileUpload['size'];
+					if (!$file->hasmoved()) {
+						$extension = $file->guessExtension();
+						$fileNameOrigin = $file->getName();
+						if ($compressImage && in_array($extension, ['png', 'jpg'])) {
+							$extensionText = "." . $extension;
+							$currentFileName = substr($fileName, 0, strlen($extensionText) * -1);
+							$fileName = $currentFileName . "." . "wepb";
+							$image = \Config\Services::image();
 
-                        $arrUploadFile[] = [
-                            'filename' => $fileName,
-                            'filename_origin' => $fileNameOrigin,
-                            'size' => $fileSize,
-                            'url' => $storePathForDownload . $fileName,
-                            'type' => $infoFileUpload['type']
-                        ];
-                        $totalSize += $fileSize;
-                    }
-                }
-            }
-        } else {
-            foreach ($listFile as $file) {
-                $filename = $safeFileName == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $safeFileName;
-                $fileNameOrigin = isset($file['filename']) ? $file['filename'] : $file->getName();
-                $fileSize = isset($file['filesize']) ? $file['filesize'] : $file->getSize();
-                file_put_contents($storePath . $filename, $file['content']);
+							$image->withFile($file)->convert(IMAGETYPE_WEBP)->save($storePath . $fileName, 80);;
 
-                $arrFilename = explode(".", $filename);
+						} else {
+							$file->move($storePath, $fileName);
+						}
 
-                $arrUploadFile[] = [
-                    'filename' => $filename,
-                    'filename_origin' => $fileNameOrigin,
-                    'size' => $fileSize,
-                    'url' => $storePathForDownload . $filename,
-                    'type' => end($arrFilename)
-                ];
-                $totalSize += $fileSize;
-            }
-        }
 
-        $result['total_size'] = $totalSize;
-        $result['arr_upload_file'] = $arrUploadFile;
+						$infoFileUpload = getFilesProps($storePathForDownload . $fileName);
+						$fileSize = $infoFileUpload['size'];
+						$lastUploaded = [
+							'filename' => $fileName,
+							'filename_origin' => $fileNameOrigin,
+							'size' => $fileSize,
+							'url' => $storePathForDownload . $fileName,
+							'type' => $infoFileUpload['type']
+						];
+						$arrUploadFile[] = $lastUploaded;
+						$totalSize += $fileSize;
+					}
+				}
+			}
+		} else {
+			foreach ($listFile as $file) {
+				$filename = $safeFileName == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $safeFileName;
+				$fileNameOrigin = isset($file['filename']) ? $file['filename'] : $file->getName();
+				$fileSize = isset($file['filesize']) ? $file['filesize'] : $file->getSize();
+				file_put_contents($storePath . $filename, $file['content']);
 
-        return $result;
-    }
+				$arrFilename = explode(".", $filename);
+				$lastUploaded = [
+					'filename' => $filename,
+					'filename_origin' => $fileNameOrigin,
+					'size' => $fileSize,
+					'url' => $storePathForDownload . $filename,
+					'type' => end($arrFilename)
+				];
+				$arrUploadFile[] = $lastUploaded;
+				$totalSize += $fileSize;
+			}
+		}
 
-    private function _handleUploadCloudStorage($storePathForDownload, $listFile, $uploadByFileContent = false, $safeFileName = '')
-    {
-        $storage = $this->googleCloudStorage->storage();
-        $bucket = $storage->bucket($this->bucketName);
-        $arrUploadFile = [];
-        $totalSize = 0;
+		$result['total_size'] = $totalSize;
+		$result['arr_upload_file'] = $arrUploadFile;
+		$result['last_uploaded'] = $lastUploaded;
 
-        if (!$uploadByFileContent) {
-            foreach ($listFile as $key => $files) {
-                if (empty($files)) continue;
-                if (!is_array($files)) $files = [$files];
-                foreach ($files as $position => $file) {
-                    $filename = $safeFileName == '' ? safeFileName($file->getName()) : $safeFileName;
-                    try {
-                        validateFiles($file);
-                    } catch (\Exception $e) {
-                        $result['error_file'][] = [
-                            'name' => $filename,
-                            'msg' => $e->getMessage()
-                        ];
-                        continue;
-                    }
+		return $result;
+	}
 
-                    if (!$file->isValid()) {
-                        $result['error_file'][] = [
-                            'name' => $filename,
-                            'msg' => $file->getErrorString() . '(' . $file->getError() . ')'
-                        ];
-                        continue;
-                    }
+	private function _handleUploadCloudStorage($storePathForDownload, $listFile, $uploadByFileContent = false, $safeFileName = '')
+	{
+		$storage = $this->googleCloudStorage->storage();
+		$bucket = $storage->bucket($this->bucketName);
+		$arrUploadFile = [];
+		$totalSize = 0;
 
-                    $fileNameOrigin = $file->getName();
-                    $fileSize = $file->getSize();
-                    $fileUpload = fopen($file, 'r');
-                    $uploadPath = 'default' . $storePathForDownload . $filename;
-                    $object = $bucket->upload($fileUpload, [
-                        'name' => $uploadPath
-                    ]);
+		if (!$uploadByFileContent) {
+			foreach ($listFile as $key => $files) {
+				if (empty($files)) continue;
+				if (!is_array($files)) $files = [$files];
+				foreach ($files as $position => $file) {
+					$filename = $safeFileName == '' ? safeFileName($file->getName()) : $safeFileName;
+					try {
+						validateFiles($file);
+					} catch (\Exception $e) {
+						$result['error_file'][] = [
+							'name' => $filename,
+							'msg' => $e->getMessage()
+						];
+						continue;
+					}
 
-                    $arrFilename = explode(".", $filename);
+					if (!$file->isValid()) {
+						$result['error_file'][] = [
+							'name' => $filename,
+							'msg' => $file->getErrorString() . '(' . $file->getError() . ')'
+						];
+						continue;
+					}
 
-                    $arrUploadFile[] = [
-                        'filename' => $filename,
-                        'filename_origin' => $fileNameOrigin,
-                        'size' => $fileSize,
-                        'url' => $storePathForDownload . $filename,
-                        'type' => end($arrFilename)
-                    ];
-                    $totalSize += $fileSize;
-                }
-            }
-        } else {
-            foreach ($listFile as $file) {
-                $filename = $safeFileName == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $safeFileName;
-                $fileNameOrigin = isset($file['filename']) ? $file['filename'] : $file->getName();
-                $fileSize = isset($file['filesize']) ? $file['filesize'] : $file->getSize();
-                $fileUpload = $file['content'];
-                $uploadPath = 'default' . $storePathForDownload . $filename;
-                $bucket->upload($fileUpload, [
-                    'name' => $uploadPath
-                ]);
+					$fileNameOrigin = $file->getName();
+					$fileSize = $file->getSize();
+					$fileUpload = fopen($file, 'r');
+					$uploadPath = 'default' . $storePathForDownload . $filename;
+					$object = $bucket->upload($fileUpload, [
+						'name' => $uploadPath
+					]);
 
-                $arrFilename = explode(".", $filename);
+					$arrFilename = explode(".", $filename);
 
-                $arrUploadFile[] = [
-                    'filename' => $filename,
-                    'filename_origin' => $fileNameOrigin,
-                    'size' => $fileSize,
-                    'url' => $storePathForDownload . $filename,
-                    'type' => end($arrFilename)
-                ];
-                $totalSize += $fileSize;
-            }
-        }
+					$arrUploadFile[] = [
+						'filename' => $filename,
+						'filename_origin' => $fileNameOrigin,
+						'size' => $fileSize,
+						'url' => $storePathForDownload . $filename,
+						'type' => end($arrFilename)
+					];
+					$totalSize += $fileSize;
+				}
+			}
+		} else {
+			foreach ($listFile as $file) {
+				$filename = $safeFileName == '' ? (isset($file['filename']) ? safeFileName($file['filename']) : safeFileName($file->getName())) : $safeFileName;
+				$fileNameOrigin = isset($file['filename']) ? $file['filename'] : $file->getName();
+				$fileSize = isset($file['filesize']) ? $file['filesize'] : $file->getSize();
+				$fileUpload = $file['content'];
+				$uploadPath = 'default' . $storePathForDownload . $filename;
+				$bucket->upload($fileUpload, [
+					'name' => $uploadPath
+				]);
 
-        $result['total_size'] = $totalSize;
-        $result['arr_upload_file'] = $arrUploadFile;
+				$arrFilename = explode(".", $filename);
 
-        return $result;
-    }
+				$arrUploadFile[] = [
+					'filename' => $filename,
+					'filename_origin' => $fileNameOrigin,
+					'size' => $fileSize,
+					'url' => $storePathForDownload . $filename,
+					'type' => end($arrFilename)
+				];
+				$totalSize += $fileSize;
+			}
+		}
 
-    private function _downloadNestedFolder($path, $zipFile, $arrSubFolderName = [])
-    {
-        $zip = new ZipArchive();
-        if (!$zip->open($zipFile, ZIPARCHIVE::CREATE)) {
-            return false;
-        }
+		$result['total_size'] = $totalSize;
+		$result['arr_upload_file'] = $arrUploadFile;
 
-        try {
-            $source =  WRITEPATH . $_ENV['data_folder'] . str_replace('\\', '/', $path);
+		return $result;
+	}
 
-            if (is_dir($source) === true) {
-                $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+	private function _downloadNestedFolder($path, $zipFile, $arrSubFolderName = [])
+	{
+		$zip = new ZipArchive();
+		if (!$zip->open($zipFile, ZIPARCHIVE::CREATE)) {
+			return false;
+		}
 
-                // add nested directory file
-                foreach ($files as $file) {
-                    $file = str_replace('\\', '/', $file);
-                    if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..'))) {
-                        continue;
-                    }
+		try {
+			$source = WRITEPATH . $_ENV['data_folder'] . str_replace('\\', '/', $path);
 
-                    $arrFileDirectory = explode('/', $file);
-                    if (is_numeric(end($arrFileDirectory))) {
-                        continue;
-                    }
+			if (is_dir($source) === true) {
+				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
 
-                    if (is_dir($file) === true) {
-                        $realPath =  $file . '/';
-                        if ($dh = opendir($realPath)) {
-                            while (($pathContent = readdir($dh)) !== false) {
-                                if ($pathContent != '' && $pathContent != '.' && $pathContent != '..') {
-                                    if (is_file($realPath . $pathContent)) {
-                                        $savePath = $this->_getZipDirectory($arrFileDirectory, $arrSubFolderName);
-                                        $zip->addFile($realPath . $pathContent, $savePath . '/' . $pathContent);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+				// add nested directory file
+				foreach ($files as $file) {
+					$file = str_replace('\\', '/', $file);
+					if (in_array(substr($file, strrpos($file, '/') + 1), array('.', '..'))) {
+						continue;
+					}
 
-                // add current directory file
-                $arrFileDirectory = explode('/', $source);
-                if ($dh = opendir($source)) {
-                    while (($pathContent = readdir($dh)) !== false) {
-                        if ($pathContent != '' && $pathContent != '.' && $pathContent != '..') {
-                            if (is_file($source . $pathContent)) {
-                                $savePath = $this->_getZipDirectory($arrFileDirectory, $arrSubFolderName);
-                                $zip->addFile($source . $pathContent, $savePath . '/' . $pathContent);
-                            }
-                        }
-                    }
-                }
+					$arrFileDirectory = explode('/', $file);
+					if (is_numeric(end($arrFileDirectory))) {
+						continue;
+					}
 
-                $zip->close();
-                header('Cache-Control: public');
-                header('Content-Description: File Transfer');
-                header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
-                header("Content-Type: application/zip");
-                header("Content-Transfer-Encoding: Binary");
-                header("Content-Length: " . filesize($zipFile));
-                header("Content-Disposition: attachment; filename=\"" . basename($zipFile) . "\"");
-                readfile($zipFile);
-                unlink($zipFile);
-                exit();
-            }
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+					if (is_dir($file) === true) {
+						$realPath = $file . '/';
+						if ($dh = opendir($realPath)) {
+							while (($pathContent = readdir($dh)) !== false) {
+								if ($pathContent != '' && $pathContent != '.' && $pathContent != '..') {
+									if (is_file($realPath . $pathContent)) {
+										$savePath = $this->_getZipDirectory($arrFileDirectory, $arrSubFolderName);
+										$zip->addFile($realPath . $pathContent, $savePath . '/' . $pathContent);
+									}
+								}
+							}
+						}
+					}
+				}
 
-    private function _getZipDirectory($arrDirectory, $arrSubFolderName)
-    {
-        if (count($arrDirectory) === 0) {
-            return "";
-        }
+				// add current directory file
+				$arrFileDirectory = explode('/', $source);
+				if ($dh = opendir($source)) {
+					while (($pathContent = readdir($dh)) !== false) {
+						if ($pathContent != '' && $pathContent != '.' && $pathContent != '..') {
+							if (is_file($source . $pathContent)) {
+								$savePath = $this->_getZipDirectory($arrFileDirectory, $arrSubFolderName);
+								$zip->addFile($source . $pathContent, $savePath . '/' . $pathContent);
+							}
+						}
+					}
+				}
 
-        $arrDirectory = array_slice($arrDirectory, 3);
-        $arrDirectoryForSave = [];
-        foreach ($arrDirectory as $rowDirectory) {
-            if ($rowDirectory != 'data' && isset($arrSubFolderName[$rowDirectory])) {
-                $arrDirectoryForSave[] = $arrSubFolderName[$rowDirectory]['name'];
-            }
-        }
+				$zip->close();
+				header('Cache-Control: public');
+				header('Content-Description: File Transfer');
+				header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+				header("Content-Type: application/zip");
+				header("Content-Transfer-Encoding: Binary");
+				header("Content-Length: " . filesize($zipFile));
+				header("Content-Disposition: attachment; filename=\"" . basename($zipFile) . "\"");
+				readfile($zipFile);
+				unlink($zipFile);
+				exit();
+			}
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
 
-        return implode('/', $arrDirectoryForSave);
-    }
+	private function _getZipDirectory($arrDirectory, $arrSubFolderName)
+	{
+		if (count($arrDirectory) === 0) {
+			return "";
+		}
 
-    private function _downloadIndividualFolder($path, $zipFile)
-    {
-        $storePath = WRITEPATH . $_ENV['data_folder']  . $path;
-        $zip = new ZipArchive();
-        try {
-            if ($zip->open($zipFile, (ZipArchive::CREATE | ZipArchive::OVERWRITE))) {
-                if ($dh = opendir($storePath)) {
-                    while (($file = readdir($dh)) !== false) {
-                        if (($file != '' && $file != '.' && $file != '..')) {
-                            if (is_file($storePath . $file)) {
-                                $zip->addFile($storePath . $file, $file);
-                            }
-                        }
-                    }
-                    closedir($dh);
-                }
-            }
-            $zip->close();
-            header('Cache-Control: public');
-            header('Content-Description: File Transfer');
-            header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
-            header("Content-Type: application/zip");
-            header("Content-Transfer-Encoding: Binary");
-            header("Content-Length: " . filesize($zipFile));
-            header("Content-Disposition: attachment; filename=\"" . basename($zipFile) . "\"");
-            readfile($zipFile);
-            unlink($zipFile);
-            exit();
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+		$arrDirectory = array_slice($arrDirectory, 3);
+		$arrDirectoryForSave = [];
+		foreach ($arrDirectory as $rowDirectory) {
+			if ($rowDirectory != 'data' && isset($arrSubFolderName[$rowDirectory])) {
+				$arrDirectoryForSave[] = $arrSubFolderName[$rowDirectory]['name'];
+			}
+		}
+
+		return implode('/', $arrDirectoryForSave);
+	}
+
+	private function _downloadIndividualFolder($path, $zipFile)
+	{
+		$storePath = WRITEPATH . $_ENV['data_folder'] . $path;
+		$zip = new ZipArchive();
+		try {
+			if ($zip->open($zipFile, (ZipArchive::CREATE | ZipArchive::OVERWRITE))) {
+				if ($dh = opendir($storePath)) {
+					while (($file = readdir($dh)) !== false) {
+						if (($file != '' && $file != '.' && $file != '..')) {
+							if (is_file($storePath . $file)) {
+								$zip->addFile($storePath . $file, $file);
+							}
+						}
+					}
+					closedir($dh);
+				}
+			}
+			$zip->close();
+			header('Cache-Control: public');
+			header('Content-Description: File Transfer');
+			header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+			header("Content-Type: application/zip");
+			header("Content-Transfer-Encoding: Binary");
+			header("Content-Length: " . filesize($zipFile));
+			header("Content-Disposition: attachment; filename=\"" . basename($zipFile) . "\"");
+			readfile($zipFile);
+			unlink($zipFile);
+			exit();
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
 }
