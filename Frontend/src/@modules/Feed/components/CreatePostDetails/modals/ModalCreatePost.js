@@ -110,8 +110,7 @@ const ModalCreatePost = (props) => {
         content: content,
         workspace: workspace,
         privacy_type: state.privacy_type,
-        file: file,
-        __user: userId
+        file: file
       }
       feedApi
         .postSubmitPost({ body: JSON.stringify(params), fileInput: fileInput })
