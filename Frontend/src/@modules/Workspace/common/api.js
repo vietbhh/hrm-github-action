@@ -10,6 +10,6 @@ export const workspaceApi = {
   },
   async getList(params) {
     const strParams = object2QueryString(params)
-    return await axiosNodeApi.get(`/workspace/get-list-workspace?get${strParams}`)
+    return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
   }
 }

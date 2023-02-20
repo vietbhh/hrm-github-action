@@ -28,4 +28,36 @@ const getWorkspace = async (req, res, next) => {
   }
 }
 
-export { getWorkspace, saveWorkspace }
+const getListWorkspace = async (req, res, next) => {
+  const page = req.query.page === 1 ? 0 : req.query.page - 1
+  const limit = req.query.limit
+  const workspaceType = req.query.workspace_type
+  try {
+    const filter = {}
+    if (workspaceType === "joined") {
+      filter["members"] = parseInt(req.__user)
+    } else if (workspaceType === "managed") {
+      filter["administrators"] = parseInt(req.__user)
+    }
+
+    const workspace = await workspaceMongoModel
+      .find(filter)
+      .limit(limit)
+      .skip(limit * page)
+      .sort({
+        _id: "desc"
+      })
+
+    const totalWorkspace = await workspaceMongoModel
+      .find(filter)
+
+    return res.respond({
+      results: workspace,
+      total_page: Math.ceil(totalWorkspace.length / limit)
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+export { getWorkspace, saveWorkspace, getListWorkspace }
