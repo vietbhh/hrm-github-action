@@ -94,7 +94,7 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Navigation",
+    "admin_tools": "Admin tools",
     "tools": "Tools",
     "quick": "Quick",
     "notification": {
@@ -949,7 +949,8 @@
         "add": "Add notepad",
         "placeholder_input": "Notepad Title",
         "pin": "Pin",
-        "un_pin": "Un pin"
+        "un_pin": "Un pin",
+        "my_notes": "My notes"
       },
       "st_show_department": "Setting show department",
       "text": {
@@ -4376,6 +4377,28 @@
     "asset_status": {
       "fields": {
         "status_name": "Status Name"
+      }
+    },
+    "feed": {
+      "create_post": {
+        "text": {
+          "placeholder_input": "What are you thinking?",
+          "task": "Task",
+          "event": "Event",
+          "poll": "Poll",
+          "announcement": "Announcement",
+          "workspace": "Workspace",
+          "only_me": "Only me",
+          "choose_a_background_image": "Choose a background image",
+          "attach_photo_video": "Attach photo/video",
+          "tag_your_colleagues": "Tag your colleagues",
+          "poll_vote": "Poll vote",
+          "anonymous_q_and_a": "Anonymous Q&A",
+          "post": "Post",
+          "photo_video": "Photo/Video",
+          "add_photo_video": "Add Photo/Video",
+          "add_description": "Add description..."
+        }
       }
     },
     "workspace": {
