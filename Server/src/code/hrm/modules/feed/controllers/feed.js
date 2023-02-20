@@ -77,6 +77,7 @@ const submitPostController = async (req, res, next) => {
       body.file[0].type,
       storePath
     )
+    handleDeleteFile(body.file[0])
     await feedMongoModel.updateOne(
       { _id: _id_parent },
       { source: result.path_attachment, thumb: result.path }
@@ -101,10 +102,7 @@ const submitPostController = async (req, res, next) => {
             storePath
           )
 
-          fs.unlinkSync(path.join(localSavePath, value.path_attachment))
-          if (value.type.includes("video/")) {
-            fs.unlinkSync(path.join(localSavePath, value.path))
-          }
+          handleDeleteFile(value)
         }
 
         let type_feed = "image"
@@ -189,6 +187,19 @@ const handleUpFile = async (file, type, storePath, uploadType = null) => {
   }
 
   return result
+}
+
+const handleDeleteFile = (file) => {
+  if (fs.existsSync(path.join(localSavePath, file.path_attachment))) {
+    fs.unlinkSync(path.join(localSavePath, file.path_attachment))
+  }
+  if (file.type.includes("video/")) {
+    if (fs.existsSync(path.join(localSavePath, file.path))) {
+      fs.unlinkSync(path.join(localSavePath, file.path))
+    }
+  }
+
+  return true
 }
 
 export { getAllEmployee, uploadTempAttachmentController, submitPostController }
