@@ -549,4 +549,14 @@
       margin-right: 30px !important;
     }
   }
+
+  @include media-breakpoint-down(xl) {
+    .app-content {
+      .div-content {
+        .div-right {
+          display: none;
+        }
+      }
+    }
+  }
 }
