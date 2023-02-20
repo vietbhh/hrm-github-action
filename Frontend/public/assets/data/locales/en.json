@@ -4402,8 +4402,15 @@
       }
     },
     "workspace": {
+      "title": {
+        "work_space": "Work Space",
+        "workspace_you_have_joined": "Workspace you have joined",
+        "workspace_that_you_managed": "Workspace that you managed"
+      },
       "buttons": {
-        "create": "Create Workspace"
+        "create": "Create Workspace",
+        "view_all": "View All",
+        "load_more": "Load More"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4419,6 +4426,12 @@
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode"
+      },
+      "text": {
+        "members": "members",
+        "member": "member",
+        "empty_workspace": "No workspace found!",
+        "create_new_workspace": "Create new workspace"
       }
     }
   }
