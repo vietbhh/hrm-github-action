@@ -6,11 +6,6 @@ import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManage
 import WorkspaceJoined from "../components/detail/ListWorkSpace/WorkspaceJoined"
 
 const ListWorkspace = (props) => {
-  const {
-    // ** props
-    // ** methods
-  } = props
-
   // ** render
   return (
     <div className="pt-0 pe-4 ps-4 pb-1 list-workspace-page">
@@ -21,3 +16,4 @@ const ListWorkspace = (props) => {
 }
 
 export default ListWorkspace
+ 

@@ -1,3 +1,5 @@
+@import "@scss/friday";
+
 .workspace {
   max-width: 1148px;
   margin: auto;
@@ -11,6 +13,52 @@
     .workspaceName {
       color: black;
       font-weight: bold;
+    }
+  }
+}
+
+.list-workspace-page {
+  .workspace-container {
+    .work-space-title {
+      color: $primary-text-color;
+      font-size: 28px;
+    }
+
+    .workspace-item {
+      box-shadow: rgb(26 26 26 / 5%) 0px 1px 3px;
+      border-radius: 0.75rem !important;
+
+      .card-body {
+        .workspace-content {
+          position: relative;
+
+          .image img {
+            max-width: 100%;
+            object-fit: cover;
+            height: 180px;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+          }
+
+          .detail {
+            .name {
+              font-weight: 600;
+              color: $primary-text-color;
+            }
+          }
+        }
+
+        .workspace-button {
+          position: absolute;
+          width: 32px;
+          height: 32px;
+          background: rgb(255, 255, 255);
+          border-radius: 50%;
+          right: 12px;
+          top: 165px;
+          box-shadow: rgb(0 0 0 / 5%) 0px 4px 8px, rgb(0 0 0 / 5%) 0px 0px 1px;
+        }
+      }
     }
   }
 }

@@ -9,4 +9,6 @@ coreRouter.post("/test", testFn)
 coreRouter.post("/notification/send", sendNotificationController)
 coreRouter.post("/test3", testUpload)
 coreRouter.get("/download/file", downloadFile)
+
+coreRouter.get("/workspace/get-list-workspace", {})
 export default coreRouter

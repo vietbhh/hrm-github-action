@@ -4382,7 +4382,7 @@
       "title": {
         "work_space": "Work Space",
         "workspace_you_have_joined": "Workspace you have joined",
-        "workspace_that_you_manage": "Workspace that you manage_overtime"
+        "workspace_that_you_manage": "Workspace that you managed"
       },
       "buttons": {
         "create": "Create Workspace",
@@ -4404,7 +4404,7 @@
         "workspace_mode": "Workspace mode"
       },
       "text": {
-        "menbers": "members"
+        "members": "members"
       }
     }
   }
