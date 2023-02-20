@@ -35,6 +35,7 @@ const _localUpload = async (storePath, files) => {
     throw new Error("unable_to_find_backend_storage_path")
   }
   const savePath = path.join(localSavePath, storePath)
+  console.log("savePath , ", savePath)
   if (!fs.existsSync(savePath)) {
     fs.mkdirSync(savePath, { recursive: true })
   }
@@ -100,9 +101,11 @@ const _googleCloudUpload = async (storePath, files) => {
 
   const promises = []
   forEach(files, (file, key) => {
-    const newFile = {...file, buffer: file.data}
+    const newFile = { ...file, buffer: file.data }
     const fileName = safeFileName(newFile.name)
-    const filePath = path.join("default", storePath, fileName).replace(/\\/g, "/")
+    const filePath = path
+      .join("default", storePath, fileName)
+      .replace(/\\/g, "/")
 
     const promise = new Promise((resolve, reject) => {
       const blob = bucket.file(filePath)
@@ -129,7 +132,8 @@ const _googleCloudUpload = async (storePath, files) => {
             name: fileName,
             error: err
           })
-        }).end(newFile.buffer)
+        })
+        .end(newFile.buffer)
     })
 
     promises.push(promise)
@@ -160,4 +164,4 @@ const _uploadServices = async (storePath, files) => {
   }
 }
 
-export { _uploadServices }
+export { _uploadServices, _localUpload }

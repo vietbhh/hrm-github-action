@@ -1,5 +1,7 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import path from "path"
+import { _localUpload } from "#app/services/upload.js"
+import fs from "fs"
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
     name: req.body.workspace_name,
@@ -29,15 +31,46 @@ const getWorkspace = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+const decodeBase64Image = (dataString) => {
+  var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+    response = {}
+  if (matches.length !== 3) {
+    return new Error("Invalid input string")
+  }
+
+  response.type = matches[1]
+  response.data = new Buffer(matches[2], "base64")
+
+  return response
+}
 const saveCoverImage = async (req, res) => {
   const storePath = path.join("modules", "workspace")
-  console.log("req , req", req)
   console.log("storePath", storePath)
   const image = req.body.image
-  const split = image.split(",") // or whatever is appropriate here. this will work for the example given
-  const base64string = split[1]
-  const buffer = Buffer.from(base64string, "base64")
+  const base64Buffe = decodeBase64Image(image)
 
+  const type = base64Buffe.type
+
+  console.log("buffer", base64Buffe)
+  const paaaaaaaaaaat =
+    "E:/project/fridayOs-hrm/Backend/applications/default/writable/uploads/modules/workspace"
+
+  try {
+    fs.writeFileSync(paaaaaaaaaaat + "anhtesss.png", base64Buffe.data, "utf8")
+  } catch (err) {
+    console.error(err)
+  }
+
+  return
+  const resultUpload = await _localUpload(paaaaaaaaaaat, [
+    { data: base64Buffe.data, type: base64Buffe.type }
+  ])
+
+  return
+
+  console.log("resultUpload", resultUpload)
+
+  return
   const workspace = new workspaceMongoModel({
     cover_image: req.body?.cover_image
   })
