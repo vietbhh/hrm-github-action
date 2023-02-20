@@ -1,14 +1,17 @@
 import { useMergedState } from "@apps/utility/common"
 import { useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { Card, CardBody, TabContent, TabPane } from "reactstrap"
+import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    tabActive: 1
+    tabActive: 1,
+    detailWorkspace: {}
   })
-
+  const params = useParams()
   const tabToggle = (tab) => {
     if (state.tabActive !== tab) {
       setState({
@@ -45,6 +48,12 @@ const DetailWorkspace = () => {
   }
 
   useEffect(() => {
+    workspaceApi.getDetailWorkspace(params.id).then((res) => {
+      console.log("res", res.data)
+      setState({ detailWorkspace: res.data })
+    })
+  }, [])
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll)
 
     return () => window.removeEventListener("scroll", handleScroll)
@@ -52,7 +61,11 @@ const DetailWorkspace = () => {
 
   return (
     <div className="workspace">
-      <WorkspaceHeader tabActive={state.tabActive} tabToggle={tabToggle} />
+      <WorkspaceHeader
+        tabActive={state.tabActive}
+        data={state.detailWorkspace}
+        tabToggle={tabToggle}
+      />
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
           <TabPane tabId={1}>

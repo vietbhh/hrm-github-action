@@ -4,20 +4,23 @@ import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
+
 const WorkspaceHeader = (props) => {
-  const { tabActive, tabToggle } = props
+  const { tabActive, tabToggle, data } = props
   const [state, setState] = useMergedState({
     coverImage: defaultWorkspaceCover,
     inviteModal: false
   })
+  console.log("datadata", data)
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
   const saveCoverImage = (image) => {
     console.log("runnn")
     setState({ coverImage: image })
-    const data = { image: image, id: 1 }
-    workspaceApi.saveCoverImage(data).then((res) => {
+    const dataPost = { ...data, image: image, id: data?._id }
+    console.log("saveCoverImage dataa", dataPost)
+    workspaceApi.saveCoverImage(dataPost).then((res) => {
       console.log("resssss", res)
     })
   }
@@ -35,10 +38,11 @@ const WorkspaceHeader = (props) => {
       <CardBody className="pb-0">
         <div className="d-flex justify-content-between align-content-center">
           <div className="workspaceInformation">
-            <h2 className="workspaceName">Friday</h2>
+            <h2 className="workspaceName">{data?.name}</h2>
             <p>
-              <i className="fa-regular fa-earth-asia"></i> Public · 2 members ·
-              3 posts
+              <i className="fa-regular fa-earth-asia"></i> Public ·{" "}
+              {data?.members && data?.members.length} members ·{" "}
+              {data?.pinPosts && data?.pinPosts.length} posts
             </p>
           </div>
           <div className="workspaceAction">
@@ -99,7 +103,7 @@ const WorkspaceHeader = (props) => {
             </NavLink>
           </NavItem>
           <div className="ms-auto">
-            <Button color="sencondary">
+            <Button color="flat-secondary">
               <i className="fa-light fa-ellipsis"></i>
             </Button>
           </div>
