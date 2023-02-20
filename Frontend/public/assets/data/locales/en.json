@@ -94,7 +94,7 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Navigation",
+    "admin_tools": "Admin tools",
     "tools": "Tools",
     "quick": "Quick",
     "notification": {
@@ -510,7 +510,8 @@
     "view": "View",
     "edit": "Edit",
     "started": "Started",
-    "remove": "Remove"
+    "remove": "Remove",
+    "duplicate": "Duplicate"
   },
   "errors": {
     "common": {
@@ -669,7 +670,8 @@
       "qrCodeGenerator": "QRCode Generator",
       "inventories": "Inventory",
       "assetGroups": "Asset Groups",
-      "assetTypes": "Asset Types"
+      "assetTypes": "Asset Types",
+      "asset_brand": "Asset Brands"
     }
   },
   "settings": {
@@ -947,7 +949,8 @@
         "add": "Add notepad",
         "placeholder_input": "Notepad Title",
         "pin": "Pin",
-        "un_pin": "Un pin"
+        "un_pin": "Un pin",
+        "my_notes": "My notes"
       },
       "st_show_department": "Setting show department",
       "text": {
@@ -4170,7 +4173,8 @@
       },
       "buttons": {
         "new_asset": "New Asset",
-        "generate": "Generate",
+        "generate_qr_code": "Generate QR Code",
+        "generate_barcode": "Generate Barcode",
         "error": "Error",
         "edit": "Edit",
         "handover": "Handover",
@@ -4180,6 +4184,7 @@
         "detail": "Asset Detail",
         "new": "New Asset",
         "edit": "Asset Edit",
+        "duplicate": "Dulicate Asset",
         "update_stt": "Update Status"
       },
       "notification": {
@@ -4350,8 +4355,23 @@
       }
     },
     "asset_brands": {
+      "title": "Asset Brands",
       "fields": {
-        "brand_name": "Brand Name"
+        "brand_name": "Brand Name",
+        "description": "Description"
+      },
+      "buttons": {
+        "create": "Create Asset Type",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "action": "Action",
+        "new_asset_brand": "New Asset Brand",
+        "warning_delete": {
+          "title": "Are you sure?",
+          "content": "All deleted data cannot be recovered!"
+        }
       }
     },
     "asset_status": {
@@ -4359,9 +4379,38 @@
         "status_name": "Status Name"
       }
     },
+    "feed": {
+      "create_post": {
+        "text": {
+          "placeholder_input": "What are you thinking?",
+          "task": "Task",
+          "event": "Event",
+          "poll": "Poll",
+          "announcement": "Announcement",
+          "workspace": "Workspace",
+          "only_me": "Only me",
+          "choose_a_background_image": "Choose a background image",
+          "attach_photo_video": "Attach photo/video",
+          "tag_your_colleagues": "Tag your colleagues",
+          "poll_vote": "Poll vote",
+          "anonymous_q_and_a": "Anonymous Q&A",
+          "post": "Post",
+          "photo_video": "Photo/Video",
+          "add_photo_video": "Add Photo/Video",
+          "add_description": "Add description..."
+        }
+      }
+    },
     "workspace": {
+      "title": {
+        "work_space": "Work Space",
+        "workspace_you_have_joined": "Workspace you have joined",
+        "workspace_that_you_managed": "Workspace that you managed"
+      },
       "buttons": {
-        "create": "Create Workspace"
+        "create": "Create Workspace",
+        "view_all": "View All",
+        "load_more": "Load More"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4377,6 +4426,12 @@
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode"
+      },
+      "text": {
+        "members": "members",
+        "member": "member",
+        "empty_workspace": "No workspace found!",
+        "create_new_workspace": "Create new workspace"
       }
     }
   }

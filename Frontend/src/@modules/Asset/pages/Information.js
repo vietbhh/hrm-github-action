@@ -1,27 +1,29 @@
 import { ErpInput } from "@apps/components/common/ErpField"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import React, { Fragment, useContext, useEffect, useRef } from "react"
+import notification from "@apps/utility/notification"
+import React, { Fragment, useContext, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import BarcodeScanner from "react-qr-barcode-scanner"
 import { useSelector } from "react-redux"
 import { Navigate } from "react-router-dom"
 import {
   Button,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Col,
+  Modal,
+  ModalBody,
   Row
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
 import { assetApi } from "../common/api"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import AssetDetail from "../components/AssetDetail"
-import notification from "@apps/utility/notification"
 import AssetEditModal from "../components/modals/AssetEditModal"
-import AssetUpdateStatusModal from "../components/modals/AssetUpdateStatusModal"
-import AssetHandoverModal from "../components/modals/AssetHandoverModal"
 import AssetErrorModal from "../components/modals/AssetErrorModal"
+import AssetHandoverModal from "../components/modals/AssetHandoverModal"
+import AssetUpdateStatusModal from "../components/modals/AssetUpdateStatusModal"
 
 const Information = (props) => {
   const inputElement = useRef()
@@ -34,9 +36,20 @@ const Information = (props) => {
     assetErrorModal: false,
     assetEditModal: false,
     assetUpdateSTTModal: false,
-    assetHandoverModal: false
+    assetHandoverModal: false,
+    scanModal: false
   })
-
+  const [stopStream, setStopStream] = useState(false)
+  const closeScanModal = () => {
+    setState({
+      scanModal: false
+    })
+  }
+  const dismissQrReader = () => {
+    // Stop the QR Reader stream (fixes issue where the browser freezes when closing the modal) and then dismiss the modal one tick later
+    setStopStream(true)
+    setTimeout(() => closeScanModal(), 0)
+  }
   const moduleData = useSelector((state) => state.app.modules.asset_lists)
   const module = moduleData.config
   const ability = useContext(AbilityContext)
@@ -143,6 +156,15 @@ const Information = (props) => {
       loadDetail(values.code)
     }
   }
+  const onQrScan = (err, result) => {
+    if (result?.text) {
+      setValue("code", result?.text)
+      onSubmitFrm({
+        code: result?.text
+      })
+      dismissQrReader()
+    }
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -183,7 +205,12 @@ const Information = (props) => {
                   </Row>
                 </form>
               </FormProvider>
-
+              <Button
+                className="btn btn-success"
+                onClick={() => setState({ scanModal: true })}>
+                Scan QRCode
+              </Button>
+              <hr />
               <Row>
                 <Col sm={6}>
                   <Button
@@ -293,6 +320,20 @@ const Information = (props) => {
         handleDetail={handleError}
         loadData={() => loadDetail(state.barcode)}
       />
+
+      <Modal
+        isOpen={state.scanModal}
+        toggle={dismissQrReader}
+        className="modal-yt-tool modal-inventory-detail"
+        modalTransition={{ timeout: 100 }}
+        backdropTransition={{ timeout: 100 }}>
+        <ModalBody>
+          <BarcodeScanner
+            onUpdate={onQrScan}
+            stopStream={stopStream}
+          />
+        </ModalBody>
+      </Modal>
     </Fragment>
   )
 }

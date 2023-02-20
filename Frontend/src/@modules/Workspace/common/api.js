@@ -1,5 +1,5 @@
 import { axiosNodeApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
+import { object2QueryString, serialize } from "@apps/utility/handleData"
 
 export const workspaceApi = {
   async save(data) {
@@ -13,5 +13,9 @@ export const workspaceApi = {
       "/workspace/save-cover-image",
       serialize(_.cloneDeep(data))
     )
+  },
+  async getList(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
   }
 }

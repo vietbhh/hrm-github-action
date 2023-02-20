@@ -131,6 +131,32 @@ export const assetApi = {
     return await axiosApi.get("/asset/export-excel?" + stringFilters, {
       responseType: "blob"
     })
+  },
+
+  // ** asset brand api
+  async createAssetBrand(data) {
+    return await axiosApi.post(
+      "asset-brand/create",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async getDataAssetBrand(params) {
+    const strParam = object2QueryString(params)
+    return await axiosApi.get(
+      `asset-brand/get-data-asset-brand?get${strParam}`,
+      {
+        disableLoading: true
+      }
+    )
+  },
+  async updateAssetBrand(id, data) {
+    return await axiosApi.post(
+      `asset-brand/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async deleteAssetBrand(id) {
+    return await axiosApi.post(`asset-brand/delete/${id}`)
   }
 }
 

@@ -42,7 +42,8 @@ const workspaceSchema = baseSchema("m_workspace", {
         }
       }
     ],
-    default: []
+    default: [],
+    cover_image: String
   }
 })
 

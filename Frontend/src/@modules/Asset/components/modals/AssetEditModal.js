@@ -27,7 +27,14 @@ import {
 } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
 const AssetEditModal = (props) => {
-  const { modal, options, dataDetail, handleDetail, loadData } = props
+  const {
+    modal,
+    isDuplicateAsset,
+    options,
+    dataDetail,
+    handleDetail,
+    loadData
+  } = props
   const ability = useContext(AbilityContext)
   const [state, setState] = useMergedState({
     readOnly: true,
@@ -51,8 +58,8 @@ const AssetEditModal = (props) => {
     setState({ saving: true })
     if (dataDetail.id) {
       values.id = dataDetail.id
+      values.is_duplicate = isDuplicateAsset
     }
-
     assetApi.addAsset(values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
@@ -86,7 +93,9 @@ const AssetEditModal = (props) => {
           </span>{" "}
           <span className="ms-50">
             {dataDetail?.id
-              ? useFormatMessage("modules.asset_lists.title.edit")
+              ? isDuplicateAsset
+                ? useFormatMessage("modules.asset_lists.title.duplicate")
+                : useFormatMessage("modules.asset_lists.title.edit")
               : useFormatMessage("modules.asset_lists.title.new")}
           </span>
         </ModalHeader>
@@ -96,13 +105,14 @@ const AssetEditModal = (props) => {
               <div className="div-tab-content">
                 <FormProvider {...methods}>
                   <Row>
-                    {!dataDetail?.id && (
+                    {(!dataDetail?.id || isDuplicateAsset) && (
                       <Col lg={6}>
                         <ErpUserSelect
                           label="Owner"
                           name="owner"
                           required
-                          readOnly={dataDetail?.id}
+                          readOnly={dataDetail?.id && !isDuplicateAsset}
+                          defaultValue={dataDetail?.id && isDuplicateAsset ? dataDetail?.owner : ""}
                           useForm={methods}
                         />
                       </Col>
@@ -119,6 +129,7 @@ const AssetEditModal = (props) => {
                         const options = optionsArr
                         const fieldAuth = { ...field }
                         const nameField = field.field
+                        let updateDataValue = ""
                         if (
                           (nameField === "asset_code" ||
                             nameField === "asset_status") &&
@@ -138,9 +149,17 @@ const AssetEditModal = (props) => {
                         if (nameField === "date_created" && !dataDetail?.id) {
                           fieldAuth.field_default_value = moment()
                         }
-                        if (nameField === "date_created" && dataDetail?.id) {
+                        if (nameField === "date_created" && (dataDetail?.id && !isDuplicateAsset)) {
                           fieldAuth.field_readonly = true
                           return ""
+                        }
+                        if (
+                          nameField === "recent_image" &&
+                          isDuplicateAsset === true
+                        ) {
+                          updateDataValue = {}
+                        } else {
+                          updateDataValue = dataDetail?.[field.field]
                         }
 
                         const fieldProps = {
@@ -160,14 +179,14 @@ const AssetEditModal = (props) => {
                                 label={useFormatMessage(
                                   "modules.asset_lists.fields." + field.field
                                 )}
-                                updateData={dataDetail?.[field.field]}
+                                updateData={updateDataValue}
                                 {...fieldProps}
                               />
                             </Fragment>
                           </Col>
                         )
                       })}
-                    {dataDetail?.id && (
+                    {(dataDetail?.id && !isDuplicateAsset) && (
                       <Col sm={12}>
                         <Alert color="warning">
                           {" "}
