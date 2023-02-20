@@ -168,10 +168,6 @@ const TableAssetList = (props) => {
     }
   }, [page])
 
-  useEffect(() => {
-    console.log(listAssetPaginate)
-  }, [listAssetPaginate])
-
   // ** render
   const AssetNameCell = useCallback(
     (props) => {
@@ -179,26 +175,14 @@ const TableAssetList = (props) => {
       return (
         <Cell {...props}>
           <div className="d-flex justify-content-left align-items-center text-dark">
-            <Photo
-              src={
-                !_.isEmpty(rowData.recent_image) && rowData.recent_image?.url
-              }
-              width="60px"
-              className="rounded"
-            />
-
             <div className="d-flex flex-column cursor ms-1">
               <p className="text-truncate mb-0">
-                <span className="font-weight-bold name-asset-table">
+                <span className="font-weight-bold">
                   {rowData?.asset_type?.label}
                 </span>
                 <br />
                 <span className="font-weight-bold name-asset-table">
                   {rowData?.asset_code}
-                </span>
-                <br />
-                <span className="font-weight-bold name-asset-table">
-                  {rowData?.asset_group_code}
                 </span>
               </p>
             </div>
@@ -279,12 +263,6 @@ const TableAssetList = (props) => {
             {useFormatMessage("modules.asset_lists.fields.asset_descriptions")}
           </HeaderCell>
           <Cell dataKey="asset_descriptions" />
-        </Column>
-        <Column width={130} align="left" fixed verticalAlign="middle">
-          <HeaderCell>
-            {useFormatMessage("modules.asset_brands.fields.brand_name")}
-          </HeaderCell>
-          <Cell dataKey="brand_name" />
         </Column>
 
         <Column width={100} align="left" fixed verticalAlign="middle">
