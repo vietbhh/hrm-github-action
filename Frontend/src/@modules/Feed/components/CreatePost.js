@@ -6,7 +6,6 @@ import {
 } from "@apps/utility/common"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { feedApi } from "../common/api"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
@@ -265,6 +264,7 @@ const CreatePost = (props) => {
       <ModalCreatePost
         modal={state.modalCreatePost}
         toggleModal={toggleModalCreatePost}
+        setModal={(value) => setState({ modalCreatePost: value })}
         avatar={avatar}
         fullName={fullName}
         dataMention={state.dataMention}

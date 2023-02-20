@@ -3,11 +3,12 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
+import { decodeHTMLEntities } from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import { useMemo, useState } from "react"
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap"
+import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
 import { feedApi } from "../../../common/api"
 import AttachPhotoVideo from "../AttachPhotoVideo"
 import EditorComponent from "../EditorComponent"
@@ -23,30 +24,17 @@ const ModalCreatePost = (props) => {
     privacy_type = "workspace",
     dataMention,
     workspace,
-    userId
+    userId,
+    setModal
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
-    loadingUploadAttachment: false
+    loadingUploadAttachment: false,
+    loadingSubmit: false
   })
   const [file, setFile] = useState([])
-
-  const submitPost = () => {
-    const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
-    const content = draftToHtml(editorStateRaw)
-    const params = {
-      content: content,
-      workspace: workspace,
-      privacy_type: state.privacy_type,
-      file: file,
-      __user: userId
-    }
-    feedApi
-      .postSubmitPost(params)
-      .then((res) => {})
-      .catch((err) => {})
-  }
+  const [fileInput, setFileInput] = useState([])
 
   // ** function
   const setLoadingUploadAttachment = (value) =>
@@ -81,6 +69,70 @@ const ModalCreatePost = (props) => {
     const newEditorState = insertCharacter(characterToInsert, state.editorState)
     setState({ editorState: newEditorState })
   }
+  const setEmptyEditorState = () => {
+    const emptyEditorState = EditorState.moveFocusToEnd(
+      EditorState.createEmpty()
+    )
+    setState({ editorState: emptyEditorState })
+  }
+
+  // submit
+  const handleCheckContentBeforeSubmit = () => {
+    const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+    let html = draftToHtml(editorStateRaw)
+    html = decodeHTMLEntities(html)
+    let check_content = false
+    if (html.trim().length) {
+      check_content = true
+    }
+
+    let check_can_submit = false
+    if (check_content === true || !_.isEmpty(file)) {
+      check_can_submit = true
+    }
+
+    return check_can_submit
+  }
+  const setEmptyAfterSubmit = () => {
+    setEmptyEditorState()
+    setModal(false)
+    setState({ loadingSubmit: false })
+    setFile([])
+    setFileInput([])
+  }
+  const submitPost = () => {
+    const check_can_submit = handleCheckContentBeforeSubmit()
+    if (check_can_submit) {
+      setState({ loadingSubmit: true })
+      const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+      const content = draftToHtml(editorStateRaw)
+      const params = {
+        content: content,
+        workspace: workspace,
+        privacy_type: state.privacy_type,
+        file: file,
+        __user: userId
+      }
+      feedApi
+        .postSubmitPost({ body: JSON.stringify(params), fileInput: fileInput })
+        .then((res) => {
+          setEmptyAfterSubmit()
+          notification.showSuccess({
+            text: useFormatMessage("notification.success")
+          })
+        })
+        .catch((err) => {
+          setState({ loadingSubmit: false })
+          notification.showError({
+            text: useFormatMessage("notification.something_went_wrong")
+          })
+        })
+    } else {
+      notification.showError({
+        text: useFormatMessage("notification.something_went_wrong")
+      })
+    }
+  }
 
   // ** attachment
   const handleAddAttachment = (attachment) => {
@@ -107,6 +159,7 @@ const ModalCreatePost = (props) => {
           arrFile.push(newFile)
           arrType.push(value.type)
         })
+        setFileInput([...fileInput, ...arrFile])
         const params = { file: arrFile, type: arrType }
         feedApi
           .postUploadAttachment(params)
@@ -219,9 +272,11 @@ const ModalCreatePost = (props) => {
         setFile={setFile}
         handleAddAttachment={handleAddAttachment}
         loadingUploadAttachment={state.loadingUploadAttachment}
+        fileInput={fileInput}
+        setFileInput={setFileInput}
       />
     ),
-    [file, state.loadingUploadAttachment]
+    [file, state.loadingUploadAttachment, fileInput]
   )
 
   return (
@@ -347,7 +402,9 @@ const ModalCreatePost = (props) => {
           color="primary"
           type="button"
           className="btn-post"
-          onClick={() => submitPost()}>
+          onClick={() => submitPost()}
+          disabled={state.loadingSubmit}>
+          {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
           {useFormatMessage("modules.feed.create_post.text.post")}
         </Button.Ripple>
       </ModalBody>

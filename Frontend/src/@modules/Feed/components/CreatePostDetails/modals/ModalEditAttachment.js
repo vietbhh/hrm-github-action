@@ -1,8 +1,8 @@
 import { useFormatMessage } from "@apps/utility/common"
-import { Label, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
-import SortableList, { SortableItem } from "react-easy-sort"
 import arrayMove from "array-move"
 import classNames from "classnames"
+import SortableList, { SortableItem } from "react-easy-sort"
+import { Label, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
 
 const ModalEditAttachment = (props) => {
   const {
@@ -12,7 +12,9 @@ const ModalEditAttachment = (props) => {
     setFile,
     handleAddAttachment,
     loadingUploadAttachment,
-    renderIconVideo
+    renderIconVideo,
+    fileInput,
+    setFileInput
   } = props
 
   // ** function
@@ -89,6 +91,13 @@ const ModalEditAttachment = (props) => {
                           const _file = [...file]
                           _file.splice(index, 1)
                           setFile(_file)
+
+                          const _fileInput = [...fileInput]
+                          const indexFile = _fileInput.findIndex(
+                            (item) => item.name === value.name
+                          )
+                          _fileInput.splice(indexFile, 1)
+                          setFileInput(_fileInput)
                         }}>
                         <svg
                           width="32"

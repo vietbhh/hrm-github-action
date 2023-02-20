@@ -3,12 +3,12 @@ import { localSavePath, _uploadServices } from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
+import fs from "fs"
 import { forEach } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
-import fs from "fs"
 
 const getAllEmployee = async (req, res, next) => {
   const dataUser = await getUserActivated()
@@ -24,29 +24,7 @@ const uploadTempAttachmentController = async (req, res, next) => {
   forEach(file, (value, index) => {
     const type = body[index.replace("file", "type")]
     const promise = new Promise(async (resolve, reject) => {
-      const resultUpload = await _uploadServices(storePath, [value], "direct")
-      let result = {
-        ...resultUpload.uploadSuccess[0],
-        path_attachment: resultUpload.uploadSuccess[0].path,
-        type: type,
-        description: "",
-        name_path: resultUpload.uploadSuccess[0].name
-      }
-
-      if (type.includes("video/")) {
-        await takeOneFrameOfVid(
-          path.join(localSavePath, resultUpload.uploadSuccess[0].path),
-          path.join(storePath, "video_" + value.name.split(".")[0] + ".jpg")
-        )
-          .then((res) => {
-            result = {
-              ...result,
-              path: res.path,
-              name_path: "video_" + value.name.split(".")[0] + ".jpg"
-            }
-          })
-          .catch((err) => {})
-      }
+      const result = await handleUpFile(value, type, storePath, "direct")
       resolve("success")
       arrResult.push(result)
     })
@@ -60,9 +38,8 @@ const uploadTempAttachmentController = async (req, res, next) => {
 
 const submitPostController = async (req, res, next) => {
   const storePath = path.join("modules", "feed")
-  console.log(req.body)
-  console.log(req.body.file.length)
-  const body = req.body
+  const fileInput = req.files
+  const body = JSON.parse(req.body.body)
   const workspace_type =
     body.workspace.length === 0 && body.privacy_type === "workspace"
       ? "default"
@@ -76,7 +53,8 @@ const submitPostController = async (req, res, next) => {
       type_feed_parent = "video"
     }
   }
-  const feedModel = new feedMongoModel({
+
+  const feedModelParent = new feedMongoModel({
     __user: req.__user,
     workspace: {
       ids: body.workspace,
@@ -84,39 +62,85 @@ const submitPostController = async (req, res, next) => {
     },
     content: body.content,
     type: type_feed_parent,
-    ref: null,
+    medias: [],
     source: null,
-    medias: []
+    thumb: null,
+    ref: null
   })
+  const saveFeedParent = await feedModelParent.save()
+  const _id_parent = saveFeedParent._id
 
   // ** check file 1 image/video
   if (body.file.length === 1) {
-    const pathAttachmentOld = path.join(
-      localSavePath,
-      body.file[0].path_attachment
+    const result = await handleUpFile(
+      fileInput["fileInput[0]"],
+      body.file[0].type,
+      storePath
     )
-    const pathAttachmentNew = path.join(
-      localSavePath,
-      storePath,
-      body.file[0].name
+    await feedMongoModel.updateOne(
+      { _id: _id_parent },
+      { source: result.path_attachment, thumb: result.path }
     )
-    const pathThumbOld = path.join(localSavePath, body.file[0].path)
-    const pathThumbNew = path.join(
-      localSavePath,
-      storePath,
-      body.file[0].name_path
-    )
-
-    /* const buffer = fs.readFileSync(pathAttachmentOld)
-    const blob = new Buffer(buffer)
-    const resultUpload = await _uploadServices(storePath, [blob])
-    console.log(resultUpload) */
   } else {
-  }
+    const arr_id_child = []
+    const promises = []
 
-  return res.respond("success")
-  const saveFeedParent = await feedModel.save()
-  console.log(saveFeedParent)
+    forEach(body.file, (value) => {
+      const promise = new Promise(async (resolve, reject) => {
+        let _fileInput = null
+        forEach(fileInput, (item) => {
+          if (item.name === value.name_original) {
+            _fileInput = item
+          }
+        })
+        let resultFileInput = {}
+        if (_fileInput) {
+          resultFileInput = await handleUpFile(
+            _fileInput,
+            value.type,
+            storePath
+          )
+
+          fs.unlinkSync(path.join(localSavePath, value.path_attachment))
+          if (value.type.includes("video/")) {
+            fs.unlinkSync(path.join(localSavePath, value.path))
+          }
+        }
+
+        let type_feed = "image"
+        if (value.type.includes("video/")) {
+          type_feed = "video"
+        }
+        const feedModelChild = new feedMongoModel({
+          __user: req.__user,
+          workspace: {
+            ids: body.workspace,
+            permission: workspace_type
+          },
+          content: value.description,
+          type: type_feed,
+          source: resultFileInput.path_attachment,
+          thumb: resultFileInput.path,
+          ref: _id_parent
+        })
+        const saveFeedChild = await feedModelChild.save()
+        arr_id_child.push({
+          _id: saveFeedChild._id,
+          type: saveFeedChild.type,
+          source: saveFeedChild.source,
+          thumb: saveFeedChild.thumb
+        })
+        resolve("success")
+      })
+      promises.push(promise)
+    })
+    Promise.all(promises).then(async () => {
+      await feedMongoModel.updateOne(
+        { _id: _id_parent },
+        { medias: arr_id_child }
+      )
+    })
+  }
 
   return res.respond("success")
 }
@@ -138,6 +162,33 @@ const takeOneFrameOfVid = (dir, storePath) => {
       })
       .run()
   })
+}
+
+const handleUpFile = async (file, type, storePath, uploadType = null) => {
+  const resultUpload = await _uploadServices(storePath, [file], uploadType)
+  let result = {
+    ...resultUpload.uploadSuccess[0],
+    path_attachment: resultUpload.uploadSuccess[0].path,
+    type: type,
+    description: "",
+    name_original: file.name
+  }
+
+  if (type.includes("video/")) {
+    await takeOneFrameOfVid(
+      path.join(localSavePath, resultUpload.uploadSuccess[0].path),
+      path.join(storePath, "video_" + file.name.split(".")[0] + ".jpg")
+    )
+      .then((res) => {
+        result = {
+          ...result,
+          path: res.path
+        }
+      })
+      .catch((err) => {})
+  }
+
+  return result
 }
 
 export { getAllEmployee, uploadTempAttachmentController, submitPostController }
