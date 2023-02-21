@@ -48,15 +48,23 @@ const saveCoverImage = async (req, res) => {
   console.log("storePath", storePath)
   const image = req.body.image
   const base64Buffe = decodeBase64Image(image)
-
+  const imageBinary = base64Buffe.data.toString("binary")
   const type = base64Buffe.type
 
-  console.log("buffer", base64Buffe)
-  const paaaaaaaaaaat =
-    "E:/project/fridayOs-hrm/Backend/applications/default/writable/uploads/modules/workspace"
-
+  const paaaaaaaaaaat = "modules/workspace/" + req.body._id
+  const saveImg = _localUpload(paaaaaaaaaaat, [
+    { name: "cover-image.png", ...imageBinary }
+  ])
+  console.log("saveImg", saveImg)
+  return
+  const paaaaaaaaaaatxxx =
+    "E:/project/fridayOs-hrm/Backend/applications/default/writable/uploads/modules/workspace/idtest"
   try {
-    fs.writeFileSync(paaaaaaaaaaat + "anhtesss.png", base64Buffe.data, "utf8")
+    fs.writeFileSync(
+      paaaaaaaaaaat + "/" + req.body._id + "/anhtesss.png",
+      base64Buffe.data,
+      "utf8"
+    )
   } catch (err) {
     console.error(err)
   }

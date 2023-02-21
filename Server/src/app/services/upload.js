@@ -45,6 +45,7 @@ const _localUpload = async (storePath, files) => {
   forEach(files, (file, key) => {
     const fileName = safeFileName(file.name)
     const filePath = path.join(savePath, fileName)
+    console.log("filePath", filePath)
     promises.push(
       new Promise((resolve, reject) => {
         file.mv(filePath, (err) => {
