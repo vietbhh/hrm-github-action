@@ -17,5 +17,11 @@ export const workspaceApi = {
   async getList(params) {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
+  },
+  async update(id, data) {
+    return await axiosNodeApi.post(
+      `/workspace/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

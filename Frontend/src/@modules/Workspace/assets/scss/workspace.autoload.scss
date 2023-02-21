@@ -38,6 +38,14 @@
       .card {
         border-radius: 14px;
       }
+
+      .introduction-container {
+        .add-introduction-description {
+          font-size: 0.75rem;
+          font-weight: 500;
+          color: rgb(179, 179, 179);
+        }
+      }
     }
   }
 }

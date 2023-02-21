@@ -53,8 +53,7 @@ const getListWorkspace = async (req, res, next) => {
         _id: "desc"
       })
 
-    const totalWorkspace = await workspaceMongoModel
-      .find(filter)
+    const totalWorkspace = await workspaceMongoModel.find(filter)
 
     return res.respond({
       results: workspace,
@@ -65,4 +64,28 @@ const getListWorkspace = async (req, res, next) => {
   }
 }
 
-export { getWorkspace, saveWorkspace, getListWorkspace, saveCoverImage }
+const updateWorkspace = async (req, res, next) => {
+  const workspaceId = req.params.id
+  
+  try {
+    const workspace = await workspaceMongoModel.findOneAndUpdate(
+      {
+        _id: workspaceId
+      },
+      {
+        introduction: req.body.introduction
+      }
+    )
+    return res.respond(workspace)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+export {
+  getWorkspace,
+  saveWorkspace,
+  getListWorkspace,
+  saveCoverImage,
+  updateWorkspace
+}

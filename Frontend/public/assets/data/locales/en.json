@@ -4410,7 +4410,11 @@
       "buttons": {
         "create": "Create Workspace",
         "view_all": "View All",
-        "load_more": "Load More"
+        "load_more": "Load More",
+        "add_description": "Add description",
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4419,6 +4423,7 @@
         "feed": "Feed",
         "pinned": "Pinned",
         "introduction": "Introduction",
+        "group_rules": "Group rules",
         "member": "Member",
         "media": "Media"
       },
@@ -4431,7 +4436,8 @@
         "members": "members",
         "member": "member",
         "empty_workspace": "No workspace found!",
-        "create_new_workspace": "Create new workspace"
+        "create_new_workspace": "Create new workspace",
+        "add_introduction_description": "Please add description to help people learn more about your group!"
       }
     }
   }

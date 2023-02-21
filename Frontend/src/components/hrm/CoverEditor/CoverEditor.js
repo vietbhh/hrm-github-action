@@ -2,24 +2,17 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import cameraBtn from "@src/assets/images/erp/icons/camera.svg"
-<<<<<<< HEAD
 import noAvatar from "@src/assets/images/erp/noavt.png"
-=======
-import { Image } from "antd"
->>>>>>> d42ea47fcf9c0079ad956d063a1f74b17f129c8c
 import classNames from "classnames"
 import { isEmpty } from "lodash-es"
 import { Fragment, useEffect, useRef } from "react"
 import AvatarEditor from "react-avatar-editor"
 import ContentLoader from "react-content-loader"
 import defaultWorkspaceCover from "./assets/images/default_workspace_cover.webp"
-<<<<<<< HEAD
 
 import { Button } from "reactstrap"
 import { Dropdown, Space, Image } from "antd"
-=======
 import "./assets/scss/cover.scss"
->>>>>>> d42ea47fcf9c0079ad956d063a1f74b17f129c8c
 const CoverEditor = (props) => {
   const [state, setState] = useMergedState({
     photoPreview: defaultWorkspaceCover,
@@ -160,7 +153,7 @@ const CoverEditor = (props) => {
             </Button>
           </div>
         )}
-      </div>
+      </Fragment>
     )
 }
 
