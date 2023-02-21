@@ -1,8 +1,8 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import notification from "@apps/utility/notification"
-import React from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import React, { useEffect, useRef } from "react"
+import { FormProvider, set, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import {
   Button,
@@ -15,12 +15,16 @@ import {
   Spinner
 } from "reactstrap"
 import { Radio, Space, Tabs } from "antd"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
+import "react-perfect-scrollbar/dist/css/styles.css"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import Avatar from "@apps/modules/download/pages/Avatar"
+import { ErpCheckbox, ErpInput } from "@apps/components/common/ErpField"
 const InviteWorkspaceModal = (props) => {
   const {
     idCandidate,
     modal,
     handleModal,
-    loadData,
     options,
     typeCoppy,
     dataDetail,
@@ -28,7 +32,13 @@ const InviteWorkspaceModal = (props) => {
   } = props
   const [state, setState] = useMergedState({
     loading: false,
-    filesend: { cv: null, candidate_avatar: "" }
+    page: 1,
+    search: "",
+    members: [],
+    departments: [],
+    jobTitles: [],
+    recordsTotal: [],
+    perPage: 10
   })
 
   const arrFields = useSelector(
@@ -94,13 +104,20 @@ const InviteWorkspaceModal = (props) => {
   })
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
-  const fieldJob = {
-    module: "candidates",
-    fieldData: {
-      ...arrFields.recruitment_proposal
-    },
-    useForm: methods,
-    options
+  const renderMember = (data = []) => {
+    return data.map((item) => {
+      return (
+        <Col sm={12} key={item.id}>
+          <div className="box-member d-flex">
+            <Avatar src={item.avatar} className="me-50" />
+            <div className="title">{item.full_name}</div>
+            <div className="ms-auto">
+              <ErpCheckbox />
+            </div>
+          </div>
+        </Col>
+      )
+    })
   }
   const itemTab = () => {
     const arr = [
@@ -115,8 +132,26 @@ const InviteWorkspaceModal = (props) => {
         children: (
           <div className="d-flex ">
             <div className="content-select">
-              <span className="title-tab-content">List member</span>
+              <div className="title-tab-content mb-1">List member</div>
+              <Row>
+                <Col>
+                  <ErpInput
+                    nolabel
+                    prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                    onChange={(e) => handleFilterText(e.target.value)}
+                  />
+                </Col>
+              </Row>
+              <PerfectScrollbar
+                onYReachEnd={() => endScrollLoad()}
+                style={{
+                  maxHeight: "400px",
+                  minHeight: "50px"
+                }}>
+                <Row className="w-100">{renderMember(state.members)}</Row>
+              </PerfectScrollbar>
             </div>
+
             <div className="content-selected">
               <span className="title-tab-content">List selected</span>
             </div>
@@ -126,8 +161,8 @@ const InviteWorkspaceModal = (props) => {
       {
         label: (
           <div className="text-center">
-            <i class="fa-solid fa-user-group"></i>
-            <p>Deoartment</p>
+            <i className="fa-duotone fa-sitemap"></i>
+            <p>Department</p>
           </div>
         ),
         key: 2,
@@ -136,7 +171,7 @@ const InviteWorkspaceModal = (props) => {
       {
         label: (
           <div className="text-center">
-            <i class="fa-light fa-briefcase"></i>
+            <i className="fa-light fa-briefcase"></i>
             <p>Job title</p>
           </div>
         ),
@@ -145,7 +180,7 @@ const InviteWorkspaceModal = (props) => {
       {
         label: (
           <div className="text-center">
-            <i class="fa-light fa-file-excel"></i>
+            <i className="fa-light fa-file-excel"></i>
             <p>Excel</p>
           </div>
         ),
@@ -155,6 +190,47 @@ const InviteWorkspaceModal = (props) => {
     ]
     return arr
   }
+
+  const loadData = (props) => {
+    defaultModuleApi.getUsers(props).then((res) => {
+      console.log("res", res)
+      const members = state.members
+      const concat = !props.search
+        ? members.concat(res.data.results)
+        : res.data.results
+      console.log("concat", props)
+      setState({
+        members: concat,
+        page: res.data.page,
+        recordsTotal: res.data.recordsTotal,
+        perPage: res.data.recordsFiltered,
+        ...props
+      })
+    })
+  }
+  const endScrollLoad = () => {
+    const page = state.page + 1
+    console.log("page", state)
+    if (state.recordsTotal > state.members.length) {
+      loadData({ page: page, search: state.search })
+    }
+  }
+
+  const typingTimeoutRef = useRef(null)
+  const handleFilterText = (e) => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current)
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      loadData({ search: e, page: 1 })
+    }, 500)
+  }
+
+  useEffect(() => {
+    loadData({ page: state.page, search: state.search })
+  }, [])
+
   return (
     <Modal
       isOpen={modal}

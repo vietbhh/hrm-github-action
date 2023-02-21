@@ -1,5 +1,6 @@
 import { axiosNodeApi } from "@apps/utility/api"
 import { serialize } from "@apps/utility/handleData"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
 
 export const workspaceApi = {
   async save(data) {

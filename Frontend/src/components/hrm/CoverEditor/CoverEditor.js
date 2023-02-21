@@ -30,6 +30,7 @@ const CoverEditor = (props) => {
   }
 
   const handleFileChange = (file) => {
+    console.log("fieeee", file)
     if (!isEmpty(file)) {
       if (!["image/jpeg", "image/png"].includes(file[0].type)) {
         notification.showError({

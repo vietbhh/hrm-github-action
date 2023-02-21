@@ -35,7 +35,6 @@ const _localUpload = async (storePath, files) => {
     throw new Error("unable_to_find_backend_storage_path")
   }
   const savePath = path.join(localSavePath, storePath)
-  console.log("savePath , ", savePath)
   if (!fs.existsSync(savePath)) {
     fs.mkdirSync(savePath, { recursive: true })
   }
@@ -45,7 +44,6 @@ const _localUpload = async (storePath, files) => {
   forEach(files, (file, key) => {
     const fileName = safeFileName(file.name)
     const filePath = path.join(savePath, fileName)
-    console.log("filePath", filePath)
     promises.push(
       new Promise((resolve, reject) => {
         file.mv(filePath, (err) => {

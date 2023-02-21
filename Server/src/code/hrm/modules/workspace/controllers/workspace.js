@@ -45,16 +45,14 @@ const decodeBase64Image = (dataString) => {
 }
 const saveCoverImage = async (req, res) => {
   const storePath = path.join("modules", "workspace")
-  console.log("storePath", storePath)
+  console.log("req.bodyreq.bodyreq.body", req.body)
   const image = req.body.image
   const base64Buffe = decodeBase64Image(image)
   const imageBinary = base64Buffe.data.toString("binary")
   const type = base64Buffe.type
 
   const paaaaaaaaaaat = "modules/workspace/" + req.body._id
-  const saveImg = _localUpload(paaaaaaaaaaat, [
-    { name: "cover-image.png", ...imageBinary }
-  ])
+  const saveImg = _localUpload(paaaaaaaaaaat, [image])
   console.log("saveImg", saveImg)
   return
   const paaaaaaaaaaatxxx =

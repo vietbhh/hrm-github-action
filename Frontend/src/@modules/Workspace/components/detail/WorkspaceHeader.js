@@ -11,15 +11,12 @@ const WorkspaceHeader = (props) => {
     coverImage: defaultWorkspaceCover,
     inviteModal: false
   })
-  console.log("datadata", data)
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
   const saveCoverImage = (image) => {
-    console.log("runnn")
     setState({ coverImage: image })
     const dataPost = { ...data, image: image, id: data?._id }
-    console.log("saveCoverImage dataa", dataPost)
     workspaceApi.saveCoverImage(dataPost).then((res) => {
       console.log("resssss", res)
     })
