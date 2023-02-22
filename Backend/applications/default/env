@@ -34,3 +34,7 @@ app.dataURL = 'http://192.168.1.6';
 
 # firebase messaging
 firebase_server_key="AAAAuvA35qk:APA91bHePnwFMmMOfc0MWVLAqB51CJs_mznuVZV_zFoazjSL6E9tQr4aqjnY20J5YtoL3usGT-FYuptPGnpDBEuPkQUXj4ZyKgU3OMtC3fpc_ALL63CsO-QRp5OpIXJMU7dUaVvg4m8_"
+
+# google cloud storage
+gcs_project_id = 'friday-351410'
+gcs_bucket_name = 'friday-storage'
