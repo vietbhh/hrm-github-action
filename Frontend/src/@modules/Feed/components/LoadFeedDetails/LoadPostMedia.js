@@ -1,0 +1,84 @@
+import {
+  renderIconVideo,
+  renderShowMoreNumber
+} from "@modules/Feed/common/common"
+import { Skeleton } from "antd"
+import classNames from "classnames"
+import React, { Fragment } from "react"
+
+const LoadPostMedia = (props) => {
+  const { data } = props
+
+  const renderMedia = () => {
+    if (data.type === "image") {
+      return (
+        <div
+          className="div-attachment-item item-image item-count-1"
+          style={{
+            backgroundImage: `url("${data.url_thumb}")`
+          }}>
+          {!data.url_thumb && <Skeleton.Image active={true} />}
+        </div>
+      )
+    }
+
+    if (data.type === "video") {
+      return (
+        <div className="div-attachment-item item-video item-count-1">
+          {data.url_source && (
+            <video width="100%" height="400" controls muted>
+              <source src={data.url_source}></source>
+            </video>
+          )}
+
+          {!data.url_source && <Skeleton.Image active={true} />}
+        </div>
+      )
+    }
+
+    if (!_.isEmpty(data.medias)) {
+      return _.map(data.medias, (item, key) => {
+        return (
+          <div
+            key={key}
+            className={classNames(`div-attachment-item item-${key + 1}`, {
+              "item-count-1": data.medias.length === 1,
+              "item-count-2": data.medias.length === 2,
+              "item-count-3": data.medias.length === 3,
+              "item-count-4": data.medias.length === 4,
+              "item-count-5": data.medias.length >= 5
+            })}
+            style={{
+              backgroundImage: `url("${item.url_thumb}")`
+            }}>
+            {!item.url_thumb && <Skeleton.Image active={true} />}
+
+            {item.url_thumb &&
+              data.medias.length > 5 &&
+              key === 4 &&
+              renderShowMoreNumber(data.medias.length)}
+            {item.url_thumb &&
+              item.type === "video" &&
+              ((data.medias.length > 5 && key < 4) ||
+                data.medias.length <= 5) &&
+              renderIconVideo()}
+          </div>
+        )
+      })
+    }
+
+    return ""
+  }
+
+  return (
+    <Fragment>
+      {((data.source !== null &&
+        (data.type === "image" || data.type === "video")) ||
+        (!_.isEmpty(data.medias) && data.type === "post")) && (
+        <div className="post-body-media">{renderMedia()}</div>
+      )}
+    </Fragment>
+  )
+}
+
+export default LoadPostMedia

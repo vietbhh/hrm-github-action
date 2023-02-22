@@ -4399,6 +4399,15 @@
           "add_photo_video": "Add Photo/Video",
           "add_description": "Add description..."
         }
+      },
+      "post": {
+        "text": {
+          "like": "Like",
+          "comment": "Comment",
+          "send": "Send",
+          "people_seen": "People seen",
+          "others": "others"
+        }
       }
     },
     "workspace": {

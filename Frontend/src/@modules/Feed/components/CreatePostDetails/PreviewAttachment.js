@@ -1,4 +1,8 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  renderIconVideo,
+  renderShowMoreNumber
+} from "@modules/Feed/common/common"
 import classNames from "classnames"
 import React, { Fragment, useEffect } from "react"
 import { Spinner } from "reactstrap"
@@ -78,14 +82,6 @@ const PreviewAttachment = (props) => {
     )
   }
 
-  const renderShowMoreNumber = () => {
-    return <span className="more-attachment">+{file.length - 5}</span>
-  }
-
-  const renderIconVideo = () => {
-    return <i className="fa-light fa-circle-play icon-play"></i>
-  }
-
   return (
     <Fragment>
       {loadingUploadAttachment && (
@@ -124,7 +120,9 @@ const PreviewAttachment = (props) => {
                   }}>
                   {file.length === 1 && renderButtonDelete()}
                   {file.length > 1 && index === 0 && renderButtonEdit()}
-                  {file.length > 5 && index === 4 && renderShowMoreNumber()}
+                  {file.length > 5 &&
+                    index === 4 &&
+                    renderShowMoreNumber(file.length)}
                   {value.type.includes("video/") &&
                     ((file.length > 5 && index < 4) || file.length <= 5) &&
                     renderIconVideo()}

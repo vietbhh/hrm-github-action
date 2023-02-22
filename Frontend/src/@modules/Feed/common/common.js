@@ -29,3 +29,11 @@ export const decodeHTMLEntities = (text) => {
 
   return text
 }
+
+export const renderShowMoreNumber = (fileLength) => {
+  return <span className="more-attachment">+{fileLength - 5}</span>
+}
+
+export const renderIconVideo = () => {
+  return <i className="fa-light fa-circle-play icon-play"></i>
+}

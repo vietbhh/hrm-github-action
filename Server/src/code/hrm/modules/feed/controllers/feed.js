@@ -10,29 +10,27 @@ import feedMongoModel from "../models/feed.mongo.js"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
 
-const getAllEmployee = async (req, res, next) => {
+const getAllEmployeeActive = async (req, res, next) => {
   const dataUser = await getUserActivated()
   return res.respond(dataUser)
 }
 
+// ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
   const body = req.body
   const file = req.files
   const promises = []
-  const arrResult = []
   forEach(file, (value, index) => {
     const type = body[index.replace("file", "type")]
     const promise = new Promise(async (resolve, reject) => {
       const result = await handleUpFile(value, type, storePath, "direct")
-      resolve("success")
-      arrResult.push(result)
+      resolve(result)
     })
     promises.push(promise)
   })
-
-  return Promise.all(promises).then(() => {
-    return res.respond(arrResult)
+  return Promise.all(promises).then((res_promise) => {
+    return res.respond(res_promise)
   })
 }
 
@@ -56,10 +54,8 @@ const submitPostController = async (req, res, next) => {
 
   const feedModelParent = new feedMongoModel({
     __user: req.__user,
-    workspace: {
-      ids: body.workspace,
-      permission: workspace_type
-    },
+    permission_ids: body.workspace,
+    permission: workspace_type,
     content: body.content,
     type: type_feed_parent,
     medias: [],
@@ -83,9 +79,7 @@ const submitPostController = async (req, res, next) => {
       { source: result.path_attachment, thumb: result.path }
     )
   } else {
-    const arr_id_child = []
     const promises = []
-
     forEach(body.file, (value) => {
       const promise = new Promise(async (resolve, reject) => {
         let _fileInput = null
@@ -111,10 +105,8 @@ const submitPostController = async (req, res, next) => {
         }
         const feedModelChild = new feedMongoModel({
           __user: req.__user,
-          workspace: {
-            ids: body.workspace,
-            permission: workspace_type
-          },
+          permission_ids: body.workspace,
+          permission: workspace_type,
           content: value.description,
           type: type_feed,
           source: resultFileInput.path_attachment,
@@ -122,17 +114,16 @@ const submitPostController = async (req, res, next) => {
           ref: _id_parent
         })
         const saveFeedChild = await feedModelChild.save()
-        arr_id_child.push({
+        resolve({
           _id: saveFeedChild._id,
           type: saveFeedChild.type,
           source: saveFeedChild.source,
           thumb: saveFeedChild.thumb
         })
-        resolve("success")
       })
       promises.push(promise)
     })
-    Promise.all(promises).then(async () => {
+    Promise.all(promises).then(async (arr_id_child) => {
       await feedMongoModel.updateOne(
         { _id: _id_parent },
         { medias: arr_id_child }
@@ -141,6 +132,29 @@ const submitPostController = async (req, res, next) => {
   }
 
   return res.respond("success")
+}
+
+// ** Load feed
+const loadFeedController = async (req, res, next) => {
+  const request = req.query
+  const page = request.page
+  const pageLength = request.pageLength
+  const filter = { ref: null }
+  const feed = await feedMongoModel
+    .find(filter)
+    .skip(page * pageLength)
+    .limit(pageLength)
+    .sort({
+      _id: "desc"
+    })
+  const feedCount = await feedMongoModel.find(filter).count()
+  const result = {
+    dataPost: feed,
+    totalPost: feedCount,
+    page: page * 1 + 1,
+    hasMore: (page * 1 + 1) * pageLength < feedCount
+  }
+  return res.respond(result)
 }
 
 // ** function
@@ -202,4 +216,9 @@ const handleDeleteFile = (file) => {
   return true
 }
 
-export { getAllEmployee, uploadTempAttachmentController, submitPostController }
+export {
+  getAllEmployeeActive,
+  uploadTempAttachmentController,
+  submitPostController,
+  loadFeedController
+}

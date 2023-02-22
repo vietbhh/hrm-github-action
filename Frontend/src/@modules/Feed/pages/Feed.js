@@ -1,9 +1,10 @@
 import { useMergedState } from "@apps/utility/common"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect } from "react"
-import CreatePost from "../components/CreatePost"
 import "../assets/scss/feed.scss"
 import { feedApi } from "../common/api"
+import CreatePost from "../components/CreatePost"
+import LoadFeed from "../components/LoadFeed"
 
 const Feed = () => {
   const [state, setState] = useMergedState({
@@ -46,7 +47,7 @@ const Feed = () => {
   }, [state.prevScrollY])
 
   useEffect(() => {
-    feedApi.getGetAllEmployee().then((res) => {
+    feedApi.getGetAllEmployeeActive().then((res) => {
       setState({ dataEmployee: res.data })
     })
   }, [])
@@ -56,6 +57,8 @@ const Feed = () => {
       <div className="div-content">
         <div className="div-left feed">
           <CreatePost dataEmployee={state.dataEmployee} workspace={[]} />
+
+          <LoadFeed workspace={[]} />
         </div>
         <div className="div-right">
           <div id="div-sticky">

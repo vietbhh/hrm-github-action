@@ -163,24 +163,22 @@ const ModalCreatePost = (props) => {
         feedApi
           .postUploadAttachment(params)
           .then((res) => {
-            const _file = []
             const promises = []
             _.forEach(res.data, (value) => {
-              const promise = new Promise((resolve, reject) => {
-                downloadApi.getPhoto(value.path).then((response) => {
-                  _file.push({
+              const promise = new Promise(async (resolve, reject) => {
+                await downloadApi.getPhoto(value.path).then((response) => {
+                  resolve({
                     ...value,
                     url: URL.createObjectURL(response.data)
                   })
-                  resolve("success")
                 })
               })
 
               promises.push(promise)
             })
 
-            Promise.all(promises).then(() => {
-              setFile([...file, ..._file])
+            Promise.all(promises).then((res_promise) => {
+              setFile([...file, ...res_promise])
               setLoadingUploadAttachment(false)
             })
           })
@@ -332,7 +330,6 @@ const ModalCreatePost = (props) => {
           <AttachPhotoVideo
             handleAddAttachment={handleAddAttachment}
             loadingUploadAttachment={state.loadingUploadAttachment}
-            setLoadingUploadAttachment={setLoadingUploadAttachment}
           />
 
           <Tooltip
