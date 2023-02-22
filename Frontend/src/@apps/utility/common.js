@@ -178,6 +178,7 @@ export const getBase64 = (file) =>
   })
 
 export const getMonthName = (month, length) => {
+  if (!month) return ""
   const months = [
     "January",
     "February",
