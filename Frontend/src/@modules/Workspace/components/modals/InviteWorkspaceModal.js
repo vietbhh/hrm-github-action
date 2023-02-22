@@ -20,6 +20,7 @@ import "react-perfect-scrollbar/dist/css/styles.css"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { ErpCheckbox, ErpInput } from "@apps/components/common/ErpField"
+import { EmptyContent } from "@apps/components/common/EmptyContent"
 const InviteWorkspaceModal = (props) => {
   const {
     idCandidate,
@@ -38,12 +39,10 @@ const InviteWorkspaceModal = (props) => {
     departments: [],
     jobTitles: [],
     recordsTotal: [],
-    perPage: 10
+    perPage: 10,
+    dataSelected: []
   })
 
-  const arrFields = useSelector(
-    (state) => state.app.modules["candidates"].metas
-  )
   const optionsArr = useSelector(
     (state) => state.app.modules["candidates"].options
   )
@@ -103,28 +102,59 @@ const InviteWorkspaceModal = (props) => {
     mode: "onSubmit"
   })
   const { handleSubmit, errors, control, register, reset, setValue } = methods
+  const handleSelected = (key) => {
+    const data = state.members
+    const dataSelected = [...state.dataSelected]
 
-  const renderMember = (data = []) => {
-    return data.map((item) => {
+    const checkExist = checkExistSelected(data[key].id)
+    if (checkExist >= 0) {
+      dataSelected.splice(checkExist, 1)
+      setState({ dataSelected: dataSelected })
+    } else {
+      const concat = dataSelected.concat(data[key])
+      setState({ dataSelected: concat })
+    }
+  }
+
+  const renderMemberSelected = (data = []) => {
+    return data.map((item, key) => {
       return (
         <Col sm={12} key={item.id}>
-          <div className="box-member d-flex">
+          <div
+            className="box-member d-flex"
+            onClick={() => handleSelected(key)}>
+            <Avatar src={item.avatar} className="me-50" />
+            <div className="title">{item.full_name}</div>
+          </div>
+        </Col>
+      )
+    })
+  }
+  const renderMember = (data = []) => {
+    return data.map((item, key) => {
+      const checked = checkExistSelected(item.id) >= 0 ?? true
+      return (
+        <Col sm={12} key={key}>
+          <div
+            className="box-member d-flex"
+            onClick={() => handleSelected(key)}>
             <Avatar src={item.avatar} className="me-50" />
             <div className="title">{item.full_name}</div>
             <div className="ms-auto">
-              <ErpCheckbox />
+              <ErpCheckbox checked={checked} />
             </div>
           </div>
         </Col>
       )
     })
   }
+
   const itemTab = () => {
     const arr = [
       {
         label: (
           <div className="text-center">
-            <i class="fa-solid fa-user-group"></i>
+            <i className="fa-solid fa-user-group"></i>
             <p>Member</p>
           </div>
         ),
@@ -137,6 +167,7 @@ const InviteWorkspaceModal = (props) => {
                 <Col>
                   <ErpInput
                     nolabel
+                    placeholder="Search"
                     prepend={<i className="fa-regular fa-magnifying-glass"></i>}
                     onChange={(e) => handleFilterText(e.target.value)}
                   />
@@ -152,8 +183,27 @@ const InviteWorkspaceModal = (props) => {
               </PerfectScrollbar>
             </div>
 
-            <div className="content-selected">
-              <span className="title-tab-content">List selected</span>
+            <div
+              className={`content-selected ${
+                !state.dataSelected.length && `d-flex align-items-center`
+              }`}>
+              {state.dataSelected.length === 0 && <EmptyContent />}
+              {state.dataSelected.length > 0 && (
+                <>
+                  <div className="title-tab-content">List selected</div>
+                  <div className="mt-1 mb-2">
+                    <i className="fa-solid fa-user-group me-50"></i>
+                    {state.dataSelected.length} member
+                  </div>
+                  <PerfectScrollbar
+                    style={{
+                      maxHeight: "400px",
+                      minHeight: "50px"
+                    }}>
+                    <Row>{renderMemberSelected(state.dataSelected)}</Row>
+                  </PerfectScrollbar>
+                </>
+              )}
             </div>
           </div>
         )
@@ -190,7 +240,14 @@ const InviteWorkspaceModal = (props) => {
     ]
     return arr
   }
-
+  const findKeyByID = (arr = [], id) => {
+    const index = arr.findIndex((p) => p.id === id)
+    return index
+  }
+  const checkExistSelected = (id) => {
+    const indexID = findKeyByID(state.dataSelected, id)
+    return indexID
+  }
   const loadData = (props) => {
     defaultModuleApi.getUsers(props).then((res) => {
       console.log("res", res)
@@ -214,6 +271,12 @@ const InviteWorkspaceModal = (props) => {
     if (state.recordsTotal > state.members.length) {
       loadData({ page: page, search: state.search })
     }
+  }
+
+  const handleAdd = () => {
+    const dataSelected = state.dataSelected
+    console.log("dataDetail", dataDetail)
+    console.log("dataSelected", dataSelected)
   }
 
   const typingTimeoutRef = useRef(null)
@@ -242,25 +305,30 @@ const InviteWorkspaceModal = (props) => {
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => handleModal()}>
-        {useFormatMessage("modules.candidates.text.assign_job")}
+        Add member to group
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
           <Row className="mt-1">
             <Col sm={12}>
-              <Tabs tabPosition={"left"} items={itemTab()} />
+              <Tabs
+                className="tab-invite"
+                tabPosition={"left"}
+                items={itemTab()}
+              />
             </Col>
           </Row>
         </ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalFooter>
             <Button
-              type="submit"
+              type="button"
+              onClick={() => handleAdd()}
               color="primary"
               disabled={state.loading}
               className="ms-auto mr-2">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              {useFormatMessage("modules.candidates.button.assign")}
+              {useFormatMessage("button.done")}
             </Button>
             <Button
               className="btn-cancel"

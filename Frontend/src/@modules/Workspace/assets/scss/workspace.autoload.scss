@@ -36,22 +36,38 @@
     width: 100%;
   }
   .content-select{
+    padding-right: 10px;
     width: 60%;
     border-right: 0.5px solid #c5c5c5;
   }
-  .content-selectd{
+  .content-selected{
+    padding-left: 10px;
     width: 40%;
-    border-right: 0.5px solid #c5c5c5;
   }
   .title-tab-content{
     font-weight: 600;
   }
 }
 .box-member {
+  cursor: pointer;
   align-items: center;
   padding: 10px 2px;
   border-radius: 12px;
   &:hover{
     background-color: #f5f7f9;
   }
+}
+.invite-workspace-modal{
+   .modal-content{
+    padding: 30px 40px 30px 0px !important;
+    .modal-header{
+      border-bottom : none !important;
+      .modal-title{
+        padding-left: 40px;
+      }
+    }
+    .ant-tabs-tab-active{
+      background-color: antiquewhite;
+    }
+   }
 }
