@@ -2,6 +2,7 @@ import { useMergedState } from "@apps/utility/common"
 import { useEffect } from "react"
 import { Card, CardBody, TabContent, TabPane } from "reactstrap"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
+import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
@@ -73,6 +74,9 @@ const DetailWorkspace = () => {
                 </div>
               </div>
             </div>
+          </TabPane>
+          <TabPane tabId={3}>
+            <TabIntroduction />
           </TabPane>
         </TabContent>
       </div>
