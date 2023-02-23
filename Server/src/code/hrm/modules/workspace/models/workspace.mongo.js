@@ -14,6 +14,10 @@ const workspaceSchema = baseSchema("m_workspace", {
   description: {
     type: String
   },
+  cover_image: {
+    type: String,
+    required: false
+  },
   rules: {
     type: String
   },
@@ -40,7 +44,14 @@ const workspaceSchema = baseSchema("m_workspace", {
     ],
     default: [],
     cover_image: String
-  }
+  },
+  introduction: String,
+  group_rules: [
+    {
+      title: String,
+      description: String
+    }
+  ]
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)
