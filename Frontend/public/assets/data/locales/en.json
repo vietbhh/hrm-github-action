@@ -4406,7 +4406,9 @@
           "comment": "Comment",
           "send": "Send",
           "people_seen": "People seen",
-          "others": "others"
+          "others": "others",
+          "see_more": "See more",
+          "hide": "Hide"
         }
       }
     },

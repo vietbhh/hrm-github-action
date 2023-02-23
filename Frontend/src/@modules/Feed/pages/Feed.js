@@ -9,7 +9,8 @@ import LoadFeed from "../components/LoadFeed"
 const Feed = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    dataEmployee: []
+    dataEmployee: [],
+    dataCreateNew: {}
   })
   const offsetTop = 90
   const offsetBottom = 30
@@ -39,6 +40,10 @@ const Feed = () => {
     }
   }
 
+  const setDataCreateNew = (value) => {
+    setState({ dataCreateNew: value })
+  }
+
   // ** useEffect
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
@@ -56,9 +61,17 @@ const Feed = () => {
     <Fragment>
       <div className="div-content">
         <div className="div-left feed">
-          <CreatePost dataEmployee={state.dataEmployee} workspace={[]} />
+          <CreatePost
+            dataEmployee={state.dataEmployee}
+            setDataCreateNew={setDataCreateNew}
+            workspace={[]}
+          />
 
-          <LoadFeed workspace={[]} />
+          <LoadFeed
+            dataCreateNew={state.dataCreateNew}
+            setDataCreateNew={setDataCreateNew}
+            workspace={[]}
+          />
         </div>
         <div className="div-right">
           <div id="div-sticky">

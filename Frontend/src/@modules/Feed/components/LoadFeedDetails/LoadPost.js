@@ -1,7 +1,11 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { timeDifference, useFormatMessage } from "@apps/utility/common"
+import {
+  timeDifference,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import { Dropdown } from "antd"
-import React from "react"
+import React, { useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import img_care from "../../assets/images/care.png"
 import img_haha from "../../assets/images/haha.png"
@@ -13,6 +17,10 @@ import LoadPostMedia from "./LoadPostMedia"
 
 const LoadPost = (props) => {
   const { data } = props
+  const [state, setState] = useMergedState({
+    showSeeMore: false,
+    seeMore: false
+  })
 
   const item_reaction = [
     {
@@ -42,8 +50,44 @@ const LoadPost = (props) => {
     }
   ]
 
+  // ** useEffect
+  useEffect(() => {
+    const height = document.getElementById(
+      `post-body-content-${data._id}`
+    ).offsetHeight
+    if (height >= 90) {
+      setState({ showSeeMore: true })
+    }
+  }, [])
+
+  // ** render
+  const renderContent = () => {
+    return (
+      <>
+        <div
+          className={`${
+            state.showSeeMore && state.seeMore === false ? "hide" : ""
+          }`}>
+          {ReactHtmlParser(data.content)}
+        </div>
+        {state.showSeeMore && (
+          <a
+            className="btn-see-more"
+            onClick={(e) => {
+              e.preventDefault()
+              setState({ seeMore: !state.seeMore })
+            }}>
+            {state.seeMore === false
+              ? useFormatMessage("modules.feed.post.text.see_more")
+              : useFormatMessage("modules.feed.post.text.hide")}
+          </a>
+        )}
+      </>
+    )
+  }
+
   return (
-    <div className="load-post">
+    <div id={data._id} className="load-post">
       <div className="post-header">
         <Avatar className="img" userId={data.created_by} />
         <div className="post-header-title">
@@ -84,7 +128,9 @@ const LoadPost = (props) => {
         </div>
       </div>
       <div className="post-body">
-        <div className="post-body-content">{ReactHtmlParser(data.content)}</div>
+        <div id={`post-body-content-${data._id}`} className="post-body-content">
+          {renderContent()}
+        </div>
         <LoadPostMedia data={data} />
       </div>
       <div className="post-footer">

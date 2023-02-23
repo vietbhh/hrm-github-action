@@ -427,6 +427,24 @@
         .post-body-media {
           text-align: center;
         }
+
+        .post-body-content {
+          .hide {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+          }
+
+          .btn-see-more {
+            color: #377dff;
+
+            &:hover {
+              text-decoration-line: underline;
+            }
+          }
+        }
       }
     }
   }
