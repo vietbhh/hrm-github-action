@@ -19,9 +19,14 @@ export const workspaceApi = {
     return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
   },
   async update(id, data) {
-    return await axiosNodeApi.post(
-      `/workspace/update/${id}`,
-      serialize(_.cloneDeep(data))
-    )
+    return await axiosNodeApi.post(`/workspace/update/${id}`, data)
+  },
+  async getDetail(workspaceId) {
+    return await axiosNodeApi.get(`/workspace/${workspaceId}`)
+  },
+  async sortGroupRule(id, data) {
+    return await axiosNodeApi.post(`/workspace/sort-group-rule/${id}`, data, {
+      disableLoading: true
+    })
   }
 }

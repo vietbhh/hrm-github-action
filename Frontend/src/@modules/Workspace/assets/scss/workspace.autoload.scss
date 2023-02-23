@@ -39,11 +39,44 @@
         border-radius: 14px;
       }
 
-      .introduction-container {
-        .add-introduction-description {
-          font-size: 0.75rem;
-          font-weight: 500;
-          color: rgb(179, 179, 179);
+      .small-description {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: rgb(179, 179, 179);
+      }
+
+      .group-rule-container {
+        .list-group-rule {
+          .group-rule-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            .index {
+              display: inline-block;
+              height: 24px;
+              width: 24px;
+              text-align: center;
+              line-height: 24px;
+              color: $primary-text-color;
+              border-radius: 8px;
+              background-color: $primary;
+              font-weight: 600;
+            }
+
+            .sort {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .workspace-info-container {
+        .workspace-info-item {
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          padding: 12px 0;
+
+          .description {
+            font-size: 12px;
+            color: rgb(179, 179, 179);
+          }
         }
       }
     }
@@ -120,6 +153,54 @@
           top: 165px;
           box-shadow: rgb(0 0 0 / 5%) 0px 4px 8px, rgb(0 0 0 / 5%) 0px 0px 1px;
         }
+      }
+    }
+  }
+}
+
+.group-rule-modal {
+  .modal-content {
+    .modal-body {
+      .list-container {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+        .list-group-rule {
+          .group-rule-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            .index {
+              display: inline-block;
+              height: 24px;
+              width: 24px;
+              text-align: center;
+              line-height: 24px;
+              color: $primary-text-color;
+              border-radius: 8px;
+              background-color: $primary;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.dropdown-workspace-group-rule {
+  .ant-dropdown-menu {
+    padding: 0 !important;
+    border-radius: 5px;
+
+    .ant-dropdown-menu-item {
+      padding: 0 !important;
+
+      button {
+        border-radius: unset;
+        text-align: left;
+        padding: 10px;
+      }
+
+      &:hover {
+        background-color: unset !important;
       }
     }
   }

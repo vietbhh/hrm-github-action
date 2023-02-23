@@ -4414,7 +4414,11 @@
         "add_description": "Add description",
         "edit": "Edit",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "remove": "Remove",
+        "add_new_rule": "Add new rule",
+        "edit_rule": "Edit rule",
+        "remove_rule": "Remove rule"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4436,8 +4440,38 @@
         "members": "members",
         "member": "member",
         "empty_workspace": "No workspace found!",
+        "empty_group_rule": "This Workspace have no rule!",
+        "empty_introduction": "This Workspace have no introduction!",
         "create_new_workspace": "Create new workspace",
-        "add_introduction_description": "Please add description to help people learn more about your group!"
+        "add_introduction_description": "Please add description to help people learn more about your group!",
+        "group_rule_title": "Title",
+        "group_rule_description": "Description",
+        "work_space_description": {
+          "type": {
+            "public": {
+              "title": "Pulbic Workspace",
+              "description": "Anyone can see post and activites in workspace"
+            },
+            "private": {
+              "title": "Private Workspace",
+              "description": "Only member on workspace can see post and activites"
+            }
+          },
+          "mode": {
+            "visible": {
+              "title": "Visible Workspace",
+              "description": "Anyone can see your workspace and request to join"
+            },
+            "hidden": {
+              "title": "Hidden",
+              "description": "Only administrator can add member and other unable to see workspace"
+            }
+          },
+          "history": {
+            "title": "History",
+            "group_crated_date": "Group created date"
+          }
+        }
       }
     }
   }

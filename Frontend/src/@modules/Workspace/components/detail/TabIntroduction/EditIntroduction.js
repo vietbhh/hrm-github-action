@@ -1,9 +1,8 @@
 // ** React Imports
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { FormProvider, useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
 // ** Styles
 import { Row, Col, Button } from "reactstrap"
 // ** Components
@@ -13,8 +12,11 @@ import notification from "@apps/utility/notification"
 const EditIntroduction = (props) => {
   const {
     // ** props
+    id,
+    introduction,
     // ** methods
-    toggleEdit
+    handleCancelEdit,
+    setIntroduction
   } = props
 
   const [loading, setLoading] = useState(false)
@@ -22,9 +24,7 @@ const EditIntroduction = (props) => {
   const methods = useForm({
     mode: "onSubmit"
   })
-  const { handleSubmit } = methods
-
-  const { id } = useParams()
+  const { handleSubmit, reset } = methods
 
   const onSubmit = (values) => {
     setLoading(true)
@@ -32,12 +32,20 @@ const EditIntroduction = (props) => {
       .update(id, values)
       .then((res) => {
         notification.showSuccess()
-        toggleEdit()
+        handleCancelEdit()
+        setIntroduction(values.introduction)
       })
       .catch((err) => {
         notification.showError()
       })
   }
+
+  // ** effect
+  useEffect(() => {
+    reset({
+      introduction: introduction
+    })
+  }, [])
 
   // ** render
   return (

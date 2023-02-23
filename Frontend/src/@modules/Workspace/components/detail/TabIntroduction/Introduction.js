@@ -5,53 +5,83 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Card, CardBody, Button } from "reactstrap"
 // ** Components
 import EditIntroduction from "./EditIntroduction"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 
 const Introduction = (props) => {
   const {
     // ** props
+    id,
+    loading,
+    workspaceInfo,
+    introduction,
     // ** methods
+    setIntroduction
   } = props
 
   const [state, setState] = useMergedState({
-    loading: false,
     isEditIntroduction: false
   })
 
-  const toggleEdit = () => {
+  const handleEdit = () => {
     setState({
-      isEditIntroduction: !state.isEditIntroduction
+      isEditIntroduction: true
     })
   }
 
-  const handleClickCancelEdit = () => {
-    toggleEdit()
+  const handleCancelEdit = () => {
+    setState({
+      isEditIntroduction: false
+    })
   }
 
   // ** render
   const renderIntroductionContent = () => {
-    if (state.isEditIntroduction) {
-      return <EditIntroduction toggleEdit={toggleEdit} />
+    if (
+      loading === false &&
+      !_.isEmpty(introduction) &&
+      state.isEditIntroduction === false
+    ) {
+      return <p className="introduction-text mt-75">{introduction}</p>
     }
 
-    return (
-      <Fragment>
-        <Button.Ripple
-          size="sm"
-          color="flat-primary"
-          className="mb-50"
-          onClick={() => toggleEdit()}>
-          {useFormatMessage("modules.workspace.buttons.add_description")}
-        </Button.Ripple>
-        <small className="add-introduction-description d-block">
-          {useFormatMessage(
-            "modules.workspace.text.add_introduction_description"
-          )}
-        </small>
-      </Fragment>
-    )
+    if (state.isEditIntroduction) {
+      return (
+        <EditIntroduction
+          id={id}
+          introduction={introduction}
+          handleCancelEdit={handleCancelEdit}
+          setIntroduction={setIntroduction}
+        />
+      )
+    }
+
+    if (loading === false && workspaceInfo.is_admin_group) {
+      return (
+        <Fragment>
+          <Button.Ripple
+            size="sm"
+            color="flat-primary"
+            className="mb-50"
+            onClick={() => handleEdit()}>
+            {useFormatMessage("modules.workspace.buttons.add_description")}
+          </Button.Ripple>
+          <small className="d-block small-description">
+            {useFormatMessage(
+              "modules.workspace.text.add_introduction_description"
+            )}
+          </small>
+        </Fragment>
+      )
+    }
+
+    return <p className="introduction-text mt-75 mb-0">{useFormatMessage("modules.workspace.text.empty_introduction")}</p>
   }
 
   const renderIntroductionAction = () => {
+    if (loading === false && !workspaceInfo.is_admin_group) {
+      return ""
+    }
+
     if (state.isEditIntroduction) {
       return (
         <div>
@@ -59,8 +89,22 @@ const Introduction = (props) => {
             size="sm"
             color="flat-primary"
             className=""
-            onClick={() => handleClickCancelEdit()}>
+            onClick={() => handleCancelEdit()}>
             {useFormatMessage("modules.workspace.buttons.cancel")}
+          </Button.Ripple>
+        </div>
+      )
+    }
+
+    if (loading === false && !_.isEmpty(introduction)) {
+      return (
+        <div>
+          <Button.Ripple
+            size="sm"
+            color="flat-primary"
+            className=""
+            onClick={() => handleEdit()}>
+            {useFormatMessage("modules.workspace.buttons.edit")}
           </Button.Ripple>
         </div>
       )
@@ -69,9 +113,17 @@ const Introduction = (props) => {
     return ""
   }
 
-  return (
-    <Card className="introduction-container">
-      <CardBody>
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="component-loading">
+          <AppSpinner />
+        </div>
+      )
+    }
+
+    return (
+      <Fragment>
         <div className="d-flex align-items-center justify-content-between">
           <div>
             <h5>
@@ -86,6 +138,14 @@ const Introduction = (props) => {
         <div className="introduction-content">
           <Fragment>{renderIntroductionContent()}</Fragment>
         </div>
+      </Fragment>
+    )
+  }
+
+  return (
+    <Card className="introduction-container">
+      <CardBody>
+        <Fragment>{renderContent()}</Fragment>
       </CardBody>
     </Card>
   )
