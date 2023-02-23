@@ -112,7 +112,11 @@ const AssetEditModal = (props) => {
                           name="owner"
                           required
                           readOnly={dataDetail?.id && !isDuplicateAsset}
-                          defaultValue={dataDetail?.id && isDuplicateAsset ? dataDetail?.owner : ""}
+                          defaultValue={
+                            dataDetail?.id && isDuplicateAsset
+                              ? dataDetail?.owner
+                              : ""
+                          }
                           useForm={methods}
                         />
                       </Col>
@@ -146,18 +150,31 @@ const AssetEditModal = (props) => {
                         ) {
                           fieldAuth.field_readonly = true
                         }
-                        if (nameField === "date_created" && !dataDetail?.id) {
+                        if (
+                          nameField === "date_created" &&
+                          (!dataDetail?.id || isDuplicateAsset)
+                        ) {
                           fieldAuth.field_default_value = moment()
                         }
-                        if (nameField === "date_created" && (dataDetail?.id && !isDuplicateAsset)) {
+                        if (
+                          nameField === "date_created" &&
+                          dataDetail?.id &&
+                          !isDuplicateAsset
+                        ) {
                           fieldAuth.field_readonly = true
                           return ""
                         }
+
                         if (
                           nameField === "recent_image" &&
                           isDuplicateAsset === true
                         ) {
                           updateDataValue = {}
+                        } else if (
+                          nameField === "date_created" &&
+                          isDuplicateAsset === true
+                        ) {
+                          updateDataValue = moment()
                         } else {
                           updateDataValue = dataDetail?.[field.field]
                         }
@@ -186,7 +203,7 @@ const AssetEditModal = (props) => {
                           </Col>
                         )
                       })}
-                    {(dataDetail?.id && !isDuplicateAsset) && (
+                    {dataDetail?.id && !isDuplicateAsset && (
                       <Col sm={12}>
                         <Alert color="warning">
                           {" "}
