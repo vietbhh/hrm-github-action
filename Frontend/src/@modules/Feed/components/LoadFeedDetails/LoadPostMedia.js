@@ -1,18 +1,56 @@
+import { useMergedState } from "@apps/utility/common"
 import {
   renderIconVideo,
   renderShowMoreNumber
 } from "@modules/Feed/common/common"
 import { Skeleton } from "antd"
 import classNames from "classnames"
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect } from "react"
+import PostImageDetailModal from "./modals/PostImageDetailModal"
 
 const LoadPostMedia = (props) => {
   const { data } = props
+  const [state, setState] = useMergedState({
+    modalPostImageDetail: false,
+    dataModal: {},
+    idImage: "",
+    postType: ""
+  })
 
+  // ** function
+  const toggleModalPostImageDetail = () => {
+    setState({ modalPostImageDetail: !state.modalPostImageDetail })
+  }
+
+  // ** useEffect
+  useEffect(() => {
+    if (state.modalPostImageDetail) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+      window.history.replaceState(null, "", `/feed`)
+      setState({ dataModal: {}, idImage: "", postType: "" })
+    }
+  }, [state.modalPostImageDetail])
+
+  // ** render
   const renderMedia = () => {
     if (data.type === "image") {
       return (
         <div
+          onClick={() => {
+            toggleModalPostImageDetail()
+            window.history.replaceState(
+              null,
+              "",
+              `/posts/${data._id}/${data._id}`
+            )
+            setState({
+              dataModal: data,
+              idImage: data._id,
+              postType: data.type
+            })
+          }}
           className="div-attachment-item item-image item-count-1"
           style={{
             backgroundImage: `url("${data.url_thumb}")`
@@ -25,13 +63,13 @@ const LoadPostMedia = (props) => {
     if (data.type === "video") {
       return (
         <div className="div-attachment-item item-video item-count-1">
-          {data.url_source && (
+          {data.url_thumb && (
             <video width="100%" height="400" controls muted>
-              <source src={data.url_source}></source>
+              <source src={data.url_thumb}></source>
             </video>
           )}
 
-          {!data.url_source && <Skeleton.Image active={true} />}
+          {!data.url_thumb && <Skeleton.Image active={true} />}
         </div>
       )
     }
@@ -41,6 +79,19 @@ const LoadPostMedia = (props) => {
         return (
           <div
             key={key}
+            onClick={() => {
+              toggleModalPostImageDetail()
+              window.history.replaceState(
+                null,
+                "",
+                `/posts/${data._id}/${item._id}`
+              )
+              setState({
+                dataModal: data,
+                idImage: item._id,
+                postType: data.type
+              })
+            }}
             className={classNames(`div-attachment-item item-${key + 1}`, {
               "item-count-1": data.medias.length === 1,
               "item-count-2": data.medias.length === 2,
@@ -77,6 +128,15 @@ const LoadPostMedia = (props) => {
         (!_.isEmpty(data.medias) && data.type === "post")) && (
         <div className="post-body-media">{renderMedia()}</div>
       )}
+
+      <PostImageDetailModal
+        modal={state.modalPostImageDetail}
+        toggleModal={toggleModalPostImageDetail}
+        dataModal={state.dataModal}
+        idImage={state.idImage}
+        setIdImage={(value) => setState({ idImage: value })}
+        postType={state.postType}
+      />
     </Fragment>
   )
 }

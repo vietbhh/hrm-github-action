@@ -53,16 +53,14 @@ const LoadFeed = (props) => {
     const promises = []
     _.forEach(value.medias, (item) => {
       const promise = new Promise(async (resolve, reject) => {
-        await downloadApi.getPhoto(item.source).then((response) => {
-          item["url_source"] = item["url_thumb"] = URL.createObjectURL(
-            response.data
-          )
+        await downloadApi.getPhoto(item.thumb).then((response) => {
+          item["url_thumb"] = URL.createObjectURL(response.data)
         })
-        if (item.type === "video") {
+        /* if (item.type === "video") {
           await downloadApi.getPhoto(item.thumb).then((response) => {
             item["url_thumb"] = URL.createObjectURL(response.data)
           })
-        }
+        } */
 
         resolve(item)
       })
@@ -94,14 +92,22 @@ const LoadFeed = (props) => {
       value.source !== null &&
       (value.type === "image" || value.type === "video")
     ) {
-      downloadApi.getPhoto(value.source).then((response) => {
-        value["url_source"] = value["url_thumb"] = URL.createObjectURL(
-          response.data
-        )
-        const dataPost = [...state.dataPost]
-        dataPost[index] = value
-        setState({ dataPost: dataPost })
-      })
+      if (value.type === "image") {
+        downloadApi.getPhoto(value.thumb).then((response) => {
+          value["url_thumb"] = URL.createObjectURL(response.data)
+          const dataPost = [...state.dataPost]
+          dataPost[index] = value
+          setState({ dataPost: dataPost })
+        })
+      }
+      if (value.type === "video") {
+        downloadApi.getPhoto(value.source).then((response) => {
+          value["url_thumb"] = URL.createObjectURL(response.data)
+          const dataPost = [...state.dataPost]
+          dataPost[index] = value
+          setState({ dataPost: dataPost })
+        })
+      }
     }
 
     if (!_.isEmpty(value.medias) && value.type === "post") {
@@ -129,8 +135,7 @@ const LoadFeed = (props) => {
       (dataCreateNew.type === "image" || dataCreateNew.type === "video")
     ) {
       await downloadApi.getPhoto(dataCreateNew.source).then((response) => {
-        dataCreateNew["url_source"] = dataCreateNew["url_thumb"] =
-          URL.createObjectURL(response.data)
+        dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
       })
     }
 

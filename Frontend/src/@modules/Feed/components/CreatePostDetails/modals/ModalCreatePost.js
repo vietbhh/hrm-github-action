@@ -168,7 +168,7 @@ const ModalCreatePost = (props) => {
             const promises = []
             _.forEach(res.data, (value) => {
               const promise = new Promise(async (resolve, reject) => {
-                await downloadApi.getPhoto(value.path).then((response) => {
+                await downloadApi.getPhoto(value.thumb).then((response) => {
                   resolve({
                     ...value,
                     url: URL.createObjectURL(response.data)

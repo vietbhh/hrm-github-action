@@ -9,6 +9,7 @@ import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
+import sharp from "sharp"
 
 const getAllEmployeeActive = async (req, res, next) => {
   const dataUser = await getUserActivated()
@@ -80,7 +81,7 @@ const submitPostController = async (req, res, next) => {
       handleDeleteFile(body.file[0])
       await feedMongoModel.updateOne(
         { _id: _id_parent },
-        { source: result.path_attachment, thumb: result.path }
+        { source: result.source, thumb: result.thumb }
       )
 
       out = await feedMongoModel.findById(_id_parent)
@@ -116,8 +117,8 @@ const submitPostController = async (req, res, next) => {
             permission: workspace_type,
             content: value.description,
             type: type_feed,
-            source: resultFileInput.path_attachment,
-            thumb: resultFileInput.path,
+            source: resultFileInput.source,
+            thumb: resultFileInput.thumb,
             ref: _id_parent
           })
           const saveFeedChild = await feedModelChild.save()
@@ -143,6 +144,7 @@ const submitPostController = async (req, res, next) => {
     }
   }
 }
+// **
 
 // ** Load feed
 const loadFeedController = async (req, res, next) => {
@@ -170,12 +172,18 @@ const loadFeedController = async (req, res, next) => {
   return res.respond(result)
 }
 
-// ** get user post
+// get feed child
+const getFeedChild = (req, res, next) => {
+  return res.respond("")
+}
+
+// get user post
 const getUserPost = async (req, res, next) => {
   const userId = req.params.id
   const dataUser = await getUserById(userId)
   return res.respond(dataUser)
 }
+// **
 
 // ** function
 const takeOneFrameOfVid = (dir, storePath) => {
@@ -197,25 +205,55 @@ const takeOneFrameOfVid = (dir, storePath) => {
 }
 
 const handleUpFile = async (file, type, storePath, uploadType = null) => {
-  const resultUpload = await _uploadServices(storePath, [file], uploadType)
-  let result = {
-    ...resultUpload.uploadSuccess[0],
-    path_attachment: resultUpload.uploadSuccess[0].path,
+  const result = {
     type: type,
     description: "",
     name_original: file.name
   }
 
+  const resultUpload = await _uploadServices(storePath, [file], uploadType)
+  result["thumb"] = resultUpload.uploadSuccess[0].path
+  result["source"] = resultUpload.uploadSuccess[0].path
+
+  if (type.includes("image/")) {
+    const image = sharp(file.data)
+    /* image.metadata().then((metadata) => {
+    console.log(metadata)
+  }) */
+    const thumb_path = path.join(
+      storePath,
+      "thumb_" +
+        file.name.split("_")[0] +
+        "_" +
+        Date.now() +
+        "_" +
+        Math.random() * 1000001 +
+        ".webp"
+    )
+    await image
+      .webp({
+        quality: 80
+      })
+      .toFile(path.join(localSavePath, thumb_path))
+    result["thumb"] = thumb_path
+  }
+
   if (type.includes("video/")) {
     await takeOneFrameOfVid(
       path.join(localSavePath, resultUpload.uploadSuccess[0].path),
-      path.join(storePath, "video_" + file.name.split(".")[0] + ".jpg")
+      path.join(
+        storePath,
+        "thumb_" +
+          file.name.split("_")[0] +
+          "_" +
+          Date.now() +
+          "_" +
+          Math.random() * 1000001 +
+          ".webp"
+      )
     )
       .then((res) => {
-        result = {
-          ...result,
-          path: res.path
-        }
+        result["thumb"] = res.path
       })
       .catch((err) => {})
   }
@@ -224,12 +262,12 @@ const handleUpFile = async (file, type, storePath, uploadType = null) => {
 }
 
 const handleDeleteFile = (file) => {
-  if (fs.existsSync(path.join(localSavePath, file.path_attachment))) {
-    fs.unlinkSync(path.join(localSavePath, file.path_attachment))
+  if (fs.existsSync(path.join(localSavePath, file.source))) {
+    fs.unlinkSync(path.join(localSavePath, file.source))
   }
   if (file.type.includes("video/")) {
-    if (fs.existsSync(path.join(localSavePath, file.path))) {
-      fs.unlinkSync(path.join(localSavePath, file.path))
+    if (fs.existsSync(path.join(localSavePath, file.thumb))) {
+      fs.unlinkSync(path.join(localSavePath, file.thumb))
     }
   }
 
@@ -241,5 +279,6 @@ export {
   uploadTempAttachmentController,
   submitPostController,
   loadFeedController,
-  getUserPost
+  getUserPost,
+  getFeedChild
 }

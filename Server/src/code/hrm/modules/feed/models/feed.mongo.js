@@ -49,6 +49,7 @@ const feedSchema = baseSchema("m_feed", {
   thumb: {
     type: String
   },
+
   // **
 
   // ** feed child

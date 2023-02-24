@@ -27,22 +27,22 @@ const LoadPost = (props) => {
       key: "1",
       label: (
         <div className="div-dropdown-reaction">
-          <button>
+          <button className="pull-up">
             <img src={img_like} />
           </button>
-          <button>
+          <button className="pull-up">
             <img src={img_love} />
           </button>
-          <button>
+          <button className="pull-up">
             <img src={img_care} />
           </button>
-          <button>
+          <button className="pull-up">
             <img src={img_haha} />
           </button>
-          <button>
+          <button className="pull-up">
             <img src={img_sad} />
           </button>
-          <button>
+          <button className="pull-up">
             <img src={img_wow} />
           </button>
         </div>
@@ -58,7 +58,6 @@ const LoadPost = (props) => {
     if (height >= 90) {
       setState({ showSeeMore: true })
     }
-    console.log(data._id, height)
   }, [])
 
   // ** render
