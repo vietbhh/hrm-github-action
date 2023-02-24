@@ -4,12 +4,15 @@ import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
-
+import { Dropdown, Space } from "antd"
+import SetupNotificationModal from "../modals/SetupNotificationModal"
+import notification from "@apps/utility/notification"
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data } = props
   const [state, setState] = useMergedState({
     coverImage: defaultWorkspaceCover,
-    inviteModal: false
+    inviteModal: false,
+    setupNotifiModal: false
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
@@ -18,9 +21,63 @@ const WorkspaceHeader = (props) => {
     setState({ coverImage: image })
     const dataPost = { ...data, image: image, id: data?._id }
     workspaceApi.saveCoverImage(dataPost).then((res) => {
-      console.log("resssss", res)
+      console.log("resssss todo", res)
     })
   }
+
+  const handleDoneInvite = (dataUpdate, field) => {
+    const infoWorkspace = { ...data }
+    const arrID = dataUpdate.map((x) => x["id"] * 1)
+
+    infoWorkspace.members = JSON.stringify(arrID)
+    workspaceApi.update(infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        onClickInvite()
+        setState({ loading: false })
+      }
+    })
+  }
+  const handleSetupNotification = () => {
+    setState({ setupNotifiModal: !state.setupNotifiModal })
+  }
+  const items = [
+    {
+      label: (
+        <div>
+          <i className="fa-regular fa-list-ul"></i> Waiting for approval post
+        </div>
+      ),
+      key: "0"
+    },
+    {
+      label: (
+        <div>
+          <i className="fa-sharp fa-regular fa-bells"></i> Setup notification
+        </div>
+      ),
+      key: "1",
+      onClick: () => handleSetupNotification()
+    },
+    {
+      label: (
+        <a>
+          <i className="fa-regular fa-square-check"></i> Setup follow
+        </a>
+      ),
+      key: "2"
+    },
+    {
+      label: (
+        <a href="https://www.aliyun.com">
+          <i className="fa-regular fa-gear"></i> Workspace settings
+        </a>
+      ),
+      key: "3"
+    }
+  ]
   return (
     <Card className="pb-0">
       <div className="image-cover">
@@ -100,14 +157,27 @@ const WorkspaceHeader = (props) => {
             </NavLink>
           </NavItem>
           <div className="ms-auto">
-            <Button color="flat-secondary">
-              <i className="fa-light fa-ellipsis"></i>
-            </Button>
+            <Dropdown
+              menu={{
+                items
+              }}
+              placement="bottomRight"
+              trigger={["click"]}>
+              <Button color="flat-secondary">
+                <i className="fa-light fa-ellipsis"></i>
+              </Button>
+            </Dropdown>
           </div>
         </Nav>
         <InviteWorkspaceModal
           modal={state.inviteModal}
           handleModal={onClickInvite}
+          handleDone={handleDoneInvite}
+        />
+        <SetupNotificationModal
+          modal={state.setupNotifiModal}
+          dataWorkspace={data}
+          handleModal={handleSetupNotification}
         />
       </CardBody>
     </Card>

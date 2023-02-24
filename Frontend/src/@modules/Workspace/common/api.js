@@ -17,5 +17,11 @@ export const workspaceApi = {
   },
   async getDetailWorkspace(Id) {
     return await axiosNodeApi.get("/workspace/" + Id)
+  },
+  async update(data) {
+    return await axiosNodeApi.post(
+      "/workspace/update",
+      serialize(_.cloneDeep(data))
+    )
   }
 }

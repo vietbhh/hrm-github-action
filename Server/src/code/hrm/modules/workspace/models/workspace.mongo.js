@@ -43,7 +43,8 @@ const workspaceSchema = baseSchema("m_workspace", {
       }
     ],
     default: []
-  }
+  },
+  notification: { type: Boolean, default: true }
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

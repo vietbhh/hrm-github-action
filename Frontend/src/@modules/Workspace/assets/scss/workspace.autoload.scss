@@ -31,6 +31,13 @@
     }
   }
 }
+.no-border-bottom{
+  .modal-content{
+    .modal-header{
+      border-bottom : none !important;
+    }
+  }
+}
 .invite-workspace-modal{
   .ant-tabs-tab-btn{
     width: 100%;
@@ -38,7 +45,7 @@
   .content-select{
     padding-right: 10px;
     width: 60%;
-    border-right: 0.5px solid #c5c5c5;
+    border-right: 0.5px solid #c5c5c569;
   }
   .content-selected{
     padding-left: 10px;
@@ -47,6 +54,18 @@
   .title-tab-content{
     font-weight: 600;
   }
+  .modal-content{
+    padding: 30px 40px 30px 0px !important;
+    .modal-header{
+      border-bottom : none !important;
+      .modal-title{
+        padding-left: 40px;
+      }
+    }
+    .ant-tabs-tab-active{
+      background-color: antiquewhite;
+    }
+   }
 }
 .box-member {
   cursor: pointer;
@@ -57,17 +76,21 @@
     background-color: #f5f7f9;
   }
 }
-.invite-workspace-modal{
-   .modal-content{
-    padding: 30px 40px 30px 0px !important;
-    .modal-header{
-      border-bottom : none !important;
-      .modal-title{
-        padding-left: 40px;
-      }
+.setup-notification-workspace-modal{
+   .content-notification-setup{
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    .title{
+      color: rgb(26, 26, 26);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
     }
-    .ant-tabs-tab-active{
-      background-color: antiquewhite;
+    .sub-title{
+      color: rgb(128, 128, 128);
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 16px;
     }
    }
 }

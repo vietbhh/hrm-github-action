@@ -7,7 +7,7 @@ const saveWorkspace = async (req, res, next) => {
     name: req.body.workspace_name,
     type: req.body.workspace_type,
     mode: req.body.workspace_mode,
-    cover_image: "tttttttttttt",
+    cover_image: "",
     members: [req.__user],
     administrators: [req.__user],
     __user: req.__user
@@ -23,7 +23,6 @@ const saveWorkspace = async (req, res, next) => {
 
 const getWorkspace = async (req, res, next) => {
   const workspaceId = req.params.workspaceId
-  console.log("workspaceId", workspaceId)
   try {
     const workspace = await workspaceMongoModel.findById(workspaceId)
     return res.respond(workspace)
@@ -91,4 +90,17 @@ const saveCoverImage = async (req, res) => {
     return res.fail(err.message)
   }
 }
-export { getWorkspace, saveWorkspace, saveCoverImage }
+
+const updateWorkspace = async (req, res) => {
+  const dataSave = { ...req.body }
+  if (dataSave?.members) {
+    dataSave.members = JSON.parse(req.body.members)
+  }
+  console.log("**********req.body", req.body)
+
+  const aaa = await workspaceMongoModel.findByIdAndUpdate(dataSave._id, {
+    ...dataSave
+  })
+  return res.respond(aaa)
+}
+export { getWorkspace, saveWorkspace, saveCoverImage, updateWorkspace }
