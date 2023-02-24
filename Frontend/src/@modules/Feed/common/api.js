@@ -41,5 +41,9 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/load-feed?" + stringFilters, {
       disableLoading: true
     })
+  },
+
+  async getGetUserPost(id) {
+    return await axiosNodeApi.get("/feed/get-user-post/" + id)
   }
 }

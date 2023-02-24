@@ -1,4 +1,4 @@
-import { getUserActivated } from "#app/models/users.mysql.js"
+import { getUserActivated, getUserById } from "#app/models/users.mysql.js"
 import { localSavePath, _uploadServices } from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
@@ -170,6 +170,13 @@ const loadFeedController = async (req, res, next) => {
   return res.respond(result)
 }
 
+// ** get user post
+const getUserPost = async (req, res, next) => {
+  const userId = req.params.id
+  const dataUser = await getUserById(userId)
+  return res.respond(dataUser)
+}
+
 // ** function
 const takeOneFrameOfVid = (dir, storePath) => {
   const savePath = path.join(localSavePath, storePath)
@@ -233,5 +240,6 @@ export {
   getAllEmployeeActive,
   uploadTempAttachmentController,
   submitPostController,
-  loadFeedController
+  loadFeedController,
+  getUserPost
 }

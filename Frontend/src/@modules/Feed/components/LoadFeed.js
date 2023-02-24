@@ -74,8 +74,22 @@ const LoadFeed = (props) => {
   }
 
   const handleAfterLoadLazyLoadComponent = (value, index) => {
-    setState({ hasMoreLazy: true })
+    if (state.hasMore) {
+      setState({ hasMoreLazy: true })
+    }
 
+    // ** user data post
+    feedApi
+      .getGetUserPost(value.created_by)
+      .then((res) => {
+        value["user_data"] = res.data
+        const dataPost = [...state.dataPost]
+        dataPost[index] = value
+        setState({ dataPost: dataPost })
+      })
+      .catch((err) => {})
+
+    // load media
     if (
       value.source !== null &&
       (value.type === "image" || value.type === "video")
@@ -99,6 +113,41 @@ const LoadFeed = (props) => {
     }
   }
 
+  // load data create new
+  const loadDataCreateNew = async () => {
+    // ** user data post
+    setState({ loadingPostCreateNew: true })
+    await feedApi
+      .getGetUserPost(dataCreateNew.created_by)
+      .then((res) => {
+        dataCreateNew["user_data"] = res.data
+      })
+      .catch((err) => {})
+
+    if (
+      dataCreateNew.source !== null &&
+      (dataCreateNew.type === "image" || dataCreateNew.type === "video")
+    ) {
+      await downloadApi.getPhoto(dataCreateNew.source).then((response) => {
+        dataCreateNew["url_source"] = dataCreateNew["url_thumb"] =
+          URL.createObjectURL(response.data)
+      })
+    }
+
+    if (!_.isEmpty(dataCreateNew.medias) && dataCreateNew.type === "post") {
+      await handleLoadAttachmentMedias(dataCreateNew).then((res_promise) => {
+        dataCreateNew["medias"] = res_promise
+      })
+    }
+
+    setState({
+      dataCreateNewTemp: [...[dataCreateNew], ...state.dataCreateNewTemp],
+      loadingPostCreateNew: false
+    })
+
+    setDataCreateNew({})
+  }
+
   // ** useEffect
   useEffect(() => {
     loadData()
@@ -106,44 +155,12 @@ const LoadFeed = (props) => {
 
   useEffect(() => {
     if (!_.isEmpty(dataCreateNew)) {
-      setState({
-        dataCreateNewTemp: [...state.dataCreateNewTemp, ...[dataCreateNew]]
-      })
-      if (state.idPostCreateNew === "") {
-        setState({ idPostCreateNew: dataCreateNew._id })
-      }
-
-      if (
-        dataCreateNew.source !== null &&
-        (dataCreateNew.type === "image" || dataCreateNew.type === "video")
-      ) {
-        setState({ loadingPostCreateNew: true })
-        downloadApi.getPhoto(dataCreateNew.source).then((response) => {
-          dataCreateNew["url_source"] = dataCreateNew["url_thumb"] =
-            URL.createObjectURL(response.data)
-          setState({
-            dataPost: [...[dataCreateNew], ...state.dataPost],
-            loadingPostCreateNew: false
-          })
-        })
-      }
-
-      if (!_.isEmpty(dataCreateNew.medias) && dataCreateNew.type === "post") {
-        setState({ loadingPostCreateNew: true })
-        handleLoadAttachmentMedias(dataCreateNew).then((res_promise) => {
-          dataCreateNew["medias"] = res_promise
-          setState({
-            dataPost: [...[dataCreateNew], ...state.dataPost],
-            loadingPostCreateNew: false
-          })
-        })
-      }
-
-      if (dataCreateNew.type === "post" && _.isEmpty(dataCreateNew.medias)) {
-        setState({ dataPost: [...[dataCreateNew], ...state.dataPost] })
-      }
-
-      setDataCreateNew({})
+      loadDataCreateNew()
+    }
+  }, [dataCreateNew])
+  useEffect(() => {
+    if (!_.isEmpty(dataCreateNew) && state.idPostCreateNew === "") {
+      setState({ idPostCreateNew: dataCreateNew._id })
     }
   }, [dataCreateNew, state.idPostCreateNew])
 
@@ -158,6 +175,10 @@ const LoadFeed = (props) => {
             <Skeleton avatar active paragraph={{ rows: 2 }} />
           </div>
         )}
+
+        {_.map(state.dataCreateNewTemp, (value, index) => {
+          return <LoadPost key={index} data={value} />
+        })}
 
         {_.map(state.dataPost, (value, index) => {
           return (

@@ -58,6 +58,7 @@ const LoadPost = (props) => {
     if (height >= 90) {
       setState({ showSeeMore: true })
     }
+    console.log(data._id, height)
   }, [])
 
   // ** render
@@ -87,11 +88,11 @@ const LoadPost = (props) => {
   }
 
   return (
-    <div id={data._id} className="load-post">
+    <div className="load-post">
       <div className="post-header">
-        <Avatar className="img" userId={data.created_by} />
+        <Avatar className="img" src={data?.user_data?.avatar} />
         <div className="post-header-title">
-          <span className="name">Life. HR</span>
+          <span className="name">{data?.user_data?.full_name || ""}</span>
           <span className="time">{timeDifference(data.created_at)}</span>
         </div>
         <div className="post-header-right">

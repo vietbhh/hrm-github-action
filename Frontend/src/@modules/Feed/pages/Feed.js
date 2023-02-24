@@ -1,6 +1,6 @@
 import { useMergedState } from "@apps/utility/common"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useMemo } from "react"
 import "../assets/scss/feed.scss"
 import { feedApi } from "../common/api"
 import CreatePost from "../components/CreatePost"
@@ -57,6 +57,18 @@ const Feed = () => {
     })
   }, [])
 
+  // ** render
+  const renderLoadFeed = useMemo(
+    () => (
+      <LoadFeed
+        dataCreateNew={state.dataCreateNew}
+        setDataCreateNew={setDataCreateNew}
+        workspace={[]}
+      />
+    ),
+    [state.dataCreateNew]
+  )
+
   return (
     <Fragment>
       <div className="div-content">
@@ -67,11 +79,7 @@ const Feed = () => {
             workspace={[]}
           />
 
-          <LoadFeed
-            dataCreateNew={state.dataCreateNew}
-            setDataCreateNew={setDataCreateNew}
-            workspace={[]}
-          />
+          {renderLoadFeed}
         </div>
         <div className="div-right">
           <div id="div-sticky">
