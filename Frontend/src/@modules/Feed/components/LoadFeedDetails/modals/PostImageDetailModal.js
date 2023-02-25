@@ -1,44 +1,63 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  timeDifference,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import { Skeleton } from "antd"
 import { useEffect } from "react"
 import { Label, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import Avatar from "@apps/modules/download/pages/Avatar"
+import ReactHtmlParser from "react-html-parser"
+import ButtonReaction from "../ButtonReaction"
+
 const PostImageDetailModal = (props) => {
-  const { modal, toggleModal, dataModal, idImage, setIdImage, postType } = props
+  const {
+    modal,
+    toggleModal,
+    dataModal,
+    idImage,
+    setIdImage,
+    postType,
+    dataMedias
+  } = props
   const [state, setState] = useMergedState({
-    data: {}
+    data: {},
+    id_previous: "",
+    id_next: ""
   })
 
   // ** useEffect
   useEffect(() => {
-    console.log(dataModal)
     if (postType === "post") {
-      const _data = {}
-
-      /* _data[idImage] = dataModal
-      downloadApi.getPhoto(dataModal.source).then((response) => {
-        _data[idImage]["url_source"] = URL.createObjectURL(response.data)
-        setState({ data: _data })
-      }) */
+      const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
+      if (indexMedia !== -1) {
+        const id_next = dataMedias[indexMedia + 1]
+          ? dataMedias[indexMedia + 1]._id
+          : dataMedias[0]._id
+        const id_previous = dataMedias[indexMedia - 1]
+          ? dataMedias[indexMedia - 1]._id
+          : dataMedias[dataMedias.length - 1]._id
+        setState({ id_previous: id_previous, id_next: id_next })
+        const _data = { ...dataMedias[indexMedia] }
+        downloadApi.getPhoto(dataMedias[indexMedia].source).then((response) => {
+          _data["url_source"] = URL.createObjectURL(response.data)
+          setState({ data: _data })
+        })
+      } else {
+        setState({ data: {}, id_previous: "", id_next: "" })
+      }
     }
 
     if (postType === "image") {
-    }
-  }, [dataModal, postType])
-
-  useEffect(() => {
-    if (postType === "post") {
-    }
-
-    if (postType === "image") {
-      const _data = {}
-      _data[idImage] = { ...dataModal }
-      downloadApi.getPhoto(_data[idImage].source).then((response) => {
-        _data[idImage]["url_source"] = URL.createObjectURL(response.data)
+      const _data = { ...dataModal }
+      downloadApi.getPhoto(_data.source).then((response) => {
+        _data["url_source"] = URL.createObjectURL(response.data)
         setState({ data: _data })
       })
     }
-  }, [idImage, postType])
+  }, [idImage, postType, dataMedias])
 
   // ** render
   const renderDivBack = () => {
@@ -46,7 +65,12 @@ const PostImageDetailModal = (props) => {
       return (
         <>
           <div className="div-back left">
-            <a className="slide-navigator">
+            <a
+              className="slide-navigator"
+              onClick={(e) => {
+                e.preventDefault()
+                setIdImage(state.id_previous)
+              }}>
               <svg
                 width="10"
                 height="18"
@@ -62,7 +86,12 @@ const PostImageDetailModal = (props) => {
             </a>
           </div>
           <div className="div-back right">
-            <a className="slide-navigator">
+            <a
+              className="slide-navigator"
+              onClick={(e) => {
+                e.preventDefault()
+                setIdImage(state.id_next)
+              }}>
               <svg
                 width="10"
                 height="18"
@@ -84,6 +113,24 @@ const PostImageDetailModal = (props) => {
     return ""
   }
 
+  const renderMedia = () => {
+    if (state.data.url_source) {
+      if (state.data.type === "image") {
+        return <img src={state.data.url_source} />
+      }
+
+      if (state.data.type === "video") {
+        return (
+          <video controls muted>
+            <source src={state.data.url_source}></source>
+          </video>
+        )
+      }
+    }
+
+    return <Skeleton.Image active={true} />
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -93,7 +140,7 @@ const PostImageDetailModal = (props) => {
       backdropTransition={{ timeout: 100 }}>
       <ModalBody>
         <div className="div-body">
-          <button className="btn-back">
+          <button className="btn-back" onClick={() => toggleModal()}>
             <svg
               width="24"
               height="24"
@@ -113,14 +160,63 @@ const PostImageDetailModal = (props) => {
             </svg>
           </button>
           {renderDivBack()}
-          <div className="div-left">
-            {state.data[idImage]?.url_source ? (
-              <img src={state.data[idImage].url_source} />
-            ) : (
-              <Skeleton.Image active={true} />
-            )}
+          <div className="div-left">{renderMedia()}</div>
+
+          <div className="div-right">
+            <PerfectScrollbar options={{ wheelPropagation: false }}>
+              <div className="right-header">
+                <Avatar className="img" src={dataModal?.user_data?.avatar} />
+                <div className="right-header__title">
+                  <span className="name">
+                    {dataModal?.user_data?.full_name}
+                  </span>
+                  <span className="time">
+                    {timeDifference(dataModal.created_at)}
+                  </span>
+                </div>
+                <div className="right-header__right">
+                  <div className="button-dot cursor-pointer">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="4"
+                      viewBox="0 0 18 4"
+                      fill="none">
+                      <path
+                        d="M9 3C9.5523 3 10 2.5523 10 2C10 1.4477 9.5523 1 9 1C8.4477 1 8 1.4477 8 2C8 2.5523 8.4477 3 9 3Z"
+                        stroke="#B0B7C3"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M16 3C16.5523 3 17 2.5523 17 2C17 1.4477 16.5523 1 16 1C15.4477 1 15 1.4477 15 2C15 2.5523 15.4477 3 16 3Z"
+                        stroke="#B0B7C3"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M2 3C2.55228 3 3 2.5523 3 2C3 1.4477 2.55228 1 2 1C1.44772 1 1 1.4477 1 2C1 2.5523 1.44772 3 2 3Z"
+                        stroke="#B0B7C3"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="right-content">
+                {ReactHtmlParser(state.data?.content)}
+              </div>
+              <div className="right-button">
+                <ButtonReaction />
+              </div>
+              <div className="right-comment-content"></div>
+              <div className="right-comment-form"></div>
+            </PerfectScrollbar>
           </div>
-          <div className="div-right"></div>
         </div>
       </ModalBody>
     </Modal>

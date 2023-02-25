@@ -1,3 +1,5 @@
+import { downloadApi } from "@apps/modules/download/common/api"
+
 export const decodeHTMLEntities = (text) => {
   const entities = [
     ["amp", "&"],
@@ -36,4 +38,26 @@ export const renderShowMoreNumber = (fileLength) => {
 
 export const renderIconVideo = () => {
   return <i className="fa-light fa-circle-play icon-play"></i>
+}
+
+export const handleLoadAttachmentMedias = (value) => {
+  const promises = []
+  _.forEach(value.medias, (item) => {
+    const promise = new Promise(async (resolve, reject) => {
+      await downloadApi.getPhoto(item.thumb).then((response) => {
+        item["url_thumb"] = URL.createObjectURL(response.data)
+      })
+      /* if (item.type === "video") {
+          await downloadApi.getPhoto(item.thumb).then((response) => {
+            item["url_thumb"] = URL.createObjectURL(response.data)
+          })
+        } */
+
+      resolve(item)
+    })
+
+    promises.push(promise)
+  })
+
+  return Promise.all(promises)
 }

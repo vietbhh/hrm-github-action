@@ -49,5 +49,9 @@ export const feedApi = {
 
   async getGetFeedChild(id) {
     return await axiosNodeApi.get("/feed/get-feed-child/" + id)
+  },
+
+  async getGetFeed(id) {
+    return await axiosNodeApi.get("/feed/get-feed/" + id)
   }
 }

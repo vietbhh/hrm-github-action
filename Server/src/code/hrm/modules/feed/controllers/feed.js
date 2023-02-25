@@ -88,7 +88,7 @@ const submitPostController = async (req, res, next) => {
       return res.respond(out)
     } else {
       const promises = []
-      forEach(body.file, (value) => {
+      forEach(body.file, (value, key) => {
         const promise = new Promise(async (resolve, reject) => {
           let _fileInput = null
           forEach(fileInput, (item) => {
@@ -119,7 +119,8 @@ const submitPostController = async (req, res, next) => {
             type: type_feed,
             source: resultFileInput.source,
             thumb: resultFileInput.thumb,
-            ref: _id_parent
+            ref: _id_parent,
+            sort_number: key
           })
           const saveFeedChild = await feedModelChild.save()
           resolve({
@@ -173,8 +174,23 @@ const loadFeedController = async (req, res, next) => {
 }
 
 // get feed child
-const getFeedChild = (req, res, next) => {
-  return res.respond("")
+const getFeedChild = async (req, res, next) => {
+  const id = req.params.id
+  const feed = await feedMongoModel.find({ ref: id }).sort({
+    sort_number: "asc"
+  })
+  return res.respond(feed)
+}
+
+// get feed by id
+const getFeedById = async (req, res, next) => {
+  const id = req.params.id
+  try {
+    const feed = await feedMongoModel.findOne({ _id: id })
+    return res.respond(feed)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 
 // get user post
@@ -265,10 +281,11 @@ const handleDeleteFile = (file) => {
   if (fs.existsSync(path.join(localSavePath, file.source))) {
     fs.unlinkSync(path.join(localSavePath, file.source))
   }
-  if (file.type.includes("video/")) {
-    if (fs.existsSync(path.join(localSavePath, file.thumb))) {
-      fs.unlinkSync(path.join(localSavePath, file.thumb))
-    }
+  if (
+    file.type.includes("video/") &&
+    fs.existsSync(path.join(localSavePath, file.thumb))
+  ) {
+    fs.unlinkSync(path.join(localSavePath, file.thumb))
   }
 
   return true
@@ -280,5 +297,6 @@ export {
   submitPostController,
   loadFeedController,
   getUserPost,
-  getFeedChild
+  getFeedChild,
+  getFeedById
 }

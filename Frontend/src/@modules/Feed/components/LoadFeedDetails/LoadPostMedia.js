@@ -1,4 +1,5 @@
 import { useMergedState } from "@apps/utility/common"
+import { feedApi } from "@modules/Feed/common/api"
 import {
   renderIconVideo,
   renderShowMoreNumber
@@ -9,12 +10,13 @@ import React, { Fragment, useEffect } from "react"
 import PostImageDetailModal from "./modals/PostImageDetailModal"
 
 const LoadPostMedia = (props) => {
-  const { data } = props
+  const { data, current_url } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
     dataModal: {},
     idImage: "",
-    postType: ""
+    postType: "",
+    dataMedias: []
   })
 
   // ** function
@@ -28,8 +30,8 @@ const LoadPostMedia = (props) => {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
-      window.history.replaceState(null, "", `/feed`)
-      setState({ dataModal: {}, idImage: "", postType: "" })
+      window.history.replaceState(null, "", current_url)
+      //setState({ dataModal: {}, idImage: "", postType: "" })
     }
   }, [state.modalPostImageDetail])
 
@@ -91,6 +93,15 @@ const LoadPostMedia = (props) => {
                 idImage: item._id,
                 postType: data.type
               })
+
+              if (_.isEmpty(state.dataMedias)) {
+                feedApi
+                  .getGetFeedChild(data._id)
+                  .then((res) => {
+                    setState({ dataMedias: res.data })
+                  })
+                  .catch((err) => {})
+              }
             }}
             className={classNames(`div-attachment-item item-${key + 1}`, {
               "item-count-1": data.medias.length === 1,
@@ -136,6 +147,7 @@ const LoadPostMedia = (props) => {
         idImage={state.idImage}
         setIdImage={(value) => setState({ idImage: value })}
         postType={state.postType}
+        dataMedias={state.dataMedias}
       />
     </Fragment>
   )

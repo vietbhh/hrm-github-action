@@ -55,6 +55,9 @@ const feedSchema = baseSchema("m_feed", {
   // ** feed child
   ref: {
     type: mongoose.Schema.Types.ObjectId
+  },
+  sort_number: {
+    type: Number
   }
   // **
 })

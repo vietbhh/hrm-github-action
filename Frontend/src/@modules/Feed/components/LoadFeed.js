@@ -5,6 +5,7 @@ import React, { useEffect } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { feedApi } from "../common/api"
+import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "./LoadFeedDetails/LoadPost"
 
 const LoadFeed = (props) => {
@@ -21,6 +22,8 @@ const LoadFeed = (props) => {
     idPostCreateNew: "",
     dataCreateNewTemp: []
   })
+
+  const current_url = window.location.pathname
 
   // ** function
   const loadData = () => {
@@ -47,28 +50,6 @@ const LoadFeed = (props) => {
           setState({ loadingPost: false, hasMore: true })
         })
     }, 1000)
-  }
-
-  const handleLoadAttachmentMedias = (value) => {
-    const promises = []
-    _.forEach(value.medias, (item) => {
-      const promise = new Promise(async (resolve, reject) => {
-        await downloadApi.getPhoto(item.thumb).then((response) => {
-          item["url_thumb"] = URL.createObjectURL(response.data)
-        })
-        /* if (item.type === "video") {
-          await downloadApi.getPhoto(item.thumb).then((response) => {
-            item["url_thumb"] = URL.createObjectURL(response.data)
-          })
-        } */
-
-        resolve(item)
-      })
-
-      promises.push(promise)
-    })
-
-    return Promise.all(promises)
   }
 
   const handleAfterLoadLazyLoadComponent = (value, index) => {
@@ -190,7 +171,7 @@ const LoadFeed = (props) => {
             <LazyLoadComponent
               key={index}
               afterLoad={() => handleAfterLoadLazyLoadComponent(value, index)}>
-              <LoadPost data={value} />
+              <LoadPost data={value} current_url={current_url} />
             </LazyLoadComponent>
           )
         })}
