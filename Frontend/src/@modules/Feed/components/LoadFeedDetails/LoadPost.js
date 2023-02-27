@@ -13,7 +13,7 @@ import ButtonReaction from "./ButtonReaction"
 import LoadPostMedia from "./LoadPostMedia"
 
 const LoadPost = (props) => {
-  const { data, current_url } = props
+  const { data, current_url, idMedia, setIdMedia } = props
   const [state, setState] = useMergedState({
     showSeeMore: false,
     seeMore: false
@@ -100,7 +100,12 @@ const LoadPost = (props) => {
         <div id={`post-body-content-${data._id}`} className="post-body-content">
           {renderContent()}
         </div>
-        <LoadPostMedia data={data} current_url={current_url} />
+        <LoadPostMedia
+          data={data}
+          current_url={current_url}
+          idMedia={idMedia}
+          setIdMedia={setIdMedia}
+        />
       </div>
       <div className="post-footer">
         <div className="post-footer-reaction">

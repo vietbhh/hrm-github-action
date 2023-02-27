@@ -1,15 +1,11 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import {
-  timeDifference,
-  useFormatMessage,
-  useMergedState
-} from "@apps/utility/common"
-import { Skeleton } from "antd"
-import { useEffect } from "react"
-import { Label, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
-import PerfectScrollbar from "react-perfect-scrollbar"
 import Avatar from "@apps/modules/download/pages/Avatar"
+import { timeDifference, useMergedState } from "@apps/utility/common"
+import { Skeleton } from "antd"
+import { useEffect, useRef } from "react"
 import ReactHtmlParser from "react-html-parser"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import { Modal, ModalBody } from "reactstrap"
 import ButtonReaction from "../ButtonReaction"
 
 const PostImageDetailModal = (props) => {
@@ -20,19 +16,25 @@ const PostImageDetailModal = (props) => {
     idImage,
     setIdImage,
     postType,
-    dataMedias
+    dataMedias,
+    current_url
   } = props
   const [state, setState] = useMergedState({
     data: {},
     id_previous: "",
     id_next: ""
   })
+  const imageRef = useRef(null)
+  const refDivBackLeft = useRef(null)
+  const refDivBackRight = useRef(null)
+  const refDivRight = useRef(null)
 
   // ** useEffect
   useEffect(() => {
     if (postType === "post") {
       const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
       if (indexMedia !== -1) {
+        setState({ data: {} })
         const id_next = dataMedias[indexMedia + 1]
           ? dataMedias[indexMedia + 1]._id
           : dataMedias[0]._id
@@ -59,12 +61,67 @@ const PostImageDetailModal = (props) => {
     }
   }, [idImage, postType, dataMedias])
 
+  useEffect(() => {
+    const handleKeydown = (event) => {
+      // left
+      if (event.keyCode === 37) {
+        setIdImage(state.id_previous)
+      }
+
+      // right
+      if (event.keyCode === 39) {
+        setIdImage(state.id_next)
+      }
+    }
+    window.addEventListener("keydown", handleKeydown)
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown)
+    }
+  }, [state.id_previous, state.id_next])
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (refDivBackLeft.current) {
+        if (
+          imageRef.current &&
+          !imageRef.current.contains(event.target) &&
+          refDivRight.current &&
+          !refDivRight.current.contains(event.target) &&
+          refDivBackLeft.current &&
+          !refDivBackLeft.current.contains(event.target) &&
+          refDivBackRight.current &&
+          !refDivBackRight.current.contains(event.target)
+        ) {
+          toggleModal()
+          window.history.replaceState(null, "", current_url)
+        }
+      } else {
+        if (
+          imageRef.current &&
+          !imageRef.current.contains(event.target) &&
+          refDivRight.current &&
+          !refDivRight.current.contains(event.target)
+        ) {
+          toggleModal()
+          window.history.replaceState(null, "", current_url)
+        }
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+
+    return () => {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+  }, [imageRef, refDivBackLeft, refDivBackRight, refDivRight, state.data])
+
   // ** render
   const renderDivBack = () => {
     if (postType === "post") {
       return (
         <>
-          <div className="div-back left">
+          <div className="div-back left" ref={refDivBackLeft}>
             <a
               className="slide-navigator"
               onClick={(e) => {
@@ -85,7 +142,7 @@ const PostImageDetailModal = (props) => {
               </svg>
             </a>
           </div>
-          <div className="div-back right">
+          <div className="div-back right" ref={refDivBackRight}>
             <a
               className="slide-navigator"
               onClick={(e) => {
@@ -116,7 +173,7 @@ const PostImageDetailModal = (props) => {
   const renderMedia = () => {
     if (state.data.url_source) {
       if (state.data.type === "image") {
-        return <img src={state.data.url_source} />
+        return <img ref={imageRef} src={state.data.url_source} />
       }
 
       if (state.data.type === "video") {
@@ -134,13 +191,16 @@ const PostImageDetailModal = (props) => {
   return (
     <Modal
       isOpen={modal}
-      toggle={() => toggleModal()}
+      toggle={() => {
+        toggleModal()
+        window.history.replaceState(null, "", current_url)
+      }}
       className="feed modal-post-image-detail"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalBody>
         <div className="div-body">
-          <button className="btn-back" onClick={() => toggleModal()}>
+          <button className="btn-back" onClick={() => {}}>
             <svg
               width="24"
               height="24"
@@ -162,7 +222,7 @@ const PostImageDetailModal = (props) => {
           {renderDivBack()}
           <div className="div-left">{renderMedia()}</div>
 
-          <div className="div-right">
+          <div className="div-right" ref={refDivRight}>
             <PerfectScrollbar options={{ wheelPropagation: false }}>
               <div className="right-header">
                 <Avatar className="img" src={dataModal?.user_data?.avatar} />

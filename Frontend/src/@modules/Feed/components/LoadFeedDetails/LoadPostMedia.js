@@ -10,7 +10,7 @@ import React, { Fragment, useEffect } from "react"
 import PostImageDetailModal from "./modals/PostImageDetailModal"
 
 const LoadPostMedia = (props) => {
-  const { data, current_url } = props
+  const { data, current_url, idMedia, setIdMedia } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
     dataModal: {},
@@ -30,10 +30,31 @@ const LoadPostMedia = (props) => {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
-      window.history.replaceState(null, "", current_url)
       //setState({ dataModal: {}, idImage: "", postType: "" })
     }
   }, [state.modalPostImageDetail])
+
+  useEffect(() => {
+    if (idMedia !== undefined && idMedia !== "") {
+      setState({
+        idImage: idMedia,
+        modalPostImageDetail: true,
+        dataModal: data,
+        postType: data.type
+      })
+
+      if (!_.isEmpty(data.medias)) {
+        feedApi
+          .getGetFeedChild(data._id)
+          .then((res) => {
+            setState({ dataMedias: res.data })
+          })
+          .catch((err) => {})
+      }
+
+      setIdMedia("")
+    }
+  }, [idMedia, data])
 
   // ** render
   const renderMedia = () => {
@@ -148,6 +169,7 @@ const LoadPostMedia = (props) => {
         setIdImage={(value) => setState({ idImage: value })}
         postType={state.postType}
         dataMedias={state.dataMedias}
+        current_url={current_url}
       />
     </Fragment>
   )

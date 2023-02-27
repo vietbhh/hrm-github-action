@@ -1,35 +1,25 @@
-import React, { Fragment, useEffect } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import {
-  timeDifference,
-  useFormatMessage,
-  useMergedState
-} from "@apps/utility/common"
-import { feedApi } from "@modules/Feed/common/api"
-import "../assets/scss/feed.scss"
-import { Skeleton } from "antd"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { Card, CardBody } from "reactstrap"
-import LoadPost from "../components/LoadFeedDetails/LoadPost"
 import { downloadApi } from "@apps/modules/download/common/api"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { feedApi } from "@modules/Feed/common/api"
+import { Skeleton } from "antd"
+import React, { Fragment, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import "../assets/scss/feed.scss"
 import { handleLoadAttachmentMedias } from "../common/common"
+import LoadPost from "../components/LoadFeedDetails/LoadPost"
 
 const PostDetail = (props) => {
   const {} = props
   const [state, setState] = useMergedState({
     dataPost: {},
     dataMedia: [],
-    loadingPost: true
+    loadingPost: true,
+    _idMedia: ""
   })
   const { idPost, idMedia } = useParams()
 
-  console.log(idPost, idMedia)
-  const current_url =
-    window.location.pathname.split("/")[0] +
-    "/" +
-    window.location.pathname.split("/")[1] +
-    "/" +
-    window.location.pathname.split("/")[2]
+  const current_url = `/posts/${idPost}`
 
   // ** useEffect
   useEffect(() => {
@@ -39,6 +29,11 @@ const PostDetail = (props) => {
       .then(async (res) => {
         if (!_.isEmpty(res.data)) {
           const data = res.data
+          if (idPost === idMedia) {
+            setState({ _idMedia: idMedia })
+          } else {
+            setState({ _idMedia: "" })
+          }
           await feedApi
             .getGetUserPost(data.created_by)
             .then((res) => {
@@ -57,6 +52,15 @@ const PostDetail = (props) => {
 
           if (!_.isEmpty(data.medias) && data.type === "post") {
             await handleLoadAttachmentMedias(data).then((res_promise) => {
+              const check_index_media = res_promise.findIndex(
+                (item) => item._id === idMedia
+              )
+              if (check_index_media !== -1) {
+                setState({ _idMedia: idMedia })
+              } else {
+                setState({ _idMedia: "" })
+                window.history.replaceState(null, "", current_url)
+              }
               data["medias"] = res_promise
             })
           }
@@ -92,7 +96,12 @@ const PostDetail = (props) => {
             )}
 
             {!state.loadingPost && !_.isEmpty(state.dataPost) && (
-              <LoadPost data={state.dataPost} current_url={current_url} />
+              <LoadPost
+                data={state.dataPost}
+                current_url={current_url}
+                idMedia={state._idMedia}
+                setIdMedia={(value) => setState({ _idMedia: value })}
+              />
             )}
           </div>
         </div>
