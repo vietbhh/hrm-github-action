@@ -73,10 +73,11 @@ const getUser = (identity) => {
       })
 }
 
-const getUsers = (ids) => {
+const getUsers = (ids, condition = {}) => {
   return usersModel.findAll({
     where: {
-      id: ids
+      id: ids,
+      ...condition
     }
   })
 }

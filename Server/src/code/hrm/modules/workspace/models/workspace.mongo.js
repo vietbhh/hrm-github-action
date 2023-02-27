@@ -51,7 +51,8 @@ const workspaceSchema = baseSchema("m_workspace", {
       title: String,
       description: String
     }
-  ]
+  ],
+  request_joins: [Number]
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

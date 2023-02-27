@@ -28,5 +28,14 @@ export const workspaceApi = {
     return await axiosNodeApi.post(`/workspace/sort-group-rule/${id}`, data, {
       disableLoading: true
     })
+  },
+  async loadDataMember(id, params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(
+      `/workspace/load-data-member/${id}?get${strParams}`,
+      {
+        disableLoading: true
+      }
+    )
   }
 }
