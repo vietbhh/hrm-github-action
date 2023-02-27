@@ -1,12 +1,12 @@
 import { useFormatMessage } from "@apps/utility/common"
 import { Dropdown } from "antd"
 import React, { Fragment } from "react"
-import img_care from "../../assets/images/care.png"
-import img_haha from "../../assets/images/haha.png"
-import img_like from "../../assets/images/like.png"
-import img_love from "../../assets/images/love.png"
-import img_sad from "../../assets/images/sad.png"
-import img_wow from "../../assets/images/wow.png"
+import img_care from "../../../assets/images/care.png"
+import img_haha from "../../../assets/images/haha.png"
+import img_like from "../../../assets/images/like.png"
+import img_love from "../../../assets/images/love.png"
+import img_sad from "../../../assets/images/sad.png"
+import img_wow from "../../../assets/images/wow.png"
 
 const ButtonReaction = (props) => {
   const {} = props

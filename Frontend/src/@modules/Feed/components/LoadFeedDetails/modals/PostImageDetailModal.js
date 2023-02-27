@@ -1,12 +1,13 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import Avatar from "@apps/modules/download/pages/Avatar"
-import { timeDifference, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
 import ReactHtmlParser from "react-html-parser"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
-import ButtonReaction from "../ButtonReaction"
+import ButtonReaction from "../PostDetails/ButtonReaction"
+import PostHeader from "../PostDetails/PostHeader"
+import PostShowReaction from "../PostDetails/PostShowReaction"
 
 const PostImageDetailModal = (props) => {
   const {
@@ -27,7 +28,13 @@ const PostImageDetailModal = (props) => {
   const imageRef = useRef(null)
   const refDivBackLeft = useRef(null)
   const refDivBackRight = useRef(null)
-  const refDivRight = useRef(null)
+  const refDivLeft = useRef(null)
+
+  // ** function
+  const handleCloseModal = () => {
+    toggleModal()
+    window.history.replaceState(null, "", current_url)
+  }
 
   // ** useEffect
   useEffect(() => {
@@ -66,11 +73,21 @@ const PostImageDetailModal = (props) => {
       // left
       if (event.keyCode === 37) {
         setIdImage(state.id_previous)
+        window.history.replaceState(
+          null,
+          "",
+          `/posts/${dataModal._id}/${state.id_previous}`
+        )
       }
 
       // right
       if (event.keyCode === 39) {
         setIdImage(state.id_next)
+        window.history.replaceState(
+          null,
+          "",
+          `/posts/${dataModal._id}/${state.id_next}`
+        )
       }
     }
     window.addEventListener("keydown", handleKeydown)
@@ -78,35 +95,27 @@ const PostImageDetailModal = (props) => {
     return () => {
       window.removeEventListener("keydown", handleKeydown)
     }
-  }, [state.id_previous, state.id_next])
+  }, [state.id_previous, state.id_next, dataModal])
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (refDivBackLeft.current) {
-        if (
-          imageRef.current &&
-          !imageRef.current.contains(event.target) &&
-          refDivRight.current &&
-          !refDivRight.current.contains(event.target) &&
-          refDivBackLeft.current &&
-          !refDivBackLeft.current.contains(event.target) &&
-          refDivBackRight.current &&
-          !refDivBackRight.current.contains(event.target)
-        ) {
-          toggleModal()
-          window.history.replaceState(null, "", current_url)
+      setTimeout(() => {
+        if (state.data.url_source) {
+          if (refDivLeft.current && refDivLeft.current.contains(event.target)) {
+            if (
+              (imageRef.current && imageRef.current.contains(event.target)) ||
+              (refDivBackLeft.current &&
+                refDivBackLeft.current.contains(event.target)) ||
+              (refDivBackRight.current &&
+                refDivBackRight.current.contains(event.target))
+            ) {
+              // do nothing
+            } else {
+              handleCloseModal()
+            }
+          }
         }
-      } else {
-        if (
-          imageRef.current &&
-          !imageRef.current.contains(event.target) &&
-          refDivRight.current &&
-          !refDivRight.current.contains(event.target)
-        ) {
-          toggleModal()
-          window.history.replaceState(null, "", current_url)
-        }
-      }
+      }, 200)
     }
 
     document.addEventListener("mousedown", handleClickOutside)
@@ -114,7 +123,7 @@ const PostImageDetailModal = (props) => {
     return () => {
       document.addEventListener("mousedown", handleClickOutside)
     }
-  }, [imageRef, refDivBackLeft, refDivBackRight, refDivRight, state.data])
+  }, [imageRef, refDivBackLeft, refDivBackRight, refDivLeft, state.data])
 
   // ** render
   const renderDivBack = () => {
@@ -127,6 +136,11 @@ const PostImageDetailModal = (props) => {
               onClick={(e) => {
                 e.preventDefault()
                 setIdImage(state.id_previous)
+                window.history.replaceState(
+                  null,
+                  "",
+                  `/posts/${dataModal._id}/${state.id_previous}`
+                )
               }}>
               <svg
                 width="10"
@@ -148,6 +162,11 @@ const PostImageDetailModal = (props) => {
               onClick={(e) => {
                 e.preventDefault()
                 setIdImage(state.id_next)
+                window.history.replaceState(
+                  null,
+                  "",
+                  `/posts/${dataModal._id}/${state.id_next}`
+                )
               }}>
               <svg
                 width="10"
@@ -178,29 +197,32 @@ const PostImageDetailModal = (props) => {
 
       if (state.data.type === "video") {
         return (
-          <video controls muted>
-            <source src={state.data.url_source}></source>
+          <video controls muted ref={imageRef}>
+            <source src={state.data.url_source} />
           </video>
         )
       }
     }
 
-    return <Skeleton.Image active={true} />
+    return <Skeleton.Image active={true} refs={imageRef} />
   }
 
   return (
     <Modal
       isOpen={modal}
       toggle={() => {
-        toggleModal()
-        window.history.replaceState(null, "", current_url)
+        handleCloseModal()
       }}
       className="feed modal-post-image-detail"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalBody>
         <div className="div-body">
-          <button className="btn-back" onClick={() => {}}>
+          <button
+            className="btn-back"
+            onClick={() => {
+              handleCloseModal()
+            }}>
             <svg
               width="24"
               height="24"
@@ -220,55 +242,20 @@ const PostImageDetailModal = (props) => {
             </svg>
           </button>
           {renderDivBack()}
-          <div className="div-left">{renderMedia()}</div>
+          <div className="div-left" ref={refDivLeft}>
+            {renderMedia()}
+          </div>
 
-          <div className="div-right" ref={refDivRight}>
+          <div className="div-right">
             <PerfectScrollbar options={{ wheelPropagation: false }}>
               <div className="right-header">
-                <Avatar className="img" src={dataModal?.user_data?.avatar} />
-                <div className="right-header__title">
-                  <span className="name">
-                    {dataModal?.user_data?.full_name}
-                  </span>
-                  <span className="time">
-                    {timeDifference(dataModal.created_at)}
-                  </span>
-                </div>
-                <div className="right-header__right">
-                  <div className="button-dot cursor-pointer">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="4"
-                      viewBox="0 0 18 4"
-                      fill="none">
-                      <path
-                        d="M9 3C9.5523 3 10 2.5523 10 2C10 1.4477 9.5523 1 9 1C8.4477 1 8 1.4477 8 2C8 2.5523 8.4477 3 9 3Z"
-                        stroke="#B0B7C3"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M16 3C16.5523 3 17 2.5523 17 2C17 1.4477 16.5523 1 16 1C15.4477 1 15 1.4477 15 2C15 2.5523 15.4477 3 16 3Z"
-                        stroke="#B0B7C3"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M2 3C2.55228 3 3 2.5523 3 2C3 1.4477 2.55228 1 2 1C1.44772 1 1 1.4477 1 2C1 2.5523 1.44772 3 2 3Z"
-                        stroke="#B0B7C3"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
+                <PostHeader data={dataModal} />
               </div>
               <div className="right-content">
                 {ReactHtmlParser(state.data?.content)}
+              </div>
+              <div className="right-show-reaction">
+                <PostShowReaction short={true} />
               </div>
               <div className="right-button">
                 <ButtonReaction />
