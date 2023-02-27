@@ -33,16 +33,23 @@
     }
   }
 
+  .btn-action-secondary {
+    background-color: #e5e5e5 !important;
+    border-color: #e5e5e5 !important;
+    color: $primary-text-color !important;
+  }
+
+  .small-description {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(179, 179, 179);
+  }
+
+
   .tab-content {
     .tab-introduction {
       .card {
         border-radius: 14px;
-      }
-
-      .small-description {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: rgb(179, 179, 179);
       }
 
       .group-rule-container {
@@ -78,6 +85,16 @@
             color: rgb(179, 179, 179);
           }
         }
+      }
+    }
+
+    .tab-member {
+      .section {
+        padding: 15px 0;
+      }
+
+      .border-bot {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       }
     }
   }
