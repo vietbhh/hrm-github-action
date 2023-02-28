@@ -4433,7 +4433,13 @@
         "remove": "Remove",
         "add_new_rule": "Add new rule",
         "edit_rule": "Edit rule",
-        "remove_rule": "Remove rule"
+        "remove_rule": "Remove rule",
+        "set_as_administrator": "Set as administrator",
+        "remove_this_member_from_this_workspace": "Remove this member from this workspace",
+        "view_profile": "View profile",
+        "remove_from_administrator": "Remove from administrator",
+        "approve": "Approve",
+        "approve_all": "Approve all request"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4444,7 +4450,8 @@
         "introduction": "Introduction",
         "group_rules": "Group rules",
         "member": "Member",
-        "media": "Media"
+        "media": "Media",
+        "request_to_join": "Request to join"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4457,6 +4464,7 @@
         "empty_workspace": "No workspace found!",
         "empty_group_rule": "This Workspace have no rule!",
         "empty_introduction": "This Workspace have no introduction!",
+        "empty_request_join": "This Workspace have no request join!",
         "create_new_workspace": "Create new workspace",
         "add_introduction_description": "Please add description to help people learn more about your group!",
         "group_rule_title": "Title",
@@ -4486,7 +4494,20 @@
             "title": "History",
             "group_crated_date": "Group created date"
           }
-        }
+        },
+        "search_member": "Search member",
+        "admin": "Admin",
+        "member_list": "Member List",
+        "confirm_set_as_administrator": {
+          "title": "Are you sure?",
+          "content_add": "{name} will be the administrator of the workspace.",
+          "content_remove": "{name} will no longer be an administrator of the workspace."
+        },
+        "confirm_remove_member": {
+          "title": "Are you sure?",
+          "content": "{name} will be removed form this workspace."
+        },
+        "approved": "Approved"
       }
     }
   }
