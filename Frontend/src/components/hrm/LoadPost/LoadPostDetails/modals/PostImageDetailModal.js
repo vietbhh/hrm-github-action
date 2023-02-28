@@ -59,7 +59,7 @@ const PostImageDetailModal = (props) => {
       }
     }
 
-    if (postType === "image") {
+    if (postType === "image" || postType === "video") {
       const _data = { ...dataModal }
       downloadApi.getPhoto(_data.source).then((response) => {
         _data["url_source"] = URL.createObjectURL(response.data)

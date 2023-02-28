@@ -274,7 +274,6 @@ const CreatePost = (props) => {
         fullName={fullName}
         dataMention={state.dataMention}
         workspace={workspace}
-        userId={userId}
         setDataCreateNew={setDataCreateNew}
         approveStatus={approveStatus}
       />

@@ -24,7 +24,6 @@ const ModalCreatePost = (props) => {
     privacy_type = "workspace",
     dataMention,
     workspace,
-    userId,
     setModal,
     setDataCreateNew,
     approveStatus
