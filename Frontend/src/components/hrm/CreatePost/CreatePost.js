@@ -9,7 +9,12 @@ import { useSelector } from "react-redux"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
-  const { dataEmployee, workspace } = props
+  const {
+    dataEmployee,
+    workspace,
+    setDataCreateNew,
+    approveStatus = "approved"
+  } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: []
@@ -270,6 +275,8 @@ const CreatePost = (props) => {
         dataMention={state.dataMention}
         workspace={workspace}
         userId={userId}
+        setDataCreateNew={setDataCreateNew}
+        approveStatus={approveStatus}
       />
     </Fragment>
   )

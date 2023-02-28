@@ -1,5 +1,9 @@
 import { axiosNodeApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
+import {
+  erpSelectToValues,
+  object2QueryString,
+  serialize
+} from "@apps/utility/handleData"
 
 export const feedApi = {
   async postUploadAttachment(data) {
@@ -14,8 +18,8 @@ export const feedApi = {
     )
   },
 
-  async getGetAllEmployee() {
-    return await axiosNodeApi.get("/feed/get-all-employee")
+  async getGetAllEmployeeActive() {
+    return await axiosNodeApi.get("/feed/get-all-employee-active")
   },
 
   async postSubmitPost(data) {
@@ -28,5 +32,26 @@ export const feedApi = {
         }
       }
     )
+  },
+
+  async getLoadFeed(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosNodeApi.get("/feed/load-feed?" + stringFilters, {
+      disableLoading: true
+    })
+  },
+
+  async getGetUserPost(id) {
+    return await axiosNodeApi.get("/feed/get-user-post/" + id)
+  },
+
+  async getGetFeedChild(id) {
+    return await axiosNodeApi.get("/feed/get-feed-child/" + id)
+  },
+
+  async getGetFeed(id) {
+    return await axiosNodeApi.get("/feed/get-feed/" + id)
   }
 }

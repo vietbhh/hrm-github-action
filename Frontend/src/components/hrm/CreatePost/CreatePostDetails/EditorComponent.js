@@ -16,6 +16,7 @@ import createMentionPlugin, {
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar"
 import { useCallback, useEffect, useMemo } from "react"
 
+import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
@@ -83,14 +84,6 @@ const EditorComponent = (props) => {
         placeholder={useFormatMessage(
           "modules.feed.create_post.text.placeholder_input"
         )}
-        editorStyle={{
-          minHeight: "150px",
-          maxHeight: "auto"
-        }}
-        wrapperStyle={{
-          minHeight: "200px",
-          maxHeight: "auto"
-        }}
       />
       <Toolbar>
         {

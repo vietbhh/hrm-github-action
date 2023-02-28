@@ -94,7 +94,7 @@ const ModalEditAttachment = (props) => {
 
                           const _fileInput = [...fileInput]
                           const indexFile = _fileInput.findIndex(
-                            (item) => item.name === value.name
+                            (item) => item.name === value.name_original
                           )
                           _fileInput.splice(indexFile, 1)
                           setFileInput(_fileInput)

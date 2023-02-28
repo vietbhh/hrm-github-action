@@ -7,15 +7,12 @@ const feedSchema = baseSchema("m_feed", {
     auto: true,
     required: true
   },
-  workspace: {
-    type: {
-      ids: [mongoose.Schema.Types.ObjectId],
-      permission: {
-        type: String,
-        enum: ["default", "workspace", "employee", "only_me"]
-      }
-    },
-    default: {}
+  permission_ids: {
+    type: [mongoose.Schema.Types.ObjectId]
+  },
+  permission: {
+    type: String,
+    enum: ["default", "workspace", "employee", "only_me"]
   },
   content: {
     type: String
@@ -44,6 +41,11 @@ const feedSchema = baseSchema("m_feed", {
     ],
     default: []
   },
+  approve_status: {
+    type: String,
+    enum: ["approved", "rejected"],
+    default: "approve"
+  },
 
   // ** source child / post: 1 image/video
   source: {
@@ -52,11 +54,15 @@ const feedSchema = baseSchema("m_feed", {
   thumb: {
     type: String
   },
+
   // **
 
   // ** feed child
   ref: {
     type: mongoose.Schema.Types.ObjectId
+  },
+  sort_number: {
+    type: Number
   }
   // **
 })
