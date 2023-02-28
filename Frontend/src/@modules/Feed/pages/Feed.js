@@ -1,9 +1,8 @@
 import { useMergedState } from "@apps/utility/common"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
-import "../assets/scss/feed.scss"
 import { feedApi } from "../common/api"
-import CreatePost from "../components/CreatePost"
+import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import LoadFeed from "../components/LoadFeed"
 
 const Feed = () => {
@@ -64,9 +63,10 @@ const Feed = () => {
         dataCreateNew={state.dataCreateNew}
         setDataCreateNew={setDataCreateNew}
         workspace={[]}
+        dataEmployee={state.dataEmployee}
       />
     ),
-    [state.dataCreateNew]
+    [state.dataCreateNew, state.dataEmployee]
   )
 
   return (

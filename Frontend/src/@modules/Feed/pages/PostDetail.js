@@ -1,11 +1,14 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import { downloadApi } from "@apps/modules/download/common/api"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  getAvatarUrl,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
 import { useParams } from "react-router-dom"
-import "../assets/scss/feed.scss"
 import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "../components/LoadFeedDetails/LoadPost"
 
@@ -15,7 +18,8 @@ const PostDetail = (props) => {
     dataPost: {},
     dataMedia: [],
     loadingPost: true,
-    _idMedia: ""
+    _idMedia: "",
+    dataMention: []
   })
   const { idPost, idMedia } = useParams()
 
@@ -74,6 +78,22 @@ const PostDetail = (props) => {
       })
   }, [idPost, idMedia])
 
+  useEffect(() => {
+    feedApi.getGetAllEmployeeActive().then((res) => {
+      const data_mention = []
+      _.forEach(res.data, (value) => {
+        data_mention.push({
+          id: value.id,
+          name: value.full_name,
+          link: "#",
+          avatar: getAvatarUrl(value.id * 1)
+        })
+      })
+
+      setState({ dataMention: data_mention })
+    })
+  }, [])
+
   return (
     <Fragment>
       <div className="div-content div-posts">
@@ -101,6 +121,7 @@ const PostDetail = (props) => {
                 current_url={current_url}
                 idMedia={state._idMedia}
                 setIdMedia={(value) => setState({ _idMedia: value })}
+                dataMention={state.dataMention}
               />
             )}
           </div>

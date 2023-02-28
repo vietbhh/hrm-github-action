@@ -4409,7 +4409,10 @@
           "others": "others",
           "see_more": "See more",
           "hide": "Hide",
-          "post_not_found": "Oops!...Post not found"
+          "post_not_found": "Oops!...Post not found",
+          "view_post": "View post",
+          "reply": "Reply",
+          "placeholder_input": "Write your comment..."
         }
       }
     },

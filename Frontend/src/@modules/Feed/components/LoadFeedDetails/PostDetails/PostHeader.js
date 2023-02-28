@@ -1,5 +1,5 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { timeDifference } from "@apps/utility/common"
+import { timeDifference, useFormatMessage } from "@apps/utility/common"
 import { Dropdown } from "antd"
 import React from "react"
 import { Link } from "react-router-dom"
@@ -11,8 +11,9 @@ const PostHeader = (props) => {
     {
       key: "1",
       label: (
-        <Link to={`/posts/${data.ref ? data.ref : data._id}`} target="_blank">
-          View Post
+        <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
+          <i className="fa-light fa-eye me-50"></i>
+          <span>{useFormatMessage("modules.feed.post.text.view_post")}</span>
         </Link>
       )
     }

@@ -3,11 +3,12 @@ import React, { useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import LoadPostMedia from "./LoadPostMedia"
 import ButtonReaction from "./PostDetails/ButtonReaction"
+import PostComment from "./PostDetails/PostComment"
 import PostHeader from "./PostDetails/PostHeader"
 import PostShowReaction from "./PostDetails/PostShowReaction"
 
 const LoadPost = (props) => {
-  const { data, current_url, idMedia, setIdMedia } = props
+  const { data, current_url, idMedia, setIdMedia, dataMention } = props
   const [state, setState] = useMergedState({
     showSeeMore: false,
     seeMore: false
@@ -69,6 +70,7 @@ const LoadPost = (props) => {
           <ButtonReaction />
         </div>
       </div>
+      <PostComment dataMention={dataMention} />
     </div>
   )
 }

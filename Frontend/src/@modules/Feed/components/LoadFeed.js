@@ -1,5 +1,5 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import { useMergedState } from "@apps/utility/common"
+import { getAvatarUrl, useMergedState } from "@apps/utility/common"
 import { Skeleton } from "antd"
 import React, { useEffect } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -9,7 +9,7 @@ import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "./LoadFeedDetails/LoadPost"
 
 const LoadFeed = (props) => {
-  const { dataCreateNew, setDataCreateNew, workspace } = props
+  const { dataCreateNew, setDataCreateNew, workspace, dataEmployee } = props
   const [state, setState] = useMergedState({
     dataPost: [],
     hasMore: false,
@@ -20,7 +20,8 @@ const LoadFeed = (props) => {
     loadingPost: false,
     loadingPostCreateNew: false,
     idPostCreateNew: "",
-    dataCreateNewTemp: []
+    dataCreateNewTemp: [],
+    dataMention: []
   })
 
   const current_url = window.location.pathname
@@ -150,6 +151,19 @@ const LoadFeed = (props) => {
     }
   }, [dataCreateNew, state.idPostCreateNew])
 
+  useEffect(() => {
+    const data_mention = []
+    _.forEach(dataEmployee, (value) => {
+      data_mention.push({
+        id: value.id,
+        name: value.full_name,
+        link: "#",
+        avatar: getAvatarUrl(value.id * 1)
+      })
+    })
+    setState({ dataMention: data_mention })
+  }, [dataEmployee])
+
   return (
     <div className="load-feed">
       <InfiniteScroll
@@ -163,7 +177,13 @@ const LoadFeed = (props) => {
         )}
 
         {_.map(state.dataCreateNewTemp, (value, index) => {
-          return <LoadPost key={index} data={value} />
+          return (
+            <LoadPost
+              key={index}
+              data={value}
+              dataMention={state.dataMention}
+            />
+          )
         })}
 
         {_.map(state.dataPost, (value, index) => {
@@ -171,7 +191,11 @@ const LoadFeed = (props) => {
             <LazyLoadComponent
               key={index}
               afterLoad={() => handleAfterLoadLazyLoadComponent(value, index)}>
-              <LoadPost data={value} current_url={current_url} />
+              <LoadPost
+                data={value}
+                current_url={current_url}
+                dataMention={state.dataMention}
+              />
             </LazyLoadComponent>
           )
         })}
