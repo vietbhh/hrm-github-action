@@ -6,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { feedApi } from "../common/api"
 import { handleLoadAttachmentMedias } from "../common/common"
-import LoadPost from "./LoadFeedDetails/LoadPost"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 
 const LoadFeed = (props) => {
   const { dataCreateNew, setDataCreateNew, workspace, dataEmployee } = props

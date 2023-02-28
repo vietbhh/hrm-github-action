@@ -10,7 +10,7 @@ import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { handleLoadAttachmentMedias } from "../common/common"
-import LoadPost from "../components/LoadFeedDetails/LoadPost"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 
 const PostDetail = (props) => {
   const {} = props

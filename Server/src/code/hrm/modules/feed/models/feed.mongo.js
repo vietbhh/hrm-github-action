@@ -41,6 +41,11 @@ const feedSchema = baseSchema("m_feed", {
     ],
     default: []
   },
+  approve_status: {
+    type: String,
+    enum: ["approved", "rejected"],
+    default: "approve"
+  },
 
   // ** source child / post: 1 image/video
   source: {

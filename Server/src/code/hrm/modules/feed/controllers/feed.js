@@ -62,87 +62,93 @@ const submitPostController = async (req, res, next) => {
     medias: [],
     source: null,
     thumb: null,
-    ref: null
+    ref: null,
+    approve_status: body.approveStatus
   })
-  const saveFeedParent = await feedModelParent.save()
-  const _id_parent = saveFeedParent._id
-  let out = saveFeedParent
+  try {
+    const saveFeedParent = await feedModelParent.save()
+    const _id_parent = saveFeedParent._id
+    let out = saveFeedParent
 
-  // ** check file image/video
-  if (body.file.length === 0) {
-    return res.respond(out)
-  } else {
-    if (body.file.length === 1) {
-      const result = await handleUpFile(
-        fileInput["fileInput[0]"],
-        body.file[0].type,
-        storePath
-      )
-      handleDeleteFile(body.file[0])
-      await feedMongoModel.updateOne(
-        { _id: _id_parent },
-        { source: result.source, thumb: result.thumb }
-      )
-
-      out = await feedMongoModel.findById(_id_parent)
+    // ** check file image/video
+    if (body.file.length === 0) {
       return res.respond(out)
     } else {
-      const promises = []
-      forEach(body.file, (value, key) => {
-        const promise = new Promise(async (resolve, reject) => {
-          let _fileInput = null
-          forEach(fileInput, (item) => {
-            if (item.name === value.name_original) {
-              _fileInput = item
-            }
-          })
-          let resultFileInput = {}
-          if (_fileInput) {
-            resultFileInput = await handleUpFile(
-              _fileInput,
-              value.type,
-              storePath
-            )
-
-            handleDeleteFile(value)
-          }
-
-          let type_feed = "image"
-          if (value.type.includes("video/")) {
-            type_feed = "video"
-          }
-          const feedModelChild = new feedMongoModel({
-            __user: req.__user,
-            permission_ids: body.workspace,
-            permission: workspace_type,
-            content: value.description,
-            type: type_feed,
-            source: resultFileInput.source,
-            thumb: resultFileInput.thumb,
-            ref: _id_parent,
-            sort_number: key
-          })
-          const saveFeedChild = await feedModelChild.save()
-          resolve({
-            _id: saveFeedChild._id,
-            type: saveFeedChild.type,
-            source: saveFeedChild.source,
-            thumb: saveFeedChild.thumb
-          })
-        })
-        promises.push(promise)
-      })
-
-      return Promise.all(promises).then(async (arr_id_child) => {
+      if (body.file.length === 1) {
+        const result = await handleUpFile(
+          fileInput["fileInput[0]"],
+          body.file[0].type,
+          storePath
+        )
+        handleDeleteFile(body.file[0])
         await feedMongoModel.updateOne(
           { _id: _id_parent },
-          { medias: arr_id_child }
+          { source: result.source, thumb: result.thumb }
         )
 
         out = await feedMongoModel.findById(_id_parent)
         return res.respond(out)
-      })
+      } else {
+        const promises = []
+        forEach(body.file, (value, key) => {
+          const promise = new Promise(async (resolve, reject) => {
+            let _fileInput = null
+            forEach(fileInput, (item) => {
+              if (item.name === value.name_original) {
+                _fileInput = item
+              }
+            })
+            let resultFileInput = {}
+            if (_fileInput) {
+              resultFileInput = await handleUpFile(
+                _fileInput,
+                value.type,
+                storePath
+              )
+
+              handleDeleteFile(value)
+            }
+
+            let type_feed = "image"
+            if (value.type.includes("video/")) {
+              type_feed = "video"
+            }
+            const feedModelChild = new feedMongoModel({
+              __user: req.__user,
+              permission_ids: body.workspace,
+              permission: workspace_type,
+              content: value.description,
+              type: type_feed,
+              source: resultFileInput.source,
+              thumb: resultFileInput.thumb,
+              ref: _id_parent,
+              sort_number: key,
+              approve_status: body.approveStatus
+            })
+            const saveFeedChild = await feedModelChild.save()
+            resolve({
+              _id: saveFeedChild._id,
+              type: saveFeedChild.type,
+              source: saveFeedChild.source,
+              thumb: saveFeedChild.thumb
+            })
+          })
+          promises.push(promise)
+        })
+
+        return Promise.all(promises).then(async (arr_id_child) => {
+          await feedMongoModel.updateOne(
+            { _id: _id_parent },
+            { medias: arr_id_child }
+          )
+
+          out = await feedMongoModel.findById(_id_parent)
+          return res.respond(out)
+        })
+      }
     }
+  } catch (err) {
+    return res.fail(err.message)
   }
 }
 // **

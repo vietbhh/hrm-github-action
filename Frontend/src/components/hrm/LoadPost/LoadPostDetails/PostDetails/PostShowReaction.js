@@ -1,8 +1,8 @@
 import { useFormatMessage } from "@apps/utility/common"
 import React from "react"
-import img_haha from "../../../assets/images/haha.png"
-import img_like from "../../../assets/images/like.png"
-import img_love from "../../../assets/images/love.png"
+import img_haha from "@modules/Feed/assets/images/haha.png"
+import img_like from "@modules/Feed/assets/images/like.png"
+import img_love from "@modules/Feed/assets/images/love.png"
 
 const PostShowReaction = (props) => {
   const { short } = props

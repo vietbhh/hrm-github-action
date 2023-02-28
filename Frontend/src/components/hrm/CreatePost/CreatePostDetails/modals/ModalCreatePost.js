@@ -26,7 +26,8 @@ const ModalCreatePost = (props) => {
     workspace,
     userId,
     setModal,
-    setDataCreateNew
+    setDataCreateNew,
+    approveStatus
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -111,7 +112,8 @@ const ModalCreatePost = (props) => {
         content: content,
         workspace: workspace,
         privacy_type: state.privacy_type,
-        file: file
+        file: file,
+        approveStatus: approveStatus
       }
       feedApi
         .postSubmitPost({ body: JSON.stringify(params), fileInput: fileInput })

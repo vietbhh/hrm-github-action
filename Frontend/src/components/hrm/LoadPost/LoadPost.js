@@ -1,11 +1,11 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import React, { useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
-import LoadPostMedia from "./LoadPostMedia"
-import ButtonReaction from "./PostDetails/ButtonReaction"
-import PostComment from "./PostDetails/PostComment"
-import PostHeader from "./PostDetails/PostHeader"
-import PostShowReaction from "./PostDetails/PostShowReaction"
+import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
+import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
+import PostComment from "./LoadPostDetails/PostDetails/PostComment"
+import PostHeader from "./LoadPostDetails/PostDetails/PostHeader"
+import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 
 const LoadPost = (props) => {
   const { data, current_url, idMedia, setIdMedia, dataMention } = props
