@@ -46,16 +46,17 @@ const DetailWorkspace = () => {
       document.getElementById("div-sticky").style.top = offsetTop + "px"
     }
   }
-
-  useEffect(() => {
+  const loadData = () => {
     workspaceApi.getDetailWorkspace(params.id).then((res) => {
-      console.log("res", res.data)
+      console.log("res DetailWS", res.data)
       setState({ detailWorkspace: res.data })
     })
+  }
+  useEffect(() => {
+    loadData()
   }, [])
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
-
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
@@ -65,6 +66,7 @@ const DetailWorkspace = () => {
         tabActive={state.tabActive}
         data={state.detailWorkspace}
         tabToggle={tabToggle}
+        loadData={loadData}
       />
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>

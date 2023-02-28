@@ -44,7 +44,9 @@ const workspaceSchema = baseSchema("m_workspace", {
     ],
     default: []
   },
-  notification: { type: Boolean, default: true }
+  notification: { type: Boolean, default: true },
+  review_post: { type: Boolean, default: false },
+  membership_approval: { type: String, enum: ["approver", "auto"] }
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

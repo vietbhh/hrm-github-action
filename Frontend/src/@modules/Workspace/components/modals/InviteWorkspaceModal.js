@@ -14,7 +14,7 @@ import {
   Spinner
 } from "reactstrap"
 const InviteWorkspaceModal = (props) => {
-  const { modal, handleModal, handleDone } = props
+  const { modal, handleModal, handleDone, member_selected } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
@@ -59,7 +59,10 @@ const InviteWorkspaceModal = (props) => {
         <ModalBody>
           <Row className="mt-1">
             <Col sm={12}>
-              <EmployeesSelect handleSelect={getDataSelect} />
+              <EmployeesSelect
+                handleSelect={getDataSelect}
+                member_selected={member_selected}
+              />
             </Col>
           </Row>
         </ModalBody>

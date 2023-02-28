@@ -93,6 +93,8 @@ const saveCoverImage = async (req, res) => {
 
 const updateWorkspace = async (req, res) => {
   const dataSave = { ...req.body }
+  // const infoWS = await workspaceMongoModel.findById(dataSave._id)
+
   if (dataSave?.members) {
     dataSave.members = JSON.parse(req.body.members)
   }
@@ -103,4 +105,12 @@ const updateWorkspace = async (req, res) => {
   })
   return res.respond(aaa)
 }
-export { getWorkspace, saveWorkspace, saveCoverImage, updateWorkspace }
+
+const getPostWorkspace = async (req, res) => {}
+export {
+  getWorkspace,
+  saveWorkspace,
+  saveCoverImage,
+  updateWorkspace,
+  getPostWorkspace
+}

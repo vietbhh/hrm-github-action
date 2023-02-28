@@ -30,7 +30,9 @@
       font-weight: bold;
     }
   }
+
 }
+
 .no-border-bottom{
   .modal-content{
     .modal-header{
@@ -93,4 +95,20 @@
       line-height: 16px;
     }
    }
+}
+
+.workspace-setting {
+  .field_switch{
+    display: flex;
+    .label{
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+    }
+    .sub-label{
+      color: rgb(77, 77, 77);
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+  }
 }

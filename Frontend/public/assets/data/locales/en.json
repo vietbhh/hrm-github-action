@@ -510,7 +510,8 @@
     "view": "View",
     "edit": "Edit",
     "started": "Started",
-    "remove": "Remove"
+    "remove": "Remove",
+    "reject" : "Reject"
   },
   "errors": {
     "common": {
@@ -4371,12 +4372,15 @@
         "pinned": "Pinned",
         "introduction": "Introduction",
         "member": "Member",
-        "media": "Media"
+        "media": "Media",
+        "workspace_infomation" : "Workspace infomation",
+        "workspace_settings" : "Workspace settings"
       },
       "fields": {
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
-        "workspace_mode": "Workspace mode"
+        "workspace_mode": "Workspace mode",
+        "membership_approval" : "Membership approval"
       }
     }
   }

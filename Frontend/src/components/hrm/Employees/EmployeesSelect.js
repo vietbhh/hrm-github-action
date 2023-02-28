@@ -9,7 +9,8 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
 const EmployeesSelect = (props) => {
-  const { handleSelect, dataDetail } = props
+  const { handleSelect, dataDetail, member_selected, department_selected } =
+    props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
@@ -21,7 +22,6 @@ const EmployeesSelect = (props) => {
     perPage: 10,
     dataSelected: []
   })
-
   const handleSelected = (key) => {
     const data = state.members
     const dataSelected = [...state.dataSelected]
@@ -52,6 +52,10 @@ const EmployeesSelect = (props) => {
   }
   const renderMember = (data = []) => {
     return data.map((item, key) => {
+      const hasMatch = member_selected.find(function (value) {
+        return parseInt(value) === parseInt(item.id)
+      })
+
       const checked = checkExistSelected(item.id) >= 0 ?? true
       return (
         <Col sm={12} key={key}>
@@ -161,15 +165,19 @@ const EmployeesSelect = (props) => {
     ]
     return arr
   }
+
   const findKeyByID = (arr = [], id) => {
     const index = arr.findIndex((p) => p.id === id)
     return index
   }
+
   const checkExistSelected = (id) => {
     const indexID = findKeyByID(state.dataSelected, id)
     return indexID
   }
+
   const loadData = (props) => {
+    props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
       const members = state.members
       const concat = !props.search
@@ -184,6 +192,7 @@ const EmployeesSelect = (props) => {
       })
     })
   }
+
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.recordsTotal > state.members.length) {
@@ -197,6 +206,7 @@ const EmployeesSelect = (props) => {
     console.log("dataSelected", dataSelected)
   }
   const typingTimeoutRef = useRef(null)
+
   const handleFilterText = (e) => {
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current)

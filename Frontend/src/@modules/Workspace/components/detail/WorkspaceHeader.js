@@ -8,7 +8,7 @@ import { Dropdown, Space } from "antd"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
 import notification from "@apps/utility/notification"
 const WorkspaceHeader = (props) => {
-  const { tabActive, tabToggle, data } = props
+  const { tabActive, tabToggle, data, loadData } = props
   const [state, setState] = useMergedState({
     coverImage: defaultWorkspaceCover,
     inviteModal: false,
@@ -27,9 +27,12 @@ const WorkspaceHeader = (props) => {
 
   const handleDoneInvite = (dataUpdate, field) => {
     const infoWorkspace = { ...data }
-    const arrID = dataUpdate.map((x) => x["id"] * 1)
+    const arrID = infoWorkspace.members.concat(
+      dataUpdate.map((x) => x["id"] * 1)
+    )
 
     infoWorkspace.members = JSON.stringify(arrID)
+    console.log("infoWorkspace.members ", infoWorkspace.members)
     workspaceApi.update(infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
@@ -37,6 +40,7 @@ const WorkspaceHeader = (props) => {
         })
         onClickInvite()
         setState({ loading: false })
+        loadData()
       }
     })
   }
@@ -71,11 +75,19 @@ const WorkspaceHeader = (props) => {
     },
     {
       label: (
-        <a href="https://www.aliyun.com">
+        <a href={`/workspace/${data._id}/setting`}>
           <i className="fa-regular fa-gear"></i> Workspace settings
         </a>
       ),
       key: "3"
+    },
+    {
+      label: (
+        <a href={`/workspace/${data._id}/pending-posts`}>
+          <i className="fa-light fa-list-check"></i> Pending posts
+        </a>
+      ),
+      key: "4"
     }
   ]
   return (
@@ -173,6 +185,7 @@ const WorkspaceHeader = (props) => {
           modal={state.inviteModal}
           handleModal={onClickInvite}
           handleDone={handleDoneInvite}
+          member_selected={data?.members}
         />
         <SetupNotificationModal
           modal={state.setupNotifiModal}
