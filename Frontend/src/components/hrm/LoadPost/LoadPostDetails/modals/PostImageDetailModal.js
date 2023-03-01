@@ -6,8 +6,10 @@ import ReactHtmlParser from "react-html-parser"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 import ButtonReaction from "../PostDetails/ButtonReaction"
+import PostComment from "../PostDetails/PostComment"
 import PostHeader from "../PostDetails/PostHeader"
 import PostShowReaction from "../PostDetails/PostShowReaction"
+import RenderContentPost from "../PostDetails/RenderContentPost"
 
 const PostImageDetailModal = (props) => {
   const {
@@ -18,7 +20,8 @@ const PostImageDetailModal = (props) => {
     setIdImage,
     postType,
     dataMedias,
-    current_url
+    current_url,
+    dataMention
   } = props
   const [state, setState] = useMergedState({
     data: {},
@@ -59,7 +62,7 @@ const PostImageDetailModal = (props) => {
       }
     }
 
-    if (postType === "image") {
+    if (postType === "image" || postType === "video") {
       const _data = { ...dataModal }
       downloadApi.getPhoto(_data.source).then((response) => {
         _data["url_source"] = URL.createObjectURL(response.data)
@@ -251,8 +254,10 @@ const PostImageDetailModal = (props) => {
               <div className="right-header">
                 <PostHeader data={dataModal} />
               </div>
-              <div className="right-content">
-                {ReactHtmlParser(state.data?.content)}
+              <div
+                className="right-content"
+                id={`post-body-content-${state.data?._id}`}>
+                <RenderContentPost data={state.data} />
               </div>
               <div className="right-show-reaction">
                 <PostShowReaction short={true} />
@@ -260,8 +265,9 @@ const PostImageDetailModal = (props) => {
               <div className="right-button">
                 <ButtonReaction />
               </div>
-              <div className="right-comment-content"></div>
-              <div className="right-comment-form"></div>
+              <div className="right-comment">
+                <PostComment dataMention={dataMention} />
+              </div>
             </PerfectScrollbar>
           </div>
         </div>

@@ -116,9 +116,17 @@ const LoadFeed = (props) => {
       dataCreateNew.source !== null &&
       (dataCreateNew.type === "image" || dataCreateNew.type === "video")
     ) {
-      await downloadApi.getPhoto(dataCreateNew.source).then((response) => {
-        dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
-      })
+      if (dataCreateNew.type === "image") {
+        await downloadApi.getPhoto(dataCreateNew.thumb).then((response) => {
+          dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
+        })
+      }
+
+      if (dataCreateNew.type === "video") {
+        await downloadApi.getPhoto(dataCreateNew.source).then((response) => {
+          dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
+        })
+      }
     }
 
     if (!_.isEmpty(dataCreateNew.medias) && dataCreateNew.type === "post") {

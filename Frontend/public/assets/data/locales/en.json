@@ -104,6 +104,7 @@
     },
     "message": "Message",
     "read_all_message": "Read all Message",
+    "feed": "Feed",
     "chat": "Chat",
     "calendar": "Calendar",
     "setting": "Setting",

@@ -24,7 +24,6 @@ const ModalCreatePost = (props) => {
     privacy_type = "workspace",
     dataMention,
     workspace,
-    userId,
     setModal,
     setDataCreateNew,
     approveStatus
@@ -118,7 +117,9 @@ const ModalCreatePost = (props) => {
       feedApi
         .postSubmitPost({ body: JSON.stringify(params), fileInput: fileInput })
         .then((res) => {
-          setDataCreateNew(res.data)
+          if (_.isFunction(setDataCreateNew)) {
+            setDataCreateNew(res.data)
+          }
           setEmptyAfterSubmit()
           notification.showSuccess({
             text: useFormatMessage("notification.success")
