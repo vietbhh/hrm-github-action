@@ -107,5 +107,3 @@ data_folder_public = 'setting,default,modules/chat';
 default_cache_time = 300
 homeRoute = Auth::login
 homeNameSpace = App\Controllers
-gcs_project_id = 'friday-351410'
-gcs_bucket_name = 'friday-storage'
