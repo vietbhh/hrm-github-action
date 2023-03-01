@@ -6,24 +6,31 @@ import fs from "fs"
 const downloadFile = async (req, res, next) => {
   const upload_type = await getSetting("upload_type")
   const filePath = req.query.name
-  if (!filePath) throw new Error("missing_store_path")
-  if (upload_type === "direct") {
-    const localSavePath = path.join(
-      dirname(global.__basedir),
-      "Backend",
-      "applications",
-      process.env.code,
-      "writable",
-      "uploads",
-      filePath
-    )
-    const buffer = fs.readFileSync(localSavePath)
-    const fileContent = buffer.toString()
-    return res.respond(fileContent)
-  } else if (upload_type === "cloud_storage") {
-    const result = await _getFileFromCloudStorage(filePath)
-    const fileContent = result.toString()
-    return res.respond(fileContent)
+  if (!filePath) {
+    return res.fail("missing_store_path")
+  }
+
+  try {
+    if (upload_type === "direct") {
+      const localSavePath = path.join(
+        dirname(global.__basedir),
+        "Backend",
+        "applications",
+        process.env.code,
+        "writable",
+        "uploads",
+        filePath
+      )
+      const buffer = fs.readFileSync(localSavePath)
+      const fileContent = buffer.toString()
+      return res.respond(fileContent)
+    } else if (upload_type === "cloud_storage") {
+      const result = await _getFileFromCloudStorage(filePath)
+      const fileContent = result.toString()
+      return res.respond(fileContent)
+    }
+  } catch (err) {
+    return res.fail(err)
   }
 }
 
