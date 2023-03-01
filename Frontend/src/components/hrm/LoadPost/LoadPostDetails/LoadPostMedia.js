@@ -10,7 +10,7 @@ import React, { Fragment, useEffect } from "react"
 import PostImageDetailModal from "./modals/PostImageDetailModal"
 
 const LoadPostMedia = (props) => {
-  const { data, current_url, idMedia, setIdMedia } = props
+  const { data, current_url, idMedia, setIdMedia, dataMention } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
     dataModal: {},
@@ -170,6 +170,7 @@ const LoadPostMedia = (props) => {
         postType={state.postType}
         dataMedias={state.dataMedias}
         current_url={current_url}
+        dataMention={dataMention}
       />
     </Fragment>
   )

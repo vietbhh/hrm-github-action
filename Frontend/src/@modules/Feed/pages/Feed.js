@@ -25,17 +25,21 @@ const Feed = () => {
   }
 
   const scrollUpwards = () => {
-    document.getElementById("div-sticky").style.top = offsetTop + "px"
+    if (document.getElementById("div-sticky")) {
+      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    }
   }
 
   const scrollDownwards = () => {
     const sticky = document.getElementById("div-sticky")
-    if (sticky.offsetHeight > window.innerHeight) {
-      const offset =
-        (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
-      document.getElementById("div-sticky").style.top = offset + "px"
-    } else {
-      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    if (sticky) {
+      if (sticky.offsetHeight > window.innerHeight) {
+        const offset =
+          (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
+        document.getElementById("div-sticky").style.top = offset + "px"
+      } else {
+        document.getElementById("div-sticky").style.top = offsetTop + "px"
+      }
     }
   }
 

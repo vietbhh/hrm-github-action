@@ -192,7 +192,7 @@ const getFeedChild = async (req, res, next) => {
 const getFeedById = async (req, res, next) => {
   const id = req.params.id
   try {
-    const feed = await feedMongoModel.findOne({ _id: id })
+    const feed = await feedMongoModel.findById(id)
     return res.respond(feed)
   } catch (err) {
     return res.fail(err.message)
@@ -238,10 +238,6 @@ const handleUpFile = async (file, type, storePath, uploadType = null) => {
   result["source"] = resultUpload.uploadSuccess[0].path
 
   if (type.includes("image/")) {
-    const image = sharp(file.data)
-    /* image.metadata().then((metadata) => {
-    console.log(metadata)
-  }) */
     const thumb_path = path.join(
       storePath,
       "thumb_" +
@@ -252,12 +248,7 @@ const handleUpFile = async (file, type, storePath, uploadType = null) => {
         Math.random() * 1000001 +
         ".webp"
     )
-    await image
-      .webp({
-        quality: 80
-      })
-      .toFile(path.join(localSavePath, thumb_path))
-    result["thumb"] = thumb_path
+    result["thumb"] = await handleCompressImage(file, thumb_path)
   }
 
   if (type.includes("video/")) {
@@ -295,6 +286,20 @@ const handleDeleteFile = (file) => {
   }
 
   return true
+}
+
+const handleCompressImage = async (file, savePath) => {
+  const image = sharp(file.data)
+  /* image.metadata().then((metadata) => {
+    console.log(metadata)
+  }) */
+  await image
+    .webp({
+      quality: 80
+    })
+    .toFile(path.join(localSavePath, savePath))
+
+  return savePath
 }
 
 export {

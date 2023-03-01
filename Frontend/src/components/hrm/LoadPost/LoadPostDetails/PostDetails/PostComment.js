@@ -53,6 +53,9 @@ const PostComment = (props) => {
                 Wow 🤩🤩🤩 keep moving, bro 🤟🤟🤟
               </div>
             </div>
+            <div className="body__image">
+              <img src="https://fastly.picsum.photos/id/8/5000/3333.jpg?hmac=OeG5ufhPYQBd6Rx1TAldAuF92lhCzAhKQKttGfawWuA" />
+            </div>
             <div className="body__reaction">
               <Dropdown
                 menu={{ items: item_reaction }}
