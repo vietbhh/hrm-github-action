@@ -19,15 +19,16 @@ const safeFileName = (fileName) => {
     .replace(/[^A-Za-z0-9\-_.\/]/g, "-")
 }
 
+export const localSavePath = path.join(
+  dirname(global.__basedir),
+  "Backend",
+  "applications",
+  process.env.code,
+  "writable",
+  "uploads"
+)
+
 const _localUpload = async (storePath, files) => {
-  const localSavePath = path.join(
-    dirname(global.__basedir),
-    "Backend",
-    "applications",
-    process.env.code,
-    "writable",
-    "uploads"
-  )
   if (isEmpty(files)) {
     throw new Error("files_is_empty")
   }
@@ -153,8 +154,8 @@ const _googleCloudUpload = async (storePath, files) => {
  * @returns
  */
 
-const _uploadServices = async (storePath, files) => {
-  const upload_type = await getSetting("upload_type")
+const _uploadServices = async (storePath, files, type = null) => {
+  const upload_type = type === null ? await getSetting("upload_type") : type
   if (!storePath) throw new Error("missing_store_path")
   if (upload_type === "direct") {
     return _localUpload(storePath, files)

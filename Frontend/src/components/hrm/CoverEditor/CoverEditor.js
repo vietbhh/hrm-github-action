@@ -12,6 +12,7 @@ import defaultWorkspaceCover from "./assets/images/default_workspace_cover.webp"
 
 import { Button } from "reactstrap"
 import { Dropdown, Space, Image } from "antd"
+import "./assets/scss/cover.scss"
 const CoverEditor = (props) => {
   const [state, setState] = useMergedState({
     photoPreview: defaultWorkspaceCover,

@@ -23,11 +23,14 @@ class Asset extends ErpController
 	public function get_data_asset_list_get()
 	{
 		$getData = $this->request->getGet();
-		$text = $getData['text'];
-		$assetTypeGroup = $getData['asset_type_group'];
-		$assetType = $getData['asset_type'];
-		$assetStatus = $getData['asset_status'];
-		$owner = $getData['owner'];
+		$text = isset($getData['text']) ? $getData['text'] : '';
+		$assetTypeGroup = isset($getData['asset_type_group']) ? $getData['asset_type_group'] : 0;
+		$assetType = isset($getData['asset_type']) ? $getData['asset_type'] : 0;
+		$assetStatus = isset($getData['asset_status']) ? $getData['asset_status'] : 0;
+		$owner = isset($getData['owner']) ? $getData['owner'] : 0;
+		$page = isset($getData['page']) ? ($getData['page'] == 1 ? 0 : $getData['page'] - 1) : 0;
+		$limit = isset($getData['limit']) ? $getData['limit'] : 30;
+		$start = $page * $limit;
 
 		$modules = \Config\Services::modules('asset_lists');
 		$model = new AssetListModel();
@@ -38,7 +41,9 @@ class Asset extends ErpController
 			'm_asset_lists.asset_name',
 			'm_asset_lists.asset_type',
 			'm_asset_lists.recent_image',
+			'm_asset_lists.asset_descriptions',
 			'm_asset_brands.brand_name ',
+			'm_asset_status.status_name',
 			'm_asset_status.status_name',
 			'm_asset_types.asset_type_code',
 			'm_asset_groups.asset_group_code'
@@ -71,40 +76,76 @@ class Asset extends ErpController
 			$builder->where('m_asset_lists.owner', $owner);
 		}
 
-		$listAssetList = $builder->orderBy('m_asset_lists.id', 'DESC')->findAll();
+		$totalAssetList = $builder->countAllResults(false);
+		$listAssetList = $builder->orderBy('m_asset_lists.id', 'ASC')->findAll($limit, $start);
 
 		return $this->respond([
+			'total_record' => $totalAssetList,
 			'results' => handleDataBeforeReturn($modules, $listAssetList, true)
 		]);
 	}
 
 	public function add_post()
 	{
-
 		helper(['app_select_option']);
 		helper('HRM\Modules\Asset\Helpers\asset_helper');
 		$uploadService = \App\Libraries\Upload\Config\Services::upload();
 		$postData = $this->request->getPost();
+		$isDuplicateAsset = isset($postData['is_duplicate']) ? filter_var($postData['is_duplicate'], FILTER_VALIDATE_BOOLEAN) : false;
+
+		unset($postData['is_duplicate']);
+		if ($isDuplicateAsset) {
+			unset($postData['id']);
+		}
+
 		$filesData = $this->request->getFiles();
 
 		if (!isset($postData['id'])) {
 			$postData['asset_status'] = getAssetStatus('normal');
 		}
 
+		// create description
+		$modules = \Config\Services::modules('asset_types');
+		$description = '';
+		if (isset($postData['asset_type']) && $postData['asset_type']) {
+			$model = $modules->model;
+			$type = $model->asArray()->find($postData['asset_type']);
+			$typeName = $type['asset_type_name'];
+			$description .= $typeName;
+		}
+		if (isset($postData['asset_brand']) && $postData['asset_brand']) {
+			$modules->setModule('asset_brands');
+			$model = $modules->model;
+			$branch = $model->asArray()->find($postData['asset_brand']);
+			if ($branch) {
+				$branchName = $branch['brand_name'];
+				$description .= '-' . $branchName;
+			}
+
+		}
+
+		$description .= '-' . $postData['asset_properties'];
+		$postData['asset_descriptions'] = $description;
+
 		$dataHandle = handleDataBeforeSave('asset_lists', $postData, $filesData);
+
 		$uploadFieldsArray = $dataHandle['uploadFieldsArray'];
 		$dataSave = $dataHandle['data'];
 
-		$assetListModel = new AssetListModel();
-		if (isset($postData['id'])) {
-			$assetListModel->save($dataSave);
+		if (isset($dataSave['asset_status']) && isset($postData['id'])) {
+			unset($dataSave['asset_status']);
 		}
 
+		$assetListModel = new AssetListModel();
+		$id = 0;
+		if (isset($postData['id'])) {
+			$assetListModel->save($dataSave);
+			$id = $postData['id'];
+		} else {
+			$id = $assetListModel->insertAssetList($dataSave);
+		}
 
-		$id = isset($postData['id']) ? $postData['id'] : $assetListModel->insertAssetList($dataSave);
-
-
-		if ($filesData) {
+		if ($filesData && !empty($id)) {
 			foreach ($filesData as $key => $files) {
 				if (empty($files)) continue;
 				if (!is_array($files)) $files = [$files];
@@ -121,10 +162,12 @@ class Asset extends ErpController
 							$removeOldFilePathForDownload = $storePath . $fileName;
 							$uploadService->removeFile($removeOldFilePathForDownload);
 							$fileName = safeFileName($fileName);
-							$uploadService->uploadFile($storePath, [$file], false, $fileName);
+							$result = $uploadService->uploadFile($storePath, [$file], false, $fileName);
+
 						} else {
 							$fileName = safeFileName($file->getName());
-							$uploadService->uploadFile($storePath, [$file], false, $fileName);
+							$result = $uploadService->uploadFile($storePath, [$file], false, $fileName, ['compressImage' => true]);
+							$fileName = $result['last_uploaded']['filename'];
 							if (!empty($uploadFieldsArray[$key])) {
 								if ($uploadFieldsArray[$key]->field_type == 'upload_multiple') {
 									$arrayFiles = isset($dataSave[$key]) ? json_decode($dataSave[$key], true) : [];
@@ -192,7 +235,7 @@ class Asset extends ErpController
 
 		$data['recordsTotal'] = $model->countAllResults(false);
 
-		$assetList = $model->asArray()->orderBy('date_created', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
+		$assetList = $model->asArray()->orderBy('m_asset_lists.id', 'DESC')->findAll($getPara['perPage'], $getPara['page'] * $getPara['perPage'] - $getPara['perPage']);
 		$data['asset_list'] = handleDataBeforeReturn($modules, $assetList, true);
 		$data['page'] = $getPara['page'];
 		return $this->respond($data);
@@ -322,7 +365,7 @@ class Asset extends ErpController
 
 		/*alphabet A to F*/
 		$arr_alphabet = [];
-		foreach (range('A', 'F') as $columnId) {
+		foreach (range('A', 'I') as $columnId) {
 			$arr_alphabet[] = $columnId;
 		}
 
@@ -344,10 +387,11 @@ class Asset extends ErpController
 		$i = 1;
 		$sheet->getStyle("A$i:I$i")->applyFromArray($styleArray);
 		//$sheet->setCellValue("A$i", "Name");
-		$sheet->setCellValue("B$i", "Group");
-		$sheet->setCellValue("C$i", "Code");
-		$sheet->setCellValue("D$i", "Type");
-		$sheet->setCellValue("E$i", "Brand");
+		$sheet->setCellValue("A$i", "Group");
+		$sheet->setCellValue("B$i", "Code");
+		$sheet->setCellValue("C$i", "Type");
+		$sheet->setCellValue("D$i", "Brand");
+		$sheet->setCellValue("E$i", "Description");
 		$sheet->setCellValue("F$i", "Created");
 		$sheet->setCellValue("G$i", "Warranty expires");
 		$sheet->setCellValue("H$i", "Status");
@@ -358,10 +402,11 @@ class Asset extends ErpController
 			$sheet->getStyle("F$i:G$i")->getNumberFormat()->setFormatCode('dd-mmm-yyyy');
 			//$sheet->getStyle("B$i:C$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 			//$sheet->setCellValue("A$i", $item['asset_name'] ?? "-");
-			$sheet->setCellValue("B$i", $item['asset_group_name'] ?? "-");
-			$sheet->setCellValue("C$i", $item['asset_code'] ?? "-");
-			$sheet->setCellValue("D$i", $item['asset_type'] ? $item['asset_type']['label'] : "-");
-			$sheet->setCellValue("E$i", $item['asset_brand'] ? $item['asset_brand']['label'] : "-");
+			$sheet->setCellValue("A$i", $item['asset_group_name'] ?? "-");
+			$sheet->setCellValue("B$i", $item['asset_code'] ?? "-");
+			$sheet->setCellValue("C$i", $item['asset_type'] ? $item['asset_type']['label'] : "-");
+			$sheet->setCellValue("D$i", $item['asset_brand'] ? $item['asset_brand']['label'] : "-");
+			$sheet->setCellValue("E$i", $item['asset_descriptions']);
 			$sheet->setCellValue("F$i", date('d/m/Y', strtotime($item['date_created'])));
 			$sheet->setCellValue("G$i", date('d/m/Y', strtotime($item['asset_warranty_expires'])));
 			$sheet->setCellValue("H$i", $item['asset_status'] ? $item['asset_status']['label'] : "-");

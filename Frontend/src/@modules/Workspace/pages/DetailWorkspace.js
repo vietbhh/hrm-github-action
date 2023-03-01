@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom"
 import { Card, CardBody, TabContent, TabPane } from "reactstrap"
 import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
+import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
+import TabMember from "../components/detail/TabMember/TabMember"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
@@ -88,6 +90,12 @@ const DetailWorkspace = () => {
                 </div>
               </div>
             </div>
+          </TabPane>
+          <TabPane tabId={3}>
+            <TabIntroduction />
+          </TabPane>
+          <TabPane tabId={4}>
+            <TabMember tabActive={state.tabActive} tabId={4} />
           </TabPane>
         </TabContent>
       </div>

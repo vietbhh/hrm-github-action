@@ -11,7 +11,13 @@ const ChosenAsset = (props) => {
   } = props
 
   // ** render
-  return <TableAssetList displayCheckbox={false} listData={chosenAssetList} />
+  return (
+    <TableAssetList
+      displayCheckbox={false}
+      loadDataFromApi={false}
+      listData={chosenAssetList}
+    />
+  )
 }
 
 export default ChosenAsset

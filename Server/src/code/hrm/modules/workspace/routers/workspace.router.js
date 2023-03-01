@@ -3,10 +3,12 @@ import {
   getWorkspace,
   saveWorkspace,
   updateWorkspace,
-  saveCoverImage
+  saveCoverImage,
+  getPostWorkspace
 } from "../controllers/workspace.js"
 const router = express.Router()
 
+router.get("/pending-posts", getPostWorkspace)
 router.get("/:workspaceId", getWorkspace)
 router.post("/save", saveWorkspace)
 router.post("/save-cover-image", saveCoverImage)

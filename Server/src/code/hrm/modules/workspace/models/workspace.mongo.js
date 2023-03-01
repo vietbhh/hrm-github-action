@@ -42,8 +42,17 @@ const workspaceSchema = baseSchema("m_workspace", {
         }
       }
     ],
-    default: []
+    default: [],
+    cover_image: String
   },
+  introduction: String,
+  group_rules: [
+    {
+      title: String,
+      description: String
+    }
+  ],
+  request_joins: [Number],
   notification: { type: Boolean, default: true },
   review_post: { type: Boolean, default: false },
   membership_approval: { type: String, enum: ["approver", "auto"] }

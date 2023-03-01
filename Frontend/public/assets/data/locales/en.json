@@ -94,7 +94,7 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Navigation",
+    "admin_tools": "Admin tools",
     "tools": "Tools",
     "quick": "Quick",
     "notification": {
@@ -511,7 +511,8 @@
     "edit": "Edit",
     "started": "Started",
     "remove": "Remove",
-    "reject" : "Reject"
+    "reject" : "Reject",
+    "duplicate": "Duplicate"
   },
   "errors": {
     "common": {
@@ -670,7 +671,8 @@
       "qrCodeGenerator": "QRCode Generator",
       "inventories": "Inventory",
       "assetGroups": "Asset Groups",
-      "assetTypes": "Asset Types"
+      "assetTypes": "Asset Types",
+      "asset_brand": "Asset Brands"
     }
   },
   "settings": {
@@ -948,7 +950,8 @@
         "add": "Add notepad",
         "placeholder_input": "Notepad Title",
         "pin": "Pin",
-        "un_pin": "Un pin"
+        "un_pin": "Un pin",
+        "my_notes": "My notes"
       },
       "st_show_department": "Setting show department",
       "text": {
@@ -4171,7 +4174,8 @@
       },
       "buttons": {
         "new_asset": "New Asset",
-        "generate": "Generate",
+        "generate_qr_code": "Generate QR Code",
+        "generate_barcode": "Generate Barcode",
         "error": "Error",
         "edit": "Edit",
         "handover": "Handover",
@@ -4181,6 +4185,7 @@
         "detail": "Asset Detail",
         "new": "New Asset",
         "edit": "Asset Edit",
+        "duplicate": "Dulicate Asset",
         "update_stt": "Update Status"
       },
       "notification": {
@@ -4351,8 +4356,23 @@
       }
     },
     "asset_brands": {
+      "title": "Asset Brands",
       "fields": {
-        "brand_name": "Brand Name"
+        "brand_name": "Brand Name",
+        "description": "Description"
+      },
+      "buttons": {
+        "create": "Create Asset Type",
+        "save": "Save",
+        "update": "Update"
+      },
+      "text": {
+        "action": "Action",
+        "new_asset_brand": "New Asset Brand",
+        "warning_delete": {
+          "title": "Are you sure?",
+          "content": "All deleted data cannot be recovered!"
+        }
       }
     },
     "asset_status": {
@@ -4360,9 +4380,67 @@
         "status_name": "Status Name"
       }
     },
+    "feed": {
+      "create_post": {
+        "text": {
+          "placeholder_input": "What are you thinking?",
+          "task": "Task",
+          "event": "Event",
+          "poll": "Poll",
+          "announcement": "Announcement",
+          "workspace": "Workspace",
+          "only_me": "Only me",
+          "choose_a_background_image": "Choose a background image",
+          "attach_photo_video": "Attach photo/video",
+          "tag_your_colleagues": "Tag your colleagues",
+          "poll_vote": "Poll vote",
+          "anonymous_q_and_a": "Anonymous Q&A",
+          "post": "Post",
+          "photo_video": "Photo/Video",
+          "add_photo_video": "Add Photo/Video",
+          "add_description": "Add description..."
+        }
+      },
+      "post": {
+        "text": {
+          "like": "Like",
+          "comment": "Comment",
+          "send": "Send",
+          "people_seen": "People seen",
+          "others": "others",
+          "see_more": "See more",
+          "hide": "Hide",
+          "post_not_found": "Oops!...Post not found",
+          "view_post": "View post",
+          "reply": "Reply",
+          "placeholder_input": "Write your comment..."
+        }
+      }
+    },
     "workspace": {
+      "title": {
+        "work_space": "Work Space",
+        "workspace_you_have_joined": "Workspace you have joined",
+        "workspace_that_you_managed": "Workspace that you managed"
+      },
       "buttons": {
-        "create": "Create Workspace"
+        "create": "Create Workspace",
+        "view_all": "View All",
+        "load_more": "Load More",
+        "add_description": "Add description",
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "remove": "Remove",
+        "add_new_rule": "Add new rule",
+        "edit_rule": "Edit rule",
+        "remove_rule": "Remove rule",
+        "set_as_administrator": "Set as administrator",
+        "remove_this_member_from_this_workspace": "Remove this member from this workspace",
+        "view_profile": "View profile",
+        "remove_from_administrator": "Remove from administrator",
+        "approve": "Approve",
+        "approve_all": "Approve all request"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4371,16 +4449,69 @@
         "feed": "Feed",
         "pinned": "Pinned",
         "introduction": "Introduction",
+        "group_rules": "Group rules",
         "member": "Member",
         "media": "Media",
         "workspace_infomation" : "Workspace infomation",
-        "workspace_settings" : "Workspace settings"
+        "workspace_settings" : "Workspace settings",
+        "request_to_join": "Request to join"
       },
       "fields": {
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
         "membership_approval" : "Membership approval"
+      },
+      "text": {
+        "members": "members",
+        "member": "member",
+        "empty_workspace": "No workspace found!",
+        "empty_group_rule": "This Workspace have no rule!",
+        "empty_introduction": "This Workspace have no introduction!",
+        "empty_request_join": "This Workspace have no request join!",
+        "create_new_workspace": "Create new workspace",
+        "add_introduction_description": "Please add description to help people learn more about your group!",
+        "group_rule_title": "Title",
+        "group_rule_description": "Description",
+        "work_space_description": {
+          "type": {
+            "public": {
+              "title": "Pulbic Workspace",
+              "description": "Anyone can see post and activites in workspace"
+            },
+            "private": {
+              "title": "Private Workspace",
+              "description": "Only member on workspace can see post and activites"
+            }
+          },
+          "mode": {
+            "visible": {
+              "title": "Visible Workspace",
+              "description": "Anyone can see your workspace and request to join"
+            },
+            "hidden": {
+              "title": "Hidden",
+              "description": "Only administrator can add member and other unable to see workspace"
+            }
+          },
+          "history": {
+            "title": "History",
+            "group_crated_date": "Group created date"
+          }
+        },
+        "search_member": "Search member",
+        "admin": "Admin",
+        "member_list": "Member List",
+        "confirm_set_as_administrator": {
+          "title": "Are you sure?",
+          "content_add": "{name} will be the administrator of the workspace.",
+          "content_remove": "{name} will no longer be an administrator of the workspace."
+        },
+        "confirm_remove_member": {
+          "title": "Are you sure?",
+          "content": "{name} will be removed form this workspace."
+        },
+        "approved": "Approved"
       }
     }
   }

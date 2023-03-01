@@ -461,7 +461,7 @@
         position: relative;
 
         .div-left {
-          width: 100%;
+          width: calc(100% - 332px - 30px);
 
           > div {
             border-radius: 14px;
@@ -547,6 +547,16 @@
     .app-content {
       margin-left: 30px !important;
       margin-right: 30px !important;
+    }
+  }
+
+  @include media-breakpoint-down(xl) {
+    .app-content {
+      .div-content {
+        .div-right {
+          display: none;
+        }
+      }
     }
   }
 }

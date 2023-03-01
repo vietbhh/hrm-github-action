@@ -1,6 +1,6 @@
 import { axiosNodeApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { object2QueryString, serialize } from "@apps/utility/handleData"
 
 export const workspaceApi = {
   async save(data) {
@@ -22,6 +22,30 @@ export const workspaceApi = {
     return await axiosNodeApi.post(
       "/workspace/update",
       serialize(_.cloneDeep(data))
+    )
+  },
+  async getList(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
+  },
+  async update(id, data) {
+    return await axiosNodeApi.post(`/workspace/update/${id}`, data)
+  },
+  async getDetail(workspaceId) {
+    return await axiosNodeApi.get(`/workspace/${workspaceId}`)
+  },
+  async sortGroupRule(id, data) {
+    return await axiosNodeApi.post(`/workspace/sort-group-rule/${id}`, data, {
+      disableLoading: true
+    })
+  },
+  async loadDataMember(id, params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(
+      `/workspace/load-data-member/${id}?get${strParams}`,
+      {
+        disableLoading: true
+      }
     )
   }
 }
