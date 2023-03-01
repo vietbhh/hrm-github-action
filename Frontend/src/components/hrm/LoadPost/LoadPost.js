@@ -9,7 +9,16 @@ import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 
 const LoadPost = (props) => {
-  const { data, current_url, idMedia, setIdMedia, dataMention } = props
+  const {
+    data, // data post
+    current_url, // current url (vd: /feed)
+    dataMention, // data arr user tag [{id: id, name: name,link: "#", avatar: getAvatarUrl(value.id * 1)}]
+    offReactionAndComment = false, // true / false
+
+    // only page post details
+    idMedia = "",
+    setIdMedia = null // function set idMedia
+  } = props
   const [state, setState] = useMergedState({})
 
   // ** useEffect
@@ -31,13 +40,17 @@ const LoadPost = (props) => {
           dataMention={dataMention}
         />
       </div>
-      <div className="post-footer">
-        <PostShowReaction />
-        <div className="post-footer-button">
-          <ButtonReaction />
-        </div>
-      </div>
-      <PostComment dataMention={dataMention} />
+      {!offReactionAndComment && (
+        <>
+          <div className="post-footer">
+            <PostShowReaction />
+            <div className="post-footer-button">
+              <ButtonReaction />
+            </div>
+          </div>
+          <PostComment dataMention={dataMention} />
+        </>
+      )}
     </div>
   )
 }

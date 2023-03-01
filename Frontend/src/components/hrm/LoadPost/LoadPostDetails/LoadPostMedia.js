@@ -52,7 +52,9 @@ const LoadPostMedia = (props) => {
           .catch((err) => {})
       }
 
-      setIdMedia("")
+      if (_.isFunction(setIdMedia)) {
+        setIdMedia("")
+      }
     }
   }, [idMedia, data])
 

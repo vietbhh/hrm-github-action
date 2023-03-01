@@ -1,10 +1,9 @@
-import { forEach, isEmpty } from "lodash-es"
-import path, { dirname, resolve } from "path"
-import { getSetting } from "./settings.js"
 import { Storage } from "@google-cloud/storage"
 import fs from "fs"
 import fse from "fs-extra"
-import { log } from "console"
+import { forEach, isEmpty } from "lodash-es"
+import path, { dirname } from "path"
+import { getSetting } from "./settings.js"
 
 const safeFileName = (fileName) => {
   return fileName
@@ -20,15 +19,16 @@ const safeFileName = (fileName) => {
     .replace(/[^A-Za-z0-9\-_.\/]/g, "-")
 }
 
+export const localSavePath = path.join(
+  dirname(global.__basedir),
+  "Backend",
+  "applications",
+  process.env.code,
+  "writable",
+  "uploads"
+)
+
 const _localUpload = async (storePath, files, uploadByFileContent) => {
-  const localSavePath = path.join(
-    dirname(global.__basedir),
-    "Backend",
-    "applications",
-    process.env.code,
-    "writable",
-    "uploads"
-  )
   if (isEmpty(files)) {
     throw new Error("files_is_empty")
   }
@@ -125,9 +125,7 @@ const _googleCloudUpload = async (storePath, files) => {
   forEach(files, (file, key) => {
     const newFile = { ...file, buffer: file.data }
     const fileName = safeFileName(newFile.name)
-    const filePath = path
-      .join(storePath, fileName)
-      .replace(/\\/g, "/")
+    const filePath = path.join(storePath, fileName).replace(/\\/g, "/")
 
     const promise = new Promise((resolve, reject) => {
       const blob = bucket.file(filePath)
@@ -170,15 +168,6 @@ const _googleCloudUpload = async (storePath, files) => {
 }
 
 const _handleCopyDirect = async (pathFrom, pathTo, filename) => {
-  const localSavePath = path.join(
-    dirname(global.__basedir),
-    "Backend",
-    "applications",
-    process.env.code,
-    "writable",
-    "uploads"
-  )
-
   const copySuccess = []
   const copyError = []
   if (!isEmpty(filename)) {
@@ -303,15 +292,17 @@ const _handleCopyCloudStorage = async (pathFrom, pathTo, filename) => {
  * @param {*} storePath (/feed/get)
  * @param {*} files
  * @param {*} uploadByFileContent:if true files = {name: "filename.png", mimetype: "image/png", content: base64string}
+ * @param {*} type (null/direct/cloud_storage)
  * @returns
  */
 
 const _uploadServices = async (
   storePath,
   files,
-  uploadByFileContent = false
+  uploadByFileContent = false,
+  type = null
 ) => {
-  const upload_type = await getSetting("upload_type")
+  const upload_type = type === null ? await getSetting("upload_type") : type
   if (!storePath) throw new Error("missing_store_path")
 
   if (upload_type === "direct") {

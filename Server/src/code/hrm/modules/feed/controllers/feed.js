@@ -25,7 +25,7 @@ const uploadTempAttachmentController = async (req, res, next) => {
   forEach(file, (value, index) => {
     const type = body[index.replace("file", "type")]
     const promise = new Promise(async (resolve, reject) => {
-      const result = await handleUpFile(value, type, storePath, "direct")
+      const result = await handleUpFile(value, type, storePath, false, "direct")
       resolve(result)
     })
     promises.push(promise)
@@ -36,6 +36,7 @@ const uploadTempAttachmentController = async (req, res, next) => {
 }
 
 const submitPostController = async (req, res, next) => {
+  //const storePathTemp = path.join("modules", "feed_temp")
   const storePath = path.join("modules", "feed")
   const fileInput = req.files
   const body = JSON.parse(req.body.body)
@@ -65,6 +66,7 @@ const submitPostController = async (req, res, next) => {
     ref: null,
     approve_status: body.approveStatus
   })
+
   try {
     const saveFeedParent = await feedModelParent.save()
     const _id_parent = saveFeedParent._id
@@ -226,47 +228,60 @@ const takeOneFrameOfVid = (dir, storePath) => {
   })
 }
 
-const handleUpFile = async (file, type, storePath, uploadType = null) => {
+const handleUpFile = async (
+  file,
+  type,
+  storePath,
+  uploadByFileContent = false,
+  uploadType = null
+) => {
   const result = {
     type: type,
     description: "",
     name_original: file.name
   }
 
-  const resultUpload = await _uploadServices(storePath, [file], uploadType)
+  const resultUpload = await _uploadServices(
+    storePath,
+    [file],
+    uploadByFileContent,
+    uploadType
+  )
   result["thumb"] = resultUpload.uploadSuccess[0].path
+  result["name_thumb"] = resultUpload.uploadSuccess[0].name
   result["source"] = resultUpload.uploadSuccess[0].path
+  result["name_source"] = resultUpload.uploadSuccess[0].name
 
   if (type.includes("image/")) {
-    const thumb_path = path.join(
-      storePath,
+    const name_thumb =
       "thumb_" +
-        file.name.split("_")[0] +
-        "_" +
-        Date.now() +
-        "_" +
-        Math.random() * 1000001 +
-        ".webp"
-    )
+      file.name.split("_")[0] +
+      "_" +
+      Date.now() +
+      "_" +
+      Math.random() * 1000001 +
+      ".webp"
+    const thumb_path = path.join(storePath, name_thumb)
     result["thumb"] = await handleCompressImage(file, thumb_path)
+    result["name_thumb"] = name_thumb
   }
 
   if (type.includes("video/")) {
+    const name_thumb =
+      "thumb_" +
+      file.name.split("_")[0] +
+      "_" +
+      Date.now() +
+      "_" +
+      Math.random() * 1000001 +
+      ".webp"
     await takeOneFrameOfVid(
       path.join(localSavePath, resultUpload.uploadSuccess[0].path),
-      path.join(
-        storePath,
-        "thumb_" +
-          file.name.split("_")[0] +
-          "_" +
-          Date.now() +
-          "_" +
-          Math.random() * 1000001 +
-          ".webp"
-      )
+      path.join(storePath, name_thumb)
     )
       .then((res) => {
         result["thumb"] = res.path
+        result["name_thumb"] = name_thumb
       })
       .catch((err) => {})
   }
