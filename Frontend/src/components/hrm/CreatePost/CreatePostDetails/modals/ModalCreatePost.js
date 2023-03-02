@@ -9,7 +9,7 @@ import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import { useMemo, useState } from "react"
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
-import { feedApi } from "../../../common/api"
+import { feedApi } from "@modules/Feed/common/api"
 import AttachPhotoVideo from "../AttachPhotoVideo"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
@@ -24,8 +24,9 @@ const ModalCreatePost = (props) => {
     privacy_type = "workspace",
     dataMention,
     workspace,
-    userId,
-    setModal
+    setModal,
+    setDataCreateNew,
+    approveStatus
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -110,11 +111,15 @@ const ModalCreatePost = (props) => {
         content: content,
         workspace: workspace,
         privacy_type: state.privacy_type,
-        file: file
+        file: file,
+        approveStatus: approveStatus
       }
       feedApi
         .postSubmitPost({ body: JSON.stringify(params), fileInput: fileInput })
         .then((res) => {
+          if (_.isFunction(setDataCreateNew)) {
+            setDataCreateNew(res.data)
+          }
           setEmptyAfterSubmit()
           notification.showSuccess({
             text: useFormatMessage("notification.success")
@@ -163,24 +168,22 @@ const ModalCreatePost = (props) => {
         feedApi
           .postUploadAttachment(params)
           .then((res) => {
-            const _file = []
             const promises = []
             _.forEach(res.data, (value) => {
-              const promise = new Promise((resolve, reject) => {
-                downloadApi.getPhoto(value.path).then((response) => {
-                  _file.push({
+              const promise = new Promise(async (resolve, reject) => {
+                await downloadApi.getPhoto(value.thumb).then((response) => {
+                  resolve({
                     ...value,
                     url: URL.createObjectURL(response.data)
                   })
-                  resolve("success")
                 })
               })
 
               promises.push(promise)
             })
 
-            Promise.all(promises).then(() => {
-              setFile([...file, ..._file])
+            Promise.all(promises).then((res_promise) => {
+              setFile([...file, ...res_promise])
               setLoadingUploadAttachment(false)
             })
           })
@@ -332,7 +335,6 @@ const ModalCreatePost = (props) => {
           <AttachPhotoVideo
             handleAddAttachment={handleAddAttachment}
             loadingUploadAttachment={state.loadingUploadAttachment}
-            setLoadingUploadAttachment={setLoadingUploadAttachment}
           />
 
           <Tooltip

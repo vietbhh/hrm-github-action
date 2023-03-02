@@ -383,6 +383,14 @@
                   background: #6d85ff;
                 }
               }
+
+              i {
+                margin-right: 0;
+                color: #ffffff;
+                width: 20px !important;
+                height: 20px !important;
+                font-size: 18px;
+              }
             }
           }
         }
@@ -461,7 +469,7 @@
         position: relative;
 
         .div-left {
-          width: 100%;
+          width: calc(100% - 332px - 30px);
 
           > div {
             border-radius: 14px;

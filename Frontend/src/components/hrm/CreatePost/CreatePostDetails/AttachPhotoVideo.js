@@ -5,15 +5,7 @@ import React, { Fragment } from "react"
 import { Label } from "reactstrap"
 
 const AttachPhotoVideo = (props) => {
-  const {
-    handleAddAttachment,
-    loadingUploadAttachment,
-    setLoadingUploadAttachment
-  } = props
-
-  // ** function
-
-  // ** useEffect
+  const { handleAddAttachment, loadingUploadAttachment } = props
 
   return (
     <Fragment>

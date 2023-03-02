@@ -1,8 +1,8 @@
 import { useMergedState } from "@apps/utility/common"
 import { Tooltip } from "antd"
-import { Fragment, useEffect, useRef, useState } from "react"
-import { Smile } from "react-feather"
 import EmojiPicker, { Categories, EmojiStyle, Theme } from "emoji-picker-react"
+import { Fragment, useEffect, useRef } from "react"
+import { Smile } from "react-feather"
 
 const Emoji = (props) => {
   const { handleInsertEditorState } = props
