@@ -13,7 +13,8 @@ const LoadPost = (props) => {
     data, // data post
     current_url, // current url (vd: /feed)
     dataMention, // data arr user tag [{id: id, name: name,link: "#", avatar: getAvatarUrl(value.id * 1)}]
-    offReactionAndComment = false, // true / false
+    offReactionAndComment = false, // tắt div reaction, comment: true / false
+    setData, // function set lại data khi react, comment
 
     // only page post details
     idMedia = "",
@@ -43,12 +44,12 @@ const LoadPost = (props) => {
       {!offReactionAndComment && (
         <>
           <div className="post-footer">
-            <PostShowReaction />
+            <PostShowReaction data={data} />
             <div className="post-footer-button">
-              <ButtonReaction />
+              <ButtonReaction data={data} setData={setData} />
             </div>
           </div>
-          <PostComment dataMention={dataMention} />
+          <PostComment data={data} dataMention={dataMention} />
         </>
       )}
     </div>

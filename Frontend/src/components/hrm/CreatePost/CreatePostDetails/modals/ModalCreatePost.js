@@ -35,7 +35,6 @@ const ModalCreatePost = (props) => {
     loadingSubmit: false
   })
   const [file, setFile] = useState([])
-  const [fileInput, setFileInput] = useState([])
 
   // ** function
   const setLoadingUploadAttachment = (value) =>
@@ -99,7 +98,6 @@ const ModalCreatePost = (props) => {
     setModal(false)
     setState({ loadingSubmit: false })
     setFile([])
-    setFileInput([])
   }
   const submitPost = () => {
     const check_can_submit = handleCheckContentBeforeSubmit()
@@ -115,7 +113,7 @@ const ModalCreatePost = (props) => {
         approveStatus: approveStatus
       }
       feedApi
-        .postSubmitPost({ body: JSON.stringify(params), fileInput: fileInput })
+        .postSubmitPost(params)
         .then((res) => {
           if (_.isFunction(setDataCreateNew)) {
             setDataCreateNew(res.data)
@@ -163,7 +161,6 @@ const ModalCreatePost = (props) => {
           arrFile.push(newFile)
           arrType.push(value.type)
         })
-        setFileInput([...fileInput, ...arrFile])
         const params = { file: arrFile, type: arrType }
         feedApi
           .postUploadAttachment(params)
@@ -274,11 +271,9 @@ const ModalCreatePost = (props) => {
         setFile={setFile}
         handleAddAttachment={handleAddAttachment}
         loadingUploadAttachment={state.loadingUploadAttachment}
-        fileInput={fileInput}
-        setFileInput={setFileInput}
       />
     ),
-    [file, state.loadingUploadAttachment, fileInput]
+    [file, state.loadingUploadAttachment]
   )
 
   return (
