@@ -88,9 +88,13 @@ const MemberItem = (props) => {
         workspaceApi
           .update(id, values)
           .then((res) => {
-            setFilter({
-              page: res.data.current_page
-            })
+            if (res.data.current_page !== 0) {
+              setFilter({
+                page: res.data.current_page
+              })
+            } else {
+              loadData()
+            }
           })
           .catch((err) => {})
       }

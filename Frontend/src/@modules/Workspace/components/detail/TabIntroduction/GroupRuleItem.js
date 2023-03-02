@@ -51,7 +51,7 @@ const GroupRuleItem = (props) => {
     workspaceApi
       .update(id, updateValues)
       .then((res) => {
-        setGroupRule(res.data, true)
+        setGroupRule(res.data.group_rules, true)
         setState({
           isEditing: false,
           loading: false
