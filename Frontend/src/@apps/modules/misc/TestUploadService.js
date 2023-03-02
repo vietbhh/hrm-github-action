@@ -22,13 +22,15 @@ const TestUploadService = (props) => {
     axiosNodeApi.post("/test3", serialize(_.cloneDeep(values))).then((res) => {
       console.log(res)
     })
+
+    /*axiosNodeApi.post("/test-copy").then((res) => {
+      console.log(res)
+    })*/
   }
 
   const handleClickDownload = () => {
     axiosNodeApi
-      .get(
-        "/download/file/?name=/feed/post/health.png"
-      )
+      .get("/download/file/?name=/feed/post/health.png")
       .then((res) => {
         console.log(res)
       })

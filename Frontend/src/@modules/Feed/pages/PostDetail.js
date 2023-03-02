@@ -37,6 +37,7 @@ const PostDetail = (props) => {
             setState({ _idMedia: idMedia })
           } else {
             setState({ _idMedia: "" })
+            window.history.replaceState(null, "", current_url)
           }
           await feedApi
             .getGetUserPost(data.created_by)

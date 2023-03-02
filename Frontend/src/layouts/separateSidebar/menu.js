@@ -7,6 +7,19 @@ const menuConfig = [
     header: useFormatMessage("layout.collaboration")
   },
   {
+    id: "Feed",
+    title: "layout.feed",
+    type: "dropdown",
+    action: "login",
+    resource: "app",
+    icon: (
+      <div className="menu-icon blue">
+        <i className="fa-solid fa-house"></i>
+      </div>
+    ),
+    navLink: "/feed"
+  },
+  {
     id: "chat",
     title: "layout.chat",
     type: "dropdown",

@@ -11,9 +11,9 @@ import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 const CreatePost = (props) => {
   const {
     dataEmployee,
-    workspace,
-    setDataCreateNew,
-    approveStatus = "approved"
+    workspace, // arr workspace: []
+    setDataCreateNew, // function set Data then create new post
+    approveStatus = "approved" // approved / rejected
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
@@ -274,7 +274,6 @@ const CreatePost = (props) => {
         fullName={fullName}
         dataMention={state.dataMention}
         workspace={workspace}
-        userId={userId}
         setDataCreateNew={setDataCreateNew}
         approveStatus={approveStatus}
       />
