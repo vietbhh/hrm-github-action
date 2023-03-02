@@ -133,36 +133,6 @@ const TabMember = (props) => {
   }, [state.memberPagination, state.adminPagination])
 
   // ** render
-  const renderListAdmin = () => {
-    if (state.administrators.length === 0) {
-      return ""
-    }
-
-    return (
-      <div className="w-100">
-        <Row>
-          {state.administrators.map((item, index) => {
-            return (
-              <Col sm={12} className="mb-2" key={`list-admin-item-${index}`}>
-                <MemberItem
-                  id={id}
-                  member={item}
-                  isAdmin={true}
-                  userState={userState}
-                  isAdminGroup={state.isAdminGroup}
-                  administrators={state.administrators}
-                  members={state.members}
-                  setFilter={setMemberPagination}
-                  loadData={loadData}
-                />
-              </Col>
-            )
-          })}
-        </Row>
-      </div>
-    )
-  }
-
   return (
     <div className="tab-member">
       <Row>
