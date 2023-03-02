@@ -1,72 +1,37 @@
 import { useFormatMessage } from "@apps/utility/common"
-import { Dropdown } from "antd"
 import React, { Fragment } from "react"
-import img_care from "@modules/Feed/assets/images/care.png"
-import img_haha from "@modules/Feed/assets/images/haha.png"
-import img_like from "@modules/Feed/assets/images/like.png"
-import img_love from "@modules/Feed/assets/images/love.png"
-import img_sad from "@modules/Feed/assets/images/sad.png"
-import img_wow from "@modules/Feed/assets/images/wow.png"
+import DropdownReaction from "./DropdownReaction"
 
 const ButtonReaction = (props) => {
-  const {} = props
-
-  const item_reaction = [
-    {
-      key: "1",
-      label: (
-        <div className="div-dropdown-reaction">
-          <button className="pull-up">
-            <img src={img_like} />
-          </button>
-          <button className="pull-up">
-            <img src={img_love} />
-          </button>
-          <button className="pull-up">
-            <img src={img_care} />
-          </button>
-          <button className="pull-up">
-            <img src={img_haha} />
-          </button>
-          <button className="pull-up">
-            <img src={img_sad} />
-          </button>
-          <button className="pull-up">
-            <img src={img_wow} />
-          </button>
-        </div>
-      )
-    }
-  ]
+  const { data, setData } = props
 
   return (
     <Fragment>
       <div className="div-button-reaction">
-        <Dropdown
-          menu={{ items: item_reaction }}
-          placement="top"
-          overlayClassName="post-footer-button-reaction-dropdown"
-          trigger={["hover"]}>
-          <button className="btn-reaction">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="23"
-              height="22"
-              viewBox="0 0 23 22"
-              fill="none">
-              <rect
-                y="9.08997"
-                width="6.45501"
-                height="12.91"
-                rx="2"
-                fill="#139FF8"
-              />
-              <path
-                d="M7.25384 19.077V12.3928C7.25547 12.1588 7.38447 11.3066 7.51529 10.8721C7.61995 10.5245 8.00588 9.68008 8.18576 9.30131C8.32966 9.0072 9.29774 7.41301 9.73926 6.62762C10.4062 5.44117 10.5271 4.70591 10.6714 4.20459C10.9291 3.30913 10.2135 0.868433 11.2764 0.294317C12.4211 -0.323963 13.4677 0.210769 13.5985 0.294322C13.7293 0.377874 14.2526 0.778927 14.6287 1.58103C15.0048 2.38314 15.1684 3.95393 15.0866 4.57222C14.9426 5.66127 14.4351 6.82523 14.1381 7.89762C15.0801 7.60352 17.654 7.46314 17.654 7.46314C17.654 7.46314 20.8427 7.0788 21.922 8.29867C23.0013 9.51854 22.3036 10.822 21.8239 11.5238C22.9032 12.61 22.8868 14.4314 21.5132 15.3171C22.0855 17.2054 21.2189 18.2581 20.0742 18.6258C20.804 20.036 19.6326 21.2632 18.7169 21.383C16.6728 21.6504 10.1979 21.4508 9.24887 21.2159C7.57437 20.8014 7.22114 19.6173 7.25384 19.077Z"
-                fill="#139FF8"
-              />
-            </svg>
-            {/* <svg
+        <DropdownReaction
+          data={data}
+          setData={setData}
+          buttonDropdown={
+            <button className="btn-reaction">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="23"
+                height="22"
+                viewBox="0 0 23 22"
+                fill="none">
+                <rect
+                  y="9.08997"
+                  width="6.45501"
+                  height="12.91"
+                  rx="2"
+                  fill="#139FF8"
+                />
+                <path
+                  d="M7.25384 19.077V12.3928C7.25547 12.1588 7.38447 11.3066 7.51529 10.8721C7.61995 10.5245 8.00588 9.68008 8.18576 9.30131C8.32966 9.0072 9.29774 7.41301 9.73926 6.62762C10.4062 5.44117 10.5271 4.70591 10.6714 4.20459C10.9291 3.30913 10.2135 0.868433 11.2764 0.294317C12.4211 -0.323963 13.4677 0.210769 13.5985 0.294322C13.7293 0.377874 14.2526 0.778927 14.6287 1.58103C15.0048 2.38314 15.1684 3.95393 15.0866 4.57222C14.9426 5.66127 14.4351 6.82523 14.1381 7.89762C15.0801 7.60352 17.654 7.46314 17.654 7.46314C17.654 7.46314 20.8427 7.0788 21.922 8.29867C23.0013 9.51854 22.3036 10.822 21.8239 11.5238C22.9032 12.61 22.8868 14.4314 21.5132 15.3171C22.0855 17.2054 21.2189 18.2581 20.0742 18.6258C20.804 20.036 19.6326 21.2632 18.7169 21.383C16.6728 21.6504 10.1979 21.4508 9.24887 21.2159C7.57437 20.8014 7.22114 19.6173 7.25384 19.077Z"
+                  fill="#139FF8"
+                />
+              </svg>
+              {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="21"
               height="22"
@@ -87,9 +52,10 @@ const ButtonReaction = (props) => {
                 strokeWidth="1.5"
               />
             </svg> */}
-            <span>{useFormatMessage("modules.feed.post.text.like")}</span>
-          </button>
-        </Dropdown>
+              <span>{useFormatMessage("modules.feed.post.text.like")}</span>
+            </button>
+          }
+        />
 
         <button className="btn-comment">
           <svg

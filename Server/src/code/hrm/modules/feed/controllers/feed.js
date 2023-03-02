@@ -1,4 +1,4 @@
-import { getUserActivated, getUserById } from "#app/models/users.mysql.js"
+import { getUserActivated } from "#app/models/users.mysql.js"
 import { localSavePath, _uploadServices } from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
@@ -10,6 +10,7 @@ import feedMongoModel from "../models/feed.mongo.js"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 
 const getAllEmployeeActive = async (req, res, next) => {
   const dataUser = await getUserActivated()
@@ -25,7 +26,7 @@ const uploadTempAttachmentController = async (req, res, next) => {
   forEach(file, (value, index) => {
     const type = body[index.replace("file", "type")]
     const promise = new Promise(async (resolve, reject) => {
-      const result = await handleUpFile(value, type, storePath, false, "direct")
+      const result = await handleUpFileTemp(value, type, storePath)
       resolve(result)
     })
     promises.push(promise)
@@ -36,10 +37,8 @@ const uploadTempAttachmentController = async (req, res, next) => {
 }
 
 const submitPostController = async (req, res, next) => {
-  //const storePathTemp = path.join("modules", "feed_temp")
   const storePath = path.join("modules", "feed")
-  const fileInput = req.files
-  const body = JSON.parse(req.body.body)
+  const body = req.body
   const workspace_type =
     body.workspace.length === 0 && body.privacy_type === "workspace"
       ? "default"
@@ -77,11 +76,7 @@ const submitPostController = async (req, res, next) => {
       return res.respond(out)
     } else {
       if (body.file.length === 1) {
-        const result = await handleUpFile(
-          fileInput["fileInput[0]"],
-          body.file[0].type,
-          storePath
-        )
+        const result = await handleMoveFileTempToMain(body.file[0], storePath)
         handleDeleteFile(body.file[0])
         await feedMongoModel.updateOne(
           { _id: _id_parent },
@@ -94,22 +89,8 @@ const submitPostController = async (req, res, next) => {
         const promises = []
         forEach(body.file, (value, key) => {
           const promise = new Promise(async (resolve, reject) => {
-            let _fileInput = null
-            forEach(fileInput, (item) => {
-              if (item.name === value.name_original) {
-                _fileInput = item
-              }
-            })
-            let resultFileInput = {}
-            if (_fileInput) {
-              resultFileInput = await handleUpFile(
-                _fileInput,
-                value.type,
-                storePath
-              )
-
-              handleDeleteFile(value)
-            }
+            const result = await handleMoveFileTempToMain(value, storePath)
+            handleDeleteFile(value)
 
             let type_feed = "image"
             if (value.type.includes("video/")) {
@@ -121,8 +102,8 @@ const submitPostController = async (req, res, next) => {
               permission: workspace_type,
               content: value.description,
               type: type_feed,
-              source: resultFileInput.source,
-              thumb: resultFileInput.thumb,
+              source: result.source,
+              thumb: result.thumb,
               ref: _id_parent,
               sort_number: key,
               approve_status: body.approveStatus
@@ -171,9 +152,10 @@ const loadFeedController = async (req, res, next) => {
     .sort({
       _id: "desc"
     })
+  const data = await handleDataBeforeReturn(feed, true)
   const feedCount = await feedMongoModel.find(filter).count()
   const result = {
-    dataPost: feed,
+    dataPost: data,
     totalPost: feedCount,
     page: page * 1 + 1,
     hasMore: (page * 1 + 1) * pageLength < feedCount
@@ -201,11 +183,16 @@ const getFeedById = async (req, res, next) => {
   }
 }
 
-// get user post
-const getUserPost = async (req, res, next) => {
-  const userId = req.params.id
-  const dataUser = await getUserById(userId)
-  return res.respond(dataUser)
+// update post
+const updatePost = async (req, res, next) => {
+  const body = req.body
+  try {
+    await feedMongoModel.updateOne({ _id: body._id }, body)
+    const data = await feedMongoModel.findById(body._id)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 // **
 
@@ -228,25 +215,14 @@ const takeOneFrameOfVid = (dir, storePath) => {
   })
 }
 
-const handleUpFile = async (
-  file,
-  type,
-  storePath,
-  uploadByFileContent = false,
-  uploadType = null
-) => {
+const handleUpFileTemp = async (file, type, storePath) => {
   const result = {
     type: type,
     description: "",
     name_original: file.name
   }
 
-  const resultUpload = await _uploadServices(
-    storePath,
-    [file],
-    uploadByFileContent,
-    uploadType
-  )
+  const resultUpload = await _uploadServices(storePath, [file], false, "direct")
   result["thumb"] = resultUpload.uploadSuccess[0].path
   result["name_thumb"] = resultUpload.uploadSuccess[0].name
   result["source"] = resultUpload.uploadSuccess[0].path
@@ -289,6 +265,49 @@ const handleUpFile = async (
   return result
 }
 
+const handleMoveFileTempToMain = async (file_info, storePath) => {
+  const result = {
+    source: null,
+    thumb: null
+  }
+
+  // source
+  if (fs.existsSync(path.join(localSavePath, file_info.source))) {
+    const contents = fs.readFileSync(
+      path.join(localSavePath, file_info.source),
+      {
+        encoding: "base64"
+      }
+    )
+    const file = {
+      name: file_info.name_source,
+      mimetype: file_info.type,
+      content: contents
+    }
+    const resultUpload = await _uploadServices(storePath, [file], true)
+    result["source"] = resultUpload.uploadSuccess[0].path
+  }
+
+  // thumb
+  if (fs.existsSync(path.join(localSavePath, file_info.thumb))) {
+    const contents = fs.readFileSync(
+      path.join(localSavePath, file_info.thumb),
+      {
+        encoding: "base64"
+      }
+    )
+    const file = {
+      name: file_info.name_thumb,
+      mimetype: file_info.type,
+      content: contents
+    }
+    const resultUpload = await _uploadServices(storePath, [file], true)
+    result["thumb"] = resultUpload.uploadSuccess[0].path
+  }
+
+  return result
+}
+
 const handleDeleteFile = (file) => {
   if (fs.existsSync(path.join(localSavePath, file.source))) {
     fs.unlinkSync(path.join(localSavePath, file.source))
@@ -306,7 +325,6 @@ const handleDeleteFile = (file) => {
 const handleCompressImage = async (file, savePath) => {
   const image = sharp(file.data)
   /* image.metadata().then((metadata) => {
-    console.log(metadata)
   }) */
   await image
     .webp({
@@ -322,7 +340,7 @@ export {
   uploadTempAttachmentController,
   submitPostController,
   loadFeedController,
-  getUserPost,
   getFeedChild,
-  getFeedById
+  getFeedById,
+  updatePost
 }

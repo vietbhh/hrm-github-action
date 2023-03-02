@@ -23,15 +23,7 @@ export const feedApi = {
   },
 
   async postSubmitPost(data) {
-    return await axiosNodeApi.post(
-      "/feed/submit-post",
-      serialize(_.cloneDeep(data)),
-      {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      }
-    )
+    return await axiosNodeApi.post("/feed/submit-post", data)
   },
 
   async getLoadFeed(params) {
@@ -43,15 +35,15 @@ export const feedApi = {
     })
   },
 
-  async getGetUserPost(id) {
-    return await axiosNodeApi.get("/feed/get-user-post/" + id)
-  },
-
   async getGetFeedChild(id) {
     return await axiosNodeApi.get("/feed/get-feed-child/" + id)
   },
 
   async getGetFeed(id) {
     return await axiosNodeApi.get("/feed/get-feed/" + id)
+  },
+
+  async postUpdatePost(data) {
+    return await axiosNodeApi.post("/feed/update-post", data)
   }
 }
