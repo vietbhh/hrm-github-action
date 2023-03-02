@@ -5,6 +5,7 @@ import {
 } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
+import LoadPost from "components/hrm/LoadPost/LoadPost"
 import { useEffect, Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
@@ -31,15 +32,11 @@ const findKeyByValue = (arr = [], value) => {
 const workspace_type = [
   {
     value: "desc",
-    label: "Newest first",
-    icon: "",
-    text: ""
+    label: "Newest first"
   },
   {
     value: "asc",
-    label: "Oldest first",
-    icon: "",
-    text: ""
+    label: "Oldest first"
   }
 ]
 
@@ -48,8 +45,11 @@ const PendingPostWorkspace = () => {
     prevScrollY: 0,
     tabActive: 1,
     detailWorkspace: {},
-    loading: false
+    loading: false,
+    listPost: []
   })
+
+  const current_url = window.location.pathname
   const params = useParams()
   const navigate = useNavigate()
   const methods = useForm({
@@ -70,16 +70,26 @@ const PendingPostWorkspace = () => {
 
   const loadData = () => {
     setState({ loading: true })
-    workspaceApi.getDetailWorkspace(params.id).then((res) => {
-      console.log("res DetailWS", res.data)
-      setState({ detailWorkspace: res.data, loading: false })
-    })
+    workspaceApi
+      .loadPost({ id: params.id, page: 1, sort: "desc" })
+      .then((res) => {
+        console.log("res DetailWS", res.data.results)
+        setState({ listPost: res.data.results, loading: false })
+      })
   }
-  console.log("detailWorkspace", state.detailWorkspace)
   useEffect(() => {
     loadData()
   }, [])
-
+  const renderPost = (arrData = []) => {
+    return arrData.map((item, key) => {
+      return (
+        <div className="load-feed">
+          <LoadPost data={item} current_url={current_url} />
+          asd
+        </div>
+      )
+    })
+  }
   return (
     <Fragment>
       <div className="workspace-setting row">
@@ -101,6 +111,8 @@ const PendingPostWorkspace = () => {
               />
             </CardBody>
           </Card>
+          <div className="feed">{renderPost(state.listPost)}</div>
+
           <Card>
             <CardBody>POst</CardBody>
             <CardFooter className="text-end d-flex">

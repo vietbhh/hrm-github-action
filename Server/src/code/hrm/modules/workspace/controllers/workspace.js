@@ -1,4 +1,5 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
+import feedMongoModel from "../../feed/models/feed.mongo.js"
 import path from "path"
 import { _localUpload } from "#app/services/upload.js"
 import fs from "fs"
@@ -100,7 +101,7 @@ const saveCoverImage = async (req, res) => {
   }
 }
 
-const updateWorkspace = async (req, res) => {
+const updateWorkspaceOLD = async (req, res) => {
   const dataSave = { ...req.body }
   // const infoWS = await workspaceMongoModel.findById(dataSave._id)
 
@@ -115,7 +116,21 @@ const updateWorkspace = async (req, res) => {
   return res.respond(aaa)
 }
 
-const getPostWorkspace = async (req, res) => {}
+const getPostWorkspace = async (req, res) => {
+  const query = req.query
+  try {
+    const postList = await feedMongoModel
+      .find({ permission: "workspace" })
+      .sort({
+        _id: "desc"
+      })
+    return res.respond({
+      results: postList
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 
 const getListWorkspace = async (req, res, next) => {
   const page = req.query.page === 1 ? 0 : req.query.page - 1

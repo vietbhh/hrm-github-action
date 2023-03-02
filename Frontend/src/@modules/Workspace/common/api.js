@@ -47,5 +47,9 @@ export const workspaceApi = {
         disableLoading: true
       }
     )
+  },
+  async loadPost(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/pending-posts?${strParams}`)
   }
 }
