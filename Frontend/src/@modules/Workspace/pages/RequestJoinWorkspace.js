@@ -17,8 +17,8 @@ const RequestJoinWorkspace = (props) => {
     requestJoins: [],
     totalRequestJoin: 0,
     filter: {
-      pageMember: 1,
-      limitMember: 30
+      page: 1,
+      limit: 30
     }
   })
 
@@ -44,10 +44,10 @@ const RequestJoinWorkspace = (props) => {
   const loadData = () => {
     const params = {
       ...state.filter,
-      is_request_join: true
+      load_list: "request_join"
     }
     workspaceApi
-      .loadDataMember(id)
+      .loadDataMember(id, params)
       .then((res) => {
         setState({
           requestJoins: res.data.request_joins,

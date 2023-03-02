@@ -80,7 +80,6 @@ const _handleUpdateGroupRule = (workspace, requestData) => {
       ...workspace._doc,
       group_rules: groupRule.map((item) => {
         if (item._id.equals(requestData.group_rule_id)) {
-          console.log(item)
           return {
             _id: requestData.group_rule_id,
             ...requestData.data
@@ -310,7 +309,6 @@ const loadDataMember = async (req, res, next) => {
         workspace?.administrators === undefined
           ? []
           : workspace.administrators.reverse()
-      console.log(workspaceAdministrator)
       const allAdmin =
         workspaceAdministrator.length === 0
           ? []

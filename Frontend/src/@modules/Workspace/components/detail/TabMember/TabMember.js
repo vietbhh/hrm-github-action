@@ -30,7 +30,6 @@ const TabMember = (props) => {
     requestJoins: [],
     isAdminGroup: false,
     filter: {},
-    currentLoad: "all",
     memberPagination: {
       page: 1,
       limit: 30
@@ -80,7 +79,7 @@ const TabMember = (props) => {
       m_limit: state.memberPagination.limit,
       a_page: state.adminPagination.page,
       a_limit: state.adminPagination.limit,
-      load_list: state.currentLoad
+      load_list: "all"
     }
 
     workspaceApi
