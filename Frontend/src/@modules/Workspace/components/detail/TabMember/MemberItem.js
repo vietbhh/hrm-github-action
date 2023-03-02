@@ -59,7 +59,6 @@ const MemberItem = (props) => {
                 page: res.data.current_page
               })
             } else {
-              console.log("r")
               loadData()
             }
           })

@@ -129,7 +129,7 @@ const _handleRemoveMember = (workspace, requestData) => {
     workspace?.members === undefined
       ? []
       : workspace.members.filter((item) => {
-          return item !== requestData.data.id
+          return item !== requestData.data.id 
         })
 
   return { ...workspace._doc, administrators: administrators, members: members }
