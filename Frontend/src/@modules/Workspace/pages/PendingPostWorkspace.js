@@ -80,13 +80,58 @@ const PendingPostWorkspace = () => {
   useEffect(() => {
     loadData()
   }, [])
+
+  const handleApprove = (id, status) => {
+    console.log("id", id)
+    console.log("status", status)
+    workspaceApi.approvePost({ id: id, approve_status: status }).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+    })
+  }
   const renderPost = (arrData = []) => {
     return arrData.map((item, key) => {
       return (
-        <div className="load-feed">
-          <LoadPost data={item} current_url={current_url} />
-          asd
-        </div>
+        <Card>
+          <CardBody className="p-0">
+            <div className="load-feed">
+              <LoadPost
+                data={item}
+                current_url={current_url}
+                offReactionAndComment={true}
+              />
+            </div>
+            <div className="p-1 text-end d-flex">
+              <Button
+                type="submit"
+                color="outline-secondary"
+                className="me-1 w-100"
+                onClick={() => handleApprove(item._id, "rejected")}
+                disabled={
+                  state.loading ||
+                  formState.isSubmitting ||
+                  formState.isValidating
+                }>
+                {state.loading && <Spinner size="sm" className="me-50" />}
+                {useFormatMessage("button.reject")}
+              </Button>
+              <Button
+                type="submit"
+                color="primary"
+                className="ms-auto w-100"
+                onClick={() => handleApprove(item._id, "approved")}
+                disabled={
+                  state.loading ||
+                  formState.isSubmitting ||
+                  formState.isValidating
+                }>
+                {state.loading && <Spinner size="sm" className="me-50" />}
+                {useFormatMessage("button.approve")}
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       )
     })
   }
@@ -115,32 +160,6 @@ const PendingPostWorkspace = () => {
 
           <Card>
             <CardBody>POst</CardBody>
-            <CardFooter className="text-end d-flex">
-              <Button
-                type="submit"
-                color="outline-secondary"
-                className="me-1 w-100"
-                disabled={
-                  state.loading ||
-                  formState.isSubmitting ||
-                  formState.isValidating
-                }>
-                {state.loading && <Spinner size="sm" className="me-50" />}
-                {useFormatMessage("button.reject")}
-              </Button>
-              <Button
-                type="submit"
-                color="primary"
-                className="ms-auto w-100"
-                disabled={
-                  state.loading ||
-                  formState.isSubmitting ||
-                  formState.isValidating
-                }>
-                {state.loading && <Spinner size="sm" className="me-50" />}
-                {useFormatMessage("button.approve")}
-              </Button>
-            </CardFooter>
           </Card>
         </div>
       </div>

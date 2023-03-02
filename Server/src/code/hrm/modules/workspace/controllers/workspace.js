@@ -3,8 +3,8 @@ import feedMongoModel from "../../feed/models/feed.mongo.js"
 import path from "path"
 import { _localUpload } from "#app/services/upload.js"
 import fs from "fs"
-import { getUsers, usersModel } from "#app/models/users.mysql.js"
-import { isEmpty } from "lodash-es"
+import { getUser, usersModel } from "#app/models/users.mysql.js"
+import { isEmpty, map } from "lodash-es"
 import { Op } from "sequelize"
 
 const saveWorkspace = async (req, res, next) => {
@@ -108,24 +108,31 @@ const updateWorkspaceOLD = async (req, res) => {
   if (dataSave?.members) {
     dataSave.members = JSON.parse(req.body.members)
   }
-  console.log("**********req.body", req.body)
 
-  const aaa = await workspaceMongoModel.findByIdAndUpdate(dataSave._id, {
+  const update = await workspaceMongoModel.findByIdAndUpdate(dataSave._id, {
     ...dataSave
   })
-  return res.respond(aaa)
+  return res.respond(update)
 }
 
 const getPostWorkspace = async (req, res) => {
-  const query = req.query
   try {
+    const arr = []
+
     const postList = await feedMongoModel
-      .find({ permission: "workspace" })
+      .find({ permission: "workspace", approve_status: "pending" })
       .sort({
         _id: "desc"
       })
+    map(postList, async (index, key) => {
+      const postData = { ...index }
+      const info_created = await getUser(index.created_by)
+      postData._doc.user_data = info_created.dataValues //info_created.dataValues
+      arr.push(postData._doc)
+    })
+
     return res.respond({
-      results: postList
+      results: arr
     })
   } catch (err) {
     return res.fail(err.message)
@@ -474,6 +481,17 @@ const _getCurrentPageMember = async (requestData, workspace) => {
   return page
 }
 
+const approvePost = async (req, res) => {
+  try {
+    console.log("req.body?.id", req.body?.id)
+    const feedUpdate = await feedMongoModel.findByIdAndUpdate(req.body?.id, {
+      ...req.body
+    })
+    return res.respond(feedUpdate)
+  } catch {
+    return res.fail(err.message)
+  }
+}
 export {
   getWorkspace,
   saveWorkspace,
@@ -482,5 +500,6 @@ export {
   updateWorkspace,
   sortGroupRule,
   loadDataMember,
-  getPostWorkspace
+  getPostWorkspace,
+  approvePost
 }

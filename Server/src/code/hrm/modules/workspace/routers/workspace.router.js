@@ -4,7 +4,8 @@ import {
   saveWorkspace,
   updateWorkspace,
   saveCoverImage,
-  getPostWorkspace
+  getPostWorkspace,
+  approvePost
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -13,5 +14,5 @@ router.get("/:workspaceId", getWorkspace)
 router.post("/save", saveWorkspace)
 router.post("/save-cover-image", saveCoverImage)
 router.post("/update", updateWorkspace)
-
+router.post("/approvePost", approvePost)
 export default router

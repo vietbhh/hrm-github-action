@@ -51,5 +51,9 @@ export const workspaceApi = {
   async loadPost(params) {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/workspace/pending-posts?${strParams}`)
+  },
+
+  async approvePost(data) {
+    return await axiosNodeApi.post(`/workspace/approvePost`, data)
   }
 }
