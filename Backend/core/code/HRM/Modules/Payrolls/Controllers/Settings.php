@@ -28,6 +28,9 @@ class Settings extends ErpController
 		if (isset($getPost['data']['payroll_setting_calculate_monthly'])) {
 			preference('payroll_setting_calculate_monthly', $getPost['data']['payroll_setting_calculate_monthly'], true);
 		}
+		if (isset($getPost['data']['payroll_auto_send_mail_review'])) {
+			preference('payroll_auto_send_mail_review', $getPost['data']['payroll_auto_send_mail_review'], true);
+		}
 		return $this->respond(ACTION_SUCCESS);
 	}
 

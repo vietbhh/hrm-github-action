@@ -3271,7 +3271,9 @@
         "days": "Days",
         "bf_end_date": "Before End Date",
         "can_not_delete": "Can not delete",
-        "employee_in_cycle": "There are {number_employee} employees in this cycle ."
+        "employee_in_cycle": "There are {number_employee} employees in this cycle .",
+        "payroll_auto_send_mail_review": "Auto Send Mail Review",
+        "other": "Other"
       },
       "note": {
         "general_note": "You can only set the data at the first initialization, can not change the settings because it affects the existing data, if you need to change or contact Friday for better support.",
@@ -3482,7 +3484,8 @@
         "repeat_on": "Repeat On *",
         "id_devices": "ID Device Machine",
         "policy": "Policy",
-        "allow_overtime": "Enable Overtime"
+        "allow_overtime": "Enable Overtime",
+        "auto_mail_notification_attendance": "Auto Mail Notification Attendance"
       },
       "app_options": {
         "radius": {
