@@ -126,7 +126,6 @@ class Auth extends ResourceController
 		$routeModuleOrders = array_column($listRoutes, 'order');
 		array_multisort($routeModuleNames, SORT_ASC, $routeModuleOrders, SORT_ASC, $listRoutes);
 
-
 		$response['modules'] = $listRoutes;
 		if (!function_exists('modulesConstructs')) {
 			helper('app');
@@ -140,6 +139,11 @@ class Auth extends ResourceController
 		$notification = \Config\Services::notifications();
 		$response['list_notification'] = $notification->list();
 		$response['number_notification'] = $notification->getUnreadNotificationNumber();
+
+		// get list user
+		$userModel = new UserModel();
+		$listUser = $userModel->getListUsers([], ['account_status' => 'activated']);
+		$response['list_user'] = $listUser;
 
 		return $this->respond($response, 200, 'login_success');
 	}
@@ -509,6 +513,11 @@ class Auth extends ResourceController
 		$notification = \Config\Services::notifications();
 		$response['list_notification'] = $notification->list();
 		$response['number_notification'] = $notification->getUnreadNotificationNumber();
+
+		// get list user
+		$userModel = new UserModel();
+		$listUser = $userModel->getListUsers([], ['account_status' => 'activated']);
+		$response['list_user'] = $listUser;
 
 		return $this->respond($response, 200, 'data_found');
 	}
