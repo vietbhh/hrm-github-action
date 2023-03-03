@@ -11,6 +11,7 @@ import React, { Fragment, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
+import { useSelector } from "react-redux"
 
 const PostDetail = (props) => {
   const {} = props
@@ -23,6 +24,7 @@ const PostDetail = (props) => {
   })
   const { idPost, idMedia } = useParams()
 
+  const dataEmployee = useSelector((state) => state.users.list)
   const current_url = `/posts/${idPost}`
 
   // ** useEffect
@@ -74,20 +76,17 @@ const PostDetail = (props) => {
   }, [idPost, idMedia])
 
   useEffect(() => {
-    feedApi.getGetAllEmployeeActive().then((res) => {
-      const data_mention = []
-      _.forEach(res.data, (value) => {
-        data_mention.push({
-          id: value.id,
-          name: value.full_name,
-          link: "#",
-          avatar: getAvatarUrl(value.id * 1)
-        })
+    _.forEach(dataEmployee, (value) => {
+      data_mention.push({
+        id: value.id,
+        name: value.full_name,
+        link: "#",
+        avatar: getAvatarUrl(value.id * 1)
       })
-
-      setState({ dataMention: data_mention })
     })
-  }, [])
+
+    setState({ dataMention: data_mention })
+  }, [dataEmployee])
 
   return (
     <Fragment>
@@ -117,6 +116,9 @@ const PostDetail = (props) => {
                 idMedia={state._idMedia}
                 setIdMedia={(value) => setState({ _idMedia: value })}
                 dataMention={state.dataMention}
+                setData={(data) => {
+                  setState({ dataPost: data })
+                }}
               />
             )}
           </div>

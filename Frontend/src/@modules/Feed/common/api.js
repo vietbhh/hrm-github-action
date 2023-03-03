@@ -18,10 +18,6 @@ export const feedApi = {
     )
   },
 
-  async getGetAllEmployeeActive() {
-    return await axiosNodeApi.get("/feed/get-all-employee-active")
-  },
-
   async postSubmitPost(data) {
     return await axiosNodeApi.post("/feed/submit-post", data)
   },

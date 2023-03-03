@@ -8,6 +8,17 @@
 }
 
 .feed {
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #377dff;
+  }
+
+  .ant-tabs-tab:hover {
+    color: #377dff;
+  }
+  .ant-tabs-tab-btn:active {
+    color: #377dff;
+  }
+
   .div-create-post {
     background: #ffffff;
     padding: 20px 40px;
@@ -293,7 +304,7 @@
       margin-bottom: 20px !important;
 
       .post-footer {
-        margin-top: 20px;
+        margin-top: 10px;
 
         .post-footer-button {
           .div-button-reaction {
@@ -303,7 +314,7 @@
             padding-bottom: 5px;
 
             button {
-              gap: 15px;
+              gap: 10px;
               padding: 0 30px;
             }
           }
@@ -436,8 +447,10 @@
     }
 
     .btn-reaction {
-      color: #139ff8;
-      font-weight: 600;
+      .is-react {
+        color: #139ff8;
+        font-weight: 600;
+      }
     }
   }
 
@@ -1347,5 +1360,34 @@
 .reaction__like {
   ul {
     margin-bottom: 10px;
+  }
+}
+
+.modal-reaction-detail {
+  .modal-content {
+    padding: 0 30px 20px 30px !important;
+
+    .modal-body {
+      .btn-close-modal {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        right: 0;
+        border-radius: 10px;
+        z-index: 10;
+        background: #f0f0f0;
+
+        &:hover {
+          background: #e6e6e6;
+        }
+      }
+
+      .ant-tabs-tab {
+        img {
+          width: 20;
+          height: 20px;
+        }
+      }
+    }
   }
 }
