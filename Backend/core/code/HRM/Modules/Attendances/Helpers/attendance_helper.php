@@ -129,7 +129,6 @@ function getAttendanceDetail(
 			} else {
 				$infoWorkingDay = isset($arrWorkingDay[$weekDay]) ? $arrWorkingDay[$weekDay] : [];
 			}
-			$infoWorkingDay = isset($arrWorkingDay[$weekDay]) ? $arrWorkingDay[$weekDay] : [];
 			
 			$infoTimeOff = isset($arrTimeOff[$key]) ? $arrTimeOff[$key] : [];
 

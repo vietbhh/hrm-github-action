@@ -73,7 +73,6 @@ const EditOvertimeModal = (props) => {
         handleCancelModal()
       })
       .catch((err) => {
-        console.log(err)
         setLoading(false)
         notification.showError({
           text: useFormatMessage("notification.save.error")
