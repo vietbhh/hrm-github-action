@@ -17,7 +17,6 @@ const Paycles = (props) => {
   // ** Props
   const modules = useSelector((state) => state.app.modules.attendance_setting)
   const settings = useSelector((state) => state.auth.settings)
-  console.log(settings)
   const module = modules.config
   const moduleName = module.name
   const ability = useContext(AbilityContext)
