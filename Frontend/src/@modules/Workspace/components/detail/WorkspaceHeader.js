@@ -50,11 +50,19 @@ const WorkspaceHeader = (props) => {
   const items = [
     {
       label: (
-        <div>
+        <a href={`/workspace/${data._id}/pending-posts`}>
           <i className="fa-regular fa-list-ul"></i> Waiting for approval post
-        </div>
+        </a>
       ),
       key: "0"
+    },
+    {
+      label: (
+        <a href={`/workspace/${data._id}/request-join`}>
+          <i className="fa-duotone fa-user-lock"></i> Request to join
+        </a>
+      ),
+      key: "3"
     },
     {
       label: (
@@ -67,27 +75,11 @@ const WorkspaceHeader = (props) => {
     },
     {
       label: (
-        <a>
-          <i className="fa-regular fa-square-check"></i> Setup follow
-        </a>
-      ),
-      key: "2"
-    },
-    {
-      label: (
         <a href={`/workspace/${data._id}/setting`}>
           <i className="fa-regular fa-gear"></i> Workspace settings
         </a>
       ),
-      key: "3"
-    },
-    {
-      label: (
-        <a href={`/workspace/${data._id}/pending-posts`}>
-          <i className="fa-light fa-list-check"></i> Pending posts
-        </a>
-      ),
-      key: "4"
+      key: "2"
     }
   ]
   return (

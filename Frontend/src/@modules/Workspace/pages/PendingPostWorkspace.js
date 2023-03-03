@@ -7,7 +7,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import LoadPost from "components/hrm/LoadPost/LoadPost"
 import { useEffect, Fragment } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, set, useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   Card,
@@ -46,7 +46,9 @@ const PendingPostWorkspace = () => {
     tabActive: 1,
     detailWorkspace: {},
     loading: false,
-    listPost: []
+    listPost: [],
+    sort: "desc",
+    page: 1
   })
 
   const current_url = window.location.pathname
@@ -56,6 +58,7 @@ const PendingPostWorkspace = () => {
     mode: "onSubmit"
   })
   const { handleSubmit, formState, reset } = methods
+
   const onSubmit = (values) => {
     values._id = params.id
     console.log("values", values)
@@ -68,23 +71,31 @@ const PendingPostWorkspace = () => {
     })
   }
 
-  const loadData = () => {
+  const loadData = (props) => {
+    const paramsSend = {
+      page: state.page,
+      sort: state.sort,
+      id: params.id,
+      ...props
+    }
     setState({ loading: true })
-    workspaceApi
-      .loadPost({ id: params.id, page: 1, sort: "desc" })
-      .then((res) => {
-        console.log("res DetailWS", res.data.results)
-        setState({ listPost: res.data.results, loading: false })
+    workspaceApi.loadPost(paramsSend).then((res) => {
+      console.log("res DetailWS", res.data.results)
+      setState({
+        listPost: res.data.results,
+        loading: false,
+        page: paramsSend.page,
+        sort: paramsSend.sort
       })
+    })
   }
   useEffect(() => {
     loadData()
   }, [])
 
   const handleApprove = (id, status) => {
-    console.log("id", id)
-    console.log("status", status)
     workspaceApi.approvePost({ id: id, approve_status: status }).then((res) => {
+      loadData()
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
@@ -141,26 +152,29 @@ const PendingPostWorkspace = () => {
         <div className="col-md-5 offset-md-3">
           <Card>
             <CardBody>
-              <ErpSelect
-                name="type"
-                nolabel
-                useForm={methods}
-                loading={state.loading}
-                label={useFormatMessage(
-                  "modules.workspace.fields.workspace_type"
-                )}
-                options={workspace_type}
-                defaultValue={workspace_type[0]}
-                isClearable={false}
-                isSearchable={false}
-              />
+              <div className="d-flex align-items-center">
+                <h4 className="w-100 ">
+                  {state.listPost.length} Pending posts
+                </h4>
+                <ErpSelect
+                  name="sort"
+                  nolabel
+                  useForm={methods}
+                  loading={state.loading}
+                  label={useFormatMessage(
+                    "modules.workspace.fields.workspace_type"
+                  )}
+                  formGroupClass="w-100 mb-0"
+                  options={workspace_type}
+                  defaultValue={workspace_type[0]}
+                  isClearable={false}
+                  isSearchable={false}
+                  onChange={(e) => loadData({ sort: e?.value })}
+                />
+              </div>
             </CardBody>
           </Card>
           <div className="feed">{renderPost(state.listPost)}</div>
-
-          <Card>
-            <CardBody>POst</CardBody>
-          </Card>
         </div>
       </div>
     </Fragment>

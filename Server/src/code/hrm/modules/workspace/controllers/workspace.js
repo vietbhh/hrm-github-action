@@ -1,11 +1,12 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import feedMongoModel from "../../feed/models/feed.mongo.js"
 import path from "path"
-import { _localUpload } from "#app/services/upload.js"
+import { _localUpload, _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
 import { getUser, usersModel } from "#app/models/users.mysql.js"
 import { isEmpty, map } from "lodash-es"
 import { Op } from "sequelize"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
@@ -61,7 +62,7 @@ const saveCoverImage = async (req, res) => {
   const type = base64Buffe.type
 
   const paaaaaaaaaaat = "modules/workspace/" + req.body._id
-  const saveImg = _localUpload(paaaaaaaaaaat, [image])
+  const saveImg = await _localUpload(paaaaaaaaaaat, [image])
   console.log("saveImg", saveImg)
   return
   const paaaaaaaaaaatxxx =
@@ -117,22 +118,19 @@ const updateWorkspaceOLD = async (req, res) => {
 
 const getPostWorkspace = async (req, res) => {
   try {
-    const arr = []
-
+    console.log("req.body", req)
     const postList = await feedMongoModel
-      .find({ permission: "workspace", approve_status: "pending" })
-      .sort({
-        _id: "desc"
+      .find({
+        permission_ids: req.query.id,
+        permission: "workspace",
+        approve_status: "pending"
       })
-    map(postList, async (index, key) => {
-      const postData = { ...index }
-      const info_created = await getUser(index.created_by)
-      postData._doc.user_data = info_created.dataValues //info_created.dataValues
-      arr.push(postData._doc)
-    })
-
+      .sort({
+        _id: req.query.sort
+      })
+    const beforeReturn = await handleDataBeforeReturn(postList, true)
     return res.respond({
-      results: arr
+      results: beforeReturn
     })
   } catch (err) {
     return res.fail(err.message)
