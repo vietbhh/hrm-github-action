@@ -1,45 +1,11 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage } from "@apps/utility/common"
-import { Dropdown } from "antd"
 import React from "react"
-import img_care from "@modules/Feed/assets/images/care.png"
-import img_haha from "@modules/Feed/assets/images/haha.png"
-import img_like from "@modules/Feed/assets/images/like.png"
-import img_love from "@modules/Feed/assets/images/love.png"
-import img_sad from "@modules/Feed/assets/images/sad.png"
-import img_wow from "@modules/Feed/assets/images/wow.png"
+import DropdownReaction from "./DropdownReaction"
 import PostCommentForm from "./PostCommentForm"
 
 const PostComment = (props) => {
-  const { dataMention } = props
-
-  const item_reaction = [
-    {
-      key: "1",
-      label: (
-        <div className="div-dropdown-reaction">
-          <button className="pull-up">
-            <img src={img_like} />
-          </button>
-          <button className="pull-up">
-            <img src={img_love} />
-          </button>
-          <button className="pull-up">
-            <img src={img_care} />
-          </button>
-          <button className="pull-up">
-            <img src={img_haha} />
-          </button>
-          <button className="pull-up">
-            <img src={img_sad} />
-          </button>
-          <button className="pull-up">
-            <img src={img_wow} />
-          </button>
-        </div>
-      )
-    }
-  ]
+  const { data, dataMention } = props
 
   return (
     <div className="post-comment">
@@ -57,17 +23,17 @@ const PostComment = (props) => {
               <img src="https://fastly.picsum.photos/id/8/5000/3333.jpg?hmac=OeG5ufhPYQBd6Rx1TAldAuF92lhCzAhKQKttGfawWuA" />
             </div>
             <div className="body__reaction">
-              <Dropdown
-                menu={{ items: item_reaction }}
-                placement="top"
-                overlayClassName="post-footer-button-reaction-dropdown reaction__like"
-                trigger={["hover"]}>
-                <a
-                  className="reaction reaction__like"
-                  onClick={(e) => e.preventDefault()}>
-                  {useFormatMessage("modules.feed.post.text.like")}
-                </a>
-              </Dropdown>
+              <DropdownReaction
+                data={data}
+                buttonDropdown={
+                  <a
+                    className="reaction reaction__like"
+                    onClick={(e) => e.preventDefault()}>
+                    {useFormatMessage("modules.feed.post.text.like")}
+                  </a>
+                }
+              />
+
               <a
                 className="reaction reaction__reply"
                 onClick={(e) => e.preventDefault()}>
@@ -143,17 +109,17 @@ const PostComment = (props) => {
               </div>
             </div>
             <div className="body__reaction">
-              <Dropdown
-                menu={{ items: item_reaction }}
-                placement="top"
-                overlayClassName="post-footer-button-reaction-dropdown reaction__like"
-                trigger={["hover"]}>
-                <a
-                  className="reaction reaction__like"
-                  onClick={(e) => e.preventDefault()}>
-                  {useFormatMessage("modules.feed.post.text.like")}
-                </a>
-              </Dropdown>
+              <DropdownReaction
+                data={data}
+                buttonDropdown={
+                  <a
+                    className="reaction reaction__like"
+                    onClick={(e) => e.preventDefault()}>
+                    {useFormatMessage("modules.feed.post.text.like")}
+                  </a>
+                }
+              />
+
               <a
                 className="reaction reaction__reply"
                 onClick={(e) => e.preventDefault()}>
@@ -204,17 +170,17 @@ const PostComment = (props) => {
               </div>
             </div>
             <div className="body__reaction">
-              <Dropdown
-                menu={{ items: item_reaction }}
-                placement="top"
-                overlayClassName="post-footer-button-reaction-dropdown reaction__like"
-                trigger={["hover"]}>
-                <a
-                  className="reaction reaction__like"
-                  onClick={(e) => e.preventDefault()}>
-                  {useFormatMessage("modules.feed.post.text.like")}
-                </a>
-              </Dropdown>
+              <DropdownReaction
+                data={data}
+                buttonDropdown={
+                  <a
+                    className="reaction reaction__like"
+                    onClick={(e) => e.preventDefault()}>
+                    {useFormatMessage("modules.feed.post.text.like")}
+                  </a>
+                }
+              />
+
               <a
                 className="reaction reaction__reply"
                 onClick={(e) => e.preventDefault()}>

@@ -21,9 +21,9 @@ const PostHeader = (props) => {
 
   return (
     <div className="post-header">
-      <Avatar className="img" src={data?.user_data?.avatar} />
+      <Avatar className="img" src={data?.created_by?.avatar} />
       <div className="post-header-title">
-        <span className="name">{data?.user_data?.full_name || ""}</span>
+        <span className="name">{data?.created_by?.full_name || ""}</span>
         <span className="time">{timeDifference(data.created_at)}</span>
       </div>
       <div className="post-header-right">

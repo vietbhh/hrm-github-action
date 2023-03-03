@@ -58,17 +58,6 @@ const LoadFeed = (props) => {
       setState({ hasMoreLazy: true })
     }
 
-    // ** user data post
-    feedApi
-      .getGetUserPost(value.created_by)
-      .then((res) => {
-        value["user_data"] = res.data
-        const dataPost = [...state.dataPost]
-        dataPost[index] = value
-        setState({ dataPost: dataPost })
-      })
-      .catch((err) => {})
-
     // load media
     if (
       value.source !== null &&
@@ -105,12 +94,6 @@ const LoadFeed = (props) => {
   const loadDataCreateNew = async () => {
     // ** user data post
     setState({ loadingPostCreateNew: true })
-    await feedApi
-      .getGetUserPost(dataCreateNew.created_by)
-      .then((res) => {
-        dataCreateNew["user_data"] = res.data
-      })
-      .catch((err) => {})
 
     if (
       dataCreateNew.source !== null &&
@@ -172,6 +155,8 @@ const LoadFeed = (props) => {
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 
+  // ** function
+
   return (
     <div className="load-feed">
       <InfiniteScroll
@@ -189,7 +174,13 @@ const LoadFeed = (props) => {
             <LoadPost
               key={index}
               data={value}
+              current_url={current_url}
               dataMention={state.dataMention}
+              setData={(data) => {
+                const _data = [...state.dataCreateNewTemp]
+                _data[index] = data
+                setState({ dataCreateNewTemp: _data })
+              }}
             />
           )
         })}
@@ -203,6 +194,11 @@ const LoadFeed = (props) => {
                 data={value}
                 current_url={current_url}
                 dataMention={state.dataMention}
+                setData={(data) => {
+                  const _data = [...state.dataPost]
+                  _data[index] = data
+                  setState({ dataPost: _data })
+                }}
               />
             </LazyLoadComponent>
           )

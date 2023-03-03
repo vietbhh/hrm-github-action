@@ -1,4 +1,5 @@
-import { isNumber } from "lodash-es"
+import { getUser } from "#app/models/users.mysql.js"
+import { forEach, isNumber } from "lodash-es"
 
 export const getBool = (val) => {
   if (isUndefined(val)) return false
@@ -127,4 +128,55 @@ export const getAvatarUrl = (userOrPath) => {
 
 export const getPublicDownloadUrl = (path, type = "image") => {
   return process.env.BASEURL + `/download/public/${type}?name=` + path
+}
+
+export const handleDataBeforeReturn = async (data, multiData = false) => {
+  const arrData = multiData ? data : [data]
+  const promises = []
+  forEach(arrData, (dataItem, index) => {
+    const _dataItem = { ...dataItem }
+    const promise = new Promise(async (resolve, reject) => {
+      if (dataItem["owner"] && isNumber(dataItem["owner"])) {
+        const data_user = await getUser(dataItem["owner"])
+        _dataItem["_doc"]["owner"] = {
+          id: data_user.id,
+          username: data_user.username,
+          avatar: data_user.avatar,
+          full_name: data_user.full_name,
+          email: data_user.email
+        }
+      }
+
+      if (dataItem["created_by"] && isNumber(dataItem["created_by"])) {
+        const data_user = await getUser(dataItem["created_by"])
+        _dataItem["_doc"]["created_by"] = {
+          id: data_user.id,
+          username: data_user.username,
+          avatar: data_user.avatar,
+          full_name: data_user.full_name,
+          email: data_user.email
+        }
+      }
+
+      if (dataItem["updated_by"] && isNumber(dataItem["updated_by"])) {
+        const data_user = await getUser(dataItem["updated_by"])
+        _dataItem["_doc"]["updated_by"] = {
+          id: data_user.id,
+          username: data_user.username,
+          avatar: data_user.avatar,
+          full_name: data_user.full_name,
+          email: data_user.email
+        }
+      }
+
+      resolve(_dataItem["_doc"])
+    })
+    promises.push(promise)
+  })
+
+  const result = await Promise.all(promises).then((res_promise) => {
+    return res_promise
+  })
+
+  return result
 }

@@ -11,33 +11,36 @@ const ListMember = (props) => {
   const {
     // ** props
     id,
-    members,
-    totalListMember,
     userState,
-    isAdminGroup,
     isAdmin,
-    administrators,
+    totalListData,
+    listData,
+    isAdminGroup,
     currentPage,
     perPage,
     // ** methods
-    setMemberPagination,
+    setPagination,
     loadData
   } = props
 
   const handleChange = (page) => {
-    setMemberPagination({
+    setPagination({
       page: page
     })
   }
 
   // ** render
   const renderPagination = () => {
+    if (totalListData === 0) {
+      return ""
+    }
+
     return (
       <Pagination
         className="mt-1"
         defaultCurrent={1}
         current={currentPage}
-        total={totalListMember}
+        total={totalListData}
         pageSize={perPage}
         onChange={handleChange}
       />
@@ -48,7 +51,7 @@ const ListMember = (props) => {
     return (
       <div className="w-100">
         <Row>
-          {members.map((item, index) => {
+          {listData.map((item, index) => {
             return (
               <Col sm={12} className="mb-2" key={`list-member-item-${index}`}>
                 <MemberItem
@@ -57,11 +60,9 @@ const ListMember = (props) => {
                   isAdmin={isAdmin}
                   userState={userState}
                   isAdminGroup={isAdminGroup}
-                  administrators={administrators}
-                  members={members}
                   currentPage={currentPage}
                   perPage={perPage}
-                  setFilter={setMemberPagination}
+                  setFilter={setPagination}
                   loadData={loadData}
                 />
               </Col>

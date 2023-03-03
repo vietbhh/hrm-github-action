@@ -36,7 +36,8 @@ const EditGroupRuleModal = (props) => {
     })
     workspaceApi
       .update(id, {
-        group_rules: [...groupRule, values]
+        group_rules: [...groupRule, values],
+        add_new_group: true
       })
       .then((res) => {
         reset({})

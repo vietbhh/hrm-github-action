@@ -26,12 +26,17 @@ const TabMember = (props) => {
     totalListMember: 0,
     members: [],
     administrators: [],
+    totalListAdmin: 0,
     requestJoins: [],
     isAdminGroup: false,
     filter: {},
     memberPagination: {
       page: 1,
       limit: 30
+    },
+    adminPagination: {
+      page: 1,
+      limit: 2
     }
   })
 
@@ -54,6 +59,15 @@ const TabMember = (props) => {
     })
   }
 
+  const setAdminPagination = (filter) => {
+    setState({
+      adminPagination: {
+        ...state.adminPagination,
+        ...filter
+      }
+    })
+  }
+
   const loadData = (updateState = {}) => {
     setState({
       loading: true
@@ -61,8 +75,11 @@ const TabMember = (props) => {
 
     const params = {
       ...state.filter,
-      ...state.memberPagination,
-      is_list_member: true
+      m_page: state.memberPagination.page,
+      m_limit: state.memberPagination.limit,
+      a_page: state.adminPagination.page,
+      a_limit: state.adminPagination.limit,
+      load_list: "all"
     }
 
     workspaceApi
@@ -73,6 +90,7 @@ const TabMember = (props) => {
           members: res.data.members,
           totalListMember: res.data.total_list_member,
           administrators: res.data.administrators,
+          totalListAdmin: res.data.total_list_admin,
           requestJoins: res.data.request_joins,
           isAdminGroup: res.data.is_admin_group,
           loading: false
@@ -109,40 +127,12 @@ const TabMember = (props) => {
     loadData({
       members: "members",
       totalListMember: "total_list_member",
-      administrators: "administrators"
+      administrators: "administrators",
+      totalListAdmin: "total_list_admin"
     })
-  }, [state.memberPagination])
+  }, [state.memberPagination, state.adminPagination])
 
   // ** render
-  const renderListAdmin = () => {
-    if (state.administrators.length === 0) {
-      return ""
-    }
-
-    return (
-      <div className="w-100">
-        <Row>
-          {state.administrators.map((item, index) => {
-            return (
-              <Col sm={12} className="mb-2" key={`list-admin-item-${index}`}>
-                <MemberItem
-                  id={id}
-                  member={item}
-                  isAdmin={true}
-                  userState={userState}
-                  isAdminGroup={state.isAdminGroup}
-                  administrators={state.administrators}
-                  members={state.members}
-                  loadData={loadData}
-                />
-              </Col>
-            )
-          })}
-        </Row>
-      </div>
-    )
-  }
-
   return (
     <div className="tab-member">
       <Row>
@@ -164,7 +154,18 @@ const TabMember = (props) => {
                     )}`}
                   </h6>
                   <div className="w-100 d-flex align-items-center justify-content-start">
-                    <Fragment>{renderListAdmin()}</Fragment>
+                    <ListMember
+                      id={id}
+                      userState={userState}
+                      isAdmin={true}
+                      isAdminGroup={state.isAdminGroup}
+                      listData={state.administrators}
+                      totalListData={state.totalListAdmin}
+                      currentPage={state.adminPagination.page}
+                      perPage={state.adminPagination.limit}
+                      setPagination={setAdminPagination}
+                      loadData={loadData}
+                    />
                   </div>
                 </div>
               </div>
@@ -179,12 +180,11 @@ const TabMember = (props) => {
                       userState={userState}
                       isAdmin={false}
                       isAdminGroup={state.isAdminGroup}
-                      administrators={state.administrators}
-                      members={state.members}
-                      totalListMember={state.totalListMember}
+                      listData={state.members}
+                      totalListData={state.totalListMember}
                       currentPage={state.memberPagination.page}
                       perPage={state.memberPagination.limit}
-                      setMemberPagination={setMemberPagination}
+                      setPagination={setMemberPagination}
                       loadData={loadData}
                     />
                   </div>

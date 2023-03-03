@@ -170,158 +170,184 @@ const getListWorkspace = async (req, res, next) => {
   }
 }
 
+const _handleUpdateGroupRule = (workspace, requestData) => {
+  const groupRule =
+    workspace?.group_rules === undefined ? [] : workspace.group_rules
+  if (requestData.type === "update") {
+    return {
+      ...workspace._doc,
+      group_rules: groupRule.map((item) => {
+        if (item._id.equals(requestData.group_rule_id)) {
+          return {
+            _id: requestData.group_rule_id,
+            ...requestData.data
+          }
+        }
+
+        return item
+      })
+    }
+  } else if (requestData.type === "remove") {
+    return {
+      ...workspace._doc,
+      group_rules: groupRule.filter((item) => {
+        return item._id !== requestData.group_rule_id
+      })
+    }
+  }
+}
+
+const _handleUpdateAdministrator = (workspace, requestData) => {
+  let administrators =
+    workspace?.administrators === undefined ? [] : workspace.administrators
+  if (requestData.type === "add") {
+    return {
+      ...workspace._doc,
+      administrators: [...workspace.administrators, requestData.data.id]
+    }
+  } else if (requestData.type === "remove") {
+    return {
+      ...workspace._doc,
+      administrators: administrators.filter((item) => {
+        return item !== requestData.data.id
+      })
+    }
+  }
+}
+
+const _handleRemoveMember = (workspace, requestData) => {
+  const administrators =
+    workspace?.administrators === undefined
+      ? []
+      : workspace.administrators.filter((item) => {
+          return item !== requestData.data.id
+        })
+
+  const members =
+    workspace?.members === undefined
+      ? []
+      : workspace.members.filter((item) => {
+          return item !== requestData.data.id
+        })
+
+  return { ...workspace._doc, administrators: administrators, members: members }
+}
+const _handleApproveJoinRequest = (workspace, requestData) => {
+  if (requestData.is_all === true) {
+    const requestJoins =
+      workspace?.request_joins === undefined ? [] : workspace.request_joins
+    return {
+      ...workspace._doc,
+      members: [...workspace.members, ...requestJoins],
+      request_joins: []
+    }
+  } else {
+    return {
+      ...workspace._doc,
+      members:
+        workspace?.members === undefined
+          ? [requestData.data.id]
+          : [...workspace.members, requestData.data.id],
+      request_joins:
+        workspace?.request_joins === undefined
+          ? []
+          : workspace.request_joins.filter((item) => {
+              return parseInt(item) !== parseInt(requestData.data.id)
+            })
+    }
+  }
+}
+
 const updateWorkspace = async (req, res, next) => {
   const workspaceId = req.params.id
+  if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
+    res.fail("invalid_work_space_id")
+  }
+
   const requestData = req.body
   try {
+    const workspaceInfo = await workspaceMongoModel.findById(workspaceId)
+    if (workspaceInfo === null) {
+      res.failNotFound("work_space_not_found")
+    }
+
+    let workSpaceUpdate = {}
+    let returnCurrentPageForPagination = ""
+    let returnNewWorkspaceAfterUpdate = false
+
     if (requestData.hasOwnProperty("group_rule_id")) {
-      if (requestData.type === "update") {
-        const workspace = await _handleUpdateWorkspace(
-          {
-            _id: workspaceId,
-            "group_rules._id": requestData.group_rule_id
-          },
-          {
-            $set: {
-              "group_rules.$": {
-                ...requestData.data
-              }
-            }
-          }
-        )
-
-        return res.respond([...workspace.group_rules])
-      } else if (requestData.type === "remove") {
-        const workspace = await _handleUpdateWorkspace(
-          {
-            _id: workspaceId
-          },
-          {
-            $pull: {
-              group_rules: {
-                _id: requestData.group_rule_id
-              }
-            }
-          }
-        )
-
-        return res.respond([...workspace.group_rules])
-      }
+      workSpaceUpdate = _handleUpdateGroupRule(workspaceInfo, requestData)
+      returnCurrentPageForPagination = ""
     } else if (requestData.hasOwnProperty("update_administrator")) {
-      if (requestData.type === "add") {
-        const workspaceUpdate = await _handleUpdateWorkspace(
-          {
-            _id: workspaceId
-          },
-          {
-            $push: {
-              administrators: requestData.data.id
-            }
-          }
-        )
-        const currentPage = await _getCurrentPageMember(
-          requestData,
-          workspaceUpdate
-        )
-
-        return res.respond({
-          data: workspaceUpdate,
-          current_page: currentPage
-        })
-      } else if (requestData.type === "remove") {
-        const workspaceUpdate = await _handleUpdateWorkspace(
-          {
-            _id: workspaceId
-          },
-          {
-            $pull: {
-              administrators: requestData.data.id
-            }
-          }
-        )
-
-        return res.respond(workspaceUpdate)
-      }
+      workSpaceUpdate = _handleUpdateAdministrator(workspaceInfo, requestData)
+      returnCurrentPageForPagination = requestData.type === "members"
     } else if (requestData.hasOwnProperty("remove_member")) {
-      const workspaceUpdate = await _handleUpdateWorkspace(
+      workSpaceUpdate = _handleRemoveMember(workspaceInfo, requestData)
+      returnCurrentPageForPagination = "members"
+    } else if (requestData.hasOwnProperty("approve_join_request")) {
+      workSpaceUpdate = _handleApproveJoinRequest(workspaceInfo, requestData)
+      returnCurrentPageForPagination =
+        requestData.is_all === false ? "request_join" : ""
+    } else if (requestData.hasOwnProperty("add_new_group")) {
+      workSpaceUpdate = {
+        ...workspaceInfo._doc,
+        group_rules: requestData.group_rules
+      }
+      returnNewWorkspaceAfterUpdate = true
+    } else {
+      workSpaceUpdate = {
+        ...workspaceInfo._doc,
+        ...requestData
+      }
+      returnCurrentPageForPagination = ""
+    }
+
+    if (
+      returnCurrentPageForPagination !== "" ||
+      returnNewWorkspaceAfterUpdate
+    ) {
+      const updateData = { ...workSpaceUpdate }
+      delete updateData._id
+      const newWorkspace = await workspaceMongoModel.findOneAndUpdate(
         {
           _id: workspaceId
         },
+        { $set: { ...updateData } },
         {
-          $pull: {
-            administrators: requestData.data.id,
-            members: requestData.data.id
-          }
+          new: returnNewWorkspaceAfterUpdate
         }
       )
 
-      const currentPage = await _getCurrentPageMember(
-        requestData,
-        workspaceUpdate
-      )
+      if (returnNewWorkspaceAfterUpdate) {
+        return res.respond(newWorkspace)
+      }
+
+      let currentPage = 1
+      if (returnCurrentPageForPagination === "members") {
+        currentPage = await _getCurrentPageMember(requestData, workSpaceUpdate)
+      } else if (returnCurrentPageForPagination === "request_join") {
+        currentPage = await _getCurrentPageRequestJoin(
+          requestData,
+          workSpaceUpdate
+        )
+      }
 
       return res.respond({
-        data: workspaceUpdate,
+        data: workSpaceUpdate,
         current_page: currentPage
       })
-    } else if (requestData.hasOwnProperty("approve_join_request")) {
-      if (requestData?.is_all === true) {
-        const workspace = await workspaceMongoModel.findById(workspaceId)
-        const workspaceUpdate = await _handleUpdateWorkspace(
-          {
-            _id: workspaceId
-          },
-          {
-            $push: {
-              members: workspace?.request_joins
-            },
-            $set: {
-              request_joins: []
-            }
-          }
-        )
+    } else {
+      const updateData = { ...workSpaceUpdate }
+      delete updateData._id
+      await workspaceMongoModel.updateOne(
+        {
+          _id: workspaceId
+        },
+        { ...updateData }
+      )
 
-        return res.respond({
-          data: workspaceUpdate
-        })
-      } else {
-        const workspaceUpdate = await _handleUpdateWorkspace(
-          {
-            _id: workspaceId
-          },
-          {
-            $push: {
-              members: requestData.data.id
-            },
-            $pull: {
-              request_joins: requestData.data.id
-            }
-          }
-        )
-
-        let page = requestData?.page === undefined ? 1 : requestData.page
-        const limit = requestData?.limit === undefined ? 4 : requestData.limit
-        const allRequestJoin =
-          workspaceUpdate?.request_joins === undefined
-            ? 0
-            : await getUsers(workspaceUpdate.request_joins)
-        const totalPage = Math.ceil(allRequestJoin.length / limit)
-        if (page > totalPage) {
-          page = totalPage
-        }
-
-        return res.respond({
-          data: workspaceUpdate,
-          currentPage: page
-        })
-      }
+      return res.respond(workSpaceUpdate)
     }
-
-    const condition = {
-      _id: workspaceId
-    }
-    const workspace = await _handleUpdateWorkspace(condition, requestData)
-    return res.respond(workspace)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -373,15 +399,31 @@ const loadDataMember = async (req, res, next) => {
       (item) => parseInt(item) === parseInt(req.__user)
     )
 
-    if (req.query.is_list_member === "true") {
+    if (req.query.load_list === "all") {
+      const pageAdmin = req.query?.a_page === undefined ? 1 : req.query.a_page
+      const limitAdmin =
+        req.query?.a_limit === undefined ? 30 : req.query.a_limit
       const workspaceAdministrator =
         workspace?.administrators === undefined
           ? []
           : workspace.administrators.reverse()
-      const administrators = await getUsers(workspaceAdministrator, condition)
+      const allAdmin =
+        workspaceAdministrator.length === 0
+          ? []
+          : await getUsers(workspace.administrators)
+      const administrators =
+        workspaceAdministrator.length === 0
+          ? []
+          : await getUsers(
+              workspaceAdministrator.slice(
+                (pageAdmin - 1) * limitAdmin,
+                pageAdmin * limitAdmin
+              ),
+              condition
+            )
 
-      const page = req.query?.page === undefined ? 1 : req.query.page
-      const limit = req.query?.limit === undefined ? 30 : req.query.limit
+      const page = req.query?.m_page === undefined ? 1 : req.query.m_page
+      const limit = req.query?.m_limit === undefined ? 30 : req.query.m_limit
       const listMember =
         workspace?.members === undefined
           ? []
@@ -409,10 +451,11 @@ const loadDataMember = async (req, res, next) => {
         members: members,
         total_list_member: allMember.length,
         administrators: administrators,
+        total_list_admin: allAdmin.length,
         request_joins: requestJoin,
         is_admin_group: isAdmin
       })
-    } else if (req.query.is_request_join === "true") {
+    } else if (req.query.load_list === "request_join") {
       const page = req.query?.page === undefined ? 1 : req.query.page
       const limit = req.query?.limit === undefined ? 4 : req.query.limit
       const allRequestJoin =
@@ -441,9 +484,7 @@ const loadDataMember = async (req, res, next) => {
 }
 
 const _handleUpdateWorkspace = (condition, dataUpdate) => {
-  return workspaceMongoModel.findOneAndUpdate(condition, dataUpdate, {
-    new: true
-  })
+  return
 }
 
 const arrayMove = (arr, oldIndex, newIndex) => {
@@ -462,7 +503,7 @@ const _getCurrentPageMember = async (requestData, workspace) => {
     workspace?.administrators === undefined
       ? []
       : workspace.administrators.reverse()
-  let page = requestData?.page === undefined ? 1 : requestData.page
+  const page = requestData?.page === undefined ? 1 : requestData.page
   const limit = requestData?.limit === undefined ? 4 : requestData.limit
   const listMember =
     workspace?.members === undefined
@@ -472,7 +513,6 @@ const _getCurrentPageMember = async (requestData, workspace) => {
         })
 
   const allMember = listMember.length === 0 ? [] : await getUsers(listMember)
-
   const totalPage = Math.ceil(allMember.length / limit)
   if (page > totalPage) {
     return totalPage
@@ -481,6 +521,35 @@ const _getCurrentPageMember = async (requestData, workspace) => {
   return page
 }
 
+const _getCurrentPageAdmin = async (requestData, workspace) => {
+  const page = requestData?.page === undefined ? 1 : requestData.page
+  const limit = requestData?.limit === undefined ? 4 : requestData.limit
+  const allAdmin =
+    workspace?.administrators === undefined
+      ? []
+      : await getUsers(workspace.administrators)
+  const totalPage = Math.ceil(allAdmin.length / limit)
+  if (page > totalPage) {
+    return totalPage
+  }
+
+  return page
+}
+
+const _getCurrentPageRequestJoin = async (requestData, workspace) => {
+  const page = requestData?.page === undefined ? 1 : requestData.page
+  const limit = requestData?.limit === undefined ? 4 : requestData.limit
+  const allRequestJoin =
+    workspace?.request_joins === undefined
+      ? []
+      : await getUsers(workspace.request_joins)
+  const totalPage = Math.ceil(allRequestJoin.length / limit)
+  if (page > totalPage) {
+    return totalPage
+  }
+
+  return page
+}
 const approvePost = async (req, res) => {
   try {
     console.log("req.body?.id", req.body?.id)
