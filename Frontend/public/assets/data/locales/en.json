@@ -3482,7 +3482,8 @@
         "repeat_on": "Repeat On *",
         "id_devices": "ID Device Machine",
         "policy": "Policy",
-        "allow_overtime": "Enable Overtime"
+        "allow_overtime": "Enable Overtime",
+        "auto_mail_notification_attendance": "Auto Mail Notification Attendance"
       },
       "app_options": {
         "radius": {

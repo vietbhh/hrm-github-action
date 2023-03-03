@@ -38,7 +38,7 @@ const EditPaidTimeModal = (props) => {
   } = props
 
   const attendanceState = useSelector((state) => state.attendance)
-  const { modalPaidTime } = attendanceState
+  const { modalPaidTime, workSchedule } = attendanceState
 
   const [loading, setLoading] = useState(false)
   const [chosenHours, setChosenHours] = useState(0)
@@ -60,6 +60,7 @@ const EditPaidTimeModal = (props) => {
     values.attendance_detail = currentAttendanceDetailData
     values.hours = chosenHours
     values.minutes = chosenMinutes
+    values.work_schedule_today = workSchedule
     MyAttendanceApi.editAttendanceDetailPaidTime(
       currentAttendanceDetailData.id.includes("empty_attendance")
         ? 0

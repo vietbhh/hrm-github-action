@@ -78,14 +78,14 @@ const General = (props) => {
           attendance_approval_cycle: res.data.attendance_approval_cycle,
           attendance_repeat_on_value: attendance_repeat_on.value,
           attendance_repeat_on_type: attendance_repeat_on.type,
-          attendance_allow_overtime: res.data.attendance_allow_overtime
+          attendance_allow_overtime: res.data.attendance_allow_overtime,
+          attendance_auto_mail_notification: res.data.attendance_auto_mail_notification
         },
         originalSetting: {
           attendance_approval_cycle_num: res.data.attendance_approval_cycle_num,
           attendance_approval_cycle: res.data.attendance_approval_cycle,
           attendance_repeat_on_value: attendance_repeat_on.value,
-          attendance_repeat_on_type: attendance_repeat_on.type,
-          attendance_allow_overtime: res.data.attendance_allow_overtime
+          attendance_repeat_on_type: attendance_repeat_on.type
         },
         blockUI: false,
         isMonthly: isMonthly
@@ -501,12 +501,14 @@ const General = (props) => {
       key: "tab-other",
       children: (
         <Row>
-          <Col sm={12}>
+          <Col sm={12} className="mb-1">
             <div className="d-flex align-items-center">
               <div className="w-25 title-attendance-setting ">
-                {useFormatMessage(
-                  "modules.attendance_setting.fields.allow_overtime"
-                )}
+                <p className="mb-50">
+                  {useFormatMessage(
+                    "modules.attendance_setting.fields.allow_overtime"
+                  )}
+                </p>
               </div>
               <div className="w-50 ">
                 <ErpSwitch
@@ -520,6 +522,35 @@ const General = (props) => {
                       generalUpdate: {
                         ...state.generalUpdate,
                         attendance_allow_overtime: e.target.checked
+                      }
+                    })
+                  }}
+                />
+              </div>
+            </div>
+          </Col>
+          <Col sm={12}>
+            <div className="d-flex align-items-center">
+              <div className="w-25 title-attendance-setting ">
+                <p className="mb-50">
+                  {useFormatMessage(
+                    "modules.attendance_setting.fields.auto_mail_notification_attendance"
+                  )}
+                </p>
+              </div>
+              <div className="w-50 ">
+                <ErpSwitch
+                  name="attendance_auto_mail_notification"
+                  id="attendance_auto_mail_notification"
+                  defaultChecked={
+                    state.generalUpdate.attendance_auto_mail_notification ===
+                    "true"
+                  }
+                  onChange={(e) => {
+                    setState({
+                      generalUpdate: {
+                        ...state.generalUpdate,
+                        attendance_auto_mail_notification: e.target.checked
                       }
                     })
                   }}
