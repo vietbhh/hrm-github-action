@@ -82,13 +82,14 @@ class Setting extends ErpController
 		$info['attendance_start_date'] = preference('attendance_start_date');
 		$info['attendance_repeat_on'] = preference('attendance_repeat_on');
 		$info['attendance_allow_overtime'] = preference('attendance_allow_overtime');
+		$info['attendance_auto_mail_notification'] = preference('attendance_auto_mail_notification');
 		return $this->respond($info);
 	}
 
 	public function general_save_post()
 	{
 		$getPost = $this->request->getPost();
-		
+
 		if (isset($getPost['data']['attendance_approval_cycle'])) {
 			preference('attendance_approval_cycle', $getPost['data']['attendance_approval_cycle'], true);
 		}
@@ -106,6 +107,9 @@ class Setting extends ErpController
 		}
 		if (isset($getPost['data']['attendance_allow_overtime'])) {
 			preference('attendance_allow_overtime', $getPost['data']['attendance_allow_overtime'], true);
+		}
+		if (isset($getPost['data']['attendance_auto_mail_notification'])) {
+			preference('attendance_auto_mail_notification', $getPost['data']['attendance_auto_mail_notification'], true);
 		}
 		return $this->respond('action_success');
 	}
@@ -249,9 +253,16 @@ class Setting extends ErpController
 
 		$clock_type = getOptionValue('attendance_logs', 'clock_type', 'clockout');
 		if ($postData['attendance_detail'] == 0) {
-			$postData['attendance_detail'] = $this->_handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, $postData['clockDay']);
+			$additionalData = $postData['clockDay'];
+			$additionalData['work_schedule_today'] = $workScheduleToday;
+			$postData['attendance_detail'] = $this->_handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, $additionalData);
 			$clock_type = getOptionValue('attendance_logs', 'clock_type', 'clockin');
 		}
+
+		if (empty($postData['attendance_detail'])) {
+			return $this->fail(FAILED_SAVE);
+		}
+
 		$postData['clock_type'] = $clock_type;
 		$clockDay = $postData['clockDay'];
 		$clockTime = $postData['clockTime'];
@@ -434,26 +445,7 @@ class Setting extends ErpController
 
 	private function _handleInsertNewAttendanceToday($modules, $attendanceId, $employeeId, $date, $additionalData = [])
 	{
-		helper('app_select_option');
-		$modules->setModule('attendance_details');
-		$model = $modules->model;
-
-		$dataInsert = [
-			'attendance' => $attendanceId,
-			'name' => strtotime($date) . '_' . $attendanceId . '_' . $employeeId,
-			'employee' => $employeeId,
-			'date' => $date,
-			'status' => getOptionValue('attendance_details', 'status', 'pending')
-		];
-		$dataInsert = array_merge($dataInsert, $additionalData);
-		$dataHandleAttendanceDetail = handleDataBeforeSave($modules, $dataInsert);
-		$model->setAllowedFields(array_keys($dataInsert));
-		try {
-			$model->save($dataHandleAttendanceDetail['data']);
-		} catch (\ReflectionException $e) {
-			return $this->fail(FAILED_SAVE);
-		}
-
-		return $model->getInsertID();
+		helper('HRM\Modules\Attendances\Helpers\attendance_helper');
+		return handleInsertNewAttendanceToday($modules, $attendanceId, $employeeId, $additionalData, $date);
 	}
 }

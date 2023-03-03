@@ -186,7 +186,7 @@ class Attendances extends ErpController
 			'location' => $location
 
 		];
-		$result = getAttendanceDetail($listAttendanceDetailAll, $currentEmployee, $fromDateAttendance, $toDateAttendance, $arrFilter);
+		$result = getAttendanceDetail($listAttendanceDetailAll, $currentEmployee, $fromDateAttendance, $toDateAttendance, $arrFilter, [], [], [], [], true);
 		$result['attendance_allow_overtime'] = preference('attendance_allow_overtime') === "true";
 		return $this->respond($result);
 	}
@@ -211,7 +211,14 @@ class Attendances extends ErpController
 
 		// if attendance_detail = 0 => insert new attendance_detail
 		if ($postData['attendance_detail'] == 0) {
-			$postData['attendance_detail'] = $this->_handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId);
+			$additionalData = [
+				'work_schedule_today' => $workScheduleToday
+			];
+			$postData['attendance_detail'] = $this->_handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, $additionalData);
+		}
+
+		if (empty($postData['attendance_detail'])) {
+			return $this->fail(FAILED_SAVE);
 		}
 
 		$modules->setModule('attendance_logs');
@@ -306,7 +313,8 @@ class Attendances extends ErpController
 			$additionalData = [
 				'date' => $postData['date'],
 				'paid_time' => $newPaidTime,
-				'is_edit_paid_time' => 1
+				'is_edit_paid_time' => 1,
+				'work_schedule_today' => $postData['work_schedule_today']
 			];
 			$attendanceDetailId = $this->_handleInsertNewAttendanceToday($modules, $attendanceId, $employeeId, $additionalData);
 		} else {
@@ -325,6 +333,10 @@ class Attendances extends ErpController
 			} catch (\ReflectionException $e) {
 				return $this->fail(FAILED_SAVE);
 			}
+		}
+
+		if (empty($attendanceDetailId)) {
+			return $this->fail(FAILED_SAVE);
 		}
 
 		//add attendance logs
@@ -385,7 +397,8 @@ class Attendances extends ErpController
 			$additionalData = [
 				'date' => $postData['date'],
 				'overtime' => $newOvertime,
-				'is_edit_overtime' => 1
+				'is_edit_overtime' => 1,
+				'work_schedule_today' => $postData['work_schedule_today']
 			];
 			$attendanceDetailId = $this->_handleInsertNewAttendanceToday($modules, $attendanceId, $employeeId, $additionalData);
 		} else {
@@ -404,6 +417,10 @@ class Attendances extends ErpController
 			} catch (\ReflectionException $e) {
 				return $this->fail(FAILED_SAVE);
 			}
+		}
+
+		if (empty($attendanceDetailId)) {
+			return $this->fail(FAILED_SAVE);
 		}
 
 		//add attendance logs
