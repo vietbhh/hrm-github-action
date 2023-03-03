@@ -45,7 +45,6 @@ const DropdownReaction = (props) => {
 
   // ** function
   const updateReaction = (react_type) => {
-    return
     const _data = { ...data }
     const reaction = _data.reaction ? _data.reaction : []
     const index_react_type = reaction.findIndex(
@@ -78,18 +77,19 @@ const DropdownReaction = (props) => {
       _id: _data._id,
       reaction: reaction
     }
-    feedApi
-      .postUpdatePost(params)
-      .then((res) => {
-        if (_.isFunction(setData)) {
+    if (_.isFunction(setData)) {
+      feedApi
+        .postUpdatePost(params)
+        .then((res) => {
           setData({
             ...res.data,
             url_thumb: _data.url_thumb,
+            url_source: _data.url_source,
             medias: _data.medias
           })
-        }
-      })
-      .catch((err) => {})
+        })
+        .catch((err) => {})
+    }
   }
 
   return (

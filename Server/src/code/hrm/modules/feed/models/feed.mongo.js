@@ -67,6 +67,10 @@ const feedSchema = baseSchema("m_feed", {
     type: [String],
     default: []
   },
+  seen_count: {
+    type: Number,
+    default: 0
+  },
 
   // ** source child / post: 1 image/video
   source: {

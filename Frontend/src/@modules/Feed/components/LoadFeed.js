@@ -7,9 +7,10 @@ import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { feedApi } from "../common/api"
 import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
+import { useSelector } from "react-redux"
 
 const LoadFeed = (props) => {
-  const { dataCreateNew, setDataCreateNew, workspace, dataEmployee } = props
+  const { dataCreateNew, setDataCreateNew, workspace } = props
   const [state, setState] = useMergedState({
     dataPost: [],
     hasMore: false,
@@ -24,6 +25,7 @@ const LoadFeed = (props) => {
     dataMention: []
   })
 
+  const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
 
   // ** function

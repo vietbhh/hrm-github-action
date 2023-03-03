@@ -2,7 +2,6 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import { useMergedState } from "@apps/utility/common"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
-import ReactHtmlParser from "react-html-parser"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 import ButtonReaction from "../PostDetails/ButtonReaction"
@@ -39,12 +38,16 @@ const PostImageDetailModal = (props) => {
     window.history.replaceState(null, "", current_url)
   }
 
+  const setData = (data) => {
+    setState({ data: data })
+  }
+
   // ** useEffect
   useEffect(() => {
     if (postType === "post") {
       const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
       if (indexMedia !== -1) {
-        setState({ data: {} })
+        setData({})
         const id_next = dataMedias[indexMedia + 1]
           ? dataMedias[indexMedia + 1]._id
           : dataMedias[0]._id
@@ -55,7 +58,7 @@ const PostImageDetailModal = (props) => {
         const _data = { ...dataMedias[indexMedia] }
         downloadApi.getPhoto(dataMedias[indexMedia].source).then((response) => {
           _data["url_source"] = URL.createObjectURL(response.data)
-          setState({ data: _data })
+          setData(_data)
         })
       } else {
         setState({ data: {}, id_previous: "", id_next: "" })
@@ -66,7 +69,7 @@ const PostImageDetailModal = (props) => {
       const _data = { ...dataModal }
       downloadApi.getPhoto(_data.source).then((response) => {
         _data["url_source"] = URL.createObjectURL(response.data)
-        setState({ data: _data })
+        setData(_data)
       })
     }
   }, [idImage, postType, dataMedias])
@@ -260,13 +263,13 @@ const PostImageDetailModal = (props) => {
                 <RenderContentPost data={state.data} />
               </div>
               <div className="right-show-reaction">
-                <PostShowReaction short={true} />
+                <PostShowReaction data={state.data} short={true} />
               </div>
               <div className="right-button">
-                <ButtonReaction />
+                <ButtonReaction data={state.data} setData={setData} />
               </div>
               <div className="right-comment">
-                <PostComment dataMention={dataMention} />
+                <PostComment data={state.data} dataMention={dataMention} />
               </div>
             </PerfectScrollbar>
           </div>

@@ -1,14 +1,12 @@
 import { useMergedState } from "@apps/utility/common"
+import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
-import { feedApi } from "../common/api"
-import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import LoadFeed from "../components/LoadFeed"
 
 const Feed = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    dataEmployee: [],
     dataCreateNew: {}
   })
   const offsetTop = 90
@@ -54,12 +52,6 @@ const Feed = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
-  useEffect(() => {
-    feedApi.getGetAllEmployeeActive().then((res) => {
-      setState({ dataEmployee: res.data })
-    })
-  }, [])
-
   // ** render
   const renderLoadFeed = useMemo(
     () => (
@@ -67,21 +59,16 @@ const Feed = () => {
         dataCreateNew={state.dataCreateNew}
         setDataCreateNew={setDataCreateNew}
         workspace={[]}
-        dataEmployee={state.dataEmployee}
       />
     ),
-    [state.dataCreateNew, state.dataEmployee]
+    [state.dataCreateNew]
   )
 
   return (
     <Fragment>
       <div className="div-content">
         <div className="div-left feed">
-          <CreatePost
-            dataEmployee={state.dataEmployee}
-            setDataCreateNew={setDataCreateNew}
-            workspace={[]}
-          />
+          <CreatePost setDataCreateNew={setDataCreateNew} workspace={[]} />
 
           {renderLoadFeed}
         </div>
