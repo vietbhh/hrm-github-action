@@ -90,12 +90,4 @@ const getUserActivated = () => {
   })
 }
 
-const getUserById = (id) => {
-  return usersModel.findOne({
-    where: {
-      id: id
-    }
-  })
-}
-
-export { usersModel, getUser, getUsers, getUserActivated, getUserById }
+export { usersModel, getUser, getUsers, getUserActivated }

@@ -12,9 +12,7 @@ const ModalEditAttachment = (props) => {
     setFile,
     handleAddAttachment,
     loadingUploadAttachment,
-    renderIconVideo,
-    fileInput,
-    setFileInput
+    renderIconVideo
   } = props
 
   // ** function
@@ -91,13 +89,6 @@ const ModalEditAttachment = (props) => {
                           const _file = [...file]
                           _file.splice(index, 1)
                           setFile(_file)
-
-                          const _fileInput = [...fileInput]
-                          const indexFile = _fileInput.findIndex(
-                            (item) => item.name === value.name_original
-                          )
-                          _fileInput.splice(indexFile, 1)
-                          setFileInput(_fileInput)
                         }}>
                         <svg
                           width="32"

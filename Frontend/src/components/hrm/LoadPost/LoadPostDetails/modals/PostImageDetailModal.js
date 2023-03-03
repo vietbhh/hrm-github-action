@@ -200,7 +200,7 @@ const PostImageDetailModal = (props) => {
 
       if (state.data.type === "video") {
         return (
-          <video controls muted ref={imageRef}>
+          <video autoPlay controls muted ref={imageRef}>
             <source src={state.data.url_source} />
           </video>
         )

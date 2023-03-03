@@ -9,14 +9,7 @@ import { Spinner } from "reactstrap"
 import ModalEditAttachment from "./modals/ModalEditAttachment"
 
 const PreviewAttachment = (props) => {
-  const {
-    file,
-    setFile,
-    handleAddAttachment,
-    loadingUploadAttachment,
-    fileInput,
-    setFileInput
-  } = props
+  const { file, setFile, handleAddAttachment, loadingUploadAttachment } = props
   const [state, setState] = useMergedState({
     modalEditAttachment: false
   })
@@ -40,7 +33,6 @@ const PreviewAttachment = (props) => {
         className="btn btn-delete-attachment"
         onClick={() => {
           setFile([])
-          setFileInput([])
         }}>
         <svg
           width="32"
@@ -141,8 +133,6 @@ const PreviewAttachment = (props) => {
         handleAddAttachment={handleAddAttachment}
         loadingUploadAttachment={loadingUploadAttachment}
         renderIconVideo={renderIconVideo}
-        fileInput={fileInput}
-        setFileInput={setFileInput}
       />
     </Fragment>
   )
