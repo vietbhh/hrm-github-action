@@ -12,7 +12,7 @@ const CreatePost = (props) => {
   const {
     workspace, // arr workspace: []
     setDataCreateNew, // function set Data then create new post
-    approveStatus = "approved" // approved / rejected
+    approveStatus = "approved" // approved / rejected / pending
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,

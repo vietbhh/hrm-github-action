@@ -4,7 +4,12 @@ import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
 import LoadFeed from "../components/LoadFeed"
 
-const Feed = () => {
+const Feed = (props) => {
+  const {
+    workspace = [], // arr workspace: []
+    apiLoadFeed = null, // api load feed
+    approveStatus = "approved" // approved / rejected / pending
+  } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {}
@@ -58,7 +63,8 @@ const Feed = () => {
       <LoadFeed
         dataCreateNew={state.dataCreateNew}
         setDataCreateNew={setDataCreateNew}
-        workspace={[]}
+        workspace={workspace}
+        apiLoadFeed={apiLoadFeed}
       />
     ),
     [state.dataCreateNew]
@@ -68,7 +74,11 @@ const Feed = () => {
     <Fragment>
       <div className="div-content">
         <div className="div-left feed">
-          <CreatePost setDataCreateNew={setDataCreateNew} workspace={[]} />
+          <CreatePost
+            setDataCreateNew={setDataCreateNew}
+            workspace={workspace}
+            approveStatus={approveStatus}
+          />
 
           {renderLoadFeed}
         </div>

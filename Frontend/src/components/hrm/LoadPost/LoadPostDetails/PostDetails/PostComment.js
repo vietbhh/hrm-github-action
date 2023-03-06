@@ -219,7 +219,7 @@ const PostComment = (props) => {
         </div>
       </div>
       <div className="post-comment__div-form">
-        <PostCommentForm dataMention={dataMention} />
+        <PostCommentForm data={data} dataMention={dataMention} />
       </div>
     </div>
   )

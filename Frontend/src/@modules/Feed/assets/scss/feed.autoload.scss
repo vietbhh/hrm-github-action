@@ -439,13 +439,12 @@
       color: #9d9fa4;
       border-radius: 14px;
       background-color: #ffffff;
+      gap: 10px;
+      padding: 0 30px;
     }
   }
 
   .btn-reaction {
-    gap: 10px;
-    padding: 0 30px;
-
     img {
       width: 25px;
       height: 25px;
@@ -528,6 +527,7 @@
           .body__reaction {
             padding-left: 20px;
             margin-top: 5px;
+
             .reaction {
               margin-right: 30px;
               font-weight: 600;
@@ -602,7 +602,6 @@
         background: #f5f6f8;
         border-radius: 12px;
         padding: 10px 20px;
-        display: flex;
 
         .div-editor {
           width: calc(100% - 55px);
@@ -647,6 +646,7 @@
         .div-form__div-icon {
           display: flex;
           gap: 10px;
+          width: 55px;
 
           label {
             position: relative;
@@ -658,6 +658,30 @@
 
           .emotions-dropdown-menu {
             left: -12px;
+          }
+        }
+
+        .div-form__div-image {
+          margin-top: 15px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+
+          img {
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 12px;
+          }
+
+          .btn-close-image {
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background-color: #e6e6e6;
+
+            &:hover {
+              background-color: darken($color: #e6e6e6, $amount: 5);
+            }
           }
         }
       }
@@ -1402,6 +1426,56 @@
         img {
           width: 20;
           height: 20px;
+        }
+      }
+
+      .ant-tabs-tab + .ant-tabs-tab {
+        margin-left: 25px;
+      }
+
+      .ant-tabs-content,
+      .scrollbar-container {
+        max-height: 450px;
+      }
+
+      .scrollbar-container {
+        padding-right: 13px;
+        margin-right: -13px;
+      }
+
+      .image-react-avatar {
+        background-size: cover;
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        bottom: 1px;
+        left: 25px;
+      }
+
+      .name {
+        font-weight: 500;
+        font-size: 15px;
+        color: #32434f;
+      }
+
+      .btn-chat {
+        background: #377dff;
+        border-radius: 12px;
+        color: #ffffff;
+        padding: 3px 10px;
+
+        &:hover {
+          background: darken($color: #377dff, $amount: 5);
+        }
+      }
+
+      .list-user-react {
+        position: relative;
+        padding: 5px;
+        border-radius: 8px;
+
+        &:hover {
+          background-color: #f0f0f0;
         }
       }
     }
