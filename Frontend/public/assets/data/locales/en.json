@@ -4420,7 +4420,8 @@
           "you": "You",
           "other": "other",
           "and": "and",
-          "all": "All"
+          "all": "All",
+          "chat": "Chat"
         },
         "react": {
           "like": "Like",

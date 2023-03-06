@@ -1404,6 +1404,45 @@
           height: 20px;
         }
       }
+
+      .ant-tabs-tab + .ant-tabs-tab {
+        margin-left: 25px;
+      }
+
+      .ant-tabs-content,
+      .scrollbar-container {
+        max-height: 350px;
+      }
+
+      .image-react-avatar {
+        background-size: cover;
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        bottom: -3px;
+        left: 20px;
+      }
+
+      .name {
+        font-weight: 500;
+        font-size: 15px;
+        color: #32434f;
+      }
+
+      .btn-chat {
+        background: #377dff;
+        border-radius: 12px;
+        color: #ffffff;
+        padding: 3px 10px;
+
+        &:hover {
+          background: darken($color: #377dff, $amount: 5);
+        }
+      }
+
+      .list-user-react {
+        position: relative;
+      }
     }
   }
 }
