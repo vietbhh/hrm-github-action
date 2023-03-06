@@ -47,7 +47,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   approve_status: {
     type: String,
-    enum: ["approved", "rejected"],
+    enum: ["approved", "rejected", "pending"],
     default: "approved"
   },
   reaction: {
@@ -64,7 +64,7 @@ const feedSchema = baseSchema("m_feed", {
     default: []
   },
   comment_ids: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
     default: []
   },
   seen_count: {

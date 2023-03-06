@@ -196,6 +196,30 @@ const updatePost = async (req, res, next) => {
 }
 // **
 
+// ** comment
+const submitComment = async (req, res, next) => {
+  const body = JSON.parse(req.body.body)
+  const content = body.content
+  const _id = body._id
+  const image = req.files !== null ? req.files.image : null
+  const storePath = path.join("modules", "comment", _id)
+
+  /* let image_source = null
+  if (image) {
+    const image_name = Date.now() + "_" + image.name.split(".")[0] + ".webp"
+    const image_path = path.join(storePath, image_name)
+    image_source = await handleCompressImage(image, image_path)
+    console.log(image_source)
+  } */
+
+  console.log(_id)
+  console.log(content)
+  console.log(image)
+
+  return res.respond("")
+}
+// **
+
 // ** function
 const takeOneFrameOfVid = (dir, storePath) => {
   const savePath = path.join(localSavePath, storePath)
@@ -341,5 +365,6 @@ export {
   loadFeedController,
   getFeedChild,
   getFeedById,
-  updatePost
+  updatePost,
+  submitComment
 }

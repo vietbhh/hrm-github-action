@@ -177,7 +177,7 @@ const ReactionDetailModal = (props) => {
       toggle={() => {
         toggleModal()
       }}
-      className="modal-md modal-dialog-centered feed modal-reaction-detail"
+      className="modal-md feed modal-reaction-detail"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalBody>

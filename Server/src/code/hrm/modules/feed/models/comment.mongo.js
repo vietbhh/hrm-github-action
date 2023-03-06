@@ -28,7 +28,7 @@ const commentSchema = baseSchema("m_comment", {
     ],
     default: []
   },
-  image_url: {
+  image_source: {
     type: String,
     default: null
   },
