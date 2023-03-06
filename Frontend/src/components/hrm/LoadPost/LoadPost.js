@@ -1,6 +1,5 @@
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import React, { useEffect } from "react"
-import ReactHtmlParser from "react-html-parser"
+import { useMergedState } from "@apps/utility/common"
+import React from "react"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
 import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
 import PostComment from "./LoadPostDetails/PostDetails/PostComment"
@@ -17,8 +16,10 @@ const LoadPost = (props) => {
     setData, // function set lại data khi react, comment
 
     // only page post details
+    idPost = "",
     idMedia = "",
-    setIdMedia = null // function set idMedia
+    setIdMedia = null, // function set idMedia
+    reloadPostThenCloseModal = false
   } = props
   const [state, setState] = useMergedState({})
 
@@ -36,9 +37,12 @@ const LoadPost = (props) => {
         <LoadPostMedia
           data={data}
           current_url={current_url}
+          idPost={idPost}
           idMedia={idMedia}
           setIdMedia={setIdMedia}
           dataMention={dataMention}
+          setData={setData}
+          reloadPostThenCloseModal={reloadPostThenCloseModal}
         />
       </div>
       {!offReactionAndComment && (

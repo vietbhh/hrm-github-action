@@ -20,7 +20,8 @@ const PostDetail = (props) => {
     dataMedia: [],
     loadingPost: true,
     _idMedia: "",
-    dataMention: []
+    dataMention: [],
+    reloadPostThenCloseModal: false
   })
   const { idPost, idMedia } = useParams()
 
@@ -48,6 +49,7 @@ const PostDetail = (props) => {
           ) {
             await downloadApi.getPhoto(data.source).then((response) => {
               data["url_thumb"] = URL.createObjectURL(response.data)
+              setState({ reloadPostThenCloseModal: true })
             })
           }
 
@@ -63,6 +65,7 @@ const PostDetail = (props) => {
                 window.history.replaceState(null, "", current_url)
               }
               data["medias"] = res_promise
+              setState({ reloadPostThenCloseModal: false })
             })
           }
           setState({ loadingPost: false, dataPost: data })
@@ -76,6 +79,7 @@ const PostDetail = (props) => {
   }, [idPost, idMedia])
 
   useEffect(() => {
+    const data_mention = []
     _.forEach(dataEmployee, (value) => {
       data_mention.push({
         id: value.id,
@@ -113,11 +117,20 @@ const PostDetail = (props) => {
               <LoadPost
                 data={state.dataPost}
                 current_url={current_url}
+                idPost={idPost}
                 idMedia={state._idMedia}
                 setIdMedia={(value) => setState({ _idMedia: value })}
+                reloadPostThenCloseModal={state.reloadPostThenCloseModal}
                 dataMention={state.dataMention}
                 setData={(data) => {
-                  setState({ dataPost: data })
+                  setState({
+                    dataPost: {
+                      ...data,
+                      url_thumb: state.dataPost.url_thumb,
+                      url_source: state.dataPost.url_source,
+                      medias: state.dataPost.medias
+                    }
+                  })
                 }}
               />
             )}
