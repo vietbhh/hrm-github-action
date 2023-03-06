@@ -312,11 +312,6 @@
             margin-top: 10px;
             padding-top: 5px;
             padding-bottom: 5px;
-
-            button {
-              gap: 10px;
-              padding: 0 30px;
-            }
           }
         }
       }
@@ -445,13 +440,34 @@
       border-radius: 14px;
       background-color: #ffffff;
     }
+  }
 
-    .btn-reaction {
-      .is-react {
-        color: #139ff8;
-        font-weight: 600;
-      }
+  .btn-reaction {
+    gap: 10px;
+    padding: 0 30px;
+
+    img {
+      width: 25px;
+      height: 25px;
     }
+  }
+
+  .react-like {
+    color: #139ff8;
+    font-weight: 600;
+  }
+
+  .react-love {
+    color: rgb(243, 62, 88);
+    font-weight: 600;
+  }
+
+  .react-care,
+  .react-smile,
+  .react-wow,
+  .react-sad {
+    color: rgb(247, 177, 37);
+    font-weight: 600;
   }
 
   .post-comment {

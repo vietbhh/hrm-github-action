@@ -1,5 +1,6 @@
 import { downloadApi } from "@apps/modules/download/common/api"
 import { useMergedState } from "@apps/utility/common"
+import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -38,41 +39,63 @@ const PostImageDetailModal = (props) => {
     window.history.replaceState(null, "", current_url)
   }
 
-  const setData = (data) => {
-    setState({ data: data })
+  const setDataMedia = (data) => {
+    setState({
+      data: {
+        ...data,
+        url_thumb: state.data.url_thumb,
+        url_source: state.data.url_source,
+        medias: state.data.medias
+      }
+    })
   }
 
   // ** useEffect
   useEffect(() => {
-    if (postType === "post") {
-      const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
-      if (indexMedia !== -1) {
-        setData({})
-        const id_next = dataMedias[indexMedia + 1]
-          ? dataMedias[indexMedia + 1]._id
-          : dataMedias[0]._id
-        const id_previous = dataMedias[indexMedia - 1]
-          ? dataMedias[indexMedia - 1]._id
-          : dataMedias[dataMedias.length - 1]._id
-        setState({ id_previous: id_previous, id_next: id_next })
-        const _data = { ...dataMedias[indexMedia] }
-        downloadApi.getPhoto(dataMedias[indexMedia].source).then((response) => {
-          _data["url_source"] = URL.createObjectURL(response.data)
-          setData(_data)
-        })
-      } else {
+    if (modal) {
+      if (postType === "post") {
+        const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
+        if (indexMedia !== -1) {
+          setState({ data: {} })
+          const id_next = dataMedias[indexMedia + 1]
+            ? dataMedias[indexMedia + 1]._id
+            : dataMedias[0]._id
+          const id_previous = dataMedias[indexMedia - 1]
+            ? dataMedias[indexMedia - 1]._id
+            : dataMedias[dataMedias.length - 1]._id
+          setState({ id_previous: id_previous, id_next: id_next })
+          feedApi
+            .getGetFeed(idImage)
+            .then((res) => {
+              const _data = res.data
+              downloadApi
+                .getPhoto(dataMedias[indexMedia].source)
+                .then((response) => {
+                  _data["url_source"] = URL.createObjectURL(response.data)
+                  setState({ data: _data })
+                })
+            })
+            .catch((err) => {})
+        } else {
+          setState({ data: {}, id_previous: "", id_next: "" })
+        }
+      }
+
+      if (postType === "image" || postType === "video") {
         setState({ data: {}, id_previous: "", id_next: "" })
+        feedApi
+          .getGetFeed(idImage)
+          .then((res) => {
+            const _data = res.data
+            downloadApi.getPhoto(_data.source).then((response) => {
+              _data["url_source"] = URL.createObjectURL(response.data)
+              setState({ data: _data })
+            })
+          })
+          .catch((err) => {})
       }
     }
-
-    if (postType === "image" || postType === "video") {
-      const _data = { ...dataModal }
-      downloadApi.getPhoto(_data.source).then((response) => {
-        _data["url_source"] = URL.createObjectURL(response.data)
-        setData(_data)
-      })
-    }
-  }, [idImage, postType, dataMedias])
+  }, [idImage, postType, dataMedias, modal])
 
   useEffect(() => {
     const handleKeydown = (event) => {
@@ -266,7 +289,7 @@ const PostImageDetailModal = (props) => {
                 <PostShowReaction data={state.data} short={true} />
               </div>
               <div className="right-button">
-                <ButtonReaction data={state.data} setData={setData} />
+                <ButtonReaction data={state.data} setData={setDataMedia} />
               </div>
               <div className="right-comment">
                 <PostComment data={state.data} dataMention={dataMention} />

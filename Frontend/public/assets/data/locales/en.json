@@ -4421,6 +4421,14 @@
           "other": "other",
           "and": "and",
           "all": "All"
+        },
+        "react": {
+          "like": "Like",
+          "love": "Love",
+          "care": "Care",
+          "haha": "Haha",
+          "sad": "Sad",
+          "wow": "Wow"
         }
       }
     },

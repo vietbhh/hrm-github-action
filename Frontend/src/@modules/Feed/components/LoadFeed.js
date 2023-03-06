@@ -180,7 +180,12 @@ const LoadFeed = (props) => {
               dataMention={state.dataMention}
               setData={(data) => {
                 const _data = [...state.dataCreateNewTemp]
-                _data[index] = data
+                _data[index] = {
+                  ...data,
+                  url_thumb: _data[index].url_thumb,
+                  url_source: _data[index].url_source,
+                  medias: _data[index].medias
+                }
                 setState({ dataCreateNewTemp: _data })
               }}
             />
@@ -198,7 +203,12 @@ const LoadFeed = (props) => {
                 dataMention={state.dataMention}
                 setData={(data) => {
                   const _data = [...state.dataPost]
-                  _data[index] = data
+                  _data[index] = {
+                    ...data,
+                    url_thumb: _data[index].url_thumb,
+                    url_source: _data[index].url_source,
+                    medias: _data[index].medias
+                  }
                   setState({ dataPost: _data })
                 }}
               />

@@ -6,11 +6,20 @@ import {
 } from "@modules/Feed/common/common"
 import { Skeleton } from "antd"
 import classNames from "classnames"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useEffect, useRef } from "react"
 import PostImageDetailModal from "./modals/PostImageDetailModal"
 
 const LoadPostMedia = (props) => {
-  const { data, current_url, idMedia, setIdMedia, dataMention } = props
+  const {
+    data,
+    current_url,
+    idMedia,
+    setIdMedia,
+    dataMention,
+    idPost,
+    setData,
+    reloadPostThenCloseModal
+  } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
     dataModal: {},
@@ -18,6 +27,8 @@ const LoadPostMedia = (props) => {
     postType: "",
     dataMedias: []
   })
+
+  const isMounted = useRef(false)
 
   // ** function
   const toggleModalPostImageDetail = () => {
@@ -40,23 +51,30 @@ const LoadPostMedia = (props) => {
         idImage: idMedia,
         modalPostImageDetail: true,
         dataModal: data,
-        postType: data.type
+        postType: data.type,
+        dataMedias: data.medias
       })
-
-      if (!_.isEmpty(data.medias)) {
-        feedApi
-          .getGetFeedChild(data._id)
-          .then((res) => {
-            setState({ dataMedias: res.data })
-          })
-          .catch((err) => {})
-      }
 
       if (_.isFunction(setIdMedia)) {
         setIdMedia("")
       }
     }
   }, [idMedia, data])
+
+  useEffect(() => {
+    if (!state.modalPostImageDetail && reloadPostThenCloseModal) {
+      if (isMounted.current) {
+        feedApi
+          .getGetFeed(idPost)
+          .then((res) => {
+            setData(res.data)
+          })
+          .catch((err) => {})
+      } else {
+        isMounted.current = true
+      }
+    }
+  }, [state.modalPostImageDetail])
 
   // ** render
   const renderMedia = () => {
@@ -114,17 +132,9 @@ const LoadPostMedia = (props) => {
               setState({
                 dataModal: data,
                 idImage: item._id,
-                postType: data.type
+                postType: data.type,
+                dataMedias: data.medias
               })
-
-              if (_.isEmpty(state.dataMedias)) {
-                feedApi
-                  .getGetFeedChild(data._id)
-                  .then((res) => {
-                    setState({ dataMedias: res.data })
-                  })
-                  .catch((err) => {})
-              }
             }}
             className={classNames(`div-attachment-item item-${key + 1}`, {
               "item-count-1": data.medias.length === 1,
