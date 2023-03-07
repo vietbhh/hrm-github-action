@@ -1,5 +1,9 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
-import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
+import {
+  ErpInput,
+  ErpSelect,
+  ErpSwitch
+} from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { useContext } from "react"
@@ -8,6 +12,7 @@ import { Button, CardTitle, Col, Row } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
 import { payrollsSettingApi } from "../../common/api"
 import PayCyclesLayout from "./PayCyclesLayout"
+import { Tabs } from "antd"
 const Paycles = (props) => {
   // ** Props
   const modules = useSelector((state) => state.app.modules.attendance_setting)
@@ -17,6 +22,7 @@ const Paycles = (props) => {
   const ability = useContext(AbilityContext)
   const [state, setState] = useMergedState({
     payroll_setting_currency: settings.payroll_setting_currency,
+    payroll_auto_send_mail_review: settings.payroll_auto_send_mail_review,
     payroll_setting_calculate_monthly:
       settings.payroll_setting_calculate_monthly,
     isSave: false
@@ -60,6 +66,21 @@ const Paycles = (props) => {
       })
   }
 
+  const handleUpdateSettingSendMail = (e) => {
+    payrollsSettingApi
+      .saveGeneral({
+        payroll_auto_send_mail_review: e.target.checked
+      })
+      .then((res) => {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+      })
+      .catch((err) => {
+        notification.showError(useFormatMessage("notification.save.error"))
+      })
+  }
+
   const addBtn = ability.can("accessPayrollsSetting", "payrolls") ? (
     <Button className="btn" color="primary" type="sub" onClick={() => onSave()}>
       {useFormatMessage("button.save")}
@@ -69,6 +90,118 @@ const Paycles = (props) => {
   )
 
   const firstSetup = settings.payroll_setting_currency === "0" ?? true
+
+  const itemsTab = [
+    {
+      label: useFormatMessage("modules.pay_cycles.fields.currency"),
+      key: "tab-currency",
+      children: (
+        <Row>
+          <Col sm={12}>
+            <div className="d-flex align-items-center">
+              <div className="w-25">
+                {useFormatMessage("modules.pay_cycles.fields.currency")} *
+              </div>
+              <div className="w-25">
+                <ErpSelect
+                  options={optionsCurrency}
+                  defaultValue={
+                    optionsCurrency[
+                      indexOfArray(
+                        optionsCurrency,
+                        settings.payroll_setting_currency
+                      )
+                    ]
+                  }
+                  readOnly={!firstSetup}
+                  isClearable={false}
+                  name="currency"
+                  onChange={(e) => {
+                    setState({
+                      payroll_setting_currency: e.value
+                    })
+                  }}
+                />
+              </div>
+            </div>
+          </Col>
+          <Col sm={12}>
+            <div className="d-flex align-items-center d-none">
+              <div className="w-25">
+                {useFormatMessage("calculate_monthly.text")} *
+              </div>
+              <div className="w-25">
+                <ErpSelect
+                  options={optionsCalculateMonthly}
+                  defaultValue={
+                    optionsCalculateMonthly[
+                      indexOfArray(
+                        optionsCalculateMonthly,
+                        parseInt(settings.payroll_setting_calculate_monthly)
+                      )
+                    ]
+                  }
+                  readOnly={!firstSetup}
+                  onChange={(e) =>
+                    setState({
+                      payroll_setting_calculate_monthly: e.value
+                    })
+                  }
+                  isClearable={false}
+                  name="calculate_monthly"
+                />
+              </div>
+            </div>
+          </Col>
+
+          {!firstSetup && (
+            <Col sm={12} className="mt-0">
+              <small>
+                <i className="fal fa-exclamation-circle mr-1"></i>{" "}
+                {useFormatMessage("modules.pay_cycles.note.general_note")}
+              </small>
+            </Col>
+          )}
+          {firstSetup && (
+            <Col sm={12} className=" d-flex mt-3 ">
+              {addBtn}
+            </Col>
+          )}
+        </Row>
+      )
+    },
+    {
+      label: useFormatMessage("modules.pay_cycles.text.other"),
+      key: "tab-other",
+      children: (
+        <Row>
+          <Col sm={12} className="mt-1">
+            <div className="d-flex align-items-center">
+              <div className="w-25 title-attendance-setting ">
+                <p className="mb-50">
+                  {useFormatMessage(
+                    "modules.pay_cycles.text.payroll_auto_send_mail_review"
+                  )}
+                </p>
+              </div>
+              <div className="w-50 ">
+                <ErpSwitch
+                  name="payroll_auto_send_mail_review"
+                  id="payroll_auto_send_mail_review"
+                  defaultChecked={
+                    state.payroll_auto_send_mail_review === "true"
+                  }
+                  onChange={(e) => {
+                    handleUpdateSettingSendMail(e)
+                  }}
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+      )
+    }
+  ]
 
   return (
     <>
@@ -104,75 +237,7 @@ const Paycles = (props) => {
               </CardTitle>
             )}
 
-            <Row>
-              <Col sm={12}>
-                <div className="d-flex align-items-center">
-                  <div className="w-25">
-                    {useFormatMessage("modules.pay_cycles.fields.currency")} *
-                  </div>
-                  <div className="w-25">
-                    <ErpSelect
-                      options={optionsCurrency}
-                      defaultValue={
-                        optionsCurrency[
-                          indexOfArray(
-                            optionsCurrency,
-                            settings.payroll_setting_currency
-                          )
-                        ]
-                      }
-                      readOnly={!firstSetup}
-                      isClearable={false}
-                      name="currency"
-                      onChange={(e) => {
-                        setState({
-                          payroll_setting_currency: e.value
-                        })
-                      }}
-                    />
-                  </div>
-                </div>
-              </Col>
-              <Col sm={12}>
-                <div className="d-flex align-items-center d-none">
-                  <div className="w-25">
-                    {useFormatMessage("calculate_monthly.text")} *
-                  </div>
-                  <div className="w-25">
-                    <ErpSelect
-                      options={optionsCalculateMonthly}
-                      defaultValue={
-                        optionsCalculateMonthly[
-                          indexOfArray(
-                            optionsCalculateMonthly,
-                            parseInt(settings.payroll_setting_calculate_monthly)
-                          )
-                        ]
-                      }
-                      readOnly={!firstSetup}
-                      onChange={(e) =>
-                        setState({
-                          payroll_setting_calculate_monthly: e.value
-                        })
-                      }
-                      isClearable={false}
-                      name="calculate_monthly"
-                    />
-                  </div>
-                </div>
-              </Col>
-              {!firstSetup && (
-                <Col sm={12} className="mt-2">
-                  <i className="fal fa-exclamation-circle mr-1"></i>{" "}
-                  {useFormatMessage("modules.pay_cycles.note.general_note")}
-                </Col>
-              )}
-              {firstSetup && (
-                <Col sm={12} className=" d-flex mt-3 ">
-                  {addBtn}
-                </Col>
-              )}
-            </Row>
+            <Tabs items={itemsTab} />
           </Col>
         </Row>
       </PayCyclesLayout>

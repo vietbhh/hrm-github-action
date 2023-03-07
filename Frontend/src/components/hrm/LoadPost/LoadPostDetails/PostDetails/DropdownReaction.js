@@ -1,41 +1,73 @@
+import { useFormatMessage } from "@apps/utility/common"
 import img_care from "@modules/Feed/assets/images/care.png"
 import img_smile from "@modules/Feed/assets/images/haha.png"
 import img_like from "@modules/Feed/assets/images/like.png"
 import img_love from "@modules/Feed/assets/images/love.png"
 import img_sad from "@modules/Feed/assets/images/sad.png"
 import img_wow from "@modules/Feed/assets/images/wow.png"
-import { feedApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
 import React from "react"
-import { useSelector } from "react-redux"
 
 const DropdownReaction = (props) => {
-  const { data, buttonDropdown, setData } = props
-
-  const userData = useSelector((state) => state.auth.userData)
-  const userId = userData.id
+  const { buttonDropdown, updateReaction, checkLike, showIconReact } = props
 
   const item_reaction = [
     {
       key: "1",
       label: (
         <div className="div-dropdown-reaction">
-          <button className="pull-up" onClick={() => updateReaction("like")}>
+          <button
+            className="pull-up"
+            onClick={() => {
+              if (_.isFunction(updateReaction)) {
+                updateReaction("like")
+              }
+            }}>
             <img src={img_like} />
           </button>
-          <button className="pull-up" onClick={() => updateReaction("love")}>
+          <button
+            className="pull-up"
+            onClick={() => {
+              if (_.isFunction(updateReaction)) {
+                updateReaction("love")
+              }
+            }}>
             <img src={img_love} />
           </button>
-          <button className="pull-up" onClick={() => updateReaction("care")}>
+          <button
+            className="pull-up"
+            onClick={() => {
+              if (_.isFunction(updateReaction)) {
+                updateReaction("care")
+              }
+            }}>
             <img src={img_care} />
           </button>
-          <button className="pull-up" onClick={() => updateReaction("smile")}>
+          <button
+            className="pull-up"
+            onClick={() => {
+              if (_.isFunction(updateReaction)) {
+                updateReaction("smile")
+              }
+            }}>
             <img src={img_smile} />
           </button>
-          <button className="pull-up" onClick={() => updateReaction("sad")}>
+          <button
+            className="pull-up"
+            onClick={() => {
+              if (_.isFunction(updateReaction)) {
+                updateReaction("sad")
+              }
+            }}>
             <img src={img_sad} />
           </button>
-          <button className="pull-up" onClick={() => updateReaction("wow")}>
+          <button
+            className="pull-up"
+            onClick={() => {
+              if (_.isFunction(updateReaction)) {
+                updateReaction("wow")
+              }
+            }}>
             <img src={img_wow} />
           </button>
         </div>
@@ -43,53 +75,88 @@ const DropdownReaction = (props) => {
     }
   ]
 
-  // ** function
-  const updateReaction = (react_type) => {
-    return
-    const _data = { ...data }
-    const reaction = _data.reaction ? _data.reaction : []
-    const index_react_type = reaction.findIndex(
-      (item) => item.react_type === react_type
-    )
-    if (index_react_type !== -1) {
-      const index_user =
-        reaction[index_react_type]["react_user"].indexOf(userId)
-      if (index_user !== -1) {
-        reaction[index_react_type]["react_user"].splice(index_user, 1)
-      } else {
-        reaction[index_react_type]["react_user"].push(userId)
-      }
-    } else {
-      reaction.push({
-        react_type: react_type,
-        react_user: [userId]
-      })
-    }
-    _.forEach(reaction, (value) => {
-      if (react_type !== value.react_type) {
-        const index = value["react_user"].indexOf(userId)
-        if (index !== -1) {
-          value["react_user"].splice(index, 1)
-        }
-      }
-    })
+  // ** render
+  const renderButtonDropdown = () => {
+    if (checkLike !== "") {
+      switch (checkLike) {
+        case "like":
+          return (
+            <button
+              className="btn-reaction"
+              onClick={() => updateReaction("like")}>
+              {showIconReact && <img src={img_like} />}{" "}
+              <span className="react-like">
+                {useFormatMessage("modules.feed.post.react.like")}
+              </span>
+            </button>
+          )
 
-    const params = {
-      _id: _data._id,
-      reaction: reaction
+        case "love":
+          return (
+            <button
+              className="btn-reaction"
+              onClick={() => updateReaction("love")}>
+              {showIconReact && <img src={img_love} />}{" "}
+              <span className="react-love">
+                {useFormatMessage("modules.feed.post.react.love")}
+              </span>
+            </button>
+          )
+
+        case "care":
+          return (
+            <button
+              className="btn-reaction"
+              onClick={() => updateReaction("care")}>
+              {showIconReact && <img src={img_care} />}{" "}
+              <span className="react-care">
+                {useFormatMessage("modules.feed.post.react.care")}
+              </span>
+            </button>
+          )
+
+        case "smile":
+          return (
+            <button
+              className="btn-reaction"
+              onClick={() => updateReaction("smile")}>
+              {showIconReact && <img src={img_smile} />}{" "}
+              <span className="react-smile">
+                {useFormatMessage("modules.feed.post.react.haha")}
+              </span>
+            </button>
+          )
+
+        case "sad":
+          return (
+            <button
+              className="btn-reaction"
+              onClick={() => updateReaction("sad")}>
+              {showIconReact && <img src={img_sad} />}{" "}
+              <span className="react-sad">
+                {useFormatMessage("modules.feed.post.react.sad")}
+              </span>
+            </button>
+          )
+
+        case "wow":
+          return (
+            <button
+              className="btn-reaction"
+              onClick={() => updateReaction("wow")}>
+              {showIconReact && <img src={img_wow} />}{" "}
+              <span className="react-wow">
+                {useFormatMessage("modules.feed.post.react.wow")}
+              </span>
+            </button>
+          )
+
+        default:
+          return buttonDropdown
+      }
     }
-    feedApi
-      .postUpdatePost(params)
-      .then((res) => {
-        if (_.isFunction(setData)) {
-          setData({
-            ...res.data,
-            url_thumb: _data.url_thumb,
-            medias: _data.medias
-          })
-        }
-      })
-      .catch((err) => {})
+
+    return buttonDropdown
   }
 
   return (
@@ -98,7 +165,7 @@ const DropdownReaction = (props) => {
       placement="top"
       overlayClassName="post-footer-button-reaction-dropdown"
       trigger={["hover"]}>
-      {buttonDropdown}
+      {renderButtonDropdown()}
     </Dropdown>
   )
 }

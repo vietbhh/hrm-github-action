@@ -10,16 +10,16 @@ import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
   const {
-    dataEmployee,
     workspace, // arr workspace: []
     setDataCreateNew, // function set Data then create new post
-    approveStatus = "approved" // approved / rejected
+    approveStatus = "approved" // approved / rejected / pending
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: []
   })
 
+  const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
   const userName = userData.username

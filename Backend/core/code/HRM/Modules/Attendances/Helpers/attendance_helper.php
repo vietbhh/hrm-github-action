@@ -4,8 +4,18 @@ use HRM\Modules\WorkSchedule\Models\WorkScheduleModel;
 use HRM\Modules\Employees\Models\EmployeesModel;
 
 
-function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate, $toDate, $arrFilter = array(), $arrWorkingDay = array(), $listTimeOffRequest = array(), $arrReturnKey = [], $listHoliday = array())
-{
+function getAttendanceDetail(
+	$listAttendanceDetail,
+	$currentEmployee,
+	$fromDate,
+	$toDate,
+	$arrFilter = array(),
+	$arrWorkingDay = array(),
+	$listTimeOffRequest = array(),
+	$arrReturnKey = [],
+	$listHoliday = array(),
+	$getSavedWorkingDay = false
+) {
 	helper('app_select_option');
 	$modules = \Config\Services::modules();
 	//get employee schedule
@@ -28,8 +38,13 @@ function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate,
 		if (empty($listHoliday)) {
 			$modules->setModule('time_off_holidays');
 			$model = $modules->model;
-			$listHoliday = $model->asArray()->where('from_date <=', $toDate)->where('to_date >= ', $fromDate)->where('office_id', $currentEmployee['office'])->findAll();
+			$listHoliday = $model->asArray()
+				->where('from_date <=', $toDate)
+				->where('to_date >= ', $fromDate)
+				->where('office_id', $currentEmployee['office'])
+				->findAll();
 		}
+
 		foreach ($listHoliday as $rowHoliday) {
 			if (strtotime($rowHoliday['from_date']) == strtotime($rowHoliday['to_date'])) {
 				$arrTimeOff[$rowHoliday['from_date']] = [
@@ -109,7 +124,12 @@ function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate,
 		foreach ($listAttendanceDetail as $key => $row) {
 			$arrayPush = $row;
 			$weekDay = date('w', strtotime($key));
-			$infoWorkingDay = isset($arrWorkingDay[$weekDay]) ? $arrWorkingDay[$weekDay] : [];
+			if ($getSavedWorkingDay) {
+				$infoWorkingDay = isset($row['work_schedule_today']) ? (array) $row['work_schedule_today'] : [];
+			} else {
+				$infoWorkingDay = isset($arrWorkingDay[$weekDay]) ? $arrWorkingDay[$weekDay] : [];
+			}
+			
 			$infoTimeOff = isset($arrTimeOff[$key]) ? $arrTimeOff[$key] : [];
 
 			// filter non working day, time off, holiday
@@ -248,7 +268,7 @@ function getAttendanceDetail($listAttendanceDetail, $currentEmployee, $fromDate,
 						$totalNonWorkingDay++;
 					}
 				}
-				$result['total_time']['work_schedule'] += $arrayPush['work_schedule']['total'];
+				$result['total_time']['work_schedule'] += isset($arrayPush['work_schedule']['total']) ? $arrayPush['work_schedule']['total'] : 0;
 				$listAttendanceDetailFilter[] = $arrayPush;
 				$index++;
 			}
@@ -289,6 +309,12 @@ function convertLocationTypeClockOutFromClockIn($type)
 function handleInsertNewAttendanceToday($modules, $attendanceId, $employeeId, $additionalData = [], $date = '')
 {
 	helper('app_select_option');
+	$employeeModel = new EmployeesModel();
+	$checkResigned = $employeeModel->exceptResigned()->where('id', $employeeId)->first();
+	if (!$checkResigned) {
+		return 0;
+	}
+
 	$modules->setModule('attendance_details');
 	$model = $modules->model;
 	if (!$date) $date = date('Y-m-d');
@@ -492,7 +518,6 @@ function calculateTimeAttendanceDoorIntegrate($infoAttendanceDetail, $workSchedu
 				$overtime += strtotime($clockOutOT) - strtotime($timeTo);
 			}
 		}
-
 	} else if ($allowOvertime) {
 		$clockInOT = $firstClockIn;
 		if (strtotime($clockInOT) < strtotime($endTime) && strtotime($clockOutOT) < strtotime($endTime)) {

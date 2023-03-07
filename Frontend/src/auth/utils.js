@@ -5,6 +5,7 @@ import { store } from "redux/store"
 import jwt from "./jwt/useJwt"
 import { createIndexedDB, recrateNotificationData } from "../indexedDB"
 import { handleNotification } from "redux/notification"
+import { updateListUsers } from "redux/app/users"
 /**
  * Return if user is logged in
  * This is completely up to you and how you want to store the token in your frontend application
@@ -33,8 +34,10 @@ export const fetchProfile = () => {
         userData,
         permits,
         init: { settings, unit, modules, routes, filters, optionsModules },
-        list_notification
+        list_notification,
+        list_user
       } = res.data
+
       const listNotification = res.data.list_notification
       const numberNotification = res.data.number_notification
       store.dispatch(initialLayout(settings))
@@ -48,6 +51,7 @@ export const fetchProfile = () => {
       store.dispatch(
         initAppData({ unit, modules, routes, optionsModules, filters })
       )
+      store.dispatch(updateListUsers(list_user))
       // ** save notification to redux
       store.dispatch(
         handleNotification({

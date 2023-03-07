@@ -12,11 +12,6 @@ FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 
-const getAllEmployeeActive = async (req, res, next) => {
-  const dataUser = await getUserActivated()
-  return res.respond(dataUser)
-}
-
 // ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
@@ -73,7 +68,8 @@ const submitPostController = async (req, res, next) => {
 
     // ** check file image/video
     if (body.file.length === 0) {
-      return res.respond(out)
+      const _out = await handleDataBeforeReturn(out)
+      return res.respond(_out)
     } else {
       if (body.file.length === 1) {
         const result = await handleMoveFileTempToMain(body.file[0], storePath)
@@ -84,7 +80,8 @@ const submitPostController = async (req, res, next) => {
         )
 
         out = await feedMongoModel.findById(_id_parent)
-        return res.respond(out)
+        const _out = await handleDataBeforeReturn(out)
+        return res.respond(_out)
       } else {
         const promises = []
         forEach(body.file, (value, key) => {
@@ -126,7 +123,8 @@ const submitPostController = async (req, res, next) => {
           )
 
           out = await feedMongoModel.findById(_id_parent)
-          return res.respond(out)
+          const _out = await handleDataBeforeReturn(out)
+          return res.respond(_out)
         })
       }
     }
@@ -177,7 +175,8 @@ const getFeedById = async (req, res, next) => {
   const id = req.params.id
   try {
     const feed = await feedMongoModel.findById(id)
-    return res.respond(feed)
+    const _data = await handleDataBeforeReturn(feed)
+    return res.respond(_data)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -189,10 +188,35 @@ const updatePost = async (req, res, next) => {
   try {
     await feedMongoModel.updateOne({ _id: body._id }, body)
     const data = await feedMongoModel.findById(body._id)
-    return res.respond(data)
+    const _data = await handleDataBeforeReturn(data)
+    return res.respond(_data)
   } catch (err) {
     return res.fail(err.message)
   }
+}
+// **
+
+// ** comment
+const submitComment = async (req, res, next) => {
+  const body = JSON.parse(req.body.body)
+  const content = body.content
+  const _id = body._id
+  const image = req.files !== null ? req.files.image : null
+  const storePath = path.join("modules", "comment", _id)
+
+  /* let image_source = null
+  if (image) {
+    const image_name = Date.now() + "_" + image.name.split(".")[0] + ".webp"
+    const image_path = path.join(storePath, image_name)
+    image_source = await handleCompressImage(image, image_path)
+    console.log(image_source)
+  } */
+
+  console.log(_id)
+  console.log(content)
+  console.log(image)
+
+  return res.respond("")
 }
 // **
 
@@ -336,11 +360,11 @@ const handleCompressImage = async (file, savePath) => {
 }
 
 export {
-  getAllEmployeeActive,
   uploadTempAttachmentController,
   submitPostController,
   loadFeedController,
   getFeedChild,
   getFeedById,
-  updatePost
+  updatePost,
+  submitComment
 }

@@ -11,6 +11,7 @@ import React, { Fragment, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
+import { useSelector } from "react-redux"
 
 const PostDetail = (props) => {
   const {} = props
@@ -19,10 +20,12 @@ const PostDetail = (props) => {
     dataMedia: [],
     loadingPost: true,
     _idMedia: "",
-    dataMention: []
+    dataMention: [],
+    reloadPostThenCloseModal: false
   })
   const { idPost, idMedia } = useParams()
 
+  const dataEmployee = useSelector((state) => state.users.list)
   const current_url = `/posts/${idPost}`
 
   // ** useEffect
@@ -46,6 +49,7 @@ const PostDetail = (props) => {
           ) {
             await downloadApi.getPhoto(data.source).then((response) => {
               data["url_thumb"] = URL.createObjectURL(response.data)
+              setState({ reloadPostThenCloseModal: true })
             })
           }
 
@@ -61,6 +65,7 @@ const PostDetail = (props) => {
                 window.history.replaceState(null, "", current_url)
               }
               data["medias"] = res_promise
+              setState({ reloadPostThenCloseModal: false })
             })
           }
           setState({ loadingPost: false, dataPost: data })
@@ -74,20 +79,18 @@ const PostDetail = (props) => {
   }, [idPost, idMedia])
 
   useEffect(() => {
-    feedApi.getGetAllEmployeeActive().then((res) => {
-      const data_mention = []
-      _.forEach(res.data, (value) => {
-        data_mention.push({
-          id: value.id,
-          name: value.full_name,
-          link: "#",
-          avatar: getAvatarUrl(value.id * 1)
-        })
+    const data_mention = []
+    _.forEach(dataEmployee, (value) => {
+      data_mention.push({
+        id: value.id,
+        name: value.full_name,
+        link: "#",
+        avatar: getAvatarUrl(value.id * 1)
       })
-
-      setState({ dataMention: data_mention })
     })
-  }, [])
+
+    setState({ dataMention: data_mention })
+  }, [dataEmployee])
 
   return (
     <Fragment>
@@ -114,9 +117,21 @@ const PostDetail = (props) => {
               <LoadPost
                 data={state.dataPost}
                 current_url={current_url}
+                idPost={idPost}
                 idMedia={state._idMedia}
                 setIdMedia={(value) => setState({ _idMedia: value })}
+                reloadPostThenCloseModal={state.reloadPostThenCloseModal}
                 dataMention={state.dataMention}
+                setData={(data) => {
+                  setState({
+                    dataPost: {
+                      ...data,
+                      url_thumb: state.dataPost.url_thumb,
+                      url_source: state.dataPost.url_source,
+                      medias: state.dataPost.medias
+                    }
+                  })
+                }}
               />
             )}
           </div>

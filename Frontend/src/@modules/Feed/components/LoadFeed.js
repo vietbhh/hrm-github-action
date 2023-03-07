@@ -7,9 +7,15 @@ import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { feedApi } from "../common/api"
 import { handleLoadAttachmentMedias } from "../common/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
+import { useSelector } from "react-redux"
 
 const LoadFeed = (props) => {
-  const { dataCreateNew, setDataCreateNew, workspace, dataEmployee } = props
+  const {
+    dataCreateNew, // data sau khi tạo mới post
+    setDataCreateNew, // set data new
+    workspace, // arr workspace: []
+    apiLoadFeed // api load feed
+  } = props
   const [state, setState] = useMergedState({
     dataPost: [],
     hasMore: false,
@@ -24,6 +30,7 @@ const LoadFeed = (props) => {
     dataMention: []
   })
 
+  const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
 
   // ** function
@@ -33,27 +40,29 @@ const LoadFeed = (props) => {
       page: state.page,
       pageLength: state.pageLength,
       workspace: workspace,
-      idPostCreateNew: state.idPostCreateNew
+      idPostCreateNew: state.idPostCreateNew // select where id <= idPostCreateNew
     }
-    setTimeout(() => {
-      feedApi
-        .getLoadFeed(params)
-        .then((res) => {
-          setState({
-            loadingPost: false,
-            dataPost: [...state.dataPost, ...res.data.dataPost],
-            totalPost: res.data.totalPost,
-            page: res.data.page,
-            hasMore: res.data.hasMore
-          })
+    const api = apiLoadFeed ? apiLoadFeed(params) : feedApi.getLoadFeed(params)
+    api
+      .then((res) => {
+        setState({
+          dataPost: [...state.dataPost, ...res.data.dataPost],
+          totalPost: res.data.totalPost,
+          page: res.data.page,
+          hasMore: res.data.hasMore
         })
-        .catch((err) => {
-          setState({ loadingPost: false, hasMore: true })
-        })
-    }, 1000)
+
+        setTimeout(() => {
+          setState({ loadingPost: false })
+        }, 1000)
+      })
+      .catch((err) => {
+        setState({ loadingPost: false, hasMore: true })
+      })
   }
 
   const handleAfterLoadLazyLoadComponent = (value, index) => {
+    setState({ loadingPost: false })
     if (state.hasMore) {
       setState({ hasMoreLazy: true })
     }
@@ -178,7 +187,12 @@ const LoadFeed = (props) => {
               dataMention={state.dataMention}
               setData={(data) => {
                 const _data = [...state.dataCreateNewTemp]
-                _data[index] = data
+                _data[index] = {
+                  ...data,
+                  url_thumb: _data[index].url_thumb,
+                  url_source: _data[index].url_source,
+                  medias: _data[index].medias
+                }
                 setState({ dataCreateNewTemp: _data })
               }}
             />
@@ -196,7 +210,12 @@ const LoadFeed = (props) => {
                 dataMention={state.dataMention}
                 setData={(data) => {
                   const _data = [...state.dataPost]
-                  _data[index] = data
+                  _data[index] = {
+                    ...data,
+                    url_thumb: _data[index].url_thumb,
+                    url_source: _data[index].url_source,
+                    medias: _data[index].medias
+                  }
                   setState({ dataPost: _data })
                 }}
               />

@@ -191,57 +191,11 @@ const MyAttendance = (props) => {
   }, [state.listLogModal])
 
   // ** render
-  const renderBreadcrumb = () => {
-    return (
-      <Breadcrumbs
-        list={[{ title: useFormatMessage("modules.attendance.title.my") }]}
-      />
-    )
-  }
-
-  const renderMyAttendanceWarning = () => {
-    return (
-      <Card>
-        <CardBody>
-          <p className="mb-0">
-            <span className="title-icon">
-              <i className="fas fa-bell-on" />
-            </span>
-            {useFormatMessage("modules.attendance.text.warning_my_attendance", {
-              expire_day: state.expireDay
-            })}
-          </p>
-        </CardBody>
-      </Card>
-    )
-  }
-
-  const renderAttendanceHeader = () => {
-    return (
-      <AttendanceHeader
-        infoAttendance={state.infoAttendance}
-        attendanceToDay={state.attendanceToDay}
-        totalTimeAttendance={state.totalTimeAttendance}
-        loadingApi={state.loading}
-        geofencing={state.geofencing}
-        clockOutside={state.clockOutside}
-        googlePlace={state.googlePlace}
-        radius={state.radius}
-        webapp={state.webapp}
-        employeeOffice={state.employeeOffice}
-        isBreakTime={state.isBreakTime}
-        optionsAttendanceLog={optionsAttendanceLog}
-        toggleLogModal={toggleLogModal}
-        setAttendanceLocation={setAttendanceLocation}
-        setIsOutsideAttendance={setIsOutsideAttendance}
-        setIsNAAttendance={setIsNAAttendance}
-        setIsBreakTime={setIsBreakTime}
-        loadData={loadData}
-      />
-    )
-  }
-
   const renderAttendanceFilter = () => {
+    if (state.loading) {
+      return ""
+    }
+
     return (
       <AttendanceFilter
         optionsAttendanceDetail={optionsAttendanceDetail}
@@ -253,29 +207,11 @@ const MyAttendance = (props) => {
     )
   }
 
-  const renderMyAttendanceContent = () => {
-    return (
-      <InfoAttendanceEmployee
-        filters={filters}
-        reloadAttendanceBodyAfterLoading={
-          state.reloadAttendanceBodyAfterLoading
-        }
-        showCheckBoxCell={false}
-        optionsAttendanceDetail={optionsAttendanceDetail}
-        optionsModules={optionsModules}
-        attendanceType="my"
-        handleAttendanceNoteLogModal={toggleListLogModal}
-        handlePaidTimeModal={showEditPaidTimeModal}
-        handleOvertimeModal={showEditOvertimeModal}
-        setCurrentAttendanceDetailData={setCurrentAttendanceDetailData}
-        setReloadAttendanceBodyAfterLoading={
-          setReloadAttendanceBodyAfterLoading
-        }
-      />
-    )
-  }
-
   const renderAttendanceLogModal = () => {
+    if (!state.addLogModal) {
+      return ""
+    }
+
     return (
       <AttendanceLogModal
         modal={state.addLogModal}
@@ -301,6 +237,10 @@ const MyAttendance = (props) => {
   }
 
   const renderListNoteAttendanceLogModal = () => {
+    if (!state.listLogModal) {
+      return ""
+    }
+
     return (
       <ListNoteLogAttendanceModal
         modal={state.listLogModal}
@@ -312,6 +252,10 @@ const MyAttendance = (props) => {
   }
 
   const renderEditPaidTimeModal = () => {
+    if (!modalPaidTime) {
+      return ""
+    }
+
     return (
       <EditPaidTimeModal
         filters={filters}
@@ -327,6 +271,10 @@ const MyAttendance = (props) => {
   }
 
   const renderOvertimeModal = () => {
+    if (!modalOvertime) {
+      return ""
+    }
+
     return (
       <EditOvertimeModal
         filters={filters}
@@ -346,21 +294,74 @@ const MyAttendance = (props) => {
       return (
         <Fragment>
           <div className="my-attendance-page">
-            {renderBreadcrumb()}
-            {renderMyAttendanceWarning()}
+            <Breadcrumbs
+              list={[{ title: useFormatMessage("modules.attendance.title.my") }]}
+            />
             <Card>
-              <CardHeader className="my-attendance-header">
-                {renderAttendanceHeader()}
-              </CardHeader>
               <CardBody>
-                {!state.loading && renderAttendanceFilter()}
-                {renderMyAttendanceContent()}
+                <p className="mb-0">
+                  <span className="title-icon">
+                    <i className="fas fa-bell-on" />
+                  </span>
+                  {useFormatMessage(
+                    "modules.attendance.text.warning_my_attendance",
+                    {
+                      expire_day: state.expireDay
+                    }
+                  )}
+                </p>
               </CardBody>
             </Card>
-            {state.addLogModal && renderAttendanceLogModal()}
-            {state.listLogModal && renderListNoteAttendanceLogModal()}
-            {modalPaidTime && renderEditPaidTimeModal()}
-            {modalOvertime && renderOvertimeModal()}
+            <Card>
+              <CardHeader className="my-attendance-header">
+                <AttendanceHeader
+                  infoAttendance={state.infoAttendance}
+                  attendanceToDay={state.attendanceToDay}
+                  totalTimeAttendance={state.totalTimeAttendance}
+                  loadingApi={state.loading}
+                  geofencing={state.geofencing}
+                  clockOutside={state.clockOutside}
+                  googlePlace={state.googlePlace}
+                  radius={state.radius}
+                  webapp={state.webapp}
+                  employeeOffice={state.employeeOffice}
+                  isBreakTime={state.isBreakTime}
+                  optionsAttendanceLog={optionsAttendanceLog}
+                  toggleLogModal={toggleLogModal}
+                  setAttendanceLocation={setAttendanceLocation}
+                  setIsOutsideAttendance={setIsOutsideAttendance}
+                  setIsNAAttendance={setIsNAAttendance}
+                  setIsBreakTime={setIsBreakTime}
+                  loadData={loadData}
+                />
+              </CardHeader>
+              <CardBody>
+                <Fragment>{renderAttendanceFilter()}</Fragment>
+                <InfoAttendanceEmployee
+                  filters={filters}
+                  reloadAttendanceBodyAfterLoading={
+                    state.reloadAttendanceBodyAfterLoading
+                  }
+                  showCheckBoxCell={false}
+                  optionsAttendanceDetail={optionsAttendanceDetail}
+                  optionsModules={optionsModules}
+                  attendanceType="my"
+                  handleAttendanceNoteLogModal={toggleListLogModal}
+                  handlePaidTimeModal={showEditPaidTimeModal}
+                  handleOvertimeModal={showEditOvertimeModal}
+                  setCurrentAttendanceDetailData={
+                    setCurrentAttendanceDetailData
+                  }
+                  setReloadAttendanceBodyAfterLoading={
+                    setReloadAttendanceBodyAfterLoading
+                  }
+                />
+              </CardBody>
+            </Card>
+            <Fragment>{renderAttendanceLogModal()}</Fragment>
+            <Fragment>{renderListNoteAttendanceLogModal()}</Fragment>
+            <Fragment>{renderEditPaidTimeModal()}</Fragment>
+            <Fragment>{renderOvertimeModal()}</Fragment>
           </div>
         </Fragment>
       )

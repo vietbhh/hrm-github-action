@@ -9,6 +9,11 @@ class Cronjob
 	// ** cronjob send mail notifications the end of the attendance cycle
 	public function send_mail_notification_attendance()
 	{
+		$attendanceAutoMailNotification = filter_var(preference('attendance_auto_mail_notification'), FILTER_VALIDATE_BOOLEAN);
+		if (!$attendanceAutoMailNotification) {
+			return false;
+		}
+		
 		$datetoday = date('Y-m-d');
 		$attendanceModules = \Config\Services::modules("attendances");
 		$attendanceModel = $attendanceModules->model;
@@ -43,17 +48,17 @@ class Cronjob
 		return true;
 	}
 
-    // ** cronjob add new record to m_attendances if today is not exist in m_attendance (start a new schedule)
-    public function create_new_attendance_schedule()
-    {
-        $attendanceService = \HRM\Modules\Attendances\Libraries\Attendances\Config\Services::attendance();
-        $attendanceService->createNewAttendanceSchedule();
-    }
+	// ** cronjob add new record to m_attendances if today is not exist in m_attendance (start a new schedule)
+	public function create_new_attendance_schedule()
+	{
+		$attendanceService = \HRM\Modules\Attendances\Libraries\Attendances\Config\Services::attendance();
+		$attendanceService->createNewAttendanceSchedule();
+	}
 
-    // ** cronjob to recalculate all data in m_attendances
-    public function recalculate_attendance()
-    {
-        $attendanceService = \HRM\Modules\Attendances\Libraries\Attendances\Config\Services::attendance();
-        $attendanceService->recalculateAttendance();
-    }
+	// ** cronjob to recalculate all data in m_attendances
+	public function recalculate_attendance()
+	{
+		$attendanceService = \HRM\Modules\Attendances\Libraries\Attendances\Config\Services::attendance();
+		$attendanceService->recalculateAttendance();
+	}
 }

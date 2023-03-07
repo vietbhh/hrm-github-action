@@ -134,8 +134,9 @@ export const handleDataBeforeReturn = async (data, multiData = false) => {
   const arrData = multiData ? data : [data]
   const promises = []
   forEach(arrData, (dataItem, index) => {
-    const _dataItem = { ...dataItem }
     const promise = new Promise(async (resolve, reject) => {
+      const _dataItem = { ...dataItem }
+
       if (dataItem["owner"] && isNumber(dataItem["owner"])) {
         const data_user = await getUser(dataItem["owner"])
         _dataItem["_doc"]["owner"] = {
@@ -178,5 +179,5 @@ export const handleDataBeforeReturn = async (data, multiData = false) => {
     return res_promise
   })
 
-  return result
+  return multiData ? result : result[0]
 }

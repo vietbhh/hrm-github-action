@@ -107,6 +107,13 @@ class Cronjob
 	function send_mail_review_payroll()
 	{
 		helper('app_select_option');
+
+		$payrollAutoSendMailReview = filter_var(preference('payroll_auto_send_mail_review'), FILTER_VALIDATE_BOOLEAN);
+		if (!$payrollAutoSendMailReview) {
+			echo 'auto send mail is disabled';
+			return;
+		}
+
 		$modules = \Config\Services::modules();
 		$mailServices = \Config\Services::mail();
 		$today = date('Y-m-d');

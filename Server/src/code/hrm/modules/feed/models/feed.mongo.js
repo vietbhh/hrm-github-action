@@ -64,8 +64,12 @@ const feedSchema = baseSchema("m_feed", {
     default: []
   },
   comment_ids: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
     default: []
+  },
+  seen_count: {
+    type: Number,
+    default: 0
   },
 
   // ** source child / post: 1 image/video

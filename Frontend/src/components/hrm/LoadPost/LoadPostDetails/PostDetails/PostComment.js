@@ -24,7 +24,6 @@ const PostComment = (props) => {
             </div>
             <div className="body__reaction">
               <DropdownReaction
-                data={data}
                 buttonDropdown={
                   <a
                     className="reaction reaction__like"
@@ -110,7 +109,6 @@ const PostComment = (props) => {
             </div>
             <div className="body__reaction">
               <DropdownReaction
-                data={data}
                 buttonDropdown={
                   <a
                     className="reaction reaction__like"
@@ -171,7 +169,6 @@ const PostComment = (props) => {
             </div>
             <div className="body__reaction">
               <DropdownReaction
-                data={data}
                 buttonDropdown={
                   <a
                     className="reaction reaction__like"
@@ -222,7 +219,7 @@ const PostComment = (props) => {
         </div>
       </div>
       <div className="post-comment__div-form">
-        <PostCommentForm dataMention={dataMention} />
+        <PostCommentForm data={data} dataMention={dataMention} />
       </div>
     </div>
   )

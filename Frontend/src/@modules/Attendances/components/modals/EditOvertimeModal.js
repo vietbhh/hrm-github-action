@@ -37,7 +37,7 @@ const EditOvertimeModal = (props) => {
   } = props
 
   const attendanceState = useSelector((state) => state.attendance)
-  const { modalOvertime } = attendanceState
+  const { modalOvertime, workSchedule } = attendanceState
 
   const [loading, setLoading] = useState(false)
   const [chosenHours, setChosenHours] = useState(0)
@@ -57,6 +57,7 @@ const EditOvertimeModal = (props) => {
     values.attendance_detail = currentAttendanceDetailData
     values.hours = chosenHours
     values.minutes = chosenMinutes
+    values.work_schedule_today = workSchedule
     MyAttendanceApi.editAttendanceDetailOvertime(
       currentAttendanceDetailData.id.includes("empty_attendance")
         ? 0
@@ -72,7 +73,6 @@ const EditOvertimeModal = (props) => {
         handleCancelModal()
       })
       .catch((err) => {
-        console.log(err)
         setLoading(false)
         notification.showError({
           text: useFormatMessage("notification.save.error")

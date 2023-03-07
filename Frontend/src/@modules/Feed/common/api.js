@@ -18,10 +18,6 @@ export const feedApi = {
     )
   },
 
-  async getGetAllEmployeeActive() {
-    return await axiosNodeApi.get("/feed/get-all-employee-active")
-  },
-
   async postSubmitPost(data) {
     return await axiosNodeApi.post("/feed/submit-post", data)
   },
@@ -45,5 +41,17 @@ export const feedApi = {
 
   async postUpdatePost(data) {
     return await axiosNodeApi.post("/feed/update-post", data)
+  },
+
+  async postSubmitComment(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-comment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
   }
 }
