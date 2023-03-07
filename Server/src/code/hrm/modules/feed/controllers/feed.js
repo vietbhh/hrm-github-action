@@ -1,20 +1,23 @@
-import { getUserActivated } from "#app/models/users.mysql.js"
 import { localSavePath, _uploadServices } from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { forEach } from "lodash-es"
+import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
+import commentMongoModel from "../models/comment.mongo.js"
 
 // ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
+  if (!fs.existsSync(path.join(localSavePath, storePath))) {
+    fs.mkdirSync(path.join(localSavePath, storePath))
+  }
   const body = req.body
   const file = req.files
   const promises = []
@@ -33,6 +36,9 @@ const uploadTempAttachmentController = async (req, res, next) => {
 
 const submitPostController = async (req, res, next) => {
   const storePath = path.join("modules", "feed")
+  if (!fs.existsSync(path.join(localSavePath, storePath))) {
+    fs.mkdirSync(path.join(localSavePath, storePath))
+  }
   const body = req.body
   const workspace_type =
     body.workspace.length === 0 && body.privacy_type === "workspace"
@@ -150,7 +156,18 @@ const loadFeedController = async (req, res, next) => {
     .sort({
       _id: "desc"
     })
-  const data = await handleDataBeforeReturn(feed, true)
+  const promises = []
+  forEach(feed, (value, key) => {
+    const promise = new Promise(async (resolve, reject) => {
+      const _value = await handleDataComment(value)
+      resolve(_value)
+    })
+    promises.push(promise)
+  })
+  const _feed = await Promise.all(promises).then((res_promise) => {
+    return res_promise
+  })
+  const data = await handleDataBeforeReturn(_feed, true)
   const feedCount = await feedMongoModel.find(filter).count()
   const result = {
     dataPost: data,
@@ -159,6 +176,28 @@ const loadFeedController = async (req, res, next) => {
     hasMore: (page * 1 + 1) * pageLength < feedCount
   }
   return res.respond(result)
+}
+
+// get feed by id
+const getFeedById = async (req, res, next) => {
+  const id = req.params.id
+  try {
+    const data = await handleDataFeedById(id)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// get feed by id and view all comment
+const getFeedByIdAndViewAllComment = async (req, res, next) => {
+  const id = req.params.id
+  try {
+    const data = await handleDataFeedById(id, 0)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 
 // get feed child
@@ -170,26 +209,16 @@ const getFeedChild = async (req, res, next) => {
   return res.respond(feed)
 }
 
-// get feed by id
-const getFeedById = async (req, res, next) => {
-  const id = req.params.id
-  try {
-    const feed = await feedMongoModel.findById(id)
-    const _data = await handleDataBeforeReturn(feed)
-    return res.respond(_data)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-
 // update post
 const updatePost = async (req, res, next) => {
   const body = req.body
+  const id = body._id
+  const comment_more_count_original = body.comment_more_count_original
+  const body_update = body.body_update
   try {
-    await feedMongoModel.updateOne({ _id: body._id }, body)
-    const data = await feedMongoModel.findById(body._id)
-    const _data = await handleDataBeforeReturn(data)
-    return res.respond(_data)
+    await feedMongoModel.updateOne({ _id: id }, body_update)
+    const data = await handleDataFeedById(id, comment_more_count_original)
+    return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -200,23 +229,66 @@ const updatePost = async (req, res, next) => {
 const submitComment = async (req, res, next) => {
   const body = JSON.parse(req.body.body)
   const content = body.content
-  const _id = body._id
+  const id_post = body.id_post
+  const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
-  const storePath = path.join("modules", "comment", _id)
+  const storePathTemp = path.join("modules", "comment_temp")
+  if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
+    fs.mkdirSync(path.join(localSavePath, storePathTemp))
+  }
+  const storePath = path.join("modules", "comment", id_post)
 
-  /* let image_source = null
+  let image_source = null
   if (image) {
     const image_name = Date.now() + "_" + image.name.split(".")[0] + ".webp"
-    const image_path = path.join(storePath, image_name)
-    image_source = await handleCompressImage(image, image_path)
-    console.log(image_source)
-  } */
+    const image_path = path.join(storePathTemp, image_name)
+    const image_source_webp = await handleCompressImage(image, image_path)
+    const file_info = {
+      source: image_source_webp,
+      name_source: image_name,
+      type: image.mimetype
+    }
+    const result_image = await handleMoveFileTempToMain(file_info, storePath)
+    image_source = result_image.source
+  }
 
-  console.log(_id)
-  console.log(content)
-  console.log(image)
+  const commentModel = new commentMongoModel({
+    __user: req.__user,
+    post_id: id_post,
+    content: content,
+    image_source: image_source
+  })
 
-  return res.respond("")
+  try {
+    const saveComment = await commentModel.save()
+    await feedMongoModel.updateOne(
+      { _id: id_post },
+      { $push: { comment_ids: saveComment._id } }
+    )
+    const dataFeed = await handleDataFeedById(
+      id_post,
+      comment_more_count_original
+    )
+    return res.respond(dataFeed)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// update comment
+const updateComment = async (req, res, next) => {
+  const body = req.body
+  const _id_post = body._id_post
+  const _id_comment = body._id_comment
+  const comment_more_count_original = body.comment_more_count_original
+  const body_update = body.body_update
+  try {
+    await commentMongoModel.updateOne({ _id: _id_comment }, body_update)
+    const data = await handleDataFeedById(_id_post, comment_more_count_original)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 // **
 
@@ -296,37 +368,41 @@ const handleMoveFileTempToMain = async (file_info, storePath) => {
   }
 
   // source
-  if (fs.existsSync(path.join(localSavePath, file_info.source))) {
-    const contents = fs.readFileSync(
-      path.join(localSavePath, file_info.source),
-      {
-        encoding: "base64"
+  if (file_info.source) {
+    if (fs.existsSync(path.join(localSavePath, file_info.source))) {
+      const contents = fs.readFileSync(
+        path.join(localSavePath, file_info.source),
+        {
+          encoding: "base64"
+        }
+      )
+      const file = {
+        name: file_info.name_source,
+        mimetype: file_info.type,
+        content: contents
       }
-    )
-    const file = {
-      name: file_info.name_source,
-      mimetype: file_info.type,
-      content: contents
+      const resultUpload = await _uploadServices(storePath, [file], true)
+      result["source"] = resultUpload.uploadSuccess[0].path
     }
-    const resultUpload = await _uploadServices(storePath, [file], true)
-    result["source"] = resultUpload.uploadSuccess[0].path
   }
 
   // thumb
-  if (fs.existsSync(path.join(localSavePath, file_info.thumb))) {
-    const contents = fs.readFileSync(
-      path.join(localSavePath, file_info.thumb),
-      {
-        encoding: "base64"
+  if (file_info.thumb) {
+    if (fs.existsSync(path.join(localSavePath, file_info.thumb))) {
+      const contents = fs.readFileSync(
+        path.join(localSavePath, file_info.thumb),
+        {
+          encoding: "base64"
+        }
+      )
+      const file = {
+        name: file_info.name_thumb,
+        mimetype: file_info.type,
+        content: contents
       }
-    )
-    const file = {
-      name: file_info.name_thumb,
-      mimetype: file_info.type,
-      content: contents
+      const resultUpload = await _uploadServices(storePath, [file], true)
+      result["thumb"] = resultUpload.uploadSuccess[0].path
     }
-    const resultUpload = await _uploadServices(storePath, [file], true)
-    result["thumb"] = resultUpload.uploadSuccess[0].path
   }
 
   return result
@@ -359,6 +435,52 @@ const handleCompressImage = async (file, savePath) => {
   return savePath
 }
 
+const handleDataComment = async (feed, loadComment = -1) => {
+  const comment_ids = feed.comment_ids
+  let comment_more_count = 0
+  let comment_list = []
+  if (!isEmpty(comment_ids)) {
+    if (loadComment === -1) {
+      const id_comment_last = comment_ids[comment_ids.length - 1]
+      const data_comment = await commentMongoModel.findById(id_comment_last)
+      const _data_comment = await handleDataBeforeReturn(data_comment)
+      comment_more_count = comment_ids.length - 1
+      comment_list.push(_data_comment)
+    } else if (loadComment === 0) {
+      const data_comment = await commentMongoModel.find({
+        _id: { $in: comment_ids }
+      })
+      const _data_comment = await handleDataBeforeReturn(data_comment, true)
+      comment_more_count = 0
+      comment_list = _data_comment
+    } else {
+      const key_filter = loadComment - 1
+      const comment_ids_filter = comment_ids.filter((item, key) => {
+        return key > key_filter
+      })
+      const data_comment = await commentMongoModel.find({
+        _id: { $in: comment_ids_filter }
+      })
+      const _data_comment = await handleDataBeforeReturn(data_comment, true)
+      comment_more_count = comment_ids.length - comment_ids_filter.length
+      comment_list = _data_comment
+    }
+  }
+  const _feed = { ...feed }
+  _feed["_doc"]["comment_more_count"] = comment_more_count
+  _feed["_doc"]["comment_count"] = comment_ids.length
+  _feed["_doc"]["comment_list"] = comment_list
+
+  return _feed["_doc"]
+}
+
+const handleDataFeedById = async (id, loadComment = -1) => {
+  const feed = await feedMongoModel.findById(id)
+  const _feed = await handleDataComment(feed, loadComment)
+  const data = await handleDataBeforeReturn(_feed)
+  return data
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -366,5 +488,7 @@ export {
   getFeedChild,
   getFeedById,
   updatePost,
-  submitComment
+  submitComment,
+  getFeedByIdAndViewAllComment,
+  updateComment
 }

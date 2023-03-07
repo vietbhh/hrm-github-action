@@ -1,11 +1,6 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import img_care from "@modules/Feed/assets/images/care.png"
-import img_smile from "@modules/Feed/assets/images/haha.png"
-import img_like from "@modules/Feed/assets/images/like.png"
-import img_love from "@modules/Feed/assets/images/love.png"
-import img_sad from "@modules/Feed/assets/images/sad.png"
-import img_wow from "@modules/Feed/assets/images/wow.png"
+import { renderImageReact } from "@modules/Feed/common/common"
 import { Tabs } from "antd"
 import { useEffect } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -22,31 +17,6 @@ const ReactionDetailModal = (props) => {
   const listReaction = ["like", "love", "care", "smile", "sad", "wow"]
 
   // ** function
-  const renderImageReact = (type) => {
-    switch (type) {
-      case "like":
-        return img_like
-
-      case "love":
-        return img_love
-
-      case "care":
-        return img_care
-
-      case "smile":
-        return img_smile
-
-      case "sad":
-        return img_sad
-
-      case "wow":
-        return img_wow
-
-      default:
-        return useFormatMessage("modules.feed.post.text.other")
-    }
-  }
-
   const renderListUserReact = (value, image) => {
     return _.map(
       _.filter(value, (item_filter) => {

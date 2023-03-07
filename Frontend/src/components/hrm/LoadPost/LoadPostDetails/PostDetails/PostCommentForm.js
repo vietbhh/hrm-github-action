@@ -1,25 +1,31 @@
+import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import Editor from "@draft-js-plugins/editor"
 import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
+import { feedApi } from "@modules/Feed/common/api"
+import { decodeHTMLEntities } from "@modules/Feed/common/common"
+import classNames from "classnames"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
+import draftToHtml from "draftjs-to-html"
 import { Fragment, useCallback, useEffect, useMemo } from "react"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useSelector } from "react-redux"
 import { Label, Spinner } from "reactstrap"
 import Emoji from "./Emoji"
-import notification from "@apps/utility/notification"
-import draftToHtml from "draftjs-to-html"
-import { decodeHTMLEntities } from "@modules/Feed/common/common"
 
-import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/mention/lib/plugin.css"
-import classNames from "classnames"
-import { feedApi } from "@modules/Feed/common/api"
+import "@styles/react/libs/editor/editor.scss"
 
 const PostCommentForm = (props) => {
-  const { data, dataMention } = props
+  const {
+    data,
+    dataMention,
+    setData,
+    comment_more_count_original,
+    setCommentMoreCountOriginal
+  } = props
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
     image: null,
@@ -98,18 +104,29 @@ const PostCommentForm = (props) => {
       const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
       const content = draftToHtml(editorStateRaw)
       const params = {
-        body: JSON.stringify({ _id: data._id, content: content }),
+        body: JSON.stringify({
+          id_post: data._id,
+          content: content,
+          comment_more_count_original: comment_more_count_original
+        }),
         image: state.image
       }
       feedApi
         .postSubmitComment(params)
         .then((res) => {
-          setState({ loadingSubmit: false })
+          setEmptyEditorState()
+          if (_.isFunction(setData)) {
+            setData(res.data)
+            setCommentMoreCountOriginal(res.data?.comment_more_count || 0)
+          }
+          setState({ loadingSubmit: false, image: null })
         })
         .catch((err) => {
           setState({ loadingSubmit: false })
+          notification.showError({
+            text: useFormatMessage("notification.something_went_wrong")
+          })
         })
-      console.log(params)
     }
   }
 

@@ -452,21 +452,21 @@
   }
 
   .react-like {
-    color: #139ff8;
-    font-weight: 600;
+    color: #139ff8 !important;
+    font-weight: 600 !important;
   }
 
   .react-love {
-    color: rgb(243, 62, 88);
-    font-weight: 600;
+    color: rgb(243, 62, 88) !important;
+    font-weight: 600 !important;
   }
 
   .react-care,
   .react-smile,
   .react-wow,
   .react-sad {
-    color: rgb(247, 177, 37);
-    font-weight: 600;
+    color: rgb(247, 177, 37) !important;
+    font-weight: 600 !important;
   }
 
   .post-comment {
@@ -480,6 +480,7 @@
         position: relative;
         display: flex;
         margin-top: 15px;
+        padding-right: 5px;
 
         .avatar {
           width: 37px;
@@ -501,6 +502,8 @@
             background: #f5f6f8;
             border-radius: 20px;
             padding: 10px 20px;
+            overflow-wrap: anywhere;
+            position: relative;
 
             .content__name {
               font-weight: 600;
@@ -512,6 +515,29 @@
               font-weight: 400;
               font-size: 14px;
               color: #32434f;
+
+              p {
+                margin-bottom: 0;
+              }
+            }
+
+            .content__react {
+              right: 0px;
+              background: #fff;
+              border-radius: 12px;
+              padding: 1px 5px;
+              cursor: pointer;
+              position: absolute;
+              bottom: -10px;
+              z-index: 9;
+              display: flex;
+              align-items: center;
+              gap: 2px;
+
+              img {
+                width: 15px;
+                height: 15px;
+              }
             }
           }
 
@@ -529,7 +555,7 @@
             margin-top: 5px;
 
             .reaction {
-              margin-right: 30px;
+              margin-right: 20px;
               font-weight: 600;
               font-size: 12px;
               color: #727e87;
@@ -570,6 +596,17 @@
 
         &.reply {
           padding-left: 60px;
+        }
+      }
+
+      .div-comment__comment_more {
+        margin-top: 10px;
+
+        > span {
+          cursor: pointer;
+          margin-left: 55px;
+          color: #377dff;
+          font-weight: 500;
         }
       }
     }
@@ -1323,6 +1360,10 @@
 
           .scrollbar-container {
             padding: 0 15px;
+
+            .ps__rail-x {
+              display: none;
+            }
           }
 
           .right-header {
@@ -1369,10 +1410,10 @@
             }
           }
 
-          .right-comment-form {
-          }
-
-          .right-comment-content {
+          .right-comment {
+            .post-comment__div-form {
+              margin-bottom: 30px;
+            }
           }
         }
       }
@@ -1394,12 +1435,6 @@
       padding: 7 15px;
       min-width: 125px;
     }
-  }
-}
-
-.reaction__like {
-  ul {
-    margin-bottom: 10px;
   }
 }
 
