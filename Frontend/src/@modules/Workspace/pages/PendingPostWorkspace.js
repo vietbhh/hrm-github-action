@@ -25,6 +25,8 @@ import {
 import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
+
+import PerfectScrollbar from "react-perfect-scrollbar"
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -92,6 +94,14 @@ const PendingPostWorkspace = () => {
   useEffect(() => {
     loadData()
   }, [])
+
+  const endScrollLoad = () => {
+    const page = state.page + 1
+    console.log("runnnnn")
+    if (state.recordsTotal > state.listPost.length) {
+      loadData({ page: page, search: state.search })
+    }
+  }
 
   const handleApprove = (id, status) => {
     workspaceApi.approvePost({ id: id, approve_status: status }).then((res) => {
@@ -174,7 +184,14 @@ const PendingPostWorkspace = () => {
               </div>
             </CardBody>
           </Card>
-          <div className="feed">{renderPost(state.listPost)}</div>
+          <PerfectScrollbar
+            onYReachEnd={() => console.log("reunnn")}
+            style={{
+              maxHeight: "500px",
+              minHeight: "200px"
+            }}>
+            <div className="feed">{renderPost(state.listPost)}</div>
+          </PerfectScrollbar>
         </div>
       </div>
     </Fragment>

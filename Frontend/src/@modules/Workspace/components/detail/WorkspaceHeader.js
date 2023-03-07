@@ -7,24 +7,28 @@ import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
 import { Dropdown, Space } from "antd"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
 import notification from "@apps/utility/notification"
+import Photo from "@apps/modules/download/pages/Photo"
+import { useEffect } from "react"
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
   const [state, setState] = useMergedState({
-    coverImage: defaultWorkspaceCover,
+    coverImage: "",
     inviteModal: false,
-    setupNotifiModal: false
+    setupNotifiModal: false,
+    loading: false,
+    defaultWorkspaceCover: ""
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
   const saveCoverImage = (image) => {
-    setState({ coverImage: image })
+    setState({ loading: true })
     const dataPost = { ...data, image: image, id: data?._id }
     workspaceApi.saveCoverImage(dataPost).then((res) => {
-      console.log("resssss todo", res)
+      setState({ defaultWorkspaceCover: image })
     })
   }
-
+  console.log("data,", data)
   const handleDoneInvite = (dataUpdate, field) => {
     const infoWorkspace = { ...data }
     const arrID = infoWorkspace.members.concat(
@@ -59,7 +63,7 @@ const WorkspaceHeader = (props) => {
     {
       label: (
         <a href={`/workspace/${data._id}/request-join`}>
-          <i className="fa-duotone fa-user-lock"></i> Request to join
+          <i className="fa-solid fa-user-lock"></i> Request to join
         </a>
       ),
       key: "3"
@@ -82,10 +86,34 @@ const WorkspaceHeader = (props) => {
       key: "2"
     }
   ]
+
+  useEffect(() => {
+    if (data.cover_image) {
+      setState({ coverImage: data.cover_image, defaultWorkspaceCover: "" })
+    } else {
+      setState({ defaultWorkspaceCover: defaultWorkspaceCover })
+    }
+  }, [data])
+  console.log("state", state)
   return (
     <Card className="pb-0">
       <div className="image-cover">
-        <img src={state.coverImage} className="w-100 workspaceCover" />
+        {state.defaultWorkspaceCover && (
+          <img
+            src={state.defaultWorkspaceCover}
+            width="100%"
+            className="w-100 workspaceCover"
+          />
+        )}
+        {state.coverImage && !state.defaultWorkspaceCover && (
+          <Photo
+            src={state.coverImage}
+            loading={state.loading}
+            width="100%"
+            className="w-100 workspaceCover"
+          />
+        )}
+
         <CoverEditor
           src=""
           className="btn-cover"
