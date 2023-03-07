@@ -139,38 +139,72 @@ export const handleDataBeforeReturn = async (data, multiData = false) => {
 
       if (dataItem["owner"] && isNumber(dataItem["owner"])) {
         const data_user = await getUser(dataItem["owner"])
-        _dataItem["_doc"]["owner"] = {
-          id: data_user.id,
-          username: data_user.username,
-          avatar: data_user.avatar,
-          full_name: data_user.full_name,
-          email: data_user.email
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["owner"] = {
+            id: data_user.id,
+            username: data_user.username,
+            avatar: data_user.avatar,
+            full_name: data_user.full_name,
+            email: data_user.email
+          }
+        } else {
+          _dataItem["owner"] = {
+            id: data_user.id,
+            username: data_user.username,
+            avatar: data_user.avatar,
+            full_name: data_user.full_name,
+            email: data_user.email
+          }
         }
       }
 
       if (dataItem["created_by"] && isNumber(dataItem["created_by"])) {
         const data_user = await getUser(dataItem["created_by"])
-        _dataItem["_doc"]["created_by"] = {
-          id: data_user.id,
-          username: data_user.username,
-          avatar: data_user.avatar,
-          full_name: data_user.full_name,
-          email: data_user.email
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["created_by"] = {
+            id: data_user.id,
+            username: data_user.username,
+            avatar: data_user.avatar,
+            full_name: data_user.full_name,
+            email: data_user.email
+          }
+        } else {
+          _dataItem["created_by"] = {
+            id: data_user.id,
+            username: data_user.username,
+            avatar: data_user.avatar,
+            full_name: data_user.full_name,
+            email: data_user.email
+          }
         }
       }
 
       if (dataItem["updated_by"] && isNumber(dataItem["updated_by"])) {
         const data_user = await getUser(dataItem["updated_by"])
-        _dataItem["_doc"]["updated_by"] = {
-          id: data_user.id,
-          username: data_user.username,
-          avatar: data_user.avatar,
-          full_name: data_user.full_name,
-          email: data_user.email
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["updated_by"] = {
+            id: data_user.id,
+            username: data_user.username,
+            avatar: data_user.avatar,
+            full_name: data_user.full_name,
+            email: data_user.email
+          }
+        } else {
+          _dataItem["updated_by"] = {
+            id: data_user.id,
+            username: data_user.username,
+            avatar: data_user.avatar,
+            full_name: data_user.full_name,
+            email: data_user.email
+          }
         }
       }
 
-      resolve(_dataItem["_doc"])
+      if (_dataItem["_doc"]) {
+        resolve(_dataItem["_doc"])
+      } else {
+        resolve(_dataItem)
+      }
     })
     promises.push(promise)
   })

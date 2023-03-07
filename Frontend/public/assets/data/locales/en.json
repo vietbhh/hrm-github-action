@@ -4407,9 +4407,10 @@
       "post": {
         "text": {
           "like": "Like",
-          "comment": "Comment",
+          "comment": "comment",
+          "comments": "comments",
           "send": "Send",
-          "people_seen": "People seen",
+          "people_seen": "people seen",
           "others": "others",
           "see_more": "See more",
           "hide": "Hide",
@@ -4421,7 +4422,9 @@
           "other": "other",
           "and": "and",
           "all": "All",
-          "chat": "Chat"
+          "chat": "Chat",
+          "view_more_comment": "View more {comment} comment",
+          "view_more_comments": "View more {comment} comments"
         },
         "react": {
           "like": "Like",

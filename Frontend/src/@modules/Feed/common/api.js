@@ -39,8 +39,16 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/get-feed/" + id)
   },
 
+  async getGetFeedAndComment(id) {
+    return await axiosNodeApi.get("/feed/get-feed-and-comment/" + id)
+  },
+
   async postUpdatePost(data) {
     return await axiosNodeApi.post("/feed/update-post", data)
+  },
+
+  async postUpdateComment(data) {
+    return await axiosNodeApi.post("/feed/update-comment", data)
   },
 
   async postSubmitComment(data) {

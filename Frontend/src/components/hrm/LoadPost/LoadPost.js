@@ -21,7 +21,14 @@ const LoadPost = (props) => {
     setIdMedia = null, // function set idMedia
     reloadPostThenCloseModal = false
   } = props
-  const [state, setState] = useMergedState({})
+  const [state, setState] = useMergedState({
+    comment_more_count_original: data.comment_more_count
+  })
+
+  // ** function
+  const setCommentMoreCountOriginal = (value = 0) => {
+    setState({ comment_more_count_original: value })
+  }
 
   // ** useEffect
 
@@ -50,10 +57,21 @@ const LoadPost = (props) => {
           <div className="post-footer">
             <PostShowReaction data={data} />
             <div className="post-footer-button">
-              <ButtonReaction data={data} setData={setData} />
+              <ButtonReaction
+                data={data}
+                setData={setData}
+                comment_more_count_original={state.comment_more_count_original}
+                setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+              />
             </div>
           </div>
-          <PostComment data={data} dataMention={dataMention} />
+          <PostComment
+            data={data}
+            dataMention={dataMention}
+            setData={setData}
+            comment_more_count_original={state.comment_more_count_original}
+            setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+          />
         </>
       )}
     </div>

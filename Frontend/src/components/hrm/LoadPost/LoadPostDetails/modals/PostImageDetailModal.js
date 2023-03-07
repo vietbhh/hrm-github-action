@@ -26,7 +26,8 @@ const PostImageDetailModal = (props) => {
   const [state, setState] = useMergedState({
     data: {},
     id_previous: "",
-    id_next: ""
+    id_next: "",
+    comment_more_count_original: dataModal.comment_more_count
   })
   const imageRef = useRef(null)
   const refDivBackLeft = useRef(null)
@@ -48,6 +49,10 @@ const PostImageDetailModal = (props) => {
         medias: state.data.medias
       }
     })
+  }
+
+  const setCommentMoreCountOriginal = (value = 0) => {
+    setState({ comment_more_count_original: value })
   }
 
   // ** useEffect
@@ -74,6 +79,9 @@ const PostImageDetailModal = (props) => {
                   _data["url_source"] = URL.createObjectURL(response.data)
                   setState({ data: _data })
                 })
+              setState({
+                comment_more_count_original: _data.comment_more_count
+              })
             })
             .catch((err) => {})
         } else {
@@ -90,6 +98,9 @@ const PostImageDetailModal = (props) => {
             downloadApi.getPhoto(_data.source).then((response) => {
               _data["url_source"] = URL.createObjectURL(response.data)
               setState({ data: _data })
+            })
+            setState({
+              comment_more_count_original: _data.comment_more_count
             })
           })
           .catch((err) => {})
@@ -289,10 +300,25 @@ const PostImageDetailModal = (props) => {
                 <PostShowReaction data={state.data} short={true} />
               </div>
               <div className="right-button">
-                <ButtonReaction data={state.data} setData={setDataMedia} />
+                <ButtonReaction
+                  data={state.data}
+                  setData={setDataMedia}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                />
               </div>
               <div className="right-comment">
-                <PostComment data={state.data} dataMention={dataMention} />
+                <PostComment
+                  data={state.data}
+                  dataMention={dataMention}
+                  setData={setDataMedia}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                />
               </div>
             </PerfectScrollbar>
           </div>
