@@ -16,10 +16,8 @@ const LoadPost = (props) => {
     setData, // function set lại data khi react, comment
 
     // only page post details
-    idPost = "",
     idMedia = "",
-    setIdMedia = null, // function set idMedia
-    reloadPostThenCloseModal = false
+    setIdMedia = null // function set idMedia
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count
@@ -44,12 +42,11 @@ const LoadPost = (props) => {
         <LoadPostMedia
           data={data}
           current_url={current_url}
-          idPost={idPost}
           idMedia={idMedia}
           setIdMedia={setIdMedia}
           dataMention={dataMention}
           setData={setData}
-          reloadPostThenCloseModal={reloadPostThenCloseModal}
+          setCommentMoreCountOriginal={setCommentMoreCountOriginal}
         />
       </div>
       {!offReactionAndComment && (

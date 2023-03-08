@@ -62,12 +62,12 @@ const ReactionDetailModal = (props) => {
 
     return (
       <div className="mb-1">
-        <span>
-          {useFormatMessage("modules.feed.post.text.and")} {other}{" "}
+        <small>
+          +{other}{" "}
           {useFormatMessage(
             `modules.feed.post.text.${other === 1 ? "other" : "others"}`
           )}
-        </span>
+        </small>
       </div>
     )
   }
@@ -85,12 +85,12 @@ const ReactionDetailModal = (props) => {
 
     return (
       <div className="mb-1">
-        <span>
-          {useFormatMessage("modules.feed.post.text.and")} {other}{" "}
+        <small>
+          +{other}{" "}
           {useFormatMessage(
             `modules.feed.post.text.${other === 1 ? "other" : "others"}`
           )}
-        </span>
+        </small>
       </div>
     )
   }
