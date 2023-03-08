@@ -24,7 +24,8 @@ const PostCommentForm = (props) => {
     dataMention,
     setData,
     comment_more_count_original,
-    setCommentMoreCountOriginal
+    setCommentMoreCountOriginal,
+    scrollToBottom
   } = props
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
@@ -42,6 +43,7 @@ const PostCommentForm = (props) => {
   const userName = userData.username
   const fullName = userData.full_name
   const userId = userData.id
+  const currentTime = Date.now()
 
   // ** function
   const setSuggestions = (value) => {
@@ -120,6 +122,11 @@ const PostCommentForm = (props) => {
             setCommentMoreCountOriginal(res.data?.comment_more_count || 0)
           }
           setState({ loadingSubmit: false, image: null })
+          if (_.isFunction(scrollToBottom)) {
+            setTimeout(() => {
+              scrollToBottom()
+            }, 100)
+          }
         })
         .catch((err) => {
           setState({ loadingSubmit: false })
@@ -156,8 +163,8 @@ const PostCommentForm = (props) => {
 
       handleInsertEditorState("")
     }
-    if (document.getElementById("attach-image")) {
-      document.getElementById("attach-image").value = null
+    if (document.getElementById(`attach-image${currentTime}`)) {
+      document.getElementById(`attach-image${currentTime}`).value = null
     }
   }
 
@@ -165,6 +172,11 @@ const PostCommentForm = (props) => {
   useEffect(() => {
     setState({ mentions: dataMention, suggestions: dataMention })
   }, [dataMention])
+
+  useEffect(() => {
+    setEmptyEditorState()
+    setState({ image: null })
+  }, [data])
 
   // ** mention
   const { plugins, MentionSuggestions } = useMemo(() => {
@@ -223,7 +235,9 @@ const PostCommentForm = (props) => {
               <>
                 <Emoji handleInsertEditorState={handleInsertEditorState} />
 
-                <Label className={`mb-0 cursor-pointer`} for="attach-image">
+                <Label
+                  className={`mb-0 cursor-pointer`}
+                  for={`attach-image${currentTime}`}>
                   <div className="div-form__icon">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +255,7 @@ const PostCommentForm = (props) => {
 
                     <input
                       type="file"
-                      id="attach-image"
+                      id={`attach-image${currentTime}`}
                       accept="image/*"
                       disabled={false}
                       multiple

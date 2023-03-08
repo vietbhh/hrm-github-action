@@ -125,7 +125,8 @@ const PostShowReaction = (props) => {
 
           {data?.seen_count > 0 && !short && (
             <div className="div-seen">
-              38 {useFormatMessage("modules.feed.post.text.people_seen")}
+              {data?.seen_count}{" "}
+              {useFormatMessage("modules.feed.post.text.people_seen")}
             </div>
           )}
         </div>

@@ -20,8 +20,7 @@ const PostDetail = (props) => {
     dataMedia: [],
     loadingPost: true,
     _idMedia: "",
-    dataMention: [],
-    reloadPostThenCloseModal: false
+    dataMention: []
   })
   const { idPost, idMedia } = useParams()
 
@@ -49,7 +48,6 @@ const PostDetail = (props) => {
           ) {
             await downloadApi.getPhoto(data.source).then((response) => {
               data["url_thumb"] = URL.createObjectURL(response.data)
-              setState({ reloadPostThenCloseModal: true })
             })
           }
 
@@ -65,7 +63,6 @@ const PostDetail = (props) => {
                 window.history.replaceState(null, "", current_url)
               }
               data["medias"] = res_promise
-              setState({ reloadPostThenCloseModal: false })
             })
           }
           setState({ loadingPost: false, dataPost: data })
@@ -117,10 +114,8 @@ const PostDetail = (props) => {
               <LoadPost
                 data={state.dataPost}
                 current_url={current_url}
-                idPost={idPost}
                 idMedia={state._idMedia}
                 setIdMedia={(value) => setState({ _idMedia: value })}
-                reloadPostThenCloseModal={state.reloadPostThenCloseModal}
                 dataMention={state.dataMention}
                 setData={(data) => {
                   setState({
