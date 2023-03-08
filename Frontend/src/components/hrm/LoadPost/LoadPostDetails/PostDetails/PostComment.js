@@ -20,7 +20,8 @@ const PostComment = (props) => {
     dataMention,
     setData,
     comment_more_count_original,
-    setCommentMoreCountOriginal
+    setCommentMoreCountOriginal,
+    scrollToBottom
   } = props
   const [state, setState] = useMergedState({
     modal_reaction: false,
@@ -305,6 +306,7 @@ const PostComment = (props) => {
             setData={setData}
             comment_more_count_original={comment_more_count_original}
             setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+            scrollToBottom={scrollToBottom}
           />
         </div>
       </div>

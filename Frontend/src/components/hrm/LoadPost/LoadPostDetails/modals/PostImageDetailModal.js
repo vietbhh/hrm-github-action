@@ -3,6 +3,7 @@ import { useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
+import ReactDOM from "react-dom"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 import ButtonReaction from "../PostDetails/ButtonReaction"
@@ -33,8 +34,16 @@ const PostImageDetailModal = (props) => {
   const refDivBackLeft = useRef(null)
   const refDivBackRight = useRef(null)
   const refDivLeft = useRef(null)
+  const refDivComment = useRef(null)
 
   // ** function
+  const scrollToBottom = () => {
+    if (refDivComment.current) {
+      const chatContainer = ReactDOM.findDOMNode(refDivComment.current)
+      chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
+    }
+  }
+
   const handleCloseModal = () => {
     toggleModal()
     window.history.replaceState(null, "", current_url)
@@ -287,7 +296,9 @@ const PostImageDetailModal = (props) => {
           </div>
 
           <div className="div-right">
-            <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <PerfectScrollbar
+              options={{ wheelPropagation: false }}
+              ref={refDivComment}>
               <div className="right-header">
                 <PostHeader data={dataModal} />
               </div>
@@ -318,6 +329,7 @@ const PostImageDetailModal = (props) => {
                     state.comment_more_count_original
                   }
                   setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                  scrollToBottom={scrollToBottom}
                 />
               </div>
             </PerfectScrollbar>
