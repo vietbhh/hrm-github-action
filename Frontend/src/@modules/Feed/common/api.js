@@ -51,9 +51,25 @@ export const feedApi = {
     return await axiosNodeApi.post("/feed/update-comment", data)
   },
 
+  async postUpdateSubComment(data) {
+    return await axiosNodeApi.post("/feed/update-sub-comment", data)
+  },
+
   async postSubmitComment(data) {
     return await axiosNodeApi.post(
       "/feed/submit-comment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async postSubmitCommentReply(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-comment-reply",
       serialize(_.cloneDeep(data)),
       {
         headers: {

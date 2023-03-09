@@ -13,7 +13,6 @@ const PostShowReaction = (props) => {
   const { short, data } = props
   const [state, setState] = useMergedState({
     dataReaction: {},
-    comment_count: 0,
     modal_reaction: false
   })
 
