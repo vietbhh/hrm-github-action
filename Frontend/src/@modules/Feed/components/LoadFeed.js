@@ -21,7 +21,7 @@ const LoadFeed = (props) => {
     hasMore: false,
     hasMoreLazy: false,
     page: 0,
-    pageLength: 10,
+    pageLength: 5,
     totalPost: 0,
     loadingPost: false,
     loadingPostCreateNew: false,

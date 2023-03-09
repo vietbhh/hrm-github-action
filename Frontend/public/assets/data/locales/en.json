@@ -4424,7 +4424,8 @@
           "all": "All",
           "chat": "Chat",
           "view_more_comment": "View more {comment} comment",
-          "view_more_comments": "View more {comment} comments"
+          "view_more_comments": "View more {comment} comments",
+          "replies": "replies"
         },
         "react": {
           "like": "Like",
