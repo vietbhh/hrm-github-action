@@ -14,7 +14,7 @@ import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, Fragment } from "react"
 import createLinkifyPlugin from "@draft-js-plugins/linkify"
 
 import "@styles/react/libs/editor/editor.scss"
@@ -93,14 +93,14 @@ const EditorComponent = (props) => {
         {
           // may be use React.Fragment instead of div to improve performance after React 16
           (externalProps) => (
-            <div>
+            <Fragment>
               <BoldButton {...externalProps} />
               <ItalicButton {...externalProps} />
               <UnderlineButton {...externalProps} />
               <UnorderedListButton {...externalProps} />
               <OrderedListButton {...externalProps} />
               <CodeBlockButton {...externalProps} />
-            </div>
+            </Fragment>
           )
         }
       </Toolbar>
@@ -108,12 +108,12 @@ const EditorComponent = (props) => {
         {
           // may be use React.Fragment instead of div to improve performance after React 16
           (externalProps) => (
-            <div>
+            <Fragment>
               <BoldButton {...externalProps} />
               <ItalicButton {...externalProps} />
               <UnderlineButton {...externalProps} />
               <linkPlugin.LinkButton {...externalProps} />
-            </div>
+            </Fragment>
           )
         }
       </InlineToolbar>
