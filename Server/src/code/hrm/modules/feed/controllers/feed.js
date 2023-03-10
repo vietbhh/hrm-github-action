@@ -53,6 +53,10 @@ const submitPostController = async (req, res, next) => {
       type_feed_parent = "video"
     }
   }
+  if (body.file.length === 0 && body.arrLink.length > 0) {
+    type_feed_parent = "link"
+  }
+  const link = type_feed_parent === "link" ? body.arrLink : []
 
   const feedModelParent = new feedMongoModel({
     __user: req.__user,
@@ -64,7 +68,8 @@ const submitPostController = async (req, res, next) => {
     source: null,
     thumb: null,
     ref: null,
-    approve_status: body.approveStatus
+    approve_status: body.approveStatus,
+    link: link
   })
 
   try {
@@ -72,11 +77,11 @@ const submitPostController = async (req, res, next) => {
     const _id_parent = saveFeedParent._id
     let out = saveFeedParent
 
-    // ** check file image/video
     if (body.file.length === 0) {
       const _out = await handleDataBeforeReturn(out)
       return res.respond(_out)
     } else {
+      // ** check file image/video
       if (body.file.length === 1) {
         const result = await handleMoveFileTempToMain(body.file[0], storePath)
         handleDeleteFile(body.file[0])

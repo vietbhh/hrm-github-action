@@ -1,3 +1,4 @@
+import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
 import React from "react"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
@@ -48,6 +49,16 @@ const LoadPost = (props) => {
           setData={setData}
           setCommentMoreCountOriginal={setCommentMoreCountOriginal}
         />
+
+        {data.type === "link" && data.link[0] && (
+          <LinkPreview
+            url={data.link[0]}
+            maxLine={2}
+            minLine={2}
+            showGraphic={true}
+            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+          />
+        )}
       </div>
       {!offReactionAndComment && (
         <>

@@ -406,7 +406,6 @@
       gap: 10px;
 
       .div-comment {
-        cursor: pointer;
         font-weight: 300;
         font-size: 12px;
         line-height: 29px;
@@ -414,7 +413,6 @@
       }
 
       .div-seen {
-        cursor: pointer;
         font-weight: 300;
         font-size: 12px;
         line-height: 29px;
@@ -829,6 +827,20 @@
 
   .public-DraftEditorPlaceholder-inner {
     font-size: 14px;
+  }
+
+  a {
+    color: #377dff;
+
+    &:hover {
+      color: darken($color: #377dff, $amount: 15);
+      text-decoration: underline;
+    }
+  }
+
+  .preview-link-component {
+    border: 1px solid #f1f1f5;
+    height: 120px;
   }
 }
 

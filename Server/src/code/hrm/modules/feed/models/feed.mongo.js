@@ -22,7 +22,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   type: {
     type: String,
-    enum: ["post", "image", "video"],
+    enum: ["post", "image", "video", "link"],
     default: "post"
   },
   medias: {
@@ -70,6 +70,10 @@ const feedSchema = baseSchema("m_feed", {
   seen_count: {
     type: Number,
     default: 0
+  },
+  link: {
+    type: [String],
+    default: []
   },
 
   // ** source child / post: 1 image/video

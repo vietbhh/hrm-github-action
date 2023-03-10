@@ -1245,6 +1245,15 @@
     "@draft-js-plugins/buttons" "^4.0.0"
     "@draft-js-plugins/utils" "^4.0.0"
 
+"@draft-js-plugins/linkify@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@draft-js-plugins/linkify/-/linkify-4.2.1.tgz#a6b62a6c9ee3bb0bd164ea5a43e78cc9974fbe42"
+  integrity sha512-xB6J+HrGEbteyBrwQ8u0r+YrjQK6fNDfVBG14A89Ger+o/OiYqwmJs8GAM0C5riqYEJzQqK2mW+UUQCagD+gUQ==
+  dependencies:
+    clsx "^1.0.4"
+    linkify-it "^3.0.3"
+    tlds "^1.231.0"
+
 "@draft-js-plugins/mention@^5.2.1":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@draft-js-plugins/mention/-/mention-5.2.1.tgz#d641b68f7db2b168d479c9164a4b11f3bb0b206c"
@@ -11149,7 +11158,7 @@ linkify-it@^2.2.0:
   dependencies:
     uc.micro "^1.0.1"
 
-linkify-it@^3.0.1:
+linkify-it@^3.0.1, linkify-it@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-3.0.3.tgz#a98baf44ce45a550efb4d49c769d07524cc2fa2e"
   integrity sha512-ynTsyrFSdE5oZ/O9GEf00kPngmOfVwazR5GKDq6EYfhlpFug3J2zybX56a2PRRpc9P+FuSoGNAwjlbDs9jJBPQ==

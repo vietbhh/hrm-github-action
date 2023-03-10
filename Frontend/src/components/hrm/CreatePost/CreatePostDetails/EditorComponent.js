@@ -15,11 +15,13 @@ import createMentionPlugin, {
 } from "@draft-js-plugins/mention"
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar"
 import { useCallback, useEffect, useMemo } from "react"
+import createLinkifyPlugin from "@draft-js-plugins/linkify"
 
 import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
+import "@draft-js-plugins/linkify/lib/plugin.css"
 
 const EditorComponent = (props) => {
   const { dataMention, editorState, onEditorStateChange } = props
@@ -53,12 +55,14 @@ const EditorComponent = (props) => {
       const { InlineToolbar } = inlineToolbarPlugin
 
       const linkPlugin = createLinkPlugin()
+      const linkifyPlugin = createLinkifyPlugin()
 
       const plugins = [
         mentionPlugin,
         staticToolbarPlugin,
         inlineToolbarPlugin,
-        linkPlugin
+        linkPlugin,
+        linkifyPlugin
       ]
       return { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin }
     }, [])
