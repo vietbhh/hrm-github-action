@@ -123,3 +123,29 @@ export const renderImageReact = (type) => {
       return useFormatMessage("modules.feed.post.text.other")
   }
 }
+
+export const detectUrl = (txt, onlyGetLink = false) => {
+  if (onlyGetLink === false) {
+    const text = txt
+    const link = txt.replace(
+      /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim,
+      function (url) {
+        const text_href = 'href="' + url
+        if (text.includes(text_href)) {
+          return url
+        }
+        return '<a href="' + url + '" target="_blank">' + url + "</a>"
+      }
+    )
+    return link
+  } else {
+    const arr_link = []
+    txt.replace(
+      /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim,
+      function (url) {
+        arr_link.push(url)
+      }
+    )
+    return arr_link
+  }
+}
