@@ -5,7 +5,8 @@ import { Fragment, useEffect, useRef } from "react"
 const Emoji = (props) => {
   const { handleInsertEditorState } = props
   const [state, setState] = useMergedState({
-    showEmotion: false
+    showEmotion: false,
+    position: "top"
   })
 
   const emotionRef = useRef(null)
@@ -39,15 +40,20 @@ const Emoji = (props) => {
       <label
         className={`mb-0 cursor-pointer form-label`}
         ref={emotionIconRef}
-        onClick={() => {
+        onClick={(e) => {
           if (state.showEmotion === false) {
             setShowEmotion(true)
+            if (e.clientY && e.clientY <= 420) {
+              setState({ position: "bottom" })
+            } else {
+              setState({ position: "top" })
+            }
           }
         }}>
         <div
           className={`emotions-dropdown-menu shadow ${
             state.showEmotion ? "show" : ""
-          }`}>
+          } ${state.position === "bottom" ? "bottom" : ""}`}>
           <div className="emotions-dropdown-arrow"></div>
           <div className="div-emoji" ref={emotionRef}>
             <EmojiPicker
