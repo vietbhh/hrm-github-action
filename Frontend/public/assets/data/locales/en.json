@@ -113,6 +113,7 @@
     "workgroup": "Workgroup",
     "your_projects": "Your Projects",
     "your_workgroup": "Your Workgroup",
+    "setting_member": "Member Info Settings",
     "header": {
       "welcome": {
         "morning": {
@@ -4530,6 +4531,14 @@
         },
         "approved": "Approved"
       }
+    },
+    "setting_member": {
+      "field_name": "Field name",
+      "show_hide_info": "Show/hide info",
+      "show_information_title": "Show information",
+      "show_information_text": "Would you like to show {field} information on the profile",
+      "hide_information_title": "Hide information",
+      "hide_information_text": "Would you like to hide {field} information on the profile"
     }
   }
 }

@@ -138,6 +138,19 @@ const menuConfig = [
       </div>
     ),
     navLink: "/dashboard"
+  },
+  {
+    id: "setting-member",
+    title: "layout.setting_member",
+    type: "dropdown",
+    action: "login",
+    resource: "app",
+    icon: (
+      <div className="menu-icon green">
+        <i className="fa-solid fa-user-gear"></i>
+      </div>
+    ),
+    navLink: "/fri-net/setting-member"
   }
 ]
 

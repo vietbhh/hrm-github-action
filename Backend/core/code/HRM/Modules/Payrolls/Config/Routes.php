@@ -27,7 +27,6 @@ $routes->get('payrolls/close-payroll/(:any)', 'Payrolls::close_payroll_get/$1',[
 $routes->add('payrolls/close-payroll/(:any)/?(:any)?', 'Payrolls::closePayroll/$1/$2',['namespace' => 'HRM\Modules\Payrolls\Controllers']);
 $routes->get('payrolls/export-excel/(:any)', 'Payrolls::export_excel_get/$1',['namespace' => 'HRM\Modules\Payrolls\Controllers']);
 $routes->post('payrolls/send-payslip', 'Payrolls::send_payslip_post',['namespace' => 'HRM\Modules\Payrolls\Controllers']);
-$routes->add('payrolls/get-table-payroll/(:any)/?(:any)?/?(:any)?/?(:any)?', 'Payrolls::getTablePayroll/$1/$2/$3/$4',['namespace' => 'HRM\Modules\Payrolls\Controllers']);
 
 	/*** Route for Settings ***/
 $routes->get('payrolls-settings', 'Settings::index_get',['namespace' => 'HRM\Modules\Payrolls\Controllers']);
