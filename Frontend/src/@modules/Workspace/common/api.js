@@ -37,5 +37,14 @@ export const workspaceApi = {
         disableLoading: true
       }
     )
+  },
+  async loadMedia(id, params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(
+      `/workspace/load-data-media/${id}?get${strParams}`,
+      {
+        disableLoading: true
+      }
+    )
   }
 }

@@ -4455,7 +4455,13 @@
         "group_rules": "Group rules",
         "member": "Member",
         "media": "Media",
-        "request_to_join": "Request to join"
+        "request_to_join": "Request to join",
+        "tab_media": {
+          "files": "Files",
+          "photos": "Photos",
+          "videos": "Videos",
+          "links": "Links"
+        }
       },
       "fields": {
         "workspace_name": "Workspace name",

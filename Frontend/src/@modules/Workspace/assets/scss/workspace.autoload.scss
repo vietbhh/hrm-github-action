@@ -45,7 +45,6 @@
     color: rgb(179, 179, 179);
   }
 
-
   .tab-content {
     .tab-introduction {
       .card {
@@ -95,6 +94,29 @@
 
       .border-bot {
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .tab-media {
+      .media-file-item {
+        .image-container {
+          height: 40px;
+          width: 40px;
+
+          img {
+            height: 100%;
+            width: 100%;
+            border-radius: 5px;
+            object-fit: cover;
+            object-position: center center;
+          }
+        }
+
+        .info {
+          small {
+            font-size: 11px;
+          }
+        }
       }
     }
   }

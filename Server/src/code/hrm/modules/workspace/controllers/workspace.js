@@ -1,6 +1,7 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
+import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { getUsers, usersModel } from "#app/models/users.mysql.js"
-import { isEmpty } from "lodash-es"
+import { isEmpty, forEach } from "lodash-es"
 import { Op } from "sequelize"
 
 const saveWorkspace = async (req, res, next) => {
@@ -129,7 +130,7 @@ const _handleRemoveMember = (workspace, requestData) => {
     workspace?.members === undefined
       ? []
       : workspace.members.filter((item) => {
-          return item !== requestData.data.id 
+          return item !== requestData.data.id
         })
 
   return { ...workspace._doc, administrators: administrators, members: members }
@@ -385,8 +386,70 @@ const loadDataMember = async (req, res, next) => {
   }
 }
 
+const loadDataMedia = async (req, res, next) => {
+  const workspaceId = req.params.id
+  const mediaTypeNumber = req.query.media_type
+
+  if (isEmpty(workspaceId) || isEmpty(mediaTypeNumber)) {
+    return res.fail("missing_workspace_id_or_media_type")
+  }
+
+  if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
+    res.fail("invalid_work_space_id")
+  }
+
+  try {
+    const workspace = await workspaceMongoModel.findById(workspaceId)
+    if (workspace === null) {
+      res.failNotFound("work_space_not_found")
+    }
+
+    const listFeed = await feedMongoModel.find({
+      permission: "workspace",
+      permission_ids: workspaceId,
+      medias: { $exists: true, $ne: [] },
+      "medias.type": _getMediaType(parseInt(mediaTypeNumber))
+    })
+
+    const requestMedia = _getMediaType(parseInt(mediaTypeNumber))
+    const result = {}
+    listFeed.map((item) => {
+      item.medias.map((itemMedia) => {
+        if (itemMedia.type === requestMedia) {
+          const feedId = item._id.toString()
+          if (result[feedId] === undefined) {
+            result[feedId] = {
+              info: item,
+              data: []
+            }
+          }
+
+          result[feedId]["data"].push(itemMedia)
+        }
+      })
+    })
+    return res.respond(result)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
 const _handleUpdateWorkspace = (condition, dataUpdate) => {
   return
+}
+
+const _getMediaType = (mediaTypeNumber) => {
+  if (mediaTypeNumber === 1) {
+    return "file"
+  } else if (mediaTypeNumber === 2) {
+    return "image"
+  } else if (mediaTypeNumber === 3) {
+    return "video"
+  } else if (mediaTypeNumber === 4) {
+    return "links"
+  }
+
+  return ""
 }
 
 const arrayMove = (arr, oldIndex, newIndex) => {
@@ -460,5 +523,6 @@ export {
   saveCoverImage,
   updateWorkspace,
   sortGroupRule,
-  loadDataMember
+  loadDataMember,
+  loadDataMedia
 }
