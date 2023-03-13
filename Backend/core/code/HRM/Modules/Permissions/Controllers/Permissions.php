@@ -608,9 +608,6 @@ class Permissions extends ErpController
 			foreach ($this->arrPermissionsCheckbox as $item) {
 				if (isset($getPost[$item['name']]) && filter_var($getPost[$item['name']], FILTER_VALIDATE_BOOLEAN)) {
 					foreach ($item['value'] as $per) {
-						echo '<pre>';
-						print_r($per);
-						echo '</pre>';
 						$authorize->addPermissionToGroup($per, $id);
 					}
 				}
