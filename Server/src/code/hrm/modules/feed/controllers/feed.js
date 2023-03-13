@@ -56,7 +56,7 @@ const submitPostController = async (req, res, next) => {
   if (body.file.length === 0 && body.arrLink.length > 0) {
     type_feed_parent = "link"
   }
-  const link = type_feed_parent === "link" ? body.arrLink : []
+  const link = body.arrLink
 
   const feedModelParent = new feedMongoModel({
     __user: req.__user,

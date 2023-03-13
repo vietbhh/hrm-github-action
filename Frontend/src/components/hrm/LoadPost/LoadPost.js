@@ -32,6 +32,31 @@ const LoadPost = (props) => {
   // ** useEffect
 
   // ** render
+  const renderBody = () => {
+    if (data.type === "link" && data.link[0]) {
+      return (
+        <LinkPreview
+          url={data.link[0]}
+          maxLine={2}
+          minLine={2}
+          showGraphic={true}
+          defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+        />
+      )
+    }
+
+    return (
+      <LoadPostMedia
+        data={data}
+        current_url={current_url}
+        idMedia={idMedia}
+        setIdMedia={setIdMedia}
+        dataMention={dataMention}
+        setData={setData}
+        setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+      />
+    )
+  }
 
   return (
     <div className="load-post">
@@ -40,25 +65,8 @@ const LoadPost = (props) => {
         <div id={`post-body-content-${data._id}`} className="post-body-content">
           <RenderContentPost data={data} />
         </div>
-        <LoadPostMedia
-          data={data}
-          current_url={current_url}
-          idMedia={idMedia}
-          setIdMedia={setIdMedia}
-          dataMention={dataMention}
-          setData={setData}
-          setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-        />
 
-        {data.type === "link" && data.link[0] && (
-          <LinkPreview
-            url={data.link[0]}
-            maxLine={2}
-            minLine={2}
-            showGraphic={true}
-            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
-          />
-        )}
+        {renderBody()}
       </div>
       {!offReactionAndComment && (
         <>
