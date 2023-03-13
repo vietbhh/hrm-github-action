@@ -25,7 +25,7 @@ const SetupNotificationModal = (props) => {
     const dataSave = { _id: dataWorkspace._id }
     dataSave.notification = values.notification
 
-    workspaceApi.update(dataSave).then((res) => {
+    workspaceApi.update(dataWorkspace._id, dataSave).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")

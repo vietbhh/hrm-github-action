@@ -1,30 +1,12 @@
-import {
-  ErpInput,
-  ErpSelect,
-  ErpSwitch
-} from "@apps/components/common/ErpField"
+import { ErpSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import LoadPost from "components/hrm/LoadPost/LoadPost"
-import { useEffect, Fragment } from "react"
-import { FormProvider, set, useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  TabContent,
-  TabPane,
-  CardHeader,
-  Row,
-  Col,
-  CardFooter,
-  Button,
-  Spinner
-} from "reactstrap"
+import { Fragment, useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { Button, Card, CardBody, Spinner } from "reactstrap"
 import { workspaceApi } from "../common/api"
-import TabFeed from "../components/detail/TabFeed/TabFeed"
-import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 
 import PerfectScrollbar from "react-perfect-scrollbar"
 const findKeyByValue = (arr = [], value) => {
@@ -50,7 +32,9 @@ const PendingPostWorkspace = () => {
     loading: false,
     listPost: [],
     sort: "desc",
-    page: 1
+    page: 1,
+    recordsTotal: 0,
+    pageLength: 10
   })
 
   const current_url = window.location.pathname
@@ -78,16 +62,17 @@ const PendingPostWorkspace = () => {
       page: state.page,
       sort: state.sort,
       id: params.id,
+      pageLength: state.pageLength,
       ...props
     }
     setState({ loading: true })
     workspaceApi.loadPost(paramsSend).then((res) => {
-      console.log("res DetailWS", res.data.results)
       setState({
         listPost: res.data.results,
         loading: false,
         page: paramsSend.page,
-        sort: paramsSend.sort
+        sort: paramsSend.sort,
+        recordsTotal: res.data.recordsTotal
       })
     })
   }
@@ -96,8 +81,8 @@ const PendingPostWorkspace = () => {
   }, [])
 
   const endScrollLoad = () => {
+    console.log("runnnnn", state)
     const page = state.page + 1
-    console.log("runnnnn")
     if (state.recordsTotal > state.listPost.length) {
       loadData({ page: page, search: state.search })
     }
@@ -114,7 +99,7 @@ const PendingPostWorkspace = () => {
   const renderPost = (arrData = []) => {
     return arrData.map((item, key) => {
       return (
-        <Card>
+        <Card key={key}>
           <CardBody className="p-0">
             <div className="load-feed">
               <LoadPost
@@ -156,6 +141,7 @@ const PendingPostWorkspace = () => {
       )
     })
   }
+
   return (
     <Fragment>
       <div className="workspace-setting row">
@@ -169,7 +155,6 @@ const PendingPostWorkspace = () => {
                 <ErpSelect
                   name="sort"
                   nolabel
-                  useForm={methods}
                   loading={state.loading}
                   label={useFormatMessage(
                     "modules.workspace.fields.workspace_type"
@@ -184,14 +169,26 @@ const PendingPostWorkspace = () => {
               </div>
             </CardBody>
           </Card>
-          <PerfectScrollbar
-            onYReachEnd={() => console.log("reunnn")}
-            style={{
-              maxHeight: "500px",
-              minHeight: "200px"
-            }}>
-            <div className="feed">{renderPost(state.listPost)}</div>
-          </PerfectScrollbar>
+          {state.listPost.length <= 0 && (
+            <div className="text-center mt-2 ">
+              <h4 className="mb-2">The workspace has no pending posts</h4>
+              <Link to={`/workspace/${params.id}`}>
+                <Button color="primary">View other posts</Button>
+              </Link>
+            </div>
+          )}
+          {state.listPost.length > 0 && (
+            <div className="feed w-100">
+              <PerfectScrollbar
+                onYReachEnd={() => endScrollLoad()}
+                style={{
+                  maxHeight: "800px",
+                  minHeight: "200px"
+                }}>
+                {renderPost(state.listPost)}
+              </PerfectScrollbar>
+            </div>
+          )}
         </div>
       </div>
     </Fragment>

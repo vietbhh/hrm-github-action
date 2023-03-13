@@ -9,6 +9,7 @@ import SetupNotificationModal from "../modals/SetupNotificationModal"
 import notification from "@apps/utility/notification"
 import Photo from "@apps/modules/download/pages/Photo"
 import { useEffect } from "react"
+import { Link } from "react-router-dom"
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
   const [state, setState] = useMergedState({
@@ -22,13 +23,11 @@ const WorkspaceHeader = (props) => {
     setState({ inviteModal: !state.inviteModal })
   }
   const saveCoverImage = (image) => {
-    setState({ loading: true })
     const dataPost = { ...data, image: image, id: data?._id }
     workspaceApi.saveCoverImage(dataPost).then((res) => {
       setState({ defaultWorkspaceCover: image })
     })
   }
-  console.log("data,", data)
   const handleDoneInvite = (dataUpdate, field) => {
     const infoWorkspace = { ...data }
     const arrID = infoWorkspace.members.concat(
@@ -36,8 +35,7 @@ const WorkspaceHeader = (props) => {
     )
 
     infoWorkspace.members = JSON.stringify(arrID)
-    console.log("infoWorkspace.members ", infoWorkspace.members)
-    workspaceApi.update(infoWorkspace).then((res) => {
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
@@ -54,24 +52,25 @@ const WorkspaceHeader = (props) => {
   const items = [
     {
       label: (
-        <a href={`/workspace/${data._id}/pending-posts`}>
-          <i className="fa-regular fa-list-ul"></i> Waiting for approval post
-        </a>
+        <Link to={`/workspace/${data._id}/pending-posts`}>
+          <i className="fa-regular fa-list-ul me-50"></i> Waiting for approval
+          post
+        </Link>
       ),
       key: "0"
     },
     {
       label: (
-        <a href={`/workspace/${data._id}/request-join`}>
-          <i className="fa-solid fa-user-lock"></i> Request to join
-        </a>
+        <Link to={`/workspace/${data._id}/request-join`}>
+          <i className="fa-duotone fa-user me-50"></i> Request to join
+        </Link>
       ),
       key: "3"
     },
     {
       label: (
         <div>
-          <i className="fa-sharp fa-regular fa-bells"></i> Setup notification
+          <i className="fa-solid fa-bell me-50"></i> Setup notification
         </div>
       ),
       key: "1",
@@ -79,9 +78,9 @@ const WorkspaceHeader = (props) => {
     },
     {
       label: (
-        <a href={`/workspace/${data._id}/setting`}>
-          <i className="fa-regular fa-gear"></i> Workspace settings
-        </a>
+        <Link to={`/workspace/${data._id}/setting`}>
+          <i className="fa-regular fa-gear  me-50"></i>Workspace settings
+        </Link>
       ),
       key: "2"
     }
@@ -94,7 +93,6 @@ const WorkspaceHeader = (props) => {
       setState({ defaultWorkspaceCover: defaultWorkspaceCover })
     }
   }, [data])
-  console.log("state", state)
   return (
     <Card className="pb-0">
       <div className="image-cover">

@@ -50,12 +50,10 @@ const saveCoverImage = async (req, res) => {
   const upp = await _uploadServices(pathUpload, [imageFile], true)
 
   try {
-    console.log("upp.uploadSuccess?.name ", upp.uploadSuccess?.name)
     const update = await workspaceMongoModel.findOneAndUpdate(
       { _id: req.body._id },
       { $set: { cover_image: upp.uploadSuccess[0]?.path } }
     )
-    console.log("update", update)
     return res.respond(update)
   } catch (err) {
     return res.fail(err.message)
@@ -82,19 +80,26 @@ const updateWorkspaceOLD = async (req, res) => {
 
 const getPostWorkspace = async (req, res) => {
   try {
-    console.log("req.body", req)
+    console.log("req.body", req.query)
+    const filter = {
+      permission_ids: req.query.id,
+      permission: "workspace",
+      approve_status: "pending"
+    }
+    const pageLength = req.query.pageLength
+    const skip = req.query.page <= 1 ? 0 : req.query.page * pageLength
     const postList = await feedMongoModel
-      .find({
-        permission_ids: req.query.id,
-        permission: "workspace",
-        approve_status: "pending"
-      })
+      .find(filter)
+      .skip(skip)
+      .limit(pageLength)
       .sort({
         _id: req.query.sort
       })
     const beforeReturn = await handleDataBeforeReturn(postList, true)
+    const feedCount = await feedMongoModel.find(filter).count()
     return res.respond({
-      results: beforeReturn
+      results: beforeReturn,
+      recordsTotal: feedCount
     })
   } catch (err) {
     return res.fail(err.message)
@@ -222,6 +227,7 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
 
 const updateWorkspace = async (req, res, next) => {
   const workspaceId = req.params.id
+
   if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
     res.fail("invalid_work_space_id")
   }
@@ -301,6 +307,9 @@ const updateWorkspace = async (req, res, next) => {
     } else {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
+      if (requestData?.members) {
+        updateData.members = JSON.parse(requestData.members)
+      }
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -514,7 +523,6 @@ const _getCurrentPageRequestJoin = async (requestData, workspace) => {
 }
 const approvePost = async (req, res) => {
   try {
-    console.log("req.body?.id", req.body?.id)
     const feedUpdate = await feedMongoModel.findByIdAndUpdate(req.body?.id, {
       ...req.body
     })
@@ -522,6 +530,32 @@ const approvePost = async (req, res) => {
   } catch {
     return res.fail(err.message)
   }
+}
+const loadFeed = async (req, res) => {
+  const request = req.query
+  const page = request.page
+  const pageLength = request.pageLength
+  const filter = {
+    permission_ids: req.query.workspace,
+    permission: "workspace",
+    approve_status: "approved"
+  }
+  const feed = await feedMongoModel
+    .find(filter)
+    .skip(page * pageLength)
+    .limit(pageLength)
+    .sort({
+      _id: "desc"
+    })
+  const data = await handleDataBeforeReturn(feed, true)
+  const feedCount = await feedMongoModel.find(filter).count()
+  const result = {
+    dataPost: data,
+    totalPost: feedCount,
+    page: page * 1 + 1,
+    hasMore: (page * 1 + 1) * pageLength < feedCount
+  }
+  return res.respond(result)
 }
 export {
   getWorkspace,
@@ -532,5 +566,6 @@ export {
   sortGroupRule,
   loadDataMember,
   getPostWorkspace,
-  approvePost
+  approvePost,
+  loadFeed
 }

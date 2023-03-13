@@ -18,18 +18,15 @@ export const workspaceApi = {
   async getDetailWorkspace(Id) {
     return await axiosNodeApi.get("/workspace/" + Id)
   },
-  async update(data) {
-    return await axiosNodeApi.post(
-      "/workspace/update",
-      serialize(_.cloneDeep(data))
-    )
-  },
   async getList(params) {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
   },
   async update(id, data) {
-    return await axiosNodeApi.post(`/workspace/update/${id}`, data)
+    return await axiosNodeApi.post(
+      `/workspace/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
   },
   async getDetail(workspaceId) {
     return await axiosNodeApi.get(`/workspace/${workspaceId}`)
@@ -55,5 +52,9 @@ export const workspaceApi = {
 
   async approvePost(data) {
     return await axiosNodeApi.post(`/workspace/approvePost`, data)
+  },
+  async loadFeed(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/load-feed?${strParams}`)
   }
 }

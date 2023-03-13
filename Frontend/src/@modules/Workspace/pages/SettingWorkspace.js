@@ -87,9 +87,7 @@ const SettingWorkspace = () => {
   })
   const { handleSubmit, formState, reset } = methods
   const onSubmit = (values) => {
-    values._id = params.id
-    console.log("values", values)
-    workspaceApi.update(values).then((res) => {
+    workspaceApi.update(params.id, values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })

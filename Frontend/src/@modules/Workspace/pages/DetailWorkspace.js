@@ -21,7 +21,7 @@ const DetailWorkspace = () => {
       })
     }
   }
-
+  console.log("state", state)
   const offsetTop = 90
   const offsetBottom = 30
 
@@ -73,7 +73,7 @@ const DetailWorkspace = () => {
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
           <TabPane tabId={1}>
-            <TabFeed />
+            <TabFeed detailWorkspace={state.detailWorkspace} />
           </TabPane>
           <TabPane tabId={2}>
             <div className="div-content">
