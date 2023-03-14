@@ -31,7 +31,7 @@ const MediaFileItem = (props) => {
       <Fragment>
         {mediaItem.data.map((item, index) => {
           return (
-            <Card className="mb-50">
+            <Card className="mb-50" key={`media-file-item-${item._id}`}>
               <CardBody className="border rounded d-flex align-items-center justify-content-between p-75">
                 <div className="d-flex align-items-start">
                   <div className="me-50 image-container">
@@ -56,7 +56,7 @@ const MediaFileItem = (props) => {
   }
 
   return (
-    <div className="ms-50 w-100 media-file-item">
+    <div className="ms-50 w-100 mb-2 media-file-item">
       <div className="p-1 d-flex align-items-center justify-content0-center">
         <Avatar className="me-50" />
         <p className="mb-0 font-weight-bold">Username</p>

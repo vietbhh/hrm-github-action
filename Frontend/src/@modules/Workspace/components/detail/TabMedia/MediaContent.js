@@ -1,44 +1,34 @@
 // ** React Imports
 import { useFormatMessage } from "@apps/utility/common"
-import { Fragment } from "react"
 // ** Styles
-import { Nav, NavItem, NavLink, Row, Col } from "reactstrap"
+import {
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  Col,
+  TabContent,
+  TabPane
+} from "reactstrap"
 // ** Components
-import MediaItem from "./MediaItem"
+import MediaTabContent from "./MediaTabContent"
 
 const MediaContent = (props) => {
   const {
     // ** props
+    id,
     mediaTabActive,
-    data,
+    modalPreview,
     // ** methods
-    setMediaTabActive
+    setMediaTabActive,
+    handleModalPreview
   } = props
 
   // ** render
-  const renderContent = () => {
-    if (Object.keys(data).length === 0) {
-      return "asdf"
-    }
-
-    return (
-      <Fragment>
-        {_.map(data, (item, index) => {
-          return (
-            <MediaItem
-              mediaItem={item}
-              mediaTabActive={mediaTabActive}
-              key={`media-item-${item._id}`}
-            />
-          )
-        })}
-      </Fragment>
-    )
-  }
 
   return (
     <div className="p-1 ps-2">
-      <Nav tabs className="mb-4">
+      <Nav tabs className="mb-0">
         <NavItem>
           <NavLink
             active={mediaTabActive === 1}
@@ -77,9 +67,52 @@ const MediaContent = (props) => {
         </NavItem>
       </Nav>
       <div className="mt-1">
-        <Row>
-          <Fragment>{renderContent()}</Fragment>
-        </Row>
+        <TabContent className="py-50" activeTab={mediaTabActive}>
+          <TabPane tabId={1}>
+            <Row>
+              <MediaTabContent
+                id={id}
+                mediaTabActive={mediaTabActive}
+                tabId={1}
+                modalPreview={modalPreview}
+                handleModalPreview={handleModalPreview}
+              />
+            </Row>
+          </TabPane>
+          <TabPane tabId={2}>
+            <Row>
+              <MediaTabContent
+                id={id}
+                mediaTabActive={mediaTabActive}
+                tabId={2}
+                modalPreview={modalPreview}
+                handleModalPreview={handleModalPreview}
+              />
+            </Row>
+          </TabPane>
+          <TabPane tabId={3}>
+            <Row>
+              <MediaTabContent
+                id={id}
+                mediaTabActive={mediaTabActive}
+                tabId={3}
+                modalPreview={modalPreview}
+                handleModalPreview={handleModalPreview}
+              />
+            </Row>
+          </TabPane>
+          <TabPane tabId={4}>
+            <Row>
+              <MediaTabContent
+                id={id}
+                mediaTabActive={mediaTabActive}
+                tabId={4}
+                modalPreview={modalPreview}
+                handleModalPreview={handleModalPreview}
+              />
+            </Row>
+          </TabPane>
+        </TabContent>
       </div>
     </div>
   )

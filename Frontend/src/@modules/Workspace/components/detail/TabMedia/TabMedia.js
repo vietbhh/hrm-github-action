@@ -8,6 +8,7 @@ import { Card, CardBody } from "reactstrap"
 // ** Components
 import MediaHeader from "./MediaHeader"
 import MediaContent from "./MediaContent"
+import PreviewMediaContentModal from "../../modals/PreviewMediaContentModal/PreviewMediaContentModal"
 
 const TabMedia = (props) => {
   const {
@@ -19,7 +20,7 @@ const TabMedia = (props) => {
   const [state, setState] = useMergedState({
     loading: true,
     mediaTabActive: 1,
-    data: {}
+    modalPreview: false
   })
 
   const { id } = useParams()
@@ -32,27 +33,11 @@ const TabMedia = (props) => {
     }
   }
 
-  const loadData = () => {
+  const handleModalPreview = () => {
     setState({
-      loading: true
+      modalPreview: !state.modalPreview
     })
-
-    workspaceApi
-      .loadMedia(id, {
-        media_type: state.mediaTabActive
-      })
-      .then((res) => {
-        setState({
-          data: res.data
-        })
-      })
-      .catch((err) => {})
   }
-
-  // ** effect
-  useEffect(() => {
-    loadData()
-  }, [state.mediaTabActive])
 
   // ** render
   return (
@@ -64,13 +49,22 @@ const TabMedia = (props) => {
           </div>
           <div>
             <MediaContent
+              id={id}
               mediaTabActive={state.mediaTabActive}
-              data={state.data}
+              modalPreview={state.modalPreview}
               setMediaTabActive={setMediaTabActive}
+              handleModalPreview={handleModalPreview}
             />
           </div>
         </CardBody>
       </Card>
+
+      {state.modalPreview && (
+        <PreviewMediaContentModal
+          modal={state.modalPreview}
+          handleModal={handleModalPreview}
+        />
+      )}
     </div>
   )
 }
