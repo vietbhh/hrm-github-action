@@ -64,10 +64,12 @@ const removeCoverImage = async (req, res) => {
   const id = req.body._id
 }
 
-const updateWorkspaceOLD = async (req, res) => {
+const addMemberByDepartment = async (req, res) => {
   const dataSave = { ...req.body }
   // const infoWS = await workspaceMongoModel.findById(dataSave._id)
+  console.log("data", dataSave)
 
+  return 1
   if (dataSave?.members) {
     dataSave.members = JSON.parse(req.body.members)
   }
@@ -567,5 +569,6 @@ export {
   loadDataMember,
   getPostWorkspace,
   approvePost,
-  loadFeed
+  loadFeed,
+  addMemberByDepartment
 }

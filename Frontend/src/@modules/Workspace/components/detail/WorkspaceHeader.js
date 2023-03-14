@@ -28,23 +28,29 @@ const WorkspaceHeader = (props) => {
       setState({ defaultWorkspaceCover: image })
     })
   }
-  const handleDoneInvite = (dataUpdate, field) => {
+  const handleDoneInvite = (dataUpdate, type) => {
     const infoWorkspace = { ...data }
-    const arrID = infoWorkspace.members.concat(
-      dataUpdate.map((x) => x["id"] * 1)
-    )
+    if (type === "members") {
+      const arrID = infoWorkspace.members.concat(
+        dataUpdate.map((x) => x["id"] * 1)
+      )
 
-    infoWorkspace.members = JSON.stringify(arrID)
-    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
-      if (res.statusText) {
-        notification.showSuccess({
-          text: useFormatMessage("notification.save.success")
-        })
-        onClickInvite()
-        setState({ loading: false })
-        loadData()
-      }
-    })
+      infoWorkspace.members = JSON.stringify(arrID)
+      workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+        if (res.statusText) {
+          notification.showSuccess({
+            text: useFormatMessage("notification.save.success")
+          })
+          onClickInvite()
+          setState({ loading: false })
+          loadData()
+        }
+      })
+    } else {
+      workspaceApi.addMemberByDepartment(infoWorkspace).then((res) => {
+        console.log("typetypetypetype", type)
+      })
+    }
   }
   const handleSetupNotification = () => {
     setState({ setupNotifiModal: !state.setupNotifiModal })
@@ -53,8 +59,8 @@ const WorkspaceHeader = (props) => {
     {
       label: (
         <Link to={`/workspace/${data._id}/pending-posts`}>
-          <i className="fa-regular fa-list-ul me-50"></i> Waiting for approval
-          post
+          <i className="fa-regular fa-list-ul me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.waiting_for_approval")}
         </Link>
       ),
       key: "0"
@@ -62,7 +68,8 @@ const WorkspaceHeader = (props) => {
     {
       label: (
         <Link to={`/workspace/${data._id}/request-join`}>
-          <i className="fa-duotone fa-user me-50"></i> Request to join
+          <i className="fa-duotone fa-user me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.request_to_join")}
         </Link>
       ),
       key: "3"
@@ -70,7 +77,8 @@ const WorkspaceHeader = (props) => {
     {
       label: (
         <div>
-          <i className="fa-solid fa-bell me-50"></i> Setup notification
+          <i className="fa-solid fa-bell me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.setup_notification")}
         </div>
       ),
       key: "1",
@@ -79,7 +87,8 @@ const WorkspaceHeader = (props) => {
     {
       label: (
         <Link to={`/workspace/${data._id}/setting`}>
-          <i className="fa-regular fa-gear  me-50"></i>Workspace settings
+          <i className="fa-regular fa-gear  me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.workspace_settings")}
         </Link>
       ),
       key: "2"

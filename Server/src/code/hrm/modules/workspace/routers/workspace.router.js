@@ -6,7 +6,8 @@ import {
   saveCoverImage,
   getPostWorkspace,
   approvePost,
-  loadFeed
+  loadFeed,
+  addMemberByDepartment
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -17,4 +18,5 @@ router.post("/save", saveWorkspace)
 router.post("/save-cover-image", saveCoverImage)
 router.post("/update/:id", updateWorkspace)
 router.post("/approvePost", approvePost)
+router.post("/add-member", addMemberByDepartment)
 export default router

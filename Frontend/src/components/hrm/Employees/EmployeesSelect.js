@@ -17,13 +17,20 @@ const EmployeesSelect = (props) => {
     search: "",
     members: [],
     departments: [],
-    jobTitles: [],
+    jobtitles: [],
     recordsTotal: [],
     perPage: 10,
-    dataSelected: []
+    dataSelected: [],
+    typeAdd: "members"
   })
   const handleSelected = (key) => {
-    const data = state.members
+    let data = state.members
+
+    if (state.typeAdd === "departments") {
+      data = state.departments
+    } else if (state.typeAdd === "jobtitles") {
+      data = state.jobtitles
+    }
     const dataSelected = [...state.dataSelected]
 
     const checkExist = checkExistSelected(data[key].id)
@@ -52,10 +59,6 @@ const EmployeesSelect = (props) => {
   }
   const renderMember = (data = []) => {
     return data.map((item, key) => {
-      const hasMatch = member_selected.find(function (value) {
-        return parseInt(value) === parseInt(item.id)
-      })
-
       const checked = checkExistSelected(item.id) >= 0 ?? true
       return (
         <Col sm={12} key={key}>
@@ -73,6 +76,38 @@ const EmployeesSelect = (props) => {
     })
   }
 
+  const renderDepartment = (data = []) => {
+    return data.map((item, key) => {
+      const checked = checkExistSelected(item.id) >= 0 ?? true
+      return (
+        <Col sm={12} key={key}>
+          <div
+            className="box-member d-flex"
+            onClick={() => handleSelected(key)}>
+            <i className="fa-regular fa-building me-1 ms-50"></i>
+            <div className="title">{item.name}</div>
+            <div className="ms-auto">
+              <ErpCheckbox checked={checked} />
+            </div>
+          </div>
+        </Col>
+      )
+    })
+  }
+  const renderDepartmentSelected = (data = []) => {
+    return data.map((item, key) => {
+      return (
+        <Col sm={12} key={item.id}>
+          <div
+            className="box-member d-flex"
+            onClick={() => handleSelected(key)}>
+            <i className="fa-regular fa-building me-1 ms-50"></i>
+            <div className="title">{item.name}</div>
+          </div>
+        </Col>
+      )
+    })
+  }
   const itemTab = () => {
     const arr = [
       {
@@ -82,7 +117,7 @@ const EmployeesSelect = (props) => {
             <p>Member</p>
           </div>
         ),
-        key: 1,
+        key: "members",
         children: (
           <div className="d-flex ">
             <div className="content-select">
@@ -139,8 +174,57 @@ const EmployeesSelect = (props) => {
             <p>Department</p>
           </div>
         ),
-        key: 2,
-        children: <div>under construction</div>
+        key: "departments",
+        children: (
+          <div className="d-flex ">
+            <div className="content-select">
+              <div className="title-tab-content mb-1">List department</div>
+              <Row>
+                <Col>
+                  <ErpInput
+                    nolabel
+                    placeholder="Search"
+                    prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                    onChange={(e) => handleFilterText(e.target.value)}
+                  />
+                </Col>
+              </Row>
+              <PerfectScrollbar
+                onYReachEnd={() => endScrollLoad()}
+                style={{
+                  maxHeight: "400px",
+                  minHeight: "50px"
+                }}>
+                <Row className="w-100">
+                  {renderDepartment(state.departments)}
+                </Row>
+              </PerfectScrollbar>
+            </div>
+
+            <div
+              className={`content-selected ${
+                !state.dataSelected.length && `d-flex align-items-center`
+              }`}>
+              {state.dataSelected.length === 0 && <EmptyContent />}
+              {state.dataSelected.length > 0 && (
+                <>
+                  <div className="title-tab-content">List selected</div>
+                  <div className="mt-1 mb-2">
+                    <i className="fa-solid fa-user-group me-50"></i>
+                    {state.dataSelected.length} department
+                  </div>
+                  <PerfectScrollbar
+                    style={{
+                      maxHeight: "400px",
+                      minHeight: "50px"
+                    }}>
+                    <Row>{renderDepartmentSelected(state.dataSelected)}</Row>
+                  </PerfectScrollbar>
+                </>
+              )}
+            </div>
+          </div>
+        )
       },
       {
         label: (
@@ -192,7 +276,21 @@ const EmployeesSelect = (props) => {
       })
     })
   }
-
+  const loadDepartment = (props) => {
+    defaultModuleApi.getList("departments").then((res) => {
+      const members = state.departments
+      const concat = !props.search
+        ? members.concat(res.data.results)
+        : res.data.results
+      setState({
+        departments: concat,
+        page: res.data.page,
+        recordsTotal: res.data.recordsTotal,
+        perPage: res.data.recordsFiltered,
+        ...props
+      })
+    })
+  }
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.recordsTotal > state.members.length) {
@@ -219,11 +317,19 @@ const EmployeesSelect = (props) => {
 
   useEffect(() => {
     loadData({ page: state.page, search: state.search })
+    loadDepartment({ page: 1 })
   }, [])
 
   useEffect(() => {
-    handleSelect(state.dataSelected)
+    handleSelect(state.dataSelected, state.typeAdd)
   }, [state.dataSelected])
-  return <Tabs className="tab-invite" tabPosition={"left"} items={itemTab()} />
+  return (
+    <Tabs
+      className="tab-invite"
+      tabPosition={"left"}
+      items={itemTab()}
+      onTabClick={(key) => setState({ typeAdd: key, dataSelected: [] })}
+    />
+  )
 }
 export default EmployeesSelect

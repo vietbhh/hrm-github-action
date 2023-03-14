@@ -5,25 +5,19 @@ import {
 } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { useEffect, Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import {
+  Button,
   Card,
   CardBody,
-  CardTitle,
-  TabContent,
-  TabPane,
-  CardHeader,
-  Row,
-  Col,
   CardFooter,
-  Button,
+  CardHeader,
+  CardTitle,
   Spinner
 } from "reactstrap"
 import { workspaceApi } from "../common/api"
-import TabFeed from "../components/detail/TabFeed/TabFeed"
-import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -99,11 +93,9 @@ const SettingWorkspace = () => {
   const loadData = () => {
     setState({ loading: true })
     workspaceApi.getDetailWorkspace(params.id).then((res) => {
-      console.log("res DetailWS", res.data)
       setState({ detailWorkspace: res.data, loading: false })
     })
   }
-  console.log("detailWorkspace", state.detailWorkspace)
   useEffect(() => {
     loadData()
   }, [])
@@ -210,9 +202,16 @@ const SettingWorkspace = () => {
                 />
                 <div className="mt-2 field_switch">
                   <div>
-                    <div className="label">Review post</div>
+                    <div className="label">
+                      {" "}
+                      {useFormatMessage(
+                        "modules.workspace.display.review_post"
+                      )}
+                    </div>
                     <div className="sub-label">
-                      All member posts must be approved by administrator
+                      {useFormatMessage(
+                        "modules.workspace.text.sub_review_post"
+                      )}
                     </div>
                   </div>
                   <ErpSwitch

@@ -24,7 +24,8 @@ const InviteWorkspaceModal = (props) => {
     jobTitles: [],
     recordsTotal: [],
     perPage: 10,
-    dataSelected: []
+    dataSelected: [],
+    typeAdd: "members"
   })
 
   const onSubmit = (values) => {}
@@ -35,11 +36,12 @@ const InviteWorkspaceModal = (props) => {
 
   const handleAdd = () => {
     const dataSelected = state.dataSelected
-    handleDone(dataSelected, "members")
+    console.log("dataSelected", dataSelected)
+    handleDone(dataSelected, state.typeAdd)
   }
 
-  const getDataSelect = (data = []) => {
-    setState({ dataSelected: data })
+  const getDataSelect = (data = [], typeAdd) => {
+    setState({ dataSelected: data, typeAdd: typeAdd })
   }
 
   return (

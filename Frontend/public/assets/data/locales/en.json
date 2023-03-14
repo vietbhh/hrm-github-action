@@ -4457,7 +4457,9 @@
         "view_profile": "View profile",
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
-        "approve_all": "Approve all request"
+        "approve_all": "Approve all request",
+        "approve_all_posts": "Approve all",
+        "reject_all_posts": "Reject all"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4471,7 +4473,10 @@
         "media": "Media",
         "workspace_infomation" : "Workspace infomation",
         "workspace_settings" : "Workspace settings",
-        "request_to_join": "Request to join"
+        "request_to_join": "Request to join",
+        "waiting_for_approval" : "Waiting for approval",
+        "setup_notification" : "Setup notification",
+        "review_post": "Review post"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4528,7 +4533,11 @@
           "title": "Are you sure?",
           "content": "{name} will be removed form this workspace."
         },
-        "approved": "Approved"
+        "approved": "Approved",
+        "no_pending_posts" : "The workspace has no pending posts",
+        "view_other_posts" : "View other posts",
+        "pending_posts": "Pending posts",
+        "sub_review_post" : "All member posts must be approved by administrator"
       }
     }
   }

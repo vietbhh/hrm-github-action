@@ -9,6 +9,7 @@ import { Button, Card, CardBody, Spinner } from "reactstrap"
 import { workspaceApi } from "../common/api"
 
 import PerfectScrollbar from "react-perfect-scrollbar"
+import SwAlert from "@apps/utility/SwAlert"
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -45,18 +46,6 @@ const PendingPostWorkspace = () => {
   })
   const { handleSubmit, formState, reset } = methods
 
-  const onSubmit = (values) => {
-    values._id = params.id
-    console.log("values", values)
-    workspaceApi.update(values).then((res) => {
-      notification.showSuccess({
-        text: useFormatMessage("notification.save.success")
-      })
-      reset()
-      navigate(`/workspace/${res.data._id}`)
-    })
-  }
-
   const loadData = (props) => {
     const paramsSend = {
       page: state.page,
@@ -81,7 +70,6 @@ const PendingPostWorkspace = () => {
   }, [])
 
   const endScrollLoad = () => {
-    console.log("runnnnn", state)
     const page = state.page + 1
     if (state.recordsTotal > state.listPost.length) {
       loadData({ page: page, search: state.search })
@@ -94,6 +82,29 @@ const PendingPostWorkspace = () => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
+    })
+  }
+
+  const handleApproveAll = (id, status) => {
+    const textBtn = "modules.workspace.buttons.approve_all_posts"
+    if (status === "rejected") {
+      textBtn = "modules.workspace.buttons.reject_all_posts"
+    }
+    SwAlert.showWarning({
+      confirmButtonText: useFormatMessage(textBtn)
+    }).then((res) => {
+      if (res.value) {
+        console.log("status", status)
+        return
+        workspaceApi
+          .approvePost({ id: id, approve_status: status })
+          .then((res) => {
+            loadData()
+            notification.showSuccess({
+              text: useFormatMessage("notification.save.success")
+            })
+          })
+      }
     })
   }
   const renderPost = (arrData = []) => {
@@ -150,7 +161,8 @@ const PendingPostWorkspace = () => {
             <CardBody>
               <div className="d-flex align-items-center">
                 <h4 className="w-100 ">
-                  {state.listPost.length} Pending posts
+                  <span className="me-50">{state.listPost.length}</span>
+                  {useFormatMessage("modules.workspace.text.pending_posts")}
                 </h4>
                 <ErpSelect
                   name="sort"
@@ -168,12 +180,46 @@ const PendingPostWorkspace = () => {
                 />
               </div>
             </CardBody>
+            <div className="p-1 text-end d-flex">
+              <Button
+                type="submit"
+                color="outline-secondary"
+                className="me-1 w-100"
+                onClick={() => handleApproveAll(params.id, "rejected")}
+                disabled={
+                  state.loading ||
+                  formState.isSubmitting ||
+                  formState.isValidating
+                }>
+                {state.loading && <Spinner size="sm" className="me-50" />}
+                {useFormatMessage("modules.workspace.buttons.reject_all_posts")}
+              </Button>
+              <Button
+                type="submit"
+                color="primary"
+                className="ms-auto w-100"
+                onClick={() => handleApproveAll(params.id, "approved")}
+                disabled={
+                  state.loading ||
+                  formState.isSubmitting ||
+                  formState.isValidating
+                }>
+                {state.loading && <Spinner size="sm" className="me-50" />}
+                {useFormatMessage(
+                  "modules.workspace.buttons.approve_all_posts"
+                )}
+              </Button>
+            </div>
           </Card>
           {state.listPost.length <= 0 && (
             <div className="text-center mt-2 ">
-              <h4 className="mb-2">The workspace has no pending posts</h4>
+              <h4 className="mb-2">
+                {useFormatMessage("modules.workspace.text.no_pending_posts")}
+              </h4>
               <Link to={`/workspace/${params.id}`}>
-                <Button color="primary">View other posts</Button>
+                <Button color="primary">
+                  {useFormatMessage("modules.workspace.text.view_other_posts")}
+                </Button>
               </Link>
             </div>
           )}
@@ -182,7 +228,7 @@ const PendingPostWorkspace = () => {
               <PerfectScrollbar
                 onYReachEnd={() => endScrollLoad()}
                 style={{
-                  maxHeight: "800px",
+                  maxHeight: "750px",
                   minHeight: "200px"
                 }}>
                 {renderPost(state.listPost)}
