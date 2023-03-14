@@ -1,0 +1,129 @@
+@import "@scss/friday";
+
+.user-introduction {
+  .user-information {
+    background-color: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 20px;
+
+    .user__header {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      border-top-left-radius: 12px;
+      border-left: 3px solid #0082ff;
+      border-bottom: 1px solid #e6e6e6;
+
+      .title {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .menu-icon {
+        background: #0082ff;
+        min-width: 36px;
+        min-height: 36px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.8;
+        margin-right: 15px;
+
+        svg {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+        }
+
+        &.blue {
+          background: #0082ff;
+        }
+
+        &.green {
+          background: #69dca1;
+        }
+
+        &.orange {
+          background: #ffc66f;
+        }
+
+        &.red {
+          background: #fa6d7d;
+        }
+
+        &.purple {
+          background: #6d85ff;
+        }
+
+        i {
+          margin-right: 0;
+          color: #ffffff;
+          font-size: 18px;
+        }
+      }
+
+      .div-button {
+        margin-left: auto;
+
+        .btn-edit {
+          border-radius: 10px;
+          padding: 5px 10px;
+          background: #ffffff;
+          color: #0082ff;
+          font-weight: 600;
+
+          &:hover {
+            background: lighten($color: #0082ff, $amount: 45);
+          }
+        }
+
+        .btn-cancel {
+          border-radius: 10px;
+          padding: 5px 0;
+          background: #f0f0f0 !important;
+          color: #18202a;
+          font-weight: 600;
+          margin-right: 15px;
+          width: 100px;
+
+          &:hover {
+            background: darken($color: #f0f0f0, $amount: 5) !important;
+          }
+        }
+
+        .btn-save {
+          width: 100px;
+          border-radius: 10px;
+          padding: 5px 0;
+          font-weight: 600;
+          background: #377dff !important;
+          border-color: #377dff !important;
+          color: #ffffff !important;
+
+          &:hover {
+            background: darken($color: #377dff, $amount: 5) !important;
+          }
+        }
+      }
+    }
+
+    .user__body {
+      padding: 10px 25px;
+
+      .height-55 {
+        height: 55px;
+      }
+
+      .form-group {
+        align-items: center;
+      }
+
+      .text {
+        font-weight: 500;
+        color: #18202a;
+      }
+    }
+  }
+}
