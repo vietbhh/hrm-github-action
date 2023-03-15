@@ -67,7 +67,9 @@ const removeCoverImage = async (req, res) => {
 const addMemberByDepartment = async (req, res) => {
   const dataSave = { ...req.body }
   // const infoWS = await workspaceMongoModel.findById(dataSave._id)
-  console.log("data", dataSave)
+  if (dataSave.departments) {
+    console.log("data", JSON.parse(dataSave.departments))
+  }
 
   return 1
   if (dataSave?.members) {

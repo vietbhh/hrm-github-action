@@ -10,6 +10,7 @@ import notification from "@apps/utility/notification"
 import Photo from "@apps/modules/download/pages/Photo"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
   const [state, setState] = useMergedState({
@@ -47,9 +48,22 @@ const WorkspaceHeader = (props) => {
         }
       })
     } else {
-      workspaceApi.addMemberByDepartment(infoWorkspace).then((res) => {
-        console.log("typetypetypetype", type)
-      })
+      const arrIdDepartment = JSON.stringify(dataUpdate.map((x) => x["id"] * 1))
+      console.log("dataUpdate", arrIdDepartment)
+      defaultModuleApi.getList(
+        "employees",
+        {
+          filters: { department_id: dataUpdate.map((x) => x["id"] * 1) }
+        },
+        "employees/load"
+      )
+
+      return
+      workspaceApi
+        .addMemberByDepartment({ departments: arrIdDepartment })
+        .then((res) => {
+          console.log("typetypetypetype", type)
+        })
     }
   }
   const handleSetupNotification = () => {

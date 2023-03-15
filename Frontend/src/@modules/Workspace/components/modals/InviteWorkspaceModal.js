@@ -55,7 +55,7 @@ const InviteWorkspaceModal = (props) => {
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => handleModal()}>
-        Add member to group
+        {useFormatMessage("modules.workspace.display.add_member_to_ws")}
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>

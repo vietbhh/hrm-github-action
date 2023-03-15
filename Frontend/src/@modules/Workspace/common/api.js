@@ -56,5 +56,11 @@ export const workspaceApi = {
   async loadFeed(params) {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/workspace/load-feed?${strParams}`)
+  },
+  async addMemberByDepartment(data) {
+    return await axiosNodeApi.post(
+      `/workspace/add-member`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

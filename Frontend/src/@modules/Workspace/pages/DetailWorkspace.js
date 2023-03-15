@@ -21,7 +21,6 @@ const DetailWorkspace = () => {
       })
     }
   }
-  console.log("state", state)
   const offsetTop = 90
   const offsetBottom = 30
 
@@ -50,7 +49,6 @@ const DetailWorkspace = () => {
   }
   const loadData = () => {
     workspaceApi.getDetailWorkspace(params.id).then((res) => {
-      console.log("res DetailWS", res.data)
       setState({ detailWorkspace: res.data })
     })
   }

@@ -139,6 +139,7 @@ export const defaultModuleApi = {
       optionImgKey: null
     }
     const sendProps = { ...defaultProps, ...props }
+    console.log("sendProps", sendProps)
     const {
       isLoadOption,
       perPage,
@@ -225,9 +226,10 @@ export const defaultModuleApi = {
   },
   async getLinkContent(data) {
     return await axiosApi.get(
-      `link-preview/get-link-content?link=${data.link}`
-    , {
-      disableLoading: true
-    })
+      `link-preview/get-link-content?link=${data.link}`,
+      {
+        disableLoading: true
+      }
+    )
   }
 }
