@@ -120,7 +120,7 @@ const Introduction = (props) => {
 
       {!state.loadPage && (
         <Fragment>
-          {permits.personalInfo.view && (
+          {permits.personalInfo.view && !_.isEmpty(state.personalInfoField) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.personalInfoField}
@@ -135,7 +135,7 @@ const Introduction = (props) => {
             />
           )}
 
-          {permits.address.view && (
+          {permits.address.view && !_.isEmpty(state.addressField) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.addressField}
@@ -148,7 +148,7 @@ const Introduction = (props) => {
             />
           )}
 
-          {permits.bankInformation.view && (
+          {permits.bankInformation.view && !_.isEmpty(state.bankInfoField) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.bankInfoField}
@@ -163,7 +163,7 @@ const Introduction = (props) => {
             />
           )}
 
-          {permits.socialNetwork.view && (
+          {permits.socialNetwork.view && !_.isEmpty(state.socialNetwork) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.socialNetwork}
@@ -178,7 +178,7 @@ const Introduction = (props) => {
             />
           )}
 
-          {permits.other.view && (
+          {permits.other.view && !_.isEmpty(state.otherField) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.otherField}
@@ -191,7 +191,7 @@ const Introduction = (props) => {
             />
           )}
 
-          {permits.job.view && (
+          {permits.job.view && !_.isEmpty(state.jobField) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.jobField}
@@ -206,7 +206,7 @@ const Introduction = (props) => {
             />
           )}
 
-          {permits.payroll.view && (
+          {permits.payroll.view && !_.isEmpty(state.payrollField) && (
             <IntroductionView
               employeeData={employeeData}
               arrField={state.payrollField}
