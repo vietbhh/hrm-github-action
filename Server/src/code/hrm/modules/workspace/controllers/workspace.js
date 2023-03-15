@@ -1,7 +1,7 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { getUsers, usersModel } from "#app/models/users.mysql.js"
-import { isEmpty, forEach } from "lodash-es"
+import { isEmpty, forEach, map } from "lodash-es"
 import { Op } from "sequelize"
 
 const saveWorkspace = async (req, res, next) => {
@@ -428,6 +428,32 @@ const loadDataMedia = async (req, res, next) => {
         }
       })
     })
+
+    if (requestMedia === "file") {
+      const allUser = await usersModel.findAll({ raw: true })
+      const newResult = map(result, (item, index) => {
+        const [userInfo] = allUser.filter(
+          (itemFilter) => parseInt(itemFilter.id) === parseInt(item.info.owner)
+        )
+
+        return {
+          ...item,
+          info: {
+            ...item.info._doc,
+            owner_info: {
+              id: userInfo.id,
+              username: userInfo.username,
+              avatar: userInfo.avatar,
+              email: userInfo.email,
+              full_name: userInfo.full_name
+            }
+          }
+        }
+      })
+
+      return res.respond(newResult)
+    }
+
     return res.respond(result)
   } catch (err) {
     return res.fail(err.message)
@@ -446,7 +472,7 @@ const _getMediaType = (mediaTypeNumber) => {
   } else if (mediaTypeNumber === 3) {
     return "video"
   } else if (mediaTypeNumber === 4) {
-    return "links"
+    return "link"
   }
 
   return ""

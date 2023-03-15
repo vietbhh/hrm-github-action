@@ -39,6 +39,16 @@ const TabMedia = (props) => {
     })
   }
 
+
+  // ** effect
+  useEffect(() => {
+    if (state.modalPreview) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+  }, [state.modalPreview])
+
   // ** render
   return (
     <div className="tab-media">
@@ -62,6 +72,7 @@ const TabMedia = (props) => {
       {state.modalPreview && (
         <PreviewMediaContentModal
           modal={state.modalPreview}
+          mediaTabActive={state.mediaTabActive}
           handleModal={handleModalPreview}
         />
       )}

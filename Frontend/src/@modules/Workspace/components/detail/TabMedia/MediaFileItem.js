@@ -12,6 +12,10 @@ const MediaFileItem = (props) => {
     // ** methods
   } = props
 
+  const handlePreviewFile = () => {
+
+  }
+
   // ** render
   const renderFileImage = () => {
     return (
@@ -56,10 +60,10 @@ const MediaFileItem = (props) => {
   }
 
   return (
-    <div className="ms-50 w-100 mb-2 media-file-item">
+    <div className="ms-50 w-100 mb-2 media-file-item" onClick={() => handlePreviewFile()}>
       <div className="p-1 d-flex align-items-center justify-content0-center">
-        <Avatar className="me-50" />
-        <p className="mb-0 font-weight-bold">Username</p>
+        <Avatar src={mediaItem.info.owner_info?.avatar} className="me-50" />
+        <p className="mb-0 font-weight-bold">{mediaItem.info.owner_info?.full_name}</p>
       </div>
       <div dangerouslySetInnerHTML={{ __html: "<p>test 1</p>" }} className="ms-75"></div>
       <div className="w-100">

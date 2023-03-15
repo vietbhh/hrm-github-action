@@ -2,18 +2,30 @@
 import { Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
+import { Modal, ModalBody } from "reactstrap"
 // ** Components
+import PreviewImage from "./PreviewImage"
 
 const PreviewMediaContentModal = (props) => {
   const {
     // ** props
     modal,
+    mediaTabActive,
     // ** methods
     handleModal
   } = props
 
   // ** render
+  const renderModalContent = () => {
+    if (mediaTabActive === 1) {
+      return ""
+    }
+
+    if (mediaTabActive === 2) {
+      return <PreviewImage handleModal={handleModal} />
+    }
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -21,11 +33,12 @@ const PreviewMediaContentModal = (props) => {
       toggle={() => handleModal()}
       backdrop={"static"}
       className="preview-workspace-media-modal"
-      size="lg"
+      size=""
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
-      <ModalHeader toggle={() => handleModal()}></ModalHeader>
-      <ModalBody></ModalBody>
+      <ModalBody>
+        <Fragment>{renderModalContent()}</Fragment>
+      </ModalBody>
     </Modal>
   )
 }

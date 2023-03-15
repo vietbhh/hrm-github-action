@@ -24,7 +24,6 @@ const MediaItem = (props) => {
   const renderPhoto = () => {
     return (
       <Fragment>
-        <Photo />
         {mediaItem.data.map((item, index) => {
           return (
             <Col

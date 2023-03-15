@@ -4443,7 +4443,9 @@
         "view_profile": "View profile",
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
-        "approve_all": "Approve all request"
+        "approve_all": "Approve all request",
+        "download": "Download",
+        "view_post": "View post"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
