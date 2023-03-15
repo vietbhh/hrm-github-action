@@ -11,6 +11,7 @@ FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import commentMongoModel from "../models/comment.mongo.js"
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 // ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
@@ -69,13 +70,17 @@ const submitPostController = async (req, res, next) => {
     thumb: null,
     ref: null,
     approve_status: body.approveStatus,
-    link: link
+    link: link,
+    tag_user: body.tag_user
   })
 
   try {
     const saveFeedParent = await feedModelParent.save()
     const _id_parent = saveFeedParent._id
     let out = saveFeedParent
+
+    // send notification
+    await handleSendNotification("post", body.tag_user, body.data_user)
 
     if (body.file.length === 0) {
       const _out = await handleDataBeforeReturn(out)
@@ -87,7 +92,12 @@ const submitPostController = async (req, res, next) => {
         handleDeleteFile(body.file[0])
         await feedMongoModel.updateOne(
           { _id: _id_parent },
-          { source: result.source, thumb: result.thumb }
+          {
+            source: result.source,
+            source_attribute: result.source_attribute,
+            thumb: result.thumb,
+            thumb_attribute: result.thumb_attribute
+          }
         )
 
         out = await feedMongoModel.findById(_id_parent)
@@ -111,7 +121,9 @@ const submitPostController = async (req, res, next) => {
               content: value.description,
               type: type_feed,
               source: result.source,
+              source_attribute: result.source_attribute,
               thumb: result.thumb,
+              thumb_attribute: result.thumb_attribute,
               ref: _id_parent,
               sort_number: key,
               approve_status: body.approveStatus
@@ -238,12 +250,13 @@ const submitComment = async (req, res, next) => {
   const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
 
-  const image_source = await handleUpImageComment(image, id_post)
+  const result = await handleUpImageComment(image, id_post)
   const commentModel = new commentMongoModel({
     __user: req.__user,
     post_id: id_post,
     content: content,
-    image_source: image_source
+    image_source: result.source,
+    image_source_attribute: result.source_attribute
   })
 
   try {
@@ -256,6 +269,10 @@ const submitComment = async (req, res, next) => {
       id_post,
       comment_more_count_original
     )
+
+    // send notification
+    await handleSendNotification("comment", body.tag_user, body.data_user)
+
     return res.respond(dataFeed)
   } catch (err) {
     return res.fail(err.message)
@@ -270,11 +287,12 @@ const submitCommentReply = async (req, res, next) => {
   const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
 
-  const image_source = await handleUpImageComment(image, id_post)
+  const result = await handleUpImageComment(image, id_post)
   const dataSaveSubComment = {
     post_id: id_post,
     content: content,
-    image_source: image_source,
+    image_source: result.source,
+    image_source_attribute: result.source_attribute,
     created_by: req.__user,
     updated_by: req.__user
   }
@@ -402,7 +420,9 @@ const handleUpFileTemp = async (file, type, storePath) => {
 const handleMoveFileTempToMain = async (file_info, storePath) => {
   const result = {
     source: null,
-    thumb: null
+    source_attribute: {},
+    thumb: null,
+    thumb_attribute: {}
   }
 
   // source
@@ -421,6 +441,7 @@ const handleMoveFileTempToMain = async (file_info, storePath) => {
       }
       const resultUpload = await _uploadServices(storePath, [file], true)
       result["source"] = resultUpload.uploadSuccess[0].path
+      result["source_attribute"] = resultUpload.uploadSuccess[0]
     }
   }
 
@@ -440,6 +461,7 @@ const handleMoveFileTempToMain = async (file_info, storePath) => {
       }
       const resultUpload = await _uploadServices(storePath, [file], true)
       result["thumb"] = resultUpload.uploadSuccess[0].path
+      result["thumb_attribute"] = resultUpload.uploadSuccess[0]
     }
   }
 
@@ -533,7 +555,10 @@ const handleUpImageComment = async (image, id_post) => {
   }
   const storePath = path.join("modules", "comment", id_post)
 
-  let image_source = null
+  const result = {
+    source: null,
+    source_attribute: {}
+  }
   if (image) {
     const image_name = Date.now() + "_" + image.name.split(".")[0] + ".webp"
     const image_path = path.join(storePathTemp, image_name)
@@ -544,10 +569,11 @@ const handleUpImageComment = async (image, id_post) => {
       type: image.mimetype
     }
     const result_image = await handleMoveFileTempToMain(file_info, storePath)
-    image_source = result_image.source
+    result["source"] = result_image.source
+    result["source_attribute"] = result_image.source_attribute
   }
 
-  return image_source
+  return result
 }
 
 const handleDataSubComment = async (dataComment, multiData = false) => {
@@ -570,6 +596,36 @@ const handleDataSubComment = async (dataComment, multiData = false) => {
   })
 
   return multiData ? result : result[0]
+}
+
+const handleSendNotification = async (type, tag_user, data_user) => {
+  if (!isEmpty(tag_user) && !isEmpty(data_user)) {
+    const userId = data_user.id
+    const full_name = data_user.full_name
+    const lang = type === "post" ? "tag_post" : "tag_comment"
+    const body =
+      "<strong>" +
+      full_name +
+      "</strong> {{modules.network.notification." +
+      lang +
+      "}}"
+    await sendNotification(
+      userId,
+      tag_user,
+      {
+        title: "",
+        body: body,
+        link: "#"
+        //icon: icon
+        //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+      },
+      {
+        skipUrls: ""
+      }
+    )
+  }
+
+  return true
 }
 
 export {

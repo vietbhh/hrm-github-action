@@ -40,6 +40,7 @@ const sendNotification = async (
           icon: notificationIcon
         },
         {
+          __user: sender,
           userId: sender
         }
       )

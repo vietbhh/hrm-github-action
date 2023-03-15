@@ -32,6 +32,10 @@ const commentSchema = baseSchema("m_comment", {
     type: String,
     default: null
   },
+  image_source_attribute: {
+    type: {},
+    default: {}
+  },
   sub_comment: {
     type: [
       {
@@ -64,6 +68,10 @@ const commentSchema = baseSchema("m_comment", {
         image_source: {
           type: String,
           default: null
+        },
+        image_source_attribute: {
+          type: {},
+          default: {}
         },
         created_at: {
           type: Date,

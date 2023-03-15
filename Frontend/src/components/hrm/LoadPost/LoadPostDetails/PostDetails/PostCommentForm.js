@@ -5,7 +5,10 @@ import Editor from "@draft-js-plugins/editor"
 import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
-import { decodeHTMLEntities } from "@modules/Feed/common/common"
+import {
+  decodeHTMLEntities,
+  handleTagUserAndReplaceContent
+} from "@modules/Feed/common/common"
 import classNames from "classnames"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
@@ -42,9 +45,8 @@ const PostCommentForm = (props) => {
 
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
-  const userName = userData.username
-  const fullName = userData.full_name
   const userId = userData.id
+  const full_name = userData.full_name
   const currentTime = Date.now()
 
   // ** function
@@ -107,13 +109,25 @@ const PostCommentForm = (props) => {
       setState({ loadingSubmit: true })
       const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
       const content = draftToHtml(editorStateRaw)
+      const result_tag_user = handleTagUserAndReplaceContent(
+        dataMention,
+        content
+      )
+      const _content = result_tag_user.content
+      const tag_user = result_tag_user.tag_user
+
       const params = {
         body: JSON.stringify({
           id_post: data._id,
-          content: content,
+          content: _content,
           comment_more_count_original: comment_more_count_original,
           id_comment_parent: id_comment_parent,
-          reply_count: reply_count
+          reply_count: reply_count,
+          tag_user: tag_user,
+          data_user: {
+            id: userId,
+            full_name: full_name
+          }
         }),
         image: state.image
       }

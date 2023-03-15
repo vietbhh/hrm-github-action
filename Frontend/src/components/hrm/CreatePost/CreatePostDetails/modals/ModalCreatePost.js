@@ -3,7 +3,11 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { decodeHTMLEntities, detectUrl } from "@modules/Feed/common/common"
+import {
+  decodeHTMLEntities,
+  detectUrl,
+  handleTagUserAndReplaceContent
+} from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
@@ -22,6 +26,7 @@ const ModalCreatePost = (props) => {
     toggleModal,
     avatar,
     fullName,
+    userId,
     privacy_type = "workspace",
     dataMention,
     workspace,
@@ -116,14 +121,25 @@ const ModalCreatePost = (props) => {
       const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
       const content = draftToHtml(editorStateRaw)
       const _content = detectUrl(content)
+      const result_tag_user = handleTagUserAndReplaceContent(
+        dataMention,
+        _content
+      )
+      const __content = result_tag_user.content
+      const tag_user = result_tag_user.tag_user
 
       const params = {
-        content: _content,
+        content: __content,
         workspace: workspace,
         privacy_type: state.privacy_type,
         file: file,
         approveStatus: approveStatus,
-        arrLink: state.arrLink
+        arrLink: state.arrLink,
+        tag_user: tag_user,
+        data_user: {
+          id: userId,
+          full_name: fullName
+        }
       }
       feedApi
         .postSubmitPost(params)

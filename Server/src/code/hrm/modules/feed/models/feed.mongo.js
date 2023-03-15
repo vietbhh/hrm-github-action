@@ -36,10 +36,20 @@ const feedSchema = baseSchema("m_feed", {
           enum: ["image", "video"]
         },
         source: {
-          type: String
+          type: String,
+          default: null
+        },
+        source_attribute: {
+          type: {},
+          default: {}
         },
         thumb: {
-          type: String
+          type: String,
+          default: null
+        },
+        thumb_attribute: {
+          type: {},
+          default: {}
         }
       }
     ],
@@ -85,9 +95,17 @@ const feedSchema = baseSchema("m_feed", {
     type: String,
     default: null
   },
+  source_attribute: {
+    type: {},
+    default: {}
+  },
   thumb: {
     type: String,
     default: null
+  },
+  thumb_attribute: {
+    type: {},
+    default: {}
   },
   // **
 
