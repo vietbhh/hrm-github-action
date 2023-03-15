@@ -22,7 +22,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   type: {
     type: String,
-    enum: ["post", "image", "video", "link"],
+    enum: ["post", "image", "video", "link", "update_avatar", "update_cover"],
     default: "post"
   },
   medias: {
@@ -72,6 +72,10 @@ const feedSchema = baseSchema("m_feed", {
     default: 0
   },
   link: {
+    type: [String],
+    default: []
+  },
+  tag_user: {
     type: [String],
     default: []
   },

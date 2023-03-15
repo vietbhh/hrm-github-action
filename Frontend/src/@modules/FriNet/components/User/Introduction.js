@@ -12,7 +12,7 @@ const Introduction = (props) => {
   const {
     employeeData,
     loadData,
-    isProfile // true: đang xem profile của mình, false: người khác vào xem. => check quyền view/edit data  ( profile/employees )
+    isProfile = false // true: đang xem profile của mình, false: người khác vào xem. => check quyền view/edit data  ( profile/employees )
   } = props
   const ability = useContext(AbilityContext)
   const [state, setState] = useMergedState({
