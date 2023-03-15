@@ -71,7 +71,7 @@ const IntroductionView = (props) => {
 
   return (
     <div className="user-information">
-      <div className="user__header">
+      <div className={`user__header border-left-${classColor}`}>
         <div className={`menu-icon ${classColor}`}>{icon}</div>
         <span className="title">{title}</span>
         {permits.update && (

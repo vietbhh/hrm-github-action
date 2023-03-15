@@ -15,6 +15,26 @@
       border-left: 3px solid #0082ff;
       border-bottom: 1px solid #e6e6e6;
 
+      &.border-left-blue {
+        border-left: 3px solid #0082ff;
+      }
+
+      &.border-left-green {
+        border-left: 3px solid #69dca1;
+      }
+
+      &.border-left-orange {
+        border-left: 3px solid #ffc66f;
+      }
+
+      &.border-left-red {
+        border-left: 3px solid #fa6d7d;
+      }
+
+      &.border-left-purple {
+        border-left: 3px solid #6d85ff;
+      }
+
       .title {
         font-weight: 600;
         font-size: 16px;
