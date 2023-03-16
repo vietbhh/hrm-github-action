@@ -1,10 +1,12 @@
 import { Storage } from "@google-cloud/storage"
 import path, { dirname } from "path"
 import { getSetting } from "../services/settings.js"
+import { isEmpty } from "lodash-es"
 import fs from "fs"
 
 const downloadFile = async (req, res, next) => {
-  const upload_type = await getSetting("upload_type")
+  const type = req.query.type
+  const upload_type = (isEmpty(type) || type === undefined) ? await getSetting("upload_type") : type
   const filePath = req.query.name
   if (!filePath) {
     return res.fail("missing_store_path")
@@ -46,7 +48,7 @@ const _getFileFromCloudStorage = async (filePath) => {
 
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
   const storageFilePath = path.join("default", filePath).replace(/\\/g, "/")
-
+  console.log(storageFilePath)
   return await bucket.file(storageFilePath).download({})
 }
 

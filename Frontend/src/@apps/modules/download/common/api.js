@@ -1,4 +1,4 @@
-import { axiosApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 
 export const downloadApi = {
   getPhoto(file) {
@@ -51,13 +51,21 @@ export const downloadApi = {
       )
     })
   },
-  getFile(file) {
+  getFile(file, downloadServer) {
     return new Promise((resolve, reject) => {
-      resolve(
-        axiosApi.get("/download/file?name=" + file, {
-          responseType: "arraybuffer"
-        })
-      )
+      if (downloadServer === "node") {
+        resolve(
+          axiosNodeApi.get("/download/file?name=" + file, {
+            responseType: "arraybuffer"
+          })
+        )
+      } else {
+        resolve(
+          axiosApi.get("/download/file?name=" + file, {
+            responseType: "arraybuffer"
+          })
+        )
+      }
     })
   }
 }

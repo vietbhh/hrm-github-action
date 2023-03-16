@@ -137,6 +137,7 @@ const _googleCloudUpload = async (storePath, files) => {
     const promise = new Promise((resolve, reject) => {
       const blob = bucket.file(filePath)
       const blobStream = blob.createWriteStream({
+        contentType: file.mimetype,
         metadata: {
           contentType: file.mimetype
         },

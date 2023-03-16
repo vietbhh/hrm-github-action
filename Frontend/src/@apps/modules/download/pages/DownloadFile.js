@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Button } from "reactstrap";
-import { downloadApi } from "../common/api";
+import { axiosNodeApi } from "@apps/utility/api"
+import React, { Component } from "react"
+import { Button } from "reactstrap"
+import { downloadApi } from "../common/api"
 
 const fileType = {
   "application/msword": (
@@ -54,39 +55,40 @@ const fileType = {
   "audio/mid": (
     <i className="far fa-file-audio ms-1" style={{ fontSize: "25px" }} />
   )
-};
+}
 
 class DownloadFile extends Component {
   constructor(props) {
-    super();
+    super()
   }
 
   download = async () => {
-    await downloadApi.getFile(this.props.src).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `${this.props.fileName}`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    });
-  };
+    const downloadServer = this.props.downloadServer
+    await downloadApi.getFile(this.props.src, downloadServer).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement("a")
+      link.href = url
+      link.setAttribute("download", `${this.props.fileName}`)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode.removeChild(link)
+    })
+  }
 
   render() {
-    const dType = this.props.type;
+    const dType = this.props.type
     if (dType === "button") {
-      const newProps = { ...this.props };
-      delete newProps.src;
-      delete newProps.children;
-      delete newProps.onClick;
-      delete newProps.fileName;
-      delete newProps.fileType;
+      const newProps = { ...this.props }
+      delete newProps.src
+      delete newProps.children
+      delete newProps.onClick
+      delete newProps.fileName
+      delete newProps.fileType
       return (
         <Button.Ripple onClick={this.download} {...newProps}>
           {this.props.children}
         </Button.Ripple>
-      );
+      )
     } else {
       return (
         <React.Fragment>
@@ -95,9 +97,9 @@ class DownloadFile extends Component {
             {this.props.children}
           </span>
         </React.Fragment>
-      );
+      )
     }
   }
 }
 
-export default DownloadFile;
+export default DownloadFile
