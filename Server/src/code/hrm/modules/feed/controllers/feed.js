@@ -36,7 +36,8 @@ const uploadTempAttachmentController = async (req, res, next) => {
 }
 
 const submitPostController = async (req, res, next) => {
-  const storePath = path.join("modules", "feed")
+  const dateToDay = handleCurrentYMD()
+  const storePath = path.join("modules", "feed", dateToDay)
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
     fs.mkdirSync(path.join(localSavePath, storePath))
   }
@@ -179,25 +180,33 @@ const loadFeedController = async (req, res, next) => {
     .sort({
       _id: "desc"
     })
-  const promises = []
-  forEach(feed, (value, key) => {
-    const promise = new Promise(async (resolve, reject) => {
-      const _value = await handleDataComment(value)
-      resolve(_value)
-    })
-    promises.push(promise)
-  })
-  const _feed = await Promise.all(promises).then((res_promise) => {
-    return res_promise
-  })
-  const data = await handleDataBeforeReturn(_feed, true)
   const feedCount = await feedMongoModel.find(filter).count()
-  const result = {
-    dataPost: data,
-    totalPost: feedCount,
-    page: page * 1 + 1,
-    hasMore: (page * 1 + 1) * pageLength < feedCount
+  const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
+  return res.respond(result)
+}
+
+// load feed profile
+const loadFeedProfile = async (req, res, next) => {
+  const request = req.query
+  const page = request.page
+  const pageLength = request.pageLength
+  const filter = {
+    ref: null,
+    permission: "default",
+    $or: [{ created_by: req.__user }, { tag_user: req.__user }]
   }
+  if (request.idPostCreateNew !== "") {
+    filter["_id"] = { $lt: request.idPostCreateNew }
+  }
+  const feed = await feedMongoModel
+    .find(filter)
+    .skip(page * pageLength)
+    .limit(pageLength)
+    .sort({
+      _id: "desc"
+    })
+  const feedCount = await feedMongoModel.find(filter).count()
+  const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
   return res.respond(result)
 }
 
@@ -577,11 +586,12 @@ const handleDataFeedById = async (id, loadComment = -1) => {
 }
 
 const handleUpImageComment = async (image, id_post) => {
+  const dateToDay = handleCurrentYMD()
   const storePathTemp = path.join("modules", "comment_temp")
   if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
     fs.mkdirSync(path.join(localSavePath, storePathTemp))
   }
-  const storePath = path.join("modules", "comment", id_post)
+  const storePath = path.join("modules", "comment", id_post, dateToDay)
 
   const result = {
     source: null,
@@ -661,6 +671,38 @@ const handleSendNotification = async (
   return true
 }
 
+const handleDataLoadFeed = async (page, pageLength, feed, feedCount) => {
+  const promises = []
+  forEach(feed, (value, key) => {
+    const promise = new Promise(async (resolve, reject) => {
+      const _value = await handleDataComment(value)
+      resolve(_value)
+    })
+    promises.push(promise)
+  })
+  const _feed = await Promise.all(promises).then((res_promise) => {
+    return res_promise
+  })
+  const data = await handleDataBeforeReturn(_feed, true)
+  const result = {
+    dataPost: data,
+    totalPost: feedCount,
+    page: page * 1 + 1,
+    hasMore: (page * 1 + 1) * pageLength < feedCount
+  }
+
+  return result
+}
+
+const handleCurrentYMD = () => {
+  const date_ob = new Date()
+  const day = ("0" + date_ob.getDate()).slice(-2)
+  const month = ("0" + (date_ob.getMonth() + 1)).slice(-2)
+  const year = date_ob.getFullYear()
+  const ymd = year + month + day
+  return ymd
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -672,5 +714,6 @@ export {
   getFeedByIdAndViewAllComment,
   updateComment,
   submitCommentReply,
-  updateSubComment
+  updateSubComment,
+  loadFeedProfile
 }
