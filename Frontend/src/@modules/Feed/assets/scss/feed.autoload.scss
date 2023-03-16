@@ -1,6 +1,10 @@
 @import "@scss/friday";
 
-.div-left.feed {
+.card-loading {
+  border-radius: 14px;
+}
+
+.div-left .feed {
   > div {
     max-width: 790px;
     margin: auto;
@@ -23,6 +27,7 @@
     background: #ffffff;
     padding: 20px 40px;
     margin-bottom: 25px !important;
+    border-radius: 14px;
 
     hr {
       color: #f1f1f5;

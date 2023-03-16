@@ -45,19 +45,19 @@ const submitPostController = async (req, res, next) => {
     body.workspace.length === 0 && body.privacy_type === "workspace"
       ? "default"
       : body.privacy_type
+  const link = body.arrLink
 
   // ** check type feed parent
   let type_feed_parent = "post"
+  if (link.length > 0) {
+    type_feed_parent = "link"
+  }
   if (body.file.length === 1) {
     type_feed_parent = "image"
     if (body.file[0].type.includes("video/")) {
       type_feed_parent = "video"
     }
   }
-  if (body.file.length === 0 && body.arrLink.length > 0) {
-    type_feed_parent = "link"
-  }
-  const link = body.arrLink
 
   const feedModelParent = new feedMongoModel({
     __user: req.__user,
@@ -80,7 +80,13 @@ const submitPostController = async (req, res, next) => {
     let out = saveFeedParent
 
     // send notification
-    await handleSendNotification("post", body.tag_user, body.data_user)
+    const link_notification = `/posts/${_id_parent}`
+    await handleSendNotification(
+      "post",
+      body.tag_user,
+      body.data_user,
+      link_notification
+    )
 
     if (body.file.length === 0) {
       const _out = await handleDataBeforeReturn(out)
@@ -271,7 +277,16 @@ const submitComment = async (req, res, next) => {
     )
 
     // send notification
-    await handleSendNotification("comment", body.tag_user, body.data_user)
+    let link_notification = `/posts/${id_post}`
+    if (dataFeed.ref) {
+      link_notification = `/posts/${dataFeed.ref}/${id_post}`
+    }
+    await handleSendNotification(
+      "comment",
+      body.tag_user,
+      body.data_user,
+      link_notification
+    )
 
     return res.respond(dataFeed)
   } catch (err) {
@@ -306,6 +321,19 @@ const submitCommentReply = async (req, res, next) => {
       id_post,
       comment_more_count_original
     )
+
+    // send notification
+    let link_notification = `/posts/${id_post}`
+    if (dataFeed.ref) {
+      link_notification = `/posts/${dataFeed.ref}/${id_post}`
+    }
+    await handleSendNotification(
+      "comment",
+      body.tag_user,
+      body.data_user,
+      link_notification
+    )
+
     return res.respond(dataFeed)
   } catch (err) {
     return res.fail(err.message)
@@ -598,7 +626,12 @@ const handleDataSubComment = async (dataComment, multiData = false) => {
   return multiData ? result : result[0]
 }
 
-const handleSendNotification = async (type, tag_user, data_user) => {
+const handleSendNotification = async (
+  type,
+  tag_user,
+  data_user,
+  link = "#"
+) => {
   if (!isEmpty(tag_user) && !isEmpty(data_user)) {
     const userId = data_user.id
     const full_name = data_user.full_name
@@ -615,7 +648,7 @@ const handleSendNotification = async (type, tag_user, data_user) => {
       {
         title: "",
         body: body,
-        link: "#"
+        link: link
         //icon: icon
         //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
       },

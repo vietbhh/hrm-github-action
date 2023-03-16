@@ -154,14 +154,14 @@ export const detectUrl = (txt, onlyGetLink = false) => {
 export const handleDataMention = (dataEmployee, userId) => {
   const data_mention = []
   _.forEach(dataEmployee, (value) => {
-    //if (userId !== value.id) {
-    data_mention.push({
-      id: value.id,
-      name: "@" + value.username,
-      link: "#",
-      avatar: getAvatarUrl(value.id * 1)
-    })
-    //}
+    if (userId !== value.id) {
+      data_mention.push({
+        id: value.id,
+        name: "@" + value.username,
+        link: "#",
+        avatar: getAvatarUrl(value.id * 1)
+      })
+    }
   })
 
   return data_mention

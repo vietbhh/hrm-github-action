@@ -1,14 +1,17 @@
-import { useMergedState } from "@apps/utility/common"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import FeedCreateAndLoad from "@modules/Feed/components/FeedCreateAndLoad"
+import { introductionApi } from "@modules/FriNet/common/api"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
-import { Fragment, useEffect, useMemo } from "react"
-import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
+import { Fragment, useContext, useEffect, useMemo } from "react"
+import { useSelector } from "react-redux"
+import { Card, CardBody } from "reactstrap"
+import { AbilityContext } from "utility/context/Can"
+import TimelineProfile from "./TimelineProfile"
+import "../../../assets/scss/timeline.scss"
 
-const Feed = (props) => {
-  const {
-    workspace = [], // arr workspace: []
-    apiLoadFeed = null, // api load feed
-    approveStatus = "approved" // approved / rejected / pending
-  } = props
+const index = (props) => {
+  const { employeeData } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0
   })
@@ -55,9 +58,9 @@ const Feed = (props) => {
   const renderLoadFeed = useMemo(
     () => (
       <FeedCreateAndLoad
-        workspace={workspace}
-        apiLoadFeed={apiLoadFeed}
-        approveStatus={approveStatus}
+        workspace={[]}
+        apiLoadFeed={null}
+        approveStatus={"approved"}
       />
     ),
     []
@@ -65,16 +68,16 @@ const Feed = (props) => {
 
   return (
     <Fragment>
-      <div className="div-content">
-        <div className="div-left">{renderLoadFeed}</div>
-        <div className="div-right">
+      <div className="div-timeline">
+        <div className="div-left">
           <div id="div-sticky">
-            <SidebarWidget />
+            <TimelineProfile />
           </div>
         </div>
+        <div className="div-right">{renderLoadFeed}</div>
       </div>
     </Fragment>
   )
 }
 
-export default Feed
+export default index
