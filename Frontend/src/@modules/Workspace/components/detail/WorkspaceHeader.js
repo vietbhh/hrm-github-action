@@ -11,6 +11,9 @@ import Photo from "@apps/modules/download/pages/Photo"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+const unique = (arr) => {
+  return Array.from(new Set(arr)) //
+}
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
   const [state, setState] = useMergedState({
@@ -44,19 +47,40 @@ const WorkspaceHeader = (props) => {
           })
           onClickInvite()
           setState({ loading: false })
-          loadData()
+          // loadData()
         }
       })
     } else {
+      let varTxt = "department_id"
+      if (type !== "departments") {
+        varTxt = "job_title_id"
+      }
       const arrIdDepartment = JSON.stringify(dataUpdate.map((x) => x["id"] * 1))
-      console.log("dataUpdate", arrIdDepartment)
-      defaultModuleApi.getList(
-        "employees",
-        {
-          filters: { department_id: dataUpdate.map((x) => x["id"] * 1) }
-        },
-        "employees/load"
-      )
+      workspaceApi
+        .loadMember({
+          [varTxt]: dataUpdate.map((x) => x["id"] * 1)
+        })
+        .then((res) => {
+          if (res.data) {
+            const arrID = infoWorkspace.members.concat(
+              res.data.map((x) => parseInt(x))
+            )
+
+            infoWorkspace.members = JSON.stringify(unique(arrID))
+            workspaceApi
+              .update(infoWorkspace._id, infoWorkspace)
+              .then((res) => {
+                if (res.statusText) {
+                  notification.showSuccess({
+                    text: useFormatMessage("notification.save.success")
+                  })
+                  onClickInvite()
+                  setState({ loading: false })
+                  //loadData()
+                }
+              })
+          }
+        })
 
       return
       workspaceApi

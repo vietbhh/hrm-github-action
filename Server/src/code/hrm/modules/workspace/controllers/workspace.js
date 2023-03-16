@@ -314,6 +314,7 @@ const updateWorkspace = async (req, res, next) => {
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
       }
+
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId

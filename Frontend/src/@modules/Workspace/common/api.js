@@ -1,4 +1,4 @@
-import { axiosNodeApi } from "@apps/utility/api"
+import { axiosNodeApi, axiosApi } from "@apps/utility/api"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { object2QueryString, serialize } from "@apps/utility/handleData"
 
@@ -62,5 +62,9 @@ export const workspaceApi = {
       `/workspace/add-member`,
       serialize(_.cloneDeep(data))
     )
+  },
+  async loadMember(params) {
+    const strParams = object2QueryString(params)
+    return await axiosApi.get(`/employees/in-department?${strParams}`)
   }
 }

@@ -139,7 +139,6 @@ export const defaultModuleApi = {
       optionImgKey: null
     }
     const sendProps = { ...defaultProps, ...props }
-    console.log("sendProps", sendProps)
     const {
       isLoadOption,
       perPage,

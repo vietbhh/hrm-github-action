@@ -1936,6 +1936,22 @@ class Employees extends Employee
 		return $this->respond($moduleData);
 	}
 
+	public function in_department_get()
+	{
+		$request = $this->request->getGet();
+		$employeeModel = new EmployeesModel();
+		if (isset($request['department_id']) && $request['department_id']) {
+			$employeeModel->whereIn('department_id', $request['department_id']);
+		}
+
+		if (isset($request['job_title_id']) && $request['job_title_id']) {
+			$employeeModel->whereIn('job_title_id', $request['job_title_id']);
+		}
+		$list = $employeeModel->findAll();
+		$idArr = array_column($list, 'id');
+		return $this->respond($idArr);
+	}
+
 	/**
 	 *  support function
 	 */

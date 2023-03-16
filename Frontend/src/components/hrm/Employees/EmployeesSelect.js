@@ -96,6 +96,7 @@ const EmployeesSelect = (props) => {
   }
   const renderDepartmentSelected = (data = []) => {
     return data.map((item, key) => {
+      console.log("item", item)
       return (
         <Col sm={12} key={item.id}>
           <div
@@ -103,6 +104,22 @@ const EmployeesSelect = (props) => {
             onClick={() => handleSelected(key)}>
             <i className="fa-regular fa-building me-1 ms-50"></i>
             <div className="title">{item.name}</div>
+          </div>
+        </Col>
+      )
+    })
+  }
+
+  const renderJobTitleSelected = (data = []) => {
+    return data.map((item, key) => {
+      console.log("item", item)
+      return (
+        <Col sm={12} key={item.id}>
+          <div
+            className="box-member d-flex"
+            onClick={() => handleSelected(key)}>
+            <i className="fa-regular fa-building me-1 ms-50"></i>
+            <div className="title">{item?.full_name}</div>
           </div>
         </Col>
       )
@@ -233,8 +250,55 @@ const EmployeesSelect = (props) => {
             <p>Job title</p>
           </div>
         ),
-        key: 3,
-        children: <div>under construction</div>
+        key: "jobtitles",
+        children: (
+          <div className="d-flex ">
+            <div className="content-select">
+              <div className="title-tab-content mb-1">List job title</div>
+              <Row>
+                <Col>
+                  <ErpInput
+                    nolabel
+                    placeholder="Search"
+                    prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                    onChange={(e) => handleFilterText(e.target.value)}
+                  />
+                </Col>
+              </Row>
+              <PerfectScrollbar
+                onYReachEnd={() => endScrollLoad()}
+                style={{
+                  maxHeight: "400px",
+                  minHeight: "50px"
+                }}>
+                <Row className="w-100">{renderDepartment(state.jobtitles)}</Row>
+              </PerfectScrollbar>
+            </div>
+
+            <div
+              className={`content-selected ${
+                !state.dataSelected.length && `d-flex align-items-center`
+              }`}>
+              {state.dataSelected.length === 0 && <EmptyContent />}
+              {state.dataSelected.length > 0 && (
+                <>
+                  <div className="title-tab-content">List selected</div>
+                  <div className="mt-1 mb-2">
+                    <i className="fa-solid fa-user-group me-50"></i>
+                    {state.dataSelected.length} Job title
+                  </div>
+                  <PerfectScrollbar
+                    style={{
+                      maxHeight: "400px",
+                      minHeight: "50px"
+                    }}>
+                    <Row>{renderJobTitleSelected(state.dataSelected)}</Row>
+                  </PerfectScrollbar>
+                </>
+              )}
+            </div>
+          </div>
+        )
       },
       {
         label: (
@@ -249,7 +313,6 @@ const EmployeesSelect = (props) => {
     ]
     return arr
   }
-  console.log("stateeeee", state)
   const findKeyByID = (arr = [], id) => {
     const index = arr.findIndex((p) => p.id === id)
     return index
@@ -259,7 +322,7 @@ const EmployeesSelect = (props) => {
     const indexID = findKeyByID(state.dataSelected, id)
     return indexID
   }
-
+  console.log("sate", state)
   const loadData = (props) => {
     props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
@@ -276,8 +339,24 @@ const EmployeesSelect = (props) => {
       })
     })
   }
+
+  const loadJobtitle = (props) => {
+    defaultModuleApi.getList("job_titles").then((res) => {
+      const job_titles = state.jobtitles
+      const concat = !props.search
+        ? job_titles.concat(res.data.results)
+        : res.data.results
+      setState({
+        jobtitles: concat,
+        page: res.data.page,
+        recordsTotal: res.data.recordsTotal,
+        perPage: res.data.recordsFiltered,
+        ...props
+      })
+    })
+  }
+
   const loadDepartment = (props) => {
-    console.log("rrrrrrrrrrrrrrrrrrrrrrrr")
     defaultModuleApi.getList("departments").then((res) => {
       const departments = state.departments
       const concat = !props.search
@@ -328,10 +407,10 @@ const EmployeesSelect = (props) => {
   useEffect(() => {
     console.log("state.typeAdd", state.typeAdd)
     if (state.typeAdd === "members") {
-      console.log("run member")
       loadData({ page: 1, search: state.search })
+    } else if (state.typeAdd === "jobtitles") {
+      loadJobtitle({ page: 1 })
     } else {
-      console.log("run depppppppp")
       loadDepartment({ page: 1 })
     }
   }, [state.typeAdd])
