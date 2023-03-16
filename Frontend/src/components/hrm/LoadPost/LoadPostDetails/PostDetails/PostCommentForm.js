@@ -159,7 +159,7 @@ const PostCommentForm = (props) => {
     let html = draftToHtml(editorStateRaw)
     html = decodeHTMLEntities(html)
     let check_content = false
-    if (html.trim().length) {
+    if (html.trim().length || state.image !== null) {
       check_content = true
     }
 

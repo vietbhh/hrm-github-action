@@ -31,6 +31,15 @@ export const feedApi = {
     })
   },
 
+  async getLoadFeedProfile(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosNodeApi.get("/feed/load-feed-profile?" + stringFilters, {
+      disableLoading: true
+    })
+  },
+
   async getGetFeedChild(id) {
     return await axiosNodeApi.get("/feed/get-feed-child/" + id)
   },

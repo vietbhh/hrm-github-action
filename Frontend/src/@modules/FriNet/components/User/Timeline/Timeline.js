@@ -9,6 +9,7 @@ import { Card, CardBody } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
 import TimelineProfile from "./TimelineProfile"
 import "../../../assets/scss/timeline.scss"
+import { feedApi } from "@modules/Feed/common/api"
 
 const index = (props) => {
   const { employeeData } = props
@@ -59,7 +60,7 @@ const index = (props) => {
     () => (
       <FeedCreateAndLoad
         workspace={[]}
-        apiLoadFeed={null}
+        apiLoadFeed={feedApi.getLoadFeedProfile}
         approveStatus={"approved"}
       />
     ),
