@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"
 import { Card, CardBody } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
 import IntroductionView from "./IntroductionView"
-import "../../assets/scss/introduction.scss"
+import "../../../assets/scss/introduction.scss"
 
 const Introduction = (props) => {
   const {
@@ -111,7 +111,7 @@ const Introduction = (props) => {
   return (
     <div className="user-introduction">
       {state.loadPage && (
-        <Card>
+        <Card className="card-loading">
           <CardBody>
             <DefaultSpinner />
           </CardBody>

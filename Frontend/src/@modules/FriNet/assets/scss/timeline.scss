@@ -1,0 +1,26 @@
+@import "@scss/friday";
+
+.div-timeline {
+  display: flex;
+  gap: 30px;
+  position: relative;
+
+  .div-left {
+    width: 360px;
+
+    #div-sticky {
+      border-radius: 14px;
+      position: sticky;
+    }
+
+    .timeline__profile {
+      .card {
+        border-radius: 14px;
+      }
+    }
+  }
+
+  .div-right {
+    width: 790px;
+  }
+}

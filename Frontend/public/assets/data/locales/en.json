@@ -4539,6 +4539,12 @@
       "show_information_text": "Would you like to show {field} information on the profile",
       "hide_information_title": "Hide information",
       "hide_information_text": "Would you like to hide {field} information on the profile"
+    },
+    "network": {
+      "notification": {
+        "tag_comment": "tagged you on a comment",
+        "tag_post": "tagged you on a post"
+      }
     }
   }
 }

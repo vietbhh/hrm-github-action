@@ -3,13 +3,16 @@ import { useMergedState } from "@apps/utility/common"
 import { Fragment, useEffect } from "react"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { userApi } from "../common/api"
-import Introduction from "../components/User/Introduction"
+import Introduction from "../components/User/Introduction/Introduction"
+import TimeLine from "../components/User/Timeline/Timeline"
+import "../assets/scss/user.scss"
 
 const User = () => {
   const navigate = useNavigate()
   const params = useParams()
   const identity = params.identity
   const tab = params.tab || ""
+
   if (_.isEmpty(identity)) {
     return (
       <>
@@ -45,7 +48,13 @@ const User = () => {
 
   return (
     <Fragment>
-      <Introduction employeeData={state.employeeData} loadData={loadData} />
+      <div className="div-user__div-body">
+        {/* Timeline */}
+        <TimeLine employeeData={state.employeeData} />
+
+        {/* Introduction  */}
+        {/* <Introduction employeeData={state.employeeData} loadData={loadData} /> */}
+      </div>
     </Fragment>
   )
 }

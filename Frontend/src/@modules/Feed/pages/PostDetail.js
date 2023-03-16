@@ -1,17 +1,13 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import { downloadApi } from "@apps/modules/download/common/api"
-import {
-  getAvatarUrl,
-  useFormatMessage,
-  useMergedState
-} from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
-import { useParams } from "react-router-dom"
-import { handleLoadAttachmentMedias } from "../common/common"
-import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
+import { handleDataMention, handleLoadAttachmentMedias } from "../common/common"
 
 const PostDetail = (props) => {
   const {} = props
@@ -24,6 +20,8 @@ const PostDetail = (props) => {
   })
   const { idPost, idMedia } = useParams()
 
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = `/posts/${idPost}`
 
@@ -76,16 +74,7 @@ const PostDetail = (props) => {
   }, [idPost, idMedia])
 
   useEffect(() => {
-    const data_mention = []
-    _.forEach(dataEmployee, (value) => {
-      data_mention.push({
-        id: value.id,
-        name: value.full_name,
-        link: "#",
-        avatar: getAvatarUrl(value.id * 1)
-      })
-    })
-
+    const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 

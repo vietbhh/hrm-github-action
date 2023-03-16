@@ -1,4 +1,5 @@
 import { downloadApi } from "@apps/modules/download/common/api"
+import { getAvatarUrl } from "@apps/utility/common"
 import img_care from "@modules/Feed/assets/images/care.png"
 import img_smile from "@modules/Feed/assets/images/haha.png"
 import img_like from "@modules/Feed/assets/images/like.png"
@@ -148,4 +149,35 @@ export const detectUrl = (txt, onlyGetLink = false) => {
     )
     return arr_link
   }
+}
+
+export const handleDataMention = (dataEmployee, userId) => {
+  const data_mention = []
+  _.forEach(dataEmployee, (value) => {
+    if (userId !== value.id) {
+      data_mention.push({
+        id: value.id,
+        name: "@" + value.username,
+        link: "#",
+        avatar: getAvatarUrl(value.id * 1)
+      })
+    }
+  })
+
+  return data_mention
+}
+
+export const handleTagUserAndReplaceContent = (dataMention, content) => {
+  const tag_user = []
+  let _content = content
+  _.forEach(dataMention, (value) => {
+    _content = _content.replace(value.name, function (val) {
+      tag_user.push(value.id)
+      return (
+        '<a href="' + value.link + '" target="_blank">' + value.name + "</a>"
+      )
+    })
+  })
+
+  return { content: _content, tag_user: tag_user }
 }
