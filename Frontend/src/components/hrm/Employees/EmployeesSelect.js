@@ -132,14 +132,16 @@ const EmployeesSelect = (props) => {
         label: (
           <div className="text-center">
             <i className="fa-solid fa-user-group"></i>
-            <p>Member</p>
+            <p>{useFormatMessage("modules.workspace.text.list_selected")}</p>
           </div>
         ),
         key: "members",
         children: (
           <div className="d-flex ">
             <div className="content-select">
-              <div className="title-tab-content mb-1">List member</div>
+              <div className="title-tab-content mb-1">
+                {useFormatMessage("modules.workspace.text.member")}
+              </div>
               <Row>
                 <Col>
                   <ErpInput
@@ -167,10 +169,13 @@ const EmployeesSelect = (props) => {
               {state.dataSelected.length === 0 && <EmptyContent />}
               {state.dataSelected.length > 0 && (
                 <>
-                  <div className="title-tab-content">List selected</div>
+                  <div className="title-tab-content">
+                    {useFormatMessage("modules.workspace.text.list_selected")}
+                  </div>
                   <div className="mt-1 mb-2">
                     <i className="fa-solid fa-user-group me-50"></i>
-                    {state.dataSelected.length} member
+                    {state.dataSelected.length}{" "}
+                    {useFormatMessage("modules.workspace.text.member")}
                   </div>
                   <PerfectScrollbar
                     style={{
@@ -189,14 +194,16 @@ const EmployeesSelect = (props) => {
         label: (
           <div className="text-center">
             <i className="fa-duotone fa-sitemap"></i>
-            <p>Department</p>
+            <p>{useFormatMessage("modules.workspace.text.department")}</p>
           </div>
         ),
         key: "departments",
         children: (
           <div className="d-flex ">
             <div className="content-select">
-              <div className="title-tab-content mb-1">List department</div>
+              <div className="title-tab-content mb-1">
+                {useFormatMessage("modules.workspace.text.list_department")}
+              </div>
               <Row>
                 <Col>
                   <ErpInput
@@ -226,10 +233,13 @@ const EmployeesSelect = (props) => {
               {state.dataSelected.length === 0 && <EmptyContent />}
               {state.dataSelected.length > 0 && (
                 <>
-                  <div className="title-tab-content">List selected</div>
+                  <div className="title-tab-content">
+                    {useFormatMessage("modules.workspace.text.list_selected")}
+                  </div>
                   <div className="mt-1 mb-2">
                     <i className="fa-solid fa-user-group me-50"></i>
-                    {state.dataSelected.length} department
+                    {state.dataSelected.length}{" "}
+                    {useFormatMessage("modules.workspace.text.department")}
                   </div>
                   <PerfectScrollbar
                     style={{
@@ -255,7 +265,9 @@ const EmployeesSelect = (props) => {
         children: (
           <div className="d-flex ">
             <div className="content-select">
-              <div className="title-tab-content mb-1">List job title</div>
+              <div className="title-tab-content mb-1">
+                {useFormatMessage("modules.workspace.text.list_job_title")}
+              </div>
               <Row>
                 <Col>
                   <ErpInput
@@ -283,10 +295,13 @@ const EmployeesSelect = (props) => {
               {state.dataSelected.length === 0 && <EmptyContent />}
               {state.dataSelected.length > 0 && (
                 <>
-                  <div className="title-tab-content">List selected</div>
+                  <div className="title-tab-content">
+                    {useFormatMessage("modules.workspace.text.list_selected")}
+                  </div>
                   <div className="mt-1 mb-2">
                     <i className="fa-solid fa-user-group me-50"></i>
-                    {state.dataSelected.length} Job title
+                    {state.dataSelected.length}{" "}
+                    {useFormatMessage("modules.workspace.text.job_title")}
                   </div>
                   <PerfectScrollbar
                     style={{

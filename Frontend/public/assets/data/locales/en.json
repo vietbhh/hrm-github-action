@@ -4541,7 +4541,10 @@
         "sub_review_post" : "All member posts must be approved by administrator",
         "list_member" : "List member",
         "list_selected" : "List selected",
-        "list_department" : "List department"
+        "list_department" : "List department",
+        "list_job_title" : "List job title",
+        "department":"Department",
+        "job_title": "Job title"
 
       }
     }
