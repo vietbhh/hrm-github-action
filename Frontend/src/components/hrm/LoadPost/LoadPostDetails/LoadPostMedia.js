@@ -121,6 +121,68 @@ const LoadPostMedia = (props) => {
       )
     }
 
+    if (data.type === "update_cover") {
+      return (
+        <div
+          onClick={() => {
+            toggleModalPostImageDetail()
+            window.history.replaceState(
+              null,
+              "",
+              `/posts/${data._id}/${data._id}`
+            )
+            setState({
+              dataModal: data,
+              idImage: data._id,
+              postType: data.type
+            })
+          }}
+          className="div-attachment-cover">
+          {data.url_thumb && <img src={data.url_thumb} />}
+          {!data.url_thumb && <Skeleton.Image active={true} />}
+        </div>
+      )
+    }
+
+    if (data.type === "update_avatar") {
+      const renderBackgroundCover = () => {
+        if (data.url_cover !== "") {
+          return {
+            backgroundImage: `url("${data.url_cover}")`
+          }
+        }
+
+        return {}
+      }
+
+      return (
+        <div
+          onClick={() => {
+            toggleModalPostImageDetail()
+            window.history.replaceState(
+              null,
+              "",
+              `/posts/${data._id}/${data._id}`
+            )
+            setState({
+              dataModal: data,
+              idImage: data._id,
+              postType: data.type
+            })
+          }}
+          className="div-attachment-avatar">
+          <div
+            className="div-background-cover"
+            style={renderBackgroundCover()}></div>
+          <div className="space"></div>
+          <div className="div-avatar">
+            {data.url_thumb && <img src={data.url_thumb} />}
+            {!data.url_thumb && <Skeleton.Image active={true} />}
+          </div>
+        </div>
+      )
+    }
+
     if (!_.isEmpty(data.medias)) {
       return _.map(data.medias, (item, key) => {
         return (
@@ -172,7 +234,10 @@ const LoadPostMedia = (props) => {
   return (
     <Fragment>
       {((data.source !== null &&
-        (data.type === "image" || data.type === "video")) ||
+        (data.type === "image" ||
+          data.type === "video" ||
+          data.type === "update_cover" ||
+          data.type === "update_avatar")) ||
         (!_.isEmpty(data.medias) && data.type === "post")) && (
         <div className="post-body-media">{renderMedia()}</div>
       )}

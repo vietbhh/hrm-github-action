@@ -22,6 +22,7 @@ const PostDetail = (props) => {
 
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
+  const cover = userData?.cover || ""
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = `/posts/${idPost}`
 
@@ -42,11 +43,29 @@ const PostDetail = (props) => {
 
           if (
             data.source !== null &&
-            (data.type === "image" || data.type === "video")
+            (data.type === "image" || data.type === "update_cover")
           ) {
+            await downloadApi.getPhoto(data.thumb).then((response) => {
+              data["url_thumb"] = URL.createObjectURL(response.data)
+            })
+          }
+
+          if (data.source !== null && data.type === "video") {
             await downloadApi.getPhoto(data.source).then((response) => {
               data["url_thumb"] = URL.createObjectURL(response.data)
             })
+          }
+
+          if (data.source !== null && data.type === "update_avatar") {
+            await downloadApi.getPhoto(data.thumb).then((response) => {
+              data["url_thumb"] = URL.createObjectURL(response.data)
+            })
+            data["url_cover"] = ""
+            if (cover !== "") {
+              await downloadApi.getPhoto(cover).then((response) => {
+                data["url_cover"] = URL.createObjectURL(response.data)
+              })
+            }
           }
 
           if (!_.isEmpty(data.medias) && data.type === "post") {

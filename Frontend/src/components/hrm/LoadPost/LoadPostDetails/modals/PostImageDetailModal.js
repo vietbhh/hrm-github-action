@@ -98,7 +98,12 @@ const PostImageDetailModal = (props) => {
         }
       }
 
-      if (postType === "image" || postType === "video") {
+      if (
+        postType === "image" ||
+        postType === "video" ||
+        postType === "update_cover" ||
+        postType === "update_avatar"
+      ) {
         setState({ data: {}, id_previous: "", id_next: "" })
         feedApi
           .getGetFeed(idImage)
@@ -240,7 +245,11 @@ const PostImageDetailModal = (props) => {
 
   const renderMedia = () => {
     if (state.data.url_source) {
-      if (state.data.type === "image") {
+      if (
+        state.data.type === "image" ||
+        state.data.type === "update_cover" ||
+        state.data.type === "update_avatar"
+      ) {
         return <img ref={imageRef} src={state.data.url_source} />
       }
 

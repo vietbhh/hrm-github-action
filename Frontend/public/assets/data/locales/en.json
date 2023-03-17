@@ -4426,7 +4426,9 @@
           "chat": "Chat",
           "view_more_comment": "View more {comment} comment",
           "view_more_comments": "View more {comment} comments",
-          "replies": "replies"
+          "replies": "replies",
+          "updated_cover": "updated cover",
+          "updated_avatar": "updated avatar"
         },
         "react": {
           "like": "Like",
@@ -4544,6 +4546,12 @@
       "notification": {
         "tag_comment": "tagged you on a comment",
         "tag_post": "tagged you on a post"
+      }
+    },
+    "timeline": {
+      "text": {
+        "introduction": "Introduction",
+        "edit_information": "Edit informarion"
       }
     }
   }
