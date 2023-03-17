@@ -125,6 +125,7 @@ const EmployeesSelect = (props) => {
       )
     })
   }
+
   const itemTab = () => {
     const arr = [
       {
@@ -233,7 +234,7 @@ const EmployeesSelect = (props) => {
                   <PerfectScrollbar
                     style={{
                       maxHeight: "400px",
-                      minHeight: "50px"
+                      minHeight: "400px"
                     }}>
                     <Row>{renderDepartmentSelected(state.dataSelected)}</Row>
                   </PerfectScrollbar>
@@ -269,7 +270,7 @@ const EmployeesSelect = (props) => {
                 onYReachEnd={() => endScrollLoad()}
                 style={{
                   maxHeight: "400px",
-                  minHeight: "50px"
+                  minHeight: "400px"
                 }}>
                 <Row className="w-100">{renderDepartment(state.jobtitles)}</Row>
               </PerfectScrollbar>
@@ -357,6 +358,7 @@ const EmployeesSelect = (props) => {
   }
 
   const loadDepartment = (props) => {
+    setState({ loading: true })
     defaultModuleApi.getList("departments").then((res) => {
       const departments = state.departments
       const concat = !props.search
@@ -367,11 +369,14 @@ const EmployeesSelect = (props) => {
         page: res.data.page,
         recordsTotal: res.data.recordsTotal,
         perPage: res.data.recordsFiltered,
+        loading: false,
         ...props
       })
     })
   }
+
   const endScrollLoad = () => {
+    console.log("runnn endScrollLoad")
     const page = state.page + 1
     if (state.typeAdd === "members") {
       console.log("run endScrollLoad members")
@@ -379,9 +384,13 @@ const EmployeesSelect = (props) => {
         loadData({ page: page, search: state.search })
       }
     }
-    if (state.typeAdd === "departments") {
+    if (state.typeAdd === "departments" && !state.loading) {
       console.log("run endScrollLoad departments")
       if (state.recordsTotal > state.departments.length) {
+        console.log("state.recordsTotal", state.recordsTotal)
+
+        console.log("state.departments.length", state.departments.length)
+        console.log("page", page)
         loadDepartment({ page: page, search: state.search })
       }
     }
@@ -408,9 +417,12 @@ const EmployeesSelect = (props) => {
     console.log("state.typeAdd", state.typeAdd)
     if (state.typeAdd === "members") {
       loadData({ page: 1, search: state.search })
-    } else if (state.typeAdd === "jobtitles") {
+    }
+
+    if (state.typeAdd === "jobtitles") {
       loadJobtitle({ page: 1 })
-    } else {
+    }
+    if (state.typeAdd === "departments") {
       loadDepartment({ page: 1 })
     }
   }, [state.typeAdd])
@@ -423,7 +435,9 @@ const EmployeesSelect = (props) => {
       className="tab-invite"
       tabPosition={"left"}
       items={itemTab()}
-      onTabClick={(key) => setState({ typeAdd: key, dataSelected: [] })}
+      onTabClick={(key) =>
+        setState({ typeAdd: key, dataSelected: [], recordsTotal: 0 })
+      }
     />
   )
 }

@@ -4538,7 +4538,11 @@
         "no_pending_posts" : "The workspace has no pending posts",
         "view_other_posts" : "View other posts",
         "pending_posts": "Pending posts",
-        "sub_review_post" : "All member posts must be approved by administrator"
+        "sub_review_post" : "All member posts must be approved by administrator",
+        "list_member" : "List member",
+        "list_selected" : "List selected",
+        "list_department" : "List department"
+
       }
     }
   }
