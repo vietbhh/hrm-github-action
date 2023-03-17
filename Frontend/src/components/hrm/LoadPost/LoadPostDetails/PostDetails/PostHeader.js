@@ -6,7 +6,6 @@ import { Link } from "react-router-dom"
 
 const PostHeader = (props) => {
   const { data } = props
-
   const items = [
     {
       key: "1",

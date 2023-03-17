@@ -52,7 +52,10 @@ const workspaceSchema = baseSchema("m_workspace", {
       description: String
     }
   ],
-  request_joins: [Number]
+  request_joins: [Number],
+  notification: { type: Boolean, default: true },
+  review_post: { type: Boolean, default: false },
+  membership_approval: { type: String, enum: ["approver", "auto"] }
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

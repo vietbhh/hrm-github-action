@@ -513,6 +513,7 @@
     "edit": "Edit",
     "started": "Started",
     "remove": "Remove",
+    "reject" : "Reject",
     "duplicate": "Duplicate"
   },
   "errors": {
@@ -4463,7 +4464,9 @@
         "view_profile": "View profile",
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
-        "approve_all": "Approve all request"
+        "approve_all": "Approve all request",
+        "approve_all_posts": "Approve all",
+        "reject_all_posts": "Reject all"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4475,12 +4478,19 @@
         "group_rules": "Group rules",
         "member": "Member",
         "media": "Media",
-        "request_to_join": "Request to join"
+        "workspace_infomation" : "Workspace infomation",
+        "workspace_settings" : "Workspace settings",
+        "request_to_join": "Request to join",
+        "waiting_for_approval" : "Waiting for approval",
+        "setup_notification" : "Setup notification",
+        "review_post": "Review post",
+        "add_member_to_ws" : "Add member to workspace"
       },
       "fields": {
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
-        "workspace_mode": "Workspace mode"
+        "workspace_mode": "Workspace mode",
+        "membership_approval" : "Membership approval"
       },
       "text": {
         "members": "members",
@@ -4531,7 +4541,18 @@
           "title": "Are you sure?",
           "content": "{name} will be removed form this workspace."
         },
-        "approved": "Approved"
+        "approved": "Approved",
+        "no_pending_posts" : "The workspace has no pending posts",
+        "view_other_posts" : "View other posts",
+        "pending_posts": "Pending posts",
+        "sub_review_post" : "All member posts must be approved by administrator",
+        "list_member" : "List member",
+        "list_selected" : "List selected",
+        "list_department" : "List department",
+        "list_job_title" : "List job title",
+        "department":"Department",
+        "job_title": "Job title"
+
       }
     },
     "setting_member": {

@@ -344,5 +344,4 @@ const copyFilesServices = async (pathFrom, pathTo, filename) => {
     return _handleCopyCloudStorage(pathFromGCS, pathToGCS, filename)
   }
 }
-
-export { _uploadServices, copyFilesServices }
+export { _uploadServices, copyFilesServices, _localUpload }
