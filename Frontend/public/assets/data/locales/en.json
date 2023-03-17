@@ -113,6 +113,7 @@
     "workgroup": "Workgroup",
     "your_projects": "Your Projects",
     "your_workgroup": "Your Workgroup",
+    "setting_member": "Member Info Settings",
     "header": {
       "welcome": {
         "morning": {
@@ -4408,9 +4409,10 @@
       "post": {
         "text": {
           "like": "Like",
-          "comment": "Comment",
+          "comment": "comment",
+          "comments": "comments",
           "send": "Send",
-          "people_seen": "People seen",
+          "people_seen": "people seen",
           "others": "others",
           "see_more": "See more",
           "hide": "Hide",
@@ -4422,7 +4424,10 @@
           "other": "other",
           "and": "and",
           "all": "All",
-          "chat": "Chat"
+          "chat": "Chat",
+          "view_more_comment": "View more {comment} comment",
+          "view_more_comments": "View more {comment} comments",
+          "replies": "replies"
         },
         "react": {
           "like": "Like",
@@ -4546,6 +4551,20 @@
         "department":"Department",
         "job_title": "Job title"
 
+      }
+    },
+    "setting_member": {
+      "field_name": "Field name",
+      "show_hide_info": "Show/hide info",
+      "show_information_title": "Show information",
+      "show_information_text": "Would you like to show {field} information on the profile",
+      "hide_information_title": "Hide information",
+      "hide_information_text": "Would you like to hide {field} information on the profile"
+    },
+    "network": {
+      "notification": {
+        "tag_comment": "tagged you on a comment",
+        "tag_post": "tagged you on a post"
       }
     }
   }

@@ -4,6 +4,7 @@ import fse from "fs-extra"
 import { forEach, isEmpty } from "lodash-es"
 import path, { dirname } from "path"
 import { getSetting } from "./settings.js"
+import mime from "mime-types"
 
 const safeFileName = (fileName) => {
   return fileName
@@ -52,6 +53,7 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
         fs.writeFileSync(filePath, base64Data, { encoding: "base64" })
         uploadSuccess.push({
           name: fileName,
+          fullPath: filePath,
           path: path.join(storePath, fileName).replaceAll("\\", "/")
         })
       } catch (err) {
@@ -76,6 +78,7 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
             } else {
               resolve({
                 name: fileName,
+                fullPath: filePath,
                 path: path.join(storePath, fileName).replaceAll("\\", "/")
               })
             }
@@ -86,8 +89,12 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
     await Promise.allSettled(promises).then((res) => {
       forEach(res, (fileUpload) => {
         if (fileUpload.status === "fulfilled") {
+          const stats = fs.statSync(fileUpload.value.fullPath)
+
           uploadSuccess.push({
             name: fileUpload.value.name,
+            size: stats.size,
+            mime: mime.lookup(fileUpload.value.name),
             path: fileUpload.value.path
           })
         }
@@ -143,6 +150,7 @@ const _googleCloudUpload = async (storePath, files) => {
             name: fileName,
             path: path.join(storePath, fileName).replace(/\\/g, "/"),
             mime: file.mimetype,
+            size: file.size,
             storagePath: publicUrl
           })
           resolve("success")

@@ -3,7 +3,11 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { decodeHTMLEntities } from "@modules/Feed/common/common"
+import {
+  decodeHTMLEntities,
+  detectUrl,
+  handleTagUserAndReplaceContent
+} from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
 import { convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
@@ -14,6 +18,7 @@ import AttachPhotoVideo from "../AttachPhotoVideo"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
 import PreviewAttachment from "../PreviewAttachment"
+import LinkPreview from "@apps/components/link-preview/LinkPreview"
 
 const ModalCreatePost = (props) => {
   const {
@@ -21,6 +26,7 @@ const ModalCreatePost = (props) => {
     toggleModal,
     avatar,
     fullName,
+    userId,
     privacy_type = "workspace",
     dataMention,
     workspace,
@@ -32,7 +38,8 @@ const ModalCreatePost = (props) => {
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
     loadingUploadAttachment: false,
-    loadingSubmit: false
+    loadingSubmit: false,
+    arrLink: []
   })
   const [file, setFile] = useState([])
 
@@ -40,8 +47,16 @@ const ModalCreatePost = (props) => {
   const setLoadingUploadAttachment = (value) =>
     setState({ loadingUploadAttachment: value })
 
+  const setArrLink = (value) => setState({ arrLink: value })
+
   const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
+
+    // check detect link
+    const editorStateRaw = convertToRaw(editorState.getCurrentContent())
+    const html = draftToHtml(editorStateRaw)
+    const arr_link = detectUrl(html, true)
+    setArrLink(arr_link)
   }
 
   const insertCharacter = (characterToInsert, editorState) => {
@@ -96,7 +111,7 @@ const ModalCreatePost = (props) => {
   const setEmptyAfterSubmit = () => {
     setEmptyEditorState()
     setModal(false)
-    setState({ loadingSubmit: false })
+    setState({ loadingSubmit: false, arrLink: [] })
     setFile([])
   }
   const submitPost = () => {
@@ -105,12 +120,26 @@ const ModalCreatePost = (props) => {
       setState({ loadingSubmit: true })
       const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
       const content = draftToHtml(editorStateRaw)
+      const _content = detectUrl(content)
+      const result_tag_user = handleTagUserAndReplaceContent(
+        dataMention,
+        _content
+      )
+      const __content = result_tag_user.content
+      const tag_user = result_tag_user.tag_user
+
       const params = {
-        content: content,
+        content: __content,
         workspace: workspace,
         privacy_type: state.privacy_type,
         file: file,
-        approveStatus: approveStatus
+        approveStatus: approveStatus,
+        arrLink: state.arrLink,
+        tag_user: tag_user,
+        data_user: {
+          id: userId,
+          full_name: fullName
+        }
       }
       feedApi
         .postSubmitPost(params)
@@ -314,6 +343,16 @@ const ModalCreatePost = (props) => {
         />
 
         {renderPreviewAttachment}
+
+        {_.isEmpty(file) && !_.isEmpty(state.arrLink) && (
+          <LinkPreview
+            url={state.arrLink[0]}
+            maxLine={2}
+            minLine={2}
+            showGraphic={true}
+            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+          />
+        )}
 
         <ul className="create_post_footer">
           <Tooltip

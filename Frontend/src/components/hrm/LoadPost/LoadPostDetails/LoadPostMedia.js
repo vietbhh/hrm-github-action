@@ -16,9 +16,8 @@ const LoadPostMedia = (props) => {
     idMedia,
     setIdMedia,
     dataMention,
-    idPost,
     setData,
-    reloadPostThenCloseModal
+    setCommentMoreCountOriginal
   } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
@@ -37,13 +36,33 @@ const LoadPostMedia = (props) => {
 
   // ** useEffect
   useEffect(() => {
+    setCommentMoreCountOriginal(-1)
     if (state.modalPostImageDetail) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
       //setState({ dataModal: {}, idImage: "", postType: "" })
     }
+
+    if (!state.modalPostImageDetail) {
+      if (isMounted.current) {
+        if (_.isFunction(setData)) {
+          feedApi
+            .getGetFeed(data._id)
+            .then((res) => {
+              setData(res.data)
+            })
+            .catch((err) => {})
+        }
+      } else {
+        isMounted.current = true
+      }
+    }
   }, [state.modalPostImageDetail])
+
+  useEffect(() => {
+    setCommentMoreCountOriginal(data?.comment_more_count || 0)
+  }, [state.modalPostImageDetail, data])
 
   useEffect(() => {
     if (idMedia !== undefined && idMedia !== "") {
@@ -60,21 +79,6 @@ const LoadPostMedia = (props) => {
       }
     }
   }, [idMedia, data])
-
-  useEffect(() => {
-    if (!state.modalPostImageDetail && reloadPostThenCloseModal) {
-      if (isMounted.current) {
-        feedApi
-          .getGetFeed(idPost)
-          .then((res) => {
-            setData(res.data)
-          })
-          .catch((err) => {})
-      } else {
-        isMounted.current = true
-      }
-    }
-  }, [state.modalPostImageDetail])
 
   // ** render
   const renderMedia = () => {

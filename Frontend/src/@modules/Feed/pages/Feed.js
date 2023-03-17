@@ -1,8 +1,7 @@
 import { useMergedState } from "@apps/utility/common"
-import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
-import LoadFeed from "../components/LoadFeed"
+import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
 
 const Feed = (props) => {
   const {
@@ -11,8 +10,7 @@ const Feed = (props) => {
     approveStatus = "approved" // approved / rejected / pending
   } = props
   const [state, setState] = useMergedState({
-    prevScrollY: 0,
-    dataCreateNew: {}
+    prevScrollY: 0
   })
   const offsetTop = 90
   const offsetBottom = 30
@@ -46,10 +44,6 @@ const Feed = (props) => {
     }
   }
 
-  const setDataCreateNew = (value) => {
-    setState({ dataCreateNew: value })
-  }
-
   // ** useEffect
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
@@ -60,28 +54,19 @@ const Feed = (props) => {
   // ** render
   const renderLoadFeed = useMemo(
     () => (
-      <LoadFeed
-        dataCreateNew={state.dataCreateNew}
-        setDataCreateNew={setDataCreateNew}
+      <FeedCreateAndLoad
         workspace={workspace}
         apiLoadFeed={apiLoadFeed}
+        approveStatus={approveStatus}
       />
     ),
-    [state.dataCreateNew]
+    []
   )
 
   return (
     <Fragment>
       <div className="div-content">
-        <div className="div-left feed">
-          <CreatePost
-            setDataCreateNew={setDataCreateNew}
-            workspace={workspace}
-            approveStatus={approveStatus}
-          />
-
-          {renderLoadFeed}
-        </div>
+        <div className="div-left">{renderLoadFeed}</div>
         <div className="div-right">
           <div id="div-sticky">
             <SidebarWidget />

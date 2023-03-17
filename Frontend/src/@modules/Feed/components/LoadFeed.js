@@ -1,13 +1,13 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import { getAvatarUrl, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
 import React, { useEffect } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
-import { feedApi } from "../common/api"
-import { handleLoadAttachmentMedias } from "../common/common"
-import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { useSelector } from "react-redux"
+import { feedApi } from "../common/api"
+import { handleDataMention, handleLoadAttachmentMedias } from "../common/common"
 
 const LoadFeed = (props) => {
   const {
@@ -30,6 +30,8 @@ const LoadFeed = (props) => {
     dataMention: []
   })
 
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
 
@@ -152,15 +154,7 @@ const LoadFeed = (props) => {
   }, [dataCreateNew, state.idPostCreateNew])
 
   useEffect(() => {
-    const data_mention = []
-    _.forEach(dataEmployee, (value) => {
-      data_mention.push({
-        id: value.id,
-        name: value.full_name,
-        link: "#",
-        avatar: getAvatarUrl(value.id * 1)
-      })
-    })
+    const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 

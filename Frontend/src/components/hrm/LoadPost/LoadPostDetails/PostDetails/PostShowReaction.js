@@ -13,7 +13,6 @@ const PostShowReaction = (props) => {
   const { short, data } = props
   const [state, setState] = useMergedState({
     dataReaction: {},
-    comment_count: 0,
     modal_reaction: false
   })
 
@@ -112,15 +111,21 @@ const PostShowReaction = (props) => {
           <div className="div-text">{renderTextReaction()}</div>
         </div>
         <div className="reaction-right">
-          {state.comment_count > 0 && (
+          {data.comment_count > 0 && (
             <div className="div-comment">
-              20 {useFormatMessage("modules.feed.post.text.comment")}
+              {data.comment_count}{" "}
+              {useFormatMessage(
+                `modules.feed.post.text.${
+                  data.comment_count === 1 ? "comment" : "comments"
+                }`
+              )}
             </div>
           )}
 
           {data?.seen_count > 0 && !short && (
             <div className="div-seen">
-              38 {useFormatMessage("modules.feed.post.text.people_seen")}
+              {data?.seen_count}{" "}
+              {useFormatMessage("modules.feed.post.text.people_seen")}
             </div>
           )}
         </div>

@@ -131,6 +131,26 @@ export const getPublicDownloadUrl = (path, type = "image") => {
 }
 
 export const handleDataBeforeReturn = async (data, multiData = false) => {
+  const handleDataItemUser = (data_user, user_id) => {
+    let data = {
+      id: user_id,
+      username: "",
+      avatar: "",
+      full_name: "",
+      email: ""
+    }
+    if (data_user) {
+      data = {
+        id: data_user.id,
+        username: data_user.username,
+        avatar: data_user.avatar,
+        full_name: data_user.full_name,
+        email: data_user.email
+      }
+    }
+    return data
+  }
+
   const arrData = multiData ? data : [data]
   const promises = []
   forEach(arrData, (dataItem, index) => {
@@ -139,38 +159,51 @@ export const handleDataBeforeReturn = async (data, multiData = false) => {
 
       if (dataItem["owner"] && isNumber(dataItem["owner"])) {
         const data_user = await getUser(dataItem["owner"])
-        _dataItem["_doc"]["owner"] = {
-          id: data_user.id,
-          username: data_user.username,
-          avatar: data_user.avatar,
-          full_name: data_user.full_name,
-          email: data_user.email
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["owner"] = handleDataItemUser(
+            data_user,
+            dataItem["owner"]
+          )
+        } else {
+          _dataItem["owner"] = handleDataItemUser(data_user, dataItem["owner"])
         }
       }
 
       if (dataItem["created_by"] && isNumber(dataItem["created_by"])) {
         const data_user = await getUser(dataItem["created_by"])
-        _dataItem["_doc"]["created_by"] = {
-          id: data_user.id,
-          username: data_user.username,
-          avatar: data_user.avatar,
-          full_name: data_user.full_name,
-          email: data_user.email
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["created_by"] = handleDataItemUser(
+            data_user,
+            dataItem["created_by"]
+          )
+        } else {
+          _dataItem["created_by"] = handleDataItemUser(
+            data_user,
+            dataItem["created_by"]
+          )
         }
       }
 
       if (dataItem["updated_by"] && isNumber(dataItem["updated_by"])) {
         const data_user = await getUser(dataItem["updated_by"])
-        _dataItem["_doc"]["updated_by"] = {
-          id: data_user.id,
-          username: data_user.username,
-          avatar: data_user.avatar,
-          full_name: data_user.full_name,
-          email: data_user.email
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["updated_by"] = handleDataItemUser(
+            data_user,
+            dataItem["updated_by"]
+          )
+        } else {
+          _dataItem["updated_by"] = handleDataItemUser(
+            data_user,
+            dataItem["updated_by"]
+          )
         }
       }
 
-      resolve(_dataItem["_doc"])
+      if (_dataItem["_doc"]) {
+        resolve(_dataItem["_doc"])
+      } else {
+        resolve(_dataItem)
+      }
     })
     promises.push(promise)
   })

@@ -22,7 +22,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   type: {
     type: String,
-    enum: ["post", "image", "video"],
+    enum: ["post", "image", "video", "link", "update_avatar", "update_cover"],
     default: "post"
   },
   medias: {
@@ -36,10 +36,20 @@ const feedSchema = baseSchema("m_feed", {
           enum: ["image", "video"]
         },
         source: {
-          type: String
+          type: String,
+          default: null
+        },
+        source_attribute: {
+          type: {},
+          default: {}
         },
         thumb: {
-          type: String
+          type: String,
+          default: null
+        },
+        thumb_attribute: {
+          type: {},
+          default: {}
         }
       }
     ],
@@ -71,15 +81,31 @@ const feedSchema = baseSchema("m_feed", {
     type: Number,
     default: 0
   },
+  link: {
+    type: [String],
+    default: []
+  },
+  tag_user: {
+    type: [String],
+    default: []
+  },
 
   // ** source child / post: 1 image/video
   source: {
     type: String,
     default: null
   },
+  source_attribute: {
+    type: {},
+    default: {}
+  },
   thumb: {
     type: String,
     default: null
+  },
+  thumb_attribute: {
+    type: {},
+    default: {}
   },
   // **
 

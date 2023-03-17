@@ -14,12 +14,14 @@ import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, Fragment } from "react"
+import createLinkifyPlugin from "@draft-js-plugins/linkify"
 
 import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
+import "@draft-js-plugins/linkify/lib/plugin.css"
 
 const EditorComponent = (props) => {
   const { dataMention, editorState, onEditorStateChange } = props
@@ -53,12 +55,14 @@ const EditorComponent = (props) => {
       const { InlineToolbar } = inlineToolbarPlugin
 
       const linkPlugin = createLinkPlugin()
+      const linkifyPlugin = createLinkifyPlugin()
 
       const plugins = [
         mentionPlugin,
         staticToolbarPlugin,
         inlineToolbarPlugin,
-        linkPlugin
+        linkPlugin,
+        linkifyPlugin
       ]
       return { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin }
     }, [])
@@ -89,14 +93,14 @@ const EditorComponent = (props) => {
         {
           // may be use React.Fragment instead of div to improve performance after React 16
           (externalProps) => (
-            <div>
+            <Fragment>
               <BoldButton {...externalProps} />
               <ItalicButton {...externalProps} />
               <UnderlineButton {...externalProps} />
               <UnorderedListButton {...externalProps} />
               <OrderedListButton {...externalProps} />
               <CodeBlockButton {...externalProps} />
-            </div>
+            </Fragment>
           )
         }
       </Toolbar>
@@ -104,12 +108,12 @@ const EditorComponent = (props) => {
         {
           // may be use React.Fragment instead of div to improve performance after React 16
           (externalProps) => (
-            <div>
+            <Fragment>
               <BoldButton {...externalProps} />
               <ItalicButton {...externalProps} />
               <UnderlineButton {...externalProps} />
               <linkPlugin.LinkButton {...externalProps} />
-            </div>
+            </Fragment>
           )
         }
       </InlineToolbar>

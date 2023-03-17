@@ -3,6 +3,7 @@ import { useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
+import ReactDOM from "react-dom"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 import ButtonReaction from "../PostDetails/ButtonReaction"
@@ -26,14 +27,23 @@ const PostImageDetailModal = (props) => {
   const [state, setState] = useMergedState({
     data: {},
     id_previous: "",
-    id_next: ""
+    id_next: "",
+    comment_more_count_original: dataModal.comment_more_count
   })
   const imageRef = useRef(null)
   const refDivBackLeft = useRef(null)
   const refDivBackRight = useRef(null)
   const refDivLeft = useRef(null)
+  const refDivComment = useRef(null)
 
   // ** function
+  const scrollToBottom = () => {
+    if (refDivComment.current) {
+      const chatContainer = ReactDOM.findDOMNode(refDivComment.current)
+      chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
+    }
+  }
+
   const handleCloseModal = () => {
     toggleModal()
     window.history.replaceState(null, "", current_url)
@@ -48,6 +58,10 @@ const PostImageDetailModal = (props) => {
         medias: state.data.medias
       }
     })
+  }
+
+  const setCommentMoreCountOriginal = (value = 0) => {
+    setState({ comment_more_count_original: value })
   }
 
   // ** useEffect
@@ -74,6 +88,9 @@ const PostImageDetailModal = (props) => {
                   _data["url_source"] = URL.createObjectURL(response.data)
                   setState({ data: _data })
                 })
+              setState({
+                comment_more_count_original: _data.comment_more_count
+              })
             })
             .catch((err) => {})
         } else {
@@ -90,6 +107,9 @@ const PostImageDetailModal = (props) => {
             downloadApi.getPhoto(_data.source).then((response) => {
               _data["url_source"] = URL.createObjectURL(response.data)
               setState({ data: _data })
+            })
+            setState({
+              comment_more_count_original: _data.comment_more_count
             })
           })
           .catch((err) => {})
@@ -276,7 +296,9 @@ const PostImageDetailModal = (props) => {
           </div>
 
           <div className="div-right">
-            <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <PerfectScrollbar
+              options={{ wheelPropagation: false }}
+              ref={refDivComment}>
               <div className="right-header">
                 <PostHeader data={dataModal} />
               </div>
@@ -289,10 +311,26 @@ const PostImageDetailModal = (props) => {
                 <PostShowReaction data={state.data} short={true} />
               </div>
               <div className="right-button">
-                <ButtonReaction data={state.data} setData={setDataMedia} />
+                <ButtonReaction
+                  data={state.data}
+                  setData={setDataMedia}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                />
               </div>
               <div className="right-comment">
-                <PostComment data={state.data} dataMention={dataMention} />
+                <PostComment
+                  data={state.data}
+                  dataMention={dataMention}
+                  setData={setDataMedia}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                  scrollToBottom={scrollToBottom}
+                />
               </div>
             </PerfectScrollbar>
           </div>

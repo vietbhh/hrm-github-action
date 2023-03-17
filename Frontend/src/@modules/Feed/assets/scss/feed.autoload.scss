@@ -1,6 +1,11 @@
 @import "@scss/friday";
 
-.div-left.feed {
+.card-loading {
+  border-radius: 14px;
+}
+
+.div-left.feed,
+.div-left .feed {
   > div {
     max-width: 790px;
     margin: auto;
@@ -23,6 +28,7 @@
     background: #ffffff;
     padding: 20px 40px;
     margin-bottom: 25px !important;
+    border-radius: 14px;
 
     hr {
       color: #f1f1f5;
@@ -406,7 +412,6 @@
       gap: 10px;
 
       .div-comment {
-        cursor: pointer;
         font-weight: 300;
         font-size: 12px;
         line-height: 29px;
@@ -414,7 +419,6 @@
       }
 
       .div-seen {
-        cursor: pointer;
         font-weight: 300;
         font-size: 12px;
         line-height: 29px;
@@ -452,21 +456,21 @@
   }
 
   .react-like {
-    color: #139ff8;
-    font-weight: 600;
+    color: #139ff8 !important;
+    font-weight: 600 !important;
   }
 
   .react-love {
-    color: rgb(243, 62, 88);
-    font-weight: 600;
+    color: rgb(243, 62, 88) !important;
+    font-weight: 600 !important;
   }
 
   .react-care,
   .react-smile,
   .react-wow,
   .react-sad {
-    color: rgb(247, 177, 37);
-    font-weight: 600;
+    color: rgb(247, 177, 37) !important;
+    font-weight: 600 !important;
   }
 
   .post-comment {
@@ -480,6 +484,7 @@
         position: relative;
         display: flex;
         margin-top: 15px;
+        padding-right: 5px;
 
         .avatar {
           width: 37px;
@@ -501,6 +506,8 @@
             background: #f5f6f8;
             border-radius: 20px;
             padding: 10px 20px;
+            overflow-wrap: anywhere;
+            position: relative;
 
             .content__name {
               font-weight: 600;
@@ -512,6 +519,29 @@
               font-weight: 400;
               font-size: 14px;
               color: #32434f;
+
+              p {
+                margin-bottom: 0;
+              }
+            }
+
+            .content__react {
+              right: 0px;
+              background: #fff;
+              border-radius: 12px;
+              padding: 1px 5px;
+              cursor: pointer;
+              position: absolute;
+              bottom: -10px;
+              z-index: 9;
+              display: flex;
+              align-items: center;
+              gap: 2px;
+
+              img {
+                width: 15px;
+                height: 15px;
+              }
             }
           }
 
@@ -529,7 +559,7 @@
             margin-top: 5px;
 
             .reaction {
-              margin-right: 30px;
+              margin-right: 20px;
               font-weight: 600;
               font-size: 12px;
               color: #727e87;
@@ -538,18 +568,6 @@
             .time {
               font-weight: 300;
               font-size: 12px;
-              color: #727e87;
-            }
-          }
-
-          .body__comment-more {
-            cursor: pointer;
-            padding-left: 18px;
-            margin-top: 5px;
-
-            span {
-              font-weight: 600;
-              font-size: 14px;
               color: #727e87;
             }
           }
@@ -567,9 +585,32 @@
             visibility: unset;
           }
         }
+      }
 
-        &.reply {
-          padding-left: 60px;
+      .div-comment__div-reply {
+        padding-left: 60px;
+
+        .div-comment__comment-reply {
+          cursor: pointer;
+          margin-top: 7px;
+          padding-left: 10px;
+
+          span {
+            font-weight: 600;
+            font-size: 14px;
+            color: #727e87;
+          }
+        }
+      }
+
+      .div-comment__comment_more {
+        margin-top: 20px;
+
+        > span {
+          cursor: pointer;
+          margin-left: 55px;
+          color: #377dff;
+          font-weight: 500;
         }
       }
     }
@@ -655,10 +696,6 @@
               margin-left: 5px;
             }
           }
-
-          .emotions-dropdown-menu {
-            left: -12px;
-          }
         }
 
         .div-form__div-image {
@@ -693,11 +730,12 @@
     background-color: #ffffff;
     border-radius: 12px;
     bottom: 50px;
-    left: 0;
+    right: -20px;
     padding: 10px;
     visibility: hidden;
     opacity: 0;
     transition: all 0.3s ease, background 0s, border 0s, color 0s;
+    z-index: 999;
 
     &.show {
       visibility: visible;
@@ -705,7 +743,7 @@
     }
 
     .emotions-dropdown-arrow {
-      left: 16px;
+      right: 25px;
       bottom: -6px;
       box-shadow: 3px 3px 7px -3px rgb(0 0 0 / 10%);
       transform: rotate(45deg);
@@ -739,10 +777,9 @@
     }
 
     .div-emoji {
-      padding: 10px;
-
       .epr-main {
-        width: 390px !important;
+        width: 330px !important;
+        height: 365px !important;
         border-width: 0;
 
         .epr-header {
@@ -769,6 +806,15 @@
         }
       }
     }
+
+    &.bottom {
+      bottom: unset;
+      top: 40px;
+
+      .emotions-dropdown-arrow {
+        display: none;
+      }
+    }
   }
 
   .post-body-content,
@@ -788,6 +834,24 @@
         text-decoration-line: underline;
       }
     }
+  }
+
+  .public-DraftEditorPlaceholder-inner {
+    font-size: 14px;
+  }
+
+  a {
+    color: #377dff;
+
+    &:hover {
+      color: darken($color: #377dff, $amount: 15);
+      text-decoration: underline;
+    }
+  }
+
+  .preview-link-component {
+    border: 1px solid #f1f1f5;
+    height: 120px;
   }
 }
 
@@ -1022,6 +1086,10 @@
           }
         }
       }
+    }
+
+    .emotions-dropdown-arrow {
+      right: 34px;
     }
   }
 }
@@ -1323,6 +1391,10 @@
 
           .scrollbar-container {
             padding: 0 15px;
+
+            .ps__rail-x {
+              display: none;
+            }
           }
 
           .right-header {
@@ -1369,10 +1441,29 @@
             }
           }
 
-          .right-comment-form {
-          }
+          .right-comment {
+            .post-comment__div-form {
+              margin-bottom: 30px;
 
-          .right-comment-content {
+              .emotions-dropdown-menu {
+                right: -50px;
+
+                .emotions-dropdown-arrow {
+                  right: 55px;
+                }
+              }
+            }
+
+            .div-comment__comment {
+              .body__reaction {
+                .reaction {
+                  margin-right: 15px;
+                }
+                .reaction__time {
+                  font-size: 12px;
+                }
+              }
+            }
           }
         }
       }
@@ -1394,12 +1485,6 @@
       padding: 7 15px;
       min-width: 125px;
     }
-  }
-}
-
-.reaction__like {
-  ul {
-    margin-bottom: 10px;
   }
 }
 
