@@ -1,7 +1,7 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import { ErpCheckbox, ErpInput } from "@apps/components/common/ErpField"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { Tabs } from "antd"
 import React, { useEffect, useRef } from "react"
@@ -132,7 +132,9 @@ const EmployeesSelect = (props) => {
         label: (
           <div className="text-center">
             <i className="fa-solid fa-user-group"></i>
-            <p>{useFormatMessage("modules.workspace.text.list_selected")}</p>
+            <p class="text-capitalize">
+              {useFormatMessage("modules.workspace.text.members")}
+            </p>
           </div>
         ),
         key: "members",
