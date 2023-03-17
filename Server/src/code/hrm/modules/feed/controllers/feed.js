@@ -191,12 +191,18 @@ const loadFeedProfile = async (req, res, next) => {
   const page = request.page
   const pageLength = request.pageLength
   const filter = {
-    ref: null,
-    permission: "default",
-    $or: [{ created_by: req.__user }, { tag_user: req.__user }]
+    $and: [
+      { ref: null },
+      {
+        $or: [{ permission: "default" }, { permission: "only_me" }]
+      },
+      {
+        $or: [{ created_by: req.__user }, { tag_user: req.__user }]
+      }
+    ]
   }
   if (request.idPostCreateNew !== "") {
-    filter["_id"] = { $lt: request.idPostCreateNew }
+    filter["$and"].push({ _id: { $lt: request.idPostCreateNew } })
   }
   const feed = await feedMongoModel
     .find(filter)
