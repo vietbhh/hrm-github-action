@@ -44,23 +44,30 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
   const promises = []
   if (uploadByFileContent) {
     forEach(files, (file, key) => {
-      const fileName = safeFileName(file.name)
-      const filePath = path.join(savePath, fileName)
-      const fileData = file.content
-      const base64Data = fileData.replace(/^data:([A-Za-z-+/]+);base64,/, "")
-      try {
-        fs.writeFileSync(filePath, base64Data, { encoding: "base64" })
-        uploadSuccess.push({
-          name: fileName,
-          fullPath: filePath,
-          path: path.join(storePath, fileName).replaceAll("\\", "/")
+      promises.push(
+        new Promise((resolve, reject) => {
+          const fileName = safeFileName(file.name)
+          const filePath = path.join(savePath, fileName)
+          const fileData = file.content
+          const base64Data = fileData.replace(
+            /^data:([A-Za-z-+/]+);base64,/,
+            ""
+          )
+          try {
+            fs.writeFileSync(filePath, base64Data, { encoding: "base64" })
+            resolve({
+              name: fileName,
+              fullPath: filePath,
+              path: path.join(storePath, fileName).replaceAll("\\", "/")
+            })
+          } catch (err) {
+            reject({
+              name: fileName,
+              error: err
+            })
+          }
         })
-      } catch (err) {
-        uploadError.push({
-          name: fileName,
-          error: err
-        })
-      }
+      )
     })
   } else {
     forEach(files, (file, key) => {
@@ -85,27 +92,29 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
         })
       )
     })
-    await Promise.allSettled(promises).then((res) => {
-      forEach(res, (fileUpload) => {
-        if (fileUpload.status === "fulfilled") {
-          const stats = fs.statSync(fileUpload.value.fullPath)
-
-          uploadSuccess.push({
-            name: fileUpload.value.name,
-            size: stats.size,
-            mime: mime.lookup(fileUpload.value.name),
-            path: fileUpload.value.path
-          })
-        }
-        if (fileUpload.status === "rejected") {
-          uploadError.push({
-            name: fileUpload.reason.name,
-            error: fileUpload.reason.error
-          })
-        }
-      })
-    })
   }
+
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (fileUpload) => {
+      if (fileUpload.status === "fulfilled") {
+        const stats = fs.statSync(fileUpload.value.fullPath)
+
+        uploadSuccess.push({
+          name: fileUpload.value.name,
+          size: stats.size,
+          mime: mime.lookup(fileUpload.value.name),
+          path: fileUpload.value.path
+        })
+      }
+      if (fileUpload.status === "rejected") {
+        uploadError.push({
+          name: fileUpload.reason.name,
+          error: fileUpload.reason.error
+        })
+      }
+    })
+  })
+
   return { uploadSuccess, uploadError }
 }
 
@@ -144,13 +153,17 @@ const _googleCloudUpload = async (storePath, files) => {
       })
 
       blobStream
-        .on("finish", () => {
+        .on("finish", async () => {
           const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+          const filePathUpload = path
+            .join(storePath, fileName)
+            .replace(/\\/g, "/")
+          const [metadata] = await bucket.file(filePathUpload).getMetadata()
           uploadSuccess.push({
             name: fileName,
-            path: path.join(storePath, fileName).replace(/\\/g, "/"),
+            path: filePathUpload,
             mime: file.mimetype,
-            size: file.size,
+            size: metadata.size,
             storagePath: publicUrl
           })
           resolve("success")
@@ -317,7 +330,7 @@ const _uploadServices = async (
     const storePathGCS = path
       .join(process.env.code, storePath)
       .replace(/\\/g, "/")
-    return _googleCloudUpload(storePathGCS, files, uploadByFileContent)
+    return _googleCloudUpload(storePathGCS, files)
   }
 }
 
@@ -418,7 +431,7 @@ const moveFileFromServerToGCS = async (serverPath, storagePath, filename) => {
               } else {
                 resolve({
                   file: file,
-                  name:  item.name,
+                  name: item.name,
                   path: dest
                 })
               }
