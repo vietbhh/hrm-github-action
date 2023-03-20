@@ -543,7 +543,8 @@ const loadFeed = async (req, res) => {
   const filter = {
     permission_ids: req.query.workspace,
     permission: "workspace",
-    approve_status: "approved"
+    approve_status: "approved",
+    ref: null
   }
   const feed = await feedMongoModel
     .find(filter)

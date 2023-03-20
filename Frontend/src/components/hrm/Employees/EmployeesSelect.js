@@ -155,7 +155,7 @@ const EmployeesSelect = (props) => {
                 </Col>
               </Row>
               <PerfectScrollbar
-                onYReachEnd={() => endScrollLoad()}
+                onYReachEnd={endScrollLoad}
                 style={{
                   maxHeight: "400px",
                   minHeight: "400px"
@@ -217,9 +217,9 @@ const EmployeesSelect = (props) => {
                 </Col>
               </Row>
               <PerfectScrollbar
-                onYReachEnd={() => endScrollLoad()}
+                onYReachEnd={() => endScrollDepartment()}
                 style={{
-                  maxHeight: "400px",
+                  height: "400px",
                   minHeight: "50px"
                 }}>
                 <Row className="w-100">
@@ -281,7 +281,7 @@ const EmployeesSelect = (props) => {
                 </Col>
               </Row>
               <PerfectScrollbar
-                onYReachEnd={() => endScrollLoad()}
+                onYReachEnd={() => endScrollJobtitle()}
                 style={{
                   maxHeight: "400px",
                   minHeight: "400px"
@@ -340,7 +340,7 @@ const EmployeesSelect = (props) => {
     const indexID = findKeyByID(state.dataSelected, id)
     return indexID
   }
-  console.log("sate", state)
+
   const loadData = (props) => {
     props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
@@ -396,11 +396,12 @@ const EmployeesSelect = (props) => {
     console.log("runnn endScrollLoad")
     const page = state.page + 1
     if (state.typeAdd === "members") {
-      console.log("run endScrollLoad members")
       if (state.recordsTotal > state.members.length) {
+        console.log("run endScrollLoad members")
         loadData({ page: page, search: state.search })
       }
     }
+    return
     if (state.typeAdd === "departments" && !state.loading) {
       console.log("run endScrollLoad departments")
       if (state.recordsTotal > state.departments.length) {
@@ -412,7 +413,21 @@ const EmployeesSelect = (props) => {
       }
     }
   }
+  const endScrollDepartment = () => {
+    console.log("runnn endScrollDepartment")
+    const page = state.page + 1
+    if (state.recordsTotal > state.departments.length) {
+      loadDepartment({ page: page, search: state.search })
+    }
+  }
 
+  const endScrollJobtitle = () => {
+    console.log("runnn endScrollJobtitle")
+    const page = state.page + 1
+    if (state.recordsTotal > state.departments.length) {
+      loadJobtitle({ page: page, search: state.search })
+    }
+  }
   const handleAdd = () => {
     const dataSelected = state.dataSelected
     handleSelect(state.dataSelected)
@@ -443,7 +458,7 @@ const EmployeesSelect = (props) => {
       loadDepartment({ page: 1 })
     }
   }, [state.typeAdd])
-
+  console.log("state ", state)
   useEffect(() => {
     handleSelect(state.dataSelected, state.typeAdd)
   }, [state.dataSelected])
@@ -453,7 +468,14 @@ const EmployeesSelect = (props) => {
       tabPosition={"left"}
       items={itemTab()}
       onTabClick={(key) =>
-        setState({ typeAdd: key, dataSelected: [], recordsTotal: 0 })
+        setState({
+          typeAdd: key,
+          dataSelected: [],
+          recordsTotal: 0,
+          departments: [],
+          jobtitles: [],
+          recordsTotal: []
+        })
       }
     />
   )

@@ -5,6 +5,7 @@ import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
+import { Card, CardBody, CardHeader } from "reactstrap"
 import WorkspaceIntroduction from "../sidebarComponents/WorkspaceIntroduction"
 const TabFeed = (props) => {
   const { detailWorkspace } = props
@@ -44,6 +45,32 @@ const TabFeed = (props) => {
           workspace={workspaceID}
           approveStatus={state.approveStatus}
         />
+
+        <Card className="mb-1">
+          <CardHeader>
+            <h2 className="card-title">
+              <i class="fa-duotone fa-flag-swallowtail"></i> Workspace pinned
+              post
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <div className="post-pinned">
+              <div className="content"></div>
+              <div className="d-flex">
+                <div className="me-50">Long Trinh</div>
+                <div className="me-50">
+                  <i className="fa-duotone fa-calendar-days me-50"></i>March 3,
+                  2023
+                </div>
+                <div>
+                  <div>
+                    <i className="fa-regular fa-eye me-50"></i>0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
         <LoadFeed
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}
