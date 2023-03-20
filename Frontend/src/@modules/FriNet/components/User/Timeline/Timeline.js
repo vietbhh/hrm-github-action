@@ -63,13 +63,13 @@ const index = (props) => {
 
   return (
     <Fragment>
-      <div className="div-timeline">
-        <div className="div-left">
+      <div className="div-timeline div-content">
+        <div className="div-left">{renderLoadFeed}</div>
+        <div className="div-right">
           <div id="div-sticky">
             <TimelineProfile employeeData={employeeData} />
           </div>
         </div>
-        <div className="div-right">{renderLoadFeed}</div>
       </div>
     </Fragment>
   )
