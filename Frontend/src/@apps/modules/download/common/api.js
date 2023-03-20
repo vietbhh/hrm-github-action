@@ -1,4 +1,4 @@
-import { axiosApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 
 export const downloadApi = {
   getPhoto(file) {
@@ -51,10 +51,15 @@ export const downloadApi = {
       )
     })
   },
-  getFile(file) {
+  getFile(file, downloadFromStorage) {
     return new Promise((resolve, reject) => {
+      const src = "/download/file?name=" + file
+      if (downloadFromStorage === true) {
+        src += "&type=cloud_storage"
+      }
+
       resolve(
-        axiosApi.get("/download/file?name=" + file, {
+        axiosApi.get(src, {
           responseType: "arraybuffer"
         })
       )
