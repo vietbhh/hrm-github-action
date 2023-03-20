@@ -26,6 +26,7 @@ import {
   Spinner
 } from "reactstrap"
 import { initAppData } from "redux/app/app"
+import { updateListUsers } from "redux/app/users"
 import { handleLogin } from "redux/authentication"
 import { initialLayout } from "redux/layout"
 import Header from "./Header"
@@ -63,7 +64,8 @@ const Login = (props) => {
           permits,
           init: { settings, unit, modules, routes, filters, optionsModules },
           accessToken,
-          refreshToken
+          refreshToken,
+          list_user
         } = res.data
         dispatch(initialLayout(settings))
         i18n.changeLanguage(settings.language)
@@ -79,6 +81,7 @@ const Login = (props) => {
         dispatch(
           initAppData({ unit, modules, routes, filters, optionsModules })
         )
+        dispatch(updateListUsers(list_user))
         ability.update(permits)
         navigate(from)
         notification.show({

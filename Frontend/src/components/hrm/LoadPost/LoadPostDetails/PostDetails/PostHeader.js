@@ -6,7 +6,6 @@ import { Link } from "react-router-dom"
 
 const PostHeader = (props) => {
   const { data } = props
-
   const items = [
     {
       key: "1",
@@ -19,11 +18,39 @@ const PostHeader = (props) => {
     }
   ]
 
+  // ** render
+  const renderAfterName = () => {
+    if (data.type === "update_cover") {
+      return (
+        <span className="after-name">
+          {useFormatMessage("modules.feed.post.text.updated_cover")}
+        </span>
+      )
+    }
+
+    if (data.type === "update_avatar") {
+      return (
+        <span className="after-name">
+          {useFormatMessage("modules.feed.post.text.updated_avatar")}
+        </span>
+      )
+    }
+
+    return ""
+  }
+
   return (
     <div className="post-header">
-      <Avatar className="img" src={data?.created_by?.avatar} />
+      <Link to={`/u/${data?.created_by?.username}`}>
+        <Avatar className="img" src={data?.created_by?.avatar} />
+      </Link>
       <div className="post-header-title">
-        <span className="name">{data?.created_by?.full_name || ""}</span>
+        <div className="div-name">
+          <Link to={`/u/${data?.created_by?.username}`}>
+            <span className="name">{data?.created_by?.full_name || ""}</span>{" "}
+          </Link>
+          {renderAfterName()}
+        </div>
         <span className="time">{timeDifference(data.created_at)}</span>
       </div>
       <div className="post-header-right">

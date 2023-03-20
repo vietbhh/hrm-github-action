@@ -1,28 +1,24 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
-import {
-  getAvatarUrl,
-  useFormatMessage,
-  useMergedState
-} from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { handleDataMention } from "@modules/Feed/common/common"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
   const {
-    dataEmployee,
     workspace, // arr workspace: []
     setDataCreateNew, // function set Data then create new post
-    approveStatus = "approved" // approved / rejected
+    approveStatus = "approved" // approved / rejected / pending
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: []
   })
 
+  const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
-  const userName = userData.username
   const fullName = userData.full_name
   const userId = userData.id
 
@@ -33,15 +29,7 @@ const CreatePost = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    const data_mention = []
-    _.forEach(dataEmployee, (value) => {
-      data_mention.push({
-        id: value.id,
-        name: value.full_name,
-        link: "#",
-        avatar: getAvatarUrl(value.id * 1)
-      })
-    })
+    const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 
@@ -272,6 +260,7 @@ const CreatePost = (props) => {
         setModal={(value) => setState({ modalCreatePost: value })}
         avatar={avatar}
         fullName={fullName}
+        userId={userId}
         dataMention={state.dataMention}
         workspace={workspace}
         setDataCreateNew={setDataCreateNew}

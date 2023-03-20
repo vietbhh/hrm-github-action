@@ -22,7 +22,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   type: {
     type: String,
-    enum: ["post", "image", "video"],
+    enum: ["post", "image", "video", "link", "update_avatar", "update_cover"],
     default: "post"
   },
   medias: {
@@ -36,10 +36,20 @@ const feedSchema = baseSchema("m_feed", {
           enum: ["image", "video"]
         },
         source: {
-          type: String
+          type: String,
+          default: null
+        },
+        source_attribute: {
+          type: {},
+          default: {}
         },
         thumb: {
-          type: String
+          type: String,
+          default: null
+        },
+        thumb_attribute: {
+          type: {},
+          default: {}
         }
       }
     ],
@@ -47,7 +57,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   approve_status: {
     type: String,
-    enum: ["approved", "rejected"],
+    enum: ["approved", "rejected", "pending"],
     default: "approved"
   },
   reaction: {
@@ -64,6 +74,18 @@ const feedSchema = baseSchema("m_feed", {
     default: []
   },
   comment_ids: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: []
+  },
+  seen_count: {
+    type: Number,
+    default: 0
+  },
+  link: {
+    type: [String],
+    default: []
+  },
+  tag_user: {
     type: [String],
     default: []
   },
@@ -73,9 +95,17 @@ const feedSchema = baseSchema("m_feed", {
     type: String,
     default: null
   },
+  source_attribute: {
+    type: {},
+    default: {}
+  },
   thumb: {
     type: String,
     default: null
+  },
+  thumb_attribute: {
+    type: {},
+    default: {}
   },
   // **
 

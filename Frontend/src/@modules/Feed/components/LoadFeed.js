@@ -1,15 +1,21 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import { getAvatarUrl, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
 import React, { useEffect } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
+import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
-import { handleLoadAttachmentMedias } from "../common/common"
-import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
+import { handleDataMention, handleLoadAttachmentMedias } from "../common/common"
 
 const LoadFeed = (props) => {
-  const { dataCreateNew, setDataCreateNew, workspace, dataEmployee } = props
+  const {
+    dataCreateNew, // data sau khi tạo mới post
+    setDataCreateNew, // set data new
+    workspace, // arr workspace: []
+    apiLoadFeed // api load feed
+  } = props
   const [state, setState] = useMergedState({
     dataPost: [],
     hasMore: false,
@@ -24,6 +30,10 @@ const LoadFeed = (props) => {
     dataMention: []
   })
 
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
+  const cover = userData?.cover || ""
+  const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
 
   // ** function
@@ -33,27 +43,29 @@ const LoadFeed = (props) => {
       page: state.page,
       pageLength: state.pageLength,
       workspace: workspace,
-      idPostCreateNew: state.idPostCreateNew
+      idPostCreateNew: state.idPostCreateNew // select where id <= idPostCreateNew
     }
-    setTimeout(() => {
-      feedApi
-        .getLoadFeed(params)
-        .then((res) => {
-          setState({
-            loadingPost: false,
-            dataPost: [...state.dataPost, ...res.data.dataPost],
-            totalPost: res.data.totalPost,
-            page: res.data.page,
-            hasMore: res.data.hasMore
-          })
+    const api = apiLoadFeed ? apiLoadFeed(params) : feedApi.getLoadFeed(params)
+    api
+      .then((res) => {
+        setState({
+          dataPost: [...state.dataPost, ...res.data.dataPost],
+          totalPost: res.data.totalPost,
+          page: res.data.page,
+          hasMore: res.data.hasMore
         })
-        .catch((err) => {
-          setState({ loadingPost: false, hasMore: true })
-        })
-    }, 1000)
+
+        setTimeout(() => {
+          setState({ loadingPost: false })
+        }, 1000)
+      })
+      .catch((err) => {
+        setState({ loadingPost: false, hasMore: true })
+      })
   }
 
   const handleAfterLoadLazyLoadComponent = (value, index) => {
+    setState({ loadingPost: false })
     if (state.hasMore) {
       setState({ hasMoreLazy: true })
     }
@@ -61,9 +73,12 @@ const LoadFeed = (props) => {
     // load media
     if (
       value.source !== null &&
-      (value.type === "image" || value.type === "video")
+      (value.type === "image" ||
+        value.type === "video" ||
+        value.type === "update_cover" ||
+        value.type === "update_avatar")
     ) {
-      if (value.type === "image") {
+      if (value.type === "image" || value.type === "update_cover") {
         downloadApi.getPhoto(value.thumb).then((response) => {
           value["url_thumb"] = URL.createObjectURL(response.data)
           const dataPost = [...state.dataPost]
@@ -78,6 +93,17 @@ const LoadFeed = (props) => {
           dataPost[index] = value
           setState({ dataPost: dataPost })
         })
+      }
+      if (value.type === "update_avatar") {
+        downloadApi.getPhoto(value.thumb).then((response) => {
+          value["url_thumb"] = URL.createObjectURL(response.data)
+        })
+        value["url_cover"] = ""
+        if (cover !== "") {
+          downloadApi.getPhoto(cover).then((response) => {
+            value["url_cover"] = URL.createObjectURL(response.data)
+          })
+        }
       }
     }
 
@@ -97,9 +123,15 @@ const LoadFeed = (props) => {
 
     if (
       dataCreateNew.source !== null &&
-      (dataCreateNew.type === "image" || dataCreateNew.type === "video")
+      (dataCreateNew.type === "image" ||
+        dataCreateNew.type === "video" ||
+        dataCreateNew.type === "update_cover" ||
+        dataCreateNew.type === "update_avatar")
     ) {
-      if (dataCreateNew.type === "image") {
+      if (
+        dataCreateNew.type === "image" ||
+        dataCreateNew.type === "update_cover"
+      ) {
         await downloadApi.getPhoto(dataCreateNew.thumb).then((response) => {
           dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
         })
@@ -109,6 +141,18 @@ const LoadFeed = (props) => {
         await downloadApi.getPhoto(dataCreateNew.source).then((response) => {
           dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
         })
+      }
+
+      if (dataCreateNew.type === "update_avatar") {
+        await downloadApi.getPhoto(dataCreateNew.thumb).then((response) => {
+          dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
+        })
+        dataCreateNew["url_cover"] = ""
+        if (cover !== "") {
+          await downloadApi.getPhoto(cover).then((response) => {
+            dataCreateNew["url_cover"] = URL.createObjectURL(response.data)
+          })
+        }
       }
     }
 
@@ -143,15 +187,7 @@ const LoadFeed = (props) => {
   }, [dataCreateNew, state.idPostCreateNew])
 
   useEffect(() => {
-    const data_mention = []
-    _.forEach(dataEmployee, (value) => {
-      data_mention.push({
-        id: value.id,
-        name: value.full_name,
-        link: "#",
-        avatar: getAvatarUrl(value.id * 1)
-      })
-    })
+    const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 
@@ -178,7 +214,12 @@ const LoadFeed = (props) => {
               dataMention={state.dataMention}
               setData={(data) => {
                 const _data = [...state.dataCreateNewTemp]
-                _data[index] = data
+                _data[index] = {
+                  ...data,
+                  url_thumb: _data[index].url_thumb,
+                  url_source: _data[index].url_source,
+                  medias: _data[index].medias
+                }
                 setState({ dataCreateNewTemp: _data })
               }}
             />
@@ -196,7 +237,12 @@ const LoadFeed = (props) => {
                 dataMention={state.dataMention}
                 setData={(data) => {
                   const _data = [...state.dataPost]
-                  _data[index] = data
+                  _data[index] = {
+                    ...data,
+                    url_thumb: _data[index].url_thumb,
+                    url_source: _data[index].url_source,
+                    medias: _data[index].medias
+                  }
                   setState({ dataPost: _data })
                 }}
               />

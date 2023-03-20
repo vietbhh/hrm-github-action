@@ -1,15 +1,16 @@
 import { useMergedState } from "@apps/utility/common"
 import SidebarWidget from "layouts/components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
-import { feedApi } from "../common/api"
-import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
-import LoadFeed from "../components/LoadFeed"
+import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
 
-const Feed = () => {
+const Feed = (props) => {
+  const {
+    workspace = [], // arr workspace: []
+    apiLoadFeed = null, // api load feed
+    approveStatus = "approved" // approved / rejected / pending
+  } = props
   const [state, setState] = useMergedState({
-    prevScrollY: 0,
-    dataEmployee: [],
-    dataCreateNew: {}
+    prevScrollY: 0
   })
   const offsetTop = 90
   const offsetBottom = 30
@@ -43,10 +44,6 @@ const Feed = () => {
     }
   }
 
-  const setDataCreateNew = (value) => {
-    setState({ dataCreateNew: value })
-  }
-
   // ** useEffect
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
@@ -54,37 +51,22 @@ const Feed = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
-  useEffect(() => {
-    feedApi.getGetAllEmployeeActive().then((res) => {
-      setState({ dataEmployee: res.data })
-    })
-  }, [])
-
   // ** render
   const renderLoadFeed = useMemo(
     () => (
-      <LoadFeed
-        dataCreateNew={state.dataCreateNew}
-        setDataCreateNew={setDataCreateNew}
-        workspace={[]}
-        dataEmployee={state.dataEmployee}
+      <FeedCreateAndLoad
+        workspace={workspace}
+        apiLoadFeed={apiLoadFeed}
+        approveStatus={approveStatus}
       />
     ),
-    [state.dataCreateNew, state.dataEmployee]
+    []
   )
 
   return (
     <Fragment>
       <div className="div-content">
-        <div className="div-left feed">
-          <CreatePost
-            dataEmployee={state.dataEmployee}
-            setDataCreateNew={setDataCreateNew}
-            workspace={[]}
-          />
-
-          {renderLoadFeed}
-        </div>
+        <div className="div-left">{renderLoadFeed}</div>
         <div className="div-right">
           <div id="div-sticky">
             <SidebarWidget />

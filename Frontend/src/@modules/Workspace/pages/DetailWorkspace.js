@@ -1,6 +1,8 @@
 import { useMergedState } from "@apps/utility/common"
 import { useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { Card, CardBody, TabContent, TabPane } from "reactstrap"
+import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
 import TabMember from "../components/detail/TabMember/TabMember"
@@ -9,9 +11,10 @@ import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    tabActive: 1
+    tabActive: 1,
+    detailWorkspace: {}
   })
-
+  const params = useParams()
   const tabToggle = (tab) => {
     if (state.tabActive !== tab) {
       setState({
@@ -19,7 +22,6 @@ const DetailWorkspace = () => {
       })
     }
   }
-
   const offsetTop = 90
   const offsetBottom = 30
 
@@ -46,20 +48,31 @@ const DetailWorkspace = () => {
       document.getElementById("div-sticky").style.top = offsetTop + "px"
     }
   }
-
+  const loadData = () => {
+    workspaceApi.getDetailWorkspace(params.id).then((res) => {
+      setState({ detailWorkspace: res.data })
+    })
+  }
+  useEffect(() => {
+    loadData()
+  }, [])
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
-
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
   return (
     <div className="workspace">
-      <WorkspaceHeader tabActive={state.tabActive} tabToggle={tabToggle} />
+      <WorkspaceHeader
+        tabActive={state.tabActive}
+        data={state.detailWorkspace}
+        tabToggle={tabToggle}
+        loadData={loadData}
+      />
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
           <TabPane tabId={1}>
-            <TabFeed />
+            <TabFeed detailWorkspace={state.detailWorkspace} />
           </TabPane>
           <TabPane tabId={2}>
             <div className="div-content">

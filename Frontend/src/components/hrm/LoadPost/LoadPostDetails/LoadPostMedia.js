@@ -6,11 +6,19 @@ import {
 } from "@modules/Feed/common/common"
 import { Skeleton } from "antd"
 import classNames from "classnames"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useEffect, useRef } from "react"
 import PostImageDetailModal from "./modals/PostImageDetailModal"
 
 const LoadPostMedia = (props) => {
-  const { data, current_url, idMedia, setIdMedia, dataMention } = props
+  const {
+    data,
+    current_url,
+    idMedia,
+    setIdMedia,
+    dataMention,
+    setData,
+    setCommentMoreCountOriginal
+  } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
     dataModal: {},
@@ -19,6 +27,8 @@ const LoadPostMedia = (props) => {
     dataMedias: []
   })
 
+  const isMounted = useRef(false)
+
   // ** function
   const toggleModalPostImageDetail = () => {
     setState({ modalPostImageDetail: !state.modalPostImageDetail })
@@ -26,13 +36,33 @@ const LoadPostMedia = (props) => {
 
   // ** useEffect
   useEffect(() => {
+    setCommentMoreCountOriginal(-1)
     if (state.modalPostImageDetail) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
       //setState({ dataModal: {}, idImage: "", postType: "" })
     }
+
+    if (!state.modalPostImageDetail) {
+      if (isMounted.current) {
+        if (_.isFunction(setData)) {
+          feedApi
+            .getGetFeed(data._id)
+            .then((res) => {
+              setData(res.data)
+            })
+            .catch((err) => {})
+        }
+      } else {
+        isMounted.current = true
+      }
+    }
   }, [state.modalPostImageDetail])
+
+  useEffect(() => {
+    setCommentMoreCountOriginal(data?.comment_more_count || 0)
+  }, [state.modalPostImageDetail, data])
 
   useEffect(() => {
     if (idMedia !== undefined && idMedia !== "") {
@@ -40,17 +70,9 @@ const LoadPostMedia = (props) => {
         idImage: idMedia,
         modalPostImageDetail: true,
         dataModal: data,
-        postType: data.type
+        postType: data.type,
+        dataMedias: data.medias
       })
-
-      if (!_.isEmpty(data.medias)) {
-        feedApi
-          .getGetFeedChild(data._id)
-          .then((res) => {
-            setState({ dataMedias: res.data })
-          })
-          .catch((err) => {})
-      }
 
       if (_.isFunction(setIdMedia)) {
         setIdMedia("")
@@ -99,6 +121,68 @@ const LoadPostMedia = (props) => {
       )
     }
 
+    if (data.type === "update_cover") {
+      return (
+        <div
+          onClick={() => {
+            toggleModalPostImageDetail()
+            window.history.replaceState(
+              null,
+              "",
+              `/posts/${data._id}/${data._id}`
+            )
+            setState({
+              dataModal: data,
+              idImage: data._id,
+              postType: data.type
+            })
+          }}
+          className="div-attachment-cover">
+          {data.url_thumb && <img src={data.url_thumb} />}
+          {!data.url_thumb && <Skeleton.Image active={true} />}
+        </div>
+      )
+    }
+
+    if (data.type === "update_avatar") {
+      const renderBackgroundCover = () => {
+        if (data.url_cover !== "") {
+          return {
+            backgroundImage: `url("${data.url_cover}")`
+          }
+        }
+
+        return {}
+      }
+
+      return (
+        <div
+          onClick={() => {
+            toggleModalPostImageDetail()
+            window.history.replaceState(
+              null,
+              "",
+              `/posts/${data._id}/${data._id}`
+            )
+            setState({
+              dataModal: data,
+              idImage: data._id,
+              postType: data.type
+            })
+          }}
+          className="div-attachment-avatar">
+          <div
+            className="div-background-cover"
+            style={renderBackgroundCover()}></div>
+          <div className="space"></div>
+          <div className="div-avatar">
+            {data.url_thumb && <img src={data.url_thumb} />}
+            {!data.url_thumb && <Skeleton.Image active={true} />}
+          </div>
+        </div>
+      )
+    }
+
     if (!_.isEmpty(data.medias)) {
       return _.map(data.medias, (item, key) => {
         return (
@@ -114,17 +198,9 @@ const LoadPostMedia = (props) => {
               setState({
                 dataModal: data,
                 idImage: item._id,
-                postType: data.type
+                postType: data.type,
+                dataMedias: data.medias
               })
-
-              if (_.isEmpty(state.dataMedias)) {
-                feedApi
-                  .getGetFeedChild(data._id)
-                  .then((res) => {
-                    setState({ dataMedias: res.data })
-                  })
-                  .catch((err) => {})
-              }
             }}
             className={classNames(`div-attachment-item item-${key + 1}`, {
               "item-count-1": data.medias.length === 1,
@@ -158,7 +234,10 @@ const LoadPostMedia = (props) => {
   return (
     <Fragment>
       {((data.source !== null &&
-        (data.type === "image" || data.type === "video")) ||
+        (data.type === "image" ||
+          data.type === "video" ||
+          data.type === "update_cover" ||
+          data.type === "update_avatar")) ||
         (!_.isEmpty(data.medias) && data.type === "post")) && (
         <div className="post-body-media">{renderMedia()}</div>
       )}

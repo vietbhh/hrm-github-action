@@ -1,8 +1,9 @@
 import { downloadApi } from "@apps/modules/download/common/api"
 import { useMergedState } from "@apps/utility/common"
+import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
-import ReactHtmlParser from "react-html-parser"
+import ReactDOM from "react-dom"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 import ButtonReaction from "../PostDetails/ButtonReaction"
@@ -26,50 +27,100 @@ const PostImageDetailModal = (props) => {
   const [state, setState] = useMergedState({
     data: {},
     id_previous: "",
-    id_next: ""
+    id_next: "",
+    comment_more_count_original: dataModal.comment_more_count
   })
   const imageRef = useRef(null)
   const refDivBackLeft = useRef(null)
   const refDivBackRight = useRef(null)
   const refDivLeft = useRef(null)
+  const refDivComment = useRef(null)
 
   // ** function
+  const scrollToBottom = () => {
+    if (refDivComment.current) {
+      const chatContainer = ReactDOM.findDOMNode(refDivComment.current)
+      chatContainer.scrollTop = Number.MAX_SAFE_INTEGER
+    }
+  }
+
   const handleCloseModal = () => {
     toggleModal()
     window.history.replaceState(null, "", current_url)
   }
 
+  const setDataMedia = (data) => {
+    setState({
+      data: {
+        ...data,
+        url_thumb: state.data.url_thumb,
+        url_source: state.data.url_source,
+        medias: state.data.medias
+      }
+    })
+  }
+
+  const setCommentMoreCountOriginal = (value = 0) => {
+    setState({ comment_more_count_original: value })
+  }
+
   // ** useEffect
   useEffect(() => {
-    if (postType === "post") {
-      const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
-      if (indexMedia !== -1) {
-        setState({ data: {} })
-        const id_next = dataMedias[indexMedia + 1]
-          ? dataMedias[indexMedia + 1]._id
-          : dataMedias[0]._id
-        const id_previous = dataMedias[indexMedia - 1]
-          ? dataMedias[indexMedia - 1]._id
-          : dataMedias[dataMedias.length - 1]._id
-        setState({ id_previous: id_previous, id_next: id_next })
-        const _data = { ...dataMedias[indexMedia] }
-        downloadApi.getPhoto(dataMedias[indexMedia].source).then((response) => {
-          _data["url_source"] = URL.createObjectURL(response.data)
-          setState({ data: _data })
-        })
-      } else {
+    if (modal) {
+      if (postType === "post") {
+        const indexMedia = dataMedias.findIndex((item) => item._id === idImage)
+        if (indexMedia !== -1) {
+          setState({ data: {} })
+          const id_next = dataMedias[indexMedia + 1]
+            ? dataMedias[indexMedia + 1]._id
+            : dataMedias[0]._id
+          const id_previous = dataMedias[indexMedia - 1]
+            ? dataMedias[indexMedia - 1]._id
+            : dataMedias[dataMedias.length - 1]._id
+          setState({ id_previous: id_previous, id_next: id_next })
+          feedApi
+            .getGetFeed(idImage)
+            .then((res) => {
+              const _data = res.data
+              downloadApi
+                .getPhoto(dataMedias[indexMedia].source)
+                .then((response) => {
+                  _data["url_source"] = URL.createObjectURL(response.data)
+                  setState({ data: _data })
+                })
+              setState({
+                comment_more_count_original: _data.comment_more_count
+              })
+            })
+            .catch((err) => {})
+        } else {
+          setState({ data: {}, id_previous: "", id_next: "" })
+        }
+      }
+
+      if (
+        postType === "image" ||
+        postType === "video" ||
+        postType === "update_cover" ||
+        postType === "update_avatar"
+      ) {
         setState({ data: {}, id_previous: "", id_next: "" })
+        feedApi
+          .getGetFeed(idImage)
+          .then((res) => {
+            const _data = res.data
+            downloadApi.getPhoto(_data.source).then((response) => {
+              _data["url_source"] = URL.createObjectURL(response.data)
+              setState({ data: _data })
+            })
+            setState({
+              comment_more_count_original: _data.comment_more_count
+            })
+          })
+          .catch((err) => {})
       }
     }
-
-    if (postType === "image" || postType === "video") {
-      const _data = { ...dataModal }
-      downloadApi.getPhoto(_data.source).then((response) => {
-        _data["url_source"] = URL.createObjectURL(response.data)
-        setState({ data: _data })
-      })
-    }
-  }, [idImage, postType, dataMedias])
+  }, [idImage, postType, dataMedias, modal])
 
   useEffect(() => {
     const handleKeydown = (event) => {
@@ -194,7 +245,11 @@ const PostImageDetailModal = (props) => {
 
   const renderMedia = () => {
     if (state.data.url_source) {
-      if (state.data.type === "image") {
+      if (
+        state.data.type === "image" ||
+        state.data.type === "update_cover" ||
+        state.data.type === "update_avatar"
+      ) {
         return <img ref={imageRef} src={state.data.url_source} />
       }
 
@@ -250,7 +305,9 @@ const PostImageDetailModal = (props) => {
           </div>
 
           <div className="div-right">
-            <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <PerfectScrollbar
+              options={{ wheelPropagation: false }}
+              ref={refDivComment}>
               <div className="right-header">
                 <PostHeader data={dataModal} />
               </div>
@@ -260,13 +317,29 @@ const PostImageDetailModal = (props) => {
                 <RenderContentPost data={state.data} />
               </div>
               <div className="right-show-reaction">
-                <PostShowReaction short={true} />
+                <PostShowReaction data={state.data} short={true} />
               </div>
               <div className="right-button">
-                <ButtonReaction />
+                <ButtonReaction
+                  data={state.data}
+                  setData={setDataMedia}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                />
               </div>
               <div className="right-comment">
-                <PostComment dataMention={dataMention} />
+                <PostComment
+                  data={state.data}
+                  dataMention={dataMention}
+                  setData={setDataMedia}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                  scrollToBottom={scrollToBottom}
+                />
               </div>
             </PerfectScrollbar>
           </div>

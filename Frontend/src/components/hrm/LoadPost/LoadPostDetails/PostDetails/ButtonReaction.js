@@ -1,37 +1,155 @@
-import { useFormatMessage } from "@apps/utility/common"
-import React, { Fragment } from "react"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { feedApi } from "@modules/Feed/common/api"
+import { handleReaction } from "@modules/Feed/common/common"
+import React, { Fragment, useEffect } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import DropdownReaction from "./DropdownReaction"
+import img_care from "@modules/Feed/assets/images/care.png"
+import img_smile from "@modules/Feed/assets/images/haha.png"
+import img_like from "@modules/Feed/assets/images/like.png"
+import img_love from "@modules/Feed/assets/images/love.png"
+import img_sad from "@modules/Feed/assets/images/sad.png"
+import img_wow from "@modules/Feed/assets/images/wow.png"
 
 const ButtonReaction = (props) => {
-  const { data, setData } = props
+  const {
+    data,
+    setData,
+    comment_more_count_original,
+    setCommentMoreCountOriginal
+  } = props
+  const [state, setState] = useMergedState({
+    checkLike: ""
+  })
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
 
-  return (
-    <Fragment>
-      <div className="div-button-reaction">
-        <DropdownReaction
-          data={data}
-          setData={setData}
-          buttonDropdown={
-            <button className="btn-reaction">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="22"
-                viewBox="0 0 23 22"
-                fill="none">
-                <rect
-                  y="9.08997"
-                  width="6.45501"
-                  height="12.91"
-                  rx="2"
-                  fill="#139FF8"
-                />
-                <path
-                  d="M7.25384 19.077V12.3928C7.25547 12.1588 7.38447 11.3066 7.51529 10.8721C7.61995 10.5245 8.00588 9.68008 8.18576 9.30131C8.32966 9.0072 9.29774 7.41301 9.73926 6.62762C10.4062 5.44117 10.5271 4.70591 10.6714 4.20459C10.9291 3.30913 10.2135 0.868433 11.2764 0.294317C12.4211 -0.323963 13.4677 0.210769 13.5985 0.294322C13.7293 0.377874 14.2526 0.778927 14.6287 1.58103C15.0048 2.38314 15.1684 3.95393 15.0866 4.57222C14.9426 5.66127 14.4351 6.82523 14.1381 7.89762C15.0801 7.60352 17.654 7.46314 17.654 7.46314C17.654 7.46314 20.8427 7.0788 21.922 8.29867C23.0013 9.51854 22.3036 10.822 21.8239 11.5238C22.9032 12.61 22.8868 14.4314 21.5132 15.3171C22.0855 17.2054 21.2189 18.2581 20.0742 18.6258C20.804 20.036 19.6326 21.2632 18.7169 21.383C16.6728 21.6504 10.1979 21.4508 9.24887 21.2159C7.57437 20.8014 7.22114 19.6173 7.25384 19.077Z"
-                  fill="#139FF8"
-                />
-              </svg>
-              {/* <svg
+  // ** function
+  const updateReaction = (react_type) => {
+    const _data = { ...data }
+    const reaction = _data.reaction ? _data.reaction : []
+    const _reaction = handleReaction(userId, react_type, reaction)
+
+    const params = {
+      _id: _data._id,
+      comment_more_count_original: comment_more_count_original,
+      body_update: {
+        reaction: _reaction
+      }
+    }
+    if (_.isFunction(setData)) {
+      feedApi
+        .postUpdatePost(params)
+        .then((res) => {
+          setData(res.data)
+          setCommentMoreCountOriginal(res.data?.comment_more_count || 0)
+        })
+        .catch((err) => {})
+    }
+  }
+
+  // ** useEffect
+  useEffect(() => {
+    const reaction = data?.reaction ? data?.reaction : []
+    let checkLike = ""
+    _.forEach(reaction, (value) => {
+      _.forEach(value.react_user, (item) => {
+        if (item === userId) {
+          checkLike = value.react_type
+
+          return false
+        }
+      })
+      if (checkLike === true) {
+        return false
+      }
+    })
+
+    setState({ checkLike: checkLike })
+  }, [data])
+
+  // ** render
+  const renderButtonDropdown = () => {
+    switch (state.checkLike) {
+      case "like":
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("like")}>
+            <img src={img_like} />
+            <span className="react-like">
+              {useFormatMessage("modules.feed.post.react.like")}
+            </span>
+          </button>
+        )
+
+      case "love":
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("love")}>
+            <img src={img_love} />
+            <span className="react-love">
+              {useFormatMessage("modules.feed.post.react.love")}
+            </span>
+          </button>
+        )
+
+      case "care":
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("care")}>
+            <img src={img_care} />
+            <span className="react-care">
+              {useFormatMessage("modules.feed.post.react.care")}
+            </span>
+          </button>
+        )
+
+      case "smile":
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("smile")}>
+            <img src={img_smile} />
+            <span className="react-smile">
+              {useFormatMessage("modules.feed.post.react.haha")}
+            </span>
+          </button>
+        )
+
+      case "sad":
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("sad")}>
+            <img src={img_sad} />
+            <span className="react-sad">
+              {useFormatMessage("modules.feed.post.react.sad")}
+            </span>
+          </button>
+        )
+
+      case "wow":
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("wow")}>
+            <img src={img_wow} />
+            <span className="react-wow">
+              {useFormatMessage("modules.feed.post.react.wow")}
+            </span>
+          </button>
+        )
+
+      default:
+        return (
+          <button
+            className="btn-reaction"
+            onClick={() => updateReaction("like")}>
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               width="21"
               height="22"
@@ -51,10 +169,19 @@ const ButtonReaction = (props) => {
                 stroke="#9D9FA4"
                 strokeWidth="1.5"
               />
-            </svg> */}
-              <span>{useFormatMessage("modules.feed.post.text.like")}</span>
-            </button>
-          }
+            </svg>
+            <span>{useFormatMessage("modules.feed.post.text.like")}</span>
+          </button>
+        )
+    }
+  }
+
+  return (
+    <Fragment>
+      <div className="div-button-reaction">
+        <DropdownReaction
+          updateReaction={updateReaction}
+          buttonDropdown={renderButtonDropdown()}
         />
 
         <button className="btn-comment">
@@ -76,32 +203,34 @@ const ButtonReaction = (props) => {
           <span>{useFormatMessage("modules.feed.post.text.comment")}</span>
         </button>
 
-        <button className="btn-send">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none">
-            <path
-              d="M5.7 18.4V22L9 20.1C9.9 20.4 10.9 20.5 12 20.5C17.5 20.5 22 16.4 22 11.2C22 6.1 17.5 2 12 2C6.5 2 2 6.1 2 11.3C2 14.2 3.4 16.7 5.7 18.4Z"
-              stroke="#9D9FA4"
-              strokeWidth="1.6"
-              strokeMiterlimit="10"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M11.3 9.19995L7.5 13.7L11.2 12.8L12.7 13.7L16.5 9.19995L13 10.1L11.3 9.19995Z"
-              stroke="#9D9FA4"
-              strokeWidth="1.6"
-              strokeMiterlimit="10"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span>{useFormatMessage("modules.feed.post.text.send")}</span>
-        </button>
+        <Link to={`/chat/${data?.created_by?.username}`}>
+          <button className="btn-send">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none">
+              <path
+                d="M5.7 18.4V22L9 20.1C9.9 20.4 10.9 20.5 12 20.5C17.5 20.5 22 16.4 22 11.2C22 6.1 17.5 2 12 2C6.5 2 2 6.1 2 11.3C2 14.2 3.4 16.7 5.7 18.4Z"
+                stroke="#9D9FA4"
+                strokeWidth="1.6"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M11.3 9.19995L7.5 13.7L11.2 12.8L12.7 13.7L16.5 9.19995L13 10.1L11.3 9.19995Z"
+                stroke="#9D9FA4"
+                strokeWidth="1.6"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>{useFormatMessage("modules.feed.post.text.send")}</span>
+          </button>
+        </Link>
       </div>
     </Fragment>
   )

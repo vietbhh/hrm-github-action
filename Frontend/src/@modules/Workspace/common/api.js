@@ -1,4 +1,5 @@
-import { axiosNodeApi } from "@apps/utility/api"
+import { axiosNodeApi, axiosApi } from "@apps/utility/api"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { object2QueryString, serialize } from "@apps/utility/handleData"
 
 export const workspaceApi = {
@@ -14,12 +15,18 @@ export const workspaceApi = {
       serialize(_.cloneDeep(data))
     )
   },
+  async getDetailWorkspace(Id) {
+    return await axiosNodeApi.get("/workspace/" + Id)
+  },
   async getList(params) {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
   },
   async update(id, data) {
-    return await axiosNodeApi.post(`/workspace/update/${id}`, data)
+    return await axiosNodeApi.post(
+      `/workspace/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
   },
   async getDetail(workspaceId) {
     return await axiosNodeApi.get(`/workspace/${workspaceId}`)
@@ -46,5 +53,27 @@ export const workspaceApi = {
         disableLoading: true
       }
     )
+  },
+  async loadPost(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/pending-posts?${strParams}`)
+  },
+
+  async approvePost(data) {
+    return await axiosNodeApi.post(`/workspace/approvePost`, data)
+  },
+  async loadFeed(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/load-feed?${strParams}`)
+  },
+  async addMemberByDepartment(data) {
+    return await axiosNodeApi.post(
+      `/workspace/add-member`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async loadMember(params) {
+    const strParams = object2QueryString(params)
+    return await axiosApi.get(`/employees/in-department?${strParams}`)
   }
 }

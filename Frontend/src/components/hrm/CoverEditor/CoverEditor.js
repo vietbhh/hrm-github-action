@@ -2,7 +2,6 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import cameraBtn from "@src/assets/images/erp/icons/camera.svg"
-import noAvatar from "@src/assets/images/erp/noavt.png"
 import classNames from "classnames"
 import { isEmpty } from "lodash-es"
 import { Fragment, useEffect, useRef } from "react"
@@ -10,8 +9,8 @@ import AvatarEditor from "react-avatar-editor"
 import ContentLoader from "react-content-loader"
 import defaultWorkspaceCover from "./assets/images/default_workspace_cover.webp"
 
+import { Dropdown, Image } from "antd"
 import { Button } from "reactstrap"
-import { Dropdown, Space, Image } from "antd"
 import "./assets/scss/cover.scss"
 const CoverEditor = (props) => {
   const [state, setState] = useMergedState({
@@ -51,10 +50,11 @@ const CoverEditor = (props) => {
         editing: false
       })
       saveCoverImage(img)
-      //props.handleSave(img)
     }
   }
-
+  const removeCoverImg = () => {
+    console.log("ssssssssssssssssssssssssssssssssss")
+  }
   useEffect(() => {
     setState({
       loading: true
@@ -76,14 +76,8 @@ const CoverEditor = (props) => {
     },
     {
       key: "2",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com">
-          Remove cover photo
-        </a>
-      )
+      label: "Remove cover photo",
+      onClick: () => removeCoverImg()
     }
   ]
 

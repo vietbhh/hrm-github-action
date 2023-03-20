@@ -7,6 +7,8 @@
     position: relative;
     .coverPhoto {
       position: absolute;
+      width: 100%;
+      min-height: 200px;
       top: 0%;
       left: 0%;
       canvas {
@@ -32,7 +34,12 @@
       font-weight: bold;
     }
   }
+  .no-border-bottom{
+    .modal-content{
+      .modal-header{
+        border-bottom : none !important;
 
+      }}}
   .btn-action-secondary {
     background-color: #e5e5e5 !important;
     border-color: #e5e5e5 !important;
@@ -127,12 +134,72 @@
   .ant-tabs-tab-btn {
     width: 100%;
   }
-  .content-select {
+  .content-select{
+    padding-right: 10px;
     width: 60%;
-    border-right: 0.5px solid #c5c5c5;
+    border-right: 0.5px solid #c5c5c569;
+  }
+  .content-selected{
+    padding-left: 10px;
+    width: 40%;
   }
   .title-tab-content {
     font-weight: 600;
+  }
+  .modal-content{
+    padding: 30px 40px 30px 0px !important;
+    .modal-header{
+      border-bottom : none !important;
+      .modal-title{
+        padding-left: 40px;
+      }
+    }
+    .ant-tabs-tab-active{
+      background-color: antiquewhite;
+    }
+   }
+}
+.box-member {
+  cursor: pointer;
+  align-items: center;
+  padding: 10px 2px;
+  border-radius: 12px;
+  &:hover{
+    background-color: #f5f7f9;
+  }
+}
+.setup-notification-workspace-modal{
+   .content-notification-setup{
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    .title{
+      color: rgb(26, 26, 26);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+    .sub-title{
+      color: rgb(128, 128, 128);
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 16px;
+    }
+   }
+}
+
+.workspace-setting {
+  .field_switch{
+    display: flex;
+    .label{
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+    }
+    .sub-label{
+      color: rgb(77, 77, 77);
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
   }
 }
 

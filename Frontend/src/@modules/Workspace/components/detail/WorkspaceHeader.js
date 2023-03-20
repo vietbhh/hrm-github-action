@@ -4,27 +4,161 @@ import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
+import { Dropdown, Space } from "antd"
+import SetupNotificationModal from "../modals/SetupNotificationModal"
+import notification from "@apps/utility/notification"
+import Photo from "@apps/modules/download/pages/Photo"
+import { useEffect } from "react"
+import { Link } from "react-router-dom"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
+const unique = (arr) => {
+  return Array.from(new Set(arr)) //
+}
 const WorkspaceHeader = (props) => {
-  const { tabActive, tabToggle } = props
+  const { tabActive, tabToggle, data, loadData } = props
   const [state, setState] = useMergedState({
-    coverImage: defaultWorkspaceCover,
-    inviteModal: false
+    coverImage: "",
+    inviteModal: false,
+    setupNotifiModal: false,
+    loading: false,
+    defaultWorkspaceCover: ""
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
   const saveCoverImage = (image) => {
-    console.log("runnn")
-    setState({ coverImage: image })
-    const data = { image: image, id: 1 }
-    workspaceApi.saveCoverImage(data).then((res) => {
-      console.log("resssss", res)
+    const dataPost = { ...data, image: image, id: data?._id }
+    workspaceApi.saveCoverImage(dataPost).then((res) => {
+      setState({ defaultWorkspaceCover: image })
     })
   }
+  const handleDoneInvite = (dataUpdate, type) => {
+    const infoWorkspace = { ...data }
+    if (type === "members") {
+      const arrID = infoWorkspace.members.concat(
+        dataUpdate.map((x) => x["id"] * 1)
+      )
+
+      infoWorkspace.members = JSON.stringify(arrID)
+      workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+        if (res.statusText) {
+          notification.showSuccess({
+            text: useFormatMessage("notification.save.success")
+          })
+          onClickInvite()
+          setState({ loading: false })
+          // loadData()
+        }
+      })
+    } else {
+      let varTxt = "department_id"
+      if (type !== "departments") {
+        varTxt = "job_title_id"
+      }
+      const arrIdDepartment = JSON.stringify(dataUpdate.map((x) => x["id"] * 1))
+      workspaceApi
+        .loadMember({
+          [varTxt]: dataUpdate.map((x) => x["id"] * 1)
+        })
+        .then((res) => {
+          if (res.data) {
+            const arrID = infoWorkspace.members.concat(
+              res.data.map((x) => parseInt(x))
+            )
+
+            infoWorkspace.members = JSON.stringify(unique(arrID))
+            workspaceApi
+              .update(infoWorkspace._id, infoWorkspace)
+              .then((res) => {
+                if (res.statusText) {
+                  notification.showSuccess({
+                    text: useFormatMessage("notification.save.success")
+                  })
+                  onClickInvite()
+                  setState({ loading: false })
+                  //loadData()
+                }
+              })
+          }
+        })
+
+      return
+      workspaceApi
+        .addMemberByDepartment({ departments: arrIdDepartment })
+        .then((res) => {
+          console.log("typetypetypetype", type)
+        })
+    }
+  }
+  const handleSetupNotification = () => {
+    setState({ setupNotifiModal: !state.setupNotifiModal })
+  }
+  const items = [
+    {
+      label: (
+        <Link to={`/workspace/${data._id}/pending-posts`}>
+          <i className="fa-regular fa-list-ul me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.waiting_for_approval")}
+        </Link>
+      ),
+      key: "0"
+    },
+    {
+      label: (
+        <Link to={`/workspace/${data._id}/request-join`}>
+          <i className="fa-duotone fa-user me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.request_to_join")}
+        </Link>
+      ),
+      key: "3"
+    },
+    {
+      label: (
+        <div>
+          <i className="fa-solid fa-bell me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.setup_notification")}
+        </div>
+      ),
+      key: "1",
+      onClick: () => handleSetupNotification()
+    },
+    {
+      label: (
+        <Link to={`/workspace/${data._id}/setting`}>
+          <i className="fa-regular fa-gear  me-50"></i>{" "}
+          {useFormatMessage("modules.workspace.display.workspace_settings")}
+        </Link>
+      ),
+      key: "2"
+    }
+  ]
+
+  useEffect(() => {
+    if (data.cover_image) {
+      setState({ coverImage: data.cover_image, defaultWorkspaceCover: "" })
+    } else {
+      setState({ defaultWorkspaceCover: defaultWorkspaceCover })
+    }
+  }, [data])
   return (
     <Card className="pb-0">
       <div className="image-cover">
-        <img src={state.coverImage} className="w-100 workspaceCover" />
+        {state.defaultWorkspaceCover && (
+          <img
+            src={state.defaultWorkspaceCover}
+            width="100%"
+            className="w-100 workspaceCover"
+          />
+        )}
+        {state.coverImage && !state.defaultWorkspaceCover && (
+          <Photo
+            src={state.coverImage}
+            loading={state.loading}
+            width="100%"
+            className="w-100 workspaceCover"
+          />
+        )}
+
         <CoverEditor
           src=""
           className="btn-cover"
@@ -35,10 +169,11 @@ const WorkspaceHeader = (props) => {
       <CardBody className="pb-0">
         <div className="d-flex justify-content-between align-content-center">
           <div className="workspaceInformation">
-            <h2 className="workspaceName">Friday</h2>
+            <h2 className="workspaceName">{data?.name}</h2>
             <p>
-              <i className="fa-regular fa-earth-asia"></i> Public · 2 members ·
-              3 posts
+              <i className="fa-regular fa-earth-asia"></i> Public ·{" "}
+              {data?.members && data?.members.length} members ·{" "}
+              {data?.pinPosts && data?.pinPosts.length} posts
             </p>
           </div>
           <div className="workspaceAction">
@@ -99,14 +234,28 @@ const WorkspaceHeader = (props) => {
             </NavLink>
           </NavItem>
           <div className="ms-auto">
-            <Button color="sencondary">
-              <i className="fa-light fa-ellipsis"></i>
-            </Button>
+            <Dropdown
+              menu={{
+                items
+              }}
+              placement="bottomRight"
+              trigger={["click"]}>
+              <Button color="flat-secondary">
+                <i className="fa-light fa-ellipsis"></i>
+              </Button>
+            </Dropdown>
           </div>
         </Nav>
         <InviteWorkspaceModal
           modal={state.inviteModal}
           handleModal={onClickInvite}
+          handleDone={handleDoneInvite}
+          member_selected={data?.members}
+        />
+        <SetupNotificationModal
+          modal={state.setupNotifiModal}
+          dataWorkspace={data}
+          handleModal={handleSetupNotification}
         />
       </CardBody>
     </Card>

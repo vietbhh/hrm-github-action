@@ -18,10 +18,6 @@ export const feedApi = {
     )
   },
 
-  async getGetAllEmployeeActive() {
-    return await axiosNodeApi.get("/feed/get-all-employee-active")
-  },
-
   async postSubmitPost(data) {
     return await axiosNodeApi.post("/feed/submit-post", data)
   },
@@ -35,6 +31,15 @@ export const feedApi = {
     })
   },
 
+  async getLoadFeedProfile(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosNodeApi.get("/feed/load-feed-profile?" + stringFilters, {
+      disableLoading: true
+    })
+  },
+
   async getGetFeedChild(id) {
     return await axiosNodeApi.get("/feed/get-feed-child/" + id)
   },
@@ -43,7 +48,43 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/get-feed/" + id)
   },
 
+  async getGetFeedAndComment(id) {
+    return await axiosNodeApi.get("/feed/get-feed-and-comment/" + id)
+  },
+
   async postUpdatePost(data) {
     return await axiosNodeApi.post("/feed/update-post", data)
+  },
+
+  async postUpdateComment(data) {
+    return await axiosNodeApi.post("/feed/update-comment", data)
+  },
+
+  async postUpdateSubComment(data) {
+    return await axiosNodeApi.post("/feed/update-sub-comment", data)
+  },
+
+  async postSubmitComment(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-comment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async postSubmitCommentReply(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-comment-reply",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
   }
 }

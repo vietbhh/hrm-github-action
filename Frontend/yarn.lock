@@ -1229,10 +1229,10 @@
   dependencies:
     clsx "^1.2.1"
 
-"@draft-js-plugins/editor@^4.1.3":
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/@draft-js-plugins/editor/-/editor-4.1.3.tgz#460d70d3b639d17f4e1f15b7d180b8c8698b1ec1"
-  integrity sha512-Mxr1GUFzN0VcVVP6XClvWS2o33Rh8ZG3l41h9l27hJoLRYVywpuzI6TXD0UFYDIHX50fz6n70sQCdoHmkBsfKQ==
+"@draft-js-plugins/editor@4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@draft-js-plugins/editor/-/editor-4.1.1.tgz#886cd9605da37f45f0272f39df18464f166198e5"
+  integrity sha512-zqxBUyX7cPEMT5Z7/DdhC4kga+uPSg/SvsRbndKbYXoT6sIXWXo+DI/TuAwaybOPjVFLLwxBco6CBkQr3d1ejg==
   dependencies:
     immutable "~3.7.4"
     prop-types "^15.8.1"
@@ -1244,6 +1244,15 @@
   dependencies:
     "@draft-js-plugins/buttons" "^4.0.0"
     "@draft-js-plugins/utils" "^4.0.0"
+
+"@draft-js-plugins/linkify@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@draft-js-plugins/linkify/-/linkify-4.2.1.tgz#a6b62a6c9ee3bb0bd164ea5a43e78cc9974fbe42"
+  integrity sha512-xB6J+HrGEbteyBrwQ8u0r+YrjQK6fNDfVBG14A89Ger+o/OiYqwmJs8GAM0C5riqYEJzQqK2mW+UUQCagD+gUQ==
+  dependencies:
+    clsx "^1.0.4"
+    linkify-it "^3.0.3"
+    tlds "^1.231.0"
 
 "@draft-js-plugins/mention@^5.2.1":
   version "5.2.1"
@@ -11149,7 +11158,7 @@ linkify-it@^2.2.0:
   dependencies:
     uc.micro "^1.0.1"
 
-linkify-it@^3.0.1:
+linkify-it@^3.0.1, linkify-it@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-3.0.3.tgz#a98baf44ce45a550efb4d49c769d07524cc2fa2e"
   integrity sha512-ynTsyrFSdE5oZ/O9GEf00kPngmOfVwazR5GKDq6EYfhlpFug3J2zybX56a2PRRpc9P+FuSoGNAwjlbDs9jJBPQ==
