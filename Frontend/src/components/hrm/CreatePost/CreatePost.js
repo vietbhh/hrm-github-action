@@ -15,7 +15,7 @@ const CreatePost = (props) => {
     modalCreatePost: false,
     dataMention: []
   })
-  console.log("approveStatus", approveStatus)
+
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
