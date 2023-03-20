@@ -1,6 +1,5 @@
 import { Storage } from "@google-cloud/storage"
 import fs from "fs"
-import fse from "fs-extra"
 import { forEach, isEmpty, toPath } from "lodash-es"
 import path, { dirname } from "path"
 import { getSetting } from "./settings.js"
@@ -322,6 +321,22 @@ const _uploadServices = async (
   }
 }
 
+const _getAllFileInDirectory = (directory, listFile, sub = "") => {
+  const filesInDirectory = fs.readdirSync(directory)
+  forEach(filesInDirectory, (file) => {
+    const absolute = path.join(directory, file)
+    if (fs.statSync(absolute).isDirectory()) {
+      _getAllFileInDirectory(absolute, listFile, file)
+    } else {
+      listFile.push({
+        name: file,
+        serverPath: absolute,
+        dest: path.join(sub, file)
+      })
+    }
+  })
+}
+
 const moveFileFromServerToGCS = async (serverPath, storagePath, filename) => {
   const moveSuccess = []
   const moveError = []
@@ -377,10 +392,41 @@ const moveFileFromServerToGCS = async (serverPath, storagePath, filename) => {
       })
     )
   } else {
-    const directoryFrom = path.join(localSavePath, pathFrom)
+    const directoryFrom = path.join(localSavePath, serverPath)
     if (!fs.existsSync(directoryFrom)) {
       throw new Error("path_from_is_not_exist")
     }
+
+    const listFile = []
+    _getAllFileInDirectory(directoryFrom, listFile)
+
+    listFile.map((item) => {
+      promises.push(
+        new Promise((resolve, reject) => {
+          const dest = path.join(toPath, item.dest).replace(/\\/g, "/")
+          bucket.upload(
+            item.serverPath,
+            {
+              destination: dest
+            },
+            (err, file) => {
+              if (err) {
+                reject({
+                  filename: item.name,
+                  error: err
+                })
+              } else {
+                resolve({
+                  file: file,
+                  name:  item.name,
+                  path: dest
+                })
+              }
+            }
+          )
+        })
+      )
+    })
   }
 
   await Promise.allSettled(promises).then((res) => {

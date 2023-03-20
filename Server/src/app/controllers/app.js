@@ -49,7 +49,7 @@ export const testUpload = async (req, res, next) => {
 }
 
 export const testCopyToGCS = async (req, res, next) => {
-  const result = await moveFileFromServerToGCS("/modules/feed", "/modules/feed2", "matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg")
+  const result = await moveFileFromServerToGCS("/modules/feed", "/modules/feed5")
 
   return res.respond(result)
 }
