@@ -63,8 +63,8 @@ class DownloadFile extends Component {
   }
 
   download = async () => {
-    const downloadServer = this.props.downloadServer
-    await downloadApi.getFile(this.props.src, downloadServer).then((response) => {
+    const downloadFromStorage = this.props.downloadFromStorage
+    await downloadApi.getFile(this.props.src, downloadFromStorage).then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement("a")
       link.href = url

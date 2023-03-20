@@ -51,21 +51,18 @@ export const downloadApi = {
       )
     })
   },
-  getFile(file, downloadServer) {
+  getFile(file, downloadFromStorage) {
     return new Promise((resolve, reject) => {
-      if (downloadServer === "node") {
-        resolve(
-          axiosNodeApi.get("/download/file?name=" + file, {
-            responseType: "arraybuffer"
-          })
-        )
-      } else {
-        resolve(
-          axiosApi.get("/download/file?name=" + file, {
-            responseType: "arraybuffer"
-          })
-        )
+      const src = "/download/file?name=" + file
+      if (downloadFromStorage === true) {
+        src += "&type=cloud_storage"
       }
+
+      resolve(
+        axiosApi.get(src, {
+          responseType: "arraybuffer"
+        })
+      )
     })
   }
 }

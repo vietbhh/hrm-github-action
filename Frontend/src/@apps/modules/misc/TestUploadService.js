@@ -63,9 +63,10 @@ const TestUploadService = (props) => {
         </Button>
         <DownloadFile
           className="align-items-center"
-          fileName="health.png"
-          downloadServer="node"
-          src="modules/feed/1678950115243_My-project.png&type=cloud_storage">
+          fileName="matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg"
+          downloadFromStorage={false}
+          src="modules/feed/matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg"
+          >
           <Button type="button" color="primary">
             Download File
           </Button>

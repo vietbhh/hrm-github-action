@@ -24,11 +24,11 @@ const downloadFile = async (req, res, next) => {
         filePath
       )
       const buffer = fs.readFileSync(localSavePath)
-      const fileContent = buffer.toString()
+      const fileContent = buffer
       return res.respond(fileContent)
     } else if (upload_type === "cloud_storage") {
       const result = await _getFileFromCloudStorage(filePath)
-      const fileContent = result.toString()
+      const fileContent = result
       return res.respond(fileContent)
     }
   } catch (err) {
@@ -48,7 +48,6 @@ const _getFileFromCloudStorage = async (filePath) => {
 
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
   const storageFilePath = path.join("default", filePath).replace(/\\/g, "/")
-  console.log(storageFilePath)
   return await bucket.file(storageFilePath).download({})
 }
 
