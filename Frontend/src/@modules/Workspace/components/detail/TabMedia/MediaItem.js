@@ -51,7 +51,10 @@ const MediaItem = (props) => {
   const renderFile = () => {
     return (
       <Col sm="12" className="m-0">
-        <MediaFileItem mediaItem={mediaItem} />
+        <MediaFileItem
+          mediaItem={mediaItem}
+          handleModalPreview={handleModalPreview}
+        />
       </Col>
     )
   }
