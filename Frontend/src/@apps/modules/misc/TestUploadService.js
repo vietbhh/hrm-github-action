@@ -36,6 +36,10 @@ const TestUploadService = (props) => {
       })
   }
 
+  const handleClickCopy = () => {
+    axiosNodeApi.post("/test4").then((res) => {})
+  }
+
   // ** render
   return (
     <Fragment>
@@ -50,8 +54,12 @@ const TestUploadService = (props) => {
         <Button
           type="button"
           color="primary"
+          className="me-1"
           onClick={() => handleClickDownload()}>
           Download
+        </Button>
+        <Button type="button" color="primary" onClick={() => handleClickCopy()}>
+          Copy to GCS
         </Button>
         <DownloadFile
           className="align-items-center"
