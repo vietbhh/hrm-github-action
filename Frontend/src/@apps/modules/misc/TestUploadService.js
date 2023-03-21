@@ -40,6 +40,10 @@ const TestUploadService = (props) => {
     axiosNodeApi.post("/test4").then((res) => {})
   }
 
+  const handleClickCopy2 = () => {
+    axiosNodeApi.post("/test-copy").then((res) => {})
+  }
+
   // ** render
   return (
     <Fragment>
@@ -58,6 +62,13 @@ const TestUploadService = (props) => {
           onClick={() => handleClickDownload()}>
           Download
         </Button>
+        <Button
+          type="button"
+          color="primary"
+          onClick={() => handleClickCopy2()}
+          className="me-1">
+          Copy
+        </Button>
         <Button type="button" color="primary" onClick={() => handleClickCopy()}>
           Copy to GCS
         </Button>
@@ -65,8 +76,7 @@ const TestUploadService = (props) => {
           className="align-items-center"
           fileName="matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg"
           downloadFromStorage={false}
-          src="modules/feed/matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg"
-          >
+          src="modules/feed/matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg">
           <Button type="button" color="primary">
             Download File
           </Button>

@@ -62,9 +62,14 @@ export const testCopyToGCS = async (req, res, next) => {
 }
 
 export const testCopy = async (req, res, next) => {
-  const pathFrom = path.join("feed", "get")
-  const pathTo = path.join("feed", "post")
-  const result = await copyFilesServices(pathFrom, pathTo)
+  const pathFrom = path.join("modules", "feed2")
+  const pathTo = path.join("modules", "feed7")
+  const result = await copyFilesServices(
+    pathFrom,
+    pathTo,
+    "",
+    "cloud_storage"
+  )
 
   return res.respond(result)
 }
