@@ -1,22 +1,125 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { timeDifference, useFormatMessage } from "@apps/utility/common"
+import {
+  timeDifference,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import SwAlert from "@apps/utility/SwAlert"
+import { feedApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
 import React from "react"
+import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 
 const PostHeader = (props) => {
-  const { data } = props
-  const items = [
-    {
-      key: "1",
+  const {
+    data,
+    setData,
+    handleCloseModal,
+    dataModal = {},
+    customAction = {} // custom dropdown post header
+  } = props
+  const { view_post, edit_post, delete_post, ...rest } = customAction || {}
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
+
+  const [state, setState] = useMergedState({
+    loadingDelete: false
+  })
+
+  const actions = {
+    view_post: {
       label: (
         <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
-          <i className="fa-light fa-eye me-50"></i>
+          <i className="fa-light fa-eye"></i>
           <span>{useFormatMessage("modules.feed.post.text.view_post")}</span>
         </Link>
-      )
-    }
+      ),
+      condition: true,
+      ...view_post
+    },
+    edit_post: {
+      label: (
+        <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
+          <i className="fa-light fa-pen-to-square"></i>
+          <span>{useFormatMessage("modules.feed.post.text.edit_post")}</span>
+        </Link>
+      ),
+      condition: parseInt(data?.created_by?.id) === parseInt(userId),
+      ...edit_post
+    },
+    delete_post: {
+      label: (
+        <a
+          onClick={(e) => {
+            e.preventDefault()
+            handleDeletePost()
+          }}>
+          <i className="fa-light fa-delete-right"></i>
+          <span>{useFormatMessage("modules.feed.post.text.delete_post")}</span>
+        </a>
+      ),
+      condition: parseInt(data?.created_by?.id) === parseInt(userId),
+      ...delete_post
+    },
+    ...rest
+  }
+
+  const items = [
+    ..._.map(
+      _.filter(actions, (item) => item !== false && item.condition),
+      (item, index) => {
+        return {
+          key: index,
+          label: item.label
+        }
+      }
+    )
   ]
+
+  // ** function
+  const handleDeletePost = () => {
+    SwAlert.showWarning({
+      confirmButtonText: useFormatMessage("button.delete"),
+      html: ""
+    }).then((res) => {
+      if (res.value && state.loadingDelete === false) {
+        setState({ loadingDelete: true })
+        const params = {
+          ref: data.ref,
+          _id: data._id
+        }
+
+        feedApi
+          .postDeletePost(params)
+          .then((res) => {
+            setState({ loadingDelete: false })
+            notification.showSuccess({
+              text: useFormatMessage("notification.delete.success")
+            })
+            if (res.data === "empty") {
+              setData({}, true)
+            } else {
+              if (_.isFunction(handleCloseModal)) {
+                handleCloseModal()
+                const _data = { ...dataModal }
+                const medias = _data.medias
+                const _medias = medias.filter((item) => item._id !== data._id)
+                _data["medias"] = _medias
+                setData(_data, false, { medias: _medias })
+              }
+            }
+          })
+          .catch((err) => {
+            setState({ loadingDelete: false })
+            notification.showError({
+              text: useFormatMessage("notification.something_went_wrong")
+            })
+          })
+      }
+    })
+  }
 
   // ** render
   const renderAfterName = () => {

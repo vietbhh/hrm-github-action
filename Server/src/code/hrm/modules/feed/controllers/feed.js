@@ -6,12 +6,13 @@ import fs from "fs"
 import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
-FfmpegCommand.setFfmpegPath(ffmpegPath.path)
-FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import commentMongoModel from "../models/comment.mongo.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+
+FfmpegCommand.setFfmpegPath(ffmpegPath.path)
+FfmpegCommand.setFfprobePath(ffprobePath.path)
 
 // ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
@@ -261,6 +262,56 @@ const updatePost = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
+// delete post
+const deletePost = async (req, res, next) => {
+  const body = req.body
+  const ref = body.ref
+  const _id = body._id
+
+  if (_id) {
+    // delete feed
+    if (ref === null) {
+      const arr_id_delete = [_id]
+      const feed = await feedMongoModel.findById(_id)
+      const medias = feed.medias
+      if (!isEmpty(medias)) {
+        forEach(medias, (value) => {
+          arr_id_delete.push(value._id)
+        })
+      }
+      try {
+        await feedMongoModel.deleteMany({
+          _id: { $in: arr_id_delete }
+        })
+        return res.respond("empty")
+      } catch (err) {
+        return res.fail(err.message)
+      }
+    }
+
+    // delete post media
+    if (ref !== null) {
+      try {
+        await feedMongoModel.deleteOne({ _id: _id })
+        await feedMongoModel.updateOne(
+          { _id: ref },
+          { $pull: { medias: { _id: _id } } }
+        )
+        const feed = await feedMongoModel.findById(ref)
+        if (isEmpty(feed.medias)) {
+          await feedMongoModel.deleteOne({ _id: ref })
+          return res.respond("empty")
+        }
+        return res.respond("medias")
+      } catch (err) {
+        return res.fail(err.message)
+      }
+    }
+  }
+
+  return res.fail("not-found")
+}
 // **
 
 // ** comment
@@ -391,7 +442,7 @@ const updateSubComment = async (req, res, next) => {
 }
 // **
 
-// ** function
+// ** support function
 const takeOneFrameOfVid = (dir, storePath) => {
   const savePath = path.join(localSavePath, storePath)
   return new Promise((resolve, reject) => {
@@ -721,5 +772,6 @@ export {
   updateComment,
   submitCommentReply,
   updateSubComment,
-  loadFeedProfile
+  loadFeedProfile,
+  deletePost
 }
