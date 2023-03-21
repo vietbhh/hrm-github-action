@@ -7,7 +7,8 @@ import {
   getPostWorkspace,
   approvePost,
   loadFeed,
-  addMemberByDepartment
+  addMemberByDepartment,
+  loadPinned
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -19,4 +20,6 @@ router.post("/save-cover-image", saveCoverImage)
 router.post("/update/:id", updateWorkspace)
 router.post("/approvePost", approvePost)
 router.post("/add-member", addMemberByDepartment)
+router.get("/load-pinned", loadPinned)
+
 export default router

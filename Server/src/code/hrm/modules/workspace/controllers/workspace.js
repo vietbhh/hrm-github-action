@@ -563,6 +563,36 @@ const loadFeed = async (req, res) => {
   }
   return res.respond(result)
 }
+
+const loadPinned = async (req, res) => {
+  const request = req.query
+  const workspace = await workspaceMongoModel.findById(workspaceId)
+
+  const page = request.page
+  const pageLength = request.pageLength
+  const filter = {
+    permission_ids: request.workspace,
+    permission: "workspace",
+    approve_status: "approved",
+    ref: null
+  }
+  const feed = await feedMongoModel
+    .find(filter)
+    .skip(page * pageLength)
+    .limit(pageLength)
+    .sort({
+      _id: "desc"
+    })
+  const data = await handleDataBeforeReturn(feed, true)
+  const feedCount = await feedMongoModel.find(filter).count()
+  const result = {
+    dataPost: data,
+    totalPost: feedCount,
+    page: page * 1 + 1,
+    hasMore: (page * 1 + 1) * pageLength < feedCount
+  }
+  return res.respond(result)
+}
 export {
   getWorkspace,
   saveWorkspace,
@@ -574,5 +604,6 @@ export {
   getPostWorkspace,
   approvePost,
   loadFeed,
-  addMemberByDepartment
+  addMemberByDepartment,
+  loadPinned
 }

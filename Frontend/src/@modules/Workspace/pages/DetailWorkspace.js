@@ -6,11 +6,12 @@ import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
 import TabMember from "../components/detail/TabMember/TabMember"
+import TabPinned from "../components/detail/TabPinned/TabPinned"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    tabActive: 1,
+    tabActive: 2,
     detailWorkspace: {}
   })
   const params = useParams()
@@ -74,20 +75,7 @@ const DetailWorkspace = () => {
             <TabFeed detailWorkspace={state.detailWorkspace} />
           </TabPane>
           <TabPane tabId={2}>
-            <div className="div-content">
-              <div className="div-left">
-                <Card>
-                  <CardBody>feed 2</CardBody>
-                </Card>
-              </div>
-              <div className="div-right">
-                <div id="div-sticky">
-                  <Card>
-                    <CardBody>sidebar 2</CardBody>
-                  </Card>
-                </div>
-              </div>
-            </div>
+            <TabPinned />
           </TabPane>
           <TabPane tabId={3}>
             <TabIntroduction />

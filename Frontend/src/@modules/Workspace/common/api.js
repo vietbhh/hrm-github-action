@@ -66,5 +66,9 @@ export const workspaceApi = {
   async loadMember(params) {
     const strParams = object2QueryString(params)
     return await axiosApi.get(`/employees/in-department?${strParams}`)
+  },
+  async loadPinned(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/load-pinned?${strParams}`)
   }
 }
