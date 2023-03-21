@@ -18,7 +18,7 @@ FfmpegCommand.setFfprobePath(ffprobePath.path)
 const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
-    fs.mkdirSync(path.join(localSavePath, storePath))
+    fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
   const file = req.files
@@ -40,7 +40,7 @@ const submitPostController = async (req, res, next) => {
   const dateToDay = handleCurrentYMD()
   const storePath = path.join("modules", "feed", dateToDay)
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
-    fs.mkdirSync(path.join(localSavePath, storePath))
+    fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
   const workspace_type =
@@ -646,7 +646,7 @@ const handleUpImageComment = async (image, id_post) => {
   const dateToDay = handleCurrentYMD()
   const storePathTemp = path.join("modules", "comment_temp")
   if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
-    fs.mkdirSync(path.join(localSavePath, storePathTemp))
+    fs.mkdirSync(path.join(localSavePath, storePathTemp), { recursive: true })
   }
   const storePath = path.join("modules", "comment", id_post, dateToDay)
 
