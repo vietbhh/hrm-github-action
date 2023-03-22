@@ -566,7 +566,13 @@ const loadFeed = async (req, res) => {
 
 const loadPinned = async (req, res) => {
   const request = req.query
+  const workspaceId = request.id
+  console.log("workspaceId", workspaceId)
   const workspace = await workspaceMongoModel.findById(workspaceId)
+
+  console.log("request", workspace)
+
+  return
 
   const page = request.page
   const pageLength = request.pageLength

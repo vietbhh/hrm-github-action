@@ -20,9 +20,17 @@ const TabPinned = (props) => {
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const params = useParams()
   const workspaceID = params?.id
-  const apiLoadFeed = workspaceApi.loadFeed
+  const apiLoadFeed = workspaceApi.loadPinned
   const setDataCreateNew = () => {}
   console.log("workspaceID pinned", workspaceID)
+
+  const loadData = (paramsX = {}) => {
+    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+    paramsX.id = workspaceID
+    workspaceApi.loadPinned(paramsX).then((res) => {
+      console.log("res pinned ", res)
+    })
+  }
   useEffect(() => {
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
@@ -37,13 +45,26 @@ const TabPinned = (props) => {
         setState({ approveStatus: "approved" })
       }
     }
-  }, [detailWorkspace])
 
+    loadData({})
+  }, [])
+  const handlePinPost = (idPost) => {
+    const dataPin = {}
+    workspaceApi.update(params.id, values).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+      reset()
+      navigate(`/workspace/${res.data._id}`)
+    })
+  }
   return (
     <div className="div-content">
       <div className="div-left">
         <Card>
-          <CardBody>feedsss 2</CardBody>
+          <CardBody>
+            feedsss 2<Button onClick={() => handlePinPost()}>Up</Button>
+          </CardBody>
         </Card>
       </div>
       <div className="div-right">

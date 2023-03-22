@@ -39,7 +39,8 @@ const workspaceSchema = baseSchema("m_workspace", {
         post: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "feedPostMongoModel"
-        }
+        },
+        stt: { type: Number }
       }
     ],
     default: [],

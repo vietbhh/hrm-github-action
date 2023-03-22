@@ -4553,6 +4553,20 @@
         "department":"Department",
         "job_title": "Job title"
 
+      },
+      "app_options": {
+        "workspace_type": {
+          "public": "Anyone can see post and activites in workspace",
+          "private": "Only member on workspace can see posts and activites"
+        },
+        "workspace_mode": {
+          "visible": "Anyone can see your workspace and request to join",
+          "hidden": "Only administrator can add member and other unable to see workspace"
+        },
+        "membership_approval" : {
+          "approver" : "Only administrators can approve joining group request",
+          "auto" : "Automatically approve all joining group request"
+        }
       }
     },
     "setting_member": {
