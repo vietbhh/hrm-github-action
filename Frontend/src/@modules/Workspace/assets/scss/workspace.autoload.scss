@@ -126,6 +126,19 @@
           }
         }
       }
+
+      .media-image-item {
+        .image-container {
+          .ant-image {
+            height: 100% !important;
+
+            img {
+              object-fit: cover;
+              object-position: center center;
+            }
+          }
+        }
+      }
     }
   }
 }

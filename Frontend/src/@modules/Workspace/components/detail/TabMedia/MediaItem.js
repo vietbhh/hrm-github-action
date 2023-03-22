@@ -25,17 +25,20 @@ const MediaItem = (props) => {
     return (
       <Fragment>
         {mediaItem.data.map((item, index) => {
-          console.log(item)
           return (
             <Col
               sm="2"
               className="m-0 p-0"
               key={`media-image-item-${item._id}`}
               onClick={() => handleClickImage()}>
-              <Card>
+              <Card className="h-100 media-image-item">
                 <CardBody className="p-0">
-                  <div className="w-100 d-flex align-items-center justify-content-center p-50 image-container">
-                    <Photo src={item.thumb}/>
+                  <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center p-50 image-container">
+                    <Photo
+                      src={item.thumb}
+                      className="w-100 h-100 rounded"
+                      preview={false}
+                    />
                   </div>
                 </CardBody>
               </Card>

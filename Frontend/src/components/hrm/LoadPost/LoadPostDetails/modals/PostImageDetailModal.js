@@ -22,7 +22,9 @@ const PostImageDetailModal = (props) => {
     postType,
     dataMedias,
     current_url,
-    dataMention
+    dataMention,
+    customAction = {}, // custom dropdown post header
+    setDataPost
   } = props
   const [state, setState] = useMergedState({
     data: {},
@@ -309,7 +311,13 @@ const PostImageDetailModal = (props) => {
               options={{ wheelPropagation: false }}
               ref={refDivComment}>
               <div className="right-header">
-                <PostHeader data={dataModal} />
+                <PostHeader
+                  data={state.data}
+                  customAction={customAction}
+                  setData={setDataPost}
+                  handleCloseModal={handleCloseModal}
+                  dataModal={dataModal}
+                />
               </div>
               <div
                 className="right-content"

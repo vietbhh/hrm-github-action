@@ -10,7 +10,9 @@ import { useParams } from "react-router-dom"
 import { handleDataMention, handleLoadAttachmentMedias } from "../common/common"
 
 const PostDetail = (props) => {
-  const {} = props
+  const {
+    customAction = {} // custom dropdown post header
+  } = props
   const [state, setState] = useMergedState({
     dataPost: {},
     dataMedia: [],
@@ -125,16 +127,22 @@ const PostDetail = (props) => {
                 idMedia={state._idMedia}
                 setIdMedia={(value) => setState({ _idMedia: value })}
                 dataMention={state.dataMention}
-                setData={(data) => {
-                  setState({
-                    dataPost: {
-                      ...data,
-                      url_thumb: state.dataPost.url_thumb,
-                      url_source: state.dataPost.url_source,
-                      medias: state.dataPost.medias
-                    }
-                  })
+                setData={(data, empty = false, dataCustom = {}) => {
+                  if (empty) {
+                    setState({ dataPost: {} })
+                  } else {
+                    setState({
+                      dataPost: {
+                        ...data,
+                        url_thumb: state.dataPost.url_thumb,
+                        url_source: state.dataPost.url_source,
+                        medias: state.dataPost.medias,
+                        ...dataCustom
+                      }
+                    })
+                  }
                 }}
+                customAction={customAction}
               />
             )}
           </div>

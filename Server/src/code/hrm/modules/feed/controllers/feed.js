@@ -1,4 +1,9 @@
-import { localSavePath, _uploadServices } from "#app/services/upload.js"
+import {
+  copyFilesServices,
+  localSavePath,
+  moveFileFromServerToGCS,
+  _uploadServices
+} from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
@@ -6,18 +11,20 @@ import fs from "fs"
 import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
-FfmpegCommand.setFfmpegPath(ffmpegPath.path)
-FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import commentMongoModel from "../models/comment.mongo.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { getSetting } from "#app/services/settings.js"
+
+FfmpegCommand.setFfmpegPath(ffmpegPath.path)
+FfmpegCommand.setFfprobePath(ffprobePath.path)
 
 // ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
-    fs.mkdirSync(path.join(localSavePath, storePath))
+    fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
   const file = req.files
@@ -36,6 +43,7 @@ const uploadTempAttachmentController = async (req, res, next) => {
 }
 
 const submitPostController = async (req, res, next) => {
+  const storePathTemp = path.join("modules", "feed_temp")
   const dateToDay = handleCurrentYMD()
   const storePath = path.join("modules", "feed", dateToDay)
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
@@ -95,7 +103,11 @@ const submitPostController = async (req, res, next) => {
     } else {
       // ** check file image/video
       if (body.file.length === 1) {
-        const result = await handleMoveFileTempToMain(body.file[0], storePath)
+        const result = await handleMoveFileTempToMain(
+          body.file[0],
+          storePathTemp,
+          storePath
+        )
         handleDeleteFile(body.file[0])
         await feedMongoModel.updateOne(
           { _id: _id_parent },
@@ -114,7 +126,11 @@ const submitPostController = async (req, res, next) => {
         const promises = []
         forEach(body.file, (value, key) => {
           const promise = new Promise(async (resolve, reject) => {
-            const result = await handleMoveFileTempToMain(value, storePath)
+            const result = await handleMoveFileTempToMain(
+              value,
+              storePathTemp,
+              storePath
+            )
             handleDeleteFile(value)
 
             let type_feed = "image"
@@ -140,7 +156,9 @@ const submitPostController = async (req, res, next) => {
               _id: saveFeedChild._id,
               type: saveFeedChild.type,
               source: saveFeedChild.source,
-              thumb: saveFeedChild.thumb
+              source_attribute: saveFeedChild.source_attribute,
+              thumb: saveFeedChild.thumb,
+              thumb_attribute: saveFeedChild.thumb_attribute
             })
           })
           promises.push(promise)
@@ -260,6 +278,56 @@ const updatePost = async (req, res, next) => {
   } catch (err) {
     return res.fail(err.message)
   }
+}
+
+// delete post
+const deletePost = async (req, res, next) => {
+  const body = req.body
+  const ref = body.ref
+  const _id = body._id
+
+  if (_id) {
+    // delete feed
+    if (ref === null) {
+      const arr_id_delete = [_id]
+      const feed = await feedMongoModel.findById(_id)
+      const medias = feed.medias
+      if (!isEmpty(medias)) {
+        forEach(medias, (value) => {
+          arr_id_delete.push(value._id)
+        })
+      }
+      try {
+        await feedMongoModel.deleteMany({
+          _id: { $in: arr_id_delete }
+        })
+        return res.respond("empty")
+      } catch (err) {
+        return res.fail(err.message)
+      }
+    }
+
+    // delete post media
+    if (ref !== null) {
+      try {
+        await feedMongoModel.deleteOne({ _id: _id })
+        await feedMongoModel.updateOne(
+          { _id: ref },
+          { $pull: { medias: { _id: _id } } }
+        )
+        const feed = await feedMongoModel.findById(ref)
+        if (isEmpty(feed.medias)) {
+          await feedMongoModel.deleteOne({ _id: ref })
+          return res.respond("empty")
+        }
+        return res.respond("medias")
+      } catch (err) {
+        return res.fail(err.message)
+      }
+    }
+  }
+
+  return res.fail("not-found")
 }
 // **
 
@@ -391,7 +459,7 @@ const updateSubComment = async (req, res, next) => {
 }
 // **
 
-// ** function
+// ** support function
 const takeOneFrameOfVid = (dir, storePath) => {
   const savePath = path.join(localSavePath, storePath)
   return new Promise((resolve, reject) => {
@@ -460,7 +528,13 @@ const handleUpFileTemp = async (file, type, storePath) => {
   return result
 }
 
-const handleMoveFileTempToMain = async (file_info, storePath) => {
+const handleMoveFileTempToMain = async (
+  file_info,
+  storePathTemp,
+  storePath
+) => {
+  const upload_type = await getSetting("upload_type")
+
   const result = {
     source: null,
     source_attribute: {},
@@ -471,40 +545,46 @@ const handleMoveFileTempToMain = async (file_info, storePath) => {
   // source
   if (file_info.source) {
     if (fs.existsSync(path.join(localSavePath, file_info.source))) {
-      const contents = fs.readFileSync(
-        path.join(localSavePath, file_info.source),
-        {
-          encoding: "base64"
-        }
-      )
-      const file = {
-        name: file_info.name_source,
-        mimetype: file_info.type,
-        content: contents
+      if (upload_type === "direct") {
+        const resultUpload = await copyFilesServices(
+          storePathTemp,
+          storePath,
+          file_info.name_source
+        )
+        result["source"] = resultUpload.uploadSuccess[0].path
+        result["source_attribute"] = resultUpload.uploadSuccess[0]
+      } else if (upload_type === "cloud_storage") {
+        const resultUpload = await moveFileFromServerToGCS(
+          storePathTemp,
+          storePath,
+          file_info.name_source
+        )
+        result["source"] = resultUpload.uploadSuccess[0].path
+        result["source_attribute"] = resultUpload.uploadSuccess[0]
       }
-      const resultUpload = await _uploadServices(storePath, [file], true)
-      result["source"] = resultUpload.uploadSuccess[0].path
-      result["source_attribute"] = resultUpload.uploadSuccess[0]
     }
   }
 
   // thumb
   if (file_info.thumb) {
     if (fs.existsSync(path.join(localSavePath, file_info.thumb))) {
-      const contents = fs.readFileSync(
-        path.join(localSavePath, file_info.thumb),
-        {
-          encoding: "base64"
-        }
-      )
-      const file = {
-        name: file_info.name_thumb,
-        mimetype: file_info.type,
-        content: contents
+      if (upload_type === "direct") {
+        const resultUpload = await copyFilesServices(
+          storePathTemp,
+          storePath,
+          file_info.name_thumb
+        )
+        result["thumb"] = resultUpload.uploadSuccess[0].path
+        result["thumb_attribute"] = resultUpload.uploadSuccess[0]
+      } else if (upload_type === "cloud_storage") {
+        const resultUpload = await moveFileFromServerToGCS(
+          storePathTemp,
+          storePath,
+          file_info.name_thumb
+        )
+        result["thumb"] = resultUpload.uploadSuccess[0].path
+        result["thumb_attribute"] = resultUpload.uploadSuccess[0]
       }
-      const resultUpload = await _uploadServices(storePath, [file], true)
-      result["thumb"] = resultUpload.uploadSuccess[0].path
-      result["thumb_attribute"] = resultUpload.uploadSuccess[0]
     }
   }
 
@@ -595,7 +675,7 @@ const handleUpImageComment = async (image, id_post) => {
   const dateToDay = handleCurrentYMD()
   const storePathTemp = path.join("modules", "comment_temp")
   if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
-    fs.mkdirSync(path.join(localSavePath, storePathTemp))
+    fs.mkdirSync(path.join(localSavePath, storePathTemp), { recursive: true })
   }
   const storePath = path.join("modules", "comment", id_post, dateToDay)
 
@@ -612,7 +692,11 @@ const handleUpImageComment = async (image, id_post) => {
       name_source: image_name,
       type: image.mimetype
     }
-    const result_image = await handleMoveFileTempToMain(file_info, storePath)
+    const result_image = await handleMoveFileTempToMain(
+      file_info,
+      storePathTemp,
+      storePath
+    )
     result["source"] = result_image.source
     result["source_attribute"] = result_image.source_attribute
   }
@@ -721,5 +805,6 @@ export {
   updateComment,
   submitCommentReply,
   updateSubComment,
-  loadFeedProfile
+  loadFeedProfile,
+  deletePost
 }
