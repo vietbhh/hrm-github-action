@@ -479,27 +479,41 @@ const loadDataMedia = async (req, res, next) => {
 
     const listFeed = await feedMongoModel.find({
       permission: "workspace",
-      permission_ids: workspaceId,
-      medias: { $exists: true, $ne: [] },
-      "medias.type": _getMediaType(parseInt(mediaTypeNumber))
+      permission_ids: workspaceId
     })
 
     const requestMedia = _getMediaType(parseInt(mediaTypeNumber))
     const result = {}
     listFeed.map((item) => {
-      item.medias.map((itemMedia) => {
-        if (itemMedia.type === requestMedia) {
-          const feedId = item._id.toString()
-          if (result[feedId] === undefined) {
-            result[feedId] = {
-              info: item,
-              data: []
+      if (item.type === "post") {
+        item.medias.map((itemMedia) => {
+          if (itemMedia.type === requestMedia) {
+            const feedId = item._id.toString()
+            if (result[feedId] === undefined) {
+              result[feedId] = {
+                info: item,
+                data: []
+              }
             }
-          }
 
-          result[feedId]["data"].push(itemMedia)
+            result[feedId]["data"].push(itemMedia)
+          }
+        })
+      } else if (item.type === requestMedia && item.ref === null) {
+        result[item._id.toString()] = {
+          info: item,
+          data: [
+            {
+              _id: item.id,
+              type: item.type,
+              source: item.source,
+              source_attribute: item.source_attribute,
+              thumb: item.thumb,
+              thumb_attribute: item.thumb_attribute
+            }
+          ]
         }
-      })
+      }
     })
 
     if (requestMedia === "file") {

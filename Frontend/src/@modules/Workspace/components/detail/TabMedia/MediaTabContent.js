@@ -14,9 +14,9 @@ const MediaTabContent = (props) => {
     id,
     tabId,
     mediaTabActive,
-    modalPreview,
     // ** methods
-    handleModalPreview
+    handleModalPreview,
+    setMediaInfo
   } = props
 
   const [state, setState] = useMergedState({
@@ -78,6 +78,7 @@ const MediaTabContent = (props) => {
               mediaTabActive={mediaTabActive}
               key={`media-item-${item.info._id}`}
               handleModalPreview={handleModalPreview}
+              setMediaInfo={setMediaInfo}
             />
           )
         })}

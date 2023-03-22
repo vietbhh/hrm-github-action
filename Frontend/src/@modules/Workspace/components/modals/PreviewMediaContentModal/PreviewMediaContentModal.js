@@ -5,24 +5,33 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Modal, ModalBody } from "reactstrap"
 // ** Components
 import PreviewImage from "./PreviewImage"
+import PreviewVideo from "./PreviewVideo"
 
 const PreviewMediaContentModal = (props) => {
   const {
     // ** props
     modal,
+    mediaInfo,
     mediaTabActive,
     // ** methods
     handleModal
   } = props
 
+  console.log(mediaInfo)
+
   // ** render
   const renderModalContent = () => {
-    if (mediaTabActive === 1) {
+    const [mediaType] = mediaInfo.mime.split("/")
+    if (mediaType === "file") {
       return ""
     }
 
-    if (mediaTabActive === 2) {
-      return <PreviewImage handleModal={handleModal} />
+    if (mediaType === "image") {
+      return <PreviewImage mediaInfo={mediaInfo} handleModal={handleModal} />
+    }
+
+    if (mediaType === "video") {
+      return <PreviewVideo mediaInfo={mediaInfo} handleModal={handleModal} />
     }
   }
 

@@ -20,6 +20,7 @@ const TabMedia = (props) => {
   const [state, setState] = useMergedState({
     loading: true,
     mediaTabActive: 1,
+    mediaInfo: {},
     modalPreview: false
   })
 
@@ -33,19 +34,24 @@ const TabMedia = (props) => {
     }
   }
 
+  const setMediaInfo = (data) => {
+    setState({
+      mediaInfo: data
+    })
+  }
+
   const handleModalPreview = () => {
     setState({
       modalPreview: !state.modalPreview
     })
   }
 
-
   // ** effect
   useEffect(() => {
     if (state.modalPreview) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = "unset"
     }
   }, [state.modalPreview])
 
@@ -63,6 +69,7 @@ const TabMedia = (props) => {
               mediaTabActive={state.mediaTabActive}
               modalPreview={state.modalPreview}
               setMediaTabActive={setMediaTabActive}
+              setMediaInfo={setMediaInfo}
               handleModalPreview={handleModalPreview}
             />
           </div>
@@ -72,6 +79,7 @@ const TabMedia = (props) => {
       {state.modalPreview && (
         <PreviewMediaContentModal
           modal={state.modalPreview}
+          mediaInfo={state.mediaInfo}
           mediaTabActive={state.mediaTabActive}
           handleModal={handleModalPreview}
         />

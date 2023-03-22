@@ -21,6 +21,7 @@ const MediaContent = (props) => {
     modalPreview,
     // ** methods
     setMediaTabActive,
+    setMediaInfo,
     handleModalPreview
   } = props
 
@@ -76,6 +77,7 @@ const MediaContent = (props) => {
                 tabId={1}
                 modalPreview={modalPreview}
                 handleModalPreview={handleModalPreview}
+                setMediaInfo={setMediaInfo}
               />
             </Row>
           </TabPane>
@@ -87,6 +89,7 @@ const MediaContent = (props) => {
                 tabId={2}
                 modalPreview={modalPreview}
                 handleModalPreview={handleModalPreview}
+                setMediaInfo={setMediaInfo}
               />
             </Row>
           </TabPane>
@@ -98,6 +101,7 @@ const MediaContent = (props) => {
                 tabId={3}
                 modalPreview={modalPreview}
                 handleModalPreview={handleModalPreview}
+                setMediaInfo={setMediaInfo}
               />
             </Row>
           </TabPane>
@@ -109,6 +113,7 @@ const MediaContent = (props) => {
                 tabId={4}
                 modalPreview={modalPreview}
                 handleModalPreview={handleModalPreview}
+                setMediaInfo={setMediaInfo}
               />
             </Row>
           </TabPane>

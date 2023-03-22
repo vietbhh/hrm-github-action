@@ -1,21 +1,25 @@
 // ** React Imports
 import { Fragment } from "react"
 import { useFormatMessage } from "@apps/utility/common"
+import moment from "moment"
 // ** Styles
 import { Button, Card, CardBody } from "reactstrap"
 import { Dropdown } from "antd"
 // ** Components
 import Avatar from "@apps/modules/download/pages/Avatar"
+import Photo from "@apps/modules/download/pages/Photo"
 
 const MediaFileItem = (props) => {
   const {
     // ** props
     mediaItem,
     // ** methods
-    handleModalPreview
+    handleModalPreview,
+    setMediaInfo
   } = props
 
-  const handlePreviewFile = () => {
+  const handlePreviewFile = (sourceAttribute) => {
+    setMediaInfo(sourceAttribute)
     handleModalPreview()
   }
 
@@ -57,14 +61,30 @@ const MediaFileItem = (props) => {
     }
   ]
 
+  const formatByte = (bytes, decimals = 2) => {
+    if (!+bytes) return "0 Bytes"
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  }
+
   // ** render
-  const renderFileImage = () => {
-    return (
-      <img
-        src="https://files-2.gapowork.vn/files/origin/e276ef44-bc8b-489e-afea-5edff5e3878a/matthias_helvar_by_noukette_dbys4l7-fullview _1.jpg"
-        className="file-thumb"
-      />
-    )
+  const renderFileImage = (sourceAttribute) => {
+    const [mediaType] = sourceAttribute.mime.split("/")
+    if (mediaType === "image") {
+      return (
+        <Photo
+          src={sourceAttribute.path}
+          className="file-thumb"
+          preview={false}
+        />
+      )
+    }
   }
 
   const renderFileItem = () => {
@@ -75,19 +95,31 @@ const MediaFileItem = (props) => {
     return (
       <Fragment>
         {mediaItem.data.map((item, index) => {
+          const sourceAttribute = item.source_attribute
+          if (sourceAttribute === undefined) {
+            return ""
+          }
+
           return (
-            <Card className="mb-50" key={`media-file-item-${item._id}`}>
+            <Card
+              className="mb-50"
+              key={`media-file-item-${item._id}`}
+              onClick={() => handlePreviewFile(sourceAttribute)}>
               <CardBody className="border rounded d-flex align-items-center justify-content-between p-75">
                 <div className="d-flex align-items-start">
                   <div className="me-50 image-container">
-                    <Fragment>{renderFileImage()}</Fragment>
+                    <Fragment>{renderFileImage(sourceAttribute)}</Fragment>
                   </div>
                   <div className="info">
-                    <h6 className="mb-25">image.png</h6>
+                    <h6 className="mb-25">{sourceAttribute.name}</h6>
                     <small>
-                      <span>9KB</span>
-                      <span className="ps-1">13/03/2023</span>{" "}
-                      <span className="ps-25">10:03 AM</span>
+                      <span>{formatByte(sourceAttribute.size)}</span>
+                      <span className="ps-1">
+                        {moment(item.created_at).format("YYYY/MM/DD")}
+                      </span>{" "}
+                      <span className="ps-25">
+                        {moment(item.created_at).format("hh:mm A")}
+                      </span>
                     </small>
                   </div>
                 </div>
@@ -111,9 +143,7 @@ const MediaFileItem = (props) => {
   }
 
   return (
-    <div
-      className="ms-50 w-100 mb-2 media-file-item"
-      onClick={() => handlePreviewFile()}>
+    <div className="ms-50 w-100 mb-2 media-file-item">
       <div className="p-1 d-flex align-items-center justify-content0-center">
         <Avatar src={mediaItem.info.owner_info?.avatar} className="me-50" />
         <p className="mb-0 font-weight-bold">
@@ -121,7 +151,7 @@ const MediaFileItem = (props) => {
         </p>
       </div>
       <div
-        dangerouslySetInnerHTML={{ __html: "<p>test 1</p>" }}
+        dangerouslySetInnerHTML={{ __html: mediaItem.info.content }}
         className="ms-75"></div>
       <div className="w-100">
         <Fragment>{renderFileItem()}</Fragment>

@@ -5,6 +5,7 @@ import { Fragment } from "react"
 import { Card, CardBody, Col } from "reactstrap"
 // ** Components
 import MediaFileItem from "./MediaFileItem"
+import MediaPhotoItem from "./MediaPhotoItem"
 import MediaVideoItem from "./MediaVideoItem"
 
 const MediaItem = (props) => {
@@ -13,38 +14,19 @@ const MediaItem = (props) => {
     mediaItem,
     mediaTabActive,
     // ** methods
-    handleModalPreview
+    handleModalPreview,
+    setMediaInfo
   } = props
-
-  const handleClickImage = () => {
-    handleModalPreview()
-  }
 
   // ** render
   const renderPhoto = () => {
     return (
       <Fragment>
-        {mediaItem.data.map((item, index) => {
-          return (
-            <Col
-              sm="2"
-              className="m-0 p-0"
-              key={`media-image-item-${item._id}`}
-              onClick={() => handleClickImage()}>
-              <Card className="h-100 media-image-item">
-                <CardBody className="p-0">
-                  <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center p-50 image-container">
-                    <Photo
-                      src={item.thumb}
-                      className="w-100 h-100 rounded"
-                      preview={false}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          )
-        })}
+        <MediaPhotoItem
+          mediaItem={mediaItem}
+          handleModalPreview={handleModalPreview}
+          setMediaInfo={setMediaInfo}
+        />
       </Fragment>
     )
   }
@@ -55,6 +37,7 @@ const MediaItem = (props) => {
         <MediaFileItem
           mediaItem={mediaItem}
           handleModalPreview={handleModalPreview}
+          setMediaInfo={setMediaInfo}
         />
       </Col>
     )
@@ -65,7 +48,11 @@ const MediaItem = (props) => {
       <Col sm="2" className="m-0 p-0">
         <Card>
           <CardBody className="p-0">
-            <MediaVideoItem />
+            <MediaVideoItem
+              mediaItem={mediaItem}
+              handleModalPreview={handleModalPreview}
+              setMediaInfo={setMediaInfo}
+            />
           </CardBody>
         </Card>
       </Col>

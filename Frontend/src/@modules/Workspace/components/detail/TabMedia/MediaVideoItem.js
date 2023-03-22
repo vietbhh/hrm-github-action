@@ -1,21 +1,34 @@
 // ** React Imports
 // ** Styles
 // ** Components
+import Photo from "@apps/modules/download/pages/Photo"
 
 const MediaVideoItem = (props) => {
   const {
     // ** props
-    mediaItem
+    mediaItem,
     // ** methods
+    handleModalPreview,
+    setMediaInfo
   } = props
+
+  const [data] = mediaItem.data
+
+  const handleClickPlay = () => {
+    setMediaInfo(data.source_attribute)
+    handleModalPreview()
+  }
 
   // ** render
   return (
-    <div className="w-100 d-flex align-items-center justify-content-center p-50 ">
-      <div className="w-100 position-relative">
-        <img
-          src="https://cdn-thumb-image-2.gapowork.vn/140x140/smart/a97d9f8f-0ad8-4f1e-8954-4f9110e02d0d/matthias_helvar_by_noukette_dbys4l7-fullview _1.jpeg"
+    <div
+      className="w-100 d-flex align-items-center justify-content-center p-50 media-video-item"
+      onClick={() => handleClickPlay()}>
+      <div className="w-100 position-relative video-thumb">
+        <Photo
+          src={data.thumb}
           className="w-100 h-100 rounded"
+          preview={false}
         />
       </div>
       <div className="position-absolute top-50 start-50 translate-middle">

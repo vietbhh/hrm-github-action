@@ -34,12 +34,13 @@
       font-weight: bold;
     }
   }
-  .no-border-bottom{
-    .modal-content{
-      .modal-header{
-        border-bottom : none !important;
-
-      }}}
+  .no-border-bottom {
+    .modal-content {
+      .modal-header {
+        border-bottom: none !important;
+      }
+    }
+  }
   .btn-action-secondary {
     background-color: #e5e5e5 !important;
     border-color: #e5e5e5 !important;
@@ -108,15 +109,17 @@
       .media-file-item {
         cursor: pointer;
         .image-container {
-          height: 40px;
-          width: 40px;
+          .ant-image {
+            height: 40px !important;
+            width: 40px !important;
 
-          img {
-            height: 100%;
-            width: 100%;
-            border-radius: 5px;
-            object-fit: cover;
-            object-position: center center;
+            img {
+              height: 100%;
+              width: 100%;
+              border-radius: 5px;
+              object-fit: cover;
+              object-position: center center;
+            }
           }
         }
 
@@ -127,10 +130,29 @@
         }
       }
 
-      .media-image-item {
-        .image-container {
+      .col-media-image {
+        .media-image-item {
+          .image-container {
+            .ant-image {
+              height: 100% !important;
+
+              img {
+                object-fit: cover;
+                object-position: center center;
+                height: 170px !important;
+              }
+            }
+          }
+        }
+      }
+
+      .media-video-item {
+        cursor: pointer;
+
+        .video-thumb {
           .ant-image {
-            height: 100% !important;
+            height: 170px !important;
+            width: 170px !important;
 
             img {
               object-fit: cover;
@@ -147,68 +169,68 @@
   .ant-tabs-tab-btn {
     width: 100%;
   }
-  .content-select{
+  .content-select {
     padding-right: 10px;
     width: 60%;
     border-right: 0.5px solid #c5c5c569;
   }
-  .content-selected{
+  .content-selected {
     padding-left: 10px;
     width: 40%;
   }
   .title-tab-content {
     font-weight: 600;
   }
-  .modal-content{
+  .modal-content {
     padding: 30px 40px 30px 0px !important;
-    .modal-header{
-      border-bottom : none !important;
-      .modal-title{
+    .modal-header {
+      border-bottom: none !important;
+      .modal-title {
         padding-left: 40px;
       }
     }
-    .ant-tabs-tab-active{
+    .ant-tabs-tab-active {
       background-color: antiquewhite;
     }
-   }
+  }
 }
 .box-member {
   cursor: pointer;
   align-items: center;
   padding: 10px 2px;
   border-radius: 12px;
-  &:hover{
+  &:hover {
     background-color: #f5f7f9;
   }
 }
-.setup-notification-workspace-modal{
-   .content-notification-setup{
+.setup-notification-workspace-modal {
+  .content-notification-setup {
     cursor: pointer;
     margin-bottom: 0.5rem;
-    .title{
+    .title {
       color: rgb(26, 26, 26);
       font-size: 14px;
       line-height: 20px;
       font-weight: 600;
     }
-    .sub-title{
+    .sub-title {
       color: rgb(128, 128, 128);
       font-weight: normal;
       font-size: 12px;
       line-height: 16px;
     }
-   }
+  }
 }
 
 .workspace-setting {
-  .field_switch{
+  .field_switch {
     display: flex;
-    .label{
+    .label {
       font-weight: 600;
       font-size: 16px;
       line-height: 20px;
     }
-    .sub-label{
+    .sub-label {
       color: rgb(77, 77, 77);
       font-size: 0.75rem;
       margin-bottom: 0.75rem;
@@ -330,17 +352,31 @@
   all: unset;
 
   .modal-content {
-    background-color:rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     padding: 0 !important;
 
     .modal-body {
       .preview-image {
-        height: calc(100vh - 10px);
+        height: 100vh;
         position: relative;
 
         img {
-          height: 100%;
-          max-width: 100%;
+          height: 95vh;
+        }
+
+        .action-container {
+          position: absolute;
+          top: 0;
+        }
+      }
+
+      .preview-video {
+        height: 100vh;
+        position: relative;
+
+        video {
+          height: 95vh;
+          width: 95vw;
         }
 
         .action-container {
