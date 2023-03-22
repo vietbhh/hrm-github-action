@@ -39,7 +39,7 @@ const submitPostController = async (req, res, next) => {
   const dateToDay = handleCurrentYMD()
   const storePath = path.join("modules", "feed", dateToDay)
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
-    fs.mkdirSync(path.join(localSavePath, storePath))
+    fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
   const workspace_type =
