@@ -76,7 +76,9 @@ const submitPostController = async (req, res, next) => {
     type: type_feed_parent,
     medias: [],
     source: null,
+    source_attribute: {},
     thumb: null,
+    thumb_attribute: {},
     ref: null,
     approve_status: body.approveStatus,
     link: link,
@@ -158,7 +160,8 @@ const submitPostController = async (req, res, next) => {
               source: saveFeedChild.source,
               source_attribute: saveFeedChild.source_attribute,
               thumb: saveFeedChild.thumb,
-              thumb_attribute: saveFeedChild.thumb_attribute
+              thumb_attribute: saveFeedChild.thumb_attribute,
+              description: saveFeedChild.content
             })
           })
           promises.push(promise)
@@ -301,7 +304,11 @@ const deletePost = async (req, res, next) => {
         await feedMongoModel.deleteMany({
           _id: { $in: arr_id_delete }
         })
-        return res.respond("empty")
+        await commentMongoModel.deleteMany({
+          post_id: { $in: arr_id_delete }
+        })
+        const out = { status: "empty" }
+        return res.respond(out)
       } catch (err) {
         return res.fail(err.message)
       }
@@ -310,17 +317,38 @@ const deletePost = async (req, res, next) => {
     // delete post media
     if (ref !== null) {
       try {
+        const out = { status: "medias" }
         await feedMongoModel.deleteOne({ _id: _id })
+        await commentMongoModel.deleteMany({ post_id: _id })
         await feedMongoModel.updateOne(
           { _id: ref },
           { $pull: { medias: { _id: _id } } }
         )
         const feed = await feedMongoModel.findById(ref)
+        if (feed.medias.length === 1) {
+          const data_update_parent = {
+            ref: null,
+            medias: [],
+            type: feed.medias[0].type,
+            source: feed.medias[0].source,
+            source_attribute: feed.medias[0].source_attribute,
+            thumb: feed.medias[0].thumb,
+            thumb_attribute: feed.medias[0].thumb_attribute
+          }
+          await feedMongoModel.updateOne({ _id: ref }, data_update_parent)
+          await feedMongoModel.deleteOne({ _id: feed.medias[0]._id })
+          await commentMongoModel.deleteMany({ post_id: feed.medias[0]._id })
+          out["status"] = "medias-1"
+          out["data"] = data_update_parent
+          return res.respond(out)
+        }
         if (isEmpty(feed.medias)) {
           await feedMongoModel.deleteOne({ _id: ref })
-          return res.respond("empty")
+          await commentMongoModel.deleteMany({ post_id: ref })
+          out["status"] = "empty"
+          return res.respond(out)
         }
-        return res.respond("medias")
+        return res.respond(out)
       } catch (err) {
         return res.fail(err.message)
       }
@@ -481,8 +509,7 @@ const takeOneFrameOfVid = (dir, storePath) => {
 const handleUpFileTemp = async (file, type, storePath) => {
   const result = {
     type: type,
-    description: "",
-    name_original: file.name
+    description: ""
   }
 
   const resultUpload = await _uploadServices(storePath, [file], false, "direct")

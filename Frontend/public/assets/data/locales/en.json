@@ -4420,6 +4420,7 @@
           "view_post": "View post",
           "edit_post": "Edit post",
           "delete_post": "Delete post",
+          "delete_image_video": "Delete image/video",
           "reply": "Reply",
           "placeholder_input": "Write your comment...",
           "you": "You",

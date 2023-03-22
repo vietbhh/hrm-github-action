@@ -50,6 +50,14 @@ const feedSchema = baseSchema("m_feed", {
         thumb_attribute: {
           type: {},
           default: {}
+        },
+        description: {
+          type: String,
+          default: ""
+        },
+        created_at: {
+          type: Date,
+          default: Date.now()
         }
       }
     ],

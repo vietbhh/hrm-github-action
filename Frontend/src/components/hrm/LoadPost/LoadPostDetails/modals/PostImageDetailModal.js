@@ -1,5 +1,5 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
@@ -313,10 +313,17 @@ const PostImageDetailModal = (props) => {
               <div className="right-header">
                 <PostHeader
                   data={state.data}
-                  customAction={customAction}
                   setData={setDataPost}
                   handleCloseModal={handleCloseModal}
                   dataModal={dataModal}
+                  customAction={{
+                    ...customAction,
+                    delete_post: {
+                      title: useFormatMessage(
+                        "modules.feed.post.text.delete_image_video"
+                      )
+                    }
+                  }}
                 />
               </div>
               <div

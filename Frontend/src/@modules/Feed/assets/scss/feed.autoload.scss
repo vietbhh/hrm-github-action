@@ -1015,6 +1015,10 @@
               .fa-solid {
                 font-weight: 900 !important;
               }
+
+              &:hover {
+                color: #6e6b7b !important;
+              }
             }
           }
         }
@@ -1566,10 +1570,10 @@
   ul {
     border-radius: 12px;
     padding: 7px 0;
+    min-width: max-content;
 
     li {
       padding: 7px 20px;
-      width: max-content;
 
       i {
         width: 20px;
