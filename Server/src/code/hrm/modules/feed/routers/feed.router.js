@@ -11,7 +11,8 @@ import {
   updateComment,
   submitCommentReply,
   updateSubComment,
-  loadFeedProfile
+  loadFeedProfile,
+  deletePost
 } from "../controllers/feed.js"
 const router = express.Router()
 
@@ -22,6 +23,7 @@ router.get("/get-feed-child/:id", getFeedChild)
 router.get("/get-feed/:id", getFeedById)
 router.get("/get-feed-and-comment/:id", getFeedByIdAndViewAllComment)
 router.post("/update-post", updatePost)
+router.post("/delete-post", deletePost)
 router.post("/submit-comment", submitComment)
 router.post("/submit-comment-reply", submitCommentReply)
 router.post("/update-comment", updateComment)

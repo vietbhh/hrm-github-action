@@ -17,7 +17,8 @@ const LoadPostMedia = (props) => {
     setIdMedia,
     dataMention,
     setData,
-    setCommentMoreCountOriginal
+    setCommentMoreCountOriginal,
+    customAction = {} // custom dropdown post header
   } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
@@ -252,6 +253,8 @@ const LoadPostMedia = (props) => {
         dataMedias={state.dataMedias}
         current_url={current_url}
         dataMention={dataMention}
+        customAction={customAction}
+        setDataPost={setData}
       />
     </Fragment>
   )

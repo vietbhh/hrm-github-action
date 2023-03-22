@@ -15,6 +15,7 @@ const LoadPost = (props) => {
     dataMention, // data arr user tag [{id: id, name: name,link: "#", avatar: getAvatarUrl(value.id * 1)}]
     offReactionAndComment = false, // tắt div reaction, comment: true / false
     setData, // function set lại data khi react, comment
+    customAction = {}, // custom dropdown post header
 
     // only page post details
     idMedia = "",
@@ -54,13 +55,14 @@ const LoadPost = (props) => {
         dataMention={dataMention}
         setData={setData}
         setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+        customAction={customAction}
       />
     )
   }
 
   return (
     <div className="load-post">
-      <PostHeader data={data} />
+      <PostHeader data={data} customAction={customAction} setData={setData} />
       <div className="post-body">
         <div id={`post-body-content-${data._id}`} className="post-body-content">
           <RenderContentPost data={data} />

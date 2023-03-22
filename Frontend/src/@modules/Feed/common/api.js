@@ -56,6 +56,10 @@ export const feedApi = {
     return await axiosNodeApi.post("/feed/update-post", data)
   },
 
+  async postDeletePost(data) {
+    return await axiosNodeApi.post("/feed/delete-post", data)
+  },
+
   async postUpdateComment(data) {
     return await axiosNodeApi.post("/feed/update-comment", data)
   },
