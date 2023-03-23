@@ -6,6 +6,7 @@ import notification from "@apps/utility/notification"
 import {
   decodeHTMLEntities,
   detectUrl,
+  handleLoadAttachmentMedias,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
@@ -34,7 +35,8 @@ const ModalCreatePost = (props) => {
     setModal,
     setDataCreateNew,
     approveStatus,
-    dataPost = {}
+    dataPost = {},
+    setData
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -141,13 +143,52 @@ const ModalCreatePost = (props) => {
         data_user: {
           id: userId,
           full_name: fullName
-        }
+        },
+        _id_post_edit: dataPost?._id || ""
       }
       feedApi
         .postSubmitPost(params)
-        .then((res) => {
+        .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             setDataCreateNew(res.data)
+          }
+          if (_.isFunction(setData)) {
+            const data = res.data
+            const dataCustom = {}
+            if (
+              data.source !== null &&
+              (data.type === "image" || data.type === "update_cover")
+            ) {
+              await downloadApi.getPhoto(data.thumb).then((response) => {
+                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
+              })
+            }
+
+            if (data.source !== null && data.type === "video") {
+              await downloadApi.getPhoto(data.source).then((response) => {
+                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
+              })
+            }
+
+            if (data.source !== null && data.type === "update_avatar") {
+              await downloadApi.getPhoto(data.thumb).then((response) => {
+                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
+              })
+              dataCustom["url_cover"] = ""
+              if (cover !== "") {
+                await downloadApi.getPhoto(cover).then((response) => {
+                  dataCustom["url_cover"] = URL.createObjectURL(response.data)
+                })
+              }
+            }
+
+            if (!_.isEmpty(data.medias) && data.type === "post") {
+              await handleLoadAttachmentMedias(data).then((res_promise) => {
+                dataCustom["medias"] = res_promise
+              })
+            }
+
+            setData(data, false, dataCustom)
           }
           setEmptyAfterSubmit()
           notification.showSuccess({
@@ -230,8 +271,7 @@ const ModalCreatePost = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    if (!_.isEmpty(dataPost) && modal) {
-      console.log(dataPost)
+    if (!_.isEmpty(dataPost)) {
       const content_html = dataPost.content
       const contentBlock = htmlToDraft(content_html)
       if (contentBlock) {
@@ -241,7 +281,11 @@ const ModalCreatePost = (props) => {
         const editorState = EditorState.createWithContent(contentState)
         setState({ editorState: editorState })
       }
+    }
+  }, [dataPost])
 
+  useEffect(() => {
+    if (!_.isEmpty(dataPost) && modal) {
       const _file = []
       if (dataPost.source) {
         _file.push({
@@ -250,10 +294,10 @@ const ModalCreatePost = (props) => {
           thumb: dataPost?.thumb,
           name_source: dataPost?.source_attribute?.name || "",
           name_thumb: dataPost?.thumb_attribute?.name || "",
-          type: dataPost?.thumb_attribute?.mime || "",
-          url_thumb: dataPost?.url_thumb
+          type: dataPost?.source_attribute?.mime || "",
+          url_thumb: dataPost?.url_thumb,
+          db: true
         })
-        setFile(_file)
       }
 
       if (!_.isEmpty(dataPost.medias)) {
@@ -262,7 +306,8 @@ const ModalCreatePost = (props) => {
             ...value,
             name_source: value?.source_attribute?.name || "",
             name_thumb: value?.thumb_attribute?.name || "",
-            type: value?.thumb_attribute?.mime || ""
+            type: value?.source_attribute?.mime || "",
+            db: true
           })
         })
       }

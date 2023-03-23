@@ -19,9 +19,10 @@ const PostHeader = (props) => {
   const {
     data,
     setData,
-    handleCloseModal,
+    handleCloseModal, // function close modal, có thể cho vào hoặc không
     dataModal = {},
-    customAction = {} // custom dropdown post header
+    customAction = {}, // custom dropdown post header
+    setEditDescription // function edit description, content only modal
   } = props
   const { view_post, edit_post, delete_post, ...rest } = customAction || {}
   const userData = useSelector((state) => state.auth.userData)
@@ -54,7 +55,13 @@ const PostHeader = (props) => {
         <a
           onClick={(e) => {
             e.preventDefault()
-            toggleModalCreatePost()
+            if (_.isFunction(handleCloseModal)) {
+              if (_.isFunction(setEditDescription)) {
+                setEditDescription(true)
+              }
+            } else {
+              toggleModalCreatePost()
+            }
           }}>
           <i className="fa-light fa-pen-to-square"></i>
           <span>
@@ -252,9 +259,9 @@ const PostHeader = (props) => {
         userId={data?.created_by?.id}
         dataMention={state.dataMention}
         workspace={[]}
-        setDataCreateNew={() => {}}
         approveStatus={data?.approve_status}
         dataPost={data}
+        setData={setData}
       />
     </Fragment>
   )

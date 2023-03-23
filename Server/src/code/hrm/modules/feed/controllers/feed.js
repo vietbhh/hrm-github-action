@@ -50,6 +50,14 @@ const submitPostController = async (req, res, next) => {
     fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
+
+  // check add or edit
+  const _id_post_edit = body._id_post_edit
+  let is_edit = false
+  if (_id_post_edit) {
+    is_edit = true
+  }
+
   const workspace_type =
     body.workspace.length === 0 && body.privacy_type === "workspace"
       ? "default"
@@ -68,101 +76,188 @@ const submitPostController = async (req, res, next) => {
     }
   }
 
-  const feedModelParent = new feedMongoModel({
-    __user: req.__user,
-    permission_ids: body.workspace,
-    permission: workspace_type,
-    content: body.content,
-    type: type_feed_parent,
-    medias: [],
-    source: null,
-    source_attribute: {},
-    thumb: null,
-    thumb_attribute: {},
-    ref: null,
-    approve_status: body.approveStatus,
-    link: link,
-    tag_user: body.tag_user
-  })
-
   try {
-    const saveFeedParent = await feedModelParent.save()
-    const _id_parent = saveFeedParent._id
-    let out = saveFeedParent
+    let out = {}
+    let _id_parent = ""
+    let data_feed_old = {}
+
+    if (!is_edit) {
+      const feedModelParent = new feedMongoModel({
+        __user: req.__user,
+        permission_ids: body.workspace,
+        permission: workspace_type,
+        content: body.content,
+        type: type_feed_parent,
+        medias: [],
+        source: null,
+        source_attribute: {},
+        thumb: null,
+        thumb_attribute: {},
+        ref: null,
+        approve_status: body.approveStatus,
+        link: link,
+        tag_user: body.tag_user
+      })
+      const saveFeedParent = await feedModelParent.save()
+      _id_parent = saveFeedParent._id
+      out = saveFeedParent
+    } else {
+      _id_parent = _id_post_edit
+      data_feed_old = await feedMongoModel.findById(_id_parent)
+      await feedMongoModel.updateOne(
+        { _id: _id_post_edit },
+        {
+          permission_ids: body.workspace,
+          permission: workspace_type,
+          content: body.content,
+          type: type_feed_parent,
+          medias: [],
+          source: null,
+          source_attribute: {},
+          thumb: null,
+          thumb_attribute: {},
+          ref: null,
+          link: link,
+          tag_user: body.tag_user
+        }
+      )
+    }
 
     // send notification
-    const link_notification = `/posts/${_id_parent}`
-    await handleSendNotification(
-      "post",
-      body.tag_user,
-      body.data_user,
-      link_notification
-    )
+    if (!is_edit) {
+      const link_notification = `/posts/${_id_parent}`
+      await handleSendNotification(
+        "post",
+        body.tag_user,
+        body.data_user,
+        link_notification
+      )
+    }
 
     if (body.file.length === 0) {
-      const _out = await handleDataBeforeReturn(out)
-      return res.respond(_out)
+      if (is_edit && !isEmpty(data_feed_old.medias)) {
+        const id_medias_delete = []
+        forEach(data_feed_old.medias, (value) => {
+          id_medias_delete.push(value._id)
+        })
+        await feedMongoModel.deleteMany({ _id: { $in: id_medias_delete } })
+        // xoa file
+      }
+
+      if (!is_edit) {
+        const _out = await handleDataBeforeReturn(out)
+        return res.respond(_out)
+      } else {
+        const _out = await handleDataFeedById(_id_parent)
+        return res.respond(_out)
+      }
     } else {
       // ** check file image/video
       if (body.file.length === 1) {
-        const result = await handleMoveFileTempToMain(
-          body.file[0],
-          storePathTemp,
-          storePath
-        )
-        handleDeleteFile(body.file[0])
-        await feedMongoModel.updateOne(
-          { _id: _id_parent },
-          {
-            source: result.source,
-            source_attribute: result.source_attribute,
-            thumb: result.thumb,
-            thumb_attribute: result.thumb_attribute
-          }
-        )
+        if (!is_edit || (is_edit && !body.file[0]._id)) {
+          const result = await handleMoveFileTempToMain(
+            body.file[0],
+            storePathTemp,
+            storePath
+          )
+          await feedMongoModel.updateOne(
+            { _id: _id_parent },
+            {
+              source: result.source,
+              source_attribute: result.source_attribute,
+              thumb: result.thumb,
+              thumb_attribute: result.thumb_attribute
+            }
+          )
+        }
 
-        out = await feedMongoModel.findById(_id_parent)
-        const _out = await handleDataBeforeReturn(out)
-        return res.respond(_out)
+        if (is_edit && body.file[0]._id) {
+          await feedMongoModel.updateOne(
+            { _id: _id_parent },
+            {
+              source: body.file[0].source,
+              source_attribute: body.file[0].source_attribute,
+              thumb: body.file[0].thumb,
+              thumb_attribute: body.file[0].thumb_attribute
+            }
+          )
+        }
+
+        if (is_edit && !isEmpty(data_feed_old.medias)) {
+          const id_medias_delete = []
+          forEach(data_feed_old.medias, (value) => {
+            id_medias_delete.push(value._id)
+          })
+          await feedMongoModel.deleteMany({
+            _id: { $in: id_medias_delete }
+          })
+          // xoa file
+        }
+
+        if (!is_edit) {
+          out = await feedMongoModel.findById(_id_parent)
+          const _out = await handleDataBeforeReturn(out)
+          return res.respond(_out)
+        } else {
+          const _out = await handleDataFeedById(_id_parent)
+          return res.respond(_out)
+        }
       } else {
         const promises = []
         forEach(body.file, (value, key) => {
           const promise = new Promise(async (resolve, reject) => {
-            const result = await handleMoveFileTempToMain(
-              value,
-              storePathTemp,
-              storePath
-            )
-            handleDeleteFile(value)
-
+            let _resolve = {}
             let type_feed = "image"
             if (value.type.includes("video/")) {
               type_feed = "video"
             }
-            const feedModelChild = new feedMongoModel({
-              __user: req.__user,
-              permission_ids: body.workspace,
-              permission: workspace_type,
-              content: value.description,
-              type: type_feed,
-              source: result.source,
-              source_attribute: result.source_attribute,
-              thumb: result.thumb,
-              thumb_attribute: result.thumb_attribute,
-              ref: _id_parent,
-              sort_number: key,
-              approve_status: body.approveStatus
-            })
-            const saveFeedChild = await feedModelChild.save()
-            resolve({
-              _id: saveFeedChild._id,
-              type: saveFeedChild.type,
-              source: saveFeedChild.source,
-              source_attribute: saveFeedChild.source_attribute,
-              thumb: saveFeedChild.thumb,
-              thumb_attribute: saveFeedChild.thumb_attribute,
-              description: saveFeedChild.content
-            })
+            if (!value._id) {
+              const result = await handleMoveFileTempToMain(
+                value,
+                storePathTemp,
+                storePath
+              )
+              const feedModelChild = new feedMongoModel({
+                __user: req.__user,
+                permission_ids: body.workspace,
+                permission: workspace_type,
+                content: value.description,
+                type: type_feed,
+                source: result.source,
+                source_attribute: result.source_attribute,
+                thumb: result.thumb,
+                thumb_attribute: result.thumb_attribute,
+                ref: _id_parent,
+                sort_number: key,
+                approve_status: body.approveStatus
+              })
+              const saveFeedChild = await feedModelChild.save()
+              _resolve = {
+                _id: saveFeedChild._id,
+                type: type_feed,
+                source: saveFeedChild.source,
+                source_attribute: saveFeedChild.source_attribute,
+                thumb: saveFeedChild.thumb,
+                thumb_attribute: saveFeedChild.thumb_attribute,
+                description: saveFeedChild.content
+              }
+            } else {
+              await feedMongoModel.updateOne(
+                { _id: value._id },
+                { content: value.description, sort_number: key }
+              )
+              _resolve = {
+                _id: value._id,
+                type: type_feed,
+                source: value.source,
+                source_attribute: value.source_attribute,
+                thumb: value.thumb,
+                thumb_attribute: value.thumb_attribute,
+                description: value.description
+              }
+            }
+
+            resolve(_resolve)
           })
           promises.push(promise)
         })
@@ -173,9 +268,32 @@ const submitPostController = async (req, res, next) => {
             { medias: arr_id_child }
           )
 
-          out = await feedMongoModel.findById(_id_parent)
-          const _out = await handleDataBeforeReturn(out)
-          return res.respond(_out)
+          if (is_edit && !isEmpty(data_feed_old.medias)) {
+            const id_medias_delete = []
+            forEach(data_feed_old.medias, (value) => {
+              const index_medias = arr_id_child.findIndex((item) => {
+                return item._id === value._id.toString()
+              })
+              if (index_medias === -1) {
+                id_medias_delete.push(value._id)
+              }
+            })
+            if (!isEmpty(id_medias_delete)) {
+              await feedMongoModel.deleteMany({
+                _id: { $in: id_medias_delete }
+              })
+              // xoa file
+            }
+          }
+
+          if (!is_edit) {
+            out = await feedMongoModel.findById(_id_parent)
+            const _out = await handleDataBeforeReturn(out)
+            return res.respond(_out)
+          } else {
+            const _out = await handleDataFeedById(_id_parent)
+            return res.respond(_out)
+          }
         })
       }
     }
@@ -352,6 +470,40 @@ const deletePost = async (req, res, next) => {
       } catch (err) {
         return res.fail(err.message)
       }
+    }
+  }
+
+  return res.fail("not-found")
+}
+
+// update content media
+const updateContentMedia = async (req, res, next) => {
+  const body = req.body
+  const content = body.content
+  const data = body.data
+  if (!isEmpty(data) && data._id) {
+    try {
+      await feedMongoModel.updateOne({ _id: data._id }, { content: content })
+      if (data.ref) {
+        const feed_parent = await feedMongoModel.findById(data.ref)
+        if (!isEmpty(feed_parent.medias)) {
+          const medias = [...feed_parent.medias]
+          const index_medias = medias.findIndex(
+            (item) => item._id.toString() === data._id.toString()
+          )
+          if (index_medias > -1) {
+            medias[index_medias]["description"] = content
+            await feedMongoModel.updateOne(
+              { _id: data.ref },
+              { medias: medias }
+            )
+          }
+        }
+      }
+
+      return res.respond("success")
+    } catch (err) {
+      return res.fail(err.message)
     }
   }
 
@@ -567,6 +719,12 @@ const handleMoveFileTempToMain = async (
     source_attribute: {},
     thumb: null,
     thumb_attribute: {}
+  }
+
+  if (file_info.db) {
+    const arr_path = file_info.source.split("/")
+    arr_path.pop()
+    storePathTemp = arr_path.join("/")
   }
 
   // source
@@ -833,5 +991,6 @@ export {
   submitCommentReply,
   updateSubComment,
   loadFeedProfile,
-  deletePost
+  deletePost,
+  updateContentMedia
 }

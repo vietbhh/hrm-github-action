@@ -919,6 +919,65 @@
         text-decoration-line: underline;
       }
     }
+
+    p {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    .div-edit-description {
+      textarea {
+        border: 1px solid rgb(222, 223, 226);
+        border-radius: 8px;
+        width: 100%;
+        padding: 8px;
+        height: 105px;
+        resize: none;
+        overflow: auto;
+
+        &:focus-visible {
+          outline: none !important;
+        }
+      }
+
+      .div-button {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 10px;
+
+        .button-cancel {
+          border-radius: 10px;
+          padding: 5px 0;
+          background: #f0f0f0 !important;
+          color: #18202a;
+          font-weight: 600;
+          width: 100px;
+
+          &:hover {
+            background: darken($color: #f0f0f0, $amount: 5) !important;
+          }
+        }
+
+        .button-save {
+          width: 100px;
+          border-radius: 10px;
+          padding: 5px 0;
+          font-weight: 600;
+          background: #377dff !important;
+          border-color: #377dff !important;
+          color: #ffffff !important;
+
+          &:hover {
+            background: darken($color: #377dff, $amount: 5) !important;
+          }
+        }
+      }
+    }
+  }
+
+  .post-body-content {
+    margin-bottom: 10px;
   }
 
   .public-DraftEditorPlaceholder-inner {
