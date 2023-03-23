@@ -17,11 +17,14 @@ const PreviewMediaContentModal = (props) => {
     handleModal
   } = props
 
-  console.log(mediaInfo)
-
   // ** render
   const renderModalContent = () => {
-    const [mediaType] = mediaInfo.mime.split("/")
+    const type = mediaInfo.mime !== undefined ? mediaInfo.mime : mediaInfo.type
+    if (type === undefined) {
+      return ""
+    }
+
+    const [mediaType] = type.split("/")
     if (mediaType === "file") {
       return ""
     }

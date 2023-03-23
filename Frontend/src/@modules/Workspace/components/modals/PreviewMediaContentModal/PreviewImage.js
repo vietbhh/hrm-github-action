@@ -15,10 +15,12 @@ const PreviewImage = (props) => {
     handleModal
   } = props
 
+  const url = mediaInfo.source === undefined ? mediaInfo.path : mediaInfo.source
+
   // ** render
   return (
     <div className="d-flex align-items-center justify-content-center preview-image">
-      <Photo src={mediaInfo.source} preview={false} />
+      <Photo src={url} preview={false} />
       <ModalButton handleModal={handleModal} />
     </div>
   )
