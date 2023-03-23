@@ -1,6 +1,7 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import LoadFeed from "@modules/Feed/components/LoadFeed"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
@@ -14,7 +15,8 @@ const TabPinned = (props) => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
-    approveStatus: "pending"
+    approveStatus: "pending",
+    dataPin: []
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -22,15 +24,16 @@ const TabPinned = (props) => {
   const workspaceID = params?.id
   const apiLoadFeed = workspaceApi.loadPinned
   const setDataCreateNew = () => {}
-  console.log("workspaceID pinned", workspaceID)
+  console.log("workspaceID pinned", state)
 
   const loadData = (paramsX = {}) => {
     console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     paramsX.id = workspaceID
     workspaceApi.loadPinned(paramsX).then((res) => {
-      console.log("res pinned ", res)
+      setState({ dataPin: res.data.dataPost })
     })
   }
+  console.log("detailWorkspace", detailWorkspace)
   useEffect(() => {
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
@@ -48,14 +51,21 @@ const TabPinned = (props) => {
 
     loadData({})
   }, [])
+
+  useEffect(() => {
+    setState({ dataPin: detailWorkspace?.pinPosts })
+  }, [detailWorkspace])
+
   const handlePinPost = (idPost) => {
-    const dataPin = {}
-    workspaceApi.update(params.id, values).then((res) => {
+    const dataPinned = [...state.dataPin]
+    dataPinned.push({ post: "64182f3180c579024eec029b", stt: 1 })
+    const dataUpdate = {
+      pinPosts: dataPinned
+    }
+    workspaceApi.update(params.id, dataUpdate).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
-      reset()
-      navigate(`/workspace/${res.data._id}`)
     })
   }
   return (
@@ -63,7 +73,7 @@ const TabPinned = (props) => {
       <div className="div-left">
         <Card>
           <CardBody>
-            feedsss 2<Button onClick={() => handlePinPost()}>Up</Button>
+            feedsss 2<Button onClick={() => handlePinPost("")}>Up</Button>
           </CardBody>
         </Card>
       </div>

@@ -42,6 +42,9 @@ const submitPostController = async (req, res, next) => {
     fs.mkdirSync(path.join(localSavePath, storePath))
   }
   const body = req.body
+  console.log("body", body)
+
+  return
   const workspace_type =
     body.workspace.length === 0 && body.privacy_type === "workspace"
       ? "default"

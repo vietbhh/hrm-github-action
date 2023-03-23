@@ -75,7 +75,7 @@ const DetailWorkspace = () => {
             <TabFeed detailWorkspace={state.detailWorkspace} />
           </TabPane>
           <TabPane tabId={2}>
-            <TabPinned />
+            <TabPinned detailWorkspace={state.detailWorkspace} />
           </TabPane>
           <TabPane tabId={3}>
             <TabIntroduction />

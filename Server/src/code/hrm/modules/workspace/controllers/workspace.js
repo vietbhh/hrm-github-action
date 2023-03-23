@@ -312,7 +312,7 @@ const updateWorkspace = async (req, res, next) => {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
       if (requestData?.members) {
-        updateData.members = JSON.parse(requestData.members)
+        //  updateData.members = JSON.parse(requestData.members)
       }
 
       await workspaceMongoModel.updateOne(
@@ -567,35 +567,22 @@ const loadFeed = async (req, res) => {
 const loadPinned = async (req, res) => {
   const request = req.query
   const workspaceId = request.id
-  console.log("workspaceId", workspaceId)
   const workspace = await workspaceMongoModel.findById(workspaceId)
+  const arrID = workspace.pinPosts.map((x) => x.post)
 
-  console.log("request", workspace)
+  const feed = await feedMongoModel.find({
+    _id: { $in: arrID }
+  })
 
-  return
-
-  const page = request.page
-  const pageLength = request.pageLength
-  const filter = {
-    permission_ids: request.workspace,
-    permission: "workspace",
-    approve_status: "approved",
-    ref: null
-  }
-  const feed = await feedMongoModel
-    .find(filter)
-    .skip(page * pageLength)
-    .limit(pageLength)
-    .sort({
-      _id: "desc"
-    })
   const data = await handleDataBeforeReturn(feed, true)
-  const feedCount = await feedMongoModel.find(filter).count()
+  const feedCount = await feedMongoModel
+    .find({
+      _id: { $in: arrID }
+    })
+    .count()
   const result = {
     dataPost: data,
-    totalPost: feedCount,
-    page: page * 1 + 1,
-    hasMore: (page * 1 + 1) * pageLength < feedCount
+    totalPost: feedCount
   }
   return res.respond(result)
 }
