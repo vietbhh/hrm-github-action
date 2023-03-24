@@ -14,14 +14,15 @@ const LoadFeed = (props) => {
     dataCreateNew, // data sau khi tạo mới post
     setDataCreateNew, // set data new
     workspace, // arr workspace: []
-    apiLoadFeed // api load feed
+    apiLoadFeed, // api load feed
+    customAction = {} // custom dropdown post header
   } = props
   const [state, setState] = useMergedState({
     dataPost: [],
     hasMore: false,
     hasMoreLazy: false,
     page: 0,
-    pageLength: 10,
+    pageLength: 7,
     totalPost: 0,
     loadingPost: false,
     loadingPostCreateNew: false,
@@ -212,16 +213,25 @@ const LoadFeed = (props) => {
               data={value}
               current_url={current_url}
               dataMention={state.dataMention}
-              setData={(data) => {
-                const _data = [...state.dataCreateNewTemp]
-                _data[index] = {
-                  ...data,
-                  url_thumb: _data[index].url_thumb,
-                  url_source: _data[index].url_source,
-                  medias: _data[index].medias
+              setData={(data, empty = false, dataCustom = {}) => {
+                if (empty) {
+                  const _data = state.dataCreateNewTemp.filter(
+                    (item, key) => key !== index
+                  )
+                  setState({ dataCreateNewTemp: _data })
+                } else {
+                  const _data = [...state.dataCreateNewTemp]
+                  _data[index] = {
+                    ...data,
+                    url_thumb: _data[index].url_thumb,
+                    url_source: _data[index].url_source,
+                    medias: _data[index].medias,
+                    ...dataCustom
+                  }
+                  setState({ dataCreateNewTemp: _data })
                 }
-                setState({ dataCreateNewTemp: _data })
               }}
+              customAction={customAction}
             />
           )
         })}
@@ -235,16 +245,25 @@ const LoadFeed = (props) => {
                 data={value}
                 current_url={current_url}
                 dataMention={state.dataMention}
-                setData={(data) => {
-                  const _data = [...state.dataPost]
-                  _data[index] = {
-                    ...data,
-                    url_thumb: _data[index].url_thumb,
-                    url_source: _data[index].url_source,
-                    medias: _data[index].medias
+                setData={(data, empty = false, dataCustom = {}) => {
+                  if (empty) {
+                    const _data = state.dataPost.filter(
+                      (item, key) => key !== index
+                    )
+                    setState({ dataPost: _data })
+                  } else {
+                    const _data = [...state.dataPost]
+                    _data[index] = {
+                      ...data,
+                      url_thumb: _data[index].url_thumb,
+                      url_source: _data[index].url_source,
+                      medias: _data[index].medias,
+                      ...dataCustom
+                    }
+                    setState({ dataPost: _data })
                   }
-                  setState({ dataPost: _data })
                 }}
+                customAction={customAction}
               />
             </LazyLoadComponent>
           )

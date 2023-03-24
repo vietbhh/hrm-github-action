@@ -1,7 +1,7 @@
 import { Storage } from "@google-cloud/storage"
 import fs from "fs"
 import fse from "fs-extra"
-import { forEach, isEmpty } from "lodash-es"
+import { forEach, isEmpty, toPath } from "lodash-es"
 import path, { dirname } from "path"
 import { getSetting } from "./settings.js"
 import mime from "mime-types"
@@ -45,23 +45,30 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
   const promises = []
   if (uploadByFileContent) {
     forEach(files, (file, key) => {
-      const fileName = safeFileName(file.name)
-      const filePath = path.join(savePath, fileName)
-      const fileData = file.content
-      const base64Data = fileData.replace(/^data:([A-Za-z-+/]+);base64,/, "")
-      try {
-        fs.writeFileSync(filePath, base64Data, { encoding: "base64" })
-        uploadSuccess.push({
-          name: fileName,
-          fullPath: filePath,
-          path: path.join(storePath, fileName).replaceAll("\\", "/")
+      promises.push(
+        new Promise((resolve, reject) => {
+          const fileName = safeFileName(file.name)
+          const filePath = path.join(savePath, fileName)
+          const fileData = file.content
+          const base64Data = fileData.replace(
+            /^data:([A-Za-z-+/]+);base64,/,
+            ""
+          )
+          try {
+            fs.writeFileSync(filePath, base64Data, { encoding: "base64" })
+            resolve({
+              name: fileName,
+              fullPath: filePath,
+              path: path.join(storePath, fileName).replaceAll("\\", "/")
+            })
+          } catch (err) {
+            reject({
+              name: fileName,
+              error: err
+            })
+          }
         })
-      } catch (err) {
-        uploadError.push({
-          name: fileName,
-          error: err
-        })
-      }
+      )
     })
   } else {
     forEach(files, (file, key) => {
@@ -86,27 +93,29 @@ const _localUpload = async (storePath, files, uploadByFileContent) => {
         })
       )
     })
-    await Promise.allSettled(promises).then((res) => {
-      forEach(res, (fileUpload) => {
-        if (fileUpload.status === "fulfilled") {
-          const stats = fs.statSync(fileUpload.value.fullPath)
-
-          uploadSuccess.push({
-            name: fileUpload.value.name,
-            size: stats.size,
-            mime: mime.lookup(fileUpload.value.name),
-            path: fileUpload.value.path
-          })
-        }
-        if (fileUpload.status === "rejected") {
-          uploadError.push({
-            name: fileUpload.reason.name,
-            error: fileUpload.reason.error
-          })
-        }
-      })
-    })
   }
+
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (fileUpload) => {
+      if (fileUpload.status === "fulfilled") {
+        const stats = fs.statSync(fileUpload.value.fullPath)
+
+        uploadSuccess.push({
+          name: fileUpload.value.name,
+          size: stats.size,
+          mime: mime.lookup(fileUpload.value.name),
+          path: fileUpload.value.path
+        })
+      }
+      if (fileUpload.status === "rejected") {
+        uploadError.push({
+          name: fileUpload.reason.name,
+          error: fileUpload.reason.error
+        })
+      }
+    })
+  })
+
   return { uploadSuccess, uploadError }
 }
 
@@ -137,6 +146,7 @@ const _googleCloudUpload = async (storePath, files) => {
     const promise = new Promise((resolve, reject) => {
       const blob = bucket.file(filePath)
       const blobStream = blob.createWriteStream({
+        contentType: file.mimetype,
         metadata: {
           contentType: file.mimetype
         },
@@ -144,13 +154,17 @@ const _googleCloudUpload = async (storePath, files) => {
       })
 
       blobStream
-        .on("finish", () => {
+        .on("finish", async () => {
           const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+          const filePathUpload = path
+            .join(storePath, fileName)
+            .replace(/\\/g, "/")
+          const [metadata] = await bucket.file(filePathUpload).getMetadata()
           uploadSuccess.push({
             name: fileName,
-            path: path.join(storePath, fileName).replace(/\\/g, "/"),
+            path: filePathUpload,
             mime: file.mimetype,
-            size: file.size,
+            size: metadata.size,
             storagePath: publicUrl
           })
           resolve("success")
@@ -176,8 +190,10 @@ const _googleCloudUpload = async (storePath, files) => {
 }
 
 const _handleCopyDirect = async (pathFrom, pathTo, filename) => {
-  const copySuccess = []
-  const copyError = []
+  const uploadSuccess = []
+  const uploadError = []
+
+  const promises = []
   if (!isEmpty(filename)) {
     const filePathFrom = path.join(localSavePath, pathFrom, filename)
     if (!fs.existsSync(filePathFrom)) {
@@ -189,20 +205,27 @@ const _handleCopyDirect = async (pathFrom, pathTo, filename) => {
       fs.mkdirSync(savePathTo, { recursive: true })
     }
 
-    fs.copyFile(filePathFrom, path.join(savePathTo, filename), (err) => {
-      if (err) {
-        copyError.push({
-          from: path.join(pathFrom, filename),
-          to: path.join(pathTo, filename),
-          error: err
+    promises.push(
+      new Promise((resolve, reject) => {
+        const filePathTo = path.join(savePathTo, filename)
+        fs.copyFile(filePathFrom, filePathTo, (err) => {
+          if (err) {
+            reject({
+              name: filename,
+              error: err
+            })
+          } else {
+            const fileInfo = fs.statSync(filePathTo)
+            resolve({
+              name: filename,
+              size: fileInfo.size,
+              fullPath: filePathTo,
+              path: path.join(pathTo, filename).replaceAll("\\", "/")
+            })
+          }
         })
-      } else {
-        copySuccess.push({
-          from: path.join(pathFrom, filename),
-          to: path.join(pathTo, filename)
-        })
-      }
-    })
+      })
+    )
   } else {
     const directoryFrom = path.join(localSavePath, pathFrom)
     if (!fs.existsSync(directoryFrom)) {
@@ -214,8 +237,60 @@ const _handleCopyDirect = async (pathFrom, pathTo, filename) => {
       fs.mkdirSync(directoryTo, { recursive: true })
     }
 
-    fse.copySync(directoryFrom, directoryTo)
+    const listFile = []
+    _getAllFileInDirectory(directoryFrom, listFile)
+
+    listFile.map((item) => {
+      promises.push(
+        new Promise((resolve, reject) => {
+          const subPath = path.join(directoryTo, item.directory)
+          if (!fs.existsSync(subPath)) {
+            fs.mkdirSync(subPath, { recursive: true })
+          }
+          const filename = item.name
+          const filePathTo = path.join(subPath, filename)
+          fs.copyFile(item.serverPath, filePathTo, (err) => {
+            if (err) {
+              reject({
+                name: filePathTo,
+                error: err
+              })
+            } else {
+              resolve({
+                name: filePathTo,
+                size: item.size,
+                fullPath: item.serverPath,
+                path: path
+                  .join(pathTo, item.directory, filename)
+                  .replaceAll("\\", "/")
+              })
+            }
+          })
+        })
+      )
+    })
   }
+
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (fileUpload) => {
+      if (fileUpload.status === "fulfilled") {
+        uploadSuccess.push({
+          name: fileUpload.value.name,
+          size: fileUpload.value.size,
+          mime: mime.lookup(fileUpload.value.name),
+          path: fileUpload.value.path
+        })
+      }
+      if (fileUpload.status === "rejected") {
+        uploadError.push({
+          name: fileUpload.reason.name,
+          error: fileUpload.reason.error
+        })
+      }
+    })
+  })
+
+  return { uploadSuccess, uploadError }
 }
 
 const _handleCopyCloudStorage = async (pathFrom, pathTo, filename) => {
@@ -233,22 +308,26 @@ const _handleCopyCloudStorage = async (pathFrom, pathTo, filename) => {
   const copySuccess = []
   const copyError = []
   const promises = []
+
   if (!isEmpty(filename)) {
     const promise = new Promise((resolve, reject) => {
       const filenameDest = path.join(pathTo, filename).replace(/\\/g, "/")
       const copyDestination = bucket.file(filenameDest)
       const filenameCopy = path.join(pathFrom, filename).replace(/\\/g, "/")
-      bucket.file(filenameCopy).copy(copyDestination, {}, (err) => {
+      bucket.file(filenameCopy).copy(copyDestination, {}, async (err) => {
         if (err) {
-          copyError.push({
-            from: path.join(source, fileItem.name),
-            to: path.join(dest, fileItem.name),
+          reject({
+            name: filenameDest,
             error: err
           })
         } else {
-          copySuccess.push({
-            from: path.join(source, fileItem.name),
-            to: path.join(dest, fileItem.name)
+          const [metadata] = await bucket.file(filenameDest).getMetadata()
+
+          resolve({
+            name: filename,
+            size: metadata.size,
+            mime: metadata.contentType,
+            path: filenameDest
           })
         }
       })
@@ -260,25 +339,26 @@ const _handleCopyCloudStorage = async (pathFrom, pathTo, filename) => {
       bucket.getFiles({ prefix: pathFrom }, (err, files) => {
         if (!err) {
           forEach(files, (fileItem) => {
-            fileItem.copy(
-              fileItem.name.replace(pathFrom, pathTo),
-              {},
-              (err) => {
-                if (err) {
-                  copyError.push({
-                    from: path.join(pathFrom, fileItem.name),
-                    to: path.join(pathTo, fileItem.name),
-                    error: err
-                  })
-                } else {
-                  copySuccess.push({
-                    from: path.join(pathFrom, fileItem.name),
-                    to: path.join(pathTo, fileItem.name)
-                  })
-                  resolve("success")
-                }
+            const filenameCopy = fileItem.name
+            const filenameDest = filenameCopy.replace(pathFrom, pathTo)
+            const copyDestination = bucket.file(filenameDest)
+
+            bucket.file(filenameCopy).copy(copyDestination, {}, async (err) => {
+              if (err) {
+                reject({
+                  name: filenameDest,
+                  error: err
+                })
+              } else {
+                const [metadata] = await bucket.file(filenameDest).getMetadata()
+                resolve({
+                  name: filenameCopy.replace(pathFrom + "/", ""),
+                  size: metadata.size,
+                  mime: metadata.contentType,
+                  path: filenameDest
+                })
               }
-            )
+            })
           })
         }
       })
@@ -287,12 +367,26 @@ const _handleCopyCloudStorage = async (pathFrom, pathTo, filename) => {
     promises.push(promise)
   }
 
-  return Promise.all(promises).then(() => {
-    return {
-      copySuccess,
-      copyError
-    }
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (fileUpload) => {
+      if (fileUpload.status === "fulfilled") {
+        copySuccess.push({
+          name: fileUpload.value.name,
+          size: fileUpload.value.size,
+          mime: fileUpload.value.mime,
+          path: fileUpload.value.path
+        })
+      }
+      if (fileUpload.status === "rejected") {
+        copyError.push({
+          name: fileUpload.reason.name,
+          error: fileUpload.reason.error
+        })
+      }
+    })
   })
+
+  return { copySuccess, copyError }
 }
 
 /**
@@ -319,8 +413,142 @@ const _uploadServices = async (
     const storePathGCS = path
       .join(process.env.code, storePath)
       .replace(/\\/g, "/")
-    return _googleCloudUpload(storePathGCS, files, uploadByFileContent)
+    return _googleCloudUpload(storePathGCS, files)
   }
+}
+
+const _getAllFileInDirectory = (directory, listFile, sub = "") => {
+  const filesInDirectory = fs.readdirSync(directory)
+  forEach(filesInDirectory, (file) => {
+    const absolute = path.join(directory, file)
+    if (fs.statSync(absolute).isDirectory()) {
+      _getAllFileInDirectory(absolute, listFile, file)
+    } else {
+      const fileInfo = fs.statSync(absolute)
+      listFile.push({
+        name: file,
+        serverPath: absolute,
+        directory: sub,
+        size: fileInfo.size,
+        dest: path.join(sub, file)
+      })
+    }
+  })
+}
+
+const moveFileFromServerToGCS = async (serverPath, storagePath, filename) => {
+  const moveSuccess = []
+  const moveError = []
+
+  if (isEmpty(serverPath) || isEmpty(storagePath)) {
+    throw new Error("missing_save_path")
+  }
+
+  const storage = new Storage({
+    keyFilename: path.join(
+      dirname(global.__basedir),
+      "Server",
+      "service_account_file.json"
+    ),
+    projectId: process.env.GCS_PROJECT_ID
+  })
+
+  const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
+
+  const toPath = path.join(process.env.code, storagePath).replace(/\\/g, "/")
+
+  const promises = []
+
+  if (!isEmpty(filename)) {
+    const filePathFrom = path.join(localSavePath, serverPath, filename)
+    if (!fs.existsSync(filePathFrom)) {
+      throw new Error("unable_to_find_backend_storage_path")
+    }
+
+    promises.push(
+      new Promise((resolve, reject) => {
+        const dest = path.join(toPath, filename).replace(/\\/g, "/")
+        bucket.upload(
+          filePathFrom,
+          {
+            destination: dest
+          },
+          (err, file) => {
+            if (err) {
+              reject({
+                filename: filename,
+                error: err
+              })
+            } else {
+              resolve({
+                file: file,
+                name: fileName,
+                path: dest
+              })
+            }
+          }
+        )
+      })
+    )
+  } else {
+    const directoryFrom = path.join(localSavePath, serverPath)
+    if (!fs.existsSync(directoryFrom)) {
+      throw new Error("path_from_is_not_exist")
+    }
+
+    const listFile = []
+    _getAllFileInDirectory(directoryFrom, listFile)
+
+    listFile.map((item) => {
+      promises.push(
+        new Promise((resolve, reject) => {
+          const dest = path.join(toPath, item.dest).replace(/\\/g, "/")
+          bucket.upload(
+            item.serverPath,
+            {
+              destination: dest
+            },
+            (err, file) => {
+              if (err) {
+                reject({
+                  filename: item.name,
+                  error: err
+                })
+              } else {
+                resolve({
+                  file: file,
+                  name: item.name,
+                  path: dest
+                })
+              }
+            }
+          )
+        })
+      )
+    })
+  }
+
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (fileUpload) => {
+      if (fileUpload.status === "fulfilled") {
+        moveSuccess.push({
+          name: fileUpload.value.name,
+          size: fileUpload.value.file.metadata.size,
+          mime: fileUpload.value.file.metadata.contentType,
+          path: fileUpload.value.path
+        })
+      }
+
+      if (fileUpload.status === "rejected") {
+        moveError.push({
+          name: fileUpload.reason.name,
+          error: fileUpload.reason.error
+        })
+      }
+    })
+  })
+
+  return { moveSuccess, moveError }
 }
 
 /**
@@ -331,8 +559,8 @@ const _uploadServices = async (
  * if filename is empty copy recursively directory from pathFrom
  * @returns
  */
-const copyFilesServices = async (pathFrom, pathTo, filename) => {
-  const upload_type = await getSetting("upload_type")
+const copyFilesServices = async (pathFrom, pathTo, filename, type = null) => {
+  const upload_type = type === null ? await getSetting("upload_type") : type
   if (isEmpty(pathFrom) || isEmpty(pathTo)) throw new Error("missing_copy_path")
   if (upload_type === "direct") {
     return _handleCopyDirect(pathFrom, pathTo, filename)
@@ -344,4 +572,5 @@ const copyFilesServices = async (pathFrom, pathTo, filename) => {
     return _handleCopyCloudStorage(pathFromGCS, pathToGCS, filename)
   }
 }
-export { _uploadServices, copyFilesServices, _localUpload }
+
+export { _uploadServices, copyFilesServices, moveFileFromServerToGCS }

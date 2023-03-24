@@ -50,6 +50,14 @@ const feedSchema = baseSchema("m_feed", {
         thumb_attribute: {
           type: {},
           default: {}
+        },
+        description: {
+          type: String,
+          default: ""
+        },
+        created_at: {
+          type: Date,
+          default: Date.now()
         }
       }
     ],
@@ -88,6 +96,14 @@ const feedSchema = baseSchema("m_feed", {
   tag_user: {
     type: [String],
     default: []
+  },
+  edited: {
+    type: Boolean,
+    default: false
+  },
+  edited_at: {
+    type: Date,
+    default: null
   },
 
   // ** source child / post: 1 image/video

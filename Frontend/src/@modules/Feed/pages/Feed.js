@@ -7,7 +7,8 @@ const Feed = (props) => {
   const {
     workspace = [], // arr workspace: []
     apiLoadFeed = null, // api load feed
-    approveStatus = "approved" // approved / rejected / pending
+    approveStatus = "approved", // approved / rejected / pending
+    customAction = {} // custom dropdown post header
   } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0
@@ -58,6 +59,7 @@ const Feed = (props) => {
         workspace={workspace}
         apiLoadFeed={apiLoadFeed}
         approveStatus={approveStatus}
+        customAction={customAction}
       />
     ),
     []

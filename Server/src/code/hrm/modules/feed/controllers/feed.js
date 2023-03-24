@@ -1,4 +1,9 @@
-import { localSavePath, _uploadServices } from "#app/services/upload.js"
+import {
+  copyFilesServices,
+  localSavePath,
+  moveFileFromServerToGCS,
+  _uploadServices
+} from "#app/services/upload.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
@@ -6,18 +11,20 @@ import fs from "fs"
 import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
-FfmpegCommand.setFfmpegPath(ffmpegPath.path)
-FfmpegCommand.setFfprobePath(ffprobePath.path)
 import sharp from "sharp"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import commentMongoModel from "../models/comment.mongo.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { getSetting } from "#app/services/settings.js"
+
+FfmpegCommand.setFfmpegPath(ffmpegPath.path)
+FfmpegCommand.setFfprobePath(ffprobePath.path)
 
 // ** create Post
 const uploadTempAttachmentController = async (req, res, next) => {
   const storePath = path.join("modules", "feed_temp")
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
-    fs.mkdirSync(path.join(localSavePath, storePath))
+    fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
   const file = req.files
@@ -36,15 +43,21 @@ const uploadTempAttachmentController = async (req, res, next) => {
 }
 
 const submitPostController = async (req, res, next) => {
+  const storePathTemp = path.join("modules", "feed_temp")
   const dateToDay = handleCurrentYMD()
   const storePath = path.join("modules", "feed", dateToDay)
   if (!fs.existsSync(path.join(localSavePath, storePath))) {
-    fs.mkdirSync(path.join(localSavePath, storePath))
+    fs.mkdirSync(path.join(localSavePath, storePath), { recursive: true })
   }
   const body = req.body
-  console.log("body", body)
 
-  return
+  // check add or edit
+  const _id_post_edit = body._id_post_edit
+  let is_edit = false
+  if (_id_post_edit) {
+    is_edit = true
+  }
+
   const workspace_type =
     body.workspace.length === 0 && body.privacy_type === "workspace"
       ? "default"
@@ -63,88 +76,191 @@ const submitPostController = async (req, res, next) => {
     }
   }
 
-  const feedModelParent = new feedMongoModel({
-    __user: req.__user,
-    permission_ids: body.workspace,
-    permission: workspace_type,
-    content: body.content,
-    type: type_feed_parent,
-    medias: [],
-    source: null,
-    thumb: null,
-    ref: null,
-    approve_status: body.approveStatus,
-    link: link,
-    tag_user: body.tag_user
-  })
-
   try {
-    const saveFeedParent = await feedModelParent.save()
-    const _id_parent = saveFeedParent._id
-    let out = saveFeedParent
+    let out = {}
+    let _id_parent = ""
+    let data_feed_old = {}
+
+    if (!is_edit) {
+      const feedModelParent = new feedMongoModel({
+        __user: req.__user,
+        permission_ids: body.workspace,
+        permission: workspace_type,
+        content: body.content,
+        type: type_feed_parent,
+        medias: [],
+        source: null,
+        source_attribute: {},
+        thumb: null,
+        thumb_attribute: {},
+        ref: null,
+        approve_status: body.approveStatus,
+        link: link,
+        tag_user: body.tag_user
+      })
+      const saveFeedParent = await feedModelParent.save()
+      _id_parent = saveFeedParent._id
+      out = saveFeedParent
+    } else {
+      _id_parent = _id_post_edit
+      data_feed_old = await feedMongoModel.findById(_id_parent)
+      await feedMongoModel.updateOne(
+        { _id: _id_post_edit },
+        {
+          permission_ids: body.workspace,
+          permission: workspace_type,
+          content: body.content,
+          type: type_feed_parent,
+          medias: [],
+          source: null,
+          source_attribute: {},
+          thumb: null,
+          thumb_attribute: {},
+          ref: null,
+          approve_status: body.approveStatus,
+          link: link,
+          tag_user: body.tag_user,
+          edited: true,
+          edited_at: Date.now()
+        }
+      )
+    }
 
     // send notification
-    const link_notification = `/posts/${_id_parent}`
-    await handleSendNotification(
-      "post",
-      body.tag_user,
-      body.data_user,
-      link_notification
-    )
+    if (!is_edit && body.approveStatus === "approved") {
+      const link_notification = `/posts/${_id_parent}`
+      await handleSendNotification(
+        "post",
+        body.tag_user,
+        body.data_user,
+        link_notification
+      )
+    }
 
     if (body.file.length === 0) {
-      const _out = await handleDataBeforeReturn(out)
-      return res.respond(_out)
+      if (is_edit && !isEmpty(data_feed_old.medias)) {
+        const id_medias_delete = []
+        forEach(data_feed_old.medias, (value) => {
+          id_medias_delete.push(value._id)
+        })
+        await feedMongoModel.deleteMany({ _id: { $in: id_medias_delete } })
+        // xoa file
+      }
+
+      if (!is_edit) {
+        const _out = await handleDataBeforeReturn(out)
+        return res.respond(_out)
+      } else {
+        const _out = await handleDataFeedById(_id_parent)
+        return res.respond(_out)
+      }
     } else {
       // ** check file image/video
       if (body.file.length === 1) {
-        const result = await handleMoveFileTempToMain(body.file[0], storePath)
-        handleDeleteFile(body.file[0])
-        await feedMongoModel.updateOne(
-          { _id: _id_parent },
-          {
-            source: result.source,
-            source_attribute: result.source_attribute,
-            thumb: result.thumb,
-            thumb_attribute: result.thumb_attribute
-          }
-        )
+        if (!is_edit || (is_edit && !body.file[0]._id)) {
+          const result = await handleMoveFileTempToMain(
+            body.file[0],
+            storePathTemp,
+            storePath
+          )
+          await feedMongoModel.updateOne(
+            { _id: _id_parent },
+            {
+              source: result.source,
+              source_attribute: result.source_attribute,
+              thumb: result.thumb,
+              thumb_attribute: result.thumb_attribute
+            }
+          )
+        }
 
-        out = await feedMongoModel.findById(_id_parent)
-        const _out = await handleDataBeforeReturn(out)
-        return res.respond(_out)
+        if (is_edit && body.file[0]._id) {
+          await feedMongoModel.updateOne(
+            { _id: _id_parent },
+            {
+              source: body.file[0].source,
+              source_attribute: body.file[0].source_attribute,
+              thumb: body.file[0].thumb,
+              thumb_attribute: body.file[0].thumb_attribute
+            }
+          )
+        }
+
+        if (is_edit && !isEmpty(data_feed_old.medias)) {
+          const id_medias_delete = []
+          forEach(data_feed_old.medias, (value) => {
+            id_medias_delete.push(value._id)
+          })
+          await feedMongoModel.deleteMany({
+            _id: { $in: id_medias_delete }
+          })
+          // xoa file
+        }
+
+        if (!is_edit) {
+          out = await feedMongoModel.findById(_id_parent)
+          const _out = await handleDataBeforeReturn(out)
+          return res.respond(_out)
+        } else {
+          const _out = await handleDataFeedById(_id_parent)
+          return res.respond(_out)
+        }
       } else {
         const promises = []
         forEach(body.file, (value, key) => {
           const promise = new Promise(async (resolve, reject) => {
-            const result = await handleMoveFileTempToMain(value, storePath)
-            handleDeleteFile(value)
-
+            let _resolve = {}
             let type_feed = "image"
             if (value.type.includes("video/")) {
               type_feed = "video"
             }
-            const feedModelChild = new feedMongoModel({
-              __user: req.__user,
-              permission_ids: body.workspace,
-              permission: workspace_type,
-              content: value.description,
-              type: type_feed,
-              source: result.source,
-              source_attribute: result.source_attribute,
-              thumb: result.thumb,
-              thumb_attribute: result.thumb_attribute,
-              ref: _id_parent,
-              sort_number: key,
-              approve_status: body.approveStatus
-            })
-            const saveFeedChild = await feedModelChild.save()
-            resolve({
-              _id: saveFeedChild._id,
-              type: saveFeedChild.type,
-              source: saveFeedChild.source,
-              thumb: saveFeedChild.thumb
-            })
+            if (!value._id) {
+              const result = await handleMoveFileTempToMain(
+                value,
+                storePathTemp,
+                storePath
+              )
+              const feedModelChild = new feedMongoModel({
+                __user: req.__user,
+                permission_ids: body.workspace,
+                permission: workspace_type,
+                content: value.description,
+                type: type_feed,
+                source: result.source,
+                source_attribute: result.source_attribute,
+                thumb: result.thumb,
+                thumb_attribute: result.thumb_attribute,
+                ref: _id_parent,
+                sort_number: key,
+                approve_status: body.approveStatus
+              })
+              const saveFeedChild = await feedModelChild.save()
+              _resolve = {
+                _id: saveFeedChild._id,
+                type: type_feed,
+                source: saveFeedChild.source,
+                source_attribute: saveFeedChild.source_attribute,
+                thumb: saveFeedChild.thumb,
+                thumb_attribute: saveFeedChild.thumb_attribute,
+                description: saveFeedChild.content
+              }
+            } else {
+              await feedMongoModel.updateOne(
+                { _id: value._id },
+                { content: value.description, sort_number: key }
+              )
+              _resolve = {
+                _id: value._id,
+                type: type_feed,
+                source: value.source,
+                source_attribute: value.source_attribute,
+                thumb: value.thumb,
+                thumb_attribute: value.thumb_attribute,
+                description: value.description
+              }
+            }
+
+            resolve(_resolve)
           })
           promises.push(promise)
         })
@@ -155,9 +271,32 @@ const submitPostController = async (req, res, next) => {
             { medias: arr_id_child }
           )
 
-          out = await feedMongoModel.findById(_id_parent)
-          const _out = await handleDataBeforeReturn(out)
-          return res.respond(_out)
+          if (is_edit && !isEmpty(data_feed_old.medias)) {
+            const id_medias_delete = []
+            forEach(data_feed_old.medias, (value) => {
+              const index_medias = arr_id_child.findIndex((item) => {
+                return item._id === value._id.toString()
+              })
+              if (index_medias === -1) {
+                id_medias_delete.push(value._id)
+              }
+            })
+            if (!isEmpty(id_medias_delete)) {
+              await feedMongoModel.deleteMany({
+                _id: { $in: id_medias_delete }
+              })
+              // xoa file
+            }
+          }
+
+          if (!is_edit) {
+            out = await feedMongoModel.findById(_id_parent)
+            const _out = await handleDataBeforeReturn(out)
+            return res.respond(_out)
+          } else {
+            const _out = await handleDataFeedById(_id_parent)
+            return res.respond(_out)
+          }
         })
       }
     }
@@ -264,6 +403,118 @@ const updatePost = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
+// delete post
+const deletePost = async (req, res, next) => {
+  const body = req.body
+  const ref = body.ref
+  const _id = body._id
+
+  if (_id) {
+    // delete feed
+    if (ref === null) {
+      const arr_id_delete = [_id]
+      const feed = await feedMongoModel.findById(_id)
+      const medias = feed.medias
+      if (!isEmpty(medias)) {
+        forEach(medias, (value) => {
+          arr_id_delete.push(value._id)
+        })
+      }
+      try {
+        await feedMongoModel.deleteMany({
+          _id: { $in: arr_id_delete }
+        })
+        await commentMongoModel.deleteMany({
+          post_id: { $in: arr_id_delete }
+        })
+        const out = { status: "empty" }
+        return res.respond(out)
+      } catch (err) {
+        return res.fail(err.message)
+      }
+    }
+
+    // delete post media
+    if (ref !== null) {
+      try {
+        const out = { status: "medias" }
+        await feedMongoModel.deleteOne({ _id: _id })
+        await commentMongoModel.deleteMany({ post_id: _id })
+        await feedMongoModel.updateOne(
+          { _id: ref },
+          { $pull: { medias: { _id: _id } } }
+        )
+        const feed = await feedMongoModel.findById(ref)
+        if (feed.medias.length === 1) {
+          const data_update_parent = {
+            ref: null,
+            medias: [],
+            type: feed.medias[0].type,
+            source: feed.medias[0].source,
+            source_attribute: feed.medias[0].source_attribute,
+            thumb: feed.medias[0].thumb,
+            thumb_attribute: feed.medias[0].thumb_attribute
+          }
+          await feedMongoModel.updateOne({ _id: ref }, data_update_parent)
+          await feedMongoModel.deleteOne({ _id: feed.medias[0]._id })
+          await commentMongoModel.deleteMany({ post_id: feed.medias[0]._id })
+          out["status"] = "medias-1"
+          out["data"] = data_update_parent
+          return res.respond(out)
+        }
+        if (isEmpty(feed.medias)) {
+          await feedMongoModel.deleteOne({ _id: ref })
+          await commentMongoModel.deleteMany({ post_id: ref })
+          out["status"] = "empty"
+          return res.respond(out)
+        }
+        return res.respond(out)
+      } catch (err) {
+        return res.fail(err.message)
+      }
+    }
+  }
+
+  return res.fail("not-found")
+}
+
+// update content media
+const updateContentMedia = async (req, res, next) => {
+  const body = req.body
+  const content = body.content
+  const data = body.data
+  if (!isEmpty(data) && data._id) {
+    try {
+      await feedMongoModel.updateOne(
+        { _id: data._id },
+        { content: content, edited: true, edited_at: Date.now() }
+      )
+      if (data.ref) {
+        const feed_parent = await feedMongoModel.findById(data.ref)
+        if (!isEmpty(feed_parent.medias)) {
+          const medias = [...feed_parent.medias]
+          const index_medias = medias.findIndex(
+            (item) => item._id.toString() === data._id.toString()
+          )
+          if (index_medias > -1) {
+            medias[index_medias]["description"] = content
+            await feedMongoModel.updateOne(
+              { _id: data.ref },
+              { medias: medias }
+            )
+          }
+        }
+      }
+
+      return res.respond("success")
+    } catch (err) {
+      return res.fail(err.message)
+    }
+  }
+
+  return res.fail("not-found")
+}
 // **
 
 // ** comment
@@ -327,7 +578,8 @@ const submitCommentReply = async (req, res, next) => {
     image_source: result.source,
     image_source_attribute: result.source_attribute,
     created_by: req.__user,
-    updated_by: req.__user
+    updated_by: req.__user,
+    created_at: Date.now()
   }
 
   try {
@@ -392,9 +644,41 @@ const updateSubComment = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
+// delete comment
+const deleteComment = async (req, res, next) => {
+  const body = req.body
+  const _id_post = body._id_post
+  const _id_comment = body._id_comment
+  const _id_sub_comment = body._id_sub_comment
+  const comment_more_count_original = body.comment_more_count_original
+
+  try {
+    if (_id_sub_comment === "") {
+      // delete comment parent
+      await commentMongoModel.deleteOne({ _id: _id_comment })
+      // xoa file
+      await feedMongoModel.updateOne(
+        { _id: _id_post },
+        { $pull: { comment_ids: _id_comment } }
+      )
+    } else {
+      // delete comment sub
+      await commentMongoModel.updateOne(
+        { _id: _id_comment },
+        { $pull: { sub_comment: { _id: _id_sub_comment } } }
+      )
+      // xoa file
+    }
+    const data = await handleDataFeedById(_id_post, comment_more_count_original)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 // **
 
-// ** function
+// ** support function
 const takeOneFrameOfVid = (dir, storePath) => {
   const savePath = path.join(localSavePath, storePath)
   return new Promise((resolve, reject) => {
@@ -416,8 +700,7 @@ const takeOneFrameOfVid = (dir, storePath) => {
 const handleUpFileTemp = async (file, type, storePath) => {
   const result = {
     type: type,
-    description: "",
-    name_original: file.name
+    description: ""
   }
 
   const resultUpload = await _uploadServices(storePath, [file], false, "direct")
@@ -463,7 +746,13 @@ const handleUpFileTemp = async (file, type, storePath) => {
   return result
 }
 
-const handleMoveFileTempToMain = async (file_info, storePath) => {
+const handleMoveFileTempToMain = async (
+  file_info,
+  storePathTemp,
+  storePath
+) => {
+  const upload_type = await getSetting("upload_type")
+
   const result = {
     source: null,
     source_attribute: {},
@@ -471,43 +760,55 @@ const handleMoveFileTempToMain = async (file_info, storePath) => {
     thumb_attribute: {}
   }
 
+  if (file_info.db) {
+    const arr_path = file_info.source.split("/")
+    arr_path.pop()
+    storePathTemp = arr_path.join("/")
+  }
+
   // source
   if (file_info.source) {
     if (fs.existsSync(path.join(localSavePath, file_info.source))) {
-      const contents = fs.readFileSync(
-        path.join(localSavePath, file_info.source),
-        {
-          encoding: "base64"
-        }
-      )
-      const file = {
-        name: file_info.name_source,
-        mimetype: file_info.type,
-        content: contents
+      if (upload_type === "direct") {
+        const resultUpload = await copyFilesServices(
+          storePathTemp,
+          storePath,
+          file_info.name_source
+        )
+        result["source"] = resultUpload.uploadSuccess[0].path
+        result["source_attribute"] = resultUpload.uploadSuccess[0]
+      } else if (upload_type === "cloud_storage") {
+        const resultUpload = await moveFileFromServerToGCS(
+          storePathTemp,
+          storePath,
+          file_info.name_source
+        )
+        result["source"] = resultUpload.uploadSuccess[0].path
+        result["source_attribute"] = resultUpload.uploadSuccess[0]
       }
-      const resultUpload = await _uploadServices(storePath, [file], true)
-      result["source"] = resultUpload.uploadSuccess[0].path
-      result["source_attribute"] = resultUpload.uploadSuccess[0]
     }
   }
 
   // thumb
   if (file_info.thumb) {
     if (fs.existsSync(path.join(localSavePath, file_info.thumb))) {
-      const contents = fs.readFileSync(
-        path.join(localSavePath, file_info.thumb),
-        {
-          encoding: "base64"
-        }
-      )
-      const file = {
-        name: file_info.name_thumb,
-        mimetype: file_info.type,
-        content: contents
+      if (upload_type === "direct") {
+        const resultUpload = await copyFilesServices(
+          storePathTemp,
+          storePath,
+          file_info.name_thumb
+        )
+        result["thumb"] = resultUpload.uploadSuccess[0].path
+        result["thumb_attribute"] = resultUpload.uploadSuccess[0]
+      } else if (upload_type === "cloud_storage") {
+        const resultUpload = await moveFileFromServerToGCS(
+          storePathTemp,
+          storePath,
+          file_info.name_thumb
+        )
+        result["thumb"] = resultUpload.uploadSuccess[0].path
+        result["thumb_attribute"] = resultUpload.uploadSuccess[0]
       }
-      const resultUpload = await _uploadServices(storePath, [file], true)
-      result["thumb"] = resultUpload.uploadSuccess[0].path
-      result["thumb_attribute"] = resultUpload.uploadSuccess[0]
     }
   }
 
@@ -598,7 +899,7 @@ const handleUpImageComment = async (image, id_post) => {
   const dateToDay = handleCurrentYMD()
   const storePathTemp = path.join("modules", "comment_temp")
   if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
-    fs.mkdirSync(path.join(localSavePath, storePathTemp))
+    fs.mkdirSync(path.join(localSavePath, storePathTemp), { recursive: true })
   }
   const storePath = path.join("modules", "comment", id_post, dateToDay)
 
@@ -607,7 +908,7 @@ const handleUpImageComment = async (image, id_post) => {
     source_attribute: {}
   }
   if (image) {
-    const image_name = Date.now() + "_" + image.name.split(".")[0] + ".webp"
+    const image_name = Date.now() + "_" + Math.random() * 1000001 + ".webp"
     const image_path = path.join(storePathTemp, image_name)
     const image_source_webp = await handleCompressImage(image, image_path)
     const file_info = {
@@ -615,7 +916,11 @@ const handleUpImageComment = async (image, id_post) => {
       name_source: image_name,
       type: image.mimetype
     }
-    const result_image = await handleMoveFileTempToMain(file_info, storePath)
+    const result_image = await handleMoveFileTempToMain(
+      file_info,
+      storePathTemp,
+      storePath
+    )
     result["source"] = result_image.source
     result["source_attribute"] = result_image.source_attribute
   }
@@ -724,5 +1029,8 @@ export {
   updateComment,
   submitCommentReply,
   updateSubComment,
-  loadFeedProfile
+  loadFeedProfile,
+  deletePost,
+  updateContentMedia,
+  deleteComment
 }

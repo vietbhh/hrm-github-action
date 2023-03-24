@@ -1,6 +1,10 @@
 @import "@scss/friday";
 
+.wrapper__menu-content:has(.content-wrapper .div-user__div-body) {
+  max-width: calc(1480px + 120px) !important;
+  padding: 0 60px;
+}
+
 .div-user__div-body {
-  max-width: 1180px;
-  margin: auto;
+  width: 100%;
 }

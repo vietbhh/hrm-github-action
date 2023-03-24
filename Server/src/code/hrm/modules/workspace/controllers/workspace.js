@@ -1,7 +1,7 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import feedMongoModel from "../../feed/models/feed.mongo.js"
 import path from "path"
-import { _localUpload, _uploadServices } from "#app/services/upload.js"
+import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
 import { getUser, usersModel } from "#app/models/users.mysql.js"
 import { isEmpty, map } from "lodash-es"

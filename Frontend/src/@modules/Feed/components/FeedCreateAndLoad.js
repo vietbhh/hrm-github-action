@@ -6,7 +6,8 @@ const FeedCreateAndLoad = (props) => {
   const {
     workspace = [], // arr workspace: []
     apiLoadFeed = null, // api load feed
-    approveStatus = "approved" // approved / rejected / pending
+    approveStatus = "approved", // approved / rejected / pending
+    customAction = {} // custom dropdown post header
   } = props
   const [state, setState] = useMergedState({
     dataCreateNew: {}
@@ -30,6 +31,7 @@ const FeedCreateAndLoad = (props) => {
         setDataCreateNew={setDataCreateNew}
         workspace={workspace}
         apiLoadFeed={apiLoadFeed}
+        customAction={customAction}
       />
     </div>
   )

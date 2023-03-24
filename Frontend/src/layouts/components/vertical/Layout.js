@@ -249,27 +249,6 @@ const Layout = (props) => {
         }
       )}
       {...(isHidden ? { "data-col": "1-column" } : {})}>
-      <Sidebar
-        skin={skin}
-        menuData={menuData}
-        menuCollapsed={menuCollapsed}
-        menuVisibility={menuVisibility}
-        setMenuCollapsed={setMenuCollapsed}
-        setMenuVisibility={setMenuVisibility}
-        windowWidth={windowWidth}
-        windowWidthMin={windowWidthMin}
-        toogleCustomizer={toogleCustomizer}
-        saveQuickAccess={saveQuickAccess}
-        defaultMenuNav={defaultMenuNav}
-        settingPermits={settingPermits}
-        fixedSidebarCollapsed={fixedSidebarCollapsed}
-        customMenuComponent={customMenuComponent}
-        outerCustomMenuComponent={outerCustomMenuComponent}
-        hideQuickAccess={hideQuickAccess}
-        hideVerticalMenuHeader={hideVerticalMenuHeader}
-        userId={userId}
-      />
-
       <Navbar
         expand="lg"
         container={false}
@@ -313,7 +292,30 @@ const Layout = (props) => {
         </div>
       </Navbar>
 
-      {children}
+      <div className="wrapper__menu-content">
+        <Sidebar
+          skin={skin}
+          menuData={menuData}
+          menuCollapsed={menuCollapsed}
+          menuVisibility={menuVisibility}
+          setMenuCollapsed={setMenuCollapsed}
+          setMenuVisibility={setMenuVisibility}
+          windowWidth={windowWidth}
+          windowWidthMin={windowWidthMin}
+          toogleCustomizer={toogleCustomizer}
+          saveQuickAccess={saveQuickAccess}
+          defaultMenuNav={defaultMenuNav}
+          settingPermits={settingPermits}
+          fixedSidebarCollapsed={fixedSidebarCollapsed}
+          customMenuComponent={customMenuComponent}
+          outerCustomMenuComponent={outerCustomMenuComponent}
+          hideQuickAccess={hideQuickAccess}
+          hideVerticalMenuHeader={hideVerticalMenuHeader}
+          userId={userId}
+        />
+
+        {children}
+      </div>
 
       {/* Vertical Nav Menu Overlay */}
       <div

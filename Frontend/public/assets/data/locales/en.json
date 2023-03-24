@@ -513,7 +513,7 @@
     "edit": "Edit",
     "started": "Started",
     "remove": "Remove",
-    "reject" : "Reject",
+    "reject": "Reject",
     "duplicate": "Duplicate"
   },
   "errors": {
@@ -4415,9 +4415,13 @@
           "people_seen": "people seen",
           "others": "others",
           "see_more": "See more",
-          "hide": "Hide",
+          "hide": "See less",
           "post_not_found": "Oops!...Post not found",
           "view_post": "View post",
+          "edit_post": "Edit post",
+          "edit_content": "Edit content",
+          "delete_post": "Delete post",
+          "delete_image_video": "Delete image/video",
           "reply": "Reply",
           "placeholder_input": "Write your comment...",
           "you": "You",
@@ -4429,7 +4433,10 @@
           "view_more_comments": "View more {comment} comments",
           "replies": "replies",
           "updated_cover": "updated cover",
-          "updated_avatar": "updated avatar"
+          "updated_avatar": "updated avatar",
+          "edited": "Edited",
+          "edit_comment": "Edit comment",
+          "delete_comment": "Delete comment"
         },
         "react": {
           "like": "Like",
@@ -4478,19 +4485,19 @@
         "group_rules": "Group rules",
         "member": "Member",
         "media": "Media",
-        "workspace_infomation" : "Workspace infomation",
-        "workspace_settings" : "Workspace settings",
+        "workspace_infomation": "Workspace infomation",
+        "workspace_settings": "Workspace settings",
         "request_to_join": "Request to join",
-        "waiting_for_approval" : "Waiting for approval",
-        "setup_notification" : "Setup notification",
+        "waiting_for_approval": "Waiting for approval",
+        "setup_notification": "Setup notification",
         "review_post": "Review post",
-        "add_member_to_ws" : "Add member to workspace"
+        "add_member_to_ws": "Add member to workspace"
       },
       "fields": {
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
-        "membership_approval" : "Membership approval"
+        "membership_approval": "Membership approval"
       },
       "text": {
         "members": "members",
@@ -4542,15 +4549,15 @@
           "content": "{name} will be removed form this workspace."
         },
         "approved": "Approved",
-        "no_pending_posts" : "The workspace has no pending posts",
-        "view_other_posts" : "View other posts",
+        "no_pending_posts": "The workspace has no pending posts",
+        "view_other_posts": "View other posts",
         "pending_posts": "Pending posts",
-        "sub_review_post" : "All member posts must be approved by administrator",
-        "list_member" : "List member",
-        "list_selected" : "List selected",
-        "list_department" : "List department",
-        "list_job_title" : "List job title",
-        "department":"Department",
+        "sub_review_post": "All member posts must be approved by administrator",
+        "list_member": "List member",
+        "list_selected": "List selected",
+        "list_department": "List department",
+        "list_job_title": "List job title",
+        "department": "Department",
         "job_title": "Job title"
 
       },
