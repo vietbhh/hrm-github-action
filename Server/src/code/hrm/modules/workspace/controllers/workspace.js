@@ -1,12 +1,13 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { isEmpty, forEach, map } from "lodash-es"
-import path from "path"
+import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
 import { getUser, usersModel } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
+import { Storage } from "@google-cloud/storage"
 
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
@@ -664,6 +665,35 @@ const loadFeed = async (req, res) => {
   }
   return res.respond(result)
 }
+
+const loadGCSObjectLink = async (req, res) => {
+  const storage = new Storage({
+    keyFilename: path.join(
+      dirname(global.__basedir),
+      "Server",
+      "service_account_file.json"
+    ),
+    //projectId: process.env.GCS_PROJECT_ID
+    projectId: "friday-351410"
+  })
+
+  //const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
+  const bucket = storage.bucket("friday-storage")
+  const filePath = path.join("default", req.query.name).replace(/\\/g, "/")
+  console.log(filePath)
+  const [url] = await bucket
+    .file(filePath)
+    .getSignedUrl({
+      version: "v4",
+      action: "read",
+      expires: Date.now() + 15 * 60 * 1000 // 15 minutes
+    })
+
+  return res.respond({
+    url: url
+  })
+}
+
 export {
   getWorkspace,
   saveWorkspace,
@@ -676,5 +706,6 @@ export {
   getPostWorkspace,
   approvePost,
   loadFeed,
-  addMemberByDepartment
+  addMemberByDepartment,
+  loadGCSObjectLink
 }

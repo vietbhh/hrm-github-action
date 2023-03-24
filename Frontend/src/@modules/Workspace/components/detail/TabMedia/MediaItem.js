@@ -13,6 +13,7 @@ const MediaItem = (props) => {
     // ** props
     mediaItem,
     mediaTabActive,
+    appSetting,
     // ** methods
     handleModalPreview,
     setMediaInfo
@@ -36,6 +37,7 @@ const MediaItem = (props) => {
       <Col sm="12" className="m-0">
         <MediaFileItem
           mediaItem={mediaItem}
+          appSetting={appSetting}
           handleModalPreview={handleModalPreview}
           setMediaInfo={setMediaInfo}
         />

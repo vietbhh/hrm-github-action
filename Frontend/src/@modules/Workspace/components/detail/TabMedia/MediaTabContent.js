@@ -2,6 +2,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Fragment, useEffect } from "react"
+import { useSelector } from "react-redux"
 // ** Styles
 // ** Components
 import { EmptyContent } from "@apps/components/common/EmptyContent"
@@ -23,6 +24,8 @@ const MediaTabContent = (props) => {
     loading: true,
     data: {}
   })
+
+  const appSetting = useSelector((state) => state.auth.settings)
 
   const loadData = () => {
     workspaceApi
@@ -76,6 +79,7 @@ const MediaTabContent = (props) => {
             <MediaItem
               mediaItem={item}
               mediaTabActive={mediaTabActive}
+              appSetting={appSetting}
               key={`media-item-${item.info._id}`}
               handleModalPreview={handleModalPreview}
               setMediaInfo={setMediaInfo}

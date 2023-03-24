@@ -354,15 +354,12 @@
   .modal-content {
     background-color: rgba(0, 0, 0, 0.2);
     padding: 0 !important;
-
     .modal-body {
-      .preview-image {
+      .preview-image,
+      .preview-video,
+      .preview-file {
         height: 100vh;
         position: relative;
-
-        img {
-          height: 95vh;
-        }
 
         .action-container {
           position: absolute;
@@ -370,18 +367,23 @@
         }
       }
 
-      .preview-video {
-        height: 100vh;
-        position: relative;
+      .preview-image {
+        img {
+          height: 95vh;
+        }
+      }
 
+      .preview-video {
         video {
           height: 95vh;
           width: 95vw;
         }
+      }
 
-        .action-container {
-          position: absolute;
-          top: 0;
+      .preview-file {
+        iframe {
+          height: 85vh;
+          width: 85vw;
         }
       }
     }

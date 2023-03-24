@@ -6,6 +6,7 @@ import { Modal, ModalBody } from "reactstrap"
 // ** Components
 import PreviewImage from "./PreviewImage"
 import PreviewVideo from "./PreviewVideo"
+import PreviewFile from "./PreviewFile"
 
 const PreviewMediaContentModal = (props) => {
   const {
@@ -21,20 +22,20 @@ const PreviewMediaContentModal = (props) => {
   const renderModalContent = () => {
     const type = mediaInfo.mime !== undefined ? mediaInfo.mime : mediaInfo.type
     if (type === undefined) {
-      return ""
+      //return ""
     }
 
     const [mediaType] = type.split("/")
-    if (mediaType === "file") {
-      return ""
-    }
-
     if (mediaType === "image") {
       return <PreviewImage mediaInfo={mediaInfo} handleModal={handleModal} />
     }
 
     if (mediaType === "video") {
       return <PreviewVideo mediaInfo={mediaInfo} handleModal={handleModal} />
+    }
+
+    if (mediaType === "file") {
+      return <PreviewFile mediaInfo={mediaInfo} handleModal={handleModal} />
     }
   }
 
