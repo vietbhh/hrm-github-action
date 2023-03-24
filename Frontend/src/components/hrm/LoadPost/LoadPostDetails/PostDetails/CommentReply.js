@@ -16,15 +16,21 @@ const CommentReply = (props) => {
     dataShowFormReply,
     id_comment_parent,
     setDataReactionAndModal,
-    comment_more_count
+    comment_more_count,
+    setDataShowFormReply
   } = props
   const [state, setState] = useMergedState({
-    reply_count: dataComment.sub_comment.length
+    reply_count: dataComment.sub_comment.length,
+    dataEditComment: {}
   })
 
   // ** function
   const handleShowCommentReply = () => {
     setState({ reply_count: 0 })
+  }
+
+  const setDataEditComment = (value) => {
+    setState({ dataEditComment: value })
   }
 
   // ** useEffect
@@ -51,6 +57,9 @@ const CommentReply = (props) => {
               dataComment={value}
               apiReaction={feedApi.postUpdateSubComment}
               setDataReactionAndModal={setDataReactionAndModal}
+              setDataEditComment={setDataEditComment}
+              setDataShowFormReply={setDataShowFormReply}
+              dataShowFormReply={state.dataShowFormReply}
             />
           )
         }
@@ -103,6 +112,8 @@ const CommentReply = (props) => {
           reply_count={state.reply_count}
           api={feedApi.postSubmitCommentReply}
           id_comment_parent={id_comment_parent}
+          dataEditComment={state.dataEditComment}
+          setDataEditComment={setDataEditComment}
         />
       )}
     </div>

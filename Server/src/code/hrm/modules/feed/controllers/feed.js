@@ -524,6 +524,9 @@ const submitComment = async (req, res, next) => {
   const id_post = body.id_post
   const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
+  console.log(body)
+  console.log("image", image)
+  return res.fail("")
 
   const result = await handleUpImageComment(image, id_post)
   const commentModel = new commentMongoModel({
@@ -570,6 +573,9 @@ const submitCommentReply = async (req, res, next) => {
   const id_comment_parent = body.id_comment_parent
   const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
+  console.log(body)
+  console.log("image", image)
+  return res.fail("")
 
   const result = await handleUpImageComment(image, id_post)
   const dataSaveSubComment = {

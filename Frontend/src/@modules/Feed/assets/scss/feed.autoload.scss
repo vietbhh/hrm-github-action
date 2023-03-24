@@ -813,6 +813,20 @@
         }
       }
     }
+
+    .post-comment__div-cancel {
+      padding-left: 60px;
+      margin-top: 10px;
+
+      span {
+        color: #377dff;
+        cursor: pointer;
+
+        &:hover {
+          color: unset;
+        }
+      }
+    }
   }
 
   .emotions-dropdown-menu {
