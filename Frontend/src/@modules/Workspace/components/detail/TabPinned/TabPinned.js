@@ -8,8 +8,17 @@ import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader } from "reactstrap"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Row
+} from "reactstrap"
 import WorkspaceIntroduction from "../sidebarComponents/WorkspaceIntroduction"
+import moment from "moment"
 const TabPinned = (props) => {
   const { detailWorkspace } = props
   const [state, setState] = useMergedState({
@@ -33,7 +42,39 @@ const TabPinned = (props) => {
       setState({ dataPin: res.data.dataPost })
     })
   }
-  console.log("detailWorkspace", detailWorkspace)
+  console.log("feed state", state)
+  const renderPostPinned = (data = []) => {
+    return data.map((item, key) => {
+      console.log("item", item)
+      return (
+        <Col sm={12}>
+          <Card>
+            <CardBody>
+              <div className="d-flex">
+                <Avatar src={item.created_by?.avatar} className="me-1" />
+                <div>
+                  <h6 className="fw-blod mb-0">
+                    {item.created_by?.full_name}{" "}
+                    <i className="fa-solid fa-caret-right ms-50 me-50"></i>{" "}
+                    {detailWorkspace.name}
+                  </h6>
+                  <small class="text-muted">
+                    {moment(item?.created_at).format("DD MMM, YYYY")}
+                  </small>
+                </div>
+              </div>
+              <div className="d-flex mt-1">
+                <div>{item?.content}</div>
+                <div className="ms-auto">
+                  {item?.thumb && <Photo src={item?.thumb} width={"100px"} />}
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+      )
+    })
+  }
   useEffect(() => {
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
@@ -56,26 +97,10 @@ const TabPinned = (props) => {
     setState({ dataPin: detailWorkspace?.pinPosts })
   }, [detailWorkspace])
 
-  const handlePinPost = (idPost) => {
-    const dataPinned = [...state.dataPin]
-    dataPinned.push({ post: "64182f3180c579024eec029b", stt: 1 })
-    const dataUpdate = {
-      pinPosts: dataPinned
-    }
-    workspaceApi.update(params.id, dataUpdate).then((res) => {
-      notification.showSuccess({
-        text: useFormatMessage("notification.save.success")
-      })
-    })
-  }
   return (
     <div className="div-content">
       <div className="div-left">
-        <Card>
-          <CardBody>
-            feedsss 2<Button onClick={() => handlePinPost("")}>Up</Button>
-          </CardBody>
-        </Card>
+        <Row>{renderPostPinned(state.dataPin)}</Row>
       </div>
       <div className="div-right">
         <div id="div-sticky">

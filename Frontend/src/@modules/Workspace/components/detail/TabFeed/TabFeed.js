@@ -39,6 +39,18 @@ const TabFeed = (props) => {
     }
   }, [detailWorkspace])
 
+  const handlePinPost = (idPost) => {
+    const dataPinned = [...state.dataPin]
+    dataPinned.push({ post: "64182f3180c579024eec029b", stt: 1 })
+    const dataUpdate = {
+      pinPosts: dataPinned
+    }
+    workspaceApi.update(params.id, dataUpdate).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+    })
+  }
   return (
     <div className="div-content ">
       <div className="div-left feed">
