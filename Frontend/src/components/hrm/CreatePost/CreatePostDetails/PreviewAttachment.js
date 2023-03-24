@@ -108,7 +108,7 @@ const PreviewAttachment = (props) => {
                     }
                   )}
                   style={{
-                    backgroundImage: `url("${value.url}")`
+                    backgroundImage: `url("${value.url_thumb}")`
                   }}>
                   {file.length === 1 && renderButtonDelete()}
                   {file.length > 1 && index === 0 && renderButtonEdit()}

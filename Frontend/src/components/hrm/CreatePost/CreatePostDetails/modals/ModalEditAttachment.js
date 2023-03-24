@@ -109,12 +109,12 @@ const ModalEditAttachment = (props) => {
                       <div
                         className="photo-view-bg"
                         style={{
-                          backgroundImage: `url("${value.url}")`
+                          backgroundImage: `url("${value.url_thumb}")`
                         }}></div>
                       <div
                         className="photo-view-img"
                         style={{
-                          backgroundImage: `url("${value.url}")`
+                          backgroundImage: `url("${value.url_thumb}")`
                         }}></div>
                       {value.type.includes("video/") && renderIconVideo()}
                     </div>
