@@ -97,6 +97,14 @@ const feedSchema = baseSchema("m_feed", {
     type: [String],
     default: []
   },
+  edited: {
+    type: Boolean,
+    default: false
+  },
+  edited_at: {
+    type: Date,
+    default: null
+  },
 
   // ** source child / post: 1 image/video
   source: {

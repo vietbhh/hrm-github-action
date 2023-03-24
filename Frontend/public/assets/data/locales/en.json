@@ -4433,7 +4433,10 @@
           "view_more_comments": "View more {comment} comments",
           "replies": "replies",
           "updated_cover": "updated cover",
-          "updated_avatar": "updated avatar"
+          "updated_avatar": "updated avatar",
+          "edited": "Edited",
+          "edit_comment": "Edit comment",
+          "delete_comment": "Delete comment"
         },
         "react": {
           "like": "Like",

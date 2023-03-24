@@ -124,6 +124,8 @@ const PostImageDetailModal = (props) => {
           })
           .catch((err) => {})
       }
+
+      setEditDescription(false)
     }
   }, [idImage, postType, dataMedias, modal])
 

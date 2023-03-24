@@ -661,8 +661,13 @@
         .comment__right-button {
           margin-top: 15px;
           margin-left: 20px;
-          cursor: pointer;
           visibility: hidden;
+
+          svg {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+          }
         }
 
         &:hover {
@@ -1625,7 +1630,8 @@
   }
 }
 
-.post-header-button-dot {
+.post-header-button-dot,
+.comment__right-button-dropdown {
   ul {
     border-radius: 12px;
     padding: 7px 0;

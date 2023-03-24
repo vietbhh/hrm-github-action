@@ -94,5 +94,9 @@ export const feedApi = {
         }
       }
     )
+  },
+
+  async postDeleteComment(data) {
+    return await axiosNodeApi.post("/feed/delete-comment", data)
   }
 }

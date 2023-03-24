@@ -13,7 +13,8 @@ import {
   updateSubComment,
   loadFeedProfile,
   deletePost,
-  updateContentMedia
+  updateContentMedia,
+  deleteComment
 } from "../controllers/feed.js"
 const router = express.Router()
 
@@ -30,6 +31,7 @@ router.post("/submit-comment", submitComment)
 router.post("/submit-comment-reply", submitCommentReply)
 router.post("/update-comment", updateComment)
 router.post("/update-sub-comment", updateSubComment)
+router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
 
 export default router

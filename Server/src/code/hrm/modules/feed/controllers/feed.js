@@ -117,14 +117,17 @@ const submitPostController = async (req, res, next) => {
           thumb: null,
           thumb_attribute: {},
           ref: null,
+          approve_status: body.approveStatus,
           link: link,
-          tag_user: body.tag_user
+          tag_user: body.tag_user,
+          edited: true,
+          edited_at: Date.now()
         }
       )
     }
 
     // send notification
-    if (!is_edit) {
+    if (!is_edit && body.approveStatus === "approved") {
       const link_notification = `/posts/${_id_parent}`
       await handleSendNotification(
         "post",
@@ -483,7 +486,10 @@ const updateContentMedia = async (req, res, next) => {
   const data = body.data
   if (!isEmpty(data) && data._id) {
     try {
-      await feedMongoModel.updateOne({ _id: data._id }, { content: content })
+      await feedMongoModel.updateOne(
+        { _id: data._id },
+        { content: content, edited: true, edited_at: Date.now() }
+      )
       if (data.ref) {
         const feed_parent = await feedMongoModel.findById(data.ref)
         if (!isEmpty(feed_parent.medias)) {
@@ -572,7 +578,8 @@ const submitCommentReply = async (req, res, next) => {
     image_source: result.source,
     image_source_attribute: result.source_attribute,
     created_by: req.__user,
-    updated_by: req.__user
+    updated_by: req.__user,
+    created_at: Date.now()
   }
 
   try {
@@ -631,6 +638,38 @@ const updateSubComment = async (req, res, next) => {
       { _id: _id_comment, "sub_comment._id": _id_sub_comment },
       { $set: { "sub_comment.$.reaction": body_update.reaction } }
     )
+    const data = await handleDataFeedById(_id_post, comment_more_count_original)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// delete comment
+const deleteComment = async (req, res, next) => {
+  const body = req.body
+  const _id_post = body._id_post
+  const _id_comment = body._id_comment
+  const _id_sub_comment = body._id_sub_comment
+  const comment_more_count_original = body.comment_more_count_original
+
+  try {
+    if (_id_sub_comment === "") {
+      // delete comment parent
+      await commentMongoModel.deleteOne({ _id: _id_comment })
+      // xoa file
+      await feedMongoModel.updateOne(
+        { _id: _id_post },
+        { $pull: { comment_ids: _id_comment } }
+      )
+    } else {
+      // delete comment sub
+      await commentMongoModel.updateOne(
+        { _id: _id_comment },
+        { $pull: { sub_comment: { _id: _id_sub_comment } } }
+      )
+      // xoa file
+    }
     const data = await handleDataFeedById(_id_post, comment_more_count_original)
     return res.respond(data)
   } catch (err) {
@@ -869,7 +908,7 @@ const handleUpImageComment = async (image, id_post) => {
     source_attribute: {}
   }
   if (image) {
-    const image_name = Date.now() + "_" + image.name.split(".")[0] + ".webp"
+    const image_name = Date.now() + "_" + Math.random() * 1000001 + ".webp"
     const image_path = path.join(storePathTemp, image_name)
     const image_source_webp = await handleCompressImage(image, image_path)
     const file_info = {
@@ -992,5 +1031,6 @@ export {
   updateSubComment,
   loadFeedProfile,
   deletePost,
-  updateContentMedia
+  updateContentMedia,
+  deleteComment
 }

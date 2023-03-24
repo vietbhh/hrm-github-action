@@ -208,7 +208,11 @@ const PostHeader = (props) => {
             </Link>
             {renderAfterName()}
           </div>
-          <span className="time">{timeDifference(data.created_at)}</span>
+          <span className="time">
+            {timeDifference(data.created_at)}{" "}
+            {data.edited &&
+              ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+          </span>
         </div>
         <div className="post-header-right">
           <Dropdown
