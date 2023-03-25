@@ -143,6 +143,9 @@ const PostCommentForm = (props) => {
             setCommentMoreCountOriginal(res.data?.comment_more_count || 0)
           }
           setState({ loadingSubmit: false, image: null })
+          if (_.isFunction(setDataEditComment)) {
+            setDataEditComment({})
+          }
           if (_.isFunction(scrollToBottom)) {
             setTimeout(() => {
               scrollToBottom()
@@ -321,8 +324,13 @@ const PostCommentForm = (props) => {
                 onClick={() => {
                   setState({ image: null })
                   if (_.isFunction(setDataEditComment)) {
+                    const editorStateRaw = convertToRaw(
+                      state.editorState.getCurrentContent()
+                    )
+                    const content = draftToHtml(editorStateRaw)
                     const _dataEditComment = { ...dataEditComment }
                     _dataEditComment["image"] = null
+                    _dataEditComment["content"] = content
                     setDataEditComment(_dataEditComment)
                   }
                 }}
