@@ -1,3 +1,4 @@
+import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
 import { timeDifference, useFormatMessage } from "@apps/utility/common"
@@ -23,7 +24,8 @@ const Comment = (props) => {
     setDataShowFormReply,
     dataShowFormReply,
     apiReaction,
-    setDataReactionAndModal
+    setDataReactionAndModal,
+    setDataEditComment
   } = props
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
@@ -34,6 +36,7 @@ const Comment = (props) => {
         <a
           onClick={(e) => {
             e.preventDefault()
+            handleEditComment()
           }}>
           <i className="fa-light fa-pen-to-square"></i>
           <span>{useFormatMessage("modules.feed.post.text.edit_comment")}</span>
@@ -129,6 +132,42 @@ const Comment = (props) => {
           })
       }
     })
+  }
+
+  const handleEditComment = async () => {
+    if (_.isFunction(setDataEditComment)) {
+      if (id_sub_comment && _.isFunction(setDataShowFormReply)) {
+        if (
+          (dataShowFormReply && !dataShowFormReply[id_comment]) ||
+          !dataShowFormReply
+        ) {
+          const showFormReply =
+            dataShowFormReply && dataShowFormReply[id_comment]
+              ? { [id_comment]: false }
+              : { [id_comment]: true }
+          setDataShowFormReply(showFormReply)
+        }
+      }
+
+      let image = null
+      if (dataComment.image_source) {
+        await downloadApi
+          .getPhoto(dataComment.image_source)
+          .then((response) => {
+            image = URL.createObjectURL(response.data)
+          })
+      }
+
+      const params = {
+        _id_post: id_post,
+        _id_comment: id_comment,
+        _id_sub_comment: id_sub_comment,
+        comment_more_count_original: comment_more_count_original,
+        content: dataComment?.content || "",
+        image: image
+      }
+      setDataEditComment(params)
+    }
   }
 
   // ** render

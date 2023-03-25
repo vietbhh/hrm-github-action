@@ -10,7 +10,7 @@ import {
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import { convertToRaw, EditorState, Modifier } from "draft-js"
+import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import { Fragment, useCallback, useEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
@@ -19,6 +19,7 @@ import Emoji from "./Emoji"
 
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@styles/react/libs/editor/editor.scss"
+import htmlToDraft from "html-to-draftjs"
 
 const PostCommentForm = (props) => {
   const {
@@ -30,7 +31,9 @@ const PostCommentForm = (props) => {
     scrollToBottom,
     api,
     id_comment_parent,
-    reply_count
+    reply_count,
+    dataEditComment = {},
+    setDataEditComment
   } = props
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
@@ -127,7 +130,8 @@ const PostCommentForm = (props) => {
           data_user: {
             id: userId,
             full_name: full_name
-          }
+          },
+          dataEditComment: dataEditComment
         }),
         image: state.image
       }
@@ -139,6 +143,9 @@ const PostCommentForm = (props) => {
             setCommentMoreCountOriginal(res.data?.comment_more_count || 0)
           }
           setState({ loadingSubmit: false, image: null })
+          if (_.isFunction(setDataEditComment)) {
+            setDataEditComment({})
+          }
           if (_.isFunction(scrollToBottom)) {
             setTimeout(() => {
               scrollToBottom()
@@ -194,6 +201,21 @@ const PostCommentForm = (props) => {
     //setEmptyEditorState()
     setState({ image: null })
   }, [data])
+
+  useEffect(() => {
+    if (!_.isEmpty(dataEditComment)) {
+      setState({ image: null })
+      const content_html = dataEditComment.content
+      const contentBlock = htmlToDraft(content_html)
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        )
+        const editorState = EditorState.createWithContent(contentState)
+        setState({ editorState: editorState })
+      }
+    }
+  }, [dataEditComment])
 
   // ** mention
   const { plugins, MentionSuggestions } = useMemo(() => {
@@ -287,13 +309,31 @@ const PostCommentForm = (props) => {
             </div>
           </div>
 
-          {state.image && (
+          {(state.image || dataEditComment["image"]) && (
             <div className="div-form__div-image">
-              <img src={URL.createObjectURL(state.image)} />
+              <img
+                src={
+                  state.image
+                    ? URL.createObjectURL(state.image)
+                    : dataEditComment["image"]
+                }
+              />
               <button
                 type="button"
                 className="btn-close-image"
-                onClick={() => setState({ image: null })}
+                onClick={() => {
+                  setState({ image: null })
+                  if (_.isFunction(setDataEditComment)) {
+                    const editorStateRaw = convertToRaw(
+                      state.editorState.getCurrentContent()
+                    )
+                    const content = draftToHtml(editorStateRaw)
+                    const _dataEditComment = { ...dataEditComment }
+                    _dataEditComment["image"] = null
+                    _dataEditComment["content"] = content
+                    setDataEditComment(_dataEditComment)
+                  }
+                }}
                 disabled={state.loadingSubmit}>
                 <i className="fa-sharp fa-solid fa-xmark"></i>
               </button>
@@ -301,6 +341,21 @@ const PostCommentForm = (props) => {
           )}
         </div>
       </div>
+
+      {!_.isEmpty(dataEditComment) && (
+        <div className="post-comment__div-cancel">
+          <span
+            onClick={() => {
+              setState({ image: null })
+              setEmptyEditorState()
+              if (_.isFunction(setDataEditComment)) {
+                setDataEditComment({})
+              }
+            }}>
+            {useFormatMessage("modules.feed.post.text.cancel_edit")}
+          </span>
+        </div>
+      )}
     </Fragment>
   )
 }
