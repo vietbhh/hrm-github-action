@@ -36,13 +36,11 @@ const TabPinned = (props) => {
   console.log("workspaceID pinned", state)
 
   const loadData = (paramsX = {}) => {
-    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     paramsX.id = workspaceID
     workspaceApi.loadPinned(paramsX).then((res) => {
       setState({ dataPin: res.data.dataPost })
     })
   }
-  console.log("feed state", state)
   const renderPostPinned = (data = []) => {
     return data.map((item, key) => {
       console.log("item", item)
@@ -54,8 +52,8 @@ const TabPinned = (props) => {
                 <Avatar src={item.created_by?.avatar} className="me-1" />
                 <div>
                   <h6 className="fw-blod mb-0">
-                    {item.created_by?.full_name}{" "}
-                    <i className="fa-solid fa-caret-right ms-50 me-50"></i>{" "}
+                    {item.created_by?.full_name}
+                    <i className="fa-solid fa-caret-right ms-50 me-50"></i>
                     {detailWorkspace.name}
                   </h6>
                   <small class="text-muted">

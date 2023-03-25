@@ -97,63 +97,6 @@ const TabFeed = (props) => {
               </div>
               <hr className="pd-0"></hr>
             </div>
-
-            <div className="post-pinned">
-              <div className="content-post d-flex align-items-center mb-50">
-                <div>
-                  align-items-center align-items-centerM align-items-center
-                  align-items-centerM align-items-center align-items-centerM
-                  align-items-center align-items-centerM
-                  <div className="d-flex align-items-center mt-50">
-                    <div className="me-50">
-                      <Avatar /> Long Trinh
-                    </div>
-                    <div className="me-50">
-                      <i className="fa-duotone fa-calendar-days me-50"></i>March
-                      3, 2023
-                    </div>
-                    <div>
-                      <i className="fa-regular fa-eye me-50"></i>0
-                    </div>
-                  </div>
-                </div>
-
-                <div className="ms-auto"></div>
-                <Button className="ms-1" color="flat-secondary" size="sm">
-                  <i class="fa-solid fa-ellipsis-vertical"></i>
-                </Button>
-              </div>
-              <hr className="pd-0"></hr>
-            </div>
-            <div className="post-pinned">
-              <div className="content-post d-flex align-items-center mb-50">
-                <div>
-                  align-items-center align-items-centerM align-items-center
-                  align-items-centerM align-items-center align-items-centerM
-                  align-items-center align-items-centerM
-                  <div className="d-flex align-items-center mt-50">
-                    <div className="me-50">
-                      <Avatar /> Long Trinh
-                    </div>
-                    <div className="me-50">
-                      <i className="fa-duotone fa-calendar-days me-50"></i>March
-                      3, 2023
-                    </div>
-                    <div>
-                      <i className="fa-regular fa-eye me-50"></i>0
-                    </div>
-                  </div>
-                </div>
-
-                <div className="ms-auto">
-                  <Photo width={60} />
-                </div>
-                <Button className="ms-1" color="flat-secondary" size="sm">
-                  <i class="fa-solid fa-ellipsis-vertical"></i>
-                </Button>
-              </div>
-              <hr className="pd-0"></hr>
-            </div>
           </CardBody>
         </Card>
         <LoadFeed
