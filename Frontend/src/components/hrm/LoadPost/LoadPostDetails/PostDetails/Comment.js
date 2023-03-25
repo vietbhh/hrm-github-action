@@ -10,6 +10,7 @@ import { Dropdown } from "antd"
 import React, { Fragment } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import DropdownReaction from "./DropdownReaction"
 
 const Comment = (props) => {
@@ -297,11 +298,15 @@ const Comment = (props) => {
   return (
     <Fragment>
       <div className="div-comment__comment">
-        <Avatar className="img" src={dataComment?.created_by?.avatar} />
+        <Link to={`/u/${dataComment?.created_by?.username}`}>
+          <Avatar className="img" src={dataComment?.created_by?.avatar} />
+        </Link>
         <div className="comment__body">
           <div className="body__content">
             <div className="content__name">
-              {dataComment?.created_by?.full_name}
+              <Link to={`/u/${dataComment?.created_by?.username}`}>
+                {dataComment?.created_by?.full_name}
+              </Link>
             </div>
             <div className="content__comment">
               {ReactHtmlParser(dataComment?.content)}

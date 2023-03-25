@@ -597,7 +597,15 @@
             .content__name {
               font-weight: 600;
               font-size: 14px;
-              color: #32434f;
+              color: #32434f !important;
+
+              a {
+                color: #32434f !important;
+
+                &:hover {
+                  text-decoration: unset !important;
+                }
+              }
             }
 
             .content__comment {

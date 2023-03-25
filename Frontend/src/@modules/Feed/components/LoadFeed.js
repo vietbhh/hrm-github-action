@@ -15,6 +15,7 @@ const LoadFeed = (props) => {
     setDataCreateNew, // set data new
     workspace, // arr workspace: []
     apiLoadFeed, // api load feed
+    paramsLoadFeed = {}, // add param load feed api
     customAction = {} // custom dropdown post header
   } = props
   const [state, setState] = useMergedState({
@@ -44,7 +45,8 @@ const LoadFeed = (props) => {
       page: state.page,
       pageLength: state.pageLength,
       workspace: workspace,
-      idPostCreateNew: state.idPostCreateNew // select where id <= idPostCreateNew
+      idPostCreateNew: state.idPostCreateNew, // select where id <= idPostCreateNew
+      ...paramsLoadFeed
     }
     const api = apiLoadFeed ? apiLoadFeed(params) : feedApi.getLoadFeed(params)
     api

@@ -315,16 +315,20 @@ const loadFeedController = async (req, res, next) => {
   if (request.idPostCreateNew !== "") {
     filter["_id"] = { $lt: request.idPostCreateNew }
   }
-  const feed = await feedMongoModel
-    .find(filter)
-    .skip(page * pageLength)
-    .limit(pageLength)
-    .sort({
-      _id: "desc"
-    })
-  const feedCount = await feedMongoModel.find(filter).count()
-  const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
-  return res.respond(result)
+  try {
+    const feed = await feedMongoModel
+      .find(filter)
+      .skip(page * pageLength)
+      .limit(pageLength)
+      .sort({
+        _id: "desc"
+      })
+    const feedCount = await feedMongoModel.find(filter).count()
+    const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
+    return res.respond(result)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 
 // load feed profile
@@ -332,6 +336,10 @@ const loadFeedProfile = async (req, res, next) => {
   const request = req.query
   const page = request.page
   const pageLength = request.pageLength
+  const id_profile =
+    request.id_profile === "undefined" || request.id_profile === undefined
+      ? 0
+      : request.id_profile
   const filter = {
     $and: [
       { ref: null },
@@ -339,23 +347,27 @@ const loadFeedProfile = async (req, res, next) => {
         $or: [{ permission: "default" }, { permission: "only_me" }]
       },
       {
-        $or: [{ created_by: req.__user }, { tag_user: req.__user }]
+        $or: [{ created_by: id_profile }, { tag_user: id_profile }]
       }
     ]
   }
   if (request.idPostCreateNew !== "") {
     filter["$and"].push({ _id: { $lt: request.idPostCreateNew } })
   }
-  const feed = await feedMongoModel
-    .find(filter)
-    .skip(page * pageLength)
-    .limit(pageLength)
-    .sort({
-      _id: "desc"
-    })
-  const feedCount = await feedMongoModel.find(filter).count()
-  const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
-  return res.respond(result)
+  try {
+    const feed = await feedMongoModel
+      .find(filter)
+      .skip(page * pageLength)
+      .limit(pageLength)
+      .sort({
+        _id: "desc"
+      })
+    const feedCount = await feedMongoModel.find(filter).count()
+    const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
+    return res.respond(result)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 
 // get feed by id
@@ -383,10 +395,14 @@ const getFeedByIdAndViewAllComment = async (req, res, next) => {
 // get feed child
 const getFeedChild = async (req, res, next) => {
   const id = req.params.id
-  const feed = await feedMongoModel.find({ ref: id }).sort({
-    sort_number: "asc"
-  })
-  return res.respond(feed)
+  try {
+    const feed = await feedMongoModel.find({ ref: id }).sort({
+      sort_number: "asc"
+    })
+    return res.respond(feed)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 
 // update post
@@ -740,14 +756,20 @@ const takeOneFrameOfVid = (dir, storePath) => {
 const handleUpFileTemp = async (file, type, storePath) => {
   const result = {
     type: type,
-    description: ""
+    description: "",
+    thumb: "",
+    name_thumb: "",
+    source: "",
+    name_source: ""
   }
 
   const resultUpload = await _uploadServices(storePath, [file], false, "direct")
-  result["thumb"] = resultUpload.uploadSuccess[0].path
-  result["name_thumb"] = resultUpload.uploadSuccess[0].name
-  result["source"] = resultUpload.uploadSuccess[0].path
-  result["name_source"] = resultUpload.uploadSuccess[0].name
+  if (resultUpload.uploadSuccess[0]) {
+    result["thumb"] = resultUpload.uploadSuccess[0].path
+    result["name_thumb"] = resultUpload.uploadSuccess[0].name
+    result["source"] = resultUpload.uploadSuccess[0].path
+    result["name_source"] = resultUpload.uploadSuccess[0].name
+  }
 
   if (type.includes("image/")) {
     const name_thumb =
@@ -763,7 +785,7 @@ const handleUpFileTemp = async (file, type, storePath) => {
     result["name_thumb"] = name_thumb
   }
 
-  if (type.includes("video/")) {
+  if (type.includes("video/") && resultUpload.uploadSuccess[0]) {
     const name_thumb =
       "thumb_" +
       file.name.split("_")[0] +
@@ -815,16 +837,20 @@ const handleMoveFileTempToMain = async (
           storePath,
           file_info.name_source
         )
-        result["source"] = resultUpload.uploadSuccess[0].path
-        result["source_attribute"] = resultUpload.uploadSuccess[0]
+        if (resultUpload.uploadSuccess[0]) {
+          result["source"] = resultUpload.uploadSuccess[0].path
+          result["source_attribute"] = resultUpload.uploadSuccess[0]
+        }
       } else if (upload_type === "cloud_storage") {
         const resultUpload = await moveFileFromServerToGCS(
           storePathTemp,
           storePath,
           file_info.name_source
         )
-        result["source"] = resultUpload.uploadSuccess[0].path
-        result["source_attribute"] = resultUpload.uploadSuccess[0]
+        if (resultUpload.uploadSuccess[0]) {
+          result["source"] = resultUpload.uploadSuccess[0].path
+          result["source_attribute"] = resultUpload.uploadSuccess[0]
+        }
       }
     }
   }
@@ -838,16 +864,20 @@ const handleMoveFileTempToMain = async (
           storePath,
           file_info.name_thumb
         )
-        result["thumb"] = resultUpload.uploadSuccess[0].path
-        result["thumb_attribute"] = resultUpload.uploadSuccess[0]
+        if (resultUpload.uploadSuccess[0]) {
+          result["thumb"] = resultUpload.uploadSuccess[0].path
+          result["thumb_attribute"] = resultUpload.uploadSuccess[0]
+        }
       } else if (upload_type === "cloud_storage") {
         const resultUpload = await moveFileFromServerToGCS(
           storePathTemp,
           storePath,
           file_info.name_thumb
         )
-        result["thumb"] = resultUpload.uploadSuccess[0].path
-        result["thumb_attribute"] = resultUpload.uploadSuccess[0]
+        if (resultUpload.uploadSuccess[0]) {
+          result["thumb"] = resultUpload.uploadSuccess[0].path
+          result["thumb_attribute"] = resultUpload.uploadSuccess[0]
+        }
       }
     }
   }

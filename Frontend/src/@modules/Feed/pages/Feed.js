@@ -67,7 +67,7 @@ const Feed = (props) => {
 
   return (
     <Fragment>
-      <div className="div-content">
+      <div id="div-content-feed" className="div-content">
         <div className="div-left">{renderLoadFeed}</div>
         <div className="div-right">
           <div id="div-sticky">
