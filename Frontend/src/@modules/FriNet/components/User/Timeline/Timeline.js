@@ -28,19 +28,20 @@ const index = (props) => {
     const sticky = document.getElementById("div-sticky")
     const sticky_div_height = document.getElementById("div-sticky-height")
     if (sticky_div_height) {
-      if (document.getElementById("div-content-feed")) {
-        console.log(document.getElementById("div-content-feed"))
-      }
-      document.getElementById("div-sticky-height").style.height = "600px"
+      const height = window.pageYOffset - offsetTop
+      sticky_div_height.style.height = height + "px"
+    }
+    if (window.scrollY === 0) {
+      sticky_div_height.style.height = "0px"
     }
     if (sticky) {
-      document.getElementById("div-sticky").style.top = "unset"
-      if (sticky.offsetHeight > window.innerHeight) {
-        const offset =
-          (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
-        document.getElementById("div-sticky").style.bottom = offset + "px"
+      if (sticky.offsetHeight > window.innerHeight - offsetTop) {
+        sticky.style.top = "unset"
+        const offset = (sticky_div_height.offsetHeight + offsetBottom) * -1
+        sticky.style.bottom = offsetBottom + "px"
       } else {
-        document.getElementById("div-sticky").style.bottom = offsetTop + "px"
+        sticky_div_height.style.height = "0px"
+        sticky.style.top = offsetTop + "px"
       }
     }
   }
@@ -49,16 +50,16 @@ const index = (props) => {
     const sticky = document.getElementById("div-sticky")
     const sticky_div_height = document.getElementById("div-sticky-height")
     if (sticky_div_height) {
-      document.getElementById("div-sticky-height").style.height = "0px"
+      sticky_div_height.style.height = "0px"
     }
     if (sticky) {
-      document.getElementById("div-sticky").style.bottom = "unset"
-      if (sticky.offsetHeight > window.innerHeight) {
+      sticky.style.bottom = "unset"
+      if (sticky.offsetHeight > window.innerHeight - offsetTop) {
         const offset =
           (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
-        document.getElementById("div-sticky").style.top = offset + "px"
+        sticky.style.top = offset + "px"
       } else {
-        document.getElementById("div-sticky").style.top = offsetTop + "px"
+        sticky.style.top = offsetTop + "px"
       }
     }
   }
@@ -96,7 +97,7 @@ const index = (props) => {
 
   return (
     <Fragment>
-      <div id="div-content-feed" className="div-timeline div-content">
+      <div className="div-timeline div-content">
         <div className="div-left">{renderLoadFeed}</div>
         <div className="div-right">
           <div id="div-sticky-height"></div>
