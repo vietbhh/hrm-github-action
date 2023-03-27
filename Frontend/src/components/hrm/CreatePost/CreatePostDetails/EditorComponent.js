@@ -24,7 +24,8 @@ import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import "@draft-js-plugins/linkify/lib/plugin.css"
 
 const EditorComponent = (props) => {
-  const { dataMention, editorState, onEditorStateChange } = props
+  const { dataMention, editorState, onEditorStateChange, backgroundImage } =
+    props
   const [state, setState] = useMergedState({
     // mention
     open: false,
@@ -41,6 +42,11 @@ const EditorComponent = (props) => {
   useEffect(() => {
     setState({ mentions: dataMention, suggestions: dataMention })
   }, [dataMention])
+
+  useEffect(() => {
+    if (backgroundImage === "") {
+    }
+  }, [backgroundImage])
 
   // ** mention
   const { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin } =
@@ -89,34 +95,39 @@ const EditorComponent = (props) => {
           "modules.feed.create_post.text.placeholder_input"
         )}
       />
-      <Toolbar>
-        {
-          // may be use React.Fragment instead of div to improve performance after React 16
-          (externalProps) => (
-            <Fragment>
-              <BoldButton {...externalProps} />
-              <ItalicButton {...externalProps} />
-              <UnderlineButton {...externalProps} />
-              <UnorderedListButton {...externalProps} />
-              <OrderedListButton {...externalProps} />
-              <CodeBlockButton {...externalProps} />
-            </Fragment>
-          )
-        }
-      </Toolbar>
-      <InlineToolbar>
-        {
-          // may be use React.Fragment instead of div to improve performance after React 16
-          (externalProps) => (
-            <Fragment>
-              <BoldButton {...externalProps} />
-              <ItalicButton {...externalProps} />
-              <UnderlineButton {...externalProps} />
-              <linkPlugin.LinkButton {...externalProps} />
-            </Fragment>
-          )
-        }
-      </InlineToolbar>
+
+      <div id="div-tool-bar">
+        <Toolbar>
+          {
+            // may be use React.Fragment instead of div to improve performance after React 16
+            (externalProps) => (
+              <Fragment>
+                <BoldButton {...externalProps} />
+                <ItalicButton {...externalProps} />
+                <UnderlineButton {...externalProps} />
+                <UnorderedListButton {...externalProps} />
+                <OrderedListButton {...externalProps} />
+                <CodeBlockButton {...externalProps} />
+              </Fragment>
+            )
+          }
+        </Toolbar>
+
+        <InlineToolbar>
+          {
+            // may be use React.Fragment instead of div to improve performance after React 16
+            (externalProps) => (
+              <Fragment>
+                <BoldButton {...externalProps} />
+                <ItalicButton {...externalProps} />
+                <UnderlineButton {...externalProps} />
+                <linkPlugin.LinkButton {...externalProps} />
+              </Fragment>
+            )
+          }
+        </InlineToolbar>
+      </div>
+
       <MentionSuggestions
         open={state.open}
         onOpenChange={onOpenChange}

@@ -1194,8 +1194,7 @@
       border: 1px solid #ddd;
       cursor: text;
       padding: 0.5rem 1rem 1rem 1rem;
-      margin: 0 -0.5rem 0.5rem -0.5rem;
-      border-radius: 2px;
+      margin: 0 0rem 0.5rem 0rem;
       box-shadow: inset 0px 1px 5px -3px #ababab;
       background: #fefefe;
       border-radius: 12px;
@@ -1666,6 +1665,11 @@
       i {
         width: 20px;
         margin-right: 0.5rem;
+      }
+
+      a {
+        color: inherit;
+        transition: all 0.3s;
       }
     }
   }

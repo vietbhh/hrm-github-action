@@ -43,7 +43,8 @@ const ModalCreatePost = (props) => {
     editorState: EditorState.createEmpty(),
     loadingUploadAttachment: false,
     loadingSubmit: false,
-    arrLink: []
+    arrLink: [],
+    backgroundImage: ""
   })
   const [file, setFile] = useState([])
 
@@ -269,6 +270,10 @@ const ModalCreatePost = (props) => {
     }
   }
 
+  const setBackgroundImage = (value) => {
+    setState({ backgroundImage: value })
+  }
+
   // ** useEffect
   useEffect(() => {
     if (!_.isEmpty(dataPost)) {
@@ -428,6 +433,7 @@ const ModalCreatePost = (props) => {
           editorState={state.editorState}
           onEditorStateChange={onEditorStateChange}
           dataMention={dataMention}
+          backgroundImage={state.backgroundImage}
         />
 
         {renderPreviewAttachment}
@@ -447,7 +453,13 @@ const ModalCreatePost = (props) => {
             title={useFormatMessage(
               "modules.feed.create_post.text.choose_a_background_image"
             )}>
-            <li className="create_post_footer-li cursor-pointer">
+            <li
+              className="create_post_footer-li cursor-pointer"
+              onClick={() => {
+                setBackgroundImage(
+                  "https://image-1.gapo.vn/images/866ad07a-6d89-4233-a1f8-e085eed97ec9.png"
+                )
+              }}>
               <span className="icon toggle-background">
                 <span>Aa</span>
               </span>
@@ -480,7 +492,11 @@ const ModalCreatePost = (props) => {
           </Tooltip>
           <Tooltip
             title={useFormatMessage("modules.feed.create_post.text.poll_vote")}>
-            <li className="create_post_footer-li cursor-pointer">
+            <li
+              className="create_post_footer-li cursor-pointer"
+              onClick={() => {
+                setBackgroundImage("")
+              }}>
               <svg
                 width="24"
                 height="24"
