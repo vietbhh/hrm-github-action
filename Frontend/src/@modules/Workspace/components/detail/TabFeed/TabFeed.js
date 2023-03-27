@@ -4,10 +4,11 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import LoadFeed from "@modules/Feed/components/LoadFeed"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
+import moment from "moment"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader } from "reactstrap"
+import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
 import WorkspaceIntroduction from "../sidebarComponents/WorkspaceIntroduction"
 const TabFeed = (props) => {
   const { detailWorkspace } = props
@@ -24,7 +25,15 @@ const TabFeed = (props) => {
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = () => {}
 
+  const loadData = (paramsX = {}) => {
+    paramsX.id = workspaceID
+    workspaceApi.loadPinned(paramsX).then((res) => {
+      setState({ dataPinned: res.data.dataPost })
+    })
+  }
+
   useEffect(() => {
+    loadData()
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
       : []
@@ -61,17 +70,20 @@ const TabFeed = (props) => {
             <div className="content-post d-flex align-items-center mb-50">
               <div>
                 {item?.content}
-                <div className="d-flex align-items-center mt-50">
-                  <div className="me-50">
-                    <Avatar src={item.created_by?.avatar} />{" "}
-                    {item.created_by?.full_name}
+                <div
+                  className="post-info d-flex align-items-center mt-50"
+                  style={{ fontSize: "12px" }}>
+                  <div className="me-50 d-flex align-items-center">
+                    <Avatar src={item.created_by?.avatar} size="sm" />{" "}
+                    <div className="ms-50">{item.created_by?.full_name}</div>
                   </div>
                   <div className="me-50">
                     <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
                     {moment(item?.created_at).format("DD MMM, YYYY")}
                   </div>
                   <div>
-                    <i className="fa-regular fa-eye me-50"></i>0
+                    <i className="fa-regular fa-eye me-50"></i>{" "}
+                    {item.seen_count}
                   </div>
                 </div>
               </div>
@@ -88,6 +100,20 @@ const TabFeed = (props) => {
         </Col>
       )
     })
+  }
+  const customActionPost = {
+    pin_post: {
+      label: (
+        <a
+          onClick={(e) => {
+            console.log("e", e)
+          }}>
+          <i className="fa-light fa-thumbtack"></i>
+          <span>Pin post</span>
+        </a>
+      ),
+      condition: true
+    }
   }
   return (
     <div className="div-content ">
@@ -114,6 +140,7 @@ const TabFeed = (props) => {
           setDataCreateNew={setDataCreateNew}
           workspace={[workspaceID]}
           apiLoadFeed={apiLoadFeed}
+          customAction={customActionPost}
         />
       </div>
       <div className="div-right">
