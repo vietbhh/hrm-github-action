@@ -1,10 +1,12 @@
 // ** React Imports
 import { Fragment, useEffect } from "react"
+import { useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
+import { axiosNodeApi } from "@apps/utility/api"
 // ** Styles
 // ** Components
 import ModalButton from "./ModalButton"
-import { useMergedState } from "@apps/utility/common"
+import PreviewPDF from "./PreviewPDF"
 
 const PreviewFile = (props) => {
   const {
@@ -16,7 +18,8 @@ const PreviewFile = (props) => {
 
   const [state, setState] = useMergedState({
     loading: true,
-    url: ""
+    url: "",
+    pdfData: undefined
   })
 
   const getPublicLink = () => {
@@ -27,7 +30,8 @@ const PreviewFile = (props) => {
     workspaceApi
       .loadGCSObjectLink({
         //name: mediaInfo.path
-        name: "modules/feed2/file-sample_100kB (1).doc"
+        name: "modules/feed2/qr-code-layout-3.pdf",
+        get_content: true
       })
       .then((res) => {
         setState({
@@ -43,9 +47,30 @@ const PreviewFile = (props) => {
       })
   }
 
+  const test = () => {
+    setState({
+      loading: true
+    })
+
+    axiosNodeApi
+      .get("/download/file/?name=/modules/feed/qr-code-layout-3.pdf")
+      .then((res) => {
+        const buffer = new ArrayBuffer(res.data.data.length)
+        const resBuffer = new Uint8Array(buffer)
+        for (let i = 0; i < res.data.data.length; ++i) {
+          resBuffer[i] = res.data.data[i]
+        }
+        const blob = new Blob([resBuffer], {type: "application/pdf"})
+        setState({
+          pdfData: resBuffer,
+          loading: false
+        })
+      })
+  }
+
   // ** effect
   useEffect(() => {
-    getPublicLink()
+    test()
   }, [])
 
   // ** render
@@ -54,12 +79,14 @@ const PreviewFile = (props) => {
       return ""
     }
 
-    return (
+    return <PreviewPDF pdfData={state.pdfData} />
+
+    /*return (
       <iframe
         src={`https://view.officeapps.live.com/op/embed.aspx?src=${state.url}`}
         title="W3Schools Free Online Web Tutorials"
       />
-    )
+    )*/
   }
 
   return (

@@ -680,7 +680,6 @@ const loadGCSObjectLink = async (req, res) => {
   //const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
   const bucket = storage.bucket("friday-storage")
   const filePath = path.join("default", req.query.name).replace(/\\/g, "/")
-  console.log(filePath)
   const [url] = await bucket
     .file(filePath)
     .getSignedUrl({
