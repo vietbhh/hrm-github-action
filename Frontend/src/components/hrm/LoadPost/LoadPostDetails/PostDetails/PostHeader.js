@@ -32,11 +32,22 @@ const PostHeader = (props) => {
   const [state, setState] = useMergedState({
     loadingDelete: false,
     modalCreatePost: false,
-    dataMention: []
+    dataMention: [],
+    _rest: {}
+  })
+
+  let _rest = {}
+  _.forEach(rest, (item, key) => {
+    const _item = { ...item }
+    if (item.onClick) {
+      _item["onClick"] = () => item.onClick(data)
+    }
+    _rest = { ..._rest, ...{ [key]: _item } }
   })
 
   const actions = {
     view_post: {
+      onClick: () => {},
       label: (
         <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
           <i className="fa-light fa-eye"></i>
@@ -51,17 +62,19 @@ const PostHeader = (props) => {
       ...view_post
     },
     edit_post: {
+      onClick: () => {
+        if (_.isFunction(handleCloseModal)) {
+          if (_.isFunction(setEditDescription)) {
+            setEditDescription(true)
+          }
+        } else {
+          toggleModalCreatePost()
+        }
+      },
       label: (
         <a
           onClick={(e) => {
             e.preventDefault()
-            if (_.isFunction(handleCloseModal)) {
-              if (_.isFunction(setEditDescription)) {
-                setEditDescription(true)
-              }
-            } else {
-              toggleModalCreatePost()
-            }
           }}>
           <i className="fa-light fa-pen-to-square"></i>
           <span>
@@ -75,11 +88,13 @@ const PostHeader = (props) => {
       ...edit_post
     },
     delete_post: {
+      onClick: () => {
+        handleDeletePost()
+      },
       label: (
         <a
           onClick={(e) => {
             e.preventDefault()
-            handleDeletePost()
           }}>
           <i className="fa-light fa-delete-right"></i>
           <span>
@@ -92,7 +107,7 @@ const PostHeader = (props) => {
       condition: parseInt(data?.created_by?.id) === parseInt(userId),
       ...delete_post
     },
-    ...rest
+    ..._rest
   }
 
   const items = [
@@ -101,7 +116,7 @@ const PostHeader = (props) => {
       (item, index) => {
         return {
           key: index,
-          label: item.label
+          label: <div onClick={item.onClick}>{item.label}</div>
         }
       }
     )
