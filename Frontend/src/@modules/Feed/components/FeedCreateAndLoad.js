@@ -6,6 +6,7 @@ const FeedCreateAndLoad = (props) => {
   const {
     workspace = [], // arr workspace: []
     apiLoadFeed = null, // api load feed
+    paramsLoadFeed = {}, // add param load feed api
     approveStatus = "approved", // approved / rejected / pending
     customAction = {} // custom dropdown post header
   } = props
@@ -32,6 +33,7 @@ const FeedCreateAndLoad = (props) => {
         workspace={workspace}
         apiLoadFeed={apiLoadFeed}
         customAction={customAction}
+        paramsLoadFeed={paramsLoadFeed}
       />
     </div>
   )

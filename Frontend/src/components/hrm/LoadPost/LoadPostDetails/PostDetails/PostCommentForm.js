@@ -16,10 +16,10 @@ import { Fragment, useCallback, useEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { Label, Spinner } from "reactstrap"
 import Emoji from "./Emoji"
+import htmlToDraft from "html-to-draftjs"
 
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@styles/react/libs/editor/editor.scss"
-import htmlToDraft from "html-to-draftjs"
 
 const PostCommentForm = (props) => {
   const {
