@@ -616,7 +616,7 @@ const updateComment = async (req, res, next) => {
   const _id_post = body._id_post
   const _id_comment = body._id_comment
   const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_updatel
+  const body_update = body.body_update
   try {
     await commentMongoModel.updateOne({ _id: _id_comment }, body_update)
     const data = await handleDataFeedById(_id_post, comment_more_count_original)

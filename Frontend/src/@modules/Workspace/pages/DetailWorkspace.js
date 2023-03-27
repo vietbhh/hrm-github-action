@@ -11,7 +11,7 @@ import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    tabActive: 2,
+    tabActive: 1,
     detailWorkspace: {}
   })
   const params = useParams()

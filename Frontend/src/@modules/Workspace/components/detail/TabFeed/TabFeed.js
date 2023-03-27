@@ -1,6 +1,6 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import LoadFeed from "@modules/Feed/components/LoadFeed"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
@@ -14,7 +14,8 @@ const TabFeed = (props) => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
-    approveStatus: "pending"
+    approveStatus: "pending",
+    dataPinned: []
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -51,6 +52,43 @@ const TabFeed = (props) => {
       })
     })
   }
+
+  const renderPinned = (data = []) => {
+    return data.map((item, key) => {
+      return (
+        <Col sm={12}>
+          <div className="post-pinned">
+            <div className="content-post d-flex align-items-center mb-50">
+              <div>
+                {item?.content}
+                <div className="d-flex align-items-center mt-50">
+                  <div className="me-50">
+                    <Avatar src={item.created_by?.avatar} />{" "}
+                    {item.created_by?.full_name}
+                  </div>
+                  <div className="me-50">
+                    <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
+                    {moment(item?.created_at).format("DD MMM, YYYY")}
+                  </div>
+                  <div>
+                    <i className="fa-regular fa-eye me-50"></i>0
+                  </div>
+                </div>
+              </div>
+
+              <div className="ms-auto">
+                {item?.thumb && <Photo src={item?.thumb} width={"60px"} />}
+              </div>
+              <Button className="ms-1" color="flat-secondary" size="sm">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </Button>
+            </div>
+            <hr className="pd-0"></hr>
+          </div>
+        </Col>
+      )
+    })
+  }
   return (
     <div className="div-content ">
       <div className="div-left feed">
@@ -63,41 +101,13 @@ const TabFeed = (props) => {
         <Card className="mb-1">
           <CardHeader>
             <h2 className="card-title">
-              <i class="fa-duotone fa-flag-swallowtail"></i> Workspace pinned
-              post
+              <i class="fa-duotone fa-flag-swallowtail"></i>{" "}
+              {useFormatMessage(
+                "modules.workspace.display.workspace_pinned_post"
+              )}
             </h2>
           </CardHeader>
-          <CardBody>
-            <div className="post-pinned">
-              <div className="content-post d-flex align-items-center mb-50">
-                <div>
-                  align-items-center align-items-centerM align-items-center
-                  align-items-centerM align-items-center align-items-centerM
-                  align-items-center align-items-centerM
-                  <div className="d-flex align-items-center mt-50">
-                    <div className="me-50">
-                      <Avatar /> Long Trinh
-                    </div>
-                    <div className="me-50">
-                      <i className="fa-duotone fa-calendar-days me-50"></i>March
-                      3, 2023
-                    </div>
-                    <div>
-                      <i className="fa-regular fa-eye me-50"></i>0
-                    </div>
-                  </div>
-                </div>
-
-                <div className="ms-auto">
-                  <Photo width={60} />
-                </div>
-                <Button className="ms-1" color="flat-secondary" size="sm">
-                  <i class="fa-solid fa-ellipsis-vertical"></i>
-                </Button>
-              </div>
-              <hr className="pd-0"></hr>
-            </div>
-          </CardBody>
+          <CardBody>{renderPinned(state.dataPinned)}</CardBody>
         </Card>
         <LoadFeed
           dataCreateNew={state.dataCreateNew}
