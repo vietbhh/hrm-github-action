@@ -13,60 +13,82 @@ const PreviewPDF = (props) => {
     // ** methods
   } = props
 
+  const [loading, setLoading] = useState(true)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
 
   const onDocumentLoadSuccess = ({ numPages }) => {
+    setLoading(false)
     setNumPages(numPages)
   }
 
-  const onDocumentLoadProgress = ({ loaded, total }) => {
-    console.log({ loaded, total })
+  const handleChangePagination = (type) => {
+    if (type === "add" && pageNumber < numPages) {
+      setPageNumber(pageNumber + 1)
+    } else if (type === "sub" && pageNumber > 1) {
+      setPageNumber(pageNumber - 1)
+    }
   }
 
-  const onDocumentLoadError = (err) => {
-    console.log(err)
-  }
-
-  const handleChangePagination = (pageSize) => {
-    setPageNumber(pageSize)
-  }
+  const onDocumentRenderSuccess = () => {}
 
   // ** render
-  const renderPagination = () => {
+  const renderLoading = () => {
     return (
-      <Pagination
-        defaultCurrent={pageNumber}
-        total={numPages * 10}
-        onChange={handleChangePagination}
-      />
+      <div className="d-flex align-items-center justify-content-center loading-area">
+        <Spin />
+      </div>
     )
   }
 
-  return (
-    <div className="preview-pdf">
-      <div className="p-1 d-flex align-items-center justify-content-between header">
-        <h6 className="mb-0">fsadfdsaf</h6>
-        <Fragment>{renderPagination()}</Fragment>
+  const renderPagination = () => {
+    return (
+      <div className="pagination">
+        <Button.Ripple
+          size="sm"
+          className="btn-icon"
+          onClick={() => handleChangePagination("sub")}>
+          <i className="fas fa-chevron-left" />
+        </Button.Ripple>
+        <span className="ms-75 me-75 ">Page {`${pageNumber}/${numPages}`}</span>
+        <Button.Ripple
+          size="sm"
+          className="btn-icon"
+          onClick={() => handleChangePagination("add")}>
+          <i className="fas fa-chevron-right" />
+        </Button.Ripple>
       </div>
-      <div>
-        <Document
-          file={{
-            data: pdfData
-          }}
-          onLoadSuccess={onDocumentLoadSuccess}
-          onLoadProgress={onDocumentLoadProgress}
-          onLoadError={onDocumentLoadError}
-          options={{
-            workerSrc: "pdf.worker.js",
-            standardFontDataUrl: `https://unpkg.com/pdfjs-dist@5.7.2/standard_fonts`
-          }}
-          renderMode="svg">
-          <Page pageNumber={pageNumber} />
-        </Document>
+    )
+  }
+
+  const renderComponent = () => {
+    return (
+      <div className="preview-pdf">
+        <div className="p-1 d-flex align-items-center justify-content-between header">
+          <h6 className="mb-0">fsadfdsaf</h6>
+          <Fragment>{renderPagination()}</Fragment>
+        </div>
+        <div>
+          <Document
+            file={{
+              data: pdfData
+            }}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onRenderTextLayerSuccess={onDocumentRenderSuccess}
+            options={{
+              workerSrc: "pdf.worker.js",
+              standardFontDataUrl: `https://unpkg.com/pdfjs-dist@5.7.2/standard_fonts`
+            }}
+            renderMode="svg"
+            loading={renderLoading()}>
+            <Page pageNumber={pageNumber} />
+          </Document>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default PreviewPDF

@@ -60,7 +60,7 @@ const PreviewFile = (props) => {
         for (let i = 0; i < res.data.data.length; ++i) {
           resBuffer[i] = res.data.data[i]
         }
-        const blob = new Blob([resBuffer], {type: "application/pdf"})
+        
         setState({
           pdfData: resBuffer,
           loading: false

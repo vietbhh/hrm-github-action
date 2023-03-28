@@ -27,5 +27,4 @@ router.get("/load-data-media/:id", loadDataMedia)
 router.post("/update/:id", updateWorkspace)
 router.post("/approvePost", approvePost)
 router.post("/add-member", addMemberByDepartment)
-router.post("/load-data-media", addMemberByDepartment)
 export default router

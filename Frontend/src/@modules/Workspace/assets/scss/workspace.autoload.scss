@@ -108,6 +108,9 @@
     .tab-media {
       .media-file-item {
         cursor: pointer;
+        p {
+          margin-bottom: 0.25rem !important;
+        }
         .image-container {
           .ant-image {
             height: 40px !important;
@@ -157,6 +160,29 @@
             img {
               object-fit: cover;
               object-position: center center;
+            }
+          }
+        }
+      }
+
+      .media-link-item {
+        .large-preview-card {
+          height: auto;
+
+          .detail-link {
+            display: flex;
+            flex-direction: row;
+
+            .image-link-container {
+              width: 15%;
+
+              .image-link {
+                background-size: contain;
+              }
+            }
+
+            .content-link-container {
+              width: 85%;
             }
           }
         }
@@ -396,9 +422,15 @@
               border-radius: 50% !important;
               height: 25px;
               width: 25px;
-              
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           }
+        }
+
+        .loading-area {
+          background-color: #ffffff;
         }
       }
     }

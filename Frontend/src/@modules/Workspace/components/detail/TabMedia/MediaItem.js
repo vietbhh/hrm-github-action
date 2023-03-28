@@ -7,6 +7,7 @@ import { Card, CardBody, Col } from "reactstrap"
 import MediaFileItem from "./MediaFileItem"
 import MediaPhotoItem from "./MediaPhotoItem"
 import MediaVideoItem from "./MediaVideoItem"
+import MediaLinkItem from "./MediaLinkItem"
 
 const MediaItem = (props) => {
   const {
@@ -62,7 +63,7 @@ const MediaItem = (props) => {
   }
 
   const renderLink = () => {
-    return ""
+    return <MediaLinkItem mediaItem={mediaItem} />
   }
 
   const renderComponent = () => {

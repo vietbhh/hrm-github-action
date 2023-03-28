@@ -64,6 +64,10 @@ const MediaTabContent = (props) => {
 
   // ** render
   const renderContent = () => {
+    if (tabId !== mediaTabActive) {
+      return ""
+    }
+
     if (state.loading === true) {
       return <AppSpinner className="mt-1" />
     }
