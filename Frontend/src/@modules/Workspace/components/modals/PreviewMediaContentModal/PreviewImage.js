@@ -12,7 +12,8 @@ const PreviewImage = (props) => {
     // ** props
     mediaInfo,
     // ** methods
-    handleModal
+    handleModal,
+    handleClickDownload
   } = props
 
   const url = mediaInfo.source === undefined ? mediaInfo.path : mediaInfo.source
@@ -21,7 +22,11 @@ const PreviewImage = (props) => {
   return (
     <div className="d-flex align-items-center justify-content-center preview-image">
       <Photo src={url} preview={false} />
-      <ModalButton handleModal={handleModal} />
+      <ModalButton
+        hideBackGround={true}
+        handleModal={handleModal}
+        handleClickDownload={handleClickDownload}
+      />
     </div>
   )
 }

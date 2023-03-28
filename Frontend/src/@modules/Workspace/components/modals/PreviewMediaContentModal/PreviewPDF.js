@@ -5,11 +5,13 @@ import { Pagination, Spin } from "antd"
 import { Button } from "reactstrap"
 // ** Components
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack"
+import PerfectScrollbar from "react-perfect-scrollbar"
 
 const PreviewPDF = (props) => {
   const {
     // ** props
-    pdfData
+    pdfData,
+    mediaInfo
     // ** methods
   } = props
 
@@ -64,25 +66,27 @@ const PreviewPDF = (props) => {
   const renderComponent = () => {
     return (
       <div className="preview-pdf">
-        <div className="p-1 d-flex align-items-center justify-content-between header">
-          <h6 className="mb-0">fsadfdsaf</h6>
-          <Fragment>{renderPagination()}</Fragment>
-        </div>
-        <div>
-          <Document
-            file={{
-              data: pdfData
-            }}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onRenderTextLayerSuccess={onDocumentRenderSuccess}
-            options={{
-              workerSrc: "pdf.worker.js",
-              standardFontDataUrl: `https://unpkg.com/pdfjs-dist@5.7.2/standard_fonts`
-            }}
-            renderMode="svg"
-            loading={renderLoading()}>
-            <Page pageNumber={pageNumber} />
-          </Document>
+        <div className="container">
+          <div className="p-1 d-flex align-items-center justify-content-between header">
+            <h6 className="mb-0">{mediaInfo.name}</h6>
+            <Fragment>{renderPagination()}</Fragment>
+          </div>
+          <div className="document">
+            <Document
+              file={{
+                data: pdfData
+              }}
+              onLoadSuccess={onDocumentLoadSuccess}
+              onRenderTextLayerSuccess={onDocumentRenderSuccess}
+              options={{
+                workerSrc: "pdf.worker.js",
+                standardFontDataUrl: `https://unpkg.com/pdfjs-dist@5.7.2/standard_fonts`
+              }}
+              renderMode="svg"
+              loading={renderLoading()}>
+              <Page pageNumber={pageNumber} />
+            </Document>
+          </div>
         </div>
       </div>
     )

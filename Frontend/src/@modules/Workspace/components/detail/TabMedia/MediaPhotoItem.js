@@ -1,5 +1,6 @@
 // ** React Imports
 import { Fragment } from "react"
+import { getFileTypeFromMime } from "@modules/Workspace/common/common"
 // ** Styles
 import { Card, CardBody, Col } from "reactstrap"
 // ** Components
@@ -15,7 +16,16 @@ const MediaPhotoItem = (props) => {
   } = props
 
   const handleClickImage = (item) => {
-    setMediaInfo(item)
+    if (item.source_attribute === undefined) {
+      return 
+    }
+
+    const newSourceAttribute = {
+      ...item.source_attribute,
+      file_type: getFileTypeFromMime(item.source_attribute.mime)
+    }
+
+    setMediaInfo(newSourceAttribute)
     handleModalPreview()
   }
 

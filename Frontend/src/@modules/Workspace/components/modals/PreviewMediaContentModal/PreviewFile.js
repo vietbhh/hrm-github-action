@@ -7,13 +7,15 @@ import { axiosNodeApi } from "@apps/utility/api"
 // ** Components
 import ModalButton from "./ModalButton"
 import PreviewPDF from "./PreviewPDF"
+import DownloadMediaContent from "./DownloadMediaContent"
 
 const PreviewFile = (props) => {
   const {
     // ** props
     mediaInfo,
     // ** methods
-    handleModal
+    handleModal,
+    handleClickDownload
   } = props
 
   const [state, setState] = useMergedState({
@@ -23,55 +25,62 @@ const PreviewFile = (props) => {
   })
 
   const getPublicLink = () => {
-    setState({
-      loading: true
-    })
+    if (mediaInfo.previewable === true) {
+      setState({
+        loading: true
+      })
+      if (mediaInfo.file_type === "word" || mediaInfo.file_type === "excel") {
+        workspaceApi
+          .loadGCSObjectLink({
+            //name: mediaInfo.path
+            name: "modules/feed2/qr-code-layout-3.pdf",
+            get_content: true
+          })
+          .then((res) => {
+            setState({
+              url: encodeURIComponent(res.data.url),
+              loading: false
+            })
+          })
+          .catch((err) => {
+            setState({
+              url: "",
+              loading: false
+            })
+          })
+      } else if (mediaInfo.file_type === "pdf") {
+        axiosNodeApi
+          .get(`/download/file/?name=${mediaInfo.path}`)
+          .then((res) => {
+            const buffer = new ArrayBuffer(res.data.data.length)
+            const resBuffer = new Uint8Array(buffer)
+            for (let i = 0; i < res.data.data.length; ++i) {
+              resBuffer[i] = res.data.data[i]
+            }
 
-    workspaceApi
-      .loadGCSObjectLink({
-        //name: mediaInfo.path
-        name: "modules/feed2/qr-code-layout-3.pdf",
-        get_content: true
-      })
-      .then((res) => {
+            setState({
+              pdfData: resBuffer,
+              loading: false
+            })
+          })
+      } else {
         setState({
-          url: encodeURIComponent(res.data.url),
-          loading: false
-        })
-      })
-      .catch((err) => {
-        setState({
+          pdfData: undefined,
           url: "",
           loading: false
         })
+      }
+    } else {
+      setState({
+        loading: false
       })
-  }
-
-  const test = () => {
-    setState({
-      loading: true
-    })
-
-    axiosNodeApi
-      .get("/download/file/?name=/modules/feed/qr-code-layout-3.pdf")
-      .then((res) => {
-        const buffer = new ArrayBuffer(res.data.data.length)
-        const resBuffer = new Uint8Array(buffer)
-        for (let i = 0; i < res.data.data.length; ++i) {
-          resBuffer[i] = res.data.data[i]
-        }
-        
-        setState({
-          pdfData: resBuffer,
-          loading: false
-        })
-      })
+    }
   }
 
   // ** effect
   useEffect(() => {
-    test()
-  }, [])
+    getPublicLink()
+  }, [mediaInfo])
 
   // ** render
   const renderContent = () => {
@@ -79,14 +88,29 @@ const PreviewFile = (props) => {
       return ""
     }
 
-    return <PreviewPDF pdfData={state.pdfData} />
+    if (mediaInfo.previewable) {
+      if (mediaInfo.file_type === "word" || mediaInfo.file_type === "excel") {
+        return (
+          <iframe
+            src={`https://view.officeapps.live.com/op/embed.aspx?src=${state.url}`}
+            title="W3Schools Free Online Web Tutorials"
+          />
+        )
+      }
 
-    /*return (
-      <iframe
-        src={`https://view.officeapps.live.com/op/embed.aspx?src=${state.url}`}
-        title="W3Schools Free Online Web Tutorials"
-      />
-    )*/
+      if (mediaInfo.file_type === "pdf") {
+        return <PreviewPDF pdfData={state.pdfData} mediaInfo={mediaInfo} />
+      }
+    } else if (!mediaInfo.previewable) {
+      return (
+        <DownloadMediaContent
+          mediaInfo={mediaInfo}
+          handleClickDownload={handleClickDownload}
+        />
+      )
+    }
+
+    return ""
   }
 
   return (
@@ -94,7 +118,11 @@ const PreviewFile = (props) => {
       <div className="iframe-container">
         <Fragment>{renderContent()}</Fragment>
       </div>
-      <ModalButton handleModal={handleModal} showViewPost={false} />
+      <ModalButton
+        handleModal={handleModal}
+        showViewPost={false}
+        handleClickDownload={handleClickDownload}
+      />
     </div>
   )
 }

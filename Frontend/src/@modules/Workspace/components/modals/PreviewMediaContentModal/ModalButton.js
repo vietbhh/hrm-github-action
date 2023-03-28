@@ -4,14 +4,17 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 import { Space } from "antd"
 import { Button } from "reactstrap"
+import classNames from "classnames"
 // ** Components
 
 const ModalButton = (props) => {
   const {
     // ** props
     showViewPost,
+    hideBackGround,
     // ** methods
-    handleModal
+    handleModal,
+    handleClickDownload
   } = props
 
   // ** render
@@ -29,9 +32,16 @@ const ModalButton = (props) => {
   }
 
   return (
-    <div className="w-100 d-flex align-items-center justify-content-end pe-1 action-container">
+    <div
+      className={classNames(
+        "w-100 d-flex align-items-center justify-content-end p-50 pe-1 action-container",
+        {
+          "action-container-bg":
+            hideBackGround === undefined || hideBackGround === false
+        }
+      )}>
       <Space>
-        <Button.Ripple color="secondary">
+        <Button.Ripple color="secondary" onClick={() => handleClickDownload()}>
           <i className="far fa-cloud-download-alt me-50" />
           {useFormatMessage("modules.workspace.buttons.download")}
         </Button.Ripple>

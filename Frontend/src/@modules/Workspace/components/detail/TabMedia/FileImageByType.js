@@ -1,8 +1,8 @@
 // ** React Imports
+import { Fragment } from "react"
+import { getFileTypeFromMime } from "../../../common/common"
 // ** Styles
 // ** Components
-
-import { Fragment } from "react"
 
 const FileImageByType = (props) => {
   const {
@@ -11,9 +11,11 @@ const FileImageByType = (props) => {
     // ** methods
   } = props
 
+  const type = getFileTypeFromMime(mime)
+
   // ** render
   const renderComponent = () => {
-    if (mime === "excel") {
+    if (type === "excel") {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +40,7 @@ const FileImageByType = (props) => {
           />
         </svg>
       )
-    } else if (mime === "pdf") {
+    } else if (type === "pdf") {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +65,7 @@ const FileImageByType = (props) => {
           />
         </svg>
       )
-    } else if (mime === "word") {
+    } else if (type === "word") {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +90,7 @@ const FileImageByType = (props) => {
           />
         </svg>
       )
-    } else if (mime === "mp4") {
+    } else if (type === "mp4") {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +115,7 @@ const FileImageByType = (props) => {
           />
         </svg>
       )
-    } else if (mime === "mp3") {
+    } else if (type === "mp3") {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +140,7 @@ const FileImageByType = (props) => {
           />
         </svg>
       )
-    } else if (mime === "zip") {
+    } else if (type === "zip") {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +150,7 @@ const FileImageByType = (props) => {
           x="0px"
           y="0px"
           width="38px"
-          height="38pxpx"
+          height="38px"
           viewBox="0 0 512 512"
           enableBackground="new 0 0 512 512"
           xmlSpace="preserve">
@@ -164,6 +166,8 @@ const FileImageByType = (props) => {
         </svg>
       )
     }
+
+    return ""
   }
 
   return <Fragment>{renderComponent()}</Fragment>

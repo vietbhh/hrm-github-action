@@ -106,11 +106,19 @@
     }
 
     .tab-media {
+      .time-title {
+        font-weight: 600;
+      }
+
       .media-file-item {
-        cursor: pointer;
         p {
           margin-bottom: 0.25rem !important;
         }
+
+        .pointer {
+          cursor: pointer;
+        }
+
         .image-container {
           .ant-image {
             height: 40px !important;
@@ -378,7 +386,7 @@
   all: unset;
 
   .modal-content {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     padding: 0 !important;
     .modal-body {
       .preview-image,
@@ -390,6 +398,10 @@
         .action-container {
           position: absolute;
           top: 0;
+        }
+
+        .action-container-bg {
+          background-color: rgba(0, 0, 0, 0.4);
         }
       }
 
@@ -414,24 +426,42 @@
       }
 
       .preview-pdf {
-        .header {
-          background-color: #ffffff;
+        .container {
+          .header {
+            background-color: #ffffff;
 
-          .pagination {
-            button {
-              border-radius: 50% !important;
-              height: 25px;
-              width: 25px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+            .pagination {
+              button {
+                border-radius: 50% !important;
+                height: 25px;
+                width: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
+
+          .document {
+            max-height: 80vh !important;
+            overflow-y: scroll;
+            background: #ffffff;
+
+            .react-pdf__Page__canvas {
+              margin: 0 !important;
+              height: 100% !important;
             }
           }
         }
 
         .loading-area {
           background-color: #ffffff;
+          height: 80vh;
         }
+      }
+
+      .download-media-content {
+        width: 400px;
       }
     }
   }

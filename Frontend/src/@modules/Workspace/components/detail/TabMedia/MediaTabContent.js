@@ -81,10 +81,11 @@ const MediaTabContent = (props) => {
         {_.map(state.data, (item, index) => {
           return (
             <MediaItem
+              index={index}
               mediaItem={item}
               mediaTabActive={mediaTabActive}
               appSetting={appSetting}
-              key={`media-item-${item.info._id}`}
+              key={`media-item-${index}`}
               handleModalPreview={handleModalPreview}
               setMediaInfo={setMediaInfo}
             />

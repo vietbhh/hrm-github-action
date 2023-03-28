@@ -12,6 +12,7 @@ import MediaLinkItem from "./MediaLinkItem"
 const MediaItem = (props) => {
   const {
     // ** props
+    index,
     mediaItem,
     mediaTabActive,
     appSetting,
@@ -37,6 +38,7 @@ const MediaItem = (props) => {
     return (
       <Col sm="12" className="m-0">
         <MediaFileItem
+          index={index}
           mediaItem={mediaItem}
           appSetting={appSetting}
           handleModalPreview={handleModalPreview}

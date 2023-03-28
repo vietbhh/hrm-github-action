@@ -1,6 +1,7 @@
 import { axiosNodeApi, axiosApi } from "@apps/utility/api"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { object2QueryString, serialize } from "@apps/utility/handleData"
+import { downloadApi } from "@apps/modules/download/common/api"
 
 export const workspaceApi = {
   async save(data) {
@@ -56,9 +57,12 @@ export const workspaceApi = {
   },
   async loadGCSObjectLink(params) {
     const strParams = object2QueryString(params)
-    return await axiosNodeApi.get(`/workspace/load-gcs-object-link?get${strParams}`, {
-      disableLoading: true
-    })
+    return await axiosNodeApi.get(
+      `/workspace/load-gcs-object-link?get${strParams}`,
+      {
+        disableLoading: true
+      }
+    )
   },
   async loadPost(params) {
     const strParams = object2QueryString(params)
@@ -81,5 +85,8 @@ export const workspaceApi = {
   async loadMember(params) {
     const strParams = object2QueryString(params)
     return await axiosApi.get(`/employees/in-department?${strParams}`)
+  },
+  async downloadMedia(src, downloadFromStorage = false) {
+    return await downloadApi.getFile(src, downloadFromStorage)
   }
 }

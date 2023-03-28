@@ -11,7 +11,8 @@ const PreviewVideo = (props) => {
     // ** props
     mediaInfo,
     // ** methods
-    handleModal
+    handleModal,
+    handleClickDownload
   } = props
 
   const [state, setState] = useMergedState({
@@ -31,7 +32,7 @@ const PreviewVideo = (props) => {
         for (let i = 0; i < res.data.data.length; ++i) {
           resBuffer[i] = res.data.data[i]
         }
-        const blob = new Blob([resBuffer], {type: "video/mp4"})
+        const blob = new Blob([resBuffer], { type: "video/mp4" })
         setState({
           url: URL.createObjectURL(blob),
           loading: false
@@ -67,7 +68,10 @@ const PreviewVideo = (props) => {
     <div className="d-flex align-items-center justify-content-center preview-video">
       <Fragment>{renderVideo()}</Fragment>
 
-      <ModalButton handleModal={handleModal} />
+      <ModalButton
+        handleModal={handleModal}
+        handleClickDownload={handleClickDownload}
+      />
     </div>
   )
 }

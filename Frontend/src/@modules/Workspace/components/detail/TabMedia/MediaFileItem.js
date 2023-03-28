@@ -1,7 +1,10 @@
 // ** React Imports
-import { Fragment } from "react"
-import { useFormatMessage } from "@apps/utility/common"
+import { Fragment, useState } from "react"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import moment from "moment"
+import { getFileTypeFromMime } from "@modules/Workspace/common/common"
+import { workspaceApi } from "@modules/Workspace/common/api"
+import { Link } from "react-router-dom"
 // ** Styles
 import { Button, Card, CardBody } from "reactstrap"
 import { Dropdown } from "antd"
@@ -13,6 +16,7 @@ import FileImageByType from "./FileImageByType"
 const MediaFileItem = (props) => {
   const {
     // ** props
+    index,
     mediaItem,
     appSetting,
     // ** methods
@@ -22,20 +26,63 @@ const MediaFileItem = (props) => {
 
   console.log(mediaItem)
 
+  const [state, setState] = useMergedState({
+    openDropdown: false,
+    currentMediaItem: {}
+  })
+
   const handlePreviewFile = (sourceAttribute) => {
-    const arrMime = sourceAttribute.mime.split("/")
-    const mediaType = arrMime[0]
-    if (appSetting.upload_type === "direct" && mediaType === "file") {
-      //return
+    const type = getFileTypeFromMime(sourceAttribute.mime)
+    if (type === "") {
+      return ""
     }
 
-    setMediaInfo(sourceAttribute)
+    const newSourceAttribute = {
+      ...sourceAttribute,
+      previewable: true,
+      file_type: type
+    }
+
+    if (
+      appSetting.upload_type === "direct" &&
+      (type === "excel" || type === "word")
+    ) {
+      newSourceAttribute["previewable"] = false
+    }
+
+    if (type === "video" || type === "sound" || type === "zip") {
+      newSourceAttribute["previewable"] = false
+    }
+
+    setMediaInfo(newSourceAttribute)
     handleModalPreview()
   }
 
-  const handleClickDownload = () => {}
+  const handleClickDownload = () => {
+    const sourceAttribute = state.currentMediaItem.source_attribute
+    workspaceApi
+      .downloadMedia(sourceAttribute.path)
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", `${sourceAttribute.name}`)
+        document.body.appendChild(link)
+        link.click()
+        link.parentNode.removeChild(link)
+        handleToggleDropdown()
+      })
+      .catch((err) => {})
+  }
 
   const handleClickViewPost = () => {}
+
+  const handleToggleDropdown = (item) => {
+    setState({
+      currentMediaItem: !state.openDropdown ? item : {},
+      openDropdown: !state.openDropdown
+    })
+  }
 
   const items = [
     {
@@ -57,16 +104,18 @@ const MediaFileItem = (props) => {
     {
       key: "2",
       label: (
-        <Button.Ripple
-          color="flat-secondary"
-          size="sm"
-          onClick={() => handleClickViewPost()}
-          className="w-100">
-          <i className="fal fa-newspaper me-50" />
-          <span className="align-middle">
-            {useFormatMessage("modules.workspace.buttons.view_post")}
-          </span>
-        </Button.Ripple>
+        <Link to={`/posts/${state.currentMediaItem._id}`}>
+          <Button.Ripple
+            color="flat-secondary"
+            size="sm"
+            onClick={() => handleClickViewPost()}
+            className="w-100">
+            <i className="fal fa-newspaper me-50" />
+            <span className="align-middle">
+              {useFormatMessage("modules.workspace.buttons.view_post")}
+            </span>
+          </Button.Ripple>
+        </Link>
       )
     }
   ]
@@ -100,26 +149,25 @@ const MediaFileItem = (props) => {
     }
   }
 
-  const renderFileItem = () => {
-    if (mediaItem.data === undefined) {
+  const renderFileItem = (itemMedia) => {
+    if (itemMedia.data === undefined) {
       return ""
     }
 
     return (
       <Fragment>
-        {mediaItem.data.map((item, index) => {
+        {itemMedia.data.map((item, index) => {
           const sourceAttribute = item.source_attribute
           if (sourceAttribute === undefined) {
             return ""
           }
 
           return (
-            <Card
-              className="mb-50"
-              key={`media-file-item-${item._id}`}
-              onClick={() => handlePreviewFile(sourceAttribute)}>
+            <Card className="mb-50" key={`media-file-item-${item._id}`}>
               <CardBody className="border rounded d-flex align-items-center justify-content-between p-75">
-                <div className="d-flex align-items-start">
+                <div
+                  className="d-flex align-items-start pointer"
+                  onClick={() => handlePreviewFile(sourceAttribute)}>
                   <div className="me-75 image-container">
                     <Fragment>{renderFileImage(sourceAttribute)}</Fragment>
                   </div>
@@ -140,7 +188,9 @@ const MediaFileItem = (props) => {
                   <Dropdown
                     placement="bottomRight"
                     menu={{ items }}
-                    trigger="click"
+                    trigger="focus"
+                    open={state.openDropdown}
+                    onClick={() => handleToggleDropdown(item)}
                     overlayClassName="dropdown-workspace-group-rule">
                     <Button.Ripple color="flat-secondary" className="btn-icon">
                       <i className="fas fa-ellipsis-h" />
@@ -155,22 +205,37 @@ const MediaFileItem = (props) => {
     )
   }
 
-  return (
-    <div className="ms-50 w-100 mb-2 media-file-item">
-      <div className="p-1 d-flex align-items-center justify-content0-center">
-        <Avatar src={mediaItem.info.owner_info?.avatar} className="me-50" />
-        <p className="mb-0 font-weight-bold">
-          {mediaItem.info.owner_info?.full_name}
-        </p>
+  const renderComponent = () => {
+    console.log(mediaItem)
+    return (
+      <div className="mb-4">
+        <h5 className="time-title">{index}</h5>
+        {_.map(mediaItem, (itemMedia) => {
+          return (
+            <div className="ms-50 w-100 mb-2 media-file-item">
+              <div className="p-1 d-flex align-items-center">
+                <Avatar
+                  src={itemMedia.info.owner_info?.avatar}
+                  className="me-50"
+                />
+                <p className="mb-0 font-weight-bold">
+                  {itemMedia.info.owner_info?.full_name}
+                </p>
+              </div>
+              <div
+                dangerouslySetInnerHTML={{ __html: itemMedia.info.content }}
+                className="ms-75"></div>
+              <div className="w-100">
+                <Fragment>{renderFileItem(itemMedia)}</Fragment>
+              </div>
+            </div>
+          )
+        })}
       </div>
-      <div
-        dangerouslySetInnerHTML={{ __html: mediaItem.info.content }}
-        className="ms-75"></div>
-      <div className="w-100">
-        <Fragment>{renderFileItem()}</Fragment>
-      </div>
-    </div>
-  )
+    )
+  }
+
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default MediaFileItem

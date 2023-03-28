@@ -8,6 +8,7 @@ import { getUser, usersModel } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
+import moment from "moment/moment.js"
 
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
@@ -519,12 +520,13 @@ const loadDataMedia = async (req, res, next) => {
 
     if (requestMedia === "file") {
       const allUser = await usersModel.findAll({ raw: true })
-      const newResult = map(result, (item, index) => {
+      const newResult = {}
+      map(result, (item, index) => {
         const [userInfo] = allUser.filter(
           (itemFilter) => parseInt(itemFilter.id) === parseInt(item.info.owner)
         )
 
-        return {
+        const newItem = {
           ...item,
           info: {
             ...item.info._doc,
@@ -537,6 +539,13 @@ const loadDataMedia = async (req, res, next) => {
             }
           }
         }
+        
+        const createdAt = moment(item.info.created_at).format("Do MMM YYYY")
+        if (newResult[createdAt]  === undefined) {
+          newResult[createdAt] = []
+        }
+
+        newResult[createdAt].push(newItem)
       })
 
       return res.respond(newResult)
@@ -680,13 +689,11 @@ const loadGCSObjectLink = async (req, res) => {
   //const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
   const bucket = storage.bucket("friday-storage")
   const filePath = path.join("default", req.query.name).replace(/\\/g, "/")
-  const [url] = await bucket
-    .file(filePath)
-    .getSignedUrl({
-      version: "v4",
-      action: "read",
-      expires: Date.now() + 15 * 60 * 1000 // 15 minutes
-    })
+  const [url] = await bucket.file(filePath).getSignedUrl({
+    version: "v4",
+    action: "read",
+    expires: Date.now() + 15 * 60 * 1000 // 15 minutes
+  })
 
   return res.respond({
     url: url

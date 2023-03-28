@@ -4561,7 +4561,8 @@
         "list_department": "List department",
         "list_job_title": "List job title",
         "department": "Department",
-        "job_title": "Job title"
+        "job_title": "Job title",
+        "format_cannot_be_previewed": "The format cannot be previewed!"
       }
     },
     "setting_member": {
