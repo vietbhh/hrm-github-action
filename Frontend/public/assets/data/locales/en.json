@@ -4436,7 +4436,8 @@
           "updated_avatar": "updated avatar",
           "edited": "Edited",
           "edit_comment": "Edit comment",
-          "delete_comment": "Delete comment"
+          "delete_comment": "Delete comment",
+          "cancel_edit": "Cancel edit"
         },
         "react": {
           "like": "Like",

@@ -27,20 +27,41 @@ const Feed = (props) => {
   }
 
   const scrollUpwards = () => {
-    if (document.getElementById("div-sticky")) {
-      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    const sticky = document.getElementById("div-sticky")
+    const sticky_div_height = document.getElementById("div-sticky-height")
+    if (sticky_div_height) {
+      const height = window.pageYOffset - offsetTop
+      sticky_div_height.style.height = height + "px"
+    }
+    if (window.scrollY === 0) {
+      sticky_div_height.style.height = "0px"
+    }
+    if (sticky) {
+      if (sticky.offsetHeight > window.innerHeight - offsetTop) {
+        sticky.style.top = "unset"
+        const offset = (sticky_div_height.offsetHeight + offsetBottom) * -1
+        sticky.style.bottom = offsetBottom + "px"
+      } else {
+        sticky_div_height.style.height = "0px"
+        sticky.style.top = offsetTop + "px"
+      }
     }
   }
 
   const scrollDownwards = () => {
     const sticky = document.getElementById("div-sticky")
+    const sticky_div_height = document.getElementById("div-sticky-height")
+    if (sticky_div_height) {
+      sticky_div_height.style.height = "0px"
+    }
     if (sticky) {
-      if (sticky.offsetHeight > window.innerHeight) {
+      sticky.style.bottom = "unset"
+      if (sticky.offsetHeight > window.innerHeight - offsetTop) {
         const offset =
           (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
-        document.getElementById("div-sticky").style.top = offset + "px"
+        sticky.style.top = offset + "px"
       } else {
-        document.getElementById("div-sticky").style.top = offsetTop + "px"
+        sticky.style.top = offsetTop + "px"
       }
     }
   }
@@ -70,6 +91,7 @@ const Feed = (props) => {
       <div className="div-content">
         <div className="div-left">{renderLoadFeed}</div>
         <div className="div-right">
+          <div id="div-sticky-height"></div>
           <div id="div-sticky">
             <SidebarWidget />
           </div>

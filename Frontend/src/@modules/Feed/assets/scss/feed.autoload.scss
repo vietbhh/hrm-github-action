@@ -597,7 +597,15 @@
             .content__name {
               font-weight: 600;
               font-size: 14px;
-              color: #32434f;
+              color: #32434f !important;
+
+              a {
+                color: #32434f !important;
+
+                &:hover {
+                  text-decoration: unset !important;
+                }
+              }
             }
 
             .content__comment {
@@ -607,6 +615,7 @@
 
               p {
                 margin-bottom: 0;
+                margin-top: 0;
               }
             }
 
@@ -810,6 +819,20 @@
               background-color: darken($color: #e6e6e6, $amount: 5);
             }
           }
+        }
+      }
+    }
+
+    .post-comment__div-cancel {
+      padding-left: 60px;
+      margin-top: 10px;
+
+      span {
+        color: #377dff;
+        cursor: pointer;
+
+        &:hover {
+          color: unset;
         }
       }
     }
@@ -1171,8 +1194,7 @@
       border: 1px solid #ddd;
       cursor: text;
       padding: 0.5rem 1rem 1rem 1rem;
-      margin: 0 -0.5rem 0.5rem -0.5rem;
-      border-radius: 2px;
+      margin: 0 0rem 0.5rem 0rem;
       box-shadow: inset 0px 1px 5px -3px #ababab;
       background: #fefefe;
       border-radius: 12px;
@@ -1643,6 +1665,11 @@
       i {
         width: 20px;
         margin-right: 0.5rem;
+      }
+
+      a {
+        color: inherit;
+        transition: all 0.3s;
       }
     }
   }
