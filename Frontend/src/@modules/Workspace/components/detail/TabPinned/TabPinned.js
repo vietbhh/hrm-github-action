@@ -1,24 +1,14 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import notification from "@apps/utility/notification"
-import LoadFeed from "@modules/Feed/components/LoadFeed"
+import { useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
-import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Col,
-  Row
-} from "reactstrap"
-import WorkspaceIntroduction from "../sidebarComponents/WorkspaceIntroduction"
+import { Card, CardBody, Col, Row } from "reactstrap"
+
 import moment from "moment"
+import ReactHtmlParser from "react-html-parser"
 const TabPinned = (props) => {
   const { detailWorkspace } = props
   const [state, setState] = useMergedState({
@@ -31,9 +21,6 @@ const TabPinned = (props) => {
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const params = useParams()
   const workspaceID = params?.id
-  const apiLoadFeed = workspaceApi.loadPinned
-  const setDataCreateNew = () => {}
-  console.log("workspaceID pinned", state)
 
   const loadData = (paramsX = {}) => {
     paramsX.id = workspaceID
@@ -43,7 +30,6 @@ const TabPinned = (props) => {
   }
   const renderPostPinned = (data = []) => {
     return data.map((item, key) => {
-      console.log("item", item)
       return (
         <Col sm={12}>
           <Card>
@@ -62,7 +48,7 @@ const TabPinned = (props) => {
                 </div>
               </div>
               <div className="d-flex mt-1">
-                <div>{item?.content}</div>
+                <div>{ReactHtmlParser(item?.content)}</div>
                 <div className="ms-auto">
                   {item?.thumb && <Photo src={item?.thumb} width={"100px"} />}
                 </div>

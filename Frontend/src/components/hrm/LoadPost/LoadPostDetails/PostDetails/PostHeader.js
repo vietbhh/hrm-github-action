@@ -109,7 +109,6 @@ const PostHeader = (props) => {
     },
     ..._rest
   }
-
   const items = [
     ..._.map(
       _.filter(actions, (item) => item !== false && item.condition),

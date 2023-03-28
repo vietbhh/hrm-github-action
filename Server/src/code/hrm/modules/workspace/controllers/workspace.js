@@ -72,19 +72,10 @@ const addMemberByDepartment = async (req, res) => {
   }
 
   return 1
-  if (dataSave?.members) {
-    dataSave.members = JSON.parse(req.body.members)
-  }
-
-  const update = await workspaceMongoModel.findByIdAndUpdate(dataSave._id, {
-    ...dataSave
-  })
-  return res.respond(update)
 }
 
 const getPostWorkspace = async (req, res) => {
   try {
-    console.log("req.body", req.query)
     const filter = {
       permission_ids: req.query.id,
       permission: "workspace",
