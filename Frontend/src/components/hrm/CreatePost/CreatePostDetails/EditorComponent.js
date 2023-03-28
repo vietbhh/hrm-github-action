@@ -24,8 +24,13 @@ import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import "@draft-js-plugins/linkify/lib/plugin.css"
 
 const EditorComponent = (props) => {
-  const { dataMention, editorState, onEditorStateChange, backgroundImage } =
-    props
+  const {
+    dataMention,
+    editorState,
+    onEditorStateChange,
+    backgroundImage,
+    showChooseBackgroundImage
+  } = props
   const [state, setState] = useMergedState({
     // mention
     open: false,
@@ -44,9 +49,15 @@ const EditorComponent = (props) => {
   }, [dataMention])
 
   useEffect(() => {
-    if (backgroundImage === "") {
+    if (document.getElementById("div-tool-bar")) {
+      const element = document.getElementById("div-tool-bar")
+      if (backgroundImage === "" && showChooseBackgroundImage === false) {
+        element.classList.remove("d-none")
+      } else {
+        element.classList.add("d-none")
+      }
     }
-  }, [backgroundImage])
+  }, [backgroundImage, showChooseBackgroundImage])
 
   // ** mention
   const { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin } =
@@ -85,7 +96,13 @@ const EditorComponent = (props) => {
   )
 
   return (
-    <div className="div-editor">
+    <div
+      className={`div-editor ${
+        backgroundImage !== "" && "div-editor-background"
+      }`}
+      style={{
+        backgroundImage: `url("${backgroundImage}")`
+      }}>
       <Editor
         editorKey={"editor"}
         editorState={editorState}

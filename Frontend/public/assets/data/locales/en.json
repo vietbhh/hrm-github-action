@@ -4403,7 +4403,8 @@
           "post": "Post",
           "photo_video": "Photo/Video",
           "add_photo_video": "Add Photo/Video",
-          "add_description": "Add description..."
+          "add_description": "Add description...",
+          "choose_a_background": "Choose a background"
         }
       },
       "post": {
