@@ -1,13 +1,18 @@
 // ** React Imports
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 // ** Styles
+import { Card, CardBody, Col } from "reactstrap"
 // ** Components
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
-import MediaItem from "./MediaItem"
+import InfiniteScroll from "react-infinite-scroll-component"
+import MediaFileItem from "./MediaFileItem"
+import MediaPhotoItem from "./MediaPhotoItem"
+import MediaVideoItem from "./MediaVideoItem"
+import MediaLinkItem from "./MediaLinkItem"
 
 const MediaTabContent = (props) => {
   const {
@@ -15,6 +20,7 @@ const MediaTabContent = (props) => {
     id,
     tabId,
     mediaTabActive,
+    pageLength,
     // ** methods
     handleModalPreview,
     setMediaInfo
@@ -22,7 +28,10 @@ const MediaTabContent = (props) => {
 
   const [state, setState] = useMergedState({
     loading: true,
-    data: {}
+    page: 0,
+    hasMore: false,
+    data: [],
+    postData: []
   })
 
   const appSetting = useSelector((state) => state.auth.settings)
@@ -30,30 +39,32 @@ const MediaTabContent = (props) => {
   const loadData = () => {
     workspaceApi
       .loadMedia(id, {
-        media_type: mediaTabActive
+        media_type: mediaTabActive,
+        page: state.page,
+        page_length: pageLength
       })
       .then((res) => {
-        setTimeout(() => {
-          setState({
-            data: res.data,
-            loading: false
-          })
-        }, 300)
+        setState({
+          data: [...state.data, ...res.data.result],
+          postData: res.data.post_data,
+          page: res.data.page,
+          hasMore: res.data.has_more,
+          loading: false
+        })
       })
       .catch((err) => {
-        setTimeout(() => {
-          setState({
-            data: {},
-            loading: false
-          })
-        }, 300)
+        setState({
+          data: {},
+          loading: false
+        })
       })
   }
 
   // ** effect
   useEffect(() => {
     setState({
-      data: {},
+      data: [],
+      page: 0,
       loading: true
     })
 
@@ -63,7 +74,39 @@ const MediaTabContent = (props) => {
   }, [mediaTabActive])
 
   // ** render
-  const renderContent = () => {
+  const renderItem = () => {
+    if (mediaTabActive === 1) {
+      return (
+        <MediaFileItem
+          mediaData={state.data}
+          postData={state.postData}
+          appSetting={appSetting}
+          handleModalPreview={handleModalPreview}
+          setMediaInfo={setMediaInfo}
+        />
+      )
+    } else if (mediaTabActive === 2) {
+      return (
+        <MediaPhotoItem
+          mediaData={state.data}
+          handleModalPreview={handleModalPreview}
+          setMediaInfo={setMediaInfo}
+        />
+      )
+    } else if (mediaTabActive === 3) {
+      return (
+        <MediaVideoItem
+          mediaData={state.data}
+          handleModalPreview={handleModalPreview}
+          setMediaInfo={setMediaInfo}
+        />
+      )
+    } else if (mediaTabActive === 4) {
+      return <MediaLinkItem mediaData={state.data} />
+    }
+  }
+
+  const renderComponent = () => {
     if (tabId !== mediaTabActive) {
       return ""
     }
@@ -77,25 +120,16 @@ const MediaTabContent = (props) => {
     }
 
     return (
-      <Fragment>
-        {_.map(state.data, (item, index) => {
-          return (
-            <MediaItem
-              index={index}
-              mediaItem={item}
-              mediaTabActive={mediaTabActive}
-              appSetting={appSetting}
-              key={`media-item-${index}`}
-              handleModalPreview={handleModalPreview}
-              setMediaInfo={setMediaInfo}
-            />
-          )
-        })}
-      </Fragment>
+      <InfiniteScroll
+        dataLength={state.data.length}
+        next={loadData}
+        hasMore={state.hasMore}>
+        <Fragment>{renderItem()}</Fragment>
+      </InfiniteScroll>
     )
   }
 
-  return <Fragment>{renderContent()}</Fragment>
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default MediaTabContent

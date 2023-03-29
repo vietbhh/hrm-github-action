@@ -23,6 +23,7 @@ const PreviewImage = (props) => {
     <div className="d-flex align-items-center justify-content-center preview-image">
       <Photo src={url} preview={false} />
       <ModalButton
+        mediaInfo={mediaInfo}
         hideBackGround={true}
         handleModal={handleModal}
         handleClickDownload={handleClickDownload}

@@ -69,6 +69,7 @@ const PreviewVideo = (props) => {
       <Fragment>{renderVideo()}</Fragment>
 
       <ModalButton
+        mediaInfo={mediaInfo}
         handleModal={handleModal}
         handleClickDownload={handleClickDownload}
       />

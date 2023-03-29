@@ -2,14 +2,14 @@
 import { Fragment } from "react"
 import { getFileTypeFromMime } from "@modules/Workspace/common/common"
 // ** Styles
-import { Card, CardBody, Col } from "reactstrap"
+import { Card, CardBody, Col, Row } from "reactstrap"
 // ** Components
 import Photo from "@apps/modules/download/pages/Photo"
 
 const MediaPhotoItem = (props) => {
   const {
     // ** props
-    mediaItem,
+    mediaData,
     // ** methods
     handleModalPreview,
     setMediaInfo
@@ -17,11 +17,12 @@ const MediaPhotoItem = (props) => {
 
   const handleClickImage = (item) => {
     if (item.source_attribute === undefined) {
-      return 
+      return
     }
 
     const newSourceAttribute = {
       ...item.source_attribute,
+      _id: item._id,
       file_type: getFileTypeFromMime(item.source_attribute.mime)
     }
 
@@ -31,8 +32,8 @@ const MediaPhotoItem = (props) => {
 
   // ** render
   return (
-    <Fragment>
-      {mediaItem.data.map((item, index) => {
+    <Row>
+      {mediaData.map((item, index) => {
         return (
           <Col
             sm="2"
@@ -49,7 +50,7 @@ const MediaPhotoItem = (props) => {
           </Col>
         )
       })}
-    </Fragment>
+    </Row>
   )
 }
 

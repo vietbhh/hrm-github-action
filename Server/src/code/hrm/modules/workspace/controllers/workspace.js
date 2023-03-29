@@ -464,6 +464,8 @@ const loadDataMember = async (req, res, next) => {
 const loadDataMedia = async (req, res, next) => {
   const workspaceId = req.params.id
   const mediaTypeNumber = req.query.media_type
+  const page = req.query.page
+  const pageLength = req.query.page_length
 
   if (isEmpty(workspaceId) || isEmpty(mediaTypeNumber)) {
     return res.fail("missing_workspace_id_or_media_type")
@@ -479,79 +481,71 @@ const loadDataMedia = async (req, res, next) => {
       res.failNotFound("work_space_not_found")
     }
 
-    const listFeed = await feedMongoModel.find({
-      permission: "workspace",
-      permission_ids: workspaceId
-    })
-
     const requestMedia = _getMediaType(parseInt(mediaTypeNumber))
-    const result = {}
-    listFeed.map((item) => {
-      if (item.type === "post") {
-        item.medias.map((itemMedia) => {
-          if (itemMedia.type === requestMedia) {
-            const feedId = item._id.toString()
-            if (result[feedId] === undefined) {
-              result[feedId] = {
-                info: item,
-                data: []
-              }
-            }
 
-            result[feedId]["data"].push(itemMedia)
-          }
-        })
-      } else if (item.type === requestMedia && item.ref === null) {
-        result[item._id.toString()] = {
-          info: item,
-          data: [
-            {
-              _id: item.id,
-              type: item.type,
-              source: item.source,
-              source_attribute: item.source_attribute,
-              thumb: item.thumb,
-              thumb_attribute: item.thumb_attribute
-            }
-          ]
+    const feedCondition = {
+      permission: "workspace",
+      permission_ids: workspaceId,
+      type: requestMedia
+    }
+    const listFeed = await feedMongoModel
+      .find(feedCondition)
+      .skip(page * pageLength)
+      .limit(pageLength)
+      .sort({
+        _id: "desc"
+      })
+
+    const totalFeed = await feedMongoModel.find(feedCondition).count()
+
+    const result = []
+    const allUser = await usersModel.findAll({ raw: true })
+    const postId = []
+    listFeed.map((item) => {
+      const [userInfo] = allUser.filter(
+        (itemFilter) => parseInt(itemFilter.id) === parseInt(item.owner)
+      )
+      const pushItem = {
+        _id: item.id,
+        owner: item.owner,
+        link: item.link,
+        type: item.type,
+        ref: item.ref,
+        source: item.source,
+        source_attribute: item.source_attribute,
+        thumb: item.thumb,
+        thumb_attribute: item.thumb_attribute,
+        created_at: item.created_at,
+        owner_info: {
+          id: userInfo.id,
+          username: userInfo.username,
+          avatar: userInfo.avatar,
+          email: userInfo.email,
+          full_name: userInfo.full_name
         }
+      }
+
+      result.push(pushItem)
+
+      if (item.ref !== null && !postId.includes(item.ref)) {
+        postId.push(item.ref)
       }
     })
 
-    if (requestMedia === "file") {
-      const allUser = await usersModel.findAll({ raw: true })
-      const newResult = {}
-      map(result, (item, index) => {
-        const [userInfo] = allUser.filter(
-          (itemFilter) => parseInt(itemFilter.id) === parseInt(item.info.owner)
-        )
+    const postData = await feedMongoModel.find({
+      _id: postId,
+      permission: "workspace",
+      permission_ids: workspaceId,
+      type: "post"
+    })
 
-        const newItem = {
-          ...item,
-          info: {
-            ...item.info._doc,
-            owner_info: {
-              id: userInfo.id,
-              username: userInfo.username,
-              avatar: userInfo.avatar,
-              email: userInfo.email,
-              full_name: userInfo.full_name
-            }
-          }
-        }
-        
-        const createdAt = moment(item.info.created_at).format("Do MMM YYYY")
-        if (newResult[createdAt]  === undefined) {
-          newResult[createdAt] = []
-        }
-
-        newResult[createdAt].push(newItem)
-      })
-
-      return res.respond(newResult)
-    }
-
-    return res.respond(result)
+    return res.respond({
+      result: result,
+      total_feed: totalFeed,
+      page: page * 1 + 1,
+      has_more: (page * 1 + 1) * pageLength < totalFeed,
+      post_data: postData
+    })
   } catch (err) {
     return res.fail(err.message)
   }

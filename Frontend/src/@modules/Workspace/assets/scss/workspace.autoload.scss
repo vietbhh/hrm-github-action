@@ -106,6 +106,10 @@
     }
 
     .tab-media {
+      .infinite-scroll-component  {
+        overflow: unset !important;
+      }
+
       .time-title {
         font-weight: 600;
       }

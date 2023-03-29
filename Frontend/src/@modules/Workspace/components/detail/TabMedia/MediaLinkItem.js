@@ -7,27 +7,40 @@ import LinkPreview from "@apps/components/link-preview/LinkPreview"
 const MediaLinkItem = (props) => {
   const {
     // ** props
-    mediaItem
+    mediaData
     // ** methods
   } = props
 
-  const link = mediaItem.info.link
-
   // ** render
   const renderComponent = () => {
-    if (mediaItem === undefined) {
-      return ""
-    }
-
-    if (Array.isArray(link)) {
-      return (
-        <Fragment>
-          {link.map((item, index) => {
+    return (
+      <Fragment>
+        {mediaData.map((item) => {
+          const link = item.link
+          if (Array.isArray(link)) {
+            return (
+              <Fragment>
+                {link.map((item, index) => {
+                  return (
+                    <LinkPreview
+                      key={`link-item-${mediaItem._id}-${index}`}
+                      componentClassName="media-link-item"
+                      url={item}
+                      cardSize="medium"
+                      showGraphic={true}
+                      defaultImage=""
+                      maxLine={2}
+                      minLine={2}
+                    />
+                  )
+                })}
+              </Fragment>
+            )
+          } else {
             return (
               <LinkPreview
-                key={`link-item-${mediaItem.info._id}-${index}`}
-                componentClassName="media-link-item"
-                url={item}
+                componentClassName="mb-1 media-link-item"
+                url={link}
                 cardSize="medium"
                 showGraphic={true}
                 defaultImage=""
@@ -35,21 +48,9 @@ const MediaLinkItem = (props) => {
                 minLine={2}
               />
             )
-          })}
-        </Fragment>
-      )
-    }
-
-    return (
-      <LinkPreview
-        componentClassName="mb-1 media-link-item"
-        url={link}
-        cardSize="medium"
-        showGraphic={true}
-        defaultImage=""
-        maxLine={2}
-        minLine={2}
-      />
+          }
+        })}
+      </Fragment>
     )
   }
 

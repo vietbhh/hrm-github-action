@@ -70,28 +70,26 @@ const MediaContent = (props) => {
       <div className="mt-1">
         <TabContent className="py-50" activeTab={mediaTabActive}>
           <TabPane tabId={1}>
-            <Row>
-              <MediaTabContent
-                id={id}
-                mediaTabActive={mediaTabActive}
-                tabId={1}
-                modalPreview={modalPreview}
-                handleModalPreview={handleModalPreview}
-                setMediaInfo={setMediaInfo}
-              />
-            </Row>
+            <MediaTabContent
+              id={id}
+              mediaTabActive={mediaTabActive}
+              tabId={1}
+              modalPreview={modalPreview}
+              pageLength={7}
+              handleModalPreview={handleModalPreview}
+              setMediaInfo={setMediaInfo}
+            />
           </TabPane>
           <TabPane tabId={2}>
-            <Row>
-              <MediaTabContent
-                id={id}
-                mediaTabActive={mediaTabActive}
-                tabId={2}
-                modalPreview={modalPreview}
-                handleModalPreview={handleModalPreview}
-                setMediaInfo={setMediaInfo}
-              />
-            </Row>
+            <MediaTabContent
+              id={id}
+              mediaTabActive={mediaTabActive}
+              tabId={2}
+              modalPreview={modalPreview}
+              pageLength={18}
+              handleModalPreview={handleModalPreview}
+              setMediaInfo={setMediaInfo}
+            />
           </TabPane>
           <TabPane tabId={3}>
             <Row>
@@ -100,6 +98,7 @@ const MediaContent = (props) => {
                 mediaTabActive={mediaTabActive}
                 tabId={3}
                 modalPreview={modalPreview}
+                pageLength={18}
                 handleModalPreview={handleModalPreview}
                 setMediaInfo={setMediaInfo}
               />
@@ -112,6 +111,7 @@ const MediaContent = (props) => {
                 mediaTabActive={mediaTabActive}
                 tabId={4}
                 modalPreview={modalPreview}
+                pageLength={7}
                 handleModalPreview={handleModalPreview}
                 setMediaInfo={setMediaInfo}
               />

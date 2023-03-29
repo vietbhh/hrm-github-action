@@ -1,21 +1,25 @@
 // ** React Imports
 import { Fragment } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useFormatMessage } from "@apps/utility/common"
+import { Link } from "react-router-dom"
+import classNames from "classnames"
 // ** Styles
 import { Space } from "antd"
 import { Button } from "reactstrap"
-import classNames from "classnames"
 // ** Components
 
 const ModalButton = (props) => {
   const {
     // ** props
+    mediaInfo,
     showViewPost,
     hideBackGround,
     // ** methods
     handleModal,
     handleClickDownload
   } = props
+
+  console.log(mediaInfo)
 
   // ** render
   const renderViewPostButton = () => {
@@ -24,10 +28,12 @@ const ModalButton = (props) => {
     }
 
     return (
-      <Button.Ripple color="secondary">
-        <i className="fal fa-newspaper me-50" />
-        {useFormatMessage("modules.workspace.buttons.view_post")}
-      </Button.Ripple>
+      <Link to={`/posts/${mediaInfo._id}`}>
+        <Button.Ripple color="secondary">
+          <i className="fal fa-newspaper me-50" />
+          {useFormatMessage("modules.workspace.buttons.view_post")}
+        </Button.Ripple>
+      </Link>
     )
   }
 
@@ -46,6 +52,7 @@ const ModalButton = (props) => {
           {useFormatMessage("modules.workspace.buttons.download")}
         </Button.Ripple>
         <Fragment>{renderViewPostButton()}</Fragment>
+
         <Button.Ripple
           color="secondary"
           className="btn-icon"
