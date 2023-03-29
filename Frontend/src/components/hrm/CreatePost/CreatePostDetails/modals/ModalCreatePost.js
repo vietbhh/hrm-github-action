@@ -45,7 +45,7 @@ const ModalCreatePost = (props) => {
     loadingUploadAttachment: false,
     loadingSubmit: false,
     arrLink: [],
-    backgroundImage: "",
+    backgroundImage: null,
     showChooseBackgroundImage: false
   })
   const [file, setFile] = useState([])
@@ -117,7 +117,7 @@ const ModalCreatePost = (props) => {
   }
   const setEmptyAfterSubmit = () => {
     setState({ showChooseBackgroundImage: false })
-    setBackgroundImage("")
+    setBackgroundImage(null)
     setEmptyEditorState()
     setModal(false)
     setState({ loadingSubmit: false, arrLink: [] })
@@ -217,7 +217,7 @@ const ModalCreatePost = (props) => {
   // ** attachment
   const handleAddAttachment = (attachment) => {
     setState({ showChooseBackgroundImage: false })
-    setBackgroundImage("")
+    setBackgroundImage(null)
     if (!_.isUndefined(attachment[0])) {
       let check_type_file = true
       _.forEach(attachment, (value) => {
@@ -278,7 +278,17 @@ const ModalCreatePost = (props) => {
   }
 
   const setBackgroundImage = (value) => {
-    setState({ backgroundImage: value })
+    let backgroundImage = null
+    if (value !== null && value !== undefined) {
+      const backgroundImageSplit = value.split("/")
+      if (backgroundImageSplit[3]) {
+        const _backgroundImageSplit = backgroundImageSplit[3].split(".")
+        if (_backgroundImageSplit[0]) {
+          backgroundImage = _backgroundImageSplit[0]
+        }
+      }
+    }
+    setState({ backgroundImage: backgroundImage })
     handleInsertEditorState("")
   }
 

@@ -18,9 +18,9 @@ const AttachPhotoVideo = (props) => {
           <li
             className={classNames("create_post_footer-li", {
               "cursor-not-allowed":
-                loadingUploadAttachment || backgroundImage !== "",
+                loadingUploadAttachment || backgroundImage !== null,
               "cursor-pointer":
-                !loadingUploadAttachment && backgroundImage === ""
+                !loadingUploadAttachment && backgroundImage === null
             })}>
             <svg
               width="22"
@@ -39,7 +39,7 @@ const AttachPhotoVideo = (props) => {
               type="file"
               id="attach-doc"
               accept="image/*, video/*"
-              disabled={loadingUploadAttachment || backgroundImage !== ""}
+              disabled={loadingUploadAttachment || backgroundImage !== null}
               multiple
               hidden
               onChange={(e) => {

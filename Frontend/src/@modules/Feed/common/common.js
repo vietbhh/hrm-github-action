@@ -7,6 +7,30 @@ import img_love from "@modules/Feed/assets/images/love.png"
 import img_sad from "@modules/Feed/assets/images/sad.png"
 import img_wow from "@modules/Feed/assets/images/wow.png"
 
+import image_1 from "@modules/Feed/assets/images/background-feed/1.png"
+import image_2 from "@modules/Feed/assets/images/background-feed/2.png"
+import image_3 from "@modules/Feed/assets/images/background-feed/3.png"
+import image_4 from "@modules/Feed/assets/images/background-feed/4.png"
+import image_5 from "@modules/Feed/assets/images/background-feed/5.png"
+import image_6 from "@modules/Feed/assets/images/background-feed/6.png"
+import image_7 from "@modules/Feed/assets/images/background-feed/7.png"
+import image_8 from "@modules/Feed/assets/images/background-feed/8.png"
+import image_9 from "@modules/Feed/assets/images/background-feed/9.png"
+import image_10 from "@modules/Feed/assets/images/background-feed/10.png"
+import image_11 from "@modules/Feed/assets/images/background-feed/11.png"
+import image_12 from "@modules/Feed/assets/images/background-feed/12.png"
+import image_13 from "@modules/Feed/assets/images/background-feed/13.png"
+import image_14 from "@modules/Feed/assets/images/background-feed/14.png"
+import image_15 from "@modules/Feed/assets/images/background-feed/15.png"
+import image_16 from "@modules/Feed/assets/images/background-feed/16.png"
+import image_17 from "@modules/Feed/assets/images/background-feed/17.png"
+import image_18 from "@modules/Feed/assets/images/background-feed/18.png"
+import image_19 from "@modules/Feed/assets/images/background-feed/19.png"
+import image_20 from "@modules/Feed/assets/images/background-feed/20.png"
+import image_21 from "@modules/Feed/assets/images/background-feed/21.png"
+import image_22 from "@modules/Feed/assets/images/background-feed/22.png"
+import image_23 from "@modules/Feed/assets/images/background-feed/23.png"
+
 export const decodeHTMLEntities = (text) => {
   const entities = [
     ["amp", "&"],
@@ -181,3 +205,29 @@ export const handleTagUserAndReplaceContent = (dataMention, content) => {
 
   return { content: _content, tag_user: tag_user }
 }
+
+export const arrImage = [
+  { image: image_1, color: "#000" },
+  { image: image_2, color: "#000" },
+  { image: image_3, color: "#000" },
+  { image: image_4, color: "#000" },
+  { image: image_5, color: "#000" },
+  { image: image_6, color: "#1a1a1a" },
+  { image: image_7, color: "#fff" },
+  { image: image_8, color: "#1a1a1a" },
+  { image: image_9, color: "#000" },
+  { image: image_10, color: "#fff" },
+  { image: image_11, color: "#1a1a1a" },
+  { image: image_12, color: "#fff" },
+  { image: image_13, color: "#1a1a1a" },
+  { image: image_14, color: "#fff" },
+  { image: image_15, color: "#fff" },
+  { image: image_16, color: "#fff" },
+  { image: image_17, color: "#fff" },
+  { image: image_18, color: "#1a1a1a" },
+  { image: image_19, color: "#1a1a1a" },
+  { image: image_20, color: "#fff" },
+  { image: image_21, color: "#fff" },
+  { image: image_22, color: "#fff" },
+  { image: image_23, color: "#fff" }
+]

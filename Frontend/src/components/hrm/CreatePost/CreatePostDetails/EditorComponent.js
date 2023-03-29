@@ -22,6 +22,7 @@ import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import "@draft-js-plugins/linkify/lib/plugin.css"
+import { arrImage } from "@modules/Feed/common/common"
 
 const EditorComponent = (props) => {
   const {
@@ -51,7 +52,7 @@ const EditorComponent = (props) => {
   useEffect(() => {
     if (document.getElementById("div-tool-bar")) {
       const element = document.getElementById("div-tool-bar")
-      if (backgroundImage === "" && showChooseBackgroundImage === false) {
+      if (backgroundImage === null && showChooseBackgroundImage === false) {
         element.classList.remove("d-none")
       } else {
         element.classList.add("d-none")
@@ -95,14 +96,23 @@ const EditorComponent = (props) => {
     [state.mentions]
   )
 
+  const renderStyleBackgroundImage = () => {
+    if (backgroundImage && arrImage[backgroundImage - 1]) {
+      return {
+        backgroundImage: `url("${arrImage[backgroundImage - 1].image}")`,
+        color: arrImage[backgroundImage - 1].color
+      }
+    }
+
+    return {}
+  }
+
   return (
     <div
       className={`div-editor ${
-        backgroundImage !== "" && "div-editor-background"
+        backgroundImage !== null && "div-editor-background"
       }`}
-      style={{
-        backgroundImage: `url("${backgroundImage}")`
-      }}>
+      style={renderStyleBackgroundImage()}>
       <Editor
         editorKey={"editor"}
         editorState={editorState}
