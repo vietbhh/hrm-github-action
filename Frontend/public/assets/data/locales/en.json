@@ -4560,7 +4560,10 @@
         "list_department": "List department",
         "list_job_title": "List job title",
         "department": "Department",
-        "job_title": "Job title"
+        "job_title": "Job title",
+        "unpin_post": "Unpin post",
+        "move_to_top" : "Move to top",
+        "pin_post" :"Pin post"
 
       },
       "app_options": {

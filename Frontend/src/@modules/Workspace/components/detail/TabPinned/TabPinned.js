@@ -1,14 +1,16 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { Card, CardBody, Col, Row } from "reactstrap"
+import { Card, CardBody, Col, Row, Button } from "reactstrap"
 
 import moment from "moment"
 import ReactHtmlParser from "react-html-parser"
+import { Dropdown } from "antd"
+import { PushpinOutlined } from "@ant-design/icons"
 const TabPinned = (props) => {
   const { detailWorkspace } = props
   const [state, setState] = useMergedState({
@@ -30,6 +32,31 @@ const TabPinned = (props) => {
   }
   const renderPostPinned = (data = []) => {
     return data.map((item, key) => {
+      const items = [
+        {
+          label: (
+            <div className="d-flex">
+              <PushpinOutlined style={{ fontSize: "18px" }} className="me-50" />
+              <span>
+                {useFormatMessage("modules.workspace.text.unpin_post")}
+              </span>
+            </div>
+          ),
+          key: "0"
+        },
+        {
+          label: (
+            <div>
+              <i className="fa-regular fa-arrow-up me-50"></i>
+              <span>
+                {useFormatMessage("modules.workspace.text.move_to_top")}
+              </span>
+            </div>
+          ),
+          key: "1",
+          onClick: () => console.log(item?._id)
+        }
+      ]
       return (
         <Col sm={12}>
           <Card>
@@ -45,6 +72,17 @@ const TabPinned = (props) => {
                   <small class="text-muted">
                     {moment(item?.created_at).format("DD MMM, YYYY")}
                   </small>
+                </div>
+                <div className="ms-auto">
+                  <Dropdown
+                    menu={{
+                      items
+                    }}
+                    trigger={["click"]}>
+                    <Button className="ms-1" color="flat-secondary" size="sm">
+                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </Button>
+                  </Dropdown>
                 </div>
               </div>
               <div className="d-flex mt-1">

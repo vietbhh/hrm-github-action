@@ -14,6 +14,7 @@ import ReactHtmlParser from "react-html-parser"
 import notification from "@apps/utility/notification"
 import { Dropdown } from "antd"
 import { PushpinOutlined } from "@ant-design/icons"
+import { map } from "lodash-es"
 const findKeyByID = (arr = [], id) => {
   const index = arr.findIndex((p) => p.id === id)
   return index
@@ -77,7 +78,28 @@ const TabFeed = (props) => {
   const handlePinPost = (idPost) => {
     const dataPinned = [...detailWorkspace.pinPosts]
 
-    dataPinned.push({ post: idPost, stt: 1 })
+    dataPinned.unshift({ post: idPost, stt: 1 })
+    let numStt = 1
+    map(dataPinned, (item, key) => {
+      dataPinned[key].stt = numStt
+      numStt += 1
+    })
+    detailWorkspace.pinPosts = dataPinned
+    const dataUpdate = {
+      pinPosts: dataPinned
+    }
+
+    workspaceApi.update(params.id, dataUpdate).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+      loadData()
+    })
+  }
+  const handleUnPinPost = (idPost) => {
+    const dataPinned = [...detailWorkspace.pinPosts]
+
+    dataPinned.push({ post: idPost, stt: dataPinned.length + 1 })
     detailWorkspace.pinPosts = dataPinned
     const dataUpdate = {
       pinPosts: dataPinned
@@ -88,7 +110,6 @@ const TabFeed = (props) => {
       })
     })
   }
-
   const renderPinned = (data = []) => {
     let count = 0
     return data.map((item, key) => {
@@ -99,7 +120,9 @@ const TabFeed = (props) => {
           label: (
             <div className="d-flex">
               <PushpinOutlined style={{ fontSize: "18px" }} className="me-50" />
-              <span>Unpin post</span>
+              <span>
+                {useFormatMessage("modules.workspace.text.unpin_post")}
+              </span>
             </div>
           ),
           key: "0"
@@ -108,7 +131,9 @@ const TabFeed = (props) => {
           label: (
             <div>
               <i className="fa-regular fa-arrow-up me-50"></i>
-              <span>Move to top</span>
+              <span>
+                {useFormatMessage("modules.workspace.text.move_to_top")}
+              </span>
             </div>
           ),
           key: "1",
@@ -162,7 +187,7 @@ const TabFeed = (props) => {
       label: (
         <a>
           <i className="fa-light fa-thumbtack"></i>
-          <span>Pin post</span>
+          <span>{useFormatMessage("modules.workspace.text.pin_post")}</span>
         </a>
       ),
       condition: true,
@@ -181,7 +206,7 @@ const TabFeed = (props) => {
         <Card className="mb-1">
           <CardHeader>
             <h2 className="card-title">
-              <i class="fa-duotone fa-flag-swallowtail"></i>{" "}
+              <i className="fa-regular fa-thumbtack me-50"></i>
               {useFormatMessage(
                 "modules.workspace.display.workspace_pinned_post"
               )}
