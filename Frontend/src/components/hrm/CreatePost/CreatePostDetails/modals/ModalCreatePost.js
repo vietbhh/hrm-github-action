@@ -21,6 +21,7 @@ import Emoji from "../Emoji"
 import PreviewAttachment from "../PreviewAttachment"
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import htmlToDraft from "html-to-draftjs"
+import ChooseBackground from "../ChooseBackground"
 
 const ModalCreatePost = (props) => {
   const {
@@ -44,7 +45,8 @@ const ModalCreatePost = (props) => {
     loadingUploadAttachment: false,
     loadingSubmit: false,
     arrLink: [],
-    backgroundImage: ""
+    backgroundImage: null,
+    showChooseBackgroundImage: false
   })
   const [file, setFile] = useState([])
 
@@ -114,6 +116,8 @@ const ModalCreatePost = (props) => {
     return check_can_submit
   }
   const setEmptyAfterSubmit = () => {
+    setState({ showChooseBackgroundImage: false })
+    setBackgroundImage(null)
     setEmptyEditorState()
     setModal(false)
     setState({ loadingSubmit: false, arrLink: [] })
@@ -145,7 +149,8 @@ const ModalCreatePost = (props) => {
           id: userId,
           full_name: fullName
         },
-        _id_post_edit: dataPost?._id || ""
+        _id_post_edit: dataPost?._id || "",
+        backgroundImage: state.backgroundImage
       }
       feedApi
         .postSubmitPost(params)
@@ -211,6 +216,8 @@ const ModalCreatePost = (props) => {
 
   // ** attachment
   const handleAddAttachment = (attachment) => {
+    setState({ showChooseBackgroundImage: false })
+    setBackgroundImage(null)
     if (!_.isUndefined(attachment[0])) {
       let check_type_file = true
       _.forEach(attachment, (value) => {
@@ -271,7 +278,18 @@ const ModalCreatePost = (props) => {
   }
 
   const setBackgroundImage = (value) => {
-    setState({ backgroundImage: value })
+    let backgroundImage = null
+    if (value !== null && value !== undefined) {
+      const backgroundImageSplit = value.split("/")
+      if (backgroundImageSplit[3]) {
+        const _backgroundImageSplit = backgroundImageSplit[3].split(".")
+        if (_backgroundImageSplit[0]) {
+          backgroundImage = _backgroundImageSplit[0]
+        }
+      }
+    }
+    setState({ backgroundImage: backgroundImage })
+    handleInsertEditorState("")
   }
 
   // ** useEffect
@@ -434,6 +452,7 @@ const ModalCreatePost = (props) => {
           onEditorStateChange={onEditorStateChange}
           dataMention={dataMention}
           backgroundImage={state.backgroundImage}
+          showChooseBackgroundImage={state.showChooseBackgroundImage}
         />
 
         {renderPreviewAttachment}
@@ -448,27 +467,42 @@ const ModalCreatePost = (props) => {
           />
         )}
 
+        <ChooseBackground
+          backgroundImage={state.backgroundImage}
+          setBackgroundImage={setBackgroundImage}
+          showChooseBackgroundImage={state.showChooseBackgroundImage}
+        />
+
         <ul className="create_post_footer">
-          <Tooltip
-            title={useFormatMessage(
-              "modules.feed.create_post.text.choose_a_background_image"
-            )}>
-            <li
-              className="create_post_footer-li cursor-pointer"
-              onClick={() => {
-                setBackgroundImage(
-                  "https://image-1.gapo.vn/images/866ad07a-6d89-4233-a1f8-e085eed97ec9.png"
-                )
-              }}>
-              <span className="icon toggle-background">
-                <span>Aa</span>
-              </span>
-            </li>
-          </Tooltip>
+          {_.isEmpty(file) && (
+            <Tooltip
+              title={useFormatMessage(
+                "modules.feed.create_post.text.choose_a_background_image"
+              )}>
+              <li
+                className="create_post_footer-li cursor-pointer"
+                onClick={() =>
+                  setState({
+                    showChooseBackgroundImage: !state.showChooseBackgroundImage
+                  })
+                }>
+                {state.showChooseBackgroundImage ? (
+                  <span className="icon icon-arrow">
+                    <i className="fa-solid fa-chevron-up"></i>
+                  </span>
+                ) : (
+                  <span className="icon toggle-background">
+                    <span>Aa</span>
+                  </span>
+                )}
+              </li>
+            </Tooltip>
+          )}
 
           <AttachPhotoVideo
             handleAddAttachment={handleAddAttachment}
             loadingUploadAttachment={state.loadingUploadAttachment}
+            backgroundImage={state.backgroundImage}
           />
 
           <Tooltip
@@ -492,11 +526,7 @@ const ModalCreatePost = (props) => {
           </Tooltip>
           <Tooltip
             title={useFormatMessage("modules.feed.create_post.text.poll_vote")}>
-            <li
-              className="create_post_footer-li cursor-pointer"
-              onClick={() => {
-                setBackgroundImage("")
-              }}>
+            <li className="create_post_footer-li cursor-pointer">
               <svg
                 width="24"
                 height="24"

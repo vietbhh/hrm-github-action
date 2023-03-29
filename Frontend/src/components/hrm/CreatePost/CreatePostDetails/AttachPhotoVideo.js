@@ -5,7 +5,8 @@ import React, { Fragment } from "react"
 import { Label } from "reactstrap"
 
 const AttachPhotoVideo = (props) => {
-  const { handleAddAttachment, loadingUploadAttachment } = props
+  const { handleAddAttachment, loadingUploadAttachment, backgroundImage } =
+    props
 
   return (
     <Fragment>
@@ -16,8 +17,10 @@ const AttachPhotoVideo = (props) => {
         <Label className={`mb-0`} for="attach-doc">
           <li
             className={classNames("create_post_footer-li", {
-              "cursor-not-allowed": loadingUploadAttachment,
-              "cursor-pointer": !loadingUploadAttachment
+              "cursor-not-allowed":
+                loadingUploadAttachment || backgroundImage !== null,
+              "cursor-pointer":
+                !loadingUploadAttachment && backgroundImage === null
             })}>
             <svg
               width="22"
@@ -36,7 +39,7 @@ const AttachPhotoVideo = (props) => {
               type="file"
               id="attach-doc"
               accept="image/*, video/*"
-              disabled={loadingUploadAttachment}
+              disabled={loadingUploadAttachment || backgroundImage !== null}
               multiple
               hidden
               onChange={(e) => {

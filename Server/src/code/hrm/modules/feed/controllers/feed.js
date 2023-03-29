@@ -75,6 +75,9 @@ const submitPostController = async (req, res, next) => {
       type_feed_parent = "video"
     }
   }
+  if (body.backgroundImage !== null && body.backgroundImage !== undefined) {
+    type_feed_parent = "background_image"
+  }
 
   try {
     let out = {}
@@ -96,7 +99,8 @@ const submitPostController = async (req, res, next) => {
         ref: null,
         approve_status: body.approveStatus,
         link: link,
-        tag_user: body.tag_user
+        tag_user: body.tag_user,
+        background_image: body.backgroundImage
       })
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
@@ -120,6 +124,7 @@ const submitPostController = async (req, res, next) => {
           approve_status: body.approveStatus,
           link: link,
           tag_user: body.tag_user,
+          background_image: body.backgroundImage,
           edited: true,
           edited_at: Date.now()
         }
