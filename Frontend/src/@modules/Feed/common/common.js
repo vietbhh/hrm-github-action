@@ -78,11 +78,6 @@ export const handleLoadAttachmentMedias = (value) => {
       await downloadApi.getPhoto(item.thumb).then((response) => {
         item["url_thumb"] = URL.createObjectURL(response.data)
       })
-      /* if (item.type === "video") {
-          await downloadApi.getPhoto(item.thumb).then((response) => {
-            item["url_thumb"] = URL.createObjectURL(response.data)
-          })
-        } */
 
       resolve(item)
     })
@@ -91,6 +86,45 @@ export const handleLoadAttachmentMedias = (value) => {
   })
 
   return Promise.all(promises)
+}
+
+export const handleLoadAttachmentThumb = async (data, cover) => {
+  const out = {
+    url_thumb: "",
+    url_cover: "",
+    medias: data.medias
+  }
+
+  if (
+    data.source !== null &&
+    (data.type === "image" ||
+      data.type === "update_cover" ||
+      data.type === "update_avatar")
+  ) {
+    await downloadApi.getPhoto(data.thumb).then((response) => {
+      out["url_thumb"] = URL.createObjectURL(response.data)
+    })
+  }
+
+  if (data.source !== null && data.type === "video") {
+    await downloadApi.getPhoto(data.source).then((response) => {
+      out["url_thumb"] = URL.createObjectURL(response.data)
+    })
+  }
+
+  if (data.source !== null && data.type === "update_avatar" && cover !== "") {
+    await downloadApi.getPhoto(cover).then((response) => {
+      out["url_cover"] = URL.createObjectURL(response.data)
+    })
+  }
+
+  if (!_.isEmpty(data.medias)) {
+    await handleLoadAttachmentMedias(data).then((res_promise) => {
+      out["medias"] = res_promise
+    })
+  }
+
+  return out
 }
 
 export const handleReaction = (userId, react_type, reaction) => {

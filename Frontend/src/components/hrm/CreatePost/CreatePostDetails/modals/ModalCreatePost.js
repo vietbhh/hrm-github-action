@@ -1,27 +1,30 @@
 import { ErpRadio } from "@apps/components/common/ErpField"
+import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
+import { feedApi } from "@modules/Feed/common/api"
 import {
   decodeHTMLEntities,
   detectUrl,
   handleLoadAttachmentMedias,
+  handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
 import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
+import htmlToDraft from "html-to-draftjs"
 import { useEffect, useMemo, useState } from "react"
+import { useSelector } from "react-redux"
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
-import { feedApi } from "@modules/Feed/common/api"
 import AttachPhotoVideo from "../AttachPhotoVideo"
+import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
+import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
-import LinkPreview from "@apps/components/link-preview/LinkPreview"
-import htmlToDraft from "html-to-draftjs"
-import ChooseBackground from "../ChooseBackground"
 
 const ModalCreatePost = (props) => {
   const {
@@ -45,10 +48,18 @@ const ModalCreatePost = (props) => {
     loadingUploadAttachment: false,
     loadingSubmit: false,
     arrLink: [],
+
+    // background image
     backgroundImage: null,
-    showChooseBackgroundImage: false
+    showChooseBackgroundImage: false,
+
+    // poll vote
+    poll_vote: false
   })
   const [file, setFile] = useState([])
+
+  const userData = useSelector((state) => state.auth.userData)
+  const cover = userData?.cover || ""
 
   // ** function
   const setLoadingUploadAttachment = (value) =>
@@ -161,39 +172,10 @@ const ModalCreatePost = (props) => {
           if (_.isFunction(setData)) {
             const data = res.data
             const dataCustom = {}
-            if (
-              data.source !== null &&
-              (data.type === "image" || data.type === "update_cover")
-            ) {
-              await downloadApi.getPhoto(data.thumb).then((response) => {
-                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
-              })
-            }
-
-            if (data.source !== null && data.type === "video") {
-              await downloadApi.getPhoto(data.source).then((response) => {
-                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
-              })
-            }
-
-            if (data.source !== null && data.type === "update_avatar") {
-              await downloadApi.getPhoto(data.thumb).then((response) => {
-                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
-              })
-              dataCustom["url_cover"] = ""
-              if (cover !== "") {
-                await downloadApi.getPhoto(cover).then((response) => {
-                  dataCustom["url_cover"] = URL.createObjectURL(response.data)
-                })
-              }
-            }
-
-            if (!_.isEmpty(data.medias) && data.type === "post") {
-              await handleLoadAttachmentMedias(data).then((res_promise) => {
-                dataCustom["medias"] = res_promise
-              })
-            }
-
+            const data_attachment = await handleLoadAttachmentThumb(data, cover)
+            dataCustom["url_thumb"] = data_attachment["url_thumb"]
+            dataCustom["url_cover"] = data_attachment["url_cover"]
+            dataCustom["medias"] = data_attachment["medias"]
             setData(data, false, dataCustom)
           }
           setEmptyAfterSubmit()
@@ -474,7 +456,7 @@ const ModalCreatePost = (props) => {
         />
 
         <ul className="create_post_footer">
-          {_.isEmpty(file) && (
+          {_.isEmpty(file) && state.poll_vote === false && (
             <Tooltip
               title={useFormatMessage(
                 "modules.feed.create_post.text.choose_a_background_image"
@@ -524,27 +506,9 @@ const ModalCreatePost = (props) => {
               </svg>
             </li>
           </Tooltip>
-          <Tooltip
-            title={useFormatMessage("modules.feed.create_post.text.poll_vote")}>
-            <li className="create_post_footer-li cursor-pointer">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M9.5 2C9.5 1.44772 9.94772 1 10.5 1H13.5C14.0523 1 14.5 1.44772 14.5 2V20C14.5 20.5523 14.0523 21 13.5 21H10.5C9.94772 21 9.5 20.5523 9.5 20V2Z"
-                  fill="#FFA940"></path>
-                <path
-                  d="M17 6C17 5.44772 17.4477 5 18 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H18C17.4477 21 17 20.5523 17 20V6Z"
-                  fill="#FFA940"></path>
-                <path
-                  d="M2 10C2 9.44772 2.44772 9 3 9H6C6.55228 9 7 9.44772 7 10V20C7 20.5523 6.55228 21 6 21H3C2.44772 21 2 20.5523 2 20V10Z"
-                  fill="#FFA940"></path>
-              </svg>
-            </li>
-          </Tooltip>
+
+          <PollVote backgroundImage={state.backgroundImage} />
+
           <Tooltip
             title={useFormatMessage(
               "modules.feed.create_post.text.anonymous_q_and_a"

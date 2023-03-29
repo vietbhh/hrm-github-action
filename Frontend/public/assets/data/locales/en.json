@@ -4404,7 +4404,13 @@
           "photo_video": "Photo/Video",
           "add_photo_video": "Add Photo/Video",
           "add_description": "Add description...",
-          "choose_a_background": "Choose a background"
+          "choose_a_background": "Choose a background",
+          "create_poll": "Create Poll",
+          "question": "Question",
+          "enter_question": "Enter question",
+          "add_options": "Add options",
+          "option": "Option {number}",
+          "add_option": "Add Option"
         }
       },
       "post": {

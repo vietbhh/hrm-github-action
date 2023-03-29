@@ -33,6 +33,11 @@ const feedSchema = baseSchema("m_feed", {
     ],
     default: "post"
   },
+  type_2: {
+    type: String,
+    enum: [null, "poll_vote"],
+    default: null
+  },
   medias: {
     type: [
       {
