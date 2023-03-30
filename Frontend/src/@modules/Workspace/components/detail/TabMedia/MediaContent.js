@@ -1,15 +1,7 @@
 // ** React Imports
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
-import {
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  Col,
-  TabContent,
-  TabPane
-} from "reactstrap"
+import { Nav, NavItem, NavLink, Row, TabContent, TabPane } from "reactstrap"
 // ** Components
 import MediaTabContent from "./MediaTabContent"
 
@@ -75,7 +67,7 @@ const MediaContent = (props) => {
               mediaTabActive={mediaTabActive}
               tabId={1}
               modalPreview={modalPreview}
-              pageLength={7}
+              pageLength={12}
               handleModalPreview={handleModalPreview}
               setMediaInfo={setMediaInfo}
             />
@@ -86,7 +78,7 @@ const MediaContent = (props) => {
               mediaTabActive={mediaTabActive}
               tabId={2}
               modalPreview={modalPreview}
-              pageLength={18}
+              pageLength={24}
               handleModalPreview={handleModalPreview}
               setMediaInfo={setMediaInfo}
             />
@@ -98,24 +90,22 @@ const MediaContent = (props) => {
                 mediaTabActive={mediaTabActive}
                 tabId={3}
                 modalPreview={modalPreview}
-                pageLength={18}
+                pageLength={24}
                 handleModalPreview={handleModalPreview}
                 setMediaInfo={setMediaInfo}
               />
             </Row>
           </TabPane>
           <TabPane tabId={4}>
-            <Row>
-              <MediaTabContent
-                id={id}
-                mediaTabActive={mediaTabActive}
-                tabId={4}
-                modalPreview={modalPreview}
-                pageLength={7}
-                handleModalPreview={handleModalPreview}
-                setMediaInfo={setMediaInfo}
-              />
-            </Row>
+            <MediaTabContent
+              id={id}
+              mediaTabActive={mediaTabActive}
+              tabId={4}
+              modalPreview={modalPreview}
+              pageLength={12}
+              handleModalPreview={handleModalPreview}
+              setMediaInfo={setMediaInfo}
+            />
           </TabPane>
         </TabContent>
       </div>

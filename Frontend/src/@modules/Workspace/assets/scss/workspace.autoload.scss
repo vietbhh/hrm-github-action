@@ -1,5 +1,4 @@
 @import "@scss/friday";
-
 .workspace {
   max-width: 1148px;
   margin: auto;
@@ -106,7 +105,7 @@
     }
 
     .tab-media {
-      .infinite-scroll-component  {
+      .infinite-scroll-component {
         overflow: unset !important;
       }
 
@@ -124,16 +123,22 @@
         }
 
         .image-container {
-          .ant-image {
+          .file-thumb {
+            cursor: pointer;
             height: 40px !important;
             width: 40px !important;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+          }
 
-            img {
-              height: 100%;
-              width: 100%;
-              border-radius: 5px;
-              object-fit: cover;
-              object-position: center center;
+          .ant-skeleton-image {
+            height: 40px !important;
+            width: 40px !important;
+            border-radius: 5px;
+
+            .ant-skeleton-image-svg {
+              width: 24px;
             }
           }
         }
@@ -145,18 +150,62 @@
         }
       }
 
+      .loading-file-item {
+        .owner-info {
+          .ant-skeleton-avatar {
+            height: 32px;
+            width: 32px;
+          }
+
+          .ant-skeleton-content {
+            .ant-skeleton-title {
+              margin-top: 7px;
+            }
+          }
+        }
+
+        .media-item {
+          .ant-skeleton-image {
+            height: 40px;
+            width: 40px;
+            border-radius: 5px;
+
+            .ant-skeleton-image-svg {
+              width: 24px;
+            }
+          }
+
+          .ant-skeleton-content {
+            .ant-skeleton-paragraph {
+              margin: 0 !important;
+            }
+          }
+        }
+      }
+
+      .loading-col-media-image {
+        .ant-skeleton-image {
+          height: 170px !important;
+          width: 170px !important;
+          border-radius: 12px;
+        }
+      }
+
       .col-media-image {
         .media-image-item {
           .image-container {
-            .ant-image {
-              height: 100% !important;
+            cursor: pointer;
+            height: 170px !important;
+            width: 170px !important;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+          }
 
-              img {
-                object-fit: cover;
-                object-position: center center;
-                height: 170px !important;
-              }
-            }
+          .ant-skeleton-image {
+            height: 170px !important;
+            width: 170px !important;
+            border-radius: 12px;
           }
         }
       }
@@ -165,14 +214,19 @@
         cursor: pointer;
 
         .video-thumb {
-          .ant-image {
+          .image-container {
+            cursor: pointer;
             height: 170px !important;
             width: 170px !important;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+          }
 
-            img {
-              object-fit: cover;
-              object-position: center center;
-            }
+          .ant-skeleton-image {
+            height: 170px !important;
+            width: 170px !important;
+            border-radius: 12px;
           }
         }
       }

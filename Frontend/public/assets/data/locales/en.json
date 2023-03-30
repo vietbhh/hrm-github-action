@@ -4470,7 +4470,8 @@
         "download": "Download",
         "view_post": "View post",
         "approve_all_posts": "Approve all",
-        "reject_all_posts": "Reject all"
+        "reject_all_posts": "Reject all",
+        "upload": "Upload"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4494,7 +4495,11 @@
         "waiting_for_approval" : "Waiting for approval",
         "setup_notification" : "Setup notification",
         "review_post": "Review post",
-        "add_member_to_ws": "Add member to workspace"
+        "add_member_to_ws": "Add member to workspace",
+        "uploaded_document": "Uploaded document",
+        "uploaded_photo": "Uploaded photo",
+        "uploaded_video": "Uploaded video",
+        "group_link_posted": "Group link posted"
       },
       "fields": {
         "workspace_name": "Workspace name",

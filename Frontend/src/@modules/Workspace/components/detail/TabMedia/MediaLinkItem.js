@@ -21,9 +21,10 @@ const MediaLinkItem = (props) => {
             return (
               <Fragment>
                 {link.map((item, index) => {
+                  console.log(`link-item-${index}`)
                   return (
                     <LinkPreview
-                      key={`link-item-${mediaItem._id}-${index}`}
+                      key={`link-item-${item._id}-${index}`}
                       componentClassName="media-link-item"
                       url={item}
                       cardSize="medium"

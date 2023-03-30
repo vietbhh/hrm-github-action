@@ -1,18 +1,25 @@
 // ** React Imports
-import { Fragment } from "react"
 import { getFileTypeFromMime } from "@modules/Workspace/common/common"
+import { downloadApi } from "@apps/modules/download/common/api"
 // ** Styles
+import { Skeleton } from "antd"
 import { Card, CardBody, Col, Row } from "reactstrap"
 // ** Components
-import Photo from "@apps/modules/download/pages/Photo"
+import { LazyLoadComponent } from "react-lazy-load-image-component"
+import { Fragment } from "react"
 
 const MediaPhotoItem = (props) => {
   const {
     // ** props
+    loading,
     mediaData,
+    hasMore,
     // ** methods
     handleModalPreview,
-    setMediaInfo
+    setMediaInfo,
+    setData,
+    setHasMoreLazy,
+    setLoading
   } = props
 
   const handleClickImage = (item) => {
@@ -30,26 +37,90 @@ const MediaPhotoItem = (props) => {
     handleModalPreview()
   }
 
+  const handleAfterLoadLazyLoadComponent = (item, index) => {
+    setLoading(false)
+    if (hasMore) {
+      setHasMoreLazy(true)
+    }
+
+    downloadApi.getPhoto(item.thumb).then((response) => {
+      item["url_thumb"] = URL.createObjectURL(response.data)
+      const newMediaData = [...mediaData]
+      newMediaData[index] = item
+
+      setTimeout(() => {
+        setData(newMediaData)
+      }, 150)
+      
+    })
+  }
+
   // ** render
+  const renderLoading = () => {
+    if (loading) {
+      return (
+        <Fragment>
+          <Col sm="2" className="m-0 p-50 loading-col-media-image">
+            <Skeleton.Image active={true} />
+          </Col>
+          <Col sm="2" className="m-0 p-50 loading-col-media-image">
+            <Skeleton.Image active={true} />
+          </Col>
+          <Col sm="2" className="m-0 p-50 loading-col-media-image">
+            <Skeleton.Image active={true} />
+          </Col>
+          <Col sm="2" className="m-0 p-50 loading-col-media-image">
+            <Skeleton.Image active={true} />
+          </Col>
+          <Col sm="2" className="m-0 p-50 loading-col-media-image">
+            <Skeleton.Image active={true} />
+          </Col>
+          <Col sm="2" className="m-0 p-50 loading-col-media-image">
+            <Skeleton.Image active={true} />
+          </Col>
+        </Fragment>
+      )
+    }
+
+    return ""
+  }
+
+  const renderImage = (item) => {
+    if (!item.url_thumb) {
+      return <Skeleton.Image active={true} />
+    }
+
+    return (
+      <div
+        className="w-100 h-100 image-container"
+        style={{
+          backgroundImage: `url("${item.url_thumb}")`
+        }}></div>
+    )
+  }
+
   return (
     <Row>
       {mediaData.map((item, index) => {
         return (
-          <Col
-            sm="2"
-            className="m-0 p-0 col-media-image"
+          <LazyLoadComponent
             key={`media-image-item-${item._id}`}
-            onClick={() => handleClickImage(item)}>
-            <Card className="media-image-item">
-              <CardBody className="p-0">
-                <div className="w-100 d-flex flex-column align-items-center justify-content-center p-50 image-container">
-                  <Photo src={item.thumb} className="rounded" preview={false} />
+            afterLoad={() => handleAfterLoadLazyLoadComponent(item, index)}>
+            <Col
+              sm="2"
+              className="m-0 p-50 col-media-image"
+              onClick={() => handleClickImage(item)}>
+              <div className="media-image-item">
+                <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+                  <Fragment>{renderImage(item)}</Fragment>
                 </div>
-              </CardBody>
-            </Card>
-          </Col>
+              </div>
+            </Col>
+          </LazyLoadComponent>
         )
       })}
+
+      <Fragment>{renderLoading()}</Fragment>
     </Row>
   )
 }

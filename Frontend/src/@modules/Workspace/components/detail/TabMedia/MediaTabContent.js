@@ -7,7 +7,6 @@ import { useSelector } from "react-redux"
 import { Card, CardBody, Col } from "reactstrap"
 // ** Components
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import AppSpinner from "@apps/components/spinner/AppSpinner"
 import InfiniteScroll from "react-infinite-scroll-component"
 import MediaFileItem from "./MediaFileItem"
 import MediaPhotoItem from "./MediaPhotoItem"
@@ -30,13 +29,20 @@ const MediaTabContent = (props) => {
     loading: true,
     page: 0,
     hasMore: false,
+    hasMoreLazy: false,
     data: [],
-    postData: []
+    postData: [],
+    totalData: 0
   })
 
   const appSetting = useSelector((state) => state.auth.settings)
 
   const loadData = () => {
+    setState({
+      loading: true,
+      hasMore: false,
+      hasMoreLazy: false
+    })
     workspaceApi
       .loadMedia(id, {
         media_type: mediaTabActive,
@@ -47,10 +53,14 @@ const MediaTabContent = (props) => {
         setState({
           data: [...state.data, ...res.data.result],
           postData: res.data.post_data,
+          totalData: res.data.total_feed,
           page: res.data.page,
-          hasMore: res.data.has_more,
-          loading: false
+          hasMore: res.data.has_more
         })
+
+        setTimeout(() => {
+          setState({ loading: false })
+        }, 1000)
       })
       .catch((err) => {
         setState({
@@ -60,12 +70,29 @@ const MediaTabContent = (props) => {
       })
   }
 
+  const setHasMoreLazy = (status) => {
+    setState({
+      hasMoreLazy: status
+    })
+  }
+
+  const setData = (data) => {
+    setState({
+      data: data
+    })
+  }
+
+  const setLoading = (status) => {
+    setState({
+      loading: status
+    })
+  }
+
   // ** effect
   useEffect(() => {
     setState({
       data: [],
-      page: 0,
-      loading: true
+      page: 0
     })
 
     if (tabId === mediaTabActive) {
@@ -78,27 +105,43 @@ const MediaTabContent = (props) => {
     if (mediaTabActive === 1) {
       return (
         <MediaFileItem
+          loading={state.loading}
           mediaData={state.data}
           postData={state.postData}
+          hasMore={state.hasMore}
           appSetting={appSetting}
           handleModalPreview={handleModalPreview}
           setMediaInfo={setMediaInfo}
+          setData={setData}
+          setHasMoreLazy={setHasMoreLazy}
+          setLoading={setLoading}
         />
       )
     } else if (mediaTabActive === 2) {
       return (
         <MediaPhotoItem
+          loading={state.loading}
           mediaData={state.data}
+          hasMore={state.hasMore}
           handleModalPreview={handleModalPreview}
           setMediaInfo={setMediaInfo}
+          setData={setData}
+          setHasMoreLazy={setHasMoreLazy}
+          setLoading={setLoading}
         />
       )
     } else if (mediaTabActive === 3) {
       return (
         <MediaVideoItem
+          loading={state.loading}
           mediaData={state.data}
+          totalData={state.totalData}
+          hasMore={state.hasMore}
           handleModalPreview={handleModalPreview}
           setMediaInfo={setMediaInfo}
+          setData={setData}
+          setHasMoreLazy={setHasMoreLazy}
+          setLoading={setLoading}
         />
       )
     } else if (mediaTabActive === 4) {
@@ -111,11 +154,7 @@ const MediaTabContent = (props) => {
       return ""
     }
 
-    if (state.loading === true) {
-      return <AppSpinner className="mt-1" />
-    }
-
-    if (Object.keys(state.data).length === 0) {
+    if (Object.keys(state.data).length === 0 && !state.loading) {
       return <EmptyContent className="mt-1" />
     }
 
@@ -123,7 +162,7 @@ const MediaTabContent = (props) => {
       <InfiniteScroll
         dataLength={state.data.length}
         next={loadData}
-        hasMore={state.hasMore}>
+        hasMore={state.hasMoreLazy}>
         <Fragment>{renderItem()}</Fragment>
       </InfiniteScroll>
     )

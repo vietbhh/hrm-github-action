@@ -61,7 +61,7 @@ const TabMedia = (props) => {
       <Card>
         <CardBody>
           <div>
-            <MediaHeader />
+            <MediaHeader mediaTabActive={state.mediaTabActive}/>
           </div>
           <div>
             <MediaContent

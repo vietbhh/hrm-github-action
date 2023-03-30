@@ -6,22 +6,30 @@ import {
   formatByte
 } from "@modules/Workspace/common/common"
 // ** Styles
+import { Skeleton } from "antd"
 import { Card, CardBody } from "reactstrap"
 // ** Components
+import { LazyLoadComponent } from "react-lazy-load-image-component"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
 import FileImageByType from "./FileImageByType"
 import ActionMediaFileItem from "./ActionMediaFileItem"
+import { downloadApi } from "@apps/modules/download/common/api"
 
 const MediaFileItem = (props) => {
   const {
     // ** props
+    loading,
     mediaData,
     postData,
+    hasMore,
     appSetting,
     // ** methods
     handleModalPreview,
-    setMediaInfo
+    setMediaInfo,
+    setData,
+    setHasMoreLazy,
+    setLoading
   } = props
 
   const dataFile = {}
@@ -81,17 +89,45 @@ const MediaFileItem = (props) => {
     handleModalPreview()
   }
 
+  const handleAfterLoadLazyLoadComponent = (item, indexData) => {
+    setLoading(false)
+    if (hasMore) {
+      setHasMoreLazy(true)
+    }
+
+    const sourceAttribute = item.source_attribute
+    const type = getFileTypeFromMime(sourceAttribute.mime)
+    if (type === "image") {
+      downloadApi.getPhoto(item.thumb).then((response) => {
+        const newMediaData = [...mediaData].map((itemMap, indexMap) => {
+          if (itemMap._id === item._id) {
+            return {
+              ...itemMap,
+              url_thumb: URL.createObjectURL(response.data)
+            }
+          }
+
+          return itemMap
+        })
+        console.log(newMediaData)
+        setData(newMediaData)
+      })
+    }
+  }
+
   // ** render
-  const renderFileImage = (sourceAttribute) => {
-    const arrMime = sourceAttribute.mime.split("/")
-    const mediaType = arrMime[0]
+  const renderFileImage = (item) => {
+    const sourceAttribute = item.source_attribute
+    const mediaType = getFileTypeFromMime(sourceAttribute.mime)
     if (mediaType === "image") {
       return (
-        <Photo
-          src={sourceAttribute.path}
+        <div
           className="file-thumb"
-          preview={false}
-        />
+          style={{
+            backgroundImage: `url("${item.url_thumb}")`
+          }}>
+          {!item.url_thumb && <Skeleton.Image active={true} />}
+        </div>
       )
     } else {
       return <FileImageByType mime={sourceAttribute.mime} />
@@ -105,43 +141,69 @@ const MediaFileItem = (props) => {
 
     return (
       <Fragment>
-        {itemMedia.data.map((item, index) => {
+        {itemMedia.data.map((item, indexData) => {
           const sourceAttribute = item.source_attribute
           if (sourceAttribute === undefined) {
             return ""
           }
 
           return (
-            <Card className="mb-50" key={`media-file-item-${item._id}`}>
-              <CardBody className="border rounded d-flex align-items-center justify-content-between p-75">
-                <div
-                  className="d-flex align-items-start pointer"
-                  onClick={() => handlePreviewFile(sourceAttribute, item._id)}>
-                  <div className="me-75 image-container">
-                    <Fragment>{renderFileImage(sourceAttribute)}</Fragment>
+            <LazyLoadComponent
+              key={`media-file-item-${item._id}`}
+              afterLoad={() =>
+                handleAfterLoadLazyLoadComponent(item, indexData)
+              }>
+              <Card className="mb-50">
+                <CardBody className="border rounded d-flex align-items-center justify-content-between p-75">
+                  <div
+                    className="d-flex align-items-start pointer"
+                    onClick={() =>
+                      handlePreviewFile(sourceAttribute, item._id)
+                    }>
+                    <div className="me-75 image-container">
+                      <Fragment>{renderFileImage(item)}</Fragment>
+                    </div>
+                    <div className="info">
+                      <h6 className="mb-25">{sourceAttribute.name}</h6>
+                      <small>
+                        <span>{formatByte(sourceAttribute.size)}</span>
+                        <span className="ps-1">
+                          {moment(item.created_at).format("YYYY/MM/DD")}
+                        </span>{" "}
+                        <span className="ps-25">
+                          {moment(item.created_at).format("hh:mm A")}
+                        </span>
+                      </small>
+                    </div>
                   </div>
-                  <div className="info">
-                    <h6 className="mb-25">{sourceAttribute.name}</h6>
-                    <small>
-                      <span>{formatByte(sourceAttribute.size)}</span>
-                      <span className="ps-1">
-                        {moment(item.created_at).format("YYYY/MM/DD")}
-                      </span>{" "}
-                      <span className="ps-25">
-                        {moment(item.created_at).format("hh:mm A")}
-                      </span>
-                    </small>
+                  <div>
+                    <ActionMediaFileItem item={item} />
                   </div>
-                </div>
-                <div>
-                  <ActionMediaFileItem item={item} />
-                </div>
-              </CardBody>
-            </Card>
+                </CardBody>
+              </Card>
+            </LazyLoadComponent>
           )
         })}
       </Fragment>
     )
+  }
+
+  const renderLoading = () => {
+    if (loading) {
+      return (
+        <div className="loading-file-item">
+          <div className="ps-1 owner-info">
+            <Skeleton avatar active paragraph={{ rows: 0 }} />
+          </div>
+          <div className="d-flex align-items-center border rounded p-75 media-item">
+            <Skeleton.Image active className="me-50" />
+            <Skeleton active paragraph={{ rows: 1 }} />
+          </div>
+        </div>
+      )
+    }
+
+    return ""
   }
 
   const renderComponent = () => {
@@ -171,7 +233,9 @@ const MediaFileItem = (props) => {
                       }}
                       className="ms-75"></div>
                     <div className="w-100">
-                      <Fragment>{renderFileItem(itemMedia)}</Fragment>
+                      <Fragment>
+                        {renderFileItem(itemMedia, index, indexMedia)}
+                      </Fragment>
                     </div>
                   </div>
                 )
@@ -179,6 +243,8 @@ const MediaFileItem = (props) => {
             </div>
           )
         })}
+
+        <Fragment>{renderLoading()}</Fragment>
       </Fragment>
     )
   }
