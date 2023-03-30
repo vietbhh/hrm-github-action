@@ -1,21 +1,23 @@
+import Photo from "@apps/modules/download/pages/Photo"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
+import { Dropdown } from "antd"
 import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
-import { Dropdown, Space } from "antd"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
-import notification from "@apps/utility/notification"
-import Photo from "@apps/modules/download/pages/Photo"
-import { useEffect } from "react"
-import { Link } from "react-router-dom"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
+
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const [state, setState] = useMergedState({
     coverImage: "",
     inviteModal: false,
@@ -81,15 +83,25 @@ const WorkspaceHeader = (props) => {
               })
           }
         })
-
-      return
-      workspaceApi
-        .addMemberByDepartment({ departments: arrIdDepartment })
-        .then((res) => {
-          console.log("typetypetypetype", type)
-        })
     }
   }
+
+  const handleLeaveWorkspace = () => {
+    const infoWorkspace = { ...data }
+    const memberArr = [...infoWorkspace.members]
+    const indexOf = memberArr.indexOf(userId)
+    memberArr.splice(indexOf, 1)
+    infoWorkspace.members = memberArr
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        setState({ loading: false })
+      }
+    })
+  }
+
   const handleSetupNotification = () => {
     setState({ setupNotifiModal: !state.setupNotifiModal })
   }
@@ -140,6 +152,7 @@ const WorkspaceHeader = (props) => {
       setState({ defaultWorkspaceCover: defaultWorkspaceCover })
     }
   }, [data])
+
   return (
     <Card className="pb-0">
       <div className="image-cover">
@@ -171,14 +184,18 @@ const WorkspaceHeader = (props) => {
           <div className="workspaceInformation">
             <h2 className="workspaceName">{data?.name}</h2>
             <p>
-              <i className="fa-regular fa-earth-asia"></i> Public ·{" "}
-              {data?.members && data?.members.length} members ·{" "}
-              {data?.pinPosts && data?.pinPosts.length} posts
+              <i className="fa-regular fa-earth-asia"></i>{" "}
+              {useFormatMessage("modules.workspace.text.public")} ·{" "}
+              {data?.members && data?.members.length}{" "}
+              {useFormatMessage("modules.workspace.text.members")} ·{" "}
+              {data?.pinPosts && data?.pinPosts.length}{" "}
+              {useFormatMessage("modules.workspace.text.posts")}
             </p>
           </div>
           <div className="workspaceAction">
             <Button className="btn btn-success" onClick={() => onClickInvite()}>
-              <i className="fa-regular fa-plus me-50"></i>Invite
+              <i className="fa-regular fa-plus me-50"></i>
+              {useFormatMessage("modules.workspace.buttons.invite")}
             </Button>
           </div>
         </div>
@@ -236,11 +253,36 @@ const WorkspaceHeader = (props) => {
           <div className="ms-auto">
             <Dropdown
               menu={{
+                items: [
+                  {
+                    label: (
+                      <>
+                        <i className="fa-light fa-right-from-bracket me-50"></i>
+                        {useFormatMessage(
+                          "modules.workspace.display.leave_workspace"
+                        )}
+                      </>
+                    ),
+                    key: "0",
+                    onClick: () => handleLeaveWorkspace()
+                  }
+                ]
+              }}
+              placement="bottomRight"
+              trigger={["click"]}>
+              <Button className="me-50" color="secondary" outline>
+                {useFormatMessage("modules.workspace.text.joined")}{" "}
+                <i class="fa-regular fa-chevron-down"></i>
+              </Button>
+            </Dropdown>
+
+            <Dropdown
+              menu={{
                 items
               }}
               placement="bottomRight"
               trigger={["click"]}>
-              <Button color="flat-secondary">
+              <Button color="flat-secondary ">
                 <i className="fa-light fa-ellipsis"></i>
               </Button>
             </Dropdown>

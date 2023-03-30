@@ -4474,7 +4474,8 @@
         "approve": "Approve",
         "approve_all": "Approve all request",
         "approve_all_posts": "Approve all",
-        "reject_all_posts": "Reject all"
+        "reject_all_posts": "Reject all",
+        "invite" : "Invite"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4493,7 +4494,8 @@
         "setup_notification": "Setup notification",
         "review_post": "Review post",
         "add_member_to_ws": "Add member to workspace",
-        "workspace_pinned_post" : "Workspace pinned post"
+        "workspace_pinned_post" : "Workspace pinned post",
+        "leave_workspace" : "Leave workspace"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4563,7 +4565,10 @@
         "job_title": "Job title",
         "unpin_post": "Unpin post",
         "move_to_top" : "Move to top",
-        "pin_post" :"Pin post"
+        "pin_post" :"Pin post",
+        "posts" : "post",
+        "public" : "Public",
+        "joined" : "Joined"
 
       },
       "app_options": {

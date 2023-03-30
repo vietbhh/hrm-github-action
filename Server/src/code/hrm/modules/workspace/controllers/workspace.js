@@ -562,17 +562,17 @@ const loadPinned = async (req, res) => {
   const arrID = workspace.pinPosts.map((x) => x.post)
 
   const dataPost = []
-  map(arrID, (item, key) => {
-    const infoPost = feedMongoModel.findById(item)
+  map(arrID, async (item, key) => {
+    console.log("ID item", item)
+    const infoPost = await feedMongoModel.findById(item)
     dataPost.push(infoPost)
     console.log("infoPost", infoPost)
   })
-
+  console.log("arrID", arrID)
   console.log("dataPostdataPostdataPostdataPost", dataPost)
   const feed = await feedMongoModel.find({
     _id: { $in: arrID }
   })
-  console.log("feed", feed)
   const data = await handleDataBeforeReturn(feed, true)
   const feedCount = await feedMongoModel
     .find({
@@ -580,7 +580,7 @@ const loadPinned = async (req, res) => {
     })
     .count()
   const result = {
-    dataPost: data,
+    dataPost: dataPost,
     totalPost: feedCount
   }
   return res.respond(result)
