@@ -1,5 +1,4 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { downloadApi } from "@apps/modules/download/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
@@ -7,11 +6,7 @@ import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import {
-  handleDataMention,
-  handleLoadAttachmentMedias,
-  handleLoadAttachmentThumb
-} from "../common/common"
+import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
 
 const PostDetail = (props) => {
   const {

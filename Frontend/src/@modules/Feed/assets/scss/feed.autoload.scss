@@ -1,5 +1,7 @@
 @import "@scss/friday";
 
+$btn-background-color: #377dff;
+
 .card-loading {
   border-radius: 14px;
 }
@@ -14,14 +16,26 @@
 
 .feed {
   .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #377dff;
+    color: $btn-background-color;
   }
 
   .ant-tabs-tab:hover {
-    color: #377dff;
+    color: $btn-background-color;
   }
   .ant-tabs-tab-btn:active {
-    color: #377dff;
+    color: $btn-background-color;
+  }
+
+  .form-check-input:checked {
+    border-color: $btn-background-color !important;
+    background-color: $btn-background-color !important;
+    color: #fff !important;
+  }
+
+  .form-check-input {
+    &:focus-within {
+      border-color: #cfd2d5 !important;
+    }
   }
 
   .div-create-post {
@@ -736,7 +750,7 @@
         > span {
           cursor: pointer;
           margin-left: 55px;
-          color: #377dff;
+          color: $btn-background-color;
           font-weight: 500;
         }
       }
@@ -856,7 +870,7 @@
       margin-top: 10px;
 
       span {
-        color: #377dff;
+        color: $btn-background-color;
         cursor: pointer;
 
         &:hover {
@@ -969,7 +983,7 @@
     }
 
     .btn-see-more {
-      color: #377dff;
+      color: $btn-background-color;
 
       &:hover {
         text-decoration-line: underline;
@@ -1020,12 +1034,15 @@
           border-radius: 10px;
           padding: 5px 0;
           font-weight: 600;
-          background: #377dff !important;
-          border-color: #377dff !important;
+          background: $btn-background-color !important;
+          border-color: $btn-background-color !important;
           color: #ffffff !important;
 
           &:hover {
-            background: darken($color: #377dff, $amount: 5) !important;
+            background: darken(
+              $color: $btn-background-color,
+              $amount: 5
+            ) !important;
           }
         }
       }
@@ -1041,10 +1058,10 @@
   }
 
   a {
-    color: #377dff;
+    color: $btn-background-color;
 
     &:hover {
-      color: darken($color: #377dff, $amount: 15);
+      color: darken($color: $btn-background-color, $amount: 15);
       text-decoration: underline;
     }
   }
@@ -1081,8 +1098,8 @@
             box-shadow: none;
 
             &:checked {
-              background-color: #377dff;
-              border-color: #377dff;
+              background-color: $btn-background-color;
+              border-color: $btn-background-color;
             }
           }
         }
@@ -1214,8 +1231,8 @@
 
     .btn-post {
       width: 100%;
-      background: #377dff !important;
-      border-color: #377dff !important;
+      background: $btn-background-color !important;
+      border-color: $btn-background-color !important;
       color: #ffffff !important;
       border-radius: 12px;
       box-shadow: none;
@@ -1224,7 +1241,17 @@
 
       &:hover {
         box-shadow: none;
-        background: darken($color: #377dff, $amount: 5) !important;
+        background: darken(
+          $color: $btn-background-color,
+          $amount: 5
+        ) !important;
+      }
+
+      &:disabled {
+        background: lighten(
+          $color: $btn-background-color,
+          $amount: 10
+        ) !important;
       }
     }
 
@@ -1370,6 +1397,103 @@
         }
       }
     }
+
+    .div-poll-vote-detail {
+      position: relative;
+      width: 100%;
+      background: rgb(255, 255, 255);
+      border: 1px solid rgb(233, 234, 236);
+      box-sizing: border-box;
+      box-shadow: rgba(47, 49, 54, 0.1) 0px 4px 8px;
+      border-radius: 12px;
+      padding: 16px;
+      height: max-content;
+      margin-top: 15px;
+      margin-bottom: 20px;
+
+      .poll-vote-detail-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+
+        .header-btn {
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+          border-radius: 50%;
+          background: #f5f7f9;
+          padding: 0px;
+          align-items: center;
+          display: inline-flex;
+          justify-content: center;
+
+          &:hover {
+            background: darken($color: #f5f7f9, $amount: 5);
+          }
+        }
+      }
+
+      .poll-vote-detail-title {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+
+        .title {
+          font-weight: 600;
+          font-size: 16px;
+          color: rgb(38, 40, 44);
+          text-align: center;
+          padding: 0px;
+          width: 100%;
+          margin-bottom: 3px;
+        }
+
+        .div-end-at {
+          display: flex;
+          align-items: center;
+          width: max-content;
+          margin: 0px auto;
+          padding: 0.5rem;
+          border-radius: 8px;
+          background: #f5f7f9;
+          border: 1px solid #eceef1;
+          gap: 7px;
+
+          .time-info {
+            font-size: 12px;
+            font-weight: bold;
+            color: #73787e;
+          }
+        }
+      }
+
+      .poll-vote-detail-content {
+        .content-options {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: auto;
+          position: relative;
+          margin-bottom: 8px;
+          cursor: pointer;
+          border: 1px solid rgb(233, 234, 236);
+          box-sizing: border-box;
+          border-radius: 12px;
+          padding: 8px 12px;
+          background: linear-gradient(
+            to right,
+            rgb(241, 242, 244) 0%,
+            white 0%,
+            white 100%
+          );
+          font-weight: 600;
+          font-size: 14px;
+          color: rgb(38, 40, 44);
+        }
+      }
+    }
   }
 }
 
@@ -1498,7 +1622,7 @@
 .item-photo-feed.dragged {
   z-index: 9999;
   cursor: grabbing !important;
-  border: 1px solid #377dff;
+  border: 1px solid $btn-background-color;
   border-radius: 12px;
 }
 
@@ -1835,13 +1959,13 @@
       }
 
       .btn-chat {
-        background: #377dff;
+        background: $btn-background-color;
         border-radius: 12px;
         color: #ffffff;
         padding: 3px 10px;
 
         &:hover {
-          background: darken($color: #377dff, $amount: 5);
+          background: darken($color: $btn-background-color, $amount: 5);
         }
       }
 
@@ -1972,7 +2096,7 @@
       }
 
       .scrollbar-container {
-        max-height: 300px;
+        max-height: 255px;
         margin-right: -15px;
         padding-right: 15px;
       }
@@ -1989,7 +2113,7 @@
           padding: 6px 0px;
           color: rgb(0, 0, 0);
           background-color: rgba(20, 33, 65, 0.06);
-          border-radius: 8px;
+          border-radius: 12px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -1999,6 +2123,56 @@
 
           &:hover {
             background-color: lighten($color: #d9d9d9, $amount: 7);
+          }
+        }
+
+        label.form-label {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          color: rgb(38, 40, 44);
+        }
+
+        .div-setting {
+          margin-top: 15px;
+
+          .form-check {
+            input,
+            label {
+              cursor: pointer;
+            }
+          }
+        }
+
+        .div-setting-time-end {
+          margin-top: 15px;
+          padding-top: 10px;
+          border-top: 1px solid #dfe0e2;
+        }
+
+        .btn-post {
+          height: 40px;
+          margin-top: 20px;
+        }
+
+        .div-add-options {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 0.5rem;
+
+          .form-group {
+            width: 100%;
+            margin-bottom: 0;
+          }
+
+          .btn-delete-options {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
           }
         }
       }

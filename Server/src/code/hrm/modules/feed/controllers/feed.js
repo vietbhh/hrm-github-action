@@ -79,6 +79,23 @@ const submitPostController = async (req, res, next) => {
     type_feed_parent = "background_image"
   }
 
+  // check type_2
+  let type_2 = null
+  const save_poll_vote_detail = {}
+  if (body.poll_vote === true) {
+    type_2 = "poll_vote"
+
+    const req_poll_vote_detail = body.poll_vote_detail
+    save_poll_vote_detail["question"] = req_poll_vote_detail.question
+    save_poll_vote_detail["setting"] = req_poll_vote_detail.setting
+    save_poll_vote_detail["time_end"] = req_poll_vote_detail.time_end
+    const options = []
+    forEach(req_poll_vote_detail.options, (item) => {
+      options.push({ option_name: item, user_vote: [] })
+    })
+    save_poll_vote_detail["options"] = options
+  }
+
   try {
     let out = {}
     let _id_parent = ""
@@ -100,7 +117,9 @@ const submitPostController = async (req, res, next) => {
         approve_status: body.approveStatus,
         link: link,
         tag_user: body.tag_user,
-        background_image: body.backgroundImage
+        background_image: body.backgroundImage,
+        type_2: type_2,
+        poll_vote_detail: save_poll_vote_detail
       })
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
@@ -126,7 +145,9 @@ const submitPostController = async (req, res, next) => {
           tag_user: body.tag_user,
           background_image: body.backgroundImage,
           edited: true,
-          edited_at: Date.now()
+          edited_at: Date.now(),
+          type_2: type_2,
+          poll_vote_detail: save_poll_vote_detail
         }
       )
     }

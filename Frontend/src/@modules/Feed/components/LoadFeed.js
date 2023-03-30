@@ -1,4 +1,3 @@
-import { downloadApi } from "@apps/modules/download/common/api"
 import { useMergedState } from "@apps/utility/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
@@ -7,11 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
-import {
-  handleDataMention,
-  handleLoadAttachmentMedias,
-  handleLoadAttachmentThumb
-} from "../common/common"
+import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
 
 const LoadFeed = (props) => {
   const {

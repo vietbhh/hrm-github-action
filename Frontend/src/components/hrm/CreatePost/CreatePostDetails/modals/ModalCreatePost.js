@@ -8,7 +8,6 @@ import { feedApi } from "@modules/Feed/common/api"
 import {
   decodeHTMLEntities,
   detectUrl,
-  handleLoadAttachmentMedias,
   handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
@@ -25,6 +24,7 @@ import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
 import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
+import PollVoteDetail from "../PollVoteDetail"
 
 const ModalCreatePost = (props) => {
   const {
@@ -54,7 +54,19 @@ const ModalCreatePost = (props) => {
     showChooseBackgroundImage: false,
 
     // poll vote
-    poll_vote: false
+    modalPollVote: false,
+    poll_vote: false,
+    poll_vote_detail: {
+      question: "",
+      options: [],
+      setting: {
+        multiple_selection: false,
+        adding_more_options: false,
+        incognito: false,
+        limit_time: false
+      },
+      time_end: null
+    }
   })
   const [file, setFile] = useState([])
 
@@ -133,6 +145,7 @@ const ModalCreatePost = (props) => {
     setModal(false)
     setState({ loadingSubmit: false, arrLink: [] })
     setFile([])
+    setEmptyPollVote()
   }
   const submitPost = () => {
     const check_can_submit = handleCheckContentBeforeSubmit()
@@ -161,7 +174,9 @@ const ModalCreatePost = (props) => {
           full_name: fullName
         },
         _id_post_edit: dataPost?._id || "",
-        backgroundImage: state.backgroundImage
+        backgroundImage: state.backgroundImage,
+        poll_vote: state.poll_vote,
+        poll_vote_detail: state.poll_vote_detail
       }
       feedApi
         .postSubmitPost(params)
@@ -272,6 +287,31 @@ const ModalCreatePost = (props) => {
     }
     setState({ backgroundImage: backgroundImage })
     handleInsertEditorState("")
+  }
+
+  const toggleModalPollVote = () => {
+    setState({ modalPollVote: !state.modalPollVote })
+  }
+
+  const setPollVoteDetail = (value) => {
+    setState({ poll_vote: true, poll_vote_detail: value })
+  }
+
+  const setEmptyPollVote = () => {
+    setState({
+      poll_vote: false,
+      poll_vote_detail: {
+        question: "",
+        options: [],
+        setting: {
+          multiple_selection: false,
+          adding_more_options: false,
+          incognito: false,
+          limit_time: false
+        },
+        time_end: null
+      }
+    })
   }
 
   // ** useEffect
@@ -449,11 +489,21 @@ const ModalCreatePost = (props) => {
           />
         )}
 
-        <ChooseBackground
-          backgroundImage={state.backgroundImage}
-          setBackgroundImage={setBackgroundImage}
-          showChooseBackgroundImage={state.showChooseBackgroundImage}
-        />
+        {state.showChooseBackgroundImage && (
+          <ChooseBackground
+            backgroundImage={state.backgroundImage}
+            setBackgroundImage={setBackgroundImage}
+            showChooseBackgroundImage={state.showChooseBackgroundImage}
+          />
+        )}
+
+        {state.poll_vote && (
+          <PollVoteDetail
+            poll_vote_detail={state.poll_vote_detail}
+            toggleModalPollVote={toggleModalPollVote}
+            setEmptyPollVote={setEmptyPollVote}
+          />
+        )}
 
         <ul className="create_post_footer">
           {_.isEmpty(file) && state.poll_vote === false && (
@@ -507,7 +557,13 @@ const ModalCreatePost = (props) => {
             </li>
           </Tooltip>
 
-          <PollVote backgroundImage={state.backgroundImage} />
+          <PollVote
+            backgroundImage={state.backgroundImage}
+            setPollVoteDetail={setPollVoteDetail}
+            modalPollVote={state.modalPollVote}
+            toggleModalPollVote={toggleModalPollVote}
+            loadingSubmit={state.loadingSubmit}
+          />
 
           <Tooltip
             title={useFormatMessage(

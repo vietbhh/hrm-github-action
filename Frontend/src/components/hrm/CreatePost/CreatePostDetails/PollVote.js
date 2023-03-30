@@ -1,21 +1,103 @@
-import { ErpInput } from "@apps/components/common/ErpField"
+import {
+  ErpCheckbox,
+  ErpDatetime,
+  ErpInput
+} from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Tooltip } from "antd"
 import classNames from "classnames"
-import React, { Fragment } from "react"
-import { Modal, ModalBody } from "reactstrap"
+import React, { Fragment, useEffect, useRef } from "react"
+import { Button, Modal, ModalBody } from "reactstrap"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
 const PollVote = (props) => {
-  const { backgroundImage } = props
+  const {
+    backgroundImage,
+    setPollVoteDetail,
+    modalPollVote,
+    toggleModalPollVote,
+    loadingSubmit
+  } = props
   const [state, setState] = useMergedState({
-    modalPollVote: false
+    question: "",
+    options: ["", ""],
+    setting: {
+      multiple_selection: false,
+      adding_more_options: false,
+      incognito: false,
+      limit_time: false
+    },
+    time_end: null,
+    disable_btn_continue: true
   })
 
+  const refInputAddOptions = useRef(null)
+
   // function
-  const toggleModalPollVote = () => {
-    setState({ modalPollVote: !state.modalPollVote })
+  const handleChangeSetting = (checked, name) => {
+    setState({ setting: { ...state.setting, [name]: checked } })
   }
+
+  const handleChangeOptions = (value, index) => {
+    const options = [...state.options]
+    options[index] = value
+    setState({ options: options })
+  }
+
+  const handleAddOptions = () => {
+    const options = [...state.options]
+    options.push("")
+    setState({ options: options })
+
+    setTimeout(() => {
+      if (refInputAddOptions.current) {
+        refInputAddOptions.current.focus()
+      }
+    }, 100)
+  }
+
+  const handleDeleteOptions = (index) => {
+    const options = [...state.options]
+    options.splice(index, 1)
+    setState({ options: options })
+  }
+
+  // useEffect
+  useEffect(() => {
+    let check_options = true
+    _.forEach(state.options, (value) => {
+      if (value === "") {
+        check_options = false
+      }
+    })
+    if (check_options && state.question !== "") {
+      let disable_btn_continue = false
+
+      if (state.setting.limit_time === true && state.time_end === null) {
+        disable_btn_continue = true
+      } else {
+        disable_btn_continue = false
+      }
+      setState({ disable_btn_continue: disable_btn_continue })
+    } else {
+      setState({ disable_btn_continue: true })
+    }
+  }, [state.question, state.options, state.setting, state.time_end])
+
+  useEffect(() => {
+    setState({
+      question: "",
+      options: ["", ""],
+      setting: {
+        multiple_selection: false,
+        adding_more_options: false,
+        incognito: false,
+        limit_time: false
+      },
+      time_end: null,
+      disable_btn_continue: true
+    })
+  }, [loadingSubmit])
 
   return (
     <Fragment>
@@ -51,7 +133,7 @@ const PollVote = (props) => {
       </Tooltip>
 
       <Modal
-        isOpen={state.modalPollVote}
+        isOpen={modalPollVote}
         toggle={() => toggleModalPollVote()}
         className="modal-dialog-centered feed modal-create-post modal-poll-vote"
         modalTransition={{ timeout: 100 }}
@@ -73,36 +155,136 @@ const PollVote = (props) => {
               placeholder={useFormatMessage(
                 "modules.feed.create_post.text.enter_question"
               )}
+              value={state.question}
+              onChange={(e) => setState({ question: e.target.value })}
             />
 
             <label
               title={useFormatMessage(
-                "modules.feed.create_post.text.add_question"
+                "modules.feed.create_post.text.add_options"
               )}
               className="form-label">
               {useFormatMessage("modules.feed.create_post.text.add_options")} *
             </label>
             <PerfectScrollbar options={{ wheelPropagation: false }}>
-              <ErpInput
-                nolabel
-                required
-                placeholder={useFormatMessage(
-                  "modules.feed.create_post.text.option",
-                  { number: 1 }
-                )}
-              />
-              <ErpInput
-                nolabel
-                required
-                placeholder={useFormatMessage(
-                  "modules.feed.create_post.text.option",
-                  { number: 2 }
-                )}
-              />
+              {_.map(state.options, (value, index) => {
+                return (
+                  <div key={index} className="div-add-options">
+                    <ErpInput
+                      nolabel
+                      required
+                      placeholder={useFormatMessage(
+                        "modules.feed.create_post.text.option",
+                        { number: index + 1 }
+                      )}
+                      value={value}
+                      onChange={(e) =>
+                        handleChangeOptions(e.target.value, index)
+                      }
+                      innerRef={
+                        index === state.options.length - 1
+                          ? refInputAddOptions
+                          : null
+                      }
+                    />
+
+                    {state.options.length > 2 && (
+                      <Button.Ripple
+                        color="danger"
+                        className="btn-delete-options"
+                        onClick={() => handleDeleteOptions(index)}>
+                        <i className="fa-solid fa-xmark"></i>
+                      </Button.Ripple>
+                    )}
+                  </div>
+                )
+              })}
             </PerfectScrollbar>
 
-            <button type="button" className="btn-add-option">
-              {useFormatMessage("modules.feed.create_post.text.add_option")}
+            <button
+              type="button"
+              className="btn-add-option"
+              onClick={() => handleAddOptions()}>
+              <i className="fa-regular fa-circle-plus fs-4 me-50"></i>
+              {useFormatMessage("modules.feed.create_post.text.add_options")}
+            </button>
+
+            <div className="div-setting">
+              <label
+                title={useFormatMessage("app.setting")}
+                className="form-label">
+                {useFormatMessage("app.setting")}
+              </label>
+              <ErpCheckbox
+                label={useFormatMessage(
+                  "modules.feed.create_post.text.allow_multiple_selection"
+                )}
+                className="mb-50"
+                checked={state.setting.multiple_selection}
+                onChange={(e) =>
+                  handleChangeSetting(e.target.checked, "multiple_selection")
+                }
+              />
+              <ErpCheckbox
+                label={useFormatMessage(
+                  "modules.feed.create_post.text.allow_adding_more_options"
+                )}
+                className="mb-50"
+                checked={state.setting.adding_more_options}
+                onChange={(e) =>
+                  handleChangeSetting(e.target.checked, "adding_more_options")
+                }
+              />
+              <ErpCheckbox
+                label={useFormatMessage(
+                  "modules.feed.create_post.text.allow_incognito"
+                )}
+                className="mb-50"
+                checked={state.setting.incognito}
+                onChange={(e) =>
+                  handleChangeSetting(e.target.checked, "incognito")
+                }
+              />
+              <ErpCheckbox
+                label={useFormatMessage(
+                  "modules.feed.create_post.text.limit_time_for_poll"
+                )}
+                checked={state.setting.limit_time}
+                onChange={(e) => {
+                  handleChangeSetting(e.target.checked, "limit_time")
+                  setState({ time_end: null })
+                }}
+              />
+            </div>
+
+            {state.setting.limit_time && (
+              <div className="div-setting-time-end">
+                <ErpDatetime
+                  label={useFormatMessage(
+                    "modules.feed.create_post.text.end_at"
+                  )}
+                  labelInline
+                  placement="topRight"
+                  value={state.time_end}
+                  onChange={(e) => setState({ time_end: e })}
+                />
+              </div>
+            )}
+
+            <button
+              type="button"
+              className="btn-post"
+              disabled={state.disable_btn_continue}
+              onClick={() => {
+                setPollVoteDetail({
+                  question: state.question,
+                  options: state.options,
+                  setting: state.setting,
+                  time_end: state.time_end
+                })
+                toggleModalPollVote()
+              }}>
+              {useFormatMessage("modules.feed.create_post.text.continue")}
             </button>
           </div>
         </ModalBody>
