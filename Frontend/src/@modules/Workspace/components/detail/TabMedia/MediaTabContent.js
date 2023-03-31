@@ -113,16 +113,15 @@ const MediaTabContent = (props) => {
   const setDataCreateNew = (newData) => {
     if (newData) {
       if (newData.type === "post") {
-        const newData = []
+        const dataMedia = []
         newData.medias.reverse().map((item) => {
-          const fileType = getFileTypeFromMime(item.mime)
-          const tabId = getTabIdFromFeedType(fileType)
+          const tabId = getTabIdFromFeedType(item.type)
           if (tabId === mediaTabActive) {
-            newData.push(item)
+            dataMedia.push(item)
           }
         })
 
-        setData([...newData, ...state.data])
+        setData([...dataMedia, ...state.data])
       } else if (newData.type !== "post") {
         const tabId = getTabIdFromFeedType(newData.type)
         if (tabId === mediaTabActive) {
