@@ -53,22 +53,23 @@ const MediaVideoItem = (props) => {
       item["url_thumb"] = URL.createObjectURL(response.data)
       const newMediaData = [...mediaData]
       newMediaData[index] = item
-      setData(newMediaData)
+
+      setTimeout(() => {
+        setData(newMediaData)
+      }, 200)
     })
   }
 
   // ** render
   const renderLoading = () => {
     if (loading) {
-      for (let i = 1; i <= number; i++) {
-        return (
-          <Col sm="2" className="m-0 p-50 loading-col-media-image">
-            <div className="w-100 d-flex align-items-center justify-content-center media-video-item">
-              <Skeleton.Image active={true} />
-            </div>
-          </Col>
-        )
-      }
+      return (
+        <Col sm="2" className="m-0 p-50 loading-col-media-image">
+          <div className="w-100 d-flex align-items-center justify-content-center media-video-item">
+            <Skeleton.Image active={true} />
+          </div>
+        </Col>
+      )
     }
 
     return ""
@@ -127,6 +128,8 @@ const MediaVideoItem = (props) => {
           </LazyLoadComponent>
         )
       })}
+
+      <Fragment>{renderLoading()}</Fragment>
     </Row>
   )
 }

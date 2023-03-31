@@ -44,4 +44,16 @@ const formatByte = (bytes, decimals = 2) => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
 }
 
-export { getFileTypeFromMime, formatByte }
+const getTabIdFromFeedType = (type) => {
+  if (type === "file") {
+    return 1
+  } else if (type === "image") {
+    return 2
+  } else if (type === "video") {
+    return 3
+  }
+
+  return ""
+}
+
+export { getFileTypeFromMime, formatByte, getTabIdFromFeedType }

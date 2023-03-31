@@ -2,9 +2,15 @@
 import { useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { getFileTypeFromMime, getTabIdFromFeedType } from "@modules/Workspace/common/common"
+// ** redux
+import { useSelector, useDispatch } from "react-redux"
+import {
+  showModalCreatePost,
+  hideModalCreatePost,
+  setModalCreatePost
+} from "@modules/Workspace/common/reducer/workspace"
 // ** Styles
-import { Card, CardBody, Col } from "reactstrap"
 // ** Components
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -12,6 +18,7 @@ import MediaFileItem from "./MediaFileItem"
 import MediaPhotoItem from "./MediaPhotoItem"
 import MediaVideoItem from "./MediaVideoItem"
 import MediaLinkItem from "./MediaLinkItem"
+import ModalCreatePost from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreatePost"
 
 const MediaTabContent = (props) => {
   const {
@@ -32,12 +39,27 @@ const MediaTabContent = (props) => {
     hasMoreLazy: false,
     data: [],
     postData: [],
+    dataCreateNew: [],
     totalData: 0
   })
 
   const appSetting = useSelector((state) => state.auth.settings)
+  const userAuth = useSelector((state) => state.auth.userData)
 
-  const loadData = () => {
+  const workspaceState = useSelector((state) => state.workspace)
+  const { modalCreatePost } = workspaceState
+
+  const dispatch = useDispatch()
+
+  const handleHideModal = () => {
+    dispatch(hideModalCreatePost())
+  }
+
+  const setModal = (status) => {
+    dispatch(setModalCreatePost(status))
+  }
+
+  const loadData = (forcePage = null) => {
     setState({
       loading: true,
       hasMore: false,
@@ -88,12 +110,38 @@ const MediaTabContent = (props) => {
     })
   }
 
-  // ** effect
-  useEffect(() => {
+  const setDataCreateNew = (newData) => {
+    if (newData) {
+      if (newData.type === "post") {
+        const newData = []
+        newData.medias.reverse().map((item) => {
+          const fileType = getFileTypeFromMime(item.mime)
+          const tabId = getTabIdFromFeedType(fileType)
+          if (tabId === mediaTabActive) {
+            newData.push(item)
+          }
+        })
+
+        setData([...newData, ...state.data])
+      } else if (newData.type !== "post") {
+        const tabId = getTabIdFromFeedType(newData.type)
+        if (tabId === mediaTabActive) {
+          setData([newData, ...state.data])
+        }
+      }
+    }
+  }
+
+  const resetData = () => {
     setState({
       data: [],
       page: 0
     })
+  }
+
+  // ** effect
+  useEffect(() => {
+    resetData()
 
     if (tabId === mediaTabActive) {
       loadData()
@@ -101,6 +149,27 @@ const MediaTabContent = (props) => {
   }, [mediaTabActive])
 
   // ** render
+  const renderModalCreatePost = () => {
+    if (tabId === mediaTabActive) {
+      return (
+        <ModalCreatePost
+          modal={modalCreatePost}
+          toggleModal={handleHideModal}
+          avatar={userAuth?.avatar}
+          fullName={userAuth?.full_name}
+          userId={userAuth?.id}
+          dataMention={[]}
+          workspace={id}
+          setModal={setModal}
+          setDataCreateNew={setDataCreateNew}
+          approveStatus="approved"
+        />
+      )
+    }
+
+    return ""
+  }
+
   const renderItem = () => {
     if (mediaTabActive === 1) {
       return (
@@ -168,7 +237,12 @@ const MediaTabContent = (props) => {
     )
   }
 
-  return <Fragment>{renderComponent()}</Fragment>
+  return (
+    <Fragment>
+      {renderComponent()}
+      {renderModalCreatePost()}
+    </Fragment>
+  )
 }
 
 export default MediaTabContent

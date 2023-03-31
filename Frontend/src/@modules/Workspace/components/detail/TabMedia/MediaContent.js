@@ -18,7 +18,6 @@ const MediaContent = (props) => {
   } = props
 
   // ** render
-
   return (
     <div className="p-1 ps-2">
       <Nav tabs className="mb-0">

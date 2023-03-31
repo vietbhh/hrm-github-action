@@ -17,6 +17,8 @@ const PreviewMediaContentModal = (props) => {
     handleModal
   } = props
 
+  console.log(mediaInfo)
+
   const handleClickDownload = () => {
     const path = mediaInfo.path
     workspaceApi

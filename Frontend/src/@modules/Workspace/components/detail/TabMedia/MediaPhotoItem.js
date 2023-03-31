@@ -51,7 +51,6 @@ const MediaPhotoItem = (props) => {
       setTimeout(() => {
         setData(newMediaData)
       }, 150)
-      
     })
   }
 
@@ -60,21 +59,6 @@ const MediaPhotoItem = (props) => {
     if (loading) {
       return (
         <Fragment>
-          <Col sm="2" className="m-0 p-50 loading-col-media-image">
-            <Skeleton.Image active={true} />
-          </Col>
-          <Col sm="2" className="m-0 p-50 loading-col-media-image">
-            <Skeleton.Image active={true} />
-          </Col>
-          <Col sm="2" className="m-0 p-50 loading-col-media-image">
-            <Skeleton.Image active={true} />
-          </Col>
-          <Col sm="2" className="m-0 p-50 loading-col-media-image">
-            <Skeleton.Image active={true} />
-          </Col>
-          <Col sm="2" className="m-0 p-50 loading-col-media-image">
-            <Skeleton.Image active={true} />
-          </Col>
           <Col sm="2" className="m-0 p-50 loading-col-media-image">
             <Skeleton.Image active={true} />
           </Col>

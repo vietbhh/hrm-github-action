@@ -1,6 +1,9 @@
 // ** React Imports
 import { Fragment } from "react"
 import { useFormatMessage } from "@apps/utility/common"
+// ** redux
+import { showModalCreatePost } from "@modules/Workspace/common/reducer/workspace"
+import { useDispatch } from "react-redux"
 // ** Styles
 import { Button } from "reactstrap"
 // ** Components
@@ -23,11 +26,17 @@ const MediaHeader = (props) => {
     strDisplay = "group_link_posted"
   }
 
+  const dispatch = useDispatch()
+
+  const handleClickUpload = () => {
+    dispatch(showModalCreatePost())
+  }
+
   // ** render
   const renderUploadButton = () => {
     if (strDisplay !== "group_link_posted") {
       return (
-        <Button.Ripple size="sm" className="btn-icon">
+        <Button.Ripple size="sm" className="btn-icon" onClick={() => handleClickUpload()}>
           <i className="fas fa-plus-circle me-50" />
           {useFormatMessage("modules.workspace.buttons.upload")}
         </Button.Ripple>
