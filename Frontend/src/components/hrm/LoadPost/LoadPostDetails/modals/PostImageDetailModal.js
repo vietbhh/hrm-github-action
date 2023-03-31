@@ -1,5 +1,5 @@
 import { downloadApi } from "@apps/modules/download/common/api"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import { Skeleton } from "antd"
 import { useEffect, useRef } from "react"
@@ -30,7 +30,8 @@ const PostImageDetailModal = (props) => {
     data: {},
     id_previous: "",
     id_next: "",
-    comment_more_count_original: dataModal.comment_more_count
+    comment_more_count_original: dataModal.comment_more_count,
+    edit_description: false
   })
   const imageRef = useRef(null)
   const refDivBackLeft = useRef(null)
@@ -65,6 +66,8 @@ const PostImageDetailModal = (props) => {
   const setCommentMoreCountOriginal = (value = 0) => {
     setState({ comment_more_count_original: value })
   }
+
+  const setEditDescription = (value) => setState({ edit_description: value })
 
   // ** useEffect
   useEffect(() => {
@@ -121,6 +124,8 @@ const PostImageDetailModal = (props) => {
           })
           .catch((err) => {})
       }
+
+      setEditDescription(false)
     }
   }, [idImage, postType, dataMedias, modal])
 
@@ -313,16 +318,34 @@ const PostImageDetailModal = (props) => {
               <div className="right-header">
                 <PostHeader
                   data={state.data}
-                  customAction={customAction}
                   setData={setDataPost}
                   handleCloseModal={handleCloseModal}
                   dataModal={dataModal}
+                  customAction={{
+                    ...customAction,
+                    edit_post: {
+                      title: useFormatMessage(
+                        "modules.feed.post.text.edit_content"
+                      )
+                    },
+                    delete_post: {
+                      title: useFormatMessage(
+                        "modules.feed.post.text.delete_image_video"
+                      )
+                    }
+                  }}
+                  setEditDescription={setEditDescription}
                 />
               </div>
               <div
                 className="right-content"
                 id={`post-body-content-${state.data?._id}`}>
-                <RenderContentPost data={state.data} />
+                <RenderContentPost
+                  data={state.data}
+                  edit_description={state.edit_description}
+                  setEditDescription={setEditDescription}
+                  setData={setDataMedia}
+                />
               </div>
               <div className="right-show-reaction">
                 <PostShowReaction data={state.data} short={true} />

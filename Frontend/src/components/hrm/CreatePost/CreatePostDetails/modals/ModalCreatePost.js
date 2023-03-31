@@ -6,12 +6,13 @@ import notification from "@apps/utility/notification"
 import {
   decodeHTMLEntities,
   detectUrl,
+  handleLoadAttachmentMedias,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
-import { convertToRaw, EditorState, Modifier } from "draft-js"
+import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
 import { feedApi } from "@modules/Feed/common/api"
 import AttachPhotoVideo from "../AttachPhotoVideo"
@@ -19,6 +20,8 @@ import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
 import PreviewAttachment from "../PreviewAttachment"
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
+import htmlToDraft from "html-to-draftjs"
+import ChooseBackground from "../ChooseBackground"
 
 const ModalCreatePost = (props) => {
   const {
@@ -32,14 +35,18 @@ const ModalCreatePost = (props) => {
     workspace,
     setModal,
     setDataCreateNew,
-    approveStatus
+    approveStatus,
+    dataPost = {},
+    setData
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
     loadingUploadAttachment: false,
     loadingSubmit: false,
-    arrLink: []
+    arrLink: [],
+    backgroundImage: null,
+    showChooseBackgroundImage: false
   })
   const [file, setFile] = useState([])
 
@@ -109,6 +116,8 @@ const ModalCreatePost = (props) => {
     return check_can_submit
   }
   const setEmptyAfterSubmit = () => {
+    setState({ showChooseBackgroundImage: false })
+    setBackgroundImage(null)
     setEmptyEditorState()
     setModal(false)
     setState({ loadingSubmit: false, arrLink: [] })
@@ -139,13 +148,53 @@ const ModalCreatePost = (props) => {
         data_user: {
           id: userId,
           full_name: fullName
-        }
+        },
+        _id_post_edit: dataPost?._id || "",
+        backgroundImage: state.backgroundImage
       }
       feedApi
         .postSubmitPost(params)
-        .then((res) => {
+        .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             setDataCreateNew(res.data)
+          }
+          if (_.isFunction(setData)) {
+            const data = res.data
+            const dataCustom = {}
+            if (
+              data.source !== null &&
+              (data.type === "image" || data.type === "update_cover")
+            ) {
+              await downloadApi.getPhoto(data.thumb).then((response) => {
+                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
+              })
+            }
+
+            if (data.source !== null && data.type === "video") {
+              await downloadApi.getPhoto(data.source).then((response) => {
+                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
+              })
+            }
+
+            if (data.source !== null && data.type === "update_avatar") {
+              await downloadApi.getPhoto(data.thumb).then((response) => {
+                dataCustom["url_thumb"] = URL.createObjectURL(response.data)
+              })
+              dataCustom["url_cover"] = ""
+              if (cover !== "") {
+                await downloadApi.getPhoto(cover).then((response) => {
+                  dataCustom["url_cover"] = URL.createObjectURL(response.data)
+                })
+              }
+            }
+
+            if (!_.isEmpty(data.medias) && data.type === "post") {
+              await handleLoadAttachmentMedias(data).then((res_promise) => {
+                dataCustom["medias"] = res_promise
+              })
+            }
+
+            setData(data, false, dataCustom)
           }
           setEmptyAfterSubmit()
           notification.showSuccess({
@@ -168,6 +217,8 @@ const ModalCreatePost = (props) => {
 
   // ** attachment
   const handleAddAttachment = (attachment) => {
+    setState({ showChooseBackgroundImage: false })
+    setBackgroundImage(null)
     if (!_.isUndefined(attachment[0])) {
       let check_type_file = true
       _.forEach(attachment, (value) => {
@@ -201,7 +252,7 @@ const ModalCreatePost = (props) => {
                 await downloadApi.getPhoto(value.thumb).then((response) => {
                   resolve({
                     ...value,
-                    url: URL.createObjectURL(response.data)
+                    url_thumb: URL.createObjectURL(response.data)
                   })
                 })
               })
@@ -227,7 +278,67 @@ const ModalCreatePost = (props) => {
     }
   }
 
+  const setBackgroundImage = (value) => {
+    let backgroundImage = null
+    if (value !== null && value !== undefined) {
+      const backgroundImageSplit = value.split("/")
+      if (backgroundImageSplit[3]) {
+        const _backgroundImageSplit = backgroundImageSplit[3].split(".")
+        if (_backgroundImageSplit[0]) {
+          backgroundImage = _backgroundImageSplit[0]
+        }
+      }
+    }
+    setState({ backgroundImage: backgroundImage })
+    handleInsertEditorState("")
+  }
+
   // ** useEffect
+  useEffect(() => {
+    if (!_.isEmpty(dataPost)) {
+      const content_html = dataPost.content
+      const contentBlock = htmlToDraft(content_html)
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        )
+        const editorState = EditorState.createWithContent(contentState)
+        setState({ editorState: editorState })
+      }
+    }
+  }, [dataPost])
+
+  useEffect(() => {
+    if (!_.isEmpty(dataPost) && modal) {
+      const _file = []
+      if (dataPost.source) {
+        _file.push({
+          description: "",
+          source: dataPost?.source,
+          thumb: dataPost?.thumb,
+          name_source: dataPost?.source_attribute?.name || "",
+          name_thumb: dataPost?.thumb_attribute?.name || "",
+          type: dataPost?.source_attribute?.mime || "",
+          url_thumb: dataPost?.url_thumb,
+          db: true
+        })
+      }
+
+      if (!_.isEmpty(dataPost.medias)) {
+        _.forEach(dataPost.medias, (value) => {
+          _file.push({
+            ...value,
+            name_source: value?.source_attribute?.name || "",
+            name_thumb: value?.thumb_attribute?.name || "",
+            type: value?.source_attribute?.mime || "",
+            db: true
+          })
+        })
+      }
+
+      setFile(_file)
+    }
+  }, [dataPost, modal])
 
   // ** render
   const items = [
@@ -341,6 +452,8 @@ const ModalCreatePost = (props) => {
           editorState={state.editorState}
           onEditorStateChange={onEditorStateChange}
           dataMention={dataMention}
+          backgroundImage={state.backgroundImage}
+          showChooseBackgroundImage={state.showChooseBackgroundImage}
         />
 
         {renderPreviewAttachment}
@@ -355,21 +468,42 @@ const ModalCreatePost = (props) => {
           />
         )}
 
+        <ChooseBackground
+          backgroundImage={state.backgroundImage}
+          setBackgroundImage={setBackgroundImage}
+          showChooseBackgroundImage={state.showChooseBackgroundImage}
+        />
+
         <ul className="create_post_footer">
-          <Tooltip
-            title={useFormatMessage(
-              "modules.feed.create_post.text.choose_a_background_image"
-            )}>
-            <li className="create_post_footer-li cursor-pointer">
-              <span className="icon toggle-background">
-                <span>Aa</span>
-              </span>
-            </li>
-          </Tooltip>
+          {_.isEmpty(file) && (
+            <Tooltip
+              title={useFormatMessage(
+                "modules.feed.create_post.text.choose_a_background_image"
+              )}>
+              <li
+                className="create_post_footer-li cursor-pointer"
+                onClick={() =>
+                  setState({
+                    showChooseBackgroundImage: !state.showChooseBackgroundImage
+                  })
+                }>
+                {state.showChooseBackgroundImage ? (
+                  <span className="icon icon-arrow">
+                    <i className="fa-solid fa-chevron-up"></i>
+                  </span>
+                ) : (
+                  <span className="icon toggle-background">
+                    <span>Aa</span>
+                  </span>
+                )}
+              </li>
+            </Tooltip>
+          )}
 
           <AttachPhotoVideo
             handleAddAttachment={handleAddAttachment}
             loadingUploadAttachment={state.loadingUploadAttachment}
+            backgroundImage={state.backgroundImage}
           />
 
           <Tooltip

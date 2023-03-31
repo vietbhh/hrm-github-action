@@ -6,6 +6,7 @@ import { userApi } from "../common/api"
 import Introduction from "../components/User/Introduction/Introduction"
 import TimeLine from "../components/User/Timeline/Timeline"
 import "../assets/scss/user.scss"
+import { Skeleton } from "antd"
 
 const User = () => {
   const navigate = useNavigate()
@@ -48,13 +49,25 @@ const User = () => {
 
   return (
     <Fragment>
-      <div className="div-user__div-body">
-        {/* Timeline */}
-        <TimeLine employeeData={state.employeeData} />
+      {state.loading && (
+        <div className="feed">
+          <div className="load-feed">
+            <div className="div-loading">
+              <Skeleton avatar active paragraph={{ rows: 2 }} />
+            </div>
+          </div>
+        </div>
+      )}
 
-        {/* Introduction  */}
-        {/* <Introduction employeeData={state.employeeData} loadData={loadData} /> */}
-      </div>
+      {!state.loading && (
+        <div className="div-user__div-body">
+          {/* Timeline */}
+          <TimeLine employeeData={state.employeeData} />
+
+          {/* Introduction  */}
+          {/* <Introduction employeeData={state.employeeData} loadData={loadData} /> */}
+        </div>
+      )}
     </Fragment>
   )
 }
