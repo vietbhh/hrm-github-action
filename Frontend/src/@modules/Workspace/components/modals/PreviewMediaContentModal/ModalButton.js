@@ -19,8 +19,6 @@ const ModalButton = (props) => {
     handleClickDownload
   } = props
 
-  console.log(mediaInfo)
-
   // ** render
   const renderViewPostButton = () => {
     if (showViewPost === false) {

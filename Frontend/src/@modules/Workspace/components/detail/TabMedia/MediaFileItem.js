@@ -109,7 +109,6 @@ const MediaFileItem = (props) => {
 
           return itemMap
         })
-        console.log(newMediaData)
         setData(newMediaData)
       })
     }
