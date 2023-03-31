@@ -6,6 +6,7 @@ import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
 import TabMember from "../components/detail/TabMember/TabMember"
+import TabMedia from "../components/detail/TabMedia/TabMedia"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
@@ -94,6 +95,9 @@ const DetailWorkspace = () => {
           </TabPane>
           <TabPane tabId={4}>
             <TabMember tabActive={state.tabActive} tabId={4} />
+          </TabPane>
+          <TabPane tabId={5}>
+            <TabMedia tabActive={state.tabActive} tabId={5} />
           </TabPane>
         </TabContent>
       </div>
