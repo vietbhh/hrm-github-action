@@ -10,6 +10,7 @@ import { Link } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
+import SelectAdminModal from "../modals/SelectAdminModal"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
@@ -23,7 +24,8 @@ const WorkspaceHeader = (props) => {
     inviteModal: false,
     setupNotifiModal: false,
     loading: false,
-    defaultWorkspaceCover: ""
+    defaultWorkspaceCover: "",
+    selectAdmin: false
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
@@ -88,10 +90,21 @@ const WorkspaceHeader = (props) => {
 
   const handleLeaveWorkspace = () => {
     const infoWorkspace = { ...data }
+    const adminArr = [...infoWorkspace.administrators]
+    // check admin
+    console.log("adminArr", adminArr)
+    const indexOfAdmin = adminArr.indexOf(userId)
+    if (indexOfAdmin >= 0 && adminArr.length <= 1) {
+      console.log("runnnn select admin")
+      setState({ selectAdmin: true })
+    }
+    console.log("indexOfAdmin", indexOfAdmin)
     const memberArr = [...infoWorkspace.members]
     const indexOf = memberArr.indexOf(userId)
     memberArr.splice(indexOf, 1)
     infoWorkspace.members = memberArr
+
+    return
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
@@ -104,6 +117,10 @@ const WorkspaceHeader = (props) => {
 
   const handleSetupNotification = () => {
     setState({ setupNotifiModal: !state.setupNotifiModal })
+  }
+
+  const handleSelectAD = () => {
+    setState({ selectAdmin: !state.selectAdmin })
   }
   const items = [
     {
@@ -298,6 +315,11 @@ const WorkspaceHeader = (props) => {
           modal={state.setupNotifiModal}
           dataWorkspace={data}
           handleModal={handleSetupNotification}
+        />
+        <SelectAdminModal
+          modal={state.selectAdmin}
+          members={data.members}
+          handleModal={handleSelectAD}
         />
       </CardBody>
     </Card>

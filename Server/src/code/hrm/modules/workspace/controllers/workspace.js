@@ -580,7 +580,7 @@ const loadPinned = async (req, res) => {
     })
     .count()
   const result = {
-    dataPost: dataPost,
+    dataPost: data,
     totalPost: feedCount
   }
   return res.respond(result)

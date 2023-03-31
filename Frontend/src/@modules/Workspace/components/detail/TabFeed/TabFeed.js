@@ -59,20 +59,16 @@ const TabFeed = (props) => {
   }, [detailWorkspace])
 
   const handlePinTop = (idPost) => {
-    console.log("idPost , ", idPost)
     const arrPinned = [...state.dataPinned]
     const index = arrPinned.findIndex((p) => p._id === idPost)
     const pinUp = arrPinned[index]
     arrPinned.splice(index, 1)
     arrPinned.unshift(pinUp)
     setState({ dataPinned: arrPinned })
-    console.log("detailWorkspace.pinPosts", detailWorkspace.pinPosts)
-    console.log("index", index)
     const dataPinnedUpdate = [...detailWorkspace.pinPosts]
     dataPinnedUpdate.splice(index, 1)
     dataPinnedUpdate.unshift({ post: idPost, stt: 1 })
 
-    console.log("dataPinnedUpdate", dataPinnedUpdate)
     //  setState({ dataPinned: dataPinned })
   }
   const handlePinPost = (idPost) => {
