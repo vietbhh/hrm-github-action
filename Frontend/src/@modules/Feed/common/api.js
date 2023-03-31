@@ -56,6 +56,17 @@ export const feedApi = {
     return await axiosNodeApi.post("/feed/update-post", data)
   },
 
+  async postUpdatePostPollVote(data) {
+    return await axiosNodeApi.post("/feed/update-post-poll-vote", data)
+  },
+
+  async postUpdatePostPollVoteAddMoreOption(data) {
+    return await axiosNodeApi.post(
+      "/feed/update-post-poll-vote-add-more-option",
+      data
+    )
+  },
+
   async postUpdateContentMedia(data) {
     return await axiosNodeApi.post("/feed/update-content-media", data)
   },

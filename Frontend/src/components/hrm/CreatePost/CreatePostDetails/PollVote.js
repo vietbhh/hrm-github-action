@@ -204,7 +204,8 @@ const PollVote = (props) => {
             <button
               type="button"
               className="btn-add-option"
-              onClick={() => handleAddOptions()}>
+              onClick={() => handleAddOptions()}
+              disabled={state.options.length >= 10}>
               <i className="fa-regular fa-circle-plus fs-4 me-50"></i>
               {useFormatMessage("modules.feed.create_post.text.add_options")}
             </button>

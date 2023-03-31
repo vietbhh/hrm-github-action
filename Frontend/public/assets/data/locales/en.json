@@ -4415,7 +4415,14 @@
           "allow_incognito": "Allow incognito",
           "limit_time_for_poll": "Litmit time for poll",
           "continue": "Continue",
-          "end_at": "End at"
+          "end_at": "End at",
+          "vote": "vote",
+          "votes": "votes",
+          "enter_options": "Enter options...",
+          "poll_expired": "Poll expired",
+          "anonymous": "Anonymous",
+          "member_voted": "member voted",
+          "members_voted": "members voted"
         }
       },
       "post": {

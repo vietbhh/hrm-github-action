@@ -1,4 +1,5 @@
 import { useFormatMessage } from "@apps/utility/common"
+import moment from "moment"
 import React, { Fragment } from "react"
 
 const PollVoteDetail = (props) => {
@@ -23,12 +24,22 @@ const PollVoteDetail = (props) => {
         </div>
         <div className="poll-vote-detail-title">
           <span className="title">{poll_vote_detail?.question}</span>
-          <div className="div-end-at">
-            <i className="fa-regular fa-clock"></i>
-            <span className="time-info">
-              {useFormatMessage("modules.feed.create_post.text.end_at")}
-            </span>
-          </div>
+          {poll_vote_detail.setting.limit_time === true &&
+            poll_vote_detail.time_end !== null && (
+              <div className="div-end-at">
+                <i className="fa-regular fa-clock"></i>
+                <span className="time-info">
+                  <span className="me-50">
+                    {useFormatMessage("modules.feed.create_post.text.end_at")}:
+                  </span>
+                  <span>
+                    {moment(poll_vote_detail.time_end).format(
+                      "HH:mm - DD/MM/YYYY"
+                    )}
+                  </span>
+                </span>
+              </div>
+            )}
         </div>
         <div className="poll-vote-detail-content">
           {!_.isEmpty(poll_vote_detail.options) &&
