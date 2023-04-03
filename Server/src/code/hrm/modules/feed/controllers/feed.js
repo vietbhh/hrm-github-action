@@ -596,13 +596,27 @@ const updatePostPollVote = async (req, res, next) => {
     }
 
     if (multiple_selection === false) {
-      /* await feedMongoModel.updateOne(
-        {
-          _id: _id_post,
-          "poll_vote_detail.options._id": { $ne: _id_option }
-        },
-        { $pull: { "poll_vote_detail.options.$.user_vote": req.__user } }
-      ) */
+      const feed = await feedMongoModel.findById(_id_post)
+      const promises = []
+      forEach(feed.poll_vote_detail.options, (item) => {
+        const promise = new Promise(async (resolve, reject) => {
+          if (
+            item._id.toString() !== _id_option.toString() &&
+            item.user_vote.indexOf(req.__user) !== -1
+          ) {
+            await feedMongoModel.updateOne(
+              {
+                _id: _id_post,
+                "poll_vote_detail.options._id": item._id
+              },
+              { $pull: { "poll_vote_detail.options.$.user_vote": req.__user } }
+            )
+          }
+          resolve("success")
+        })
+        promises.push(promise)
+      })
+      await Promise.all(promises).then((res) => {})
     }
 
     const data = await handleDataFeedById(_id_post, comment_more_count_original)

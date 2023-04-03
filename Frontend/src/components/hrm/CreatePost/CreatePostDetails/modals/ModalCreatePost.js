@@ -6,6 +6,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
 import {
+  arrImage,
   decodeHTMLEntities,
   detectUrl,
   handleLoadAttachmentThumb,
@@ -58,7 +59,7 @@ const ModalCreatePost = (props) => {
     poll_vote: false,
     poll_vote_detail: {
       question: "",
-      options: [],
+      options: ["", ""],
       setting: {
         multiple_selection: false,
         adding_more_options: false,
@@ -331,6 +332,7 @@ const ModalCreatePost = (props) => {
 
   useEffect(() => {
     if (!_.isEmpty(dataPost) && modal) {
+      // ** media
       const _file = []
       if (dataPost.source) {
         _file.push({
@@ -358,6 +360,28 @@ const ModalCreatePost = (props) => {
       }
 
       setFile(_file)
+      // **
+
+      // ** background_image
+      if (
+        dataPost.type === "background_image" &&
+        dataPost.background_image !== null
+      ) {
+        setState({ backgroundImage: dataPost.background_image })
+      }
+      // **
+
+      // ** poll_vote
+      if (dataPost.type_2 === "poll_vote") {
+        const poll_vote_detail = { ...dataPost.poll_vote_detail }
+        const options = []
+        _.forEach(dataPost.poll_vote_detail.options, (item) => {
+          options.push(item.option_name)
+        })
+        poll_vote_detail["options"] = options
+        setPollVoteDetail(poll_vote_detail)
+      }
+      // **
     }
   }, [dataPost, modal])
 
@@ -563,6 +587,7 @@ const ModalCreatePost = (props) => {
             modalPollVote={state.modalPollVote}
             toggleModalPollVote={toggleModalPollVote}
             loadingSubmit={state.loadingSubmit}
+            poll_vote_detail={state.poll_vote_detail}
           />
 
           <Tooltip

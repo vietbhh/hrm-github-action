@@ -1566,6 +1566,7 @@ $btn-background-color: #377dff;
           align-items: center;
           display: inline-flex;
           justify-content: center;
+          outline: unset !important;
 
           &:hover {
             background: darken($color: #f5f7f9, $amount: 5);

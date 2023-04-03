@@ -16,7 +16,8 @@ const PollVote = (props) => {
     setPollVoteDetail,
     modalPollVote,
     toggleModalPollVote,
-    loadingSubmit
+    loadingSubmit,
+    poll_vote_detail
   } = props
   const [state, setState] = useMergedState({
     question: "",
@@ -83,6 +84,12 @@ const PollVote = (props) => {
       setState({ disable_btn_continue: true })
     }
   }, [state.question, state.options, state.setting, state.time_end])
+
+  useEffect(() => {
+    if (modalPollVote) {
+      setState(poll_vote_detail)
+    }
+  }, [modalPollVote])
 
   useEffect(() => {
     setState({
