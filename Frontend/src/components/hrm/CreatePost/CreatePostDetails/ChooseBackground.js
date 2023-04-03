@@ -6,8 +6,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import { arrImage } from "@modules/Feed/common/common"
 
 const ChooseBackground = (props) => {
-  const { backgroundImage, setBackgroundImage, showChooseBackgroundImage } =
-    props
+  const { backgroundImage, setBackgroundImage } = props
   const [state, setState] = useMergedState({
     modalChooseBackground: false
   })
@@ -19,10 +18,7 @@ const ChooseBackground = (props) => {
 
   return (
     <Fragment>
-      <div
-        className={classNames("div-choose-background", {
-          "d-none": !showChooseBackgroundImage
-        })}>
+      <div className={classNames("div-choose-background", {})}>
         <div
           onClick={() => setBackgroundImage(null)}
           className={classNames("item item-default", {

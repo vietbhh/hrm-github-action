@@ -33,6 +33,11 @@ const feedSchema = baseSchema("m_feed", {
     ],
     default: "post"
   },
+  type_2: {
+    type: String,
+    enum: [null, "poll_vote"],
+    default: null
+  },
   medias: {
     type: [
       {
@@ -116,6 +121,43 @@ const feedSchema = baseSchema("m_feed", {
   background_image: {
     type: Number,
     default: null
+  },
+  poll_vote_detail: {
+    type: {
+      question: {
+        type: String,
+        default: ""
+      },
+      options: {
+        type: [
+          {
+            _id: {
+              type: mongoose.Schema.Types.ObjectId,
+              auto: true,
+              required: true
+            },
+            option_name: {
+              type: String,
+              default: ""
+            },
+            user_vote: {
+              type: [String],
+              default: []
+            }
+          }
+        ],
+        default: []
+      },
+      setting: {
+        type: {},
+        default: {}
+      },
+      time_end: {
+        type: Date,
+        default: null
+      }
+    },
+    default: {}
   },
 
   // ** source child / post: 1 image/video

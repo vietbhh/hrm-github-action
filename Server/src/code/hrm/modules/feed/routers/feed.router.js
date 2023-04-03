@@ -14,7 +14,9 @@ import {
   loadFeedProfile,
   deletePost,
   updateContentMedia,
-  deleteComment
+  deleteComment,
+  updatePostPollVote,
+  updatePostPollVoteAddMoreOption
 } from "../controllers/feed.js"
 const router = express.Router()
 
@@ -27,6 +29,11 @@ router.get("/get-feed-and-comment/:id", getFeedByIdAndViewAllComment)
 router.post("/update-post", updatePost)
 router.post("/update-content-media", updateContentMedia)
 router.post("/delete-post", deletePost)
+router.post("/update-post-poll-vote", updatePostPollVote)
+router.post(
+  "/update-post-poll-vote-add-more-option",
+  updatePostPollVoteAddMoreOption
+)
 router.post("/submit-comment", submitComment)
 router.post("/submit-comment-reply", submitCommentReply)
 router.post("/update-comment", updateComment)
