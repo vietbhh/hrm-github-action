@@ -254,13 +254,14 @@ const EmployeesSelect = (props) => {
               )}
             </div>
           </div>
-        )
+        ),
+        disabled: true
       },
       {
         label: (
           <div className="text-center">
             <i className="fa-light fa-briefcase"></i>
-            <p>Job title</p>
+            <p>{useFormatMessage("modules.workspace.text.job_title")}</p>
           </div>
         ),
         key: "jobtitles",
@@ -316,7 +317,8 @@ const EmployeesSelect = (props) => {
               )}
             </div>
           </div>
-        )
+        ),
+        hidden: true
       },
       {
         label: (
@@ -393,28 +395,14 @@ const EmployeesSelect = (props) => {
   }
 
   const endScrollLoad = () => {
-    console.log("runnn endScrollLoad")
     const page = state.page + 1
     if (state.typeAdd === "members") {
       if (state.recordsTotal > state.members.length) {
-        console.log("run endScrollLoad members")
         loadData({ page: page, search: state.search })
-      }
-    }
-    return
-    if (state.typeAdd === "departments" && !state.loading) {
-      console.log("run endScrollLoad departments")
-      if (state.recordsTotal > state.departments.length) {
-        console.log("state.recordsTotal", state.recordsTotal)
-
-        console.log("state.departments.length", state.departments.length)
-        console.log("page", page)
-        loadDepartment({ page: page, search: state.search })
       }
     }
   }
   const endScrollDepartment = () => {
-    console.log("runnn endScrollDepartment")
     const page = state.page + 1
     if (state.recordsTotal > state.departments.length) {
       loadDepartment({ page: page, search: state.search })
@@ -422,7 +410,6 @@ const EmployeesSelect = (props) => {
   }
 
   const endScrollJobtitle = () => {
-    console.log("runnn endScrollJobtitle")
     const page = state.page + 1
     if (state.recordsTotal > state.departments.length) {
       loadJobtitle({ page: page, search: state.search })
@@ -431,7 +418,6 @@ const EmployeesSelect = (props) => {
   const handleAdd = () => {
     const dataSelected = state.dataSelected
     handleSelect(state.dataSelected)
-    console.log("dataSelected", dataSelected)
   }
   const typingTimeoutRef = useRef(null)
 
@@ -446,7 +432,6 @@ const EmployeesSelect = (props) => {
   }
 
   useEffect(() => {
-    console.log("state.typeAdd", state.typeAdd)
     if (state.typeAdd === "members") {
       loadData({ page: 1, search: state.search })
     }
@@ -458,7 +443,6 @@ const EmployeesSelect = (props) => {
       loadDepartment({ page: 1 })
     }
   }, [state.typeAdd])
-  console.log("state ", state)
   useEffect(() => {
     handleSelect(state.dataSelected, state.typeAdd)
   }, [state.dataSelected])

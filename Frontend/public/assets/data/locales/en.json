@@ -4568,8 +4568,8 @@
         "pin_post" :"Pin post",
         "posts" : "post",
         "public" : "Public",
-        "joined" : "Joined"
-
+        "joined" : "Joined",
+        "excel" : "Excel"
       },
       "app_options": {
         "workspace_type": {

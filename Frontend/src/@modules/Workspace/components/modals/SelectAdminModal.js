@@ -16,15 +16,17 @@ import {
   Row,
   Spinner
 } from "reactstrap"
+import { Alert } from "antd"
 const SelectAdminModal = (props) => {
-  const { modal, handleModal, handleDone, members } = props
+  const { modal, handleModal, members } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
     search: "",
     members: [],
     recordsTotal: [],
-    perPage: 10
+    perPage: 10,
+    admins: []
   })
 
   const onSubmit = (values) => {}
@@ -33,7 +35,7 @@ const SelectAdminModal = (props) => {
   })
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
-  const handleAdd = () => {
+  const handleAddOld = () => {
     const dataSelected = state.dataSelected
     console.log("dataSelected", dataSelected)
     handleDone(dataSelected, state.typeAdd)
@@ -59,6 +61,62 @@ const SelectAdminModal = (props) => {
     })
   }
 
+  const handleSelect = (arr) => {
+    setState({ admins: arr })
+  }
+
+  const handleDone = (dataUpdate, type) => {
+    const infoWorkspace = { ...data }
+    if (type === "members") {
+      const arrID = infoWorkspace.members.concat(
+        dataUpdate.map((x) => x["id"] * 1)
+      )
+
+      infoWorkspace.members = JSON.stringify(arrID)
+      workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+        if (res.statusText) {
+          notification.showSuccess({
+            text: useFormatMessage("notification.save.success")
+          })
+          onClickInvite()
+          setState({ loading: false })
+          // loadData()
+        }
+      })
+    } else {
+      let varTxt = "department_id"
+      if (type !== "departments") {
+        varTxt = "job_title_id"
+      }
+      const arrIdDepartment = JSON.stringify(dataUpdate.map((x) => x["id"] * 1))
+      workspaceApi
+        .loadMember({
+          [varTxt]: dataUpdate.map((x) => x["id"] * 1)
+        })
+        .then((res) => {
+          if (res.data) {
+            const arrID = infoWorkspace.members.concat(
+              res.data.map((x) => parseInt(x))
+            )
+
+            infoWorkspace.members = JSON.stringify(unique(arrID))
+            workspaceApi
+              .update(infoWorkspace._id, infoWorkspace)
+              .then((res) => {
+                if (res.statusText) {
+                  notification.showSuccess({
+                    text: useFormatMessage("notification.save.success")
+                  })
+                  onClickInvite()
+                  setState({ loading: false })
+                  //loadData()
+                }
+              })
+          }
+        })
+    }
+  }
+
   useEffect(() => {
     loadData()
   }, [members])
@@ -69,20 +127,30 @@ const SelectAdminModal = (props) => {
       style={{ top: "100px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
-      size="md"
+      className="invite-workspace-modal"
+      size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => handleModal()}>Warning</ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
           <Row className="mt-1">
-            <Col className="text-center mb-1">
-              You are the only administrator.
-              <br />
-              To take the action to leave the group please select an alternate
-              administrator
+            <Col className="text-left mb-1">
+              <Alert
+                description={
+                  <>
+                    You are the only administrator.
+                    <br />
+                    To take the action to leave the group please select an
+                    alternate administrator
+                  </>
+                }
+                type="error"
+              />
             </Col>
-            {renderMember(state.members)}
+            <Col sm={12}>
+              <EmployeesSelect handleSelect={handleSelect} />
+            </Col>
           </Row>
         </ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
