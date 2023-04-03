@@ -1153,37 +1153,34 @@ $btn-background-color: #377dff;
         justify-content: center;
         gap: 30px;
         margin-top: 10px;
-
-        .button-cancel {
-          border-radius: 10px;
-          padding: 5px 0;
-          background: #f0f0f0 !important;
-          color: #18202a;
-          font-weight: 600;
-          width: 100px;
-
-          &:hover {
-            background: darken($color: #f0f0f0, $amount: 5) !important;
-          }
-        }
-
-        .button-save {
-          width: 100px;
-          border-radius: 10px;
-          padding: 5px 0;
-          font-weight: 600;
-          background: $btn-background-color !important;
-          border-color: $btn-background-color !important;
-          color: #ffffff !important;
-
-          &:hover {
-            background: darken(
-              $color: $btn-background-color,
-              $amount: 5
-            ) !important;
-          }
-        }
       }
+    }
+  }
+
+  .button-cancel {
+    border-radius: 10px;
+    padding: 5px 0;
+    background: #f0f0f0 !important;
+    color: #18202a;
+    font-weight: 600;
+    width: 100px;
+
+    &:hover {
+      background: darken($color: #f0f0f0, $amount: 5) !important;
+    }
+  }
+
+  .button-save {
+    width: 100px;
+    border-radius: 10px;
+    padding: 5px 0;
+    font-weight: 600;
+    background: $btn-background-color !important;
+    border-color: $btn-background-color !important;
+    color: #ffffff !important;
+
+    &:hover {
+      background: darken($color: $btn-background-color, $amount: 5) !important;
     }
   }
 
@@ -2344,5 +2341,64 @@ $btn-background-color: #377dff;
       margin-right: -15px;
       padding-right: 15px;
     }
+  }
+}
+
+.modal-tag-your-colleagues {
+  .body-content {
+    display: flex;
+
+    .text-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: rgb(77, 77, 77);
+    }
+
+    .scrollbar-container {
+      max-height: 450px !important;
+      margin-right: -10px !important;
+      padding-right: 10px !important;
+    }
+
+    .list-user-react {
+      padding: 10px !important;
+      cursor: pointer;
+    }
+
+    hr {
+      margin: 10px 0 !important;
+    }
+
+    .div-list-member {
+      width: 60%;
+      border-right: 1px solid #dfe0e2;
+      padding-right: 10px;
+
+      .list-member__header {
+        height: 70px;
+        margin-bottom: 15px;
+
+        .text-title {
+          margin-bottom: 10px;
+        }
+
+        .form-group {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .div-list-selected {
+      width: 40%;
+      padding-left: 10px;
+    }
+  }
+
+  .body-footer {
+    border-top: 1px solid rgb(245, 245, 245);
+    padding-top: 15px;
+    margin-top: 15px;
+    width: 100%;
+    text-align: right;
   }
 }

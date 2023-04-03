@@ -4422,7 +4422,10 @@
           "poll_expired": "Poll expired",
           "anonymous": "Anonymous",
           "member_voted": "member voted",
-          "members_voted": "members voted"
+          "members_voted": "members voted",
+          "list_member": "List member",
+          "done": "Done",
+          "no_member_selected_yet": "No member selected yet"
         }
       },
       "post": {
@@ -4515,10 +4518,10 @@
           "videos": "Videos",
           "links": "Links"
         },
-        "workspace_infomation" : "Workspace infomation",
-        "workspace_settings" : "Workspace settings",
-        "waiting_for_approval" : "Waiting for approval",
-        "setup_notification" : "Setup notification",
+        "workspace_infomation": "Workspace infomation",
+        "workspace_settings": "Workspace settings",
+        "waiting_for_approval": "Waiting for approval",
+        "setup_notification": "Setup notification",
         "review_post": "Review post",
         "add_member_to_ws": "Add member to workspace",
         "uploaded_document": "Uploaded document",
