@@ -1,12 +1,14 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import feedMongoModel from "../../feed/models/feed.mongo.js"
-import path from "path"
+import { isEmpty, forEach, map } from "lodash-es"
+import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
 import { getUser, usersModel } from "#app/models/users.mysql.js"
-import { isEmpty, map } from "lodash-es"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
+import { Storage } from "@google-cloud/storage"
+import moment from "moment/moment.js"
 
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
@@ -459,8 +461,112 @@ const loadDataMember = async (req, res, next) => {
   }
 }
 
+const loadDataMedia = async (req, res, next) => {
+  const workspaceId = req.params.id
+  const mediaTypeNumber = req.query.media_type
+  const page = req.query.page
+  const pageLength = req.query.page_length
+
+  if (isEmpty(workspaceId) || isEmpty(mediaTypeNumber)) {
+    return res.fail("missing_workspace_id_or_media_type")
+  }
+
+  if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
+    res.fail("invalid_work_space_id")
+  }
+
+  try {
+    const workspace = await workspaceMongoModel.findById(workspaceId)
+    if (workspace === null) {
+      res.failNotFound("work_space_not_found")
+    }
+
+    const requestMedia = _getMediaType(parseInt(mediaTypeNumber))
+
+    const feedCondition = {
+      permission: "workspace",
+      permission_ids: workspaceId,
+      type: requestMedia
+    }
+    const listFeed = await feedMongoModel
+      .find(feedCondition)
+      .skip(page * pageLength)
+      .limit(pageLength)
+      .sort({
+        _id: "desc"
+      })
+
+    const totalFeed = await feedMongoModel.find(feedCondition).count()
+
+    const result = []
+    const allUser = await usersModel.findAll({ raw: true })
+    const postId = []
+    listFeed.map((item) => {
+      const [userInfo] = allUser.filter(
+        (itemFilter) => parseInt(itemFilter.id) === parseInt(item.owner)
+      )
+      const pushItem = {
+        _id: item.id,
+        owner: item.owner,
+        link: item.link,
+        type: item.type,
+        ref: item.ref,
+        source: item.source,
+        source_attribute: item.source_attribute,
+        thumb: item.thumb,
+        thumb_attribute: item.thumb_attribute,
+        created_at: item.created_at,
+        owner_info: {
+          id: userInfo.id,
+          username: userInfo.username,
+          avatar: userInfo.avatar,
+          email: userInfo.email,
+          full_name: userInfo.full_name
+        }
+      }
+
+      result.push(pushItem)
+
+      if (item.ref !== null && !postId.includes(item.ref)) {
+        postId.push(item.ref)
+      }
+    })
+
+    const postData = await feedMongoModel.find({
+      _id: postId,
+      permission: "workspace",
+      permission_ids: workspaceId,
+      type: "post"
+    })
+
+    return res.respond({
+      result: result,
+      total_feed: totalFeed,
+      page: page * 1 + 1,
+      has_more: (page * 1 + 1) * pageLength < totalFeed,
+      post_data: postData
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
 const _handleUpdateWorkspace = (condition, dataUpdate) => {
   return
+}
+
+const _getMediaType = (mediaTypeNumber) => {
+  if (mediaTypeNumber === 1) {
+    return "file"
+  } else if (mediaTypeNumber === 2) {
+    return "image"
+  } else if (mediaTypeNumber === 3) {
+    return "video"
+  } else if (mediaTypeNumber === 4) {
+    return "link"
+  }
+
+  return ""
 }
 
 const arrayMove = (arr, oldIndex, newIndex) => {
@@ -562,6 +668,32 @@ const loadFeed = async (req, res) => {
   }
   return res.respond(result)
 }
+
+const loadGCSObjectLink = async (req, res) => {
+  const storage = new Storage({
+    keyFilename: path.join(
+      dirname(global.__basedir),
+      "Server",
+      "service_account_file.json"
+    ),
+    //projectId: process.env.GCS_PROJECT_ID
+    projectId: "friday-351410"
+  })
+
+  //const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
+  const bucket = storage.bucket("friday-storage")
+  const filePath = path.join("default", req.query.name).replace(/\\/g, "/")
+  const [url] = await bucket.file(filePath).getSignedUrl({
+    version: "v4",
+    action: "read",
+    expires: Date.now() + 15 * 60 * 1000 // 15 minutes
+  })
+
+  return res.respond({
+    url: url
+  })
+}
+
 export {
   getWorkspace,
   saveWorkspace,
@@ -570,8 +702,10 @@ export {
   updateWorkspace,
   sortGroupRule,
   loadDataMember,
+  loadDataMedia,
   getPostWorkspace,
   approvePost,
   loadFeed,
-  addMemberByDepartment
+  addMemberByDepartment,
+  loadGCSObjectLink
 }

@@ -13,7 +13,7 @@ class LinkPreview extends ErpController
     public function get_link_content_get()
     {
         header('Content-Type: text/html; charset=utf-8');
-        
+
         $postData = $this->request->getGet();
         $url  = isset($postData['link']) ? $postData['link'] : '';
         if ($url == '') {
@@ -123,7 +123,7 @@ class LinkPreview extends ErpController
             }
         } catch (Exception $e) {
             $this->_handleCacheLinkPreview($code, new stdClass());
-            
+
             return $this->fail($e->getMessage());
         }
     }
@@ -172,7 +172,7 @@ class LinkPreview extends ErpController
 
         if ($code != '') {
             return isset($dataCache[$code]) ? $dataCache[$code] : false;
-        }   
+        }
 
         return $dataCache;
     }

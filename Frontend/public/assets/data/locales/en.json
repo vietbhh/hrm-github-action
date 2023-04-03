@@ -4492,8 +4492,11 @@
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
         "approve_all": "Approve all request",
+        "download": "Download",
+        "view_post": "View post",
         "approve_all_posts": "Approve all",
-        "reject_all_posts": "Reject all"
+        "reject_all_posts": "Reject all",
+        "upload": "Upload"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4505,13 +4508,23 @@
         "group_rules": "Group rules",
         "member": "Member",
         "media": "Media",
-        "workspace_infomation": "Workspace infomation",
-        "workspace_settings": "Workspace settings",
         "request_to_join": "Request to join",
-        "waiting_for_approval": "Waiting for approval",
-        "setup_notification": "Setup notification",
+        "tab_media": {
+          "files": "Files",
+          "photos": "Photos",
+          "videos": "Videos",
+          "links": "Links"
+        },
+        "workspace_infomation" : "Workspace infomation",
+        "workspace_settings" : "Workspace settings",
+        "waiting_for_approval" : "Waiting for approval",
+        "setup_notification" : "Setup notification",
         "review_post": "Review post",
-        "add_member_to_ws": "Add member to workspace"
+        "add_member_to_ws": "Add member to workspace",
+        "uploaded_document": "Uploaded document",
+        "uploaded_photo": "Uploaded photo",
+        "uploaded_video": "Uploaded video",
+        "group_link_posted": "Group link posted"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4578,7 +4591,8 @@
         "list_department": "List department",
         "list_job_title": "List job title",
         "department": "Department",
-        "job_title": "Job title"
+        "job_title": "Job title",
+        "format_cannot_be_previewed": "The format cannot be previewed!"
       }
     },
     "setting_member": {
