@@ -8,3 +8,31 @@
 .div-user__div-body {
   width: 100%;
 }
+
+.user-profile-page {
+  .image-cover {
+    position: relative;
+    .coverPhoto {
+      position: absolute;
+      width: 100%;
+      min-height: 200px;
+      top: 0%;
+      left: 0%;
+      canvas {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+      }
+    }
+    .cameraBtn {
+      position: absolute;
+      top: 4%;
+      left: 1%;
+    }
+  }
+  .workspaceCover {
+    object-fit: cover;
+    max-height: 336px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+}

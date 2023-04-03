@@ -13,7 +13,8 @@ const WorkspaceManaged = (props) => {
   const {
     // ** props
     title,
-    workspaceType
+    workspaceType,
+    customLimit
     // ** methods
   } = props
 
@@ -34,8 +35,16 @@ const WorkspaceManaged = (props) => {
       loading: true
     })
 
+    const params = {
+      ...state.filter
+    }
+
+    if (customLimit !== undefined) {
+      params["limit"] = customLimit
+    }
+
     workspaceApi
-      .getList(state.filter)
+      .getList(params)
       .then((res) => {
         setTimeout(() => {
           setState({

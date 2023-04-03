@@ -117,11 +117,18 @@ const getListWorkspace = async (req, res, next) => {
   const limit = req.query.limit
   const workspaceType = req.query.workspace_type
   try {
-    const filter = {}
+    let filter = {}
     if (workspaceType === "joined") {
-      filter["members"] = parseInt(req.__user)
+      filter = { members: parseInt(req.__user) }
     } else if (workspaceType === "managed") {
-      filter["administrators"] = parseInt(req.__user)
+      filter = { administrators: parseInt(req.__user) }
+    } else if (workspaceType === "both") {
+      filter = {
+        $or: [
+          { members: parseInt(req.__user) },
+          { administrators: parseInt(req.__user) }
+        ]
+      }
     }
 
     const workspace = await workspaceMongoModel

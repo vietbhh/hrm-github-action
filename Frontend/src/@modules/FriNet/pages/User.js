@@ -5,8 +5,11 @@ import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { userApi } from "../common/api"
 import Introduction from "../components/User/Introduction/Introduction"
 import TimeLine from "../components/User/Timeline/Timeline"
+import WorkSpace from "../components/User/Workspace/Workspace"
+import { workspaceApi } from "@modules/Workspace/common/api"
 import "../assets/scss/user.scss"
 import { Skeleton } from "antd"
+import PageHeader from "../components/User/PageHeader/PageHeader"
 
 const User = () => {
   const navigate = useNavigate()
@@ -28,48 +31,46 @@ const User = () => {
     employeeData: {}
   })
 
-  // ** function
   const loadData = async () => {
-    setState({ loading: true })
+    setState({
+      loading: true
+    })
     await userApi
       .getUser(identity)
       .then((res) => {
-        setState({ employeeData: res.data, loading: false })
+        setState({
+          employeeData: res.data,
+          loading: false
+        })
       })
       .catch((err) => {
-        setState({ employeeData: {}, loading: false })
+        setState({
+          employeeData: {},
+          loading: false
+        })
         navigate("/not-found", { replace: true })
       })
   }
 
-  // ** useEffect
+  // ** effect
   useEffect(() => {
     loadData()
-  }, [identity])
+  }, [])
 
-  return (
-    <Fragment>
-      {state.loading && (
-        <div className="feed">
-          <div className="load-feed">
-            <div className="div-loading">
-              <Skeleton avatar active paragraph={{ rows: 2 }} />
-            </div>
-          </div>
-        </div>
-      )}
+  // ** render
+  const renderComponent = () => {
+    if (state.loading) {
+      return ""
+    }
 
-      {!state.loading && (
-        <div className="div-user__div-body">
-          {/* Timeline */}
-          <TimeLine employeeData={state.employeeData} />
+    return (
+      <div className="user-profile-page">
+        <PageHeader employeeData={state.employeeData} />
+      </div>
+    )
+  }
 
-          {/* Introduction  */}
-          {/* <Introduction employeeData={state.employeeData} loadData={loadData} /> */}
-        </div>
-      )}
-    </Fragment>
-  )
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default User
