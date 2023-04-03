@@ -234,12 +234,7 @@ const LoadPostMedia = (props) => {
 
   return (
     <Fragment>
-      {((data.source !== null &&
-        (data.type === "image" ||
-          data.type === "video" ||
-          data.type === "update_cover" ||
-          data.type === "update_avatar")) ||
-        (!_.isEmpty(data.medias) && data.type === "post")) && (
+      {(data.source !== null || !_.isEmpty(data.medias)) && (
         <div className="post-body-media">{renderMedia()}</div>
       )}
 

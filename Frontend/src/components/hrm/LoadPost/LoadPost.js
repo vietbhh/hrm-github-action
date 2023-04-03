@@ -9,6 +9,7 @@ import PostComment from "./LoadPostDetails/PostDetails/PostComment"
 import PostHeader from "./LoadPostDetails/PostDetails/PostHeader"
 import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
+import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 
 const LoadPost = (props) => {
   const {
@@ -94,6 +95,14 @@ const LoadPost = (props) => {
         </div>
 
         {renderBody()}
+
+        {data.type_2 === "poll_vote" && (
+          <RenderPollVote
+            data={data}
+            setData={setData}
+            comment_more_count_original={state.comment_more_count_original}
+          />
+        )}
       </div>
       {!offReactionAndComment && (
         <>

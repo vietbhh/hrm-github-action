@@ -1,5 +1,4 @@
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { downloadApi } from "@apps/modules/download/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
@@ -7,7 +6,7 @@ import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { handleDataMention, handleLoadAttachmentMedias } from "../common/common"
+import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
 
 const PostDetail = (props) => {
   const {
@@ -43,47 +42,23 @@ const PostDetail = (props) => {
             window.history.replaceState(null, "", current_url)
           }
 
-          if (
-            data.source !== null &&
-            (data.type === "image" || data.type === "update_cover")
-          ) {
-            await downloadApi.getPhoto(data.thumb).then((response) => {
-              data["url_thumb"] = URL.createObjectURL(response.data)
-            })
-          }
+          const data_attachment = await handleLoadAttachmentThumb(data, cover)
+          data["url_thumb"] = data_attachment["url_thumb"]
+          data["url_cover"] = data_attachment["url_cover"]
+          data["medias"] = data_attachment["medias"]
 
-          if (data.source !== null && data.type === "video") {
-            await downloadApi.getPhoto(data.source).then((response) => {
-              data["url_thumb"] = URL.createObjectURL(response.data)
-            })
-          }
-
-          if (data.source !== null && data.type === "update_avatar") {
-            await downloadApi.getPhoto(data.thumb).then((response) => {
-              data["url_thumb"] = URL.createObjectURL(response.data)
-            })
-            data["url_cover"] = ""
-            if (cover !== "") {
-              await downloadApi.getPhoto(cover).then((response) => {
-                data["url_cover"] = URL.createObjectURL(response.data)
-              })
+          if (!_.isEmpty(data.medias)) {
+            const check_index_media = data.medias.findIndex(
+              (item) => item._id === idMedia
+            )
+            if (check_index_media !== -1) {
+              setState({ _idMedia: idMedia })
+            } else {
+              setState({ _idMedia: "" })
+              window.history.replaceState(null, "", current_url)
             }
           }
 
-          if (!_.isEmpty(data.medias) && data.type === "post") {
-            await handleLoadAttachmentMedias(data).then((res_promise) => {
-              const check_index_media = res_promise.findIndex(
-                (item) => item._id === idMedia
-              )
-              if (check_index_media !== -1) {
-                setState({ _idMedia: idMedia })
-              } else {
-                setState({ _idMedia: "" })
-                window.history.replaceState(null, "", current_url)
-              }
-              data["medias"] = res_promise
-            })
-          }
           setState({ loadingPost: false, dataPost: data })
         } else {
           setState({ loadingPost: false, dataPost: {} })
