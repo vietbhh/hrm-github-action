@@ -71,7 +71,8 @@ const ModalCreatePost = (props) => {
     },
 
     // tag your colleagues
-    tag_your_colleagues: []
+    tag_your_colleagues: [],
+    modal_tag: false
   })
   const [file, setFile] = useState([])
 
@@ -144,11 +145,15 @@ const ModalCreatePost = (props) => {
     return check_can_submit
   }
   const setEmptyAfterSubmit = () => {
-    setState({ showChooseBackgroundImage: false })
     setBackgroundImage(null)
     setEmptyEditorState()
     setModal(false)
-    setState({ loadingSubmit: false, arrLink: [] })
+    setState({
+      loadingSubmit: false,
+      arrLink: [],
+      showChooseBackgroundImage: false,
+      tag_your_colleagues: []
+    })
     setFile([])
     setEmptyPollVote()
   }
@@ -181,7 +186,8 @@ const ModalCreatePost = (props) => {
         _id_post_edit: dataPost?._id || "",
         backgroundImage: state.backgroundImage,
         poll_vote: state.poll_vote,
-        poll_vote_detail: state.poll_vote_detail
+        poll_vote_detail: state.poll_vote_detail,
+        tag_your_colleagues: state.tag_your_colleagues
       }
       feedApi
         .postSubmitPost(params)
@@ -323,6 +329,8 @@ const ModalCreatePost = (props) => {
     setState({ tag_your_colleagues: value })
   }
 
+  const toggleModalTag = () => setState({ modal_tag: !state.modal_tag })
+
   // ** useEffect
   useEffect(() => {
     if (!_.isEmpty(dataPost)) {
@@ -390,6 +398,11 @@ const ModalCreatePost = (props) => {
         setPollVoteDetail(poll_vote_detail)
       }
       // **
+
+      // tag_your_colleagues
+      if (!_.isEmpty(dataPost.tag_user)) {
+        setState({ tag_your_colleagues: dataPost.tag_user.tag })
+      }
     }
   }, [dataPost, modal])
 
@@ -470,6 +483,63 @@ const ModalCreatePost = (props) => {
     [file, state.loadingUploadAttachment]
   )
 
+  const renderWithTag = () => {
+    if (!_.isEmpty(state.tag_your_colleagues)) {
+      const index_user = dataMention.findIndex(
+        (item) => item.id === state.tag_your_colleagues[0]
+      )
+      let data_user = {}
+      if (index_user !== -1) {
+        data_user = dataMention[index_user]
+      }
+      if (state.tag_your_colleagues.length > 2) {
+        return (
+          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <span className="text-tag">{data_user?.full_name}</span>{" "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.and")}
+            </span>{" "}
+            <span className="text-tag">
+              {state.tag_your_colleagues.length - 1}{" "}
+              {useFormatMessage(`modules.feed.post.text.others`)}
+            </span>
+          </span>
+        )
+      } else {
+        let data_user_and = {}
+        if (state.tag_your_colleagues.length === 2) {
+          const index_user = dataMention.findIndex(
+            (item) => item.id === state.tag_your_colleagues[1]
+          )
+          if (index_user !== -1) {
+            data_user_and = dataMention[index_user]
+          }
+        }
+        return (
+          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <span className="text-tag">{data_user?.full_name}</span>{" "}
+            {state.tag_your_colleagues.length === 2 && (
+              <>
+                <span className="text-default">
+                  {useFormatMessage("modules.feed.post.text.and")}
+                </span>{" "}
+                <span className="text-tag">{data_user_and?.full_name}</span>
+              </>
+            )}
+          </span>
+        )
+      }
+    }
+
+    return ""
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -482,7 +552,9 @@ const ModalCreatePost = (props) => {
       <ModalHeader toggle={() => toggleModal()}>
         <Avatar className="img" src={avatar} />
         <div className="modal-header-privacy">
-          <span className="modal-header-privacy-name">{fullName}</span>
+          <span className="modal-header-privacy-name">
+            {fullName} {renderWithTag()}
+          </span>
           <div className="modal-header-privacy-choose">
             <Dropdown
               menu={{ items }}
@@ -573,6 +645,8 @@ const ModalCreatePost = (props) => {
             dataMention={dataMention}
             tag_your_colleagues={state.tag_your_colleagues}
             setTagYourColleagues={setTagYourColleagues}
+            modal={state.modal_tag}
+            toggleModal={toggleModalTag}
           />
 
           <PollVote

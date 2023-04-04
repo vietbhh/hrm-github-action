@@ -624,6 +624,10 @@ $btn-background-color: #377dff;
       a:hover {
         text-decoration: unset !important;
       }
+
+      .text-default {
+        font-weight: normal;
+      }
     }
 
     .post-header-right {
@@ -1265,6 +1269,14 @@ $btn-background-color: #377dff;
       .modal-header-privacy {
         .modal-header-privacy-name {
           font-size: 14px;
+
+          .text-default {
+            font-weight: normal;
+          }
+
+          .text-tag:hover {
+            text-decoration: underline;
+          }
         }
 
         .modal-header-privacy-choose {
@@ -2373,24 +2385,36 @@ $btn-background-color: #377dff;
       width: 60%;
       border-right: 1px solid #dfe0e2;
       padding-right: 10px;
+    }
 
-      .list-member__header {
-        height: 70px;
-        margin-bottom: 15px;
+    .list-member__header {
+      height: 70px;
+      margin-bottom: 15px;
 
-        .text-title {
-          margin-bottom: 10px;
-        }
+      .text-title {
+        margin-bottom: 10px;
+      }
 
-        .form-group {
-          margin-bottom: 0;
-        }
+      .form-group {
+        margin-bottom: 0;
       }
     }
 
     .div-list-selected {
       width: 40%;
       padding-left: 10px;
+
+      .div-member-count {
+        display: flex;
+        align-items: center;
+        height: 40px;
+
+        span {
+          color: #73787e;
+          font-weight: 500;
+          font-size: 12px;
+        }
+      }
     }
   }
 

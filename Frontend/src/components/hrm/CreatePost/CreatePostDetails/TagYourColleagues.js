@@ -8,16 +8,19 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 
 const TagYourColleagues = (props) => {
-  const { dataMention, tag_your_colleagues, setTagYourColleagues } = props
+  const {
+    dataMention,
+    tag_your_colleagues,
+    setTagYourColleagues,
+    modal,
+    toggleModal
+  } = props
   const [state, setState] = useMergedState({
-    modal: false,
     text_search: "",
     data_tag: []
   })
 
   // ** function
-  const toggleModal = () => setState({ modal: !state.modal })
-
   const handleCheckedUser = (user_id) => {
     const index_user = state.data_tag.indexOf(user_id)
     const _tag_your_colleagues = [...state.data_tag]
@@ -32,10 +35,10 @@ const TagYourColleagues = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    if (state.modal) {
+    if (modal) {
       setState({ data_tag: tag_your_colleagues })
     }
-  }, [state.modal, tag_your_colleagues])
+  }, [modal, tag_your_colleagues])
 
   return (
     <Fragment>
@@ -62,7 +65,7 @@ const TagYourColleagues = (props) => {
       </Tooltip>
 
       <Modal
-        isOpen={state.modal}
+        isOpen={modal}
         toggle={() => toggleModal()}
         className="modal-dialog-centered feed modal-lg modal-reaction-detail modal-poll-vote modal-tag-your-colleagues"
         modalTransition={{ timeout: 100 }}
@@ -148,29 +151,54 @@ const TagYourColleagues = (props) => {
                 </div>
               )}
 
-              {!_.isEmpty(state.data_tag) &&
-                _.map(state.data_tag, (value, index) => {
-                  const index_user = dataMention.findIndex(
-                    (item) => item.id === value
-                  )
-                  let data_user = {}
-                  if (index_user !== -1) {
-                    data_user = dataMention[index_user]
-                  }
-                  return (
-                    <Fragment key={index}>
-                      <div className="d-flex align-items-center list-user-react">
-                        <Avatar className="img me-1" src={data_user?.avatar} />
-                        <span className="name">{data_user?.full_name}</span>
-                        <div className="ms-auto">
-                          <i className="fa-solid fa-xmark"></i>
-                        </div>
-                      </div>
+              {!_.isEmpty(state.data_tag) && (
+                <Fragment>
+                  <div className="list-member__header">
+                    <div className="text-title">
+                      {useFormatMessage(
+                        "modules.feed.create_post.text.list_selected"
+                      )}
+                    </div>
+                    <div className="div-member-count">
+                      <i className="fa-solid fa-user me-50"></i>
+                      <span>
+                        {state.data_tag.length}{" "}
+                        {useFormatMessage(
+                          `modules.feed.create_post.text.${
+                            state.data_tag.length > 1 ? "members" : "member"
+                          }`
+                        )}
+                      </span>
+                    </div>
+                  </div>
 
-                      <hr />
-                    </Fragment>
-                  )
-                })}
+                  {_.map(state.data_tag, (value, index) => {
+                    const index_user = dataMention.findIndex(
+                      (item) => item.id === value
+                    )
+                    let data_user = {}
+                    if (index_user !== -1) {
+                      data_user = dataMention[index_user]
+                    }
+                    return (
+                      <Fragment key={index}>
+                        <div className="d-flex align-items-center list-user-react">
+                          <Avatar
+                            className="img me-1"
+                            src={data_user?.avatar}
+                          />
+                          <span className="name">{data_user?.full_name}</span>
+                          <div className="ms-auto">
+                            <i className="fa-solid fa-xmark"></i>
+                          </div>
+                        </div>
+
+                        <hr />
+                      </Fragment>
+                    )
+                  })}
+                </Fragment>
+              )}
             </div>
           </div>
           <div className="body-footer">

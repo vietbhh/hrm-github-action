@@ -97,7 +97,7 @@ const submitPostController = async (req, res, next) => {
   }
 
   const mention = body.mention
-  const tag = []
+  const tag = body.tag_your_colleagues
   const tag_user = { mention: mention, tag: tag }
 
   try {
@@ -378,7 +378,11 @@ const loadFeedProfile = async (req, res, next) => {
         $or: [{ permission: "default" }, { permission: "only_me" }]
       },
       {
-        $or: [{ created_by: id_profile }, { tag_user: id_profile }]
+        $or: [
+          { created_by: id_profile },
+          { "tag_user.mention": id_profile },
+          { "tag_user.tag": id_profile }
+        ]
       }
     ]
   }
