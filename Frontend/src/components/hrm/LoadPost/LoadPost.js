@@ -96,7 +96,7 @@ const LoadPost = (props) => {
 
         {renderBody()}
 
-        {data.type_2 === "poll_vote" && (
+        {data.has_poll_vote === true && (
           <RenderPollVote
             data={data}
             setData={setData}

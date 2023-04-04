@@ -33,7 +33,9 @@ const ReactionDetailModal = (props) => {
               style={{
                 backgroundImage: `url("${renderImageReact(image)}")`
               }}></div>
-            <span className="name">{redux_list_user[item]?.full_name}</span>
+            <Link to={`/u/${redux_list_user[item]?.username}`}>
+              <span className="name">{redux_list_user[item]?.full_name}</span>
+            </Link>
             <Link
               to={`/chat/${redux_list_user[item]?.username}`}
               className="ms-auto">

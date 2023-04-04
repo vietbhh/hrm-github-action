@@ -216,8 +216,9 @@ export const handleDataMention = (dataEmployee, userId) => {
       data_mention.push({
         id: value.id,
         name: "@" + value.username,
-        link: "#",
-        avatar: getAvatarUrl(value.id * 1)
+        link: "/u/" + value.username,
+        avatar: getAvatarUrl(value.id * 1),
+        full_name: value.full_name
       })
     }
   })

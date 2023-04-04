@@ -6,14 +6,14 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
 import {
-  arrImage,
   decodeHTMLEntities,
   detectUrl,
   handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
-import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js"
+import classNames from "classnames"
+import { ContentState, EditorState, Modifier, convertToRaw } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import htmlToDraft from "html-to-draftjs"
 import { useEffect, useMemo, useState } from "react"
@@ -24,8 +24,9 @@ import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
 import PollVote from "../PollVote"
-import PreviewAttachment from "../PreviewAttachment"
 import PollVoteDetail from "../PollVoteDetail"
+import PreviewAttachment from "../PreviewAttachment"
+import TagYourColleagues from "../TagYourColleagues"
 
 const ModalCreatePost = (props) => {
   const {
@@ -41,7 +42,9 @@ const ModalCreatePost = (props) => {
     setDataCreateNew,
     approveStatus,
     dataPost = {},
-    setData
+    setData,
+    optionCreate = "",
+    setOptionCreate
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -67,7 +70,11 @@ const ModalCreatePost = (props) => {
         limit_time: false
       },
       time_end: null
-    }
+    },
+
+    // tag your colleagues
+    tag_your_colleagues: [],
+    modal_tag: false
   })
   const [file, setFile] = useState([])
 
@@ -140,11 +147,15 @@ const ModalCreatePost = (props) => {
     return check_can_submit
   }
   const setEmptyAfterSubmit = () => {
-    setState({ showChooseBackgroundImage: false })
-    setBackgroundImage(null)
     setEmptyEditorState()
     setModal(false)
-    setState({ loadingSubmit: false, arrLink: [] })
+    setState({
+      loadingSubmit: false,
+      arrLink: [],
+      backgroundImage: null,
+      showChooseBackgroundImage: false,
+      tag_your_colleagues: []
+    })
     setFile([])
     setEmptyPollVote()
   }
@@ -160,7 +171,7 @@ const ModalCreatePost = (props) => {
         _content
       )
       const __content = result_tag_user.content
-      const tag_user = result_tag_user.tag_user
+      const mention = result_tag_user.tag_user
 
       const params = {
         content: __content,
@@ -169,7 +180,7 @@ const ModalCreatePost = (props) => {
         file: file,
         approveStatus: approveStatus,
         arrLink: state.arrLink,
-        tag_user: tag_user,
+        mention: mention,
         data_user: {
           id: userId,
           full_name: fullName
@@ -177,7 +188,8 @@ const ModalCreatePost = (props) => {
         _id_post_edit: dataPost?._id || "",
         backgroundImage: state.backgroundImage,
         poll_vote: state.poll_vote,
-        poll_vote_detail: state.poll_vote_detail
+        poll_vote_detail: state.poll_vote_detail,
+        tag_your_colleagues: state.tag_your_colleagues
       }
       feedApi
         .postSubmitPost(params)
@@ -214,8 +226,7 @@ const ModalCreatePost = (props) => {
 
   // ** attachment
   const handleAddAttachment = (attachment) => {
-    setState({ showChooseBackgroundImage: false })
-    setBackgroundImage(null)
+    setState({ backgroundImage: null, showChooseBackgroundImage: false })
     if (!_.isUndefined(attachment[0])) {
       let check_type_file = true
       _.forEach(attachment, (value) => {
@@ -303,7 +314,7 @@ const ModalCreatePost = (props) => {
       poll_vote: false,
       poll_vote_detail: {
         question: "",
-        options: [],
+        options: ["", ""],
         setting: {
           multiple_selection: false,
           adding_more_options: false,
@@ -314,6 +325,12 @@ const ModalCreatePost = (props) => {
       }
     })
   }
+
+  const setTagYourColleagues = (value) => {
+    setState({ tag_your_colleagues: value })
+  }
+
+  const toggleModalTag = () => setState({ modal_tag: !state.modal_tag })
 
   // ** useEffect
   useEffect(() => {
@@ -372,7 +389,7 @@ const ModalCreatePost = (props) => {
       // **
 
       // ** poll_vote
-      if (dataPost.type_2 === "poll_vote") {
+      if (dataPost.has_poll_vote === true) {
         const poll_vote_detail = { ...dataPost.poll_vote_detail }
         const options = []
         _.forEach(dataPost.poll_vote_detail.options, (item) => {
@@ -382,8 +399,32 @@ const ModalCreatePost = (props) => {
         setPollVoteDetail(poll_vote_detail)
       }
       // **
+
+      // tag_your_colleagues
+      if (!_.isEmpty(dataPost.tag_user)) {
+        setState({ tag_your_colleagues: dataPost.tag_user.tag })
+      }
     }
   }, [dataPost, modal])
+
+  useEffect(() => {
+    if (optionCreate !== "" && modal) {
+      if (optionCreate === "poll_vote") {
+        setState({ backgroundImage: null, showChooseBackgroundImage: false })
+        toggleModalPollVote()
+      }
+
+      if (_.isFunction(setOptionCreate)) {
+        setOptionCreate("")
+      }
+    }
+  }, [optionCreate, modal])
+
+  useEffect(() => {
+    if (state.poll_vote) {
+      setState({ backgroundImage: null, showChooseBackgroundImage: false })
+    }
+  }, [state.poll_vote])
 
   // ** render
   const items = [
@@ -462,6 +503,63 @@ const ModalCreatePost = (props) => {
     [file, state.loadingUploadAttachment]
   )
 
+  const renderWithTag = () => {
+    if (!_.isEmpty(state.tag_your_colleagues)) {
+      const index_user = dataMention.findIndex(
+        (item) => item.id === state.tag_your_colleagues[0]
+      )
+      let data_user = {}
+      if (index_user !== -1) {
+        data_user = dataMention[index_user]
+      }
+      if (state.tag_your_colleagues.length > 2) {
+        return (
+          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <span className="text-tag">{data_user?.full_name}</span>{" "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.and")}
+            </span>{" "}
+            <span className="text-tag">
+              {state.tag_your_colleagues.length - 1}{" "}
+              {useFormatMessage(`modules.feed.post.text.others`)}
+            </span>
+          </span>
+        )
+      } else {
+        let data_user_and = {}
+        if (state.tag_your_colleagues.length === 2) {
+          const index_user = dataMention.findIndex(
+            (item) => item.id === state.tag_your_colleagues[1]
+          )
+          if (index_user !== -1) {
+            data_user_and = dataMention[index_user]
+          }
+        }
+        return (
+          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <span className="text-tag">{data_user?.full_name}</span>{" "}
+            {state.tag_your_colleagues.length === 2 && (
+              <>
+                <span className="text-default">
+                  {useFormatMessage("modules.feed.post.text.and")}
+                </span>{" "}
+                <span className="text-tag">{data_user_and?.full_name}</span>
+              </>
+            )}
+          </span>
+        )
+      }
+    }
+
+    return ""
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -474,7 +572,9 @@ const ModalCreatePost = (props) => {
       <ModalHeader toggle={() => toggleModal()}>
         <Avatar className="img" src={avatar} />
         <div className="modal-header-privacy">
-          <span className="modal-header-privacy-name">{fullName}</span>
+          <span className="modal-header-privacy-name">
+            {fullName} {renderWithTag()}
+          </span>
           <div className="modal-header-privacy-choose">
             <Dropdown
               menu={{ items }}
@@ -530,30 +630,34 @@ const ModalCreatePost = (props) => {
         )}
 
         <ul className="create_post_footer">
-          {_.isEmpty(file) && state.poll_vote === false && (
-            <Tooltip
-              title={useFormatMessage(
-                "modules.feed.create_post.text.choose_a_background_image"
-              )}>
-              <li
-                className="create_post_footer-li cursor-pointer"
-                onClick={() =>
+          <Tooltip
+            title={useFormatMessage(
+              "modules.feed.create_post.text.choose_a_background_image"
+            )}>
+            <li
+              className={classNames("create_post_footer-li", {
+                "cursor-not-allowed":
+                  !_.isEmpty(file) || state.poll_vote === true,
+                "cursor-pointer": _.isEmpty(file) && state.poll_vote === false
+              })}
+              onClick={() => {
+                if (_.isEmpty(file) && state.poll_vote === false) {
                   setState({
                     showChooseBackgroundImage: !state.showChooseBackgroundImage
                   })
-                }>
-                {state.showChooseBackgroundImage ? (
-                  <span className="icon icon-arrow">
-                    <i className="fa-solid fa-chevron-up"></i>
-                  </span>
-                ) : (
-                  <span className="icon toggle-background">
-                    <span>Aa</span>
-                  </span>
-                )}
-              </li>
-            </Tooltip>
-          )}
+                }
+              }}>
+              {state.showChooseBackgroundImage ? (
+                <span className="icon icon-arrow">
+                  <i className="fa-solid fa-chevron-up"></i>
+                </span>
+              ) : (
+                <span className="icon toggle-background">
+                  <span>Aa</span>
+                </span>
+              )}
+            </li>
+          </Tooltip>
 
           <AttachPhotoVideo
             handleAddAttachment={handleAddAttachment}
@@ -561,25 +665,13 @@ const ModalCreatePost = (props) => {
             backgroundImage={state.backgroundImage}
           />
 
-          <Tooltip
-            title={useFormatMessage(
-              "modules.feed.create_post.text.tag_your_colleagues"
-            )}>
-            <li className="create_post_footer-li cursor-pointer">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M1.97532 12.0251L11.9753 2.02513C12.6317 1.36875 13.5219 1 14.4502 1H20.5004C21.8812 1 23.0004 2.11929 23.0004 3.5V9.55025C23.0004 10.4785 22.6317 11.3687 21.9753 12.0251L11.9753 22.0251C10.6085 23.392 8.39241 23.392 7.02558 22.0251L1.97532 16.9749C0.608485 15.608 0.608488 13.392 1.97532 12.0251ZM17.5004 8C18.3289 8 19.0004 7.32843 19.0004 6.5C19.0004 5.67157 18.3289 5 17.5004 5C16.672 5 16.0004 5.67157 16.0004 6.5C16.0004 7.32843 16.672 8 17.5004 8Z"
-                  fill="#2F54EB"></path>
-              </svg>
-            </li>
-          </Tooltip>
+          <TagYourColleagues
+            dataMention={dataMention}
+            tag_your_colleagues={state.tag_your_colleagues}
+            setTagYourColleagues={setTagYourColleagues}
+            modal={state.modal_tag}
+            toggleModal={toggleModalTag}
+          />
 
           <PollVote
             backgroundImage={state.backgroundImage}
@@ -589,26 +681,6 @@ const ModalCreatePost = (props) => {
             loadingSubmit={state.loadingSubmit}
             poll_vote_detail={state.poll_vote_detail}
           />
-
-          <Tooltip
-            title={useFormatMessage(
-              "modules.feed.create_post.text.anonymous_q_and_a"
-            )}>
-            <li className="create_post_footer-li cursor-pointer">
-              <svg
-                width="23"
-                height="21"
-                viewBox="0 0 23 21"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M0.333313 4C0.333313 1.79086 2.12417 0 4.33331 0H18.3333C20.5425 0 22.3333 1.79086 22.3333 4V13C22.3333 15.2091 20.5425 17 18.3333 17H12.2424L5.78886 20.8372C5.04072 21.2821 4.12081 20.625 4.29895 19.773L4.87877 17H4.33331C2.12417 17 0.333313 15.2091 0.333313 13V4ZM9.74753 5C9.51876 5 9.33331 5.18545 9.33331 5.41421C9.33331 5.52407 9.37695 5.62943 9.45463 5.70711L9.54042 5.79289C9.93094 6.18342 9.93094 6.81658 9.54042 7.20711C9.1499 7.59763 8.51673 7.59763 8.12621 7.20711L8.04042 7.12132C7.58767 6.66857 7.33331 6.0545 7.33331 5.41421C7.33331 4.08088 8.41419 3 9.74753 3H12.5899C14.105 3 15.3333 4.22827 15.3333 5.74342C15.3333 6.92427 14.5777 7.97263 13.4574 8.34605L13.1495 8.44868C12.6621 8.61116 12.3333 9.06733 12.3333 9.58114V10C12.3333 10.5523 11.8856 11 11.3333 11C10.781 11 10.3333 10.5523 10.3333 10V9.58114C10.3333 8.20647 11.213 6.98603 12.5171 6.55132L12.825 6.44868C13.1286 6.34749 13.3333 6.06341 13.3333 5.74342C13.3333 5.33284 13.0005 5 12.5899 5H9.74753ZM11.3333 12C10.781 12 10.3333 12.4477 10.3333 13C10.3333 13.5523 10.781 14 11.3333 14C11.8856 14 12.3333 13.5523 12.3333 13C12.3333 12.4477 11.8856 12 11.3333 12Z"
-                  fill="#20C950"></path>
-              </svg>
-            </li>
-          </Tooltip>
 
           <Emoji handleInsertEditorState={handleInsertEditorState} />
         </ul>

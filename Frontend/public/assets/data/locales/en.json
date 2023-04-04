@@ -4431,7 +4431,13 @@
           "poll_expired": "Poll expired",
           "anonymous": "Anonymous",
           "member_voted": "member voted",
-          "members_voted": "members voted"
+          "members_voted": "members voted",
+          "list_member": "List member",
+          "done": "Done",
+          "no_member_selected_yet": "No member selected yet",
+          "list_selected": "List selected",
+          "member": "member",
+          "members": "members"
         }
       },
       "post": {
@@ -4465,7 +4471,9 @@
           "edited": "Edited",
           "edit_comment": "Edit comment",
           "delete_comment": "Delete comment",
-          "cancel_edit": "Cancel edit"
+          "cancel_edit": "Cancel edit",
+          "with": "with",
+          "people": "People"
         },
         "react": {
           "like": "Like",

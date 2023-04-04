@@ -69,7 +69,7 @@ const TimelineProfile = (props) => {
               </div>
             </Tooltip>
 
-            <Link to={`/u/${employeeData.username}/about`}>
+            <Link to={`/u/${employeeData.id}/introduction`}>
               <button className="button-introduction">
                 <i className="fa-solid fa-pencil me-50"></i>
                 {useFormatMessage("modules.timeline.text.edit_information")}
