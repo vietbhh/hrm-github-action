@@ -1520,6 +1520,15 @@
               }
             }
           }
+        },
+        "timeline": {
+          "title": "Timeline"
+        },
+        "introduction": {
+          "title": "Introduction"
+        },
+        "workspace": {
+          "title": "Workspace"
         }
       },
       "fields": {
