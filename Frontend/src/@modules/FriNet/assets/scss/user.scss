@@ -10,29 +10,72 @@
 }
 
 .user-profile-page {
-  .image-cover {
+  .cover-image-container {
     position: relative;
-    .coverPhoto {
-      position: absolute;
-      width: 100%;
-      min-height: 200px;
-      top: 0%;
-      left: 0%;
-      canvas {
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
+
+    .image-cover {
+      position: relative;
+      .coverPhoto {
+        position: absolute;
+        width: 100%;
+        min-height: 200px;
+        top: 0%;
+        left: 0%;
+        canvas {
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+        }
+      }
+      .cameraBtn {
+        position: absolute;
+        top: 4%;
+        left: 1%;
       }
     }
-    .cameraBtn {
+    .workspaceCover {
+      object-fit: cover;
+      max-height: 336px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .avatar {
       position: absolute;
-      top: 4%;
-      left: 1%;
+      left: calc(50% - 90px);
+      bottom: -20px;
+      padding: 3px;
+      background-color: #ffffff;
+
+      .employeeAvatar {
+        @include media-breakpoint-up(lg) {
+          height: 180px;
+          width: 180px;
+        }
+
+        position: relative;
+
+        cursor: pointer;
+
+        img {
+          border-radius: 50% !important;
+          height: 100%;
+          object-fit: cover;
+          object-position: center center;
+        }
+
+        .cameraBtn {
+          position: absolute;
+          bottom: 0;
+          right: 20px;
+        }
+      }
     }
   }
-  .workspaceCover {
-    object-fit: cover;
-    max-height: 336px;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+
+  .user-info-container {
+    h3 {
+      color: #000000 !important;
+      font-weight: 600;
+    }
   }
 }

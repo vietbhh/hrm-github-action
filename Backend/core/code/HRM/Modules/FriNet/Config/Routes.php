@@ -17,3 +17,4 @@ $routes->post('fri-net-setting-member/show-hide-info', 'SettingMember::show_hide
 
 	/*** Route for User ***/
 $routes->get('fri-net-user/get-user/(:any)', 'User::get_user_get/$1',['namespace' => 'HRM\Modules\FriNet\Controllers']);
+$routes->post('fri-net-user/save-cover-image', 'User::save_cover_image_post',['namespace' => 'HRM\Modules\FriNet\Controllers']);

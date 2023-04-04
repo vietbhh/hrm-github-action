@@ -19,6 +19,16 @@ export const userApi = {
     return await axiosApi.get("/fri-net-user/get-user/" + identity, {
       disableLoading: true
     })
+  },
+
+  async saveCoverImage(data) {
+    return await axiosApi.post(
+      "/fri-net-user/save-cover-image",
+      serialize(_.cloneDeep(data)),
+      {
+        disableLoading: true
+      }
+    )
   }
 }
 

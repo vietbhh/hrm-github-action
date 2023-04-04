@@ -57,6 +57,7 @@ const CoverImage = (props) => {
 
       {state.coverImage && !state.defaultWorkspaceCover && (
         <Photo
+          loading={state.loading}
           src={state.coverImage}
           width="100%"
           className="h-100 w-100 workspaceCover"
