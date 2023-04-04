@@ -22,11 +22,7 @@ const PageHeader = (props) => {
 
   const handleChangeTab = (tabId) => {
     setTabActive(getTabId(tabId))
-    window.history.replaceState(
-      null,
-      "",
-      `/u/${employeeData.id}/${tabId}`
-    )
+    window.history.replaceState(null, "", `/u/${employeeData.id}/${tabId}`)
   }
 
   const handleChangeAvatar = (img) => {
@@ -49,7 +45,7 @@ const PageHeader = (props) => {
       )
     }
 
-    return <Avatar src={employeeData.avatar} className="employeeAvatar"/>
+    return <Avatar src={employeeData.avatar} className="employeeAvatar" />
   }
 
   return (
