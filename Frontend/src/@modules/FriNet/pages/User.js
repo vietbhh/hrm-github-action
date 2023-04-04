@@ -18,6 +18,15 @@ const User = () => {
   const params = useParams()
   const tab = getTabId(params.tab)
 
+  if (tab === "") {
+    return (
+      <>
+        <Navigate to="/not-found" replace={true} />
+        <AppSpinner />
+      </>
+    )
+  }
+
   const [state, setState] = useMergedState({
     loading: true,
     employeeData: {},

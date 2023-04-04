@@ -1,5 +1,5 @@
 export const getTabId = (tabText) => {
-  if (tabText === "timeline") {
+  if (tabText === "timeline" || tabText === undefined) {
     return 1
   } else if (tabText === "introduction") {
     return 2
@@ -7,5 +7,5 @@ export const getTabId = (tabText) => {
     return 3
   }
 
-  return 1
+  return ""
 }
