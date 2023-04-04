@@ -141,6 +141,7 @@ const WorkspaceHeader = (props) => {
       <CoverImage
         src={data.cover_image}
         dataSave={{ ...data, id: data?._id }}
+        isEditable={data.is_admin_group}
         saveCoverImageApi={workspaceApi.saveCoverImage}
       />
 
