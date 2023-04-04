@@ -13,7 +13,8 @@ const CreatePost = (props) => {
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
-    dataMention: []
+    dataMention: [],
+    optionCreate: ""
   })
 
   const dataEmployee = useSelector((state) => state.users.list)
@@ -26,6 +27,8 @@ const CreatePost = (props) => {
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
+
+  const setOptionCreate = (value) => setState({ optionCreate: value })
 
   // ** useEffect
   useEffect(() => {
@@ -165,7 +168,11 @@ const CreatePost = (props) => {
                 {useFormatMessage("modules.feed.create_post.text.event")}
               </span>
             </li>
-            <li>
+            <li
+              onClick={() => {
+                setState({ optionCreate: "poll_vote" })
+                toggleModalCreatePost()
+              }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -265,6 +272,8 @@ const CreatePost = (props) => {
         workspace={workspace}
         setDataCreateNew={setDataCreateNew}
         approveStatus={approveStatus}
+        optionCreate={state.optionCreate}
+        setOptionCreate={setOptionCreate}
       />
     </Fragment>
   )

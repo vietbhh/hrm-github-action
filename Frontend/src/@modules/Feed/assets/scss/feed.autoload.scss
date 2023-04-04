@@ -1327,6 +1327,16 @@ $btn-background-color: #377dff;
         border-radius: 12px;
         position: relative;
 
+        &.cursor-not-allowed {
+          svg path {
+            fill: #c3c7cc;
+          }
+
+          span {
+            background: #c3c7cc;
+          }
+        }
+
         &:hover {
           background: #f0f3ff;
         }

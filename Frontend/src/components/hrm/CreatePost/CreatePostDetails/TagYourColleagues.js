@@ -188,7 +188,10 @@ const TagYourColleagues = (props) => {
                             src={data_user?.avatar}
                           />
                           <span className="name">{data_user?.full_name}</span>
-                          <div className="ms-auto">
+                          <div
+                            className="ms-auto text-center"
+                            style={{ width: "20px" }}
+                            onClick={() => handleCheckedUser(value)}>
                             <i className="fa-solid fa-xmark"></i>
                           </div>
                         </div>
@@ -206,7 +209,7 @@ const TagYourColleagues = (props) => {
               type="button"
               className="button-cancel me-1"
               onClick={() => toggleModal()}>
-              {useFormatMessage("app.cancel")}
+              {useFormatMessage("app.close")}
             </button>
             <button
               type="button"

@@ -26,7 +26,7 @@ const Introduction = (props) => {
     loadPage: true
   })
 
-  const [permits, setPermits] = useMergedState({
+  const permits = {
     personalInfo: {
       view: ability.can(
         "viewPersonalInfo",
@@ -79,7 +79,7 @@ const Introduction = (props) => {
       view: ability.can("viewPayroll", isProfile ? "profile" : "employees"),
       update: ability.can("updatePayroll", isProfile ? "profile" : "employees")
     }
-  })
+  }
 
   const employeesModule = useSelector((state) => state.app.modules.employees)
 

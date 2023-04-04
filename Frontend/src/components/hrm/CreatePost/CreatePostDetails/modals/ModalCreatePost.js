@@ -6,14 +6,14 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
 import {
-  arrImage,
   decodeHTMLEntities,
   detectUrl,
   handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { Dropdown, Tooltip } from "antd"
-import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js"
+import classNames from "classnames"
+import { ContentState, EditorState, Modifier, convertToRaw } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import htmlToDraft from "html-to-draftjs"
 import { useEffect, useMemo, useState } from "react"
@@ -24,8 +24,8 @@ import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
 import PollVote from "../PollVote"
-import PreviewAttachment from "../PreviewAttachment"
 import PollVoteDetail from "../PollVoteDetail"
+import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
 
 const ModalCreatePost = (props) => {
@@ -42,7 +42,9 @@ const ModalCreatePost = (props) => {
     setDataCreateNew,
     approveStatus,
     dataPost = {},
-    setData
+    setData,
+    optionCreate = "",
+    setOptionCreate
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -145,12 +147,12 @@ const ModalCreatePost = (props) => {
     return check_can_submit
   }
   const setEmptyAfterSubmit = () => {
-    setBackgroundImage(null)
     setEmptyEditorState()
     setModal(false)
     setState({
       loadingSubmit: false,
       arrLink: [],
+      backgroundImage: null,
       showChooseBackgroundImage: false,
       tag_your_colleagues: []
     })
@@ -224,8 +226,7 @@ const ModalCreatePost = (props) => {
 
   // ** attachment
   const handleAddAttachment = (attachment) => {
-    setState({ showChooseBackgroundImage: false })
-    setBackgroundImage(null)
+    setState({ backgroundImage: null, showChooseBackgroundImage: false })
     if (!_.isUndefined(attachment[0])) {
       let check_type_file = true
       _.forEach(attachment, (value) => {
@@ -405,6 +406,25 @@ const ModalCreatePost = (props) => {
       }
     }
   }, [dataPost, modal])
+
+  useEffect(() => {
+    if (optionCreate !== "" && modal) {
+      if (optionCreate === "poll_vote") {
+        setState({ backgroundImage: null, showChooseBackgroundImage: false })
+        toggleModalPollVote()
+      }
+
+      if (_.isFunction(setOptionCreate)) {
+        setOptionCreate("")
+      }
+    }
+  }, [optionCreate, modal])
+
+  useEffect(() => {
+    if (state.poll_vote) {
+      setState({ backgroundImage: null, showChooseBackgroundImage: false })
+    }
+  }, [state.poll_vote])
 
   // ** render
   const items = [
@@ -610,30 +630,34 @@ const ModalCreatePost = (props) => {
         )}
 
         <ul className="create_post_footer">
-          {_.isEmpty(file) && state.poll_vote === false && (
-            <Tooltip
-              title={useFormatMessage(
-                "modules.feed.create_post.text.choose_a_background_image"
-              )}>
-              <li
-                className="create_post_footer-li cursor-pointer"
-                onClick={() =>
+          <Tooltip
+            title={useFormatMessage(
+              "modules.feed.create_post.text.choose_a_background_image"
+            )}>
+            <li
+              className={classNames("create_post_footer-li", {
+                "cursor-not-allowed":
+                  !_.isEmpty(file) || state.poll_vote === true,
+                "cursor-pointer": _.isEmpty(file) && state.poll_vote === false
+              })}
+              onClick={() => {
+                if (_.isEmpty(file) && state.poll_vote === false) {
                   setState({
                     showChooseBackgroundImage: !state.showChooseBackgroundImage
                   })
-                }>
-                {state.showChooseBackgroundImage ? (
-                  <span className="icon icon-arrow">
-                    <i className="fa-solid fa-chevron-up"></i>
-                  </span>
-                ) : (
-                  <span className="icon toggle-background">
-                    <span>Aa</span>
-                  </span>
-                )}
-              </li>
-            </Tooltip>
-          )}
+                }
+              }}>
+              {state.showChooseBackgroundImage ? (
+                <span className="icon icon-arrow">
+                  <i className="fa-solid fa-chevron-up"></i>
+                </span>
+              ) : (
+                <span className="icon toggle-background">
+                  <span>Aa</span>
+                </span>
+              )}
+            </li>
+          </Tooltip>
 
           <AttachPhotoVideo
             handleAddAttachment={handleAddAttachment}
