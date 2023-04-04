@@ -18,7 +18,7 @@ import {
 } from "reactstrap"
 import { Alert } from "antd"
 const SelectAdminModal = (props) => {
-  const { modal, handleModal, members } = props
+  const { modal, handleModal, members, handleDone } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
@@ -35,91 +35,15 @@ const SelectAdminModal = (props) => {
   })
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
-  const handleAddOld = () => {
-    const dataSelected = state.dataSelected
-    console.log("dataSelected", dataSelected)
-    handleDone(dataSelected, state.typeAdd)
-  }
-
-  const getDataSelect = (data = [], typeAdd) => {
-    setState({ dataSelected: data, typeAdd: typeAdd })
-  }
-  const loadData = (filters = {}) => {
-    defaultModuleApi.getList("employees", {}).then((res) => {
-      console.log("res", res.data.results)
-      setState({ members: res.data.results })
-    })
-  }
-  const renderMember = (data = []) => {
-    return data.map((item, key) => {
-      return (
-        <Col sm={12} className="d-flex">
-          <UserDisplay user={item} className="mb-1" />
-          <ErpCheckbox formGroupClass="ms-auto" />
-        </Col>
-      )
-    })
+  const handleAdd = () => {
+    handleDone(state.admins)
   }
 
   const handleSelect = (arr) => {
     setState({ admins: arr })
   }
 
-  const handleDone = (dataUpdate, type) => {
-    const infoWorkspace = { ...data }
-    if (type === "members") {
-      const arrID = infoWorkspace.members.concat(
-        dataUpdate.map((x) => x["id"] * 1)
-      )
-
-      infoWorkspace.members = JSON.stringify(arrID)
-      workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
-        if (res.statusText) {
-          notification.showSuccess({
-            text: useFormatMessage("notification.save.success")
-          })
-          onClickInvite()
-          setState({ loading: false })
-          // loadData()
-        }
-      })
-    } else {
-      let varTxt = "department_id"
-      if (type !== "departments") {
-        varTxt = "job_title_id"
-      }
-      const arrIdDepartment = JSON.stringify(dataUpdate.map((x) => x["id"] * 1))
-      workspaceApi
-        .loadMember({
-          [varTxt]: dataUpdate.map((x) => x["id"] * 1)
-        })
-        .then((res) => {
-          if (res.data) {
-            const arrID = infoWorkspace.members.concat(
-              res.data.map((x) => parseInt(x))
-            )
-
-            infoWorkspace.members = JSON.stringify(unique(arrID))
-            workspaceApi
-              .update(infoWorkspace._id, infoWorkspace)
-              .then((res) => {
-                if (res.statusText) {
-                  notification.showSuccess({
-                    text: useFormatMessage("notification.save.success")
-                  })
-                  onClickInvite()
-                  setState({ loading: false })
-                  //loadData()
-                }
-              })
-          }
-        })
-    }
-  }
-
-  useEffect(() => {
-    loadData()
-  }, [members])
+  useEffect(() => {}, [members])
 
   return (
     <Modal

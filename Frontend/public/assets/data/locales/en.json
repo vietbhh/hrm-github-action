@@ -4475,7 +4475,8 @@
         "approve_all": "Approve all request",
         "approve_all_posts": "Approve all",
         "reject_all_posts": "Reject all",
-        "invite" : "Invite"
+        "invite" : "Invite",
+        "join_workspace": "Join workspace"
       },
       "display": {
         "create_workspace_title": "Create Workspace",

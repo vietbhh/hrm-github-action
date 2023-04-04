@@ -15,6 +15,11 @@ import SetupNotificationModal from "../modals/SetupNotificationModal"
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
+const arrSplice = (arr = [], IDrm) => {
+  const index = arr.findIndex((v) => v === IDrm)
+  arr.splice(index, 1)
+  return arr
+}
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
 
@@ -25,7 +30,8 @@ const WorkspaceHeader = (props) => {
     setupNotifiModal: false,
     loading: false,
     defaultWorkspaceCover: "",
-    selectAdmin: false
+    selectAdmin: false,
+    joined: false
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
@@ -122,6 +128,24 @@ const WorkspaceHeader = (props) => {
   const handleSelectAD = () => {
     setState({ selectAdmin: !state.selectAdmin })
   }
+  const handleDoneAddAD = (dataUpdate) => {
+    const infoWorkspace = { ...data }
+    const arrID = dataUpdate.map((x) => parseInt(x["id"]))
+    infoWorkspace.administrators = arrID
+    // arrSplice members
+    infoWorkspace.members = arrSplice(infoWorkspace.members, userId)
+
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        //onClickInvite()
+        setState({ loading: false })
+        // loadData()
+      }
+    })
+  }
   const items = [
     {
       label: (
@@ -163,10 +187,26 @@ const WorkspaceHeader = (props) => {
   ]
 
   useEffect(() => {
+    const arrAdmin = data?.administrators ? data?.administrators : []
+    const arrMember = data?.members ? data?.members : []
+    const isAdmin = arrAdmin.includes(userId)
+    const isMember = arrMember.includes(userId)
+    let isJoined = false
+    if (isAdmin || isMember) {
+      isJoined = true
+    }
+
     if (data.cover_image) {
-      setState({ coverImage: data.cover_image, defaultWorkspaceCover: "" })
+      setState({
+        coverImage: data.cover_image,
+        defaultWorkspaceCover: "",
+        joined: isJoined
+      })
     } else {
-      setState({ defaultWorkspaceCover: defaultWorkspaceCover })
+      setState({
+        defaultWorkspaceCover: defaultWorkspaceCover,
+        joined: isJoined
+      })
     }
   }, [data])
 
@@ -210,10 +250,20 @@ const WorkspaceHeader = (props) => {
             </p>
           </div>
           <div className="workspaceAction">
-            <Button className="btn btn-success" onClick={() => onClickInvite()}>
-              <i className="fa-regular fa-plus me-50"></i>
-              {useFormatMessage("modules.workspace.buttons.invite")}
-            </Button>
+            {state.joined && (
+              <Button
+                className="btn btn-success"
+                onClick={() => onClickInvite()}>
+                <i className="fa-regular fa-plus me-50"></i>
+                {useFormatMessage("modules.workspace.buttons.invite")}
+              </Button>
+            )}
+            {!state.joined && (
+              <Button className="btn btn-success">
+                <i className="fa-regular fa-plus me-50"></i>
+                {useFormatMessage("modules.workspace.buttons.join_workspace")}
+              </Button>
+            )}
           </div>
         </div>
         <hr
@@ -267,43 +317,45 @@ const WorkspaceHeader = (props) => {
               {useFormatMessage("modules.workspace.display.media")}
             </NavLink>
           </NavItem>
-          <div className="ms-auto">
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    label: (
-                      <>
-                        <i className="fa-light fa-right-from-bracket me-50"></i>
-                        {useFormatMessage(
-                          "modules.workspace.display.leave_workspace"
-                        )}
-                      </>
-                    ),
-                    key: "0",
-                    onClick: () => handleLeaveWorkspace()
-                  }
-                ]
-              }}
-              placement="bottomRight"
-              trigger={["click"]}>
-              <Button className="me-50" color="secondary" outline>
-                {useFormatMessage("modules.workspace.text.joined")}{" "}
-                <i class="fa-regular fa-chevron-down"></i>
-              </Button>
-            </Dropdown>
+          {state.joined && (
+            <div className="ms-auto">
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      label: (
+                        <>
+                          <i className="fa-light fa-right-from-bracket me-50"></i>
+                          {useFormatMessage(
+                            "modules.workspace.display.leave_workspace"
+                          )}
+                        </>
+                      ),
+                      key: "0",
+                      onClick: () => handleLeaveWorkspace()
+                    }
+                  ]
+                }}
+                placement="bottomRight"
+                trigger={["click"]}>
+                <Button className="me-50" color="secondary" outline>
+                  {useFormatMessage("modules.workspace.text.joined")}{" "}
+                  <i class="fa-regular fa-chevron-down"></i>
+                </Button>
+              </Dropdown>
 
-            <Dropdown
-              menu={{
-                items
-              }}
-              placement="bottomRight"
-              trigger={["click"]}>
-              <Button color="flat-secondary ">
-                <i className="fa-light fa-ellipsis"></i>
-              </Button>
-            </Dropdown>
-          </div>
+              <Dropdown
+                menu={{
+                  items
+                }}
+                placement="bottomRight"
+                trigger={["click"]}>
+                <Button color="flat-secondary ">
+                  <i className="fa-light fa-ellipsis"></i>
+                </Button>
+              </Dropdown>
+            </div>
+          )}
         </Nav>
         <InviteWorkspaceModal
           modal={state.inviteModal}
@@ -319,6 +371,7 @@ const WorkspaceHeader = (props) => {
         <SelectAdminModal
           modal={state.selectAdmin}
           members={data.members}
+          handleDone={handleDoneAddAD}
           handleModal={handleSelectAD}
         />
       </CardBody>

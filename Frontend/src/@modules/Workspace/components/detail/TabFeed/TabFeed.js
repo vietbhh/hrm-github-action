@@ -25,7 +25,8 @@ const TabFeed = (props) => {
     prevScrollY: 0,
     dataCreateNew: {},
     approveStatus: "pending",
-    dataPinned: []
+    dataPinned: [],
+    joined: false
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -46,14 +47,21 @@ const TabFeed = (props) => {
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
       : []
+    const arrMember = detailWorkspace?.members ? detailWorkspace?.members : []
     const isAdmin = arrAdmin.includes(userId)
+
+    const isMember = arrMember.includes(userId)
+    let isJoined = false
+    if (isAdmin || isMember) {
+      isJoined = true
+    }
     if (isAdmin) {
-      setState({ approveStatus: "approved" })
+      setState({ approveStatus: "approved", joined: isJoined })
     } else {
       if (detailWorkspace?.review_post) {
-        setState({ approveStatus: "pending" })
+        setState({ approveStatus: "pending", joined: isJoined })
       } else {
-        setState({ approveStatus: "approved" })
+        setState({ approveStatus: "approved", joined: isJoined })
       }
     }
   }, [detailWorkspace])
@@ -193,11 +201,13 @@ const TabFeed = (props) => {
   return (
     <div className="div-content ">
       <div className="div-left feed">
-        <CreatePost
-          setDataCreateNew={setDataCreateNew}
-          workspace={workspaceID}
-          approveStatus={state.approveStatus}
-        />
+        {state.joined && (
+          <CreatePost
+            setDataCreateNew={setDataCreateNew}
+            workspace={workspaceID}
+            approveStatus={state.approveStatus}
+          />
+        )}
 
         <Card className="mb-1">
           <CardHeader>
