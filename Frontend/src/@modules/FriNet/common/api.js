@@ -29,6 +29,14 @@ export const userApi = {
         disableLoading: true
       }
     )
+  },
+
+  async saveAvatar(data) {
+    return await axiosApi.post("/user/avatar", serialize(_.cloneDeep(data)), {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    })
   }
 }
 

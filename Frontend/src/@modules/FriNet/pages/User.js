@@ -10,13 +10,25 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 import "../assets/scss/user.scss"
 import { Skeleton } from "antd"
 import PageHeader from "../components/User/PageHeader/PageHeader"
+import { TabContent, TabPane } from "reactstrap"
+import {getTabId} from "../common/common"
+import { useSelector } from "react-redux"
 
 const User = () => {
-  const navigate = useNavigate()
   const params = useParams()
-  const identity = params.identity
-  const tab = params.tab || ""
+  const tab = getTabId(params.tab)
 
+  const [state, setState] = useMergedState({
+    loading: true,
+    employeeData: {},
+    tabActive: tab
+  })
+
+  const userAuth = useSelector((state) => state.auth.userData)
+
+  const navigate = useNavigate()
+  const identity = params.identity === "profile" ? userAuth.id : params.identity
+  
   if (_.isEmpty(identity)) {
     return (
       <>
@@ -26,10 +38,11 @@ const User = () => {
     )
   }
 
-  const [state, setState] = useMergedState({
-    loading: true,
-    employeeData: {}
-  })
+  const setTabActive = (status) => {
+    setState({
+      tabActive: status
+    })
+  }
 
   const loadData = async () => {
     setState({
@@ -60,12 +73,45 @@ const User = () => {
   // ** render
   const renderComponent = () => {
     if (state.loading) {
-      return ""
+      return (
+        <div className="feed">
+          <div className="load-feed">
+            <div className="div-loading">
+              <Skeleton avatar active paragraph={{ rows: 2 }} />
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
       <div className="user-profile-page">
-        <PageHeader employeeData={state.employeeData} />
+        <PageHeader
+          employeeData={state.employeeData}
+          tabActive={state.tabActive}
+          setTabActive={setTabActive}
+        />
+
+        <div className="mt-1">
+          <TabContent className="py-50" activeTab={state.tabActive}>
+            <TabPane tabId={1}>
+              <TimeLine employeeData={state.employeeData} />
+            </TabPane>
+            <TabPane tabId={2}>
+              <Introduction
+                employeeData={state.employeeData}
+                loadData={loadData}
+                isProfile={state.employeeData.is_profile}
+              />
+            </TabPane>
+            <TabPane tabId={3}>
+              <WorkSpace
+                identity={identity}
+                employeeData={state.employeeData}
+              />
+            </TabPane>
+          </TabContent>
+        </div>
       </div>
     )
   }

@@ -39,11 +39,12 @@
       border-top-right-radius: 12px;
     }
 
-    .avatar {
+    .avatar-container {
       position: absolute;
       left: calc(50% - 90px);
       bottom: -20px;
       padding: 3px;
+      border-radius: 50%;
       background-color: #ffffff;
 
       .employeeAvatar {
@@ -59,6 +60,7 @@
         img {
           border-radius: 50% !important;
           height: 100%;
+          width: 100%;
           object-fit: cover;
           object-position: center center;
         }

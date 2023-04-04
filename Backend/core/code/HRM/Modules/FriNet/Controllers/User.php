@@ -19,7 +19,10 @@ class User extends ErpController
 			return $this->failNotFound(NOT_FOUND);
 		}
 
-		return $this->respond(handleDataBeforeReturn($modules, $data));
+		$result = handleDataBeforeReturn($modules, $data);
+		$result['avatar'] = $data['avatar'];
+		$result['is_profile'] = user_id() == $result['id'];
+		return $this->respond($result);
 	}
 
 	public function save_cover_image_post()
@@ -33,20 +36,9 @@ class User extends ErpController
 			return $this->fail(MISSING_REQUIRED);
 		}
 
-		$uploadService = \App\Libraries\Upload\Config\Services::upload();
-
 		try {
 			$employeeId = $employeeData['id'];
-			$storePath = getModuleUploadPath('employees', $employeeId, false) . 'other/';
-			$filename = $employeeId . '_cover_image.png';
-			$image = substr($image, strpos($image, ',') + 1);
-			$image = str_replace(' ', '+', $image);
-			$image = base64_decode($image);
-			$paths = $uploadService->uploadFile($storePath, [[
-				'filename' => $filename,
-				'filesize' => 0,
-				'content' => $image
-			]], true);
+			$paths = $this->_handleUploadImage($employeeId, $image);
 
 			if (isset($paths['last_uploaded']) && count($paths['last_uploaded']) > 0) {
 				$model->setAllowedFields(['cover_image']);
@@ -62,5 +54,23 @@ class User extends ErpController
 		} catch (\Exception $err) {
 			return $this->fail(FAILED_SAVE);
 		}
+	}
+
+	// ** support function
+	private function _handleUploadImage($employeeId, $image)
+	{
+		$uploadService = \App\Libraries\Upload\Config\Services::upload();
+		$storePath = getModuleUploadPath('employees', $employeeId, false) . 'other/';
+		$filename = $employeeId . '_cover_image.png';
+		$image = substr($image, strpos($image, ',') + 1);
+		$image = str_replace(' ', '+', $image);
+		$image = base64_decode($image);
+		$result =  $uploadService->uploadFile($storePath, [[
+			'filename' => $filename,
+			'filesize' => 0,
+			'content' => $image
+		]], true);
+
+		return $result;
 	}
 }

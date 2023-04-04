@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 // ** Components
@@ -12,6 +12,7 @@ const CoverImage = (props) => {
     // ** props
     src,
     dataSave,
+    isEditable,
     // ** methods
     saveCoverImageApi
   } = props
@@ -45,6 +46,20 @@ const CoverImage = (props) => {
   }, [src])
 
   // ** render
+  const renderEditButton = () => {
+    if (isEditable === true) {
+      return (
+        <CoverEditor
+          src=""
+          className="btn-cover"
+          saveCoverImage={saveCoverImage}
+        />
+      )
+    }
+
+    return ""
+  }
+
   return (
     <div className="image-cover">
       {state.defaultWorkspaceCover && (
@@ -64,11 +79,7 @@ const CoverImage = (props) => {
         />
       )}
 
-      <CoverEditor
-        src=""
-        className="btn-cover"
-        saveCoverImage={saveCoverImage}
-      />
+      <Fragment>{renderEditButton()}</Fragment>
     </div>
   )
 }
