@@ -13,7 +13,9 @@ const WorkspaceManaged = (props) => {
   const {
     // ** props
     title,
-    workspaceType
+    workspaceType,
+    customLimit,
+    customUserId
     // ** methods
   } = props
 
@@ -34,8 +36,20 @@ const WorkspaceManaged = (props) => {
       loading: true
     })
 
+    const params = {
+      ...state.filter
+    }
+
+    if (customLimit !== undefined) {
+      params["limit"] = customLimit
+    }
+
+    if (customUserId !== undefined) {
+      params['user_id'] = customUserId
+    }
+
     workspaceApi
-      .getList(state.filter)
+      .getList(params)
       .then((res) => {
         setTimeout(() => {
           setState({
@@ -147,11 +161,19 @@ const WorkspaceManaged = (props) => {
     )
   }
 
+  const renderTitle = () => {
+    if (title === undefined) {
+      return ""
+    }
+
+    return <h3 className="mb-2 work-space-title">{title}</h3>
+  }
+
   return (
     <div className="p-1 workspace-container">
       <div>
         <div>
-          <h3 className="mb-2 work-space-title">{title}</h3>
+          <Fragment>{renderTitle()}</Fragment>
         </div>
         <div>
           <Fragment>{renderContent()}</Fragment>

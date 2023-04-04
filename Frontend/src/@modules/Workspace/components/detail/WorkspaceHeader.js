@@ -11,6 +11,8 @@ import Photo from "@apps/modules/download/pages/Photo"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import CoverImage from "./CoverImage"
+
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
@@ -25,12 +27,6 @@ const WorkspaceHeader = (props) => {
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
-  }
-  const saveCoverImage = (image) => {
-    const dataPost = { ...data, image: image, id: data?._id }
-    workspaceApi.saveCoverImage(dataPost).then((res) => {
-      setState({ defaultWorkspaceCover: image })
-    })
   }
   const handleDoneInvite = (dataUpdate, type) => {
     const infoWorkspace = { ...data }
@@ -142,29 +138,12 @@ const WorkspaceHeader = (props) => {
   }, [data])
   return (
     <Card className="pb-0">
-      <div className="image-cover">
-        {state.defaultWorkspaceCover && (
-          <img
-            src={state.defaultWorkspaceCover}
-            width="100%"
-            className="w-100 workspaceCover"
-          />
-        )}
-        {state.coverImage && !state.defaultWorkspaceCover && (
-          <Photo
-            src={state.coverImage}
-            loading={state.loading}
-            width="100%"
-            className="w-100 workspaceCover"
-          />
-        )}
-
-        <CoverEditor
-          src=""
-          className="btn-cover"
-          saveCoverImage={saveCoverImage}
-        />
-      </div>
+      <CoverImage
+        src={data.cover_image}
+        dataSave={{ ...data, id: data?._id }}
+        isEditable={data.is_admin_group}
+        saveCoverImageApi={workspaceApi.saveCoverImage}
+      />
 
       <CardBody className="pb-0">
         <div className="d-flex justify-content-between align-content-center">
