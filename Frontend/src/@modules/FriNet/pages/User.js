@@ -6,12 +6,13 @@ import { userApi } from "../common/api"
 import Introduction from "../components/User/Introduction/Introduction"
 import TimeLine from "../components/User/Timeline/Timeline"
 import WorkSpace from "../components/User/Workspace/Workspace"
+import Photo from "../components/User/Photo/Photo"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import "../assets/scss/user.scss"
 import { Skeleton } from "antd"
 import PageHeader from "../components/User/PageHeader/PageHeader"
 import { TabContent, TabPane } from "reactstrap"
-import {getTabId} from "../common/common"
+import { getTabId } from "@modules/FriNet/common/common"
 import { useSelector } from "react-redux"
 
 const User = () => {
@@ -37,7 +38,7 @@ const User = () => {
 
   const navigate = useNavigate()
   const identity = params.identity === "profile" ? userAuth.id : params.identity
-  
+
   if (_.isEmpty(identity)) {
     return (
       <>
@@ -47,10 +48,11 @@ const User = () => {
     )
   }
 
-  const setTabActive = (status) => {
+  const setTabActive = (tabId) => {
     setState({
-      tabActive: status
+      tabActive: getTabId(tabId)
     })
+    window.history.replaceState(null, "", `/u/${identity}/${tabId}`)
   }
 
   const loadData = async () => {
@@ -79,6 +81,12 @@ const User = () => {
     loadData()
   }, [])
 
+  useEffect(() => {
+    setState({
+      tabActive: tab
+    })
+  }, [params])
+
   // ** render
   const renderComponent = () => {
     if (state.loading) {
@@ -96,6 +104,7 @@ const User = () => {
     return (
       <div className="user-profile-page">
         <PageHeader
+          identity={identity}
           employeeData={state.employeeData}
           tabActive={state.tabActive}
           setTabActive={setTabActive}
@@ -118,6 +127,9 @@ const User = () => {
                 identity={identity}
                 employeeData={state.employeeData}
               />
+            </TabPane>
+            <TabPane tabId={4}>
+              <Photo identity={identity} />
             </TabPane>
           </TabContent>
         </div>

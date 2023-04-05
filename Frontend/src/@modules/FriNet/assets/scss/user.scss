@@ -80,4 +80,35 @@
       font-weight: 600;
     }
   }
+
+  .infinite-scroll-component {
+    overflow: unset !important;
+  }
+
+  .loading-col-media-image {
+    .ant-skeleton-image {
+      height: 175px !important;
+      width: 175px !important;
+      border-radius: 12px;
+    }
+  }
+
+  .col-media-image {
+    .media-image-item {
+      .image-container {
+        cursor: pointer;
+        height: 175px !important;
+        width: 175px !important;
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+      }
+
+      .ant-skeleton-image {
+        height: 175px !important;
+        width: 175px !important;
+        border-radius: 12px;
+      }
+    }
+  }
 }

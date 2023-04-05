@@ -1,8 +1,11 @@
 // ** React Imports
 import { useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
-import { Fragment, useEffect } from "react"
-import { getFileTypeFromMime, getTabIdFromFeedType } from "@modules/Workspace/common/common"
+import { Fragment, useEffect, Suspense } from "react"
+import {
+  getFileTypeFromMime,
+  getTabIdFromFeedType
+} from "@modules/Workspace/common/common"
 // ** redux
 import { useSelector, useDispatch } from "react-redux"
 import {
@@ -19,17 +22,17 @@ import MediaPhotoItem from "./MediaPhotoItem"
 import MediaVideoItem from "./MediaVideoItem"
 import MediaLinkItem from "./MediaLinkItem"
 import ModalCreatePost from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreatePost"
+import PreviewMediaContentModal from "../../modals/PreviewMediaContentModal/PreviewMediaContentModal"
 
 const MediaTabContent = (props) => {
   const {
     // ** props
     id,
+    customFilter,
     tabId,
     mediaTabActive,
-    pageLength,
+    pageLength
     // ** methods
-    handleModalPreview,
-    setMediaInfo
   } = props
 
   const [state, setState] = useMergedState({
@@ -40,7 +43,9 @@ const MediaTabContent = (props) => {
     data: [],
     postData: [],
     dataCreateNew: [],
-    totalData: 0
+    totalData: 0,
+    mediaInfo: {},
+    modalPreview: false
   })
 
   const appSetting = useSelector((state) => state.auth.settings)
@@ -59,7 +64,19 @@ const MediaTabContent = (props) => {
     dispatch(setModalCreatePost(status))
   }
 
-  const loadData = (forcePage = null) => {
+  const setMediaInfo = (data) => {
+    setState({
+      mediaInfo: data
+    })
+  }
+
+  const handleModalPreview = () => {
+    setState({
+      modalPreview: !state.modalPreview
+    })
+  }
+
+  const loadData = () => {
     setState({
       loading: true,
       hasMore: false,
@@ -69,7 +86,8 @@ const MediaTabContent = (props) => {
       .loadMedia(id, {
         media_type: mediaTabActive,
         page: state.page,
-        page_length: pageLength
+        page_length: pageLength,
+        ...customFilter
       })
       .then((res) => {
         setState({
@@ -147,6 +165,14 @@ const MediaTabContent = (props) => {
     }
   }, [mediaTabActive])
 
+  useEffect(() => {
+    if (state.modalPreview) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+  }, [state.modalPreview])
+
   // ** render
   const renderModalCreatePost = () => {
     if (tabId === mediaTabActive) {
@@ -162,6 +188,21 @@ const MediaTabContent = (props) => {
           setModal={setModal}
           setDataCreateNew={setDataCreateNew}
           approveStatus="approved"
+        />
+      )
+    }
+
+    return ""
+  }
+
+  const renderModalPreview = () => {
+    if (state.modalPreview) {
+      return (
+        <PreviewMediaContentModal
+          modal={state.modalPreview}
+          mediaInfo={state.mediaInfo}
+          mediaTabActive={mediaTabActive}
+          handleModal={handleModalPreview}
         />
       )
     }
@@ -240,6 +281,7 @@ const MediaTabContent = (props) => {
     <Fragment>
       {renderComponent()}
       {renderModalCreatePost()}
+      {renderModalPreview()}
     </Fragment>
   )
 }

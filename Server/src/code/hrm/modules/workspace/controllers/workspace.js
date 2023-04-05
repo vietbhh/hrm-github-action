@@ -479,23 +479,42 @@ const loadDataMedia = async (req, res, next) => {
     return res.fail("missing_workspace_id_or_media_type")
   }
 
-  if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
+  if (workspaceId !== "user" && !workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
     res.fail("invalid_work_space_id")
   }
 
   try {
-    const workspace = await workspaceMongoModel.findById(workspaceId)
-    if (workspace === null) {
-      res.failNotFound("work_space_not_found")
-    }
-
     const requestMedia = _getMediaType(parseInt(mediaTypeNumber))
 
-    const feedCondition = {
-      permission: "workspace",
-      permission_ids: workspaceId,
-      type: requestMedia
+    let feedCondition = {}
+    let postCondition = {}
+    if (workspaceId !== "user") {
+      const workspace = await workspaceMongoModel.findById(workspaceId)
+      if (workspace === null) {
+        res.failNotFound("work_space_not_found")
+      }
+
+      feedCondition = {
+        permission: "workspace",
+        permission_ids: workspaceId,
+        type: requestMedia
+      }
+
+      postCondition = {
+        permission: "workspace",
+        permission_ids: workspaceId,
+        type: "post"
+      }
+    } else {
+      feedCondition = {
+        type: requestMedia
+      }
+
+      postCondition = {
+        type: "post"
+      }
     }
+
     const listFeed = await feedMongoModel
       .find(feedCondition)
       .skip(page * pageLength)
@@ -540,12 +559,8 @@ const loadDataMedia = async (req, res, next) => {
       }
     })
 
-    const postData = await feedMongoModel.find({
-      _id: postId,
-      permission: "workspace",
-      permission_ids: workspaceId,
-      type: "post"
-    })
+    postCondition["_id"] = postId
+    const postData = await feedMongoModel.find(postCondition)
 
     return res.respond({
       result: result,

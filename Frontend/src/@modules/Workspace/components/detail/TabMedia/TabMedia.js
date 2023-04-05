@@ -34,27 +34,6 @@ const TabMedia = (props) => {
     }
   }
 
-  const setMediaInfo = (data) => {
-    setState({
-      mediaInfo: data
-    })
-  }
-
-  const handleModalPreview = () => {
-    setState({
-      modalPreview: !state.modalPreview
-    })
-  }
-
-  // ** effect
-  useEffect(() => {
-    if (state.modalPreview) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
-    }
-  }, [state.modalPreview])
-
   // ** render
   return (
     <div className="tab-media">
@@ -67,23 +46,11 @@ const TabMedia = (props) => {
             <MediaContent
               id={id}
               mediaTabActive={state.mediaTabActive}
-              modalPreview={state.modalPreview}
               setMediaTabActive={setMediaTabActive}
-              setMediaInfo={setMediaInfo}
-              handleModalPreview={handleModalPreview}
             />
           </div>
         </CardBody>
       </Card>
-
-      {state.modalPreview && (
-        <PreviewMediaContentModal
-          modal={state.modalPreview}
-          mediaInfo={state.mediaInfo}
-          mediaTabActive={state.mediaTabActive}
-          handleModal={handleModalPreview}
-        />
-      )}
     </div>
   )
 }

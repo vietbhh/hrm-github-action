@@ -5,6 +5,8 @@ export const getTabId = (tabText) => {
     return 2
   } else if (tabText === "workspace") {
     return 3
+  } else if (tabText === "photo") {
+    return 4
   }
 
   return ""
