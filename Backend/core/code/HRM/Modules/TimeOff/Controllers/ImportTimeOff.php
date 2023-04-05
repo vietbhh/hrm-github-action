@@ -53,7 +53,7 @@ class ImportTimeOff extends ErpController
             ];
         }
 
-        $pathTemplate = COREPATH . 'assets/template/TimeOff_Template.xlsx';
+        $pathTemplate = COREPATH . 'assets/templates/TimeOff_Template.xlsx';
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $reader->setLoadSheetsOnly(["Instruction"]);
         $spreadsheet = $reader->load($pathTemplate);
