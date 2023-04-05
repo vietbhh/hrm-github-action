@@ -10,11 +10,8 @@ const MediaContent = (props) => {
     // ** props
     id,
     mediaTabActive,
-    modalPreview,
     // ** methods
-    setMediaTabActive,
-    setMediaInfo,
-    handleModalPreview
+    setMediaTabActive
   } = props
 
   // ** render
@@ -65,10 +62,7 @@ const MediaContent = (props) => {
               id={id}
               mediaTabActive={mediaTabActive}
               tabId={1}
-              modalPreview={modalPreview}
               pageLength={12}
-              handleModalPreview={handleModalPreview}
-              setMediaInfo={setMediaInfo}
             />
           </TabPane>
           <TabPane tabId={2}>
@@ -76,10 +70,7 @@ const MediaContent = (props) => {
               id={id}
               mediaTabActive={mediaTabActive}
               tabId={2}
-              modalPreview={modalPreview}
               pageLength={24}
-              handleModalPreview={handleModalPreview}
-              setMediaInfo={setMediaInfo}
             />
           </TabPane>
           <TabPane tabId={3}>
@@ -88,10 +79,7 @@ const MediaContent = (props) => {
                 id={id}
                 mediaTabActive={mediaTabActive}
                 tabId={3}
-                modalPreview={modalPreview}
                 pageLength={24}
-                handleModalPreview={handleModalPreview}
-                setMediaInfo={setMediaInfo}
               />
             </Row>
           </TabPane>
@@ -100,10 +88,7 @@ const MediaContent = (props) => {
               id={id}
               mediaTabActive={mediaTabActive}
               tabId={4}
-              modalPreview={modalPreview}
               pageLength={12}
-              handleModalPreview={handleModalPreview}
-              setMediaInfo={setMediaInfo}
             />
           </TabPane>
         </TabContent>

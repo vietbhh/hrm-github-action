@@ -1529,6 +1529,9 @@
         },
         "workspace": {
           "title": "Workspace"
+        },
+        "photo": {
+          "title": "Photo"
         }
       },
       "fields": {

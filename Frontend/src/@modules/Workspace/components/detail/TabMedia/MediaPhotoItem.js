@@ -1,12 +1,12 @@
 // ** React Imports
+import { Fragment } from "react"
 import { getFileTypeFromMime } from "@modules/Workspace/common/common"
-import { downloadApi } from "@apps/modules/download/common/api"
 // ** Styles
 import { Skeleton } from "antd"
-import { Card, CardBody, Col, Row } from "reactstrap"
+import { Col, Row } from "reactstrap"
 // ** Components
 import { LazyLoadComponent } from "react-lazy-load-image-component"
-import { Fragment } from "react"
+import MediaPhotoImage from "./MediaPhotoImage"
 
 const MediaPhotoItem = (props) => {
   const {
@@ -23,7 +23,7 @@ const MediaPhotoItem = (props) => {
   } = props
 
   const handleClickImage = (item) => {
-    if (item.source_attribute === undefined) {
+    if (item.source_attribute === undefined || Object.keys(item.source_attribute).length === 0) {
       return
     }
 
@@ -42,16 +42,6 @@ const MediaPhotoItem = (props) => {
     if (hasMore) {
       setHasMoreLazy(true)
     }
-
-    downloadApi.getPhoto(item.thumb).then((response) => {
-      item["url_thumb"] = URL.createObjectURL(response.data)
-      const newMediaData = [...mediaData]
-      newMediaData[index] = item
-
-      setTimeout(() => {
-        setData(newMediaData)
-      }, 150)
-    })
   }
 
   // ** render
@@ -69,20 +59,6 @@ const MediaPhotoItem = (props) => {
     return ""
   }
 
-  const renderImage = (item) => {
-    if (!item.url_thumb) {
-      return <Skeleton.Image active={true} />
-    }
-
-    return (
-      <div
-        className="w-100 h-100 image-container"
-        style={{
-          backgroundImage: `url("${item.url_thumb}")`
-        }}></div>
-    )
-  }
-
   return (
     <Row>
       {mediaData.map((item, index) => {
@@ -92,11 +68,11 @@ const MediaPhotoItem = (props) => {
             afterLoad={() => handleAfterLoadLazyLoadComponent(item, index)}>
             <Col
               sm="2"
-              className="m-0 p-50 col-media-image"
+              className="m-0 p-50 pb-0 col-media-image"
               onClick={() => handleClickImage(item)}>
               <div className="media-image-item">
                 <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                  <Fragment>{renderImage(item)}</Fragment>
+                  <MediaPhotoImage src={item.thumb} />
                 </div>
               </div>
             </Col>

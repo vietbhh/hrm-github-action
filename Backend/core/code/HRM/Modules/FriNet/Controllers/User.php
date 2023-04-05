@@ -21,6 +21,7 @@ class User extends ErpController
 
 		$result = handleDataBeforeReturn($modules, $data);
 		$result['avatar'] = $data['avatar'];
+		$result['cover_image'] = $data['cover_image'];
 		$result['is_profile'] = user_id() == $result['id'];
 		return $this->respond($result);
 	}
