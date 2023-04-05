@@ -41,7 +41,6 @@ const TabFeed = (props) => {
       setState({ dataPinned: res.data.dataPost })
     })
   }
-
   useEffect(() => {
     loadData()
     const arrAdmin = detailWorkspace?.administrators

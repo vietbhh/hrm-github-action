@@ -31,7 +31,8 @@ const WorkspaceHeader = (props) => {
     loading: false,
     defaultWorkspaceCover: "",
     selectAdmin: false,
-    joined: false
+    joined: false,
+    waitJoined: false
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
@@ -57,7 +58,7 @@ const WorkspaceHeader = (props) => {
           })
           onClickInvite()
           setState({ loading: false })
-          // loadData()
+          loadData()
         }
       })
     } else {
@@ -86,7 +87,7 @@ const WorkspaceHeader = (props) => {
                   })
                   onClickInvite()
                   setState({ loading: false })
-                  //loadData()
+                  loadData()
                 }
               })
           }
@@ -98,24 +99,22 @@ const WorkspaceHeader = (props) => {
     const infoWorkspace = { ...data }
     const adminArr = [...infoWorkspace.administrators]
     // check admin
-    console.log("adminArr", adminArr)
     const indexOfAdmin = adminArr.indexOf(userId)
     if (indexOfAdmin >= 0 && adminArr.length <= 1) {
-      console.log("runnnn select admin")
       setState({ selectAdmin: true })
+      return
     }
-    console.log("indexOfAdmin", indexOfAdmin)
+
     const memberArr = [...infoWorkspace.members]
     const indexOf = memberArr.indexOf(userId)
     memberArr.splice(indexOf, 1)
-    infoWorkspace.members = memberArr
-
-    return
+    infoWorkspace.members = JSON.stringify(memberArr)
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
         })
+        loadData()
         setState({ loading: false })
       }
     })
@@ -146,6 +145,46 @@ const WorkspaceHeader = (props) => {
       }
     })
   }
+  const handleJoin = () => {
+    const infoWorkspace = { ...data }
+    if (data?.membership_approval === "auto") {
+      const members = [...infoWorkspace.members]
+      members.push(userId)
+      infoWorkspace.members = JSON.stringify(unique(members))
+    } else {
+      const request_joins = [...infoWorkspace.request_joins]
+      request_joins.push(userId)
+      infoWorkspace.request_joins = JSON.stringify(unique(request_joins))
+    }
+    console.log("infoWorkspace", infoWorkspace)
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        setState({ loading: false })
+        loadData()
+      }
+    })
+  }
+
+  const handleCancelJoin = () => {
+    const infoWorkspace = { ...data }
+    const request_joinsArr = [...infoWorkspace.request_joins]
+    const indexOf = request_joinsArr.indexOf(userId)
+    request_joinsArr.splice(indexOf, 1)
+    infoWorkspace.request_joins = JSON.stringify(request_joinsArr)
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        setState({ loading: false, waitJoined: false })
+      }
+    })
+    console.log("handleCancelJoin", infoWorkspace)
+  }
+
   const items = [
     {
       label: (
@@ -189,6 +228,8 @@ const WorkspaceHeader = (props) => {
   useEffect(() => {
     const arrAdmin = data?.administrators ? data?.administrators : []
     const arrMember = data?.members ? data?.members : []
+    const arrRequest_joins = data?.request_joins ? data?.request_joins : []
+
     const isAdmin = arrAdmin.includes(userId)
     const isMember = arrMember.includes(userId)
     let isJoined = false
@@ -196,16 +237,22 @@ const WorkspaceHeader = (props) => {
       isJoined = true
     }
 
+    let waitJoined = false
+    if (arrRequest_joins.includes(userId)) {
+      waitJoined = true
+    }
     if (data.cover_image) {
       setState({
         coverImage: data.cover_image,
         defaultWorkspaceCover: "",
-        joined: isJoined
+        joined: isJoined,
+        waitJoined: waitJoined
       })
     } else {
       setState({
         defaultWorkspaceCover: defaultWorkspaceCover,
-        joined: isJoined
+        joined: isJoined,
+        waitJoined: waitJoined
       })
     }
   }, [data])
@@ -241,8 +288,7 @@ const WorkspaceHeader = (props) => {
           <div className="workspaceInformation">
             <h2 className="workspaceName">{data?.name}</h2>
             <p>
-              <i className="fa-regular fa-earth-asia"></i>{" "}
-              {useFormatMessage("modules.workspace.text.public")} ·{" "}
+              <i className="fa-regular fa-earth-asia"></i> {data?.type} ·{" "}
               {data?.members && data?.members.length}{" "}
               {useFormatMessage("modules.workspace.text.members")} ·{" "}
               {data?.pinPosts && data?.pinPosts.length}{" "}
@@ -258,10 +304,21 @@ const WorkspaceHeader = (props) => {
                 {useFormatMessage("modules.workspace.buttons.invite")}
               </Button>
             )}
-            {!state.joined && (
-              <Button className="btn btn-success">
-                <i className="fa-regular fa-plus me-50"></i>
-                {useFormatMessage("modules.workspace.buttons.join_workspace")}
+
+            {!state.joined && !state.waitJoined && (
+              <>
+                <Button
+                  className="btn btn-success"
+                  onClick={() => handleJoin()}>
+                  {useFormatMessage("modules.workspace.buttons.join_workspace")}
+                </Button>
+              </>
+            )}
+            {!state.joined && state.waitJoined && (
+              <Button
+                className="btn btn-secondary"
+                onClick={() => handleCancelJoin()}>
+                {useFormatMessage("button.cancel")}
               </Button>
             )}
           </div>
@@ -350,7 +407,9 @@ const WorkspaceHeader = (props) => {
                 }}
                 placement="bottomRight"
                 trigger={["click"]}>
-                <Button color="flat-secondary ">
+                <Button
+                  color="flat-secondary"
+                  style={{ backgroundColor: "rgba(130, 134, 139, 0.12)" }}>
                   <i className="fa-light fa-ellipsis"></i>
                 </Button>
               </Dropdown>

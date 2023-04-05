@@ -41,6 +41,7 @@ const getWorkspace = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
 const saveCoverImage = async (req, res) => {
   const image = req.body.image
   const imageFile = {}
@@ -303,9 +304,15 @@ const updateWorkspace = async (req, res, next) => {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
       if (requestData?.members) {
-        //  updateData.members = JSON.parse(requestData.members)
+        updateData.members = JSON.parse(requestData.members)
       }
-
+      if (requestData?.administrators) {
+        updateData.administrators = JSON.parse(requestData.administrators)
+      }
+      if (requestData?.request_joins) {
+        updateData.request_joins = JSON.parse(requestData.request_joins)
+      }
+      console.log("updateData , ", updateData)
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -563,13 +570,9 @@ const loadPinned = async (req, res) => {
 
   const dataPost = []
   map(arrID, async (item, key) => {
-    console.log("ID item", item)
     const infoPost = await feedMongoModel.findById(item)
     dataPost.push(infoPost)
-    console.log("infoPost", infoPost)
   })
-  console.log("arrID", arrID)
-  console.log("dataPostdataPostdataPostdataPost", dataPost)
   const feed = await feedMongoModel.find({
     _id: { $in: arrID }
   })
