@@ -33,11 +33,6 @@ const feedSchema = baseSchema("m_feed", {
     ],
     default: "post"
   },
-  type_2: {
-    type: String,
-    enum: [null, "poll_vote"],
-    default: null
-  },
   medias: {
     type: [
       {
@@ -107,8 +102,17 @@ const feedSchema = baseSchema("m_feed", {
     default: []
   },
   tag_user: {
-    type: [String],
-    default: []
+    type: {
+      mention: {
+        type: [String],
+        default: []
+      },
+      tag: {
+        type: [String],
+        default: []
+      }
+    },
+    default: {}
   },
   edited: {
     type: Boolean,
@@ -121,6 +125,10 @@ const feedSchema = baseSchema("m_feed", {
   background_image: {
     type: Number,
     default: null
+  },
+  has_poll_vote: {
+    type: Boolean,
+    default: false
   },
   poll_vote_detail: {
     type: {

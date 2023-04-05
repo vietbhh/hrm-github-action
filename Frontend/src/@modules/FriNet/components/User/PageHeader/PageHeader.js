@@ -2,7 +2,6 @@
 import { Fragment } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 import { userApi } from "@modules/FriNet/common/api"
-import { getTabId } from "@modules/FriNet/common/common"
 // ** Styles
 import { Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 // ** Components
@@ -22,8 +21,7 @@ const PageHeader = (props) => {
   } = props
 
   const handleChangeTab = (tabId) => {
-    setTabActive(getTabId(tabId))
-    window.history.replaceState(null, "", `/u/${identity}/${tabId}`)
+    setTabActive(tabId)
   }
 
   const handleChangeAvatar = (img) => {

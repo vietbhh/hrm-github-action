@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import { Modal, ModalBody } from "reactstrap"
 
 const MemberVoteModal = (props) => {
-  const { modal, toggleModal, dataUserVote } = props
+  const { modal, toggleModal, dataUserVote, title = "" } = props
   const redux_list_user = useSelector((state) => state.users.list)
 
   return (
@@ -27,11 +27,17 @@ const MemberVoteModal = (props) => {
         </button>
         <div className="text-center mt-50">
           <span className="text-title">
-            {dataUserVote.length}{" "}
-            {useFormatMessage(
-              `modules.feed.create_post.text.${
-                dataUserVote.length > 1 ? "members_voted" : "member_voted"
-              }`
+            {title !== "" ? (
+              title
+            ) : (
+              <>
+                {dataUserVote.length}{" "}
+                {useFormatMessage(
+                  `modules.feed.create_post.text.${
+                    dataUserVote.length > 1 ? "members_voted" : "member_voted"
+                  }`
+                )}
+              </>
             )}
           </span>
         </div>
@@ -47,9 +53,11 @@ const MemberVoteModal = (props) => {
                     className="img me-1"
                     src={redux_list_user[item]?.avatar}
                   />
-                  <span className="name">
-                    {redux_list_user[item]?.full_name}
-                  </span>
+                  <Link to={`/u/${redux_list_user[item]?.username}`}>
+                    <span className="name">
+                      {redux_list_user[item]?.full_name}
+                    </span>
+                  </Link>
                   <Link
                     to={`/chat/${redux_list_user[item]?.username}`}
                     className="ms-auto">

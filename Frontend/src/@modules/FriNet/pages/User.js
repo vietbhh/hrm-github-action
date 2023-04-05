@@ -12,7 +12,7 @@ import "../assets/scss/user.scss"
 import { Skeleton } from "antd"
 import PageHeader from "../components/User/PageHeader/PageHeader"
 import { TabContent, TabPane } from "reactstrap"
-import { getTabId } from "../common/common"
+import { getTabId } from "@modules/FriNet/common/common"
 import { useSelector } from "react-redux"
 
 const User = () => {
@@ -48,10 +48,11 @@ const User = () => {
     )
   }
 
-  const setTabActive = (status) => {
+  const setTabActive = (tabId) => {
     setState({
-      tabActive: status
+      tabActive: getTabId(tabId)
     })
+    window.history.replaceState(null, "", `/u/${identity}/${tabId}`)
   }
 
   const loadData = async () => {
@@ -81,8 +82,10 @@ const User = () => {
   }, [])
 
   useEffect(() => {
-    console.log(tab)
-  }, [tab])
+    setState({
+      tabActive: tab
+    })
+  }, [params])
 
   // ** render
   const renderComponent = () => {

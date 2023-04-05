@@ -8,7 +8,7 @@ import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { forEach, isEmpty } from "lodash-es"
+import { forEach, isEmpty, union } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import sharp from "sharp"
@@ -79,11 +79,11 @@ const submitPostController = async (req, res, next) => {
     type_feed_parent = "background_image"
   }
 
-  // check type_2
-  let type_2 = null
+  // check has_poll_vote
+  let has_poll_vote = false
   const save_poll_vote_detail = {}
   if (body.poll_vote === true) {
-    type_2 = "poll_vote"
+    has_poll_vote = true
 
     const req_poll_vote_detail = body.poll_vote_detail
     save_poll_vote_detail["question"] = req_poll_vote_detail.question
@@ -95,6 +95,10 @@ const submitPostController = async (req, res, next) => {
     })
     save_poll_vote_detail["options"] = options
   }
+
+  const mention = body.mention
+  const tag = body.tag_your_colleagues
+  const tag_user = { mention: mention, tag: tag }
 
   try {
     let out = {}
@@ -116,9 +120,9 @@ const submitPostController = async (req, res, next) => {
         ref: null,
         approve_status: body.approveStatus,
         link: link,
-        tag_user: body.tag_user,
+        tag_user: tag_user,
         background_image: body.backgroundImage,
-        type_2: type_2,
+        has_poll_vote: has_poll_vote,
         poll_vote_detail: save_poll_vote_detail
       })
       const saveFeedParent = await feedModelParent.save()
@@ -142,11 +146,11 @@ const submitPostController = async (req, res, next) => {
           ref: null,
           approve_status: body.approveStatus,
           link: link,
-          tag_user: body.tag_user,
+          tag_user: tag_user,
           background_image: body.backgroundImage,
           edited: true,
           edited_at: Date.now(),
-          type_2: type_2,
+          has_poll_vote: has_poll_vote,
           poll_vote_detail: save_poll_vote_detail
         }
       )
@@ -154,10 +158,11 @@ const submitPostController = async (req, res, next) => {
 
     // send notification
     if (!is_edit && body.approveStatus === "approved") {
+      const receivers = union(mention, tag)
       const link_notification = `/posts/${_id_parent}`
       await handleSendNotification(
         "post",
-        body.tag_user,
+        receivers,
         body.data_user,
         link_notification
       )
@@ -373,7 +378,11 @@ const loadFeedProfile = async (req, res, next) => {
         $or: [{ permission: "default" }, { permission: "only_me" }]
       },
       {
-        $or: [{ created_by: id_profile }, { tag_user: id_profile }]
+        $or: [
+          { created_by: id_profile },
+          { "tag_user.mention": id_profile },
+          { "tag_user.tag": id_profile }
+        ]
       }
     ]
   }
@@ -1154,11 +1163,11 @@ const handleDataSubComment = async (dataComment, multiData = false) => {
 
 const handleSendNotification = async (
   type,
-  tag_user,
+  receivers,
   data_user,
   link = "#"
 ) => {
-  if (!isEmpty(tag_user) && !isEmpty(data_user)) {
+  if (!isEmpty(receivers) && !isEmpty(data_user)) {
     const userId = data_user.id
     const full_name = data_user.full_name
     const lang = type === "post" ? "tag_post" : "tag_comment"
@@ -1170,7 +1179,7 @@ const handleSendNotification = async (
       "}}"
     await sendNotification(
       userId,
-      tag_user,
+      receivers,
       {
         title: "",
         body: body,

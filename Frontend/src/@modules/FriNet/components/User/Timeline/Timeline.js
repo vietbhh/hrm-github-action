@@ -105,10 +105,6 @@ const index = (props) => {
           <div id="div-sticky-height"></div>
           <div id="div-sticky">
             <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
           </div>
         </div>
       </div>
