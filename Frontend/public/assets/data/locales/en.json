@@ -4492,7 +4492,9 @@
       "title": {
         "work_space": "Work Space",
         "workspace_you_have_joined": "Workspace you have joined",
-        "workspace_that_you_managed": "Workspace that you managed"
+        "workspace_that_you_managed": "Workspace that you managed",
+        "manage_workspace": "Manage Workspaces",
+        "workspace_overview": "Workspace overview"
       },
       "buttons": {
         "create": "Create Workspace",
@@ -4550,7 +4552,10 @@
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
-        "membership_approval": "Membership approval"
+        "membership_approval": "Membership approval",
+        "owner": "Owner",
+        "visible": "Visible",
+        "status": "Status"
       },
       "text": {
         "members": "members",
@@ -4612,7 +4617,10 @@
         "list_job_title": "List job title",
         "department": "Department",
         "job_title": "Job title",
-        "format_cannot_be_previewed": "The format cannot be previewed!"
+        "format_cannot_be_previewed": "The format cannot be previewed!",
+        "search_workspace": "Search workspace...",
+        "members_capitalize": "Members",
+        "all_member": "All members"
       }
     },
     "setting_member": {

@@ -116,6 +116,8 @@ const getListWorkspace = async (req, res, next) => {
   const page = req.query.page === 1 ? 0 : req.query.page - 1
   const limit = req.query.limit
   const workspaceType = req.query.workspace_type
+  const status = req.query.status
+  const text = req.query.text
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
   try {
     let filter = {}
@@ -132,6 +134,16 @@ const getListWorkspace = async (req, res, next) => {
       }
     }
 
+    if (status !== undefined && status !== "" && status !== "all") {
+      filter["status"] = status
+    }
+
+    if (text.trim().length > 0) {
+      filter["name"] = {
+        $regex: text + ".*"
+      }
+    }
+
     const workspace = await workspaceMongoModel
       .find(filter)
       .limit(limit)
@@ -141,9 +153,11 @@ const getListWorkspace = async (req, res, next) => {
       })
 
     const totalWorkspace = await workspaceMongoModel.find(filter)
+    const result = await handleDataBeforeReturn(workspace, true)
 
     return res.respond({
-      results: workspace,
+      results: result,
+      total_data: totalWorkspace.length,
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
   } catch (err) {
@@ -717,8 +731,15 @@ const loadGCSObjectLink = async (req, res) => {
   })
 }
 
+const getWorkspaceOverview = () => {
+  return res.respond({
+    data: []
+  })
+}
+
 export {
   getWorkspace,
+  getWorkspaceOverview,
   saveWorkspace,
   getListWorkspace,
   saveCoverImage,
