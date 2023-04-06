@@ -15,13 +15,14 @@ class PrintHandOver extends ErpController
 		$d = date("d");
 		$m = date("m");
 		$Y = date("Y");
+		$address = preference('address');
 
 		$languageEnGb = new \PhpOffice\PhpWord\Style\Language(\PhpOffice\PhpWord\Style\Language::EN_GB);
 		$phpWord = new \PhpOffice\PhpWord\PhpWord();
 		$phpWord->getSettings()->setThemeFontLang($languageEnGb);
 
 		$section = $phpWord->addSection();
-		$html = '<div style="font-family: Barlow Condensed Light; font-size: 11pt;width: 100%;">';
+		$html = '';
 
 		$employeesModules = \Config\Services::modules("employees");
 		$employeesModel = $employeesModules->model;
@@ -29,10 +30,12 @@ class PrintHandOver extends ErpController
 		$assetModules = \Config\Services::modules("asset_lists");
 		$assetModel = $assetModules->model;
 
-		foreach ($arr_employee as $id_employee) {
+		foreach ($arr_employee as $key_employee => $id_employee) {
 			$data_employee = $employeesModel->select(["id", "full_name", "job_title_id"])->asArray()->find($id_employee);
 
 			if ($data_employee) {
+				$html .= '<div style="font-family: Barlow Condensed Light; font-size: 11pt;width: 100%;min-height: 100%">';
+
 				$data_employee = handleDataBeforeReturn($employeesModules, $data_employee);
 				$job_title = $data_employee['job_title_id']['label'] ?? "";
 				// header
@@ -55,15 +58,15 @@ class PrintHandOver extends ErpController
 				// content
 				$content = '<p style="text-align: center;font-size: 13pt;font-weight: bold;margin-top: 10pt;margin-bottom: 0;">BIÊN BẢN GIAO NHẬN TSCĐ</p>';
 				$content .= '<p style="text-align: center;font-style: italic;margin-bottom: 17pt;">Ngày ' . $d . ' tháng ' . $m . ' năm ' . $Y . '</p>';
-				$content .= '<p style="margin-bottom: 0;">Căn cứ Quyết định số: ...................... ngày ' . $d . ' tháng ' . $m . ' năm ' . $Y . ' ....... của ...................... về việc bàn giao TSCĐ: </p>';
+				$content .= '<p style="margin-bottom: 0;">Căn cứ Quyết định số: ...................... ngày ' . $d . ' tháng ' . $m . ' năm ' . $Y . ' của ...................... về việc bàn giao TSCĐ: </p>';
 				$content .= '<p style="margin-bottom: 0;">               Bản giao nhận TSCĐ gồm:</p>';
 				$content .= '<p style="margin-bottom: 0;">               - Ông/Bà : Vũ Thị Hồng Hải, chức vụ : Admin</p>';
 				$content .= '<p style="margin-bottom: 0;">               - Ông/Bà : ' . $data_employee['full_name'] . ', chức vụ : ' . $job_title . '</p>';
 				$content .= '<p style="margin-bottom: 0;">               - Ông/Bà : ................................................ chức vụ ...............................</p>';
-				$content .= '<p style="margin-bottom: 0;">               Địa điểm giao nhận TSCĐ :............................................................................................</p>';
+				$content .= '<p style="margin-bottom: 0;">               Địa điểm giao nhận TSCĐ : ' . $address . '</p>';
 				$content .= '<p style="margin-bottom: 13pt;">               Xác nhận việc giao nhận TSCĐ như sau: </p>';
 
-				// table ->join('m_time_off_types', 'm_time_off_types.id = m_time_off_balances.type', 'inner')
+				// table
 				$list_asset = $assetModel->join("m_asset_types", "m_asset_types.id = m_asset_lists.asset_type", "left")
 					->join("m_asset_groups", "m_asset_groups.id = m_asset_types.asset_type_group", "left")
 					->select(["m_asset_lists.asset_code as asset_code", "m_asset_lists.asset_descriptions as asset_descriptions", "m_asset_lists.date_created as date_created", "m_asset_types.asset_type_code as asset_type_code", "m_asset_types.asset_type_name as asset_type_name", "m_asset_groups.asset_group_name as asset_group_name"])
@@ -122,22 +125,24 @@ class PrintHandOver extends ErpController
 <td style="width: 25%; text-align: center">
 <p style="font-weight: bold;margin-bottom: 0;">Người giao</p>
 <p style="font-style: italic">(Ký, họ tên)</p>
-<p style="font-weight: bold;font-size: 9pt;margin-top: 20pt;">Vũ Thị Hồng Hải</p>
+<p style="font-weight: bold;font-size: 9pt;margin-top: 30pt;">Vũ Thị Hồng Hải</p>
 </td>
 </tr>
 </table>';
 
-				$break_line = '<div style="page-break-before:always"></div>';
+				$break_line = '<p style="page-break-after: always;">&nbsp;</p>';
+				if ($key_employee == count($arr_employee) - 1) {
+					$break_line = '';
+				}
 
 				$html .= $header;
 				$html .= $content;
 				$html .= $table;
 				$html .= $footer;
 				$html .= $break_line;
+				$html .= '</div>';
 			}
 		}
-
-		$html .= '</div>';
 
 		\PhpOffice\PhpWord\Shared\Html::addHtml($section, $html, false, false);
 		header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');

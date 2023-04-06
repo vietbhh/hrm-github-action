@@ -1,13 +1,25 @@
 import { ErpUserSelect } from "@apps/components/common/ErpField"
-import { useFormatMessage } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import React, { Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Button, Card, CardBody, CardHeader, Col, Row } from "reactstrap"
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Spinner
+} from "reactstrap"
 import "../assets/scss/print_hand_over.scss"
 import { assetPrintHandOverApi } from "../common/api"
 import notification from "@apps/utility/notification"
 
 const AssetPrintHandOver = () => {
+  const [state, setState] = useMergedState({
+    loading: false
+  })
+
   const methods = useForm({
     mode: "onSubmit"
   })
@@ -15,11 +27,12 @@ const AssetPrintHandOver = () => {
 
   // ** function
   const onSubmit = (value) => {
-    console.log(value)
+    setState({ loading: true })
     const params = { employee: value.employee }
     assetPrintHandOverApi
       .postExportWord(params)
       .then((res) => {
+        setState({ loading: false })
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement("a")
         link.href = url
@@ -29,6 +42,7 @@ const AssetPrintHandOver = () => {
         link.parentNode.removeChild(link)
       })
       .catch((err) => {
+        setState({ loading: false })
         notification.showError({
           text: useFormatMessage("notification.something_went_wrong")
         })
@@ -62,7 +76,9 @@ const AssetPrintHandOver = () => {
                     type="submit"
                     color="primary"
                     size="sm"
-                    className="btn-export-word">
+                    className="btn-export-word"
+                    disabled={state.loading}>
+                    {state.loading && <Spinner size={"sm"} className="me-50" />}
                     {useFormatMessage(
                       "modules.asset.print_hand_over.text.export_word"
                     )}
