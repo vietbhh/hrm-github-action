@@ -2,7 +2,6 @@
 import { Fragment } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 import { userApi } from "@modules/FriNet/common/api"
-import { getTabId } from "@modules/FriNet/common/common"
 // ** Styles
 import { Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 // ** Components
@@ -14,6 +13,7 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 const PageHeader = (props) => {
   const {
     // ** props
+    identity,
     employeeData,
     tabActive,
     // ** methods
@@ -21,8 +21,7 @@ const PageHeader = (props) => {
   } = props
 
   const handleChangeTab = (tabId) => {
-    setTabActive(getTabId(tabId))
-    window.history.replaceState(null, "", `/u/${employeeData.id}/${tabId}`)
+    setTabActive(tabId)
   }
 
   const handleChangeAvatar = (img) => {
@@ -52,7 +51,7 @@ const PageHeader = (props) => {
     <Card>
       <div className="cover-image-container">
         <CoverImage
-          src={employeeData.cover_image?.url}
+          src={employeeData.cover_image}
           dataSave={{ employeeData }}
           isEditable={employeeData.is_profile}
           saveCoverImageApi={userApi.saveCoverImage}
@@ -90,6 +89,13 @@ const PageHeader = (props) => {
               active={tabActive === 3}
               onClick={() => handleChangeTab("workspace")}>
               {useFormatMessage("modules.employees.tabs.workspace.title")}
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              active={tabActive === 4}
+              onClick={() => handleChangeTab("photo")}>
+              {useFormatMessage("modules.employees.tabs.photo.title")}
             </NavLink>
           </NavItem>
         </Nav>
