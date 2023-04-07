@@ -1,5 +1,7 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
+import { arrImage } from "@modules/Feed/common/common"
+import classNames from "classnames"
 import React from "react"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
 import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
@@ -7,6 +9,7 @@ import PostComment from "./LoadPostDetails/PostDetails/PostComment"
 import PostHeader from "./LoadPostDetails/PostDetails/PostHeader"
 import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
+import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 
 const LoadPost = (props) => {
   const {
@@ -46,29 +49,60 @@ const LoadPost = (props) => {
       )
     }
 
-    return (
-      <LoadPostMedia
-        data={data}
-        current_url={current_url}
-        idMedia={idMedia}
-        setIdMedia={setIdMedia}
-        dataMention={dataMention}
-        setData={setData}
-        setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-        customAction={customAction}
-      />
-    )
+    if (data.source !== null || !_.isEmpty(data.medias)) {
+      return (
+        <LoadPostMedia
+          data={data}
+          current_url={current_url}
+          idMedia={idMedia}
+          setIdMedia={setIdMedia}
+          dataMention={dataMention}
+          setData={setData}
+          setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+          customAction={customAction}
+        />
+      )
+    }
+
+    return ""
+  }
+
+  const renderStyleBackgroundImage = () => {
+    if (
+      data.type === "background_image" &&
+      data.background_image &&
+      arrImage[data.background_image - 1]
+    ) {
+      return {
+        backgroundImage: `url("${arrImage[data.background_image - 1].image}")`,
+        color: arrImage[data.background_image - 1].color
+      }
+    }
+
+    return {}
   }
 
   return (
     <div className="load-post">
       <PostHeader data={data} customAction={customAction} setData={setData} />
-      <div className="post-body">
+      <div
+        className={classNames("post-body", {
+          "post-body__background-image": data.type === "background_image"
+        })}
+        style={renderStyleBackgroundImage()}>
         <div id={`post-body-content-${data._id}`} className="post-body-content">
           <RenderContentPost data={data} />
         </div>
 
         {renderBody()}
+
+        {data.has_poll_vote === true && (
+          <RenderPollVote
+            data={data}
+            setData={setData}
+            comment_more_count_original={state.comment_more_count_original}
+          />
+        )}
       </div>
       {!offReactionAndComment && (
         <>

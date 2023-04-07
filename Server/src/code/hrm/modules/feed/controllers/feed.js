@@ -8,7 +8,7 @@ import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { forEach, isEmpty } from "lodash-es"
+import { forEach, isEmpty, union } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import sharp from "sharp"
@@ -75,6 +75,30 @@ const submitPostController = async (req, res, next) => {
       type_feed_parent = "video"
     }
   }
+  if (body.backgroundImage !== null && body.backgroundImage !== undefined) {
+    type_feed_parent = "background_image"
+  }
+
+  // check has_poll_vote
+  let has_poll_vote = false
+  const save_poll_vote_detail = {}
+  if (body.poll_vote === true) {
+    has_poll_vote = true
+
+    const req_poll_vote_detail = body.poll_vote_detail
+    save_poll_vote_detail["question"] = req_poll_vote_detail.question
+    save_poll_vote_detail["setting"] = req_poll_vote_detail.setting
+    save_poll_vote_detail["time_end"] = req_poll_vote_detail.time_end
+    const options = []
+    forEach(req_poll_vote_detail.options, (item) => {
+      options.push({ option_name: item, user_vote: [] })
+    })
+    save_poll_vote_detail["options"] = options
+  }
+
+  const mention = body.mention
+  const tag = body.tag_your_colleagues
+  const tag_user = { mention: mention, tag: tag }
 
   try {
     let out = {}
@@ -96,7 +120,10 @@ const submitPostController = async (req, res, next) => {
         ref: null,
         approve_status: body.approveStatus,
         link: link,
-        tag_user: body.tag_user
+        tag_user: tag_user,
+        background_image: body.backgroundImage,
+        has_poll_vote: has_poll_vote,
+        poll_vote_detail: save_poll_vote_detail
       })
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
@@ -119,19 +146,23 @@ const submitPostController = async (req, res, next) => {
           ref: null,
           approve_status: body.approveStatus,
           link: link,
-          tag_user: body.tag_user,
+          tag_user: tag_user,
+          background_image: body.backgroundImage,
           edited: true,
-          edited_at: Date.now()
+          edited_at: Date.now(),
+          has_poll_vote: has_poll_vote,
+          poll_vote_detail: save_poll_vote_detail
         }
       )
     }
 
     // send notification
     if (!is_edit && body.approveStatus === "approved") {
+      const receivers = union(mention, tag)
       const link_notification = `/posts/${_id_parent}`
       await handleSendNotification(
         "post",
-        body.tag_user,
+        receivers,
         body.data_user,
         link_notification
       )
@@ -347,7 +378,11 @@ const loadFeedProfile = async (req, res, next) => {
         $or: [{ permission: "default" }, { permission: "only_me" }]
       },
       {
-        $or: [{ created_by: id_profile }, { tag_user: id_profile }]
+        $or: [
+          { created_by: id_profile },
+          { "tag_user.mention": id_profile },
+          { "tag_user.tag": id_profile }
+        ]
       }
     ]
   }
@@ -530,6 +565,112 @@ const updateContentMedia = async (req, res, next) => {
   }
 
   return res.fail("not-found")
+}
+
+// update post poll vote
+const updatePostPollVote = async (req, res, next) => {
+  const body = req.body
+  const _id_post = body._id_post
+  const _id_option = body._id_option
+  const action = body.action
+  const multiple_selection = body.multiple_selection
+  const comment_more_count_original = body.comment_more_count_original
+  const time_end = body.time_end
+
+  if (time_end !== null) {
+    const now = moment()
+    const date = moment(time_end)
+    if (date <= now) {
+      return res.fail("poll_expired")
+    }
+  }
+
+  try {
+    if (action === "add") {
+      await feedMongoModel.updateOne(
+        {
+          _id: _id_post,
+          "poll_vote_detail.options._id": _id_option
+        },
+        { $push: { "poll_vote_detail.options.$.user_vote": req.__user } }
+      )
+    } else {
+      await feedMongoModel.updateOne(
+        {
+          _id: _id_post,
+          "poll_vote_detail.options._id": _id_option
+        },
+        { $pull: { "poll_vote_detail.options.$.user_vote": req.__user } }
+      )
+    }
+
+    if (multiple_selection === false) {
+      const feed = await feedMongoModel.findById(_id_post)
+      const promises = []
+      forEach(feed.poll_vote_detail.options, (item) => {
+        const promise = new Promise(async (resolve, reject) => {
+          if (
+            item._id.toString() !== _id_option.toString() &&
+            item.user_vote.indexOf(req.__user) !== -1
+          ) {
+            await feedMongoModel.updateOne(
+              {
+                _id: _id_post,
+                "poll_vote_detail.options._id": item._id
+              },
+              { $pull: { "poll_vote_detail.options.$.user_vote": req.__user } }
+            )
+          }
+          resolve("success")
+        })
+        promises.push(promise)
+      })
+      await Promise.all(promises).then((res) => {})
+    }
+
+    const data = await handleDataFeedById(_id_post, comment_more_count_original)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// poll_vote_detail add more option
+const updatePostPollVoteAddMoreOption = async (req, res, next) => {
+  const body = req.body
+  const _id_post = body._id_post
+  const option_name = body.option_name
+  const comment_more_count_original = body.comment_more_count_original
+  const time_end = body.time_end
+
+  if (time_end !== null) {
+    const now = moment()
+    const date = moment(time_end)
+    if (date <= now) {
+      return res.fail("poll_expired")
+    }
+  }
+
+  try {
+    await feedMongoModel.updateOne(
+      {
+        _id: _id_post
+      },
+      {
+        $push: {
+          "poll_vote_detail.options": {
+            option_name: option_name,
+            user_vote: []
+          }
+        }
+      }
+    )
+
+    const data = await handleDataFeedById(_id_post, comment_more_count_original)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 // **
 
@@ -1022,11 +1163,11 @@ const handleDataSubComment = async (dataComment, multiData = false) => {
 
 const handleSendNotification = async (
   type,
-  tag_user,
+  receivers,
   data_user,
   link = "#"
 ) => {
-  if (!isEmpty(tag_user) && !isEmpty(data_user)) {
+  if (!isEmpty(receivers) && !isEmpty(data_user)) {
     const userId = data_user.id
     const full_name = data_user.full_name
     const lang = type === "post" ? "tag_post" : "tag_comment"
@@ -1038,7 +1179,7 @@ const handleSendNotification = async (
       "}}"
     await sendNotification(
       userId,
-      tag_user,
+      receivers,
       {
         title: "",
         body: body,
@@ -1102,5 +1243,7 @@ export {
   loadFeedProfile,
   deletePost,
   updateContentMedia,
-  deleteComment
+  deleteComment,
+  updatePostPollVote,
+  updatePostPollVoteAddMoreOption
 }

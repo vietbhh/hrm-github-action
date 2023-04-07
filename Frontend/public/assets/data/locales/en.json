@@ -674,7 +674,8 @@
       "inventories": "Inventory",
       "assetGroups": "Asset Groups",
       "assetTypes": "Asset Types",
-      "asset_brand": "Asset Brands"
+      "asset_brand": "Asset Brands",
+      "asset_print_hand_over": "Print hand over"
     }
   },
   "settings": {
@@ -1520,6 +1521,18 @@
               }
             }
           }
+        },
+        "timeline": {
+          "title": "Timeline"
+        },
+        "introduction": {
+          "title": "Introduction"
+        },
+        "workspace": {
+          "title": "Workspace"
+        },
+        "photo": {
+          "title": "Photo"
         }
       },
       "fields": {
@@ -4349,6 +4362,11 @@
         "text": {
           "search_asset_name_or_code": "Search by asset name or asset code"
         }
+      },
+      "print_hand_over": {
+        "text": {
+          "export_word": "Export word"
+        }
       }
     },
     "asset_inventories_detail": {
@@ -4403,7 +4421,32 @@
           "post": "Post",
           "photo_video": "Photo/Video",
           "add_photo_video": "Add Photo/Video",
-          "add_description": "Add description..."
+          "add_description": "Add description...",
+          "choose_a_background": "Choose a background",
+          "create_poll": "Create Poll",
+          "question": "Question",
+          "enter_question": "Enter question",
+          "add_options": "Add options",
+          "option": "Option {number}",
+          "allow_multiple_selection": "Allow multiple selection",
+          "allow_adding_more_options": "Allow adding more options",
+          "allow_incognito": "Allow incognito",
+          "limit_time_for_poll": "Litmit time for poll",
+          "continue": "Continue",
+          "end_at": "End at",
+          "vote": "vote",
+          "votes": "votes",
+          "enter_options": "Enter options...",
+          "poll_expired": "Poll expired",
+          "anonymous": "Anonymous",
+          "member_voted": "member voted",
+          "members_voted": "members voted",
+          "list_member": "List member",
+          "done": "Done",
+          "no_member_selected_yet": "No member selected yet",
+          "list_selected": "List selected",
+          "member": "member",
+          "members": "members"
         }
       },
       "post": {
@@ -4437,7 +4480,9 @@
           "edited": "Edited",
           "edit_comment": "Edit comment",
           "delete_comment": "Delete comment",
-          "cancel_edit": "Cancel edit"
+          "cancel_edit": "Cancel edit",
+          "with": "with",
+          "people": "People"
         },
         "react": {
           "like": "Like",
@@ -4473,10 +4518,13 @@
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
         "approve_all": "Approve all request",
+        "download": "Download",
+        "view_post": "View post",
         "approve_all_posts": "Approve all",
         "reject_all_posts": "Reject all",
         "invite" : "Invite",
-        "join_workspace": "Join workspace"
+        "join_workspace": "Join workspace",
+        "upload": "Upload"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4488,15 +4536,25 @@
         "group_rules": "Group rules",
         "member": "Member",
         "media": "Media",
+        "request_to_join": "Request to join",
+        "tab_media": {
+          "files": "Files",
+          "photos": "Photos",
+          "videos": "Videos",
+          "links": "Links"
+        },
         "workspace_infomation": "Workspace infomation",
         "workspace_settings": "Workspace settings",
-        "request_to_join": "Request to join",
         "waiting_for_approval": "Waiting for approval",
         "setup_notification": "Setup notification",
         "review_post": "Review post",
         "add_member_to_ws": "Add member to workspace",
         "workspace_pinned_post" : "Workspace pinned post",
-        "leave_workspace" : "Leave workspace"
+        "leave_workspace" : "Leave workspace",
+        "uploaded_document": "Uploaded document",
+        "uploaded_photo": "Uploaded photo",
+        "uploaded_video": "Uploaded video",
+        "group_link_posted": "Group link posted"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4584,7 +4642,8 @@
         "membership_approval" : {
           "approver" : "Only administrators can approve joining group request",
           "auto" : "Automatically approve all joining group request"
-        }
+        },
+        "format_cannot_be_previewed": "The format cannot be previewed!"
       }
     },
     "setting_member": {

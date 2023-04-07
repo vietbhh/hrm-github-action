@@ -7,6 +7,7 @@ import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
 import TabMember from "../components/detail/TabMember/TabMember"
 import TabPinned from "../components/detail/TabPinned/TabPinned"
+import TabMedia from "../components/detail/TabMedia/TabMedia"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 import TabPrivate from "../components/detail/TabPrivate"
 import { useSelector } from "react-redux"
@@ -132,6 +133,9 @@ const DetailWorkspace = () => {
             {state.isJoined && (
               <TabMember tabActive={state.tabActive} tabId={4} />
             )}
+          </TabPane>
+          <TabPane tabId={5}>
+            <TabMedia tabActive={state.tabActive} tabId={5} />
           </TabPane>
         </TabContent>
       </div>

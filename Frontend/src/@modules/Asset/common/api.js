@@ -211,3 +211,15 @@ export const assetInventoryApi = {
     )
   }
 }
+
+export const assetPrintHandOverApi = {
+  async postExportWord(data) {
+    return await axiosApi.post(
+      "/asset-print-hand-over/export-word",
+      serialize(_.cloneDeep(data)),
+      {
+        responseType: "arraybuffer"
+      }
+    )
+  }
+}

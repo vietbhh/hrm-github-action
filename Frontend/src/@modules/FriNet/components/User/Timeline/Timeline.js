@@ -30,18 +30,20 @@ const index = (props) => {
     if (sticky_div_height) {
       const height = window.pageYOffset - offsetTop
       sticky_div_height.style.height = height + "px"
-    }
-    if (window.scrollY === 0) {
-      sticky_div_height.style.height = "0px"
-    }
-    if (sticky) {
-      if (sticky.offsetHeight > window.innerHeight - offsetTop) {
-        sticky.style.top = "unset"
-        const offset = (sticky_div_height.offsetHeight + offsetBottom) * -1
-        sticky.style.bottom = offsetBottom + "px"
-      } else {
+
+      if (window.scrollY === 0) {
         sticky_div_height.style.height = "0px"
-        sticky.style.top = offsetTop + "px"
+      }
+
+      if (sticky) {
+        if (sticky.offsetHeight > window.innerHeight - offsetTop) {
+          sticky.style.top = "unset"
+          const offset = (sticky_div_height.offsetHeight + offsetBottom) * -1
+          sticky.style.bottom = offsetBottom + "px"
+        } else {
+          sticky_div_height.style.height = "0px"
+          sticky.style.top = offsetTop + "px"
+        }
       }
     }
   }
@@ -102,10 +104,6 @@ const index = (props) => {
         <div className="div-right">
           <div id="div-sticky-height"></div>
           <div id="div-sticky">
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineProfile employeeData={employeeData} />
             <TimelineProfile employeeData={employeeData} />
           </div>
         </div>

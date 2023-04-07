@@ -212,7 +212,7 @@ class Attendances extends ErpController
 		// if attendance_detail = 0 => insert new attendance_detail
 		if ($postData['attendance_detail'] == 0) {
 			$additionalData = [
-				'work_schedule_today' => $workScheduleToday
+				'work_schedule_today' => json_encode($workScheduleToday)
 			];
 			$postData['attendance_detail'] = $this->_handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, $additionalData);
 		}

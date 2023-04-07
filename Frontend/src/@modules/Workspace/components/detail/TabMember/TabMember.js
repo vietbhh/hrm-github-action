@@ -1,6 +1,6 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
@@ -8,7 +8,6 @@ import { useSelector } from "react-redux"
 import { Card, CardBody, Col, Row } from "reactstrap"
 // ** Components
 import HeaderSection from "./HeaderSection"
-import MemberItem from "./MemberItem"
 import RequestToJoin from "./RequestToJoin"
 import ListMember from "./ListMember"
 

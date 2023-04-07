@@ -44,7 +44,7 @@ const RenderContentPost = (props) => {
       const height = document.getElementById(
         `post-body-content-${data?._id}`
       ).offsetHeight
-      if (height >= 90 && edit_description === false) {
+      if (height >= 90 && !edit_description) {
         setState({ showSeeMore: true })
       }
     }

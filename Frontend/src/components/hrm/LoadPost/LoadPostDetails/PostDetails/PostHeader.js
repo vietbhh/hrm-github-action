@@ -14,6 +14,7 @@ import ModalCreatePost from "components/hrm/CreatePost/CreatePostDetails/modals/
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import MemberVoteModal from "../modals/MemberVoteModal"
 
 const PostHeader = (props) => {
   const {
@@ -33,7 +34,11 @@ const PostHeader = (props) => {
     loadingDelete: false,
     modalCreatePost: false,
     dataMention: [],
-    _rest: {}
+    _rest: {},
+
+    // with tag
+    modalWith: false,
+    dataUserOtherWith: []
   })
 
   let _rest = {}
@@ -182,6 +187,8 @@ const PostHeader = (props) => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
 
+  const toggleModalWith = () => setState({ modalWith: !state.modalWith })
+
   // ** useEffect
   useEffect(() => {
     const data_mention = handleDataMention(dataEmployee, userId)
@@ -209,6 +216,67 @@ const PostHeader = (props) => {
     return ""
   }
 
+  const renderWithTag = () => {
+    if (!_.isEmpty(data.tag_user) && !_.isEmpty(data.tag_user.tag)) {
+      if (data.tag_user.tag.length > 2) {
+        return (
+          <span>
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <Link to={`/u/${dataEmployee?.[data.tag_user.tag[0]]?.username}`}>
+              <span className="name">
+                {dataEmployee?.[data.tag_user.tag[0]]?.full_name}
+              </span>
+            </Link>{" "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.and")}
+            </span>{" "}
+            <span
+              className="name cursor-pointer"
+              onClick={() => {
+                const data_tag = [...data.tag_user.tag]
+                data_tag.shift()
+                setState({ dataUserOtherWith: data_tag })
+                toggleModalWith()
+              }}>
+              {data.tag_user.tag.length - 1}{" "}
+              {useFormatMessage(`modules.feed.post.text.others`)}
+            </span>
+          </span>
+        )
+      } else {
+        return (
+          <span>
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <Link to={`/u/${dataEmployee?.[data.tag_user.tag[0]]?.username}`}>
+              <span className="name">
+                {dataEmployee?.[data.tag_user.tag[0]]?.full_name}
+              </span>
+            </Link>{" "}
+            {data.tag_user.tag.length === 2 && (
+              <>
+                <span className="text-default">
+                  {useFormatMessage("modules.feed.post.text.and")}
+                </span>{" "}
+                <Link
+                  to={`/u/${dataEmployee?.[data.tag_user.tag[1]]?.username}`}>
+                  <span className="name">
+                    {dataEmployee?.[data.tag_user.tag[1]]?.full_name}
+                  </span>
+                </Link>
+              </>
+            )}
+          </span>
+        )
+      }
+    }
+
+    return ""
+  }
+
   return (
     <Fragment>
       <div className="post-header">
@@ -221,6 +289,7 @@ const PostHeader = (props) => {
               <span className="name">{data?.created_by?.full_name || ""}</span>{" "}
             </Link>
             {renderAfterName()}
+            {renderWithTag()}
           </div>
           <span className="time">
             {timeDifference(data.created_at)}{" "}
@@ -280,6 +349,13 @@ const PostHeader = (props) => {
         approveStatus={data?.approve_status}
         dataPost={data}
         setData={setData}
+      />
+
+      <MemberVoteModal
+        modal={state.modalWith}
+        toggleModal={toggleModalWith}
+        dataUserVote={state.dataUserOtherWith}
+        title={useFormatMessage("modules.feed.post.text.people")}
       />
     </Fragment>
   )

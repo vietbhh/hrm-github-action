@@ -22,10 +22,16 @@ import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import "@draft-js-plugins/linkify/lib/plugin.css"
+import { arrImage } from "@modules/Feed/common/common"
 
 const EditorComponent = (props) => {
-  const { dataMention, editorState, onEditorStateChange, backgroundImage } =
-    props
+  const {
+    dataMention,
+    editorState,
+    onEditorStateChange,
+    backgroundImage,
+    showChooseBackgroundImage
+  } = props
   const [state, setState] = useMergedState({
     // mention
     open: false,
@@ -44,9 +50,15 @@ const EditorComponent = (props) => {
   }, [dataMention])
 
   useEffect(() => {
-    if (backgroundImage === "") {
+    if (document.getElementById("div-tool-bar")) {
+      const element = document.getElementById("div-tool-bar")
+      if (backgroundImage === null && showChooseBackgroundImage === false) {
+        element.classList.remove("d-none")
+      } else {
+        element.classList.add("d-none")
+      }
     }
-  }, [backgroundImage])
+  }, [backgroundImage, showChooseBackgroundImage])
 
   // ** mention
   const { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin } =
@@ -84,8 +96,23 @@ const EditorComponent = (props) => {
     [state.mentions]
   )
 
+  const renderStyleBackgroundImage = () => {
+    if (backgroundImage && arrImage[backgroundImage - 1]) {
+      return {
+        backgroundImage: `url("${arrImage[backgroundImage - 1].image}")`,
+        color: arrImage[backgroundImage - 1].color
+      }
+    }
+
+    return {}
+  }
+
   return (
-    <div className="div-editor">
+    <div
+      className={`div-editor ${
+        backgroundImage !== null && "div-editor-background"
+      }`}
+      style={renderStyleBackgroundImage()}>
       <Editor
         editorKey={"editor"}
         editorState={editorState}

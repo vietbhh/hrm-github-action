@@ -1,4 +1,3 @@
-import { downloadApi } from "@apps/modules/download/common/api"
 import { useMergedState } from "@apps/utility/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
@@ -7,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
-import { handleDataMention, handleLoadAttachmentMedias } from "../common/common"
+import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
 
 const LoadFeed = (props) => {
   const {
@@ -67,56 +66,19 @@ const LoadFeed = (props) => {
       })
   }
 
-  const handleAfterLoadLazyLoadComponent = (value, index) => {
+  const handleAfterLoadLazyLoadComponent = async (value, index) => {
     setState({ loadingPost: false })
     if (state.hasMore) {
       setState({ hasMoreLazy: true })
     }
 
     // load media
-    if (
-      value.source !== null &&
-      (value.type === "image" ||
-        value.type === "video" ||
-        value.type === "update_cover" ||
-        value.type === "update_avatar")
-    ) {
-      if (value.type === "image" || value.type === "update_cover") {
-        downloadApi.getPhoto(value.thumb).then((response) => {
-          value["url_thumb"] = URL.createObjectURL(response.data)
-          const dataPost = [...state.dataPost]
-          dataPost[index] = value
-          setState({ dataPost: dataPost })
-        })
-      }
-      if (value.type === "video") {
-        downloadApi.getPhoto(value.source).then((response) => {
-          value["url_thumb"] = URL.createObjectURL(response.data)
-          const dataPost = [...state.dataPost]
-          dataPost[index] = value
-          setState({ dataPost: dataPost })
-        })
-      }
-      if (value.type === "update_avatar") {
-        downloadApi.getPhoto(value.thumb).then((response) => {
-          value["url_thumb"] = URL.createObjectURL(response.data)
-        })
-        value["url_cover"] = ""
-        if (cover !== "") {
-          downloadApi.getPhoto(cover).then((response) => {
-            value["url_cover"] = URL.createObjectURL(response.data)
-          })
-        }
-      }
-    }
-
-    if (!_.isEmpty(value.medias) && value.type === "post") {
-      handleLoadAttachmentMedias(value).then((res_promise) => {
-        const dataPost = [...state.dataPost]
-        dataPost[index]["medias"] = res_promise
-        setState({ dataPost: dataPost })
-      })
-    }
+    const data_attachment = await handleLoadAttachmentThumb(value, cover)
+    const dataPost = [...state.dataPost]
+    dataPost[index]["url_thumb"] = data_attachment["url_thumb"]
+    dataPost[index]["url_cover"] = data_attachment["url_cover"]
+    dataPost[index]["medias"] = data_attachment["medias"]
+    setState({ dataPost: dataPost })
   }
 
   // load data create new
@@ -124,46 +86,14 @@ const LoadFeed = (props) => {
     // ** user data post
     setState({ loadingPostCreateNew: true })
 
-    if (
-      dataCreateNew.source !== null &&
-      (dataCreateNew.type === "image" ||
-        dataCreateNew.type === "video" ||
-        dataCreateNew.type === "update_cover" ||
-        dataCreateNew.type === "update_avatar")
-    ) {
-      if (
-        dataCreateNew.type === "image" ||
-        dataCreateNew.type === "update_cover"
-      ) {
-        await downloadApi.getPhoto(dataCreateNew.thumb).then((response) => {
-          dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
-        })
-      }
-
-      if (dataCreateNew.type === "video") {
-        await downloadApi.getPhoto(dataCreateNew.source).then((response) => {
-          dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
-        })
-      }
-
-      if (dataCreateNew.type === "update_avatar") {
-        await downloadApi.getPhoto(dataCreateNew.thumb).then((response) => {
-          dataCreateNew["url_thumb"] = URL.createObjectURL(response.data)
-        })
-        dataCreateNew["url_cover"] = ""
-        if (cover !== "") {
-          await downloadApi.getPhoto(cover).then((response) => {
-            dataCreateNew["url_cover"] = URL.createObjectURL(response.data)
-          })
-        }
-      }
-    }
-
-    if (!_.isEmpty(dataCreateNew.medias) && dataCreateNew.type === "post") {
-      await handleLoadAttachmentMedias(dataCreateNew).then((res_promise) => {
-        dataCreateNew["medias"] = res_promise
-      })
-    }
+    // load media
+    const data_attachment = await handleLoadAttachmentThumb(
+      dataCreateNew,
+      cover
+    )
+    dataCreateNew["url_thumb"] = data_attachment["url_thumb"]
+    dataCreateNew["url_cover"] = data_attachment["url_cover"]
+    dataCreateNew["medias"] = data_attachment["medias"]
 
     setState({
       dataCreateNewTemp: [...[dataCreateNew], ...state.dataCreateNewTemp],

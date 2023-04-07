@@ -22,7 +22,15 @@ const feedSchema = baseSchema("m_feed", {
   },
   type: {
     type: String,
-    enum: ["post", "image", "video", "link", "update_avatar", "update_cover"],
+    enum: [
+      "post",
+      "image",
+      "video",
+      "link",
+      "update_avatar",
+      "update_cover",
+      "background_image"
+    ],
     default: "post"
   },
   medias: {
@@ -94,8 +102,17 @@ const feedSchema = baseSchema("m_feed", {
     default: []
   },
   tag_user: {
-    type: [String],
-    default: []
+    type: {
+      mention: {
+        type: [String],
+        default: []
+      },
+      tag: {
+        type: [String],
+        default: []
+      }
+    },
+    default: {}
   },
   edited: {
     type: Boolean,
@@ -104,6 +121,51 @@ const feedSchema = baseSchema("m_feed", {
   edited_at: {
     type: Date,
     default: null
+  },
+  background_image: {
+    type: Number,
+    default: null
+  },
+  has_poll_vote: {
+    type: Boolean,
+    default: false
+  },
+  poll_vote_detail: {
+    type: {
+      question: {
+        type: String,
+        default: ""
+      },
+      options: {
+        type: [
+          {
+            _id: {
+              type: mongoose.Schema.Types.ObjectId,
+              auto: true,
+              required: true
+            },
+            option_name: {
+              type: String,
+              default: ""
+            },
+            user_vote: {
+              type: [String],
+              default: []
+            }
+          }
+        ],
+        default: []
+      },
+      setting: {
+        type: {},
+        default: {}
+      },
+      time_end: {
+        type: Date,
+        default: null
+      }
+    },
+    default: {}
   },
 
   // ** source child / post: 1 image/video
