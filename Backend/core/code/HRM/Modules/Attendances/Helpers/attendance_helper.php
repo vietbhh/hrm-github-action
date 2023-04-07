@@ -242,8 +242,9 @@ function getAttendanceDetail(
 						$ot_regular += $arrayPush['overtime'];
 					}
 
+					$workScheduleTotal = isset($arrayPush['work_schedule']['total']) ? $arrayPush['work_schedule']['total'] : 0;
 					$totalPaidTimeWorkingDay += $arrayPush['paid_time'];
-					$arrayPush['deficit'] = $arrayPush['work_schedule']['total'] - $arrayPush['paid_time'];
+					$arrayPush['deficit'] = $workScheduleTotal - $arrayPush['paid_time'];
 					$result['total_time']['logged_time'] += $arrayPush['logged_time'];
 					$result['total_time']['paid_time'] += $arrayPush['paid_time'];
 					$result['total_time']['overtime'] += $arrayPush['overtime'];
