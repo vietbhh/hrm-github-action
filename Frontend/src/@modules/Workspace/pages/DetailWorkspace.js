@@ -8,6 +8,8 @@ import TabIntroduction from "../components/detail/TabIntroduction/TabIntroductio
 import TabMember from "../components/detail/TabMember/TabMember"
 import TabPinned from "../components/detail/TabPinned/TabPinned"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
+import TabPrivate from "../components/detail/TabPrivate"
+import { useSelector } from "react-redux"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
@@ -15,6 +17,7 @@ const DetailWorkspace = () => {
     detailWorkspace: {}
   })
   const params = useParams()
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const tabToggle = (tab) => {
     if (state.tabActive !== tab) {
       setState({
@@ -35,17 +38,22 @@ const DetailWorkspace = () => {
   }
 
   const scrollUpwards = () => {
-    document.getElementById("div-sticky").style.top = offsetTop + "px"
+    const sticky = document.getElementById("div-sticky")
+    if (sticky) {
+      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    }
   }
 
   const scrollDownwards = () => {
     const sticky = document.getElementById("div-sticky")
-    if (sticky.offsetHeight > window.innerHeight) {
-      const offset =
-        (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
-      document.getElementById("div-sticky").style.top = offset + "px"
-    } else {
-      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    if (sticky) {
+      if (sticky.offsetHeight > window.innerHeight) {
+        const offset =
+          (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
+        document.getElementById("div-sticky").style.top = offset + "px"
+      } else {
+        document.getElementById("div-sticky").style.top = offsetTop + "px"
+      }
     }
   }
   const loadData = () => {
@@ -61,6 +69,22 @@ const DetailWorkspace = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
+  useEffect(() => {
+    const arrAdmin = state.detailWorkspace?.administrators
+      ? state.detailWorkspace?.administrators
+      : []
+    const arrMember = state.detailWorkspace?.members
+      ? state.detailWorkspace?.members
+      : []
+
+    const isAdmin = arrAdmin.includes(userId)
+    const isMember = arrMember.includes(userId)
+    let isJoined = false
+    if (isAdmin || isMember) {
+      isJoined = true
+    }
+    setState({ isJoined: isJoined })
+  }, [state.detailWorkspace])
   return (
     <div className="workspace">
       <WorkspaceHeader
@@ -72,16 +96,42 @@ const DetailWorkspace = () => {
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
           <TabPane tabId={1}>
-            <TabFeed detailWorkspace={state.detailWorkspace} />
+            {!state.isJoined && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {state.isJoined && (
+              <TabFeed detailWorkspace={state.detailWorkspace} />
+            )}
           </TabPane>
           <TabPane tabId={2}>
-            <TabPinned detailWorkspace={state.detailWorkspace} />
+            {!state.isJoined && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {state.isJoined && (
+              <TabPinned detailWorkspace={state.detailWorkspace} />
+            )}
           </TabPane>
           <TabPane tabId={3}>
-            <TabIntroduction />
+            {!state.isJoined && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {state.isJoined && <TabIntroduction />}
           </TabPane>
           <TabPane tabId={4}>
-            <TabMember tabActive={state.tabActive} tabId={4} />
+            {!state.isJoined && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {state.isJoined && (
+              <TabMember tabActive={state.tabActive} tabId={4} />
+            )}
           </TabPane>
         </TabContent>
       </div>

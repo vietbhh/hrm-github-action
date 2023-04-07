@@ -395,7 +395,7 @@ const WorkspaceHeader = (props) => {
                 }}
                 placement="bottomRight"
                 trigger={["click"]}>
-                <Button className="me-50" color="secondary" outline>
+                <Button className="me-50 btn-sm" color="secondary" outline>
                   {useFormatMessage("modules.workspace.text.joined")}{" "}
                   <i class="fa-regular fa-chevron-down"></i>
                 </Button>
@@ -409,6 +409,7 @@ const WorkspaceHeader = (props) => {
                 trigger={["click"]}>
                 <Button
                   color="flat-secondary"
+                  className="btn-sm"
                   style={{ backgroundColor: "rgba(130, 134, 139, 0.12)" }}>
                   <i className="fa-light fa-ellipsis"></i>
                 </Button>
