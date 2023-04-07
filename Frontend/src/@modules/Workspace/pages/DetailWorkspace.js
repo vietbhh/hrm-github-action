@@ -135,7 +135,14 @@ const DetailWorkspace = () => {
             )}
           </TabPane>
           <TabPane tabId={5}>
-            <TabMedia tabActive={state.tabActive} tabId={5} />
+            {!state.isJoined && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {state.isJoined && (
+              <TabMedia tabActive={state.tabActive} tabId={5} />
+            )}
           </TabPane>
         </TabContent>
       </div>

@@ -126,7 +126,7 @@ const EmployeesSelect = (props) => {
     })
   }
 
-  const itemTab = () => {
+  const itemTab = (show = []) => {
     const arr = [
       {
         label: (
@@ -317,8 +317,7 @@ const EmployeesSelect = (props) => {
               )}
             </div>
           </div>
-        ),
-        hidden: true
+        )
       },
       {
         label: (
@@ -327,10 +326,16 @@ const EmployeesSelect = (props) => {
             <p>Excel</p>
           </div>
         ),
-        key: 4,
+        key: "excel",
         children: "under construction"
       }
     ]
+    console.log("item", arr)
+    if (show) {
+      show.map((item) => {
+        console.log("iiiiii", item)
+      })
+    }
     return arr
   }
   const findKeyByID = (arr = [], id) => {

@@ -12,10 +12,6 @@ import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.w
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
 import SelectAdminModal from "../modals/SelectAdminModal"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
-import notification from "@apps/utility/notification"
-import Photo from "@apps/modules/download/pages/Photo"
-import { useEffect } from "react"
-import { Link } from "react-router-dom"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import CoverImage from "./CoverImage"
 

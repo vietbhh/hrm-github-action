@@ -4,7 +4,7 @@ import { isEmpty, forEach, map } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
-import { getUser, usersModel } from "#app/models/users.mysql.js"
+import { getUsers, usersModel } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
@@ -233,7 +233,7 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
 
 const updateWorkspace = async (req, res, next) => {
   const workspaceId = req.params.id
-
+  console.log("workspaceId")
   if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
     res.fail("invalid_work_space_id")
   }
@@ -254,6 +254,7 @@ const updateWorkspace = async (req, res, next) => {
       returnCurrentPageForPagination = ""
     } else if (requestData.hasOwnProperty("update_administrator")) {
       workSpaceUpdate = _handleUpdateAdministrator(workspaceInfo, requestData)
+      console.log("workSpaceUpdate", workSpaceUpdate)
       returnCurrentPageForPagination = requestData.type === "members"
     } else if (requestData.hasOwnProperty("remove_member")) {
       workSpaceUpdate = _handleRemoveMember(workspaceInfo, requestData)
