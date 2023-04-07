@@ -125,7 +125,7 @@ function getAttendanceDetail(
 			$arrayPush = $row;
 			$weekDay = date('w', strtotime($key));
 			if ($getSavedWorkingDay) {
-				$infoWorkingDay = isset($row['work_schedule_today']) ? (array) $row['work_schedule_today'] : [];
+				$infoWorkingDay = isset($row['work_schedule_today']) ? json_decode($row['work_schedule_today'], true) : [];
 			} else {
 				$infoWorkingDay = isset($arrWorkingDay[$weekDay]) ? $arrWorkingDay[$weekDay] : [];
 			}
