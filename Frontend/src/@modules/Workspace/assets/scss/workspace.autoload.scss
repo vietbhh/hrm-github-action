@@ -534,15 +534,51 @@
     width: 80%;
   }
 
-  .workspace-overview {
-    .overview-header {
+  .header-card {
+    .ant-picker-input {
+      input {
+        font-size: 12px !important;
+        font-weight: 500;
+        line-height: 1;
+      }
     }
 
+    .filter {
+      .form-group {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+
+  .workspace-overview {
+    .overview-header {
+      .time-update-text {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
     .overview-content {
       gap: 12px;
 
       .paragraph {
+        .apexcharts-datalabels-group {
+          text:first-child {
+            font-weight: 700;
+          }
+
+          text:nth-child(2) {
+            font-size: 14px !important;
+            font-weight: 550;
+            color: #babcbf !important;
+          }
+        }
       }
+      
+      .title {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
       .overview {
         gap: 12px;
 
@@ -552,13 +588,39 @@
           height: 100%;
           border: 1px solid rgba(0, 0, 0, 0.1);
 
+          .description {
+            font-size: 11px;
+          }
+
           .number {
             font-size: 20px;
             font-weight: bold;
-            padding: 7px;
+            height: 35px;
+            width: 35px;
+            line-height: 35px;
+            text-align: center;
             border-radius: 5px;
+          }
+        }
+
+        .all-member {
+          .number {
             background-color: #ffeecf;
             color: #ecb579;
+          }
+        }
+
+        .public {
+          .number {
+            background-color: #ddf3ff;
+            color: #0050b3;
+          }
+        }
+
+        .private {
+          .number {
+            background-color: #f7edff;
+            color: #391085;
           }
         }
       }

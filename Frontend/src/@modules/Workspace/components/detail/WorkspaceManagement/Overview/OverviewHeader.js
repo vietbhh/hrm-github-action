@@ -1,38 +1,39 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import moment from "moment"
 // ** Styles
-import { Col, Row } from "reactstrap"
 // ** Components
-import { ErpDate } from "@apps/components/common/ErpField"
+import Header from "../Common/Header"
 
 const OverviewHeader = (props) => {
   const {
     // ** props
+    filterOverview,
     // ** methods
+    setFilterOverview
   } = props
+
+  const handleChangeDate  = (value, type) => {
+    setFilterOverview({
+      [type]: value
+    })
+  }
 
   // ** render
   return (
     <div className="w-100 overview-header">
-      <div className="d-flex align-items-center justify-content-between">
-        <h5>
-          {useFormatMessage("modules.workspace.title.workspace_overview")}
-        </h5>
-        <div className="w-25">
-          <Row className="m-0">
-            <Col sm={6} className="p-0 pe-50">
-              <ErpDate nolabel={true} allowClear={false} />
-            </Col>
-            <Col sm={6} className="p-0">
-              <ErpDate nolabel={true} allowClear={false} />
-            </Col>
-          </Row>
-        </div>
-      </div>
+      <Header
+        title={useFormatMessage("modules.workspace.title.workspace_overview")}
+        from={filterOverview.from}
+        to={filterOverview.to}
+        handleChangeDate={handleChangeDate}
+      />
       <div>
-        <p>
+        <p className="time-update-text">
           <i className="fa-duotone fa-calendar-days me-50" />
-          Data last updated on: 06/04/2023.
+          {useFormatMessage("modules.workspace.text.data_last_updated_on", {
+            date: moment().format("DD/MM/YYYY")
+          })}
         </p>
       </div>
       <hr />

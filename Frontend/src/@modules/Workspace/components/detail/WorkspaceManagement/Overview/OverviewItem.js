@@ -5,18 +5,23 @@
 const OverviewItem = (props) => {
   const {
     // ** props
+    loading,
+    title,
+    description,
+    number,
+    className
     // ** methods
   } = props
 
   // ** render
   return (
-    <div className="p-1 overview-item">
+    <div className={`p-1 overview-item ${className}`}>
       <div className="mb-2">
-        <h6>All-members groups</h6>
-        <p>Group include all member of the organizations</p>
+        <h6 className="title">{title}</h6>
+        <p className="description">{description}</p>
       </div>
       <div>
-        <span className="number">12</span>
+        <p className="number">{loading ? "" : number}</p>
       </div>
     </div>
   )

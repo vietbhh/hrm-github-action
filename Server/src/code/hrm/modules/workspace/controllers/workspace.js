@@ -731,10 +731,38 @@ const loadGCSObjectLink = async (req, res) => {
   })
 }
 
-const getWorkspaceOverview = () => {
-  return res.respond({
-    data: []
+const getWorkspaceOverview = async (req, res) => {
+  const from = req.query.from
+  const to = req.query.to
+
+  const filter = {
+    created_at: {
+      $gte : from,
+      $lte: to
+    }
+  }
+
+  const listWorkspace = await workspaceMongoModel.find(filter)
+  const result = {
+    all_member: 0,
+    private: 0,
+    public: 0
+  }
+
+  forEach(listWorkspace, (item) => {
+    if (item.type === "private") {
+      result['private'] += 1
+    } else if (item.type === "public") {
+      result['public'] += 1
+    }
+
+    if (result['all_member'] === true) {
+      result['all_member'] += 1
+    }
+
   })
+
+  return res.respond(result)
 }
 
 export {

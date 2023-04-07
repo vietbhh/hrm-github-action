@@ -6,8 +6,8 @@ import moment from "moment"
 // ** Styles
 // ** Components
 import HeaderComponent from "../components/detail/WorkspaceManagement/HeaderComponent"
-import TableWorkspace from "../components/detail/WorkspaceManagement/TableWorkspace"
 import WorkspaceOverview from "../components/detail/WorkspaceManagement/Overview/WorkspaceOverview"
+import ListWorkspace from "../components/detail/WorkspaceManagement/List/ListWorkspace"
 
 const WorkspaceManagement = () => {
   const [state, setState] = useMergedState({
@@ -17,16 +17,17 @@ const WorkspaceManagement = () => {
     dataOverview: [],
     totalData: 0,
     filterOverview: {
-      from: moment().startOf("month").format("YYYY-MM-DD"),
-      to: moment().format("YYYY-MM-DD")
+      from: moment().subtract(6, "days"),
+      to: moment()
     },
     filter: {
       page: 1,
       limit: 20,
       status: "all",
       text: "",
-      from: moment().startOf("month").format("YYYY-MM-DD"),
-      to: moment().format("YYYY-MM-DD")
+      from: moment().subtract(6, "days"),
+      to: moment(),
+      query_type: "information"
     }
   })
 
@@ -41,7 +42,7 @@ const WorkspaceManagement = () => {
 
   const setFilterOverview = (obj) => {
     setState({
-      filter: {
+      filterOverview: {
         ...state.filter,
         ...obj
       }
@@ -53,7 +54,12 @@ const WorkspaceManagement = () => {
       loading: true
     })
 
-    const params = { ...state.filter, workspace_type: "" }
+    const params = {
+      ...state.filter,
+      workspace_type: "",
+      from: state.filterOverview.from.format("YYYY-MM-DD"),
+      to: state.filterOverview.to.format("YYYY-MM-DD")
+    }
     workspaceApi
       .getList(params)
       .then((res) => {
@@ -77,24 +83,47 @@ const WorkspaceManagement = () => {
       loadingOverview: true
     })
 
-    const params = state.filterOverview
+    const params = {
+      ...state.filterOverview,
+      from: state.filterOverview.from.format("YYYY-MM-DD"),
+      to: state.filterOverview.to.format("YYYY-MM-DD")
+    }
+    workspaceApi
+      .getOverview(params)
+      .then((res) => {
+        setState({
+          dataOverview: res.data,
+          loadingOverview: false
+        })
+      })
+      .catch((err) => {
+        setState({
+          dataOverview: state.dataOverview,
+          loadingOverview: false
+        })
+      })
   }
 
   // ** effect
   useEffect(() => {
     loadData()
-  }, [])
+  }, [state.filter])
+
+  useEffect(() => {
+    loadDataOverview()
+  }, [state.filterOverview])
 
   // ** render
   return (
     <div className="workspace-management-page">
       <HeaderComponent filter={state.filter} setFilter={setFilter} />
       <WorkspaceOverview
+        loading={state.loadingOverview}
         data={state.dataOverview}
         filterOverview={state.filterOverview}
         setFilterOverview={setFilterOverview}
       />
-      <TableWorkspace
+      <ListWorkspace
         data={state.data}
         totalData={state.totalData}
         filter={state.filter}
