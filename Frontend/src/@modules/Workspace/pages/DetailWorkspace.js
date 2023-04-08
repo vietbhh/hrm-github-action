@@ -15,7 +15,8 @@ const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     tabActive: 1,
-    detailWorkspace: {}
+    detailWorkspace: {},
+    workspacePublic: false
   })
   const params = useParams()
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -28,7 +29,7 @@ const DetailWorkspace = () => {
   }
   const offsetTop = 90
   const offsetBottom = 30
-
+  console.log("state", state.detailWorkspace)
   const handleScroll = (e) => {
     if (window.scrollY < state.prevScrollY) {
       scrollUpwards()
@@ -84,7 +85,16 @@ const DetailWorkspace = () => {
     if (isAdmin || isMember) {
       isJoined = true
     }
-    setState({ isJoined: isJoined })
+
+    let workspacePublic = false
+    if (
+      state.detailWorkspace?.type &&
+      state.detailWorkspace?.type === "public"
+    ) {
+      workspacePublic = true
+    }
+
+    setState({ isJoined: isJoined, workspacePublic: workspacePublic })
   }, [state.detailWorkspace])
   return (
     <div className="workspace">
@@ -97,50 +107,50 @@ const DetailWorkspace = () => {
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
           <TabPane tabId={1}>
-            {!state.isJoined && (
+            {!state.isJoined && !state.workspacePublic && (
               <div>
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {state.isJoined && (
+            {(state.isJoined || state.workspacePublic) && (
               <TabFeed detailWorkspace={state.detailWorkspace} />
             )}
           </TabPane>
           <TabPane tabId={2}>
-            {!state.isJoined && (
+            {!state.isJoined && !state.workspacePublic && (
               <div>
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {state.isJoined && (
+            {(state.isJoined || state.workspacePublic) && (
               <TabPinned detailWorkspace={state.detailWorkspace} />
             )}
           </TabPane>
           <TabPane tabId={3}>
-            {!state.isJoined && (
+            {!state.isJoined && !state.workspacePublic && (
               <div>
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {state.isJoined && <TabIntroduction />}
+            {(state.isJoined || state.workspacePublic) && <TabIntroduction />}
           </TabPane>
           <TabPane tabId={4}>
-            {!state.isJoined && (
+            {!state.isJoined && !state.workspacePublic && (
               <div>
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {state.isJoined && (
+            {(state.isJoined || state.workspacePublic) && (
               <TabMember tabActive={state.tabActive} tabId={4} />
             )}
           </TabPane>
           <TabPane tabId={5}>
-            {!state.isJoined && (
+            {!state.isJoined && !state.workspacePublic && (
               <div>
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {state.isJoined && (
+            {(state.isJoined || state.workspacePublic) && (
               <TabMedia tabActive={state.tabActive} tabId={5} />
             )}
           </TabPane>

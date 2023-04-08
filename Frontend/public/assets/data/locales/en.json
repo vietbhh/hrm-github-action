@@ -514,7 +514,8 @@
     "started": "Started",
     "remove": "Remove",
     "reject": "Reject",
-    "duplicate": "Duplicate"
+    "duplicate": "Duplicate",
+    "done" : "Done"
   },
   "errors": {
     "common": {

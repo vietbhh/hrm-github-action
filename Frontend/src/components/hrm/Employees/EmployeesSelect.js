@@ -9,8 +9,13 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
 const EmployeesSelect = (props) => {
-  const { handleSelect, dataDetail, member_selected, department_selected } =
-    props
+  const {
+    handleSelect,
+    dataDetail,
+    member_selected,
+    department_selected,
+    tabShow
+  } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
@@ -254,8 +259,7 @@ const EmployeesSelect = (props) => {
               )}
             </div>
           </div>
-        ),
-        disabled: true
+        )
       },
       {
         label: (
@@ -318,23 +322,18 @@ const EmployeesSelect = (props) => {
             </div>
           </div>
         )
-      },
-      {
-        label: (
-          <div className="text-center">
-            <i className="fa-light fa-file-excel"></i>
-            <p>Excel</p>
-          </div>
-        ),
-        key: "excel",
-        children: "under construction"
       }
     ]
-    console.log("item", arr)
-    if (show) {
+    if (show.length > 0) {
+      const arrShow = []
       show.map((item) => {
-        console.log("iiiiii", item)
+        const index = arr.findIndex((p) => p.key === item)
+        if (index >= 0) {
+          arrShow.push(arr[index])
+        }
       })
+
+      return arrShow
     }
     return arr
   }
@@ -455,7 +454,7 @@ const EmployeesSelect = (props) => {
     <Tabs
       className="tab-invite"
       tabPosition={"left"}
-      items={itemTab()}
+      items={itemTab(tabShow)}
       onTabClick={(key) =>
         setState({
           typeAdd: key,

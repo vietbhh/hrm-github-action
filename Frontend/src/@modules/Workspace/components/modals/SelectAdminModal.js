@@ -55,7 +55,7 @@ const SelectAdminModal = (props) => {
       size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
-      <ModalHeader toggle={() => handleModal()}>Warning</ModalHeader>
+      <ModalHeader toggle={() => handleModal()}></ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
           <Row className="mt-1">
@@ -73,7 +73,10 @@ const SelectAdminModal = (props) => {
               />
             </Col>
             <Col sm={12}>
-              <EmployeesSelect handleSelect={handleSelect} />
+              <EmployeesSelect
+                handleSelect={handleSelect}
+                tabShow={["members"]}
+              />
             </Col>
           </Row>
         </ModalBody>
