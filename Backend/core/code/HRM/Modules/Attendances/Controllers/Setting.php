@@ -253,8 +253,10 @@ class Setting extends ErpController
 
 		$clock_type = getOptionValue('attendance_logs', 'clock_type', 'clockout');
 		if ($postData['attendance_detail'] == 0) {
-			$additionalData = $postData['clockDay'];
-			$additionalData['work_schedule_today'] = json_encode($workScheduleToday);
+			//$additionalData = $postData['clockDay'];
+			$additionalData = [
+				'work_schedule_today' => json_encode($workScheduleToday)
+			];
 			$postData['attendance_detail'] = $this->_handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, $additionalData);
 			$clock_type = getOptionValue('attendance_logs', 'clock_type', 'clockin');
 		}
