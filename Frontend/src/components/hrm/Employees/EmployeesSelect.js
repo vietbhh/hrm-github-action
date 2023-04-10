@@ -101,7 +101,6 @@ const EmployeesSelect = (props) => {
   }
   const renderDepartmentSelected = (data = []) => {
     return data.map((item, key) => {
-      console.log("item", item)
       return (
         <Col sm={12} key={item.id}>
           <div
@@ -117,7 +116,6 @@ const EmployeesSelect = (props) => {
 
   const renderJobTitleSelected = (data = []) => {
     return data.map((item, key) => {
-      console.log("item", item)
       return (
         <Col sm={12} key={item.id}>
           <div
@@ -365,7 +363,7 @@ const EmployeesSelect = (props) => {
   }
 
   const loadJobtitle = (props) => {
-    defaultModuleApi.getList("job_titles").then((res) => {
+    defaultModuleApi.getList("job_titles", props).then((res) => {
       const job_titles = state.jobtitles
       const concat = !props.search
         ? job_titles.concat(res.data.results)
@@ -382,7 +380,7 @@ const EmployeesSelect = (props) => {
 
   const loadDepartment = (props) => {
     setState({ loading: true })
-    defaultModuleApi.getList("departments").then((res) => {
+    defaultModuleApi.getList("departments", props).then((res) => {
       const departments = state.departments
       const concat = !props.search
         ? departments.concat(res.data.results)
@@ -408,15 +406,19 @@ const EmployeesSelect = (props) => {
   }
   const endScrollDepartment = () => {
     const page = state.page + 1
-    if (state.recordsTotal > state.departments.length) {
-      loadDepartment({ page: page, search: state.search })
+    if (state.typeAdd === "departments") {
+      if (state.recordsTotal > state.departments.length) {
+        loadDepartment({ page: page, search: state.search })
+      }
     }
   }
 
   const endScrollJobtitle = () => {
     const page = state.page + 1
-    if (state.recordsTotal > state.departments.length) {
-      loadJobtitle({ page: page, search: state.search })
+    if (state.typeAdd === "jobtitles") {
+      if (state.recordsTotal > state.jobtitles.length) {
+        loadJobtitle({ page: page, search: state.search })
+      }
     }
   }
   const handleAdd = () => {
@@ -455,16 +457,16 @@ const EmployeesSelect = (props) => {
       className="tab-invite"
       tabPosition={"left"}
       items={itemTab(tabShow)}
-      onTabClick={(key) =>
+      onTabClick={(key) => {
         setState({
           typeAdd: key,
           dataSelected: [],
           recordsTotal: 0,
           departments: [],
           jobtitles: [],
-          recordsTotal: []
+          members: []
         })
-      }
+      }}
     />
   )
 }

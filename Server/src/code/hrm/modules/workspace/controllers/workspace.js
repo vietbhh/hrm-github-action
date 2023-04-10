@@ -9,7 +9,7 @@ import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
 import moment from "moment/moment.js"
-
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
     name: req.body.workspace_name,
@@ -330,7 +330,25 @@ const updateWorkspace = async (req, res, next) => {
         },
         { ...updateData }
       )
+      const receivers = {}
 
+      const body =
+        "<strong> NVT" + "</strong> {{modules.network.notification." + "}}"
+      const link = "https://google.com.vn"
+      await sendNotification(
+        82,
+        receivers,
+        {
+          title: "",
+          body: body,
+          link: link
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
+        }
+      )
       return res.respond(workSpaceUpdate)
     }
   } catch (err) {

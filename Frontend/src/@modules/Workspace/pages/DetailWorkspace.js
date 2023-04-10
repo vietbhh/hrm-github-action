@@ -29,7 +29,6 @@ const DetailWorkspace = () => {
   }
   const offsetTop = 90
   const offsetBottom = 30
-  console.log("state", state.detailWorkspace)
   const handleScroll = (e) => {
     if (window.scrollY < state.prevScrollY) {
       scrollUpwards()
