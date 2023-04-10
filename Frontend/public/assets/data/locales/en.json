@@ -4522,7 +4522,11 @@
         "view_post": "View post",
         "approve_all_posts": "Approve all",
         "reject_all_posts": "Reject all",
-        "upload": "Upload"
+        "upload": "Upload",
+        "reactivate_workspace": "Reactivate workspace",
+        "disable_workspace": "Disable workspace",
+        "become_admin_workspace": "Become Admin of the workspace",
+        "view_detail": "View details"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4554,7 +4558,9 @@
         "workspace_information": "Workspace information",
         "workspace_activities": "Workspace activities",
         "all_member_workspaces": "All-members workspaces",
-        "private_workspaces": "Private workspaces"
+        "private_workspaces": "Private workspaces",
+        "post_created": "Post crated"
+        
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4651,6 +4657,20 @@
             "title": "Private workspace",
             "description": "Workspaces that only the members of the workspace can view the posts"
           }
+        },
+        "warning_change_workspace_status": {
+          "active": {
+            "title": "Reactivate Workspace",
+            "description": "Reactivate workspace {name}. Team members can join and be active in the workspace as usual!"
+          },
+          "disable": {
+            "title": "Disable Workspace",
+            "description": "Disable workspace {name}. Team members will not be able to access this workspace untial administrator reactivate it!"
+          }
+        },
+        "warning_become_admin": {
+          "title": "Become an admin of the workspace",
+          "description": "You'll become an admin of the workspcace and have permission to: administer workspace members and posts, change workspace settings,..."
         }
       }
     },

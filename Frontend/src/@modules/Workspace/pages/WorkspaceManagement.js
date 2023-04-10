@@ -17,7 +17,7 @@ const WorkspaceManagement = () => {
     dataOverview: [],
     totalData: 0,
     filterOverview: {
-      from: moment().subtract(6, "days"),
+      from: moment().subtract(1, "month"),
       to: moment()
     },
     filter: {
@@ -25,7 +25,7 @@ const WorkspaceManagement = () => {
       limit: 20,
       status: "all",
       text: "",
-      from: moment().subtract(6, "days"),
+      from: moment().subtract(1, "month"),
       to: moment(),
       query_type: "information"
     }
@@ -63,11 +63,13 @@ const WorkspaceManagement = () => {
     workspaceApi
       .getList(params)
       .then((res) => {
-        setState({
-          data: res.data.results,
-          totalData: res.data.total_data,
-          loading: false
-        })
+        setTimeout(() => {
+          setState({
+            loading: false,
+            data: res.data.results,
+            totalData: res.data.total_data
+          })
+        }, 500)
       })
       .catch((err) => {
         setState({
@@ -104,6 +106,12 @@ const WorkspaceManagement = () => {
       })
   }
 
+  const setData = (data) => {
+    setState({
+      data: data
+    })
+  }
+
   // ** effect
   useEffect(() => {
     loadData()
@@ -124,10 +132,12 @@ const WorkspaceManagement = () => {
         setFilterOverview={setFilterOverview}
       />
       <ListWorkspace
+        loading={state.loading}
         data={state.data}
         totalData={state.totalData}
         filter={state.filter}
         setFilter={setFilter}
+        setData={setData}
       />
     </div>
   )

@@ -119,6 +119,7 @@ const getListWorkspace = async (req, res, next) => {
   const status = req.query.status
   const text = req.query.text
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
+  const queryType = req.query.query_type
   try {
     let filter = {}
     if (workspaceType === "joined") {
@@ -154,6 +155,33 @@ const getListWorkspace = async (req, res, next) => {
 
     const totalWorkspace = await workspaceMongoModel.find(filter)
     const result = await handleDataBeforeReturn(workspace, true)
+
+    if (queryType === "activity") {
+      const idWorkspace = []
+      result.map((item) => {
+        idWorkspace.push(item._id)
+      })
+
+      const listFeed = await feedMongoModel.find({
+        permission: "workspace",
+        permission_ids: { $in: idWorkspace }
+      })
+
+      listFeed.map((feedItem) => {
+        const workspacePermissionId = feedItem.permission_ids
+        workspacePermissionId.map((itemPermissionId) => {
+          result.map((itemResult, index) => {
+            if (itemPermissionId.includes(itemResult._id.toString())) {
+              if (result[index]["post_created"] === undefined) {
+                result[index]["post_created"] = 0
+              }
+
+              result[index]["post_created"] += 1
+            }
+          })
+        })
+      })
+    }
 
     return res.respond({
       results: result,
@@ -362,7 +390,7 @@ const sortGroupRule = async (req, res, next) => {
     const nextIndex = sortType === "down" ? index + 1 : index - 1
     const groupRule = arrayMove([...workspace["group_rules"]], index, nextIndex)
 
-    await _handleUpdateWorkspace(
+    await workspaceMongoModel.findOneAndUpdate(
       {
         _id: workspaceId
       },
@@ -737,7 +765,7 @@ const getWorkspaceOverview = async (req, res) => {
 
   const filter = {
     created_at: {
-      $gte : from,
+      $gte: from,
       $lte: to
     }
   }
@@ -751,15 +779,14 @@ const getWorkspaceOverview = async (req, res) => {
 
   forEach(listWorkspace, (item) => {
     if (item.type === "private") {
-      result['private'] += 1
+      result["private"] += 1
     } else if (item.type === "public") {
-      result['public'] += 1
+      result["public"] += 1
     }
 
-    if (result['all_member'] === true) {
-      result['all_member'] += 1
+    if (item.all_member === true) {
+      result["all_member"] += 1
     }
-
   })
 
   return res.respond(result)

@@ -11,11 +11,13 @@ import TableWorkspace from "./TableWorkspace"
 const ListWorkspace = (props) => {
   const {
     // ** props
+    loading,
     data,
     totalData,
     filter,
     // ** methods
-    setFilter
+    setFilter,
+    setData
   } = props
 
   const setTabActive = (type) => {
@@ -86,10 +88,12 @@ const ListWorkspace = (props) => {
             setFilter={setFilter}
           />
           <TableWorkspace
+            loading={loading}
             data={data}
             totalData={totalData}
             filter={filter}
             setFilter={setFilter}
+            setData={setData}
           />
         </CardBody>
       </Card>

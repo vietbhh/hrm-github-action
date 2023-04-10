@@ -21,11 +21,15 @@ export const workspaceApi = {
   },
   async getList(params) {
     const strParams = object2QueryString(params)
-    return await axiosNodeApi.get(`/workspace/list?get${strParams}`)
+    return await axiosNodeApi.get(`/workspace/list?get${strParams}`, {
+      disableLoading: true
+    })
   },
   async getOverview(params) {
     const strParams = object2QueryString(params)
-    return await axiosNodeApi.get(`/workspace/overview?get${strParams}`)
+    return await axiosNodeApi.get(`/workspace/overview?get${strParams}`, {
+      disableLoading: true
+    })
   },
   async update(id, data) {
     return await axiosNodeApi.post(
