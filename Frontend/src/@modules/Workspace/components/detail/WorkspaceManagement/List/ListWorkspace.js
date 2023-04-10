@@ -1,4 +1,5 @@
 // ** React Imports
+import { useRef } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 import { Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
@@ -21,6 +22,19 @@ const ListWorkspace = (props) => {
     setFilter({
       query_type: type
     })
+  }
+
+  const debounceSearch = useRef(
+    _.debounce((nextValue) => {
+      setFilter({
+        text: nextValue
+      })
+    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+  ).current
+
+  const handleChangeText = (e) => {
+    const value = e.target.value
+    debounceSearch(value.toLowerCase())
   }
 
   // ** render
@@ -60,12 +74,17 @@ const ListWorkspace = (props) => {
             placeholder={useFormatMessage(
               "modules.workspace.text.search_workspace"
             )}
+            onChange={(e) => handleChangeText(e)}
           />
         </div>
       </div>
       <Card>
         <CardBody>
-          <ListWorkspaceHeader filter={filter} setFilter={setFilter} />
+          <ListWorkspaceHeader
+            data={data}
+            filter={filter}
+            setFilter={setFilter}
+          />
           <TableWorkspace
             data={data}
             totalData={totalData}

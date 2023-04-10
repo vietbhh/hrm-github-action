@@ -38,7 +38,7 @@ const OverviewContent = (props) => {
             total: {
               show: true,
               label: data.all_member + data.public + data.private,
-              fontSize: "24px",
+              //fontSize: "24px",
               formatter: () =>
                 useFormatMessage("modules.workspace.title.workspaces")
             }
@@ -55,7 +55,16 @@ const OverviewContent = (props) => {
     chart: {
       width: "20%"
     },
-    colors: ["#ffeecf", "#1a99f4", "#722ed1"]
+    colors: ["#ffeecf", "#1a99f4", "#722ed1"],
+    states: {
+      hover: {
+        filter: {
+          type: "none",
+          value: 1
+        }
+      }
+    },
+    tooltip : {  enabled : false }
   }
 
   // ** render

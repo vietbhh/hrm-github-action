@@ -4565,6 +4565,13 @@
         "visible": "Visible",
         "status": "Status"
       },
+      "options": {
+        "status": {
+          "all": "All",
+          "active": "Active",
+          "disable": "Disable"
+        }
+      },
       "text": {
         "members": "members",
         "member": "member",

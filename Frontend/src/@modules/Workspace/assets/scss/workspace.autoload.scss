@@ -573,7 +573,7 @@
           }
         }
       }
-      
+
       .title {
         font-size: 13px;
         font-weight: 600;
@@ -622,6 +622,29 @@
             background-color: #f7edff;
             color: #391085;
           }
+        }
+      }
+    }
+  }
+
+  .list-workspace {
+    .status-filter {
+      button {
+        border-radius: 12px;
+      }
+    }
+
+    .table-list-workspace {
+      .rs-table-header-row-wrapper {
+        .rs-table-row {
+          border-top-right-radius: 12px !important;
+          border-top-left-radius: 12px !important;
+        }
+      }
+
+      .rs-table-body-row-wrapper {
+        .rs-table-cell-wrap {
+          font-weight: 400;
         }
       }
     }

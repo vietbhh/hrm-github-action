@@ -9,13 +9,25 @@ import Header from "../Common/Header"
 const ListWorkspaceHeader = (props) => {
   const {
     // ** props
+    data,
     filter,
     // ** methods
     setFilter
   } = props
 
-  const handleChangeDate = (value, to) => {
-    console.log(value, to)
+  const numberWorkspace = data !== undefined ? data.length : 0
+
+  const handleChangeDate = (value, type) => {
+    console.log(value)
+    setFilter({
+      [type]: value
+    })
+  }
+
+  const handleClickStatus = (status) => {
+    setFilter({
+      status: status
+    })
   }
 
   // ** render
@@ -24,9 +36,11 @@ const ListWorkspaceHeader = (props) => {
       <div className="mb-1">
         <Header
           title={useFormatMessage(
-            "modules.workspace.title.workspaces_in_the_organization",
+            numberWorkspace === 1
+              ? "modules.workspace.title.workspace_in_the_organization"
+              : "modules.workspace.title.workspaces_in_the_organization",
             {
-              number: 2
+              number: numberWorkspace
             }
           )}
           from={filter.from}
@@ -34,16 +48,28 @@ const ListWorkspaceHeader = (props) => {
           handleChangeDate={handleChangeDate}
         />
       </div>
-      <div>
+      <div className="status-filter">
         <Space>
-          <Button.Ripple color="success" outline size="sm">
-            All
+          <Button.Ripple
+            color={filter.status === "all" ? "success" : "secondary"}
+            outline
+            size="sm"
+            onClick={() => handleClickStatus("all")}>
+            {useFormatMessage("modules.workspace.options.status.all")}
           </Button.Ripple>
-          <Button.Ripple color="secondary" outline size="sm">
-            Active
+          <Button.Ripple
+            color={filter.status === "active" ? "success" : "secondary"}
+            outline
+            size="sm"
+            onClick={() => handleClickStatus("active")}>
+            {useFormatMessage("modules.workspace.options.status.active")}
           </Button.Ripple>
-          <Button.Ripple color="secondary" outline size="sm">
-            Disabled
+          <Button.Ripple
+            color={filter.status === "disable" ? "success" : "secondary"}
+            outline
+            size="sm"
+            onClick={() => handleClickStatus("disable")}>
+            {useFormatMessage("modules.workspace.options.status.disable")}
           </Button.Ripple>
         </Space>
       </div>

@@ -15,8 +15,6 @@ const WorkspaceOverview = (props) => {
     setFilterOverview
   } = props
 
-  console.log(loading)
-
   // ** render
   return (
     <Card className="workspace-overview">

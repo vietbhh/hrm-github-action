@@ -31,6 +31,11 @@ const TableWorkspace = (props) => {
     })
   }
 
+  const handleSwitchAllMember = (e, rowData) => {
+    const isChecked = e.target.checked
+    console.log(rowData)
+  }
+
   // ** render
   const OwnerCell = ({ rowData, dataKey, ...props }) => {
     return <Cell {...props}>{rowData.owner.full_name}</Cell>
@@ -56,11 +61,14 @@ const TableWorkspace = (props) => {
   }
 
   const StatusCell = ({ rowData, dataKey, ...props }) => {
-    //return <Cell {...props}>{rowData?.status}</Cell>
+    const currentStatus =
+      rowData?.status === undefined ? "active" : rowData.status
     return (
       <Cell {...props}>
-        <Tag bordered={false} color="green">
-          Active
+        <Tag color={currentStatus === "active" ? "green" : "red"}>
+          {useFormatMessage(
+            `modules.workspace.options.status.${currentStatus}`
+          )}
         </Tag>
       </Cell>
     )
@@ -69,7 +77,7 @@ const TableWorkspace = (props) => {
   const AllMemberCell = ({ rowData, dataKey, ...props }) => {
     return (
       <Cell {...props}>
-        <ErpSwitch />
+        <ErpSwitch onChange={(e) => handleSwitchAllMember(e, rowData)} />
       </Cell>
     )
   }
@@ -92,7 +100,8 @@ const TableWorkspace = (props) => {
         headerHeight={60}
         rowHeight={50}
         wordWrap="break-word"
-        affixHorizontalScrollbar>
+        affixHorizontalScrollbar
+        className="table-list-workspace">
         <Column flexGrow={1} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage("modules.workspace.fields.workspace_name")}
