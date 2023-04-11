@@ -4499,7 +4499,8 @@
       "title": {
         "work_space": "Work Space",
         "workspace_you_have_joined": "Workspace you have joined",
-        "workspace_that_you_managed": "Workspace that you managed"
+        "workspace_that_you_managed": "Workspace that you managed",
+        "remove_cover_image" : "Do you want to remove the photo cover ?"
       },
       "buttons": {
         "create": "Create Workspace",
@@ -4658,7 +4659,9 @@
     "network": {
       "notification": {
         "tag_comment": "tagged you on a comment",
-        "tag_post": "tagged you on a post"
+        "tag_post": "tagged you on a post",
+        "request_workspace" : "sent a request to join the workspace",
+        "need_approval" : "needs approval"
       }
     },
     "timeline": {

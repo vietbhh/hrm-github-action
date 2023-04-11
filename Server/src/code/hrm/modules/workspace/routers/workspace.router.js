@@ -13,7 +13,8 @@ import {
   loadFeed,
   addMemberByDepartment,
   loadPinned,
-  loadGCSObjectLink
+  loadGCSObjectLink,
+  removeCoverImage
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -31,5 +32,6 @@ router.get("/load-data-media/:id", loadDataMedia)
 router.post("/update/:id", updateWorkspace)
 router.post("/approvePost", approvePost)
 router.post("/add-member", addMemberByDepartment)
+router.post("/remove-cover-image/:id", removeCoverImage)
 
 export default router

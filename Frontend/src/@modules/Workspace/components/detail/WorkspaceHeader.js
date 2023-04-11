@@ -1,9 +1,7 @@
-import Photo from "@apps/modules/download/pages/Photo"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Dropdown } from "antd"
-import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
@@ -12,7 +10,6 @@ import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.w
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
 import SelectAdminModal from "../modals/SelectAdminModal"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
 import CoverImage from "./CoverImage"
 
 const unique = (arr) => {
@@ -153,7 +150,6 @@ const WorkspaceHeader = (props) => {
       request_joins.push(userId)
       infoWorkspace.request_joins = JSON.stringify(unique(request_joins))
     }
-    console.log("infoWorkspace", infoWorkspace)
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
@@ -179,7 +175,6 @@ const WorkspaceHeader = (props) => {
         setState({ loading: false, waitJoined: false })
       }
     })
-    console.log("handleCancelJoin", infoWorkspace)
   }
 
   const items = [
@@ -187,7 +182,8 @@ const WorkspaceHeader = (props) => {
       label: (
         <Link to={`/workspace/${data._id}/pending-posts`}>
           <i className="fa-regular fa-list-ul me-50"></i>{" "}
-          {useFormatMessage("modules.workspace.display.waiting_for_approval")}
+          {useFormatMessage("modules.workspace.display.waiting_for_approval")}{" "}
+          <span>{data?.request_joins?.length}</span>
         </Link>
       ),
       key: "0"
@@ -196,7 +192,8 @@ const WorkspaceHeader = (props) => {
       label: (
         <Link to={`/workspace/${data._id}/request-join`}>
           <i className="fa-duotone fa-user me-50"></i>{" "}
-          {useFormatMessage("modules.workspace.display.request_to_join")}
+          {useFormatMessage("modules.workspace.display.request_to_join")}{" "}
+          <span>{data?.request_joins?.length}</span>
         </Link>
       ),
       key: "3"
@@ -261,6 +258,7 @@ const WorkspaceHeader = (props) => {
         dataSave={{ ...data, id: data?._id }}
         isEditable={data.is_admin_group}
         saveCoverImageApi={workspaceApi.saveCoverImage}
+        loadData={loadData}
       />
 
       <CardBody className="pb-0">

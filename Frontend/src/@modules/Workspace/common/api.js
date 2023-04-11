@@ -92,5 +92,9 @@ export const workspaceApi = {
   },
   async downloadMedia(src, downloadFromStorage = false) {
     return await downloadApi.getFile(src, downloadFromStorage)
+  },
+
+  async removeCover(Id) {
+    return await axiosNodeApi.post(`/workspace/remove-cover-image/` + Id)
   }
 }

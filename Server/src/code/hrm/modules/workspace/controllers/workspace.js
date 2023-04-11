@@ -233,7 +233,6 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
 
 const updateWorkspace = async (req, res, next) => {
   const workspaceId = req.params.id
-  console.log("workspaceId")
   if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
     res.fail("invalid_work_space_id")
   }
@@ -254,7 +253,6 @@ const updateWorkspace = async (req, res, next) => {
       returnCurrentPageForPagination = ""
     } else if (requestData.hasOwnProperty("update_administrator")) {
       workSpaceUpdate = _handleUpdateAdministrator(workspaceInfo, requestData)
-      console.log("workSpaceUpdate", workSpaceUpdate)
       returnCurrentPageForPagination = requestData.type === "members"
     } else if (requestData.hasOwnProperty("remove_member")) {
       workSpaceUpdate = _handleRemoveMember(workspaceInfo, requestData)
@@ -313,6 +311,7 @@ const updateWorkspace = async (req, res, next) => {
       })
     } else {
       const updateData = { ...workSpaceUpdate }
+      const _id = updateData._id
       delete updateData._id
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
@@ -322,33 +321,33 @@ const updateWorkspace = async (req, res, next) => {
       }
       if (requestData?.request_joins) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
+        // sent a request to join the workspace
+        const body =
+          "<strong> NVT" +
+          "</strong> {{modules.network.notification.request_workspace}}"
+        const link = "workspace/" + workspaceId + "/pending-posts"
+        await sendNotification(
+          82,
+          [82, 1],
+          {
+            title: "",
+            body: body,
+            link: link
+            //icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          {
+            skipUrls: ""
+          }
+        )
       }
-      console.log("updateData , ", updateData)
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
         },
         { ...updateData }
       )
-      const receivers = {}
 
-      const body =
-        "<strong> NVT" + "</strong> {{modules.network.notification." + "}}"
-      const link = "https://google.com.vn"
-      await sendNotification(
-        82,
-        receivers,
-        {
-          title: "",
-          body: body,
-          link: link
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
-      )
       return res.respond(workSpaceUpdate)
     }
   } catch (err) {
@@ -775,5 +774,6 @@ export {
   loadFeed,
   addMemberByDepartment,
   loadPinned,
-  loadGCSObjectLink
+  loadGCSObjectLink,
+  removeCoverImage
 }

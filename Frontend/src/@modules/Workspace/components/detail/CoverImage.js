@@ -6,6 +6,9 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
 import Photo from "@apps/modules/download/pages/Photo"
+import SwAlert from "@apps/utility/SwAlert"
+import { workspaceApi } from "@modules/Workspace/common/api"
+import notification from "@apps/utility/notification"
 
 const CoverImage = (props) => {
   const {
@@ -14,7 +17,8 @@ const CoverImage = (props) => {
     dataSave,
     isEditable,
     // ** methods
-    saveCoverImageApi
+    saveCoverImageApi,
+    loadData
   } = props
 
   const [state, setState] = useMergedState({
@@ -22,14 +26,38 @@ const CoverImage = (props) => {
     coverImage: "",
     defaultWorkspaceCover: ""
   })
-
   const saveCoverImage = (image) => {
     const dataPost = { ...dataSave, image: image }
     saveCoverImageApi(dataPost).then((res) => {
       setState({ defaultWorkspaceCover: image })
     })
   }
-
+  const removeCover = () => {
+    SwAlert.showWarning({
+      title: useFormatMessage("modules.workspace.title.remove_cover_image"),
+      confirmButtonText: useFormatMessage("button.confirm")
+    }).then((res) => {
+      if (res.value) {
+        dataSave.cover_image = ""
+        workspaceApi
+          .update(dataSave._id, dataSave)
+          .then((result) => {
+            notification.showSuccess({
+              text: useFormatMessage("notification.save.success")
+            })
+            setState({
+              coverImage: "",
+              defaultWorkspaceCover: defaultWorkspaceCover
+            })
+          })
+          .catch((err) => {
+            notification.showError({
+              text: err.message
+            })
+          })
+      }
+    })
+  }
   // ** effect
   useEffect(() => {
     if (src) {
@@ -53,6 +81,7 @@ const CoverImage = (props) => {
           src=""
           className="btn-cover"
           saveCoverImage={saveCoverImage}
+          removeCover={removeCover}
         />
       )
     }

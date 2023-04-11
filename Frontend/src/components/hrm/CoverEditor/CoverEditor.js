@@ -20,7 +20,7 @@ const CoverEditor = (props) => {
     loading: true,
     editing: false
   })
-  const { currentCover, saveCoverImage } = props
+  const { currentCover, saveCoverImage, removeCover } = props
   const photoUploader = useRef()
   const photoEditor = useRef()
   const handleUploadBtnClick = (e) => {
@@ -52,9 +52,7 @@ const CoverEditor = (props) => {
       saveCoverImage(img)
     }
   }
-  const removeCoverImg = () => {
-    console.log("ssssssssssssssssssssssssssssssssss")
-  }
+
   useEffect(() => {
     setState({
       loading: true
@@ -77,7 +75,7 @@ const CoverEditor = (props) => {
     {
       key: "2",
       label: "Remove cover photo",
-      onClick: () => removeCoverImg()
+      onClick: () => removeCover()
     }
   ]
 
