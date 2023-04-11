@@ -2,6 +2,8 @@
 import { Fragment, useEffect, useState } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "../../../../common/api"
+import { useSelector } from "react-redux"
+import { useNavigate } from "react-router"
 // ** Styles
 import { Table, Pagination, Tag } from "rsuite"
 import { Dropdown } from "antd"
@@ -30,6 +32,10 @@ const TableWorkspace = (props) => {
     dataTable: [],
     loadingTable: loading
   })
+
+  const userAuth = useSelector((state) => state.auth.userData)
+
+  const history = useNavigate()
 
   const handleChangeLimit = (dataKey) => {
     setFilter({
@@ -86,6 +92,10 @@ const TableWorkspace = (props) => {
     return data
   }
 
+  const handleClickViewDetail = (workspaceId) => {
+    history(`/workspace/${workspaceId}`)
+  }
+
   // ** render
   const OwnerCell = ({ rowData, dataKey, ...props }) => {
     return <Cell {...props}>{rowData.owner.full_name}</Cell>
@@ -104,10 +114,6 @@ const TableWorkspace = (props) => {
         )}
       </Cell>
     )
-  }
-
-  const MemberCell = ({ rowData, dataKey, ...props }) => {
-    return <Cell {...props}>{rowData.members.length}</Cell>
   }
 
   const StatusCell = ({ rowData, dataKey, ...props }) => {
@@ -139,7 +145,12 @@ const TableWorkspace = (props) => {
   const ActionCell = ({ rowData, dataKey, data, ...props }) => {
     return (
       <Cell {...props}>
-        <ActionTable data={data} rowData={rowData} setData={setData} />
+        <ActionTable
+          data={data}
+          rowData={rowData}
+          userAuth={userAuth}
+          setData={setData}
+        />
       </Cell>
     )
   }
@@ -155,7 +166,7 @@ const TableWorkspace = (props) => {
   const ViewDetailCell = ({ rowData, dataKey, ...props }) => {
     return (
       <Cell {...props}>
-        <Button.Ripple size="sm" color="success">
+        <Button.Ripple size="sm" className="custom-success-btn" onClick={() => handleClickViewDetail(rowData._id)}>
           {useFormatMessage("modules.workspace.buttons.view_detail")}
         </Button.Ripple>
       </Cell>
@@ -189,11 +200,16 @@ const TableWorkspace = (props) => {
             </HeaderCell>
             <VisibleCell />
           </Column>
-          <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+          <Column
+            flexGrow={1}
+            align="left"
+            fixed
+            verticalAlign="middle"
+            sortable>
             <HeaderCell>
               {useFormatMessage("modules.workspace.text.members_capitalize")}
             </HeaderCell>
-            <MemberCell />
+            <Cell dataKey="total_member" />
           </Column>
           <Column flexGrow={1} align="left" fixed verticalAlign="middle">
             <HeaderCell>
@@ -216,17 +232,27 @@ const TableWorkspace = (props) => {
     } else if (filter.query_type === "activity") {
       return (
         <Fragment>
-          <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+          <Column
+            flexGrow={1}
+            align="left"
+            fixed
+            verticalAlign="middle"
+            sortable>
             <HeaderCell>
               {useFormatMessage("modules.workspace.fields.workspace_name")}
             </HeaderCell>
             <Cell dataKey="name" />
           </Column>
-          <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+          <Column
+            flexGrow={1}
+            align="left"
+            fixed
+            verticalAlign="middle"
+            sortable>
             <HeaderCell>
               {useFormatMessage("modules.workspace.display.post_created")}
             </HeaderCell>
-            <PostCratedCell />
+            <PostCratedCell dataKey="post_created" />
           </Column>
           <Column flexGrow={1} align="left" fixed verticalAlign="middle">
             <HeaderCell></HeaderCell>

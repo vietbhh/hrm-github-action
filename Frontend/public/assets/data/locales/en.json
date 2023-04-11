@@ -4526,7 +4526,9 @@
         "reactivate_workspace": "Reactivate workspace",
         "disable_workspace": "Disable workspace",
         "become_admin_workspace": "Become Admin of the workspace",
-        "view_detail": "View details"
+        "view_detail": "View details",
+        "leave_admin_workspace": "Leave Admin of the workspace",
+        "export_excel_file": "Export excel file"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4560,7 +4562,6 @@
         "all_member_workspaces": "All-members workspaces",
         "private_workspaces": "Private workspaces",
         "post_created": "Post crated"
-        
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4668,9 +4669,15 @@
             "description": "Disable workspace {name}. Team members will not be able to access this workspace untial administrator reactivate it!"
           }
         },
-        "warning_become_admin": {
-          "title": "Become an admin of the workspace",
-          "description": "You'll become an admin of the workspcace and have permission to: administer workspace members and posts, change workspace settings,..."
+        "warning_set_admin": {
+          "become": {
+            "title": "Become an admin of the workspace",
+            "description": "You'll become an admin of the workspcace and have permission to: administer workspace members and posts, change workspace settings,..."
+          },
+          "leave": {
+            "title": "Leave admin of the workspace",
+            "description": "You'll leave admin of the workspcace and have no permission to: administer workspace members and posts, change workspace settings,..."
+          }
         }
       }
     },

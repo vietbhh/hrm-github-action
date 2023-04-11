@@ -16,12 +16,14 @@ const OverviewItem = (props) => {
   // ** render
   return (
     <div className={`p-1 overview-item ${className}`}>
-      <div className="mb-2">
+      <div className="mb-1">
         <h6 className="title">{title}</h6>
-        <p className="description">{description}</p>
+      </div>
+      <div className="mb-2">
+        <p className="number">{loading ? "" : number}</p>
       </div>
       <div>
-        <p className="number">{loading ? "" : number}</p>
+        <p className="description">{description}</p>
       </div>
     </div>
   )

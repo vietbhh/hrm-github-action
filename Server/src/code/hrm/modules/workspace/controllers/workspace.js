@@ -156,12 +156,17 @@ const getListWorkspace = async (req, res, next) => {
     const totalWorkspace = await workspaceMongoModel.find(filter)
     const result = await handleDataBeforeReturn(workspace, true)
 
-    if (queryType === "activity") {
-      const idWorkspace = []
-      result.map((item) => {
-        idWorkspace.push(item._id)
-      })
+    const idWorkspace = []
+    result.map((item, index) => {
+      idWorkspace.push(item._id)
+      if (result[index]["post_created"] === undefined) {
+        result[index]["post_created"] = 0
+      }
 
+      result[index]['total_member'] = Array.isArray(item.members) ? item.members.length : 0 
+    })
+
+    if (queryType === "activity") {
       const listFeed = await feedMongoModel.find({
         permission: "workspace",
         permission_ids: { $in: idWorkspace }
@@ -172,10 +177,6 @@ const getListWorkspace = async (req, res, next) => {
         workspacePermissionId.map((itemPermissionId) => {
           result.map((itemResult, index) => {
             if (itemPermissionId.includes(itemResult._id.toString())) {
-              if (result[index]["post_created"] === undefined) {
-                result[index]["post_created"] = 0
-              }
-
               result[index]["post_created"] += 1
             }
           })

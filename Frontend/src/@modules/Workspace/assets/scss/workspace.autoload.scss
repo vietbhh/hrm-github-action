@@ -534,6 +534,14 @@
     width: 80%;
   }
 
+  .custom-success-btn {
+    background-color: #e4f6e9 !important;
+    border: none;
+    color: #3db77e !important;
+    font-weight: 500;
+    border-radius: 8px;
+  }
+
   .header-card {
     .ant-picker-input {
       input {
@@ -589,7 +597,7 @@
           border: 1px solid rgba(0, 0, 0, 0.1);
 
           .description {
-            font-size: 11px;
+            font-size: 12px;
           }
 
           .number {

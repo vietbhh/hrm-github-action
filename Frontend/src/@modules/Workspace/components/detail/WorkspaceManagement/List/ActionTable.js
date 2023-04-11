@@ -12,9 +12,31 @@ const ActionTable = (props) => {
     // ** props
     data,
     rowData,
+    userAuth,
     // ** methods
     setData
   } = props
+
+  const _handleSetData = (obj, isNewObj = false) => {
+    const newData = [...data].map((item) => {
+      if (item._id === rowData._id) {
+        if (isNewObj) {
+          return {
+            ...obj
+          }
+        }
+
+        return {
+          ...item,
+          ...obj
+        }
+      }
+
+      return { ...item }
+    })
+
+    setData(newData)
+  }
 
   const handleClickChangeStatus = (status) => {
     SwAlert.showWarning({
@@ -34,44 +56,47 @@ const ActionTable = (props) => {
             status: status
           })
           .then((res) => {
-            const newData = [...data].map((item) => {
-              if (item._id === rowData._id) {
-                return {
-                  ...item,
-                  status: status
-                }
-              }
-
-              return { ...item }
+            _handleSetData({
+              status: status
             })
-
-            setData(newData)
           })
           .catch((err) => {})
       }
     })
   }
 
-  const handleClickBecomeAdmin = () => {
+  const handleClickSetAdmin = (type) => {
     SwAlert.showWarning({
       title: useFormatMessage(
-        `modules.workspace.text.warning_become_admin.title`
+        `modules.workspace.text.warning_set_admin.${type}.title`
       ),
       text: useFormatMessage(
-        `modules.workspace.text.warning_become_admin.description`,
+        `modules.workspace.text.warning_set_admin.${type}.description`,
         {
           name: rowData.name
         }
       )
     }).then((res) => {
       if (res.isConfirmed === true) {
+        workspaceApi
+          .update(rowData._id, {
+            data: {
+              id: parseInt(userAuth.id)
+            },
+            type: type === "become" ? "add" : "remove",
+            update_administrator: true
+          })
+          .then((res) => {
+            _handleSetData(res.data.data)
+          })
+          .catch((err) => {})
       }
     })
   }
 
   const getItem = (rowData) => {
     if (rowData.status === "active") {
-      return [
+      const temp = [
         {
           key: "1",
           label: (
@@ -82,19 +107,39 @@ const ActionTable = (props) => {
               {useFormatMessage("modules.workspace.buttons.disable_workspace")}
             </p>
           )
-        },
-        {
+        }
+      ]
+      if (rowData.administrators.includes(parseInt(userAuth.id))) {
+        temp.push({
           key: "2",
           label: (
-            <p className="mb-0 p-50" onClick={() => handleClickBecomeAdmin()}>
+            <p
+              className="mb-0 p-50"
+              onClick={() => handleClickSetAdmin("leave")}>
+              <i className="far fa-user-tag me-50" />
+              {useFormatMessage(
+                "modules.workspace.buttons.leave_admin_workspace"
+              )}
+            </p>
+          )
+        })
+      } else {
+        temp.push({
+          key: "2",
+          label: (
+            <p
+              className="mb-0 p-50"
+              onClick={() => handleClickSetAdmin("become")}>
               <i className="far fa-user-cog me-50" />
               {useFormatMessage(
                 "modules.workspace.buttons.become_admin_workspace"
               )}
             </p>
           )
-        }
-      ]
+        })
+      }
+
+      return temp
     }
 
     return [
