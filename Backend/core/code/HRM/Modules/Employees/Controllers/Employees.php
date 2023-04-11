@@ -575,7 +575,7 @@ class Employees extends Employee
 		}
 
 		/*clone sheet from template*/
-		$path_template = COREPATH . 'assets/template/Employee_Template.xlsx';
+		$path_template = COREPATH . 'assets/templates/Employee_Template.xlsx';
 		$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 		$reader->setLoadSheetsOnly(["Instructions"]);
 		$spreadsheet = $reader->load($path_template);

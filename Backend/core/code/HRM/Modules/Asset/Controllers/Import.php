@@ -28,7 +28,7 @@ class Import extends ErpController
 
 		$arrAlphabet = range('A', 'Z');
 
-		$path_template = COREPATH . 'assets/template/Asset_Template.xlsx';
+		$path_template = COREPATH . 'assets/templates/Asset_Template.xlsx';
 		$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 		$reader->setLoadSheetsOnly(["Instructions"]);
 		$spreadsheet = $reader->load($path_template);

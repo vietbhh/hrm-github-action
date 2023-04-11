@@ -58,7 +58,7 @@ class Import extends ErpController
 		}
 
 		/*clone sheet from template*/
-		$path_template = COREPATH . 'assets/template/Payroll_Template.xlsx';
+		$path_template = COREPATH . 'assets/templates/Payroll_Template.xlsx';
 		$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 		$reader->setLoadSheetsOnly(["Instructions"]);
 		$spreadsheet = $reader->load($path_template);

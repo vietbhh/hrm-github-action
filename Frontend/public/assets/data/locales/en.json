@@ -674,7 +674,8 @@
       "inventories": "Inventory",
       "assetGroups": "Asset Groups",
       "assetTypes": "Asset Types",
-      "asset_brand": "Asset Brands"
+      "asset_brand": "Asset Brands",
+      "asset_print_hand_over": "Print hand over"
     }
   },
   "settings": {
@@ -4360,6 +4361,11 @@
         },
         "text": {
           "search_asset_name_or_code": "Search by asset name or asset code"
+        }
+      },
+      "print_hand_over": {
+        "text": {
+          "export_word": "Export word"
         }
       }
     },

@@ -1,0 +1,20 @@
+@import "@scss/friday";
+
+.print-hand-over {
+  .title {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 16px;
+    color: #32434f;
+  }
+
+  .card-body {
+    min-height: 500px;
+
+    .btn-export-word {
+      margin-top: 30px;
+      height: 40px;
+      margin-left: 30px;
+    }
+  }
+}

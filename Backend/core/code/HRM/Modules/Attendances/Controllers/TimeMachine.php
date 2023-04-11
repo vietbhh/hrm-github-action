@@ -190,9 +190,12 @@ class TimeMachine extends ErpController
 					unset($postData['users_id']);
 
 					if ($postData['attendance_detail'] == 0) {
-						$additionalData = $postData['clockDay'];
-						$additionalData['work_schedule_today'] = $workScheduleToday;
-						$postData['attendance_detail'] = handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, [], $additionalData);
+						//$additionalData = $postData['clockDay'];
+						$additionalData = [
+							'work_schedule_today' => json_encode($workScheduleToday)
+						];
+						
+						$postData['attendance_detail'] = handleInsertNewAttendanceToday($modules, $postData['attendance_id'], $userId, $additionalData);
 					}
 
 					if (empty($postData['attendance_detail'])) {

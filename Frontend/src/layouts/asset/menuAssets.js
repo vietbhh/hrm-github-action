@@ -69,6 +69,15 @@ const assetMenu = [
         resource: "asset_brands",
         icon: <Icon.Circle size={6} />,
         navLink: "/asset/brands"
+      },
+      {
+        id: "asset-print-hand-over",
+        title: "menu.asset.asset_print_hand_over",
+        type: "item",
+        action: "access",
+        resource: "asset_lists",
+        icon: <Icon.Circle size={6} />,
+        navLink: "/asset/print-hand-over"
       }
     ]
   }
