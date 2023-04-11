@@ -1,6 +1,7 @@
 import express from "express"
 import {
   getWorkspace,
+  getWorkspaceOverview,
   saveWorkspace,
   getListWorkspace,
   updateWorkspace,
@@ -17,6 +18,7 @@ import {
 const router = express.Router()
 
 router.get("/list", getListWorkspace)
+router.get("/overview", getWorkspaceOverview)
 router.get("/pending-posts", getPostWorkspace)
 router.get("/load-feed", loadFeed)
 router.get("/load-gcs-object-link", loadGCSObjectLink)

@@ -4497,8 +4497,14 @@
     "workspace": {
       "title": {
         "work_space": "Work Space",
+        "workspaces": "Workspaces",
+        "workspace": "Workspace",
         "workspace_you_have_joined": "Workspace you have joined",
-        "workspace_that_you_managed": "Workspace that you managed"
+        "workspace_that_you_managed": "Workspace that you managed",
+        "manage_workspace": "Manage Workspaces",
+        "workspace_overview": "Workspace overview",
+        "workspaces_in_the_organization": "{number} workspaces in the organization",
+        "workspace_in_the_organization": "{number} workspace in the organization"
       },
       "buttons": {
         "create": "Create Workspace",
@@ -4522,7 +4528,13 @@
         "view_post": "View post",
         "approve_all_posts": "Approve all",
         "reject_all_posts": "Reject all",
-        "upload": "Upload"
+        "upload": "Upload",
+        "reactivate_workspace": "Reactivate workspace",
+        "disable_workspace": "Disable workspace",
+        "become_admin_workspace": "Become Admin of the workspace",
+        "view_detail": "View details",
+        "leave_admin_workspace": "Leave Admin of the workspace",
+        "export_excel_file": "Export excel file"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4550,13 +4562,28 @@
         "uploaded_document": "Uploaded document",
         "uploaded_photo": "Uploaded photo",
         "uploaded_video": "Uploaded video",
-        "group_link_posted": "Group link posted"
+        "group_link_posted": "Group link posted",
+        "workspace_information": "Workspace information",
+        "workspace_activities": "Workspace activities",
+        "all_member_workspaces": "All-members workspaces",
+        "private_workspaces": "Private workspaces",
+        "post_created": "Post crated"
       },
       "fields": {
         "workspace_name": "Workspace name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
-        "membership_approval": "Membership approval"
+        "membership_approval": "Membership approval",
+        "owner": "Owner",
+        "visible": "Visible",
+        "status": "Status"
+      },
+      "options": {
+        "status": {
+          "all": "All",
+          "active": "Active",
+          "disable": "Disable"
+        }
       },
       "text": {
         "members": "members",
@@ -4618,7 +4645,46 @@
         "list_job_title": "List job title",
         "department": "Department",
         "job_title": "Job title",
-        "format_cannot_be_previewed": "The format cannot be previewed!"
+        "format_cannot_be_previewed": "The format cannot be previewed!",
+        "search_workspace": "Search workspace...",
+        "members_capitalize": "Members",
+        "all_member": "All members",
+        "manage_workspace_description": "Track activities and view reports about groups in your organization.",
+        "data_last_updated_on": "Data last updated on: {date}",
+        "workspace_overview_content": {
+          "all_member": {
+            "title": "All-members workspaces",
+            "description": "Workspaces include all member of the organization"
+          },
+          "public": {
+            "title": "Pulbic workspaces",
+            "description": "Workspaces can be searched and viewed by all members of the organizaton"
+          },
+          "private": {
+            "title": "Private workspace",
+            "description": "Workspaces that only the members of the workspace can view the posts"
+          }
+        },
+        "warning_change_workspace_status": {
+          "active": {
+            "title": "Reactivate Workspace",
+            "description": "Reactivate workspace {name}. Team members can join and be active in the workspace as usual!"
+          },
+          "disable": {
+            "title": "Disable Workspace",
+            "description": "Disable workspace {name}. Team members will not be able to access this workspace untial administrator reactivate it!"
+          }
+        },
+        "warning_set_admin": {
+          "become": {
+            "title": "Become an admin of the workspace",
+            "description": "You'll become an admin of the workspcace and have permission to: administer workspace members and posts, change workspace settings,..."
+          },
+          "leave": {
+            "title": "Leave admin of the workspace",
+            "description": "You'll leave admin of the workspcace and have no permission to: administer workspace members and posts, change workspace settings,..."
+          }
+        }
       }
     },
     "setting_member": {

@@ -524,3 +524,155 @@
     }
   }
 }
+
+.workspace-management-page {
+  .w-20 {
+    width: 20%;
+  }
+
+  .w-80 {
+    width: 80%;
+  }
+
+  .custom-success-btn {
+    background-color: #e4f6e9 !important;
+    border: none;
+    color: #3db77e !important;
+    font-weight: 500;
+    border-radius: 8px;
+  }
+
+  .header-card {
+    .ant-picker-input {
+      input {
+        font-size: 12px !important;
+        font-weight: 500;
+        line-height: 1;
+      }
+    }
+
+    .filter {
+      .form-group {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+
+  .workspace-overview {
+    .overview-header {
+      .time-update-text {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+    .overview-content {
+      gap: 12px;
+
+      .paragraph {
+        .apexcharts-datalabels-group {
+          text:first-child {
+            font-weight: 700;
+          }
+
+          text:nth-child(2) {
+            font-size: 14px !important;
+            font-weight: 550;
+            color: #babcbf !important;
+          }
+        }
+      }
+
+      .title {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .overview {
+        gap: 12px;
+
+        .overview-item {
+          width: 33%;
+          border-radius: 12px;
+          height: 100%;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+
+          .description {
+            font-size: 12px;
+          }
+
+          .number {
+            font-size: 20px;
+            font-weight: bold;
+            height: 35px;
+            width: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 5px;
+          }
+        }
+
+        .all-member {
+          .number {
+            background-color: #ffeecf;
+            color: #ecb579;
+          }
+        }
+
+        .public {
+          .number {
+            background-color: #ddf3ff;
+            color: #0050b3;
+          }
+        }
+
+        .private {
+          .number {
+            background-color: #f7edff;
+            color: #391085;
+          }
+        }
+      }
+    }
+  }
+
+  .list-workspace {
+    .status-filter {
+      button {
+        border-radius: 12px;
+      }
+    }
+
+    .table-list-workspace {
+      .form-group {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+
+      .rs-table-header-row-wrapper {
+        .rs-table-row {
+          border-top-right-radius: 12px !important;
+          border-top-left-radius: 12px !important;
+        }
+      }
+
+      .rs-table-body-row-wrapper {
+        .rs-table-cell-wrap {
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+
+.action-workspace-dropdown {
+  .ant-dropdown-menu {
+    border-radius: 12px !important;
+    padding: 5px !important;
+
+    .ant-dropdown-menu-item {
+      border-radius: 12px !important;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}

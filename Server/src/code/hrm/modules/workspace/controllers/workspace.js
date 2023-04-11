@@ -116,7 +116,10 @@ const getListWorkspace = async (req, res, next) => {
   const page = req.query.page === 1 ? 0 : req.query.page - 1
   const limit = req.query.limit
   const workspaceType = req.query.workspace_type
+  const status = req.query.status
+  const text = req.query.text
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
+  const queryType = req.query.query_type
   try {
     let filter = {}
     if (workspaceType === "joined") {
@@ -132,6 +135,16 @@ const getListWorkspace = async (req, res, next) => {
       }
     }
 
+    if (status !== undefined && status !== "" && status !== "all") {
+      filter["status"] = status
+    }
+
+    if (text.trim().length > 0) {
+      filter["name"] = {
+        $regex: text + ".*"
+      }
+    }
+
     const workspace = await workspaceMongoModel
       .find(filter)
       .limit(limit)
@@ -141,9 +154,39 @@ const getListWorkspace = async (req, res, next) => {
       })
 
     const totalWorkspace = await workspaceMongoModel.find(filter)
+    const result = await handleDataBeforeReturn(workspace, true)
+
+    const idWorkspace = []
+    result.map((item, index) => {
+      idWorkspace.push(item._id)
+      if (result[index]["post_created"] === undefined) {
+        result[index]["post_created"] = 0
+      }
+
+      result[index]['total_member'] = Array.isArray(item.members) ? item.members.length : 0 
+    })
+
+    if (queryType === "activity") {
+      const listFeed = await feedMongoModel.find({
+        permission: "workspace",
+        permission_ids: { $in: idWorkspace }
+      })
+
+      listFeed.map((feedItem) => {
+        const workspacePermissionId = feedItem.permission_ids
+        workspacePermissionId.map((itemPermissionId) => {
+          result.map((itemResult, index) => {
+            if (itemPermissionId.includes(itemResult._id.toString())) {
+              result[index]["post_created"] += 1
+            }
+          })
+        })
+      })
+    }
 
     return res.respond({
-      results: workspace,
+      results: result,
+      total_data: totalWorkspace.length,
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
   } catch (err) {
@@ -348,7 +391,7 @@ const sortGroupRule = async (req, res, next) => {
     const nextIndex = sortType === "down" ? index + 1 : index - 1
     const groupRule = arrayMove([...workspace["group_rules"]], index, nextIndex)
 
-    await _handleUpdateWorkspace(
+    await workspaceMongoModel.findOneAndUpdate(
       {
         _id: workspaceId
       },
@@ -717,8 +760,42 @@ const loadGCSObjectLink = async (req, res) => {
   })
 }
 
+const getWorkspaceOverview = async (req, res) => {
+  const from = req.query.from
+  const to = req.query.to
+
+  const filter = {
+    created_at: {
+      $gte: from,
+      $lte: to
+    }
+  }
+
+  const listWorkspace = await workspaceMongoModel.find(filter)
+  const result = {
+    all_member: 0,
+    private: 0,
+    public: 0
+  }
+
+  forEach(listWorkspace, (item) => {
+    if (item.type === "private") {
+      result["private"] += 1
+    } else if (item.type === "public") {
+      result["public"] += 1
+    }
+
+    if (item.all_member === true) {
+      result["all_member"] += 1
+    }
+  })
+
+  return res.respond(result)
+}
+
 export {
   getWorkspace,
+  getWorkspaceOverview,
   saveWorkspace,
   getListWorkspace,
   saveCoverImage,
