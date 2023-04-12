@@ -2,11 +2,23 @@
 import classnames from "classnames"
 import moment from "moment"
 import { Fragment } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import {
+  checkHTMLTag,
+  handleFormatMessageStr
+} from "@src/layouts/components/vertical/common/common"
+// ** redux
+import { useDispatch } from "react-redux"
+import { toggleOpenDropdown } from "redux/notification"
 // ** Styles
 import { Badge } from "reactstrap"
 // ** Components
-import { getDefaultFridayLogo, timeDifference } from "@apps/utility/common"
+import {
+  getDefaultFridayLogo,
+  timeDifference,
+  useFormatMessage
+} from "@apps/utility/common"
+
 
 const ListNotification = (props) => {
   const {
@@ -15,7 +27,42 @@ const ListNotification = (props) => {
     // ** methods
   } = props
 
+  const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+
+  const handleClickNotification = (notificationLink) => {
+    if (notificationLink.length > 0) {
+      dispatch(toggleOpenDropdown())
+      navigate(notificationLink)
+    }
+  }
+
   // ** render
+  const renderContent = (str, type) => {
+    if (str.trim().length === 0) {
+      return ""
+    }
+
+    const newStr = handleFormatMessageStr(str)
+
+    if (type === "title") {
+      return checkHTMLTag(str) ? (
+        <span dangerouslySetInnerHTML={{ __html: str }}></span>
+      ) : (
+        <Fragment>{str}</Fragment>
+      )
+    } else if (type === "content") {
+      return checkHTMLTag(newStr) ? (
+        <p
+          dangerouslySetInnerHTML={{ __html: newStr }}
+          className="div-content"></p>
+      ) : (
+        <p>{newStr}</p>
+      )
+    }
+  }
+
   const renderCategoryBadge = (category = "", color = "warning") => {
     if (category === "comment") {
       return (
@@ -40,27 +87,25 @@ const ListNotification = (props) => {
 
   const renderNotificationItem = (item, index) => {
     const sender = item.sender_id
-    let duration = moment
-      .duration(moment().diff(moment(item.created_at, "YYYY/MM/DD HH:mm")))
-      .asHours()
-    let suffix = "h"
-    if (duration > 24) {
-      duration = duration / 24
-      suffix = "d"
-    }
+    const notificationLink = item.link.trim()
+
     return (
       <div
         key={`notification-${index}`}
         className={classnames(
           "d-flex align-items-center div-noti app-notifications",
           {
-            "bg-active": !item.seen
+            "bg-active": !item.seen,
+            "link-notification-list-notification": notificationLink.length > 0
           }
-        )}>
+        )}
+        onClick={() => handleClickNotification(notificationLink)}>
         <div className="div-img">
           <img
             src={item.icon ?? getDefaultFridayLogo("icon")}
-            className="img"
+            className={classnames("img", {
+              custom: item.icon !== null
+            })}
             width={48}
           />
         </div>
@@ -68,8 +113,8 @@ const ListNotification = (props) => {
           className={classnames("div-text", {
             "has-content": item.body
           })}>
-          {item.title}
-          {item.body && <p className="div-content">{item.body}</p>}
+          {renderContent(item.title, "title")}
+          {renderContent(item.body, "content")}
           {item.created_at && (
             <p className="div-time">{timeDifference(item.created_at)}</p>
           )}

@@ -7,6 +7,7 @@ import { Fragment, useCallback, useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button } from "reactstrap"
 import SocketContext from "utility/context/Socket"
+import Photo from "../download/pages/Photo"
 const Test = (props) => {
   const socketDoc = socketConnect({
     path: "/document"
@@ -22,7 +23,7 @@ const Test = (props) => {
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
     //socket.on("notification", handleData)
-    /* socket.emit("app_notification", {
+    /*socket.emit("app_notification", {
       receivers: [1, 10],
       payload: {
         title: "Trịnh Hải Long",
@@ -30,7 +31,7 @@ const Test = (props) => {
         link: "/dashboard",
         image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
       }
-    }) */
+    })*/
     /* socket.emit("chat_notification", {
       receivers: 1,
       payload: {
@@ -44,6 +45,16 @@ const Test = (props) => {
         skipUrls: "/chat/hailongtrinh,/chat/dlskalskdjdf"
       }
     }) */
+    /*socket.emit("app_notification", {
+      receivers: [1],
+      save_notification: true,
+      payload: {
+        title: "<i>bold</i>",
+        body: "{{app.save}}",
+        link: "/dashboard",
+        image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+      }
+    })*/
   }, [socket])
 
   const onSubmit = (values) => {
@@ -53,13 +64,26 @@ const Test = (props) => {
   }
 
   const testNoti = () => {
-    axiosNodeApi
+    socket.emit("app_notification", {
+      receivers: [1],
+      save_notification: true,
+      payload: {
+        title: "<i>bold</i>",
+        body: "{{app.save}}",
+        link: "/dashboard",
+        icon: getPublicDownloadUrl("modules/feed/matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg")
+      }
+    })
+    /*axiosNodeApi
       .post("/notification/send", {
+        receivers: [1],
+        title: "<p>bold</p>",
+        body: "{{modules.auth.authentication}}",
         test: "testOk"
       })
       .then((res) => {
         console.log(res)
-      })
+      })*/
 
     /* notification.show({
       title: "bạn nhận được thông báo",
