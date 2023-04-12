@@ -311,35 +311,58 @@ const updateWorkspace = async (req, res, next) => {
       })
     } else {
       const updateData = { ...workSpaceUpdate }
-      const _id = updateData._id
       delete updateData._id
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
+        console.log("updateData", updateData)
+        if (updateData?.membership_approval === "approver") {
+          const body =
+            "<strong> NVT" +
+            "</strong> {{modules.network.notification.request_workspace}}"
+          const link = "workspace/" + workspaceId + "/pending-posts"
+          await sendNotification(
+            82,
+            [82, 1],
+            {
+              title: "",
+              body: body,
+              link: link
+            },
+            {
+              skipUrls: ""
+            }
+          )
+        }
       }
       if (requestData?.administrators) {
         updateData.administrators = JSON.parse(requestData.administrators)
       }
+      if (requestData?.pinPosts) {
+        updateData.pinPosts = JSON.parse(requestData.pinPosts)
+      }
       if (requestData?.request_joins) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
         // sent a request to join the workspace
-        const body =
-          "<strong> NVT" +
-          "</strong> {{modules.network.notification.request_workspace}}"
-        const link = "workspace/" + workspaceId + "/pending-posts"
-        await sendNotification(
-          82,
-          [82, 1],
-          {
-            title: "",
-            body: body,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
-        )
+        console.log("updateData", updateData)
+        if (updateData?.membership_approval === "approver") {
+          const body =
+            "<strong> NVT" +
+            "</strong> {{modules.network.notification.request_workspace}}"
+          const link = "workspace/" + workspaceId + "/pending-posts"
+          await sendNotification(
+            82,
+            [82, 1],
+            {
+              title: "",
+              body: body,
+              link: link
+            },
+            {
+              skipUrls: ""
+            }
+          )
+        }
+        return
       }
       await workspaceMongoModel.updateOne(
         {
@@ -702,7 +725,7 @@ const loadFeed = async (req, res) => {
   const feedCount = await feedMongoModel.find(filter).count()
   const result = {
     dataPost: data,
-    totalPost: feedCount,
+    totalPost: data.length,
     page: page * 1 + 1,
     hasMore: (page * 1 + 1) * pageLength < feedCount
   }
@@ -713,24 +736,27 @@ const loadPinned = async (req, res) => {
   const request = req.query
   const workspaceId = request.id
   const workspace = await workspaceMongoModel.findById(workspaceId)
-  const arrID = workspace.pinPosts.map((x) => x.post)
+  const arrID = workspace.pinPosts // .map((x) => x.post)
 
-  const dataPost = []
-  map(arrID, async (item, key) => {
-    const infoPost = await feedMongoModel.findById(item)
-    dataPost.push(infoPost)
-  })
+  let dataPost = []
+  await Promise.all(
+    map(arrID, async (item, key) => {
+      const infoPost = await feedMongoModel.findById(item.post)
+      infoPost.stt = item.stt
+      dataPost.push({ ...infoPost._doc, stt: item.stt })
+    })
+  )
   const feed = await feedMongoModel.find({
     _id: { $in: arrID }
   })
-  const data = await handleDataBeforeReturn(feed, true)
+  const data = await handleDataBeforeReturn(dataPost, true)
   const feedCount = await feedMongoModel
     .find({
       _id: { $in: arrID }
     })
     .count()
   const result = {
-    dataPost: data,
+    dataPost: data.sort((a, b) => a.stt - b.stt),
     totalPost: feedCount
   }
   return res.respond(result)

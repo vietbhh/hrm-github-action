@@ -81,9 +81,10 @@ const CoverEditor = (props) => {
 
   if (state.loading)
     return (
-      <ContentLoader viewBox="0 0 208 208" height={208} width={208}>
-        <circle cx="100" cy="100" r="100" width="208" height="208" />
-      </ContentLoader>
+      <ContentLoader
+        viewBox="0 0 208 208"
+        height={208}
+        width={208}></ContentLoader>
     )
   else
     return (

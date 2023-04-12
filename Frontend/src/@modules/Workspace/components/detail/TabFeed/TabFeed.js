@@ -15,10 +15,7 @@ import notification from "@apps/utility/notification"
 import { Dropdown } from "antd"
 import { PushpinOutlined } from "@ant-design/icons"
 import { map } from "lodash-es"
-const findKeyByID = (arr = [], id) => {
-  const index = arr.findIndex((p) => p.id === id)
-  return index
-}
+
 const TabFeed = (props) => {
   const { detailWorkspace } = props
   const [state, setState] = useMergedState({
@@ -89,7 +86,7 @@ const TabFeed = (props) => {
     })
     detailWorkspace.pinPosts = dataPinned
     const dataUpdate = {
-      pinPosts: dataPinned
+      pinPosts: JSON.stringify(dataPinned)
     }
 
     workspaceApi.update(params.id, dataUpdate).then((res) => {
@@ -101,16 +98,23 @@ const TabFeed = (props) => {
   }
   const handleUnPinPost = (idPost) => {
     const dataPinned = [...detailWorkspace.pinPosts]
-
-    dataPinned.push({ post: idPost, stt: dataPinned.length + 1 })
-    detailWorkspace.pinPosts = dataPinned
+    const index = dataPinned.findIndex((p) => p.post === idPost)
+    dataPinned.splice(index, 1)
+    let numStt = 1
+    const dataPinnedUpdate = []
+    map(dataPinned, (item, key) => {
+      dataPinnedUpdate.push({ post: item.post, stt: numStt })
+      numStt += 1
+    })
+    detailWorkspace.pinPosts = dataPinnedUpdate
     const dataUpdate = {
-      pinPosts: dataPinned
+      pinPosts: JSON.stringify(dataPinnedUpdate)
     }
     workspaceApi.update(params.id, dataUpdate).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
+      loadData()
     })
   }
   const renderPinned = (data = []) => {
@@ -128,7 +132,8 @@ const TabFeed = (props) => {
               </span>
             </div>
           ),
-          key: "0"
+          key: "0",
+          onClick: () => handleUnPinPost(item?._id)
         },
         {
           label: (
