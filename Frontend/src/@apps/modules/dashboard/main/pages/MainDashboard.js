@@ -15,6 +15,7 @@ import "../../../../../../node_modules/react-grid-layout/css/styles.css"
 import "../../../../../../node_modules/react-resizable/css/styles.css"
 import "../../assets/css/dashboard.scss"
 import "../../assets/css/dnd.scss"
+import catGif from "../../assets/images/cat.gif"
 import { DashboardApi } from "../common/api"
 import { ListComponentConfig } from "../components/ListComponentConfig"
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
@@ -546,7 +547,9 @@ const MainDashboard = ({
         <Drawer
           title={
             <>
-              <div className="widget-drawer-icon"></div>
+              <div className="widget-drawer-icon">
+                <img src={catGif} />
+              </div>
               <span className="widget-drawer-title">
                 {useFormatMessage("modules.dashboard.add_widget")}
               </span>

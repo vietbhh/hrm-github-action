@@ -25,7 +25,8 @@ const Sidebar = (props) => {
     outerCustomMenuComponent,
     hideQuickAccess,
     hideVerticalMenuHeader,
-    userId
+    userId,
+    notMenuCollapsed
   } = props
 
   // ** States
@@ -63,7 +64,7 @@ const Sidebar = (props) => {
         className={classNames(
           "main-menu menu-fixed menu-accordion menu-shadow",
           {
-            expanded: menuHover || menuCollapsed === false,
+            expanded: menuHover || menuCollapsed === false || notMenuCollapsed,
             "menu-light": skin !== "semi-dark" && skin !== "dark",
             "menu-dark": skin === "semi-dark" || skin === "dark"
           }
@@ -135,6 +136,7 @@ const Sidebar = (props) => {
                     saveQuickAccess={saveQuickAccess}
                     settingPermits={settingPermits}
                     defaultMenuNav={defaultMenuNav}
+                    notMenuCollapsed={notMenuCollapsed}
                   />
                 </div>
               </>
@@ -150,6 +152,7 @@ const Sidebar = (props) => {
                 windowWidth={windowWidth}
                 windowWidthMin={windowWidthMin}
                 userId={userId}
+                notMenuCollapsed={notMenuCollapsed}
               />
             </div>
           </div>
