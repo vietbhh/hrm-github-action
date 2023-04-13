@@ -18,7 +18,6 @@ const ListWorkspaceHeader = (props) => {
   const numberWorkspace = data !== undefined ? data.length : 0
 
   const handleChangeDate = (value, type) => {
-    console.log(value)
     setFilter({
       [type]: value
     })

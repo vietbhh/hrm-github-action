@@ -1398,17 +1398,11 @@ $btn-background-color: #377dff;
 
       &:hover {
         box-shadow: none;
-        background: darken(
-          $color: $btn-background-color,
-          $amount: 5
-        ) !important;
+        background: darken($color: $btn-background-color, $amount: 5) !important;
       }
 
       &:disabled {
-        background: lighten(
-          $color: $btn-background-color,
-          $amount: 10
-        ) !important;
+        background: lighten($color: $btn-background-color, $amount: 10) !important;
       }
     }
 
@@ -1641,12 +1635,7 @@ $btn-background-color: #377dff;
           box-sizing: border-box;
           border-radius: 12px;
           padding: 8px 12px;
-          background: linear-gradient(
-            to right,
-            rgb(241, 242, 244) 0%,
-            white 0%,
-            white 100%
-          );
+          background: linear-gradient(to right, rgb(241, 242, 244) 0%, white 0%, white 100%);
           font-weight: 600;
           font-size: 14px;
           color: rgb(38, 40, 44);
@@ -1869,20 +1858,12 @@ $btn-background-color: #377dff;
 
           &.left {
             left: 0px;
-            background: linear-gradient(
-              90deg,
-              rgba(0, 0, 0, 0.3) 0%,
-              rgba(0, 0, 0, 0) 100%
-            );
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
           }
 
           &.right {
             right: 400px;
-            background: linear-gradient(
-              90deg,
-              rgba(0, 0, 0, 0.3) 0%,
-              rgba(0, 0, 0, 0) 100%
-            );
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
             transform: rotate(180deg);
           }
 
@@ -2434,5 +2415,41 @@ $btn-background-color: #377dff;
     margin-top: 15px;
     width: 100%;
     text-align: right;
+  }
+}
+
+.manage-post-page {
+  .custom-success-btn {
+    background-color: #e4f6e9 !important;
+    border: none;
+    color: #3db77e !important;
+    font-weight: 500;
+    border-radius: 8px;
+  }
+
+  .text-link {
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 85% !important;
+    padding-top: 10px;
+  }
+
+  .post-cell {
+    p {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+.action-feed-dropdown {
+  .ant-dropdown-menu {
+    border-radius: 12px !important;
+    padding: 5px !important;
+
+    .ant-dropdown-menu-item {
+      border-radius: 12px !important;
+      font-size: 12px;
+      font-weight: 500;
+    }
   }
 }

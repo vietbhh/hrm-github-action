@@ -16,6 +16,8 @@ import { handleDataBeforeReturn } from "#app/utility/common.js"
 import commentMongoModel from "../models/comment.mongo.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { getSetting } from "#app/services/settings.js"
+import moment from "moment"
+import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -343,9 +345,21 @@ const loadFeedController = async (req, res, next) => {
   const page = request.page
   const pageLength = request.pageLength
   const filter = { ref: null }
-  if (request.idPostCreateNew !== "") {
+  const from = request.from
+  const to = request.to
+  const isFeaturedPost = request.is_featured_post
+
+  if (request.idPostCreateNew !== "" && request.idPostCreateNew !== undefined) {
     filter["_id"] = { $lt: request.idPostCreateNew }
   }
+
+  if (!isEmpty(from) && !isEmpty(to)) {
+    filter["created_at"] = {
+      $gte: from + " 00:00:00",
+      $lte: to + " 23:59:59"
+    }
+  }
+
   try {
     const feed = await feedMongoModel
       .find(filter)
@@ -355,6 +369,37 @@ const loadFeedController = async (req, res, next) => {
         _id: "desc"
       })
     const feedCount = await feedMongoModel.find(filter).count()
+
+    if (isFeaturedPost === "true") {
+      const data = await handleDataBeforeReturn(feed, true)
+
+      const workspaceId = []
+
+      data.map((item, index) => {
+        data[index]["seen_count"] =
+          item.seen_count === null ? 0 : item.seen_count
+        data[index]["reaction_number"] =
+          item.reaction === null ? 0 : item.reaction.length
+        data[index]["comment_number"] =
+          item.comment_ids === null ? 0 : item.comment_ids.length
+        data[index]["created_at"] = moment(item.crated_at).format("DD/MM/YYYY")
+
+        if (item.permission === "workspace") {
+          workspaceId.push(...item.permission_ids)
+        }
+      })
+
+      const workspaceData = await workspaceMongoModel.find({
+        _id: { $in: workspaceId }
+      })
+
+      return res.respond({
+        data: data,
+        workspace_data: workspaceData,
+        total_data: feedCount
+      })
+    }
+
     const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
     return res.respond(result)
   } catch (err) {

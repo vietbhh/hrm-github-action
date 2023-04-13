@@ -4492,6 +4492,35 @@
           "sad": "Sad",
           "wow": "Wow"
         }
+      },
+      "manage_post": {
+        "title": {
+          "index": "Manage Posts",
+          "featured_post": "Featured posts"
+        },
+        "text": {
+          "description": "Track activities and view reports about posts in your organization.",
+          "time_update": "Data last updated on: {date}",
+          "warning_delete_post": {
+            "title": "Delete post",
+            "description": "The post will be unrecoverable and will no longer appear on the member's Profile, Feed, or Workspace. Are you sure you want to delete this post?"
+          }
+        },
+        "display": {
+          "table_featured_post": {
+            "author": "Author",
+            "post": "Post",
+            "views": "Views",
+            "comments": "Comments",
+            "reactions": "Reactions",
+            "date_crated": "Date crated"
+          }
+        },
+        "buttons": {
+          "details": "Details",
+          "delete_post": "Delete post",
+          "preview_post": "Preview post"
+        }
       }
     },
     "workspace": {
