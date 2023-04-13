@@ -1209,6 +1209,20 @@ $btn-background-color: #377dff;
     border: 1px solid #f1f1f5;
     height: 120px;
   }
+
+  @media (min-width: 1366px) and (max-width: 1445px) {
+    .div-create-post .div-option .ul-option li {
+      padding: 0 12px;
+    }
+
+    .load-feed
+      .load-post
+      .post-footer
+      .post-footer-button
+      .div-button-reaction {
+      gap: 30px;
+    }
+  }
 }
 
 .modal-header-privacy-choose-dropdown {
