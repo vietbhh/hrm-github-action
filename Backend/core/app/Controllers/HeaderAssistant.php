@@ -44,23 +44,29 @@ class HeaderAssistant extends ErpController
 		}
 
 		/** get weather*/
-		$current_time = date("Y-m-d H:i:s");
+		$current_time = $data_location_time_get = date("Y-m-d H:i:s");
 		$weather_location = preference("weather_location");
+		$result = [];
 		if (!empty($weather_location)) {
 			if (isset($weather_location[$city_name])) {
 				$time = $weather_location[$city_name]['time'];
 				$second = strtotime($current_time) - strtotime($time);
-				if ($second >= $this->secondLoadWeather) {
-					$result = $this->getWeather($city_name, $lat, $lon, $weather_location);
-				} else {
+				if ($second < $this->secondLoadWeather) {
+					$data_location_time_get = $time;
 					$result = ['temp' => $weather_location[$city_name]['temp'], 'main' => $weather_location[$city_name]['main'], 'content' => rand(1, 10)];
 				}
-			} else {
-				$result = $this->getWeather($city_name, $lat, $lon, $weather_location);
 			}
-		} else {
+		}
+		if (empty($result)) {
 			$result = $this->getWeather($city_name, $lat, $lon, $weather_location);
 		}
+
+		$result['data_location'] = [
+			'city_name' => $city_name,
+			'lat' => $lat,
+			'lon' => $lon,
+			'time' => $data_location_time_get
+		];
 
 		return $this->respond($result);
 	}

@@ -14,11 +14,15 @@ const QuickAccess = ({
   menuData,
   saveQuickAccess,
   settingPermits,
-  defaultMenuNav
+  defaultMenuNav,
+  notMenuCollapsed
 }) => {
   const { t } = useTranslation()
   const sidebarCollapsed =
-    !menuHover && menuCollapsed === true && windowWidth >= windowWidthMin
+    !menuHover &&
+    menuCollapsed === true &&
+    windowWidth >= windowWidthMin &&
+    !notMenuCollapsed
   const [listQuickAccess, setListQuickAccess] = useState([])
 
   useEffect(() => {
