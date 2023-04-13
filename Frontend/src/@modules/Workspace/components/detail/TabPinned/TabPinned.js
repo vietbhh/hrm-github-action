@@ -11,13 +11,15 @@ import moment from "moment"
 import ReactHtmlParser from "react-html-parser"
 import { Dropdown } from "antd"
 import { PushpinOutlined } from "@ant-design/icons"
+import Introduction from "../TabIntroduction/Introduction"
 const TabPinned = (props) => {
   const { detailWorkspace } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
     approveStatus: "pending",
-    dataPin: []
+    dataPin: [],
+    loading: false
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -97,6 +99,13 @@ const TabPinned = (props) => {
       )
     })
   }
+
+  const setIntroduction = (data) => {
+    setState({ loading: true })
+    detailWorkspace.introduction = data
+    setState({ loading: false })
+  }
+
   useEffect(() => {
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
@@ -126,9 +135,13 @@ const TabPinned = (props) => {
       </div>
       <div className="div-right">
         <div id="div-sticky">
-          <Card>
-            <CardBody>sidebar 2</CardBody>
-          </Card>
+          <Introduction
+            id={workspaceID}
+            loading={state.loading}
+            workspaceInfo={detailWorkspace}
+            introduction={detailWorkspace.introduction}
+            setIntroduction={setIntroduction}
+          />
         </div>
       </div>
     </div>

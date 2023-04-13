@@ -1,7 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
-import { Dropdown } from "antd"
+import { Badge, Dropdown } from "antd"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
@@ -184,9 +184,13 @@ const WorkspaceHeader = (props) => {
           <i className="fa-regular fa-list-ul me-50"></i>{" "}
           {useFormatMessage("modules.workspace.display.waiting_for_approval")}{" "}
           <span>{data?.request_joins?.length}</span>
+          <Badge color="danger">{data?.request_joins?.length}</Badge>
         </Link>
       ),
-      key: "0"
+      key: "0",
+      disabled: data?.administrators
+        ? !data?.administrators.includes(userId)
+        : true
     },
     {
       label: (
@@ -196,7 +200,10 @@ const WorkspaceHeader = (props) => {
           <span>{data?.request_joins?.length}</span>
         </Link>
       ),
-      key: "3"
+      key: "3",
+      disabled: data?.administrators
+        ? !data?.administrators.includes(userId)
+        : true
     },
     {
       label: (
@@ -215,7 +222,10 @@ const WorkspaceHeader = (props) => {
           {useFormatMessage("modules.workspace.display.workspace_settings")}
         </Link>
       ),
-      key: "2"
+      key: "2",
+      disabled: data?.administrators
+        ? !data?.administrators.includes(userId)
+        : true
     }
   ]
 
@@ -266,8 +276,13 @@ const WorkspaceHeader = (props) => {
           <div className="workspaceInformation">
             <h2 className="workspaceName">{data?.name}</h2>
             <p>
-              <i className="fa-regular fa-earth-asia"></i> {data?.type} ·{" "}
-              {data?.members && data?.members.length}{" "}
+              {data?.type === "private" && (
+                <i class="fa-solid fa-lock-keyhole me-50"></i>
+              )}
+              {data?.type !== "private" && (
+                <i className="fa-regular fa-earth-asia me-50"></i>
+              )}
+              {data?.type} · {data?.members && data?.members.length}{" "}
               {useFormatMessage("modules.workspace.text.members")} ·{" "}
               {data?.pinPosts && data?.pinPosts.length}{" "}
               {useFormatMessage("modules.workspace.text.posts")}

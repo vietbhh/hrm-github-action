@@ -4556,7 +4556,9 @@
         "uploaded_document": "Uploaded document",
         "uploaded_photo": "Uploaded photo",
         "uploaded_video": "Uploaded video",
-        "group_link_posted": "Group link posted"
+        "group_link_posted": "Group link posted",
+        "change_cover_img" : "Change cover image",
+        "remove_cover_photo" : "Remove cover photo"
       },
       "fields": {
         "workspace_name": "Workspace name",

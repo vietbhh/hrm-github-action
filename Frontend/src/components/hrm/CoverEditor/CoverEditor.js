@@ -69,12 +69,12 @@ const CoverEditor = (props) => {
   const items = [
     {
       key: "1",
-      label: "Change cover image",
+      label: useFormatMessage("modules.workspace.display.change_cover_img"),
       onClick: () => handleUploadBtnClick()
     },
     {
       key: "2",
-      label: "Remove cover photo",
+      label: useFormatMessage("modules.workspace.display.remove_cover_photo"),
       onClick: () => removeCover()
     }
   ]

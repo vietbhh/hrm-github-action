@@ -15,6 +15,7 @@ import notification from "@apps/utility/notification"
 import { Dropdown } from "antd"
 import { PushpinOutlined } from "@ant-design/icons"
 import { map } from "lodash-es"
+import Introduction from "../TabIntroduction/Introduction"
 
 const TabFeed = (props) => {
   const { detailWorkspace } = props
@@ -23,7 +24,8 @@ const TabFeed = (props) => {
     dataCreateNew: {},
     approveStatus: "pending",
     dataPinned: [],
-    joined: false
+    joined: false,
+    loading: false
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -202,6 +204,12 @@ const TabFeed = (props) => {
       onClick: (e) => handlePinPost(e?._id)
     }
   }
+
+  const setIntroduction = (data) => {
+    setState({ loading: true })
+    detailWorkspace.introduction = data
+    setState({ loading: false })
+  }
   return (
     <div className="div-content ">
       <div className="div-left feed">
@@ -234,7 +242,13 @@ const TabFeed = (props) => {
       </div>
       <div className="div-right">
         <div id="div-sticky">
-          <WorkspaceIntroduction />
+          <Introduction
+            id={workspaceID}
+            loading={state.loading}
+            workspaceInfo={detailWorkspace}
+            introduction={detailWorkspace.introduction}
+            setIntroduction={setIntroduction}
+          />
         </div>
       </div>
     </div>
