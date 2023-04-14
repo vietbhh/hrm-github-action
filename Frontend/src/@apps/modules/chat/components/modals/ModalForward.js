@@ -1,4 +1,3 @@
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Search } from "react-feather"
 import {
@@ -11,6 +10,7 @@ import {
   ModalHeader,
   Row
 } from "reactstrap"
+import { renderAvatar } from "../../common/common"
 
 const ModalForward = (props) => {
   const {
@@ -49,7 +49,7 @@ const ModalForward = (props) => {
   const renderInfo = (item) => {
     return (
       <li key={`${item.type === "group" ? item.id : item.idEmployee}`}>
-        <Avatar src={item.avatar} imgHeight="42" imgWidth="42" />
+        {renderAvatar(item, "", "42", "42")}
         <div
           className="chat-info flex-grow-1"
           style={{ display: "flex", alignItems: "center" }}>

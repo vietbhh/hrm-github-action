@@ -3,17 +3,12 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 
 // ** Custom Components
-import Avatar from "@apps/modules/download/pages/Avatar"
 import ChatMessage from "./details/ChatMessage"
 import SearchMessage from "./details/SearchMessage"
 import ModalForward from "./modals/ModalForward"
 
 // ** Third Party Components
-import {
-  getAvatarUrl,
-  useFormatMessage,
-  useMergedState
-} from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import classnames from "classnames"
 import { MessageSquare, MoreVertical } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -25,7 +20,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { ChatApi } from "../common/api"
-import { decodeHTMLEntities, detectUrl } from "../common/common"
+import { decodeHTMLEntities, detectUrl, renderAvatar } from "../common/common"
 import InputMessage from "./details/InputMessage"
 import Typing from "./details/Typing"
 
@@ -55,7 +50,6 @@ const ChatLog = (props) => {
     handleSearchMessage,
     hasMoreChat,
     getChatScrollBottom,
-    imageGroup,
     selectedGroup,
     keyEncrypt,
     handleUpdateGroup
@@ -417,13 +411,14 @@ const ChatLog = (props) => {
       if (_file.arr_file.length > 2) {
         let start = 0
         for (let i = 0; i < Math.ceil(_file.arr_file.length / 2); i++) {
+          const check_break_type = i === 0
           if (_file.arr_file[start] && _file.arr_file[start + 1]) {
-            handleSubmitSaveFile([
-              _file.arr_file[start],
-              _file.arr_file[start + 1]
-            ])
+            handleSubmitSaveFile(
+              [_file.arr_file[start], _file.arr_file[start + 1]],
+              check_break_type
+            )
           } else {
-            handleSubmitSaveFile([_file.arr_file[start]])
+            handleSubmitSaveFile([_file.arr_file[start]], check_break_type)
           }
           start = start + 2
         }
@@ -431,14 +426,15 @@ const ChatLog = (props) => {
         handleSubmitSaveFile(_file.arr_file)
       }
     } else {
-      _.forEach(_file.arr_file, (val) => {
-        handleSubmitSaveFile([val])
+      _.forEach(_file.arr_file, (val, key) => {
+        const check_break_type = key === 0
+        handleSubmitSaveFile([val], check_break_type)
       })
     }
     setReplyingDefault()
   }
 
-  const handleSubmitSaveFile = (file) => {
+  const handleSubmitSaveFile = (file, check_break_type = true) => {
     let validateFile_ = true
     if (file.length > 0) {
       _.forEach(file, (item) => {
@@ -463,7 +459,8 @@ const ChatLog = (props) => {
       status: "loading",
       type: file[0].type,
       timestamp: timestamp,
-      file: []
+      file: [],
+      ...(!check_break_type ? { break_type: "" } : {})
     })
     ChatApi.postUpFile(data)
       .then((res) => {
@@ -605,46 +602,6 @@ const ChatLog = (props) => {
       ? PerfectScrollbar
       : "div"
 
-  const renderAvatar = () => {
-    if (selectedUser.contact.type && selectedUser.contact.type === "group") {
-      const index_group = groups.findIndex(
-        (item) => item.id === selectedUser.chat.id
-      )
-      if (index_group !== -1 && groups[index_group].avatar) {
-        return (
-          <Avatar
-            imgHeight="36"
-            imgWidth="36"
-            src={`/modules/chat/${selectedUser.chat.id}/avatar/${groups[index_group].avatar}`}
-            className="avatar-border user-profile-toggle m-0 me-1"
-          />
-        )
-      } else {
-        return (
-          <div className="avatar avatar-border user-profile-toggle m-0 me-1 rounded-circle">
-            <img
-              className=""
-              src={imageGroup}
-              alt="avatarImg"
-              height="36"
-              width="36"
-            />
-          </div>
-        )
-      }
-    }
-
-    return (
-      <Avatar
-        imgHeight="36"
-        imgWidth="36"
-        src={selectedUser.contact.avatar}
-        userId={selectedUser.contact.idEmployee}
-        className="avatar-border user-profile-toggle m-0 me-1"
-      />
-    )
-  }
-
   return (
     <Fragment>
       <div ref={divChatRef} className="chat-app-window">
@@ -674,7 +631,7 @@ const ChatLog = (props) => {
                     onClick={handleSidebar}>
                     <i className="fa-regular fa-arrow-left-to-line"></i>
                   </div>
-                  {renderAvatar()}
+                  {renderAvatar(selectedGroup, "me-1", "36", "36")}
                   <div className="chat-header-name">
                     <h6
                       className="mb-0 cursor-pointer"

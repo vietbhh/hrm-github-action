@@ -157,6 +157,7 @@ const InputMessage = (props) => {
     }
 
     e.preventDefault()
+    onSubmitEditor()
 
     return "handled"
   }
@@ -246,29 +247,23 @@ const InputMessage = (props) => {
   )
 
   // ** listen
-  useEffect(() => {
-    const handle = (event) => {
-      if (localStorage.getItem("formChatFocus") === "true") {
-        if (
-          (event.keyCode === 13 && event.shiftKey) ||
-          (event.keyCode === 13 && event.ctrlKey) ||
-          (event.keyCode === 90 && event.ctrlKey) ||
-          event.keyCode === 8
-        ) {
-          handleHeight(replying, false)
-          return
-        }
-
-        if (event.keyCode === 13 && state.open === false) {
-          onSubmitEditor()
-        }
+  const handle = (event) => {
+    if (localStorage.getItem("formChatFocus") === "true") {
+      if (
+        (event.keyCode === 13 && event.shiftKey) ||
+        (event.keyCode === 13 && event.ctrlKey) ||
+        (event.keyCode === 90 && event.ctrlKey) ||
+        event.keyCode === 8
+      ) {
+        handleHeight(replying, false)
       }
     }
+  }
 
-    const handlePaste = (event) => {
-      handleHeight(replying)
-    }
-
+  const handlePaste = (event) => {
+    handleHeight(replying)
+  }
+  useEffect(() => {
     window.addEventListener("keydown", handle)
     window.addEventListener("paste", handlePaste)
 

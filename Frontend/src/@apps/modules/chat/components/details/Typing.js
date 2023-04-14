@@ -81,7 +81,7 @@ const Typing = (props) => {
     }
   }, [typing])
 
-  const renderAvatar = () => {
+  const renderComponent = () => {
     if (!_.isEmpty(typing)) {
       const arrAva = []
       _.forEach(typing, (value) => {
@@ -143,7 +143,7 @@ const Typing = (props) => {
     return ""
   }
 
-  return renderAvatar()
+  return renderComponent()
 }
 
 export default Typing

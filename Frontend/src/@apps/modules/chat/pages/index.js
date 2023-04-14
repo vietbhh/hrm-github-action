@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom"
 import { handleChats, handleTitleChat } from "redux/chat"
 import SocketContext from "utility/context/Socket"
 import { ChatApi } from "../common/api"
-import { replaceHtmlMessage, triGram } from "../common/common"
+import { imageGroup, replaceHtmlMessage, triGram } from "../common/common"
 
 // ** Chat App Component Imports
 import Chat from "../components/Chat"
@@ -110,8 +110,6 @@ const AppChat = (props) => {
   const socket = useContext(SocketContext)
 
   const keyEncrypt = "Friday"
-  const imageGroup =
-    process.env.REACT_APP_URL + "/assets/images/default_chat_group.webp"
 
   // ** params
   const { id } = useParams()
@@ -724,7 +722,9 @@ const AppChat = (props) => {
     setState({ checkAddMessage: true })
     const timestamp = Date.now()
     const file_count = handleCountFile(groupId, dataAddFile.type)
-    const break_type = await handleBreakType(groupId, timestamp, dataAddFile)
+    const break_type = dataAddFile.break_type
+      ? ""
+      : await handleBreakType(groupId, timestamp, dataAddFile)
 
     // ** encrypt
     if (dataAddFile.message) {
@@ -1684,7 +1684,6 @@ const AppChat = (props) => {
           userId={userId}
           handleUpdateGroup={handleUpdateGroup}
           setDataUnseenDetail={setDataUnseenDetail}
-          imageGroup={imageGroup}
           keyEncrypt={keyEncrypt}
         />
         <div className="content-right">
@@ -1731,7 +1730,6 @@ const AppChat = (props) => {
                 dataChatScrollBottom={state.dataChatScrollBottom}
                 checkShowDataChat={state.checkShowDataChat}
                 getChatScrollBottom={getChatScrollBottom}
-                imageGroup={imageGroup}
                 handleUpdateGroup={handleUpdateGroup}
                 handleCountFile={handleCountFile}
                 selectedGroup={state.selectedGroup}
@@ -1750,7 +1748,6 @@ const AppChat = (props) => {
                 setDataUnseenDetail={setDataUnseenDetail}
                 setActive={setActive}
                 setActiveFullName={setActiveFullName}
-                imageGroup={imageGroup}
                 selectedGroup={state.selectedGroup}
               />
             </div>

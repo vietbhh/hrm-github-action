@@ -1,5 +1,9 @@
 import { formatDateToMonthShort } from "@utils"
 import moment from "moment"
+import Avatar from "@apps/modules/download/pages/Avatar"
+
+export const imageGroup =
+  process.env.REACT_APP_URL + "/assets/images/default_chat_group.webp"
 
 export const formatTime = (time, date_time = false) => {
   const today = moment().format("YYYY-MM-DD")
@@ -109,4 +113,41 @@ export const detectUrl = (txt, onlyGetLink = false) => {
     )
     return arr_link
   }
+}
+
+export const renderAvatar = (item, className, width = "50", height = "50") => {
+  if (item.type && item.type === "group") {
+    if (item.avatar) {
+      return (
+        <Avatar
+          src={`/modules/chat/${item.id}/avatar/${item.avatar}`}
+          imgHeight={height}
+          imgWidth={width}
+          className={className}
+        />
+      )
+    } else {
+      return (
+        <div className={`avatar rounded-circle ${className}`}>
+          <img
+            className=""
+            src={imageGroup}
+            alt="avatarImg"
+            height={height}
+            width={width}
+          />
+        </div>
+      )
+    }
+  }
+
+  return (
+    <Avatar
+      src={item?.avatar}
+      imgHeight={height}
+      imgWidth={width}
+      userId={item?.idEmployee}
+      className={className}
+    />
+  )
 }

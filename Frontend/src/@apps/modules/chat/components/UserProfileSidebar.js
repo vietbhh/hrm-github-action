@@ -1,5 +1,4 @@
 import { ErpInput } from "@apps/components/common/ErpField"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import classnames from "classnames"
@@ -10,6 +9,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import { Button, Spinner } from "reactstrap"
 import BackgroundProfile from "../assets/images/Bitmap.png"
 import { ChatApi } from "../common/api"
+import { renderAvatar } from "../common/common"
 import FileViewComponent from "./details/FileView"
 import Photo from "./details/Photo"
 import ProfileSidebarEmployee from "./details/ProfileSidebarEmployee"
@@ -34,7 +34,6 @@ const UserProfileSidebar = (props) => {
     setDataUnseenDetail,
     setActive,
     setActiveFullName,
-    imageGroup,
     selectedGroup
   } = props
 
@@ -236,45 +235,6 @@ const UserProfileSidebar = (props) => {
     return <img src={BackgroundProfile} />
   }
 
-  const renderAvatar = () => {
-    if (user.type && user.type === "group") {
-      if (selectedGroup.avatar) {
-        return (
-          <Avatar
-            className="box-shadow-1 avatar-border"
-            size="xl"
-            src={`/modules/chat/${selectedGroup.id}/avatar/${selectedGroup.avatar}`}
-            imgHeight="70"
-            imgWidth="70"
-          />
-        )
-      } else {
-        return (
-          <div className="avatar box-shadow-1 avatar-border rounded-circle avatar-xl">
-            <img
-              className=""
-              src={imageGroup}
-              alt="avatarImg"
-              height="32"
-              width="32"
-            />
-          </div>
-        )
-      }
-    }
-
-    return (
-      <Avatar
-        className="box-shadow-1 avatar-border"
-        size="xl"
-        src={user?.avatar}
-        imgHeight="70"
-        imgWidth="70"
-        userId={user?.idEmployee}
-      />
-    )
-  }
-
   const handleShowHideInput = (type, action) => {
     if (type === "fullName") {
       if (action === "show") {
@@ -371,7 +331,7 @@ const UserProfileSidebar = (props) => {
             </div>
             <div className="header-profile-avatar">
               <div className="div-avatar">
-                {renderAvatar()}
+                {renderAvatar(selectedGroup, "", "70", "70")}
                 {user.type && user.type === "group" && (
                   <>
                     <input

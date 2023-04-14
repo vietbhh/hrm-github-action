@@ -8,7 +8,7 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import classnames from "classnames"
 import { Search, X } from "react-feather"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { formatTime, replaceHtmlMessage } from "../common/common"
+import { formatTime, renderAvatar, replaceHtmlMessage } from "../common/common"
 import ModalNewGroup from "./modals/ModalNewGroup"
 
 // ** Reactstrap Imports
@@ -41,8 +41,7 @@ const SidebarLeft = (props) => {
     handleAddNewGroup,
     userId,
     handleUpdateGroup,
-    setDataUnseenDetail,
-    imageGroup
+    setDataUnseenDetail
   } = props
   const { groups, contacts, userProfile } = store
   const [state, setState] = useMergedState({
@@ -67,41 +66,6 @@ const SidebarLeft = (props) => {
   }
 
   // ** Renders Chat
-  const renderAvatar = (item) => {
-    if (item.type && item.type === "group") {
-      if (item.avatar) {
-        return (
-          <Avatar
-            src={`/modules/chat/${item.id}/avatar/${item.avatar}`}
-            imgHeight="50"
-            imgWidth="50"
-          />
-        )
-      } else {
-        return (
-          <div className="avatar rounded-circle">
-            <img
-              className=""
-              src={imageGroup}
-              alt="avatarImg"
-              height="50"
-              width="50"
-            />
-          </div>
-        )
-      }
-    }
-
-    return (
-      <Avatar
-        src={item.avatar}
-        imgHeight="50"
-        imgWidth="50"
-        userId={item.idEmployee}
-      />
-    )
-  }
-
   const renderChats = (pin = false) => {
     if (groups && groups.length) {
       const index_search = filteredChat.findIndex(
@@ -339,12 +303,7 @@ const SidebarLeft = (props) => {
                 window.history.replaceState(null, "", `/chat/${item.username}`)
                 handleUserClick(item.id, item.username)
               }}>
-              <Avatar
-                src={item.avatar}
-                imgHeight="50"
-                imgWidth="50"
-                userId={item.idEmployee}
-              />
+              {renderAvatar(item)}
               <div
                 className="chat-info flex-grow-1"
                 style={{ display: "flex", alignItems: "center" }}>

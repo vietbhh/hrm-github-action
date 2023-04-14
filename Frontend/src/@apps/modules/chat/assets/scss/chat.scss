@@ -1008,8 +1008,8 @@ $font-family: Helvetica;
                       img,
                       .ant-image-mask {
                         max-width: 300px;
-                        //max-height: 150px;
                         border-radius: 15px;
+                        object-fit: cover;
                       }
                     }
                   }
@@ -2040,6 +2040,7 @@ $font-family: Helvetica;
                           border-radius: 6px;
                           width: 65px;
                           height: 65px;
+                          object-fit: cover;
                         }
 
                         .ant-image-mask {
