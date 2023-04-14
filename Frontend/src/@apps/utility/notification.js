@@ -9,9 +9,26 @@ import { X } from "react-feather"
 import toast from "react-hot-toast"
 import { useFormatMessage } from "./common"
 import { Link } from "react-router-dom"
+import {
+  checkHTMLTag
+} from "@src/layouts/components/vertical/common/common"
+
 const ToastContent = ({ type, title, icon, text, meta, closeToast, link }) => {
   const Wrap = _.isUndefined(link) ? "div" : Link
   const wrapProps = _.isUndefined(link) ? {} : { to: link }
+
+  const renderContent = (str,  className) => {
+    if (str.trim().length === 0) {
+      return <p className={className}></p>
+    }
+
+    return checkHTMLTag(str) ? (
+      <p dangerouslySetInnerHTML={{ __html: str }} className={className}></p>
+    ) : (
+      <p className={className}>{str}</p>
+    )
+  }
+  
   return (
     <Fragment>
       <div
@@ -25,8 +42,8 @@ const ToastContent = ({ type, title, icon, text, meta, closeToast, link }) => {
         <X size="14" onClick={closeToast} className="noti-remove" />
         {icon}
         <Wrap {...wrapProps} className="noti-link flex-fill">
-          {title && <p className="noti-title mb-0">{title}</p>}
-          {text && <p className="noti-text mb-0">{text}</p>}
+          {title && renderContent(title, "noti-title mb-0")}
+          {text && renderContent(text, "noti-text mb-0")}
           {meta && (
             <p className="m-0 text-end">
               <small

@@ -36,6 +36,7 @@ import { initialLayout } from "redux/layout"
 import * as yup from "yup"
 import Header from "./Header"
 import { useTranslation } from "react-i18next"
+import { updateListUsers } from "redux/app/users"
 
 const Activation = () => {
   const { i18n } = useTranslation()
@@ -162,7 +163,8 @@ const Activation = () => {
                 optionsModules
               },
               accessToken,
-              refreshToken
+              refreshToken,
+              list_user
             } = res.data
             dispatch(initialLayout(settings))
             dispatch(
@@ -177,6 +179,7 @@ const Activation = () => {
             dispatch(
               initAppData({ unit, modules, routes, filters, optionsModules })
             )
+            dispatch(updateListUsers(list_user))
             ability.update(permits)
             history("/start")
           })

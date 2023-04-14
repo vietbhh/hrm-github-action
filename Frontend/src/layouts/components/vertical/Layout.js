@@ -57,7 +57,8 @@ const Layout = (props) => {
     outerCustomMenuComponent,
     logoLeft,
     hideQuickAccess,
-    hideVerticalMenuHeader
+    hideVerticalMenuHeader,
+    notMenuCollapsed = false
   } = props
 
   // ** Hooks
@@ -239,7 +240,8 @@ const Layout = (props) => {
         {
           // Modern Menu
           "vertical-menu-modern": windowWidth >= windowWidthMin,
-          "menu-collapsed": menuCollapsed && windowWidth >= windowWidthMin,
+          "menu-collapsed":
+            menuCollapsed && windowWidth >= windowWidthMin && !notMenuCollapsed,
           "menu-expanded": !menuCollapsed && windowWidth > windowWidthMin,
 
           // Overlay Menu
@@ -249,27 +251,6 @@ const Layout = (props) => {
         }
       )}
       {...(isHidden ? { "data-col": "1-column" } : {})}>
-      <Sidebar
-        skin={skin}
-        menuData={menuData}
-        menuCollapsed={menuCollapsed}
-        menuVisibility={menuVisibility}
-        setMenuCollapsed={setMenuCollapsed}
-        setMenuVisibility={setMenuVisibility}
-        windowWidth={windowWidth}
-        windowWidthMin={windowWidthMin}
-        toogleCustomizer={toogleCustomizer}
-        saveQuickAccess={saveQuickAccess}
-        defaultMenuNav={defaultMenuNav}
-        settingPermits={settingPermits}
-        fixedSidebarCollapsed={fixedSidebarCollapsed}
-        customMenuComponent={customMenuComponent}
-        outerCustomMenuComponent={outerCustomMenuComponent}
-        hideQuickAccess={hideQuickAccess}
-        hideVerticalMenuHeader={hideVerticalMenuHeader}
-        userId={userId}
-      />
-
       <Navbar
         expand="lg"
         container={false}
@@ -313,7 +294,31 @@ const Layout = (props) => {
         </div>
       </Navbar>
 
-      {children}
+      <div className="wrapper__menu-content">
+        <Sidebar
+          skin={skin}
+          menuData={menuData}
+          menuCollapsed={menuCollapsed}
+          menuVisibility={menuVisibility}
+          setMenuCollapsed={setMenuCollapsed}
+          setMenuVisibility={setMenuVisibility}
+          windowWidth={windowWidth}
+          windowWidthMin={windowWidthMin}
+          toogleCustomizer={toogleCustomizer}
+          saveQuickAccess={saveQuickAccess}
+          defaultMenuNav={defaultMenuNav}
+          settingPermits={settingPermits}
+          fixedSidebarCollapsed={fixedSidebarCollapsed}
+          customMenuComponent={customMenuComponent}
+          outerCustomMenuComponent={outerCustomMenuComponent}
+          hideQuickAccess={hideQuickAccess}
+          hideVerticalMenuHeader={hideVerticalMenuHeader}
+          userId={userId}
+          notMenuCollapsed={notMenuCollapsed}
+        />
+
+        {children}
+      </div>
 
       {/* Vertical Nav Menu Overlay */}
       <div

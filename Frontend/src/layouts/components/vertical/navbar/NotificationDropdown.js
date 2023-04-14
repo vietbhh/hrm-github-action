@@ -7,6 +7,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import {
   Badge,
   Button,
+  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -19,12 +20,14 @@ import { Link } from "react-router-dom"
 
 // ** redux
 import { useDispatch, useSelector } from "react-redux"
-import { handleSeenNotification } from "redux/notification"
+import { handleSeenNotification, toggleOpenDropdown } from "redux/notification"
+import { Fragment } from "react"
 
 const NotificationDropdown = () => {
   const notification = useSelector((state) => state.notification)
   const listNotificationStore = notification.listNotification
   const numberNotificationStore = notification.numberNotification
+  const openDropdown = notification.openDropdown
 
   const dispatch = useDispatch()
 
@@ -46,25 +49,44 @@ const NotificationDropdown = () => {
       .catch((err) => {})
   }
 
+  const handleToggleDropdown = () => {
+    dispatch(toggleOpenDropdown())
+  }
+
   const renderListNotification = () => {
     if (listNotificationStore.length > 0) {
       return (
-        <PerfectScrollbar
-          component="li"
-          className="noti-list scrollable-container"
-          options={{
-            wheelPropagation: false
-          }}>
-          <ListNotification listNotification={listNotificationStore} />
-        </PerfectScrollbar>
+        <Fragment>
+          <PerfectScrollbar
+            component="li"
+            className="noti-list scrollable-container"
+            options={{
+              wheelPropagation: false
+            }}>
+            <ListNotification listNotification={listNotificationStore} />
+          </PerfectScrollbar>
+          <li className="">
+            <Link to="/notification">
+              <Button.Ripple color="primary" block>
+                {useFormatMessage(
+                  "layout.notification.see_all_incoming_activity"
+                )}
+              </Button.Ripple>
+            </Link>
+          </li>
+        </Fragment>
       )
     }
 
-    return ""
+    return <p className="ps-3 pb-2">{useFormatMessage("notification.no_notification")}</p>
   }
 
   return (
-    <UncontrolledDropdown tag="li" className="dropdown-notification nav-item">
+    <Dropdown
+      isOpen={openDropdown}
+      toggle={() => handleToggleDropdown()}
+      tag="li"
+      className="dropdown-notification nav-item">
       <DropdownToggle
         tag="a"
         className="nav-link"
@@ -115,17 +137,8 @@ const NotificationDropdown = () => {
           </DropdownItem>
         </li>
         {renderListNotification()}
-        <li className="dropdown-menu-footer">
-          <Link to="/notification">
-            <Button.Ripple color="primary" block>
-              {useFormatMessage(
-                "layout.notification.see_all_incoming_activity"
-              )}
-            </Button.Ripple>
-          </Link>
-        </li>
       </DropdownMenu>
-    </UncontrolledDropdown>
+    </Dropdown>
   )
 }
 

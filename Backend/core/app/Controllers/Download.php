@@ -25,7 +25,7 @@ class Download extends ErpController
 			}
 		}
 
-		if (empty($path) || !file_exists($filepath)) {
+		if ($downloadType == 'direct' && (empty($path) || !file_exists($filepath))) {
 			return $this->failNotFound("File $filepath does not exist");
 		}
 		if (!is_readable($filepath)) {
@@ -161,9 +161,9 @@ class Download extends ErpController
 	public function publicDownload($type)
 	{
 		$downloadType = preference('upload_type');
+		$path = urldecode($this->request->getVar('name'));
+		$path = ltrim($path, '/');
 		if ($downloadType == 'direct') {
-			$path = urldecode($this->request->getVar('name'));
-			$path = ltrim($path, '/');
 
 			$folder = explode('/', $path)[0];
 			$allowFolders = (empty($_ENV['data_folder_public'])) ? [] : explode(',', $_ENV['data_folder_public']);
@@ -178,7 +178,6 @@ class Download extends ErpController
 			}
 			$filepath = WRITEPATH . 'uploads/' . $path;
 		} elseif ($downloadType == 'cloud_storage') {
-			$content = $this->_getContentFileFromCloudStorage();
 			if (empty($content)) {
 				$filepath = '';
 			} else {
@@ -194,6 +193,7 @@ class Download extends ErpController
 		if ($type === 'file' && !is_readable($filepath)) {
 			return $this->failNotFound("File $filepath is not readable");
 		}
+
 		if ($type === 'image' && empty($path) || !file_exists($filepath) || !is_readable($filepath)) {
 			$customDefault = WRITEPATH . 'uploads/default/img-not-found.png';
 			if (empty($customDefault) || !file_exists($customDefault) || !is_readable($customDefault)) {
@@ -292,7 +292,7 @@ class Download extends ErpController
 		$path = 'default' . urldecode($name);
 		$googleCloudStorage = new GoogleCloudStorage();
 		$storage = $googleCloudStorage->storage();
-		$bucketName = 'friday-storage';
+		$bucketName = empty($_ENV['gcs_bucket_name']) ? 'friday-storage' : $_ENV['gcs_bucket_name'];
 		$bucket = $storage->bucket($bucketName);
 		try {
 			$object = $bucket->object($path);

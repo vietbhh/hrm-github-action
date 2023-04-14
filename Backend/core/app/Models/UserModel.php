@@ -140,7 +140,7 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 		return ['id', 'full_name', 'username', 'email', 'phone', 'account_status', 'active', 'dob', 'avatar', 'gender', 'code', 'google_linked', 'facebook_linked', 'office', 'group_id', 'job_title_id', 'department_id', 'device_token'];
 	}
 
-	public function getListUsers($field = [])
+	public function getListUsers($field = [], $where = [])
 	{
 		$defaultFields = [
 			'id',
@@ -150,7 +150,7 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 			'avatar'
 		];
 		$selectFields = array_unique(array_merge($defaultFields, $field));
-		$data = $this->select($selectFields)->asArray()->findAll();
+		$data = $this->select($selectFields)->asArray()->where($where)->findAll();
 		$users = [];
 		foreach ($data as $item) {
 			$users[$item['id']] = $item;

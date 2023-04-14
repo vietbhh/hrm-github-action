@@ -398,7 +398,8 @@
       "text": "This section is under contuction,please comback later."
     },
     "approve": "Approve has been success",
-    "decline": "Decline has been success"
+    "decline": "Decline has been success",
+    "no_notification": "No notification found!"
   },
   "menu": {
     "dashboard": "Dashboard",
