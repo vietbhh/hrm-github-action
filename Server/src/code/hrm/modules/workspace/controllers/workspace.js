@@ -314,15 +314,14 @@ const updateWorkspace = async (req, res, next) => {
       delete updateData._id
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
-        console.log("updateData", updateData)
         if (updateData?.membership_approval === "approver") {
           const body =
-            "<strong> NVT" +
+            "<strong> member" +
             "</strong> {{modules.network.notification.request_workspace}}"
           const link = "workspace/" + workspaceId + "/pending-posts"
           await sendNotification(
-            82,
-            [82, 1],
+            1,
+            updateData?.administrators,
             {
               title: "",
               body: body,
@@ -343,15 +342,14 @@ const updateWorkspace = async (req, res, next) => {
       if (requestData?.request_joins) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
         // sent a request to join the workspace
-        console.log("updateData", updateData)
         if (updateData?.membership_approval === "approver") {
           const body =
             "<strong> NVT" +
             "</strong> {{modules.network.notification.request_workspace}}"
           const link = "workspace/" + workspaceId + "/pending-posts"
           await sendNotification(
-            82,
-            [82, 1],
+            1,
+            updateData?.administrators,
             {
               title: "",
               body: body,
@@ -362,7 +360,6 @@ const updateWorkspace = async (req, res, next) => {
             }
           )
         }
-        return
       }
       await workspaceMongoModel.updateOne(
         {
@@ -696,9 +693,40 @@ const _getCurrentPageRequestJoin = async (requestData, workspace) => {
 }
 const approvePost = async (req, res) => {
   try {
-    const feedUpdate = await feedMongoModel.findByIdAndUpdate(req.body?.id, {
-      ...req.body
-    })
+    const idWorkspace = req.body.idWorkspace
+    delete req.body.idWorkspace
+    const infoWorkSpace = await workspaceMongoModel.findById(idWorkspace)
+    const feedUpdate = await feedMongoModel.findOneAndUpdate(
+      { _id: req.body?.id },
+      {
+        ...req.body
+      },
+      { new: true }
+    )
+    const data = await handleDataBeforeReturn(feedUpdate)
+    if (data) {
+      const status =
+        data?.approve_status === "approved"
+          ? "has been approved"
+          : "has been rejected"
+      const full_name = data?.created_by?.full_name
+      const workspaceName = infoWorkSpace?.name
+      const body = "Post in <strong>" + workspaceName + "</strong> " + status
+      const link =
+        data?.approve_status === "approved" ? "workspace/" + idWorkspace : ""
+      await sendNotification(
+        1,
+        [data?.created_by?.id],
+        {
+          title: "",
+          body: body,
+          link: link
+        },
+        {
+          skipUrls: ""
+        }
+      )
+    }
     return res.respond(feedUpdate)
   } catch {
     return res.fail(err.message)

@@ -99,6 +99,9 @@ const WorkspaceHeader = (props) => {
       return
     }
 
+    adminArr.splice(indexOfAdmin, 1)
+    infoWorkspace.administrators = JSON.stringify(adminArr)
+
     const memberArr = [...infoWorkspace.members]
     const indexOf = memberArr.indexOf(userId)
     memberArr.splice(indexOf, 1)
