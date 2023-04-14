@@ -10,6 +10,7 @@ import { Button } from "reactstrap"
 import ActionTable from "./ActionTable"
 import PostContentTable from "./PostContentTable"
 import Avatar from "@apps/modules/download/pages/Avatar"
+import moment from "moment"
 
 const { Column, HeaderCell, Cell } = Table
 
@@ -45,7 +46,7 @@ const TableFeaturedPost = (props) => {
 
   const setPage = (currentPage) => {
     setFilter({
-      page: currentPage
+      page: currentPage - 1
     })
   }
 
@@ -109,6 +110,14 @@ const TableFeaturedPost = (props) => {
     )
   }
 
+  const DateCreatedCell = ({ rowData, dataKey, ...props }) => {
+    return (
+      <Cell {...props}>
+        {moment(rowData.created_at).format("DD/MM/YYYY")}
+      </Cell>
+    )
+  }
+
   const DetailCell = ({ rowData, dataKey, ...props }) => {
     return (
       <Cell {...props}>
@@ -143,14 +152,13 @@ const TableFeaturedPost = (props) => {
         loading={loading}
         autoHeight={true}
         headerHeight={60}
-        rowHeight={50}
-        wordWrap="break-word"
+        rowHeight={80}
         affixHorizontalScrollbar
         sortColumn={state.sortColumn}
         sortType={state.sortType}
         onSortColumn={handleSortColumn}
         className="table-list-workspace">
-        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
+        <Column width={220} align="left" fixed verticalAlign="middle">
           <HeaderCell>
             {useFormatMessage(
               "modules.feed.manage_post.display.table_featured_post.author"
@@ -158,7 +166,7 @@ const TableFeaturedPost = (props) => {
           </HeaderCell>
           <AuthorCell />
         </Column>
-        <Column flexGrow={2} align="left" fixed verticalAlign="middle">
+        <Column width={220} align="left" fixed verticalAlign="middle" fullText>
           <HeaderCell>
             {useFormatMessage(
               "modules.feed.manage_post.display.table_featured_post.post"
@@ -166,7 +174,7 @@ const TableFeaturedPost = (props) => {
           </HeaderCell>
           <PostCell />
         </Column>
-        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+        <Column width={100} align="left" fixed verticalAlign="middle" sortable>
           <HeaderCell>
             {useFormatMessage(
               "modules.feed.manage_post.display.table_featured_post.views"
@@ -174,7 +182,7 @@ const TableFeaturedPost = (props) => {
           </HeaderCell>
           <Cell dataKey="seen_count" />
         </Column>
-        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={1} align="left" fixed verticalAlign="middle" sortable>
           <HeaderCell>
             {useFormatMessage(
               "modules.feed.manage_post.display.table_featured_post.comments"
@@ -182,7 +190,7 @@ const TableFeaturedPost = (props) => {
           </HeaderCell>
           <Cell dataKey="comment_number" />
         </Column>
-        <Column flexGrow={1} align="left" fixed verticalAlign="middle">
+        <Column flexGrow={1} align="left" fixed verticalAlign="middle" sortable>
           <HeaderCell>
             {useFormatMessage(
               "modules.feed.manage_post.display.table_featured_post.reactions"
@@ -196,7 +204,7 @@ const TableFeaturedPost = (props) => {
               "modules.feed.manage_post.display.table_featured_post.date_crated"
             )}
           </HeaderCell>
-          <Cell dataKey="created_at" />
+          <DateCreatedCell />
         </Column>
         <Column width={110} align="left" fixed verticalAlign="middle">
           <HeaderCell></HeaderCell>
@@ -221,7 +229,7 @@ const TableFeaturedPost = (props) => {
           total={totalData}
           limitOptions={[10, 20, 40]}
           limit={filter.limit}
-          activePage={filter.page}
+          activePage={filter.page + 1}
           onChangePage={setPage}
           onChangeLimit={handleChangeLimit}
         />

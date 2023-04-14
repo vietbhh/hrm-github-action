@@ -4513,13 +4513,20 @@
             "views": "Views",
             "comments": "Comments",
             "reactions": "Reactions",
-            "date_crated": "Date crated"
+            "date_crated": "Date created"
           }
         },
         "buttons": {
           "details": "Details",
           "delete_post": "Delete post",
           "preview_post": "Preview post"
+        },
+        "options": {
+          "type": {
+            "all_posts": "All posts",
+            "personal_posts": "Personal posts",
+            "workspace_posts": "Workspace posts"
+          }
         }
       }
     },

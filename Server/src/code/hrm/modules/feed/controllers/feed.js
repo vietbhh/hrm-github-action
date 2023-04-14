@@ -348,6 +348,7 @@ const loadFeedController = async (req, res, next) => {
   const from = request.from
   const to = request.to
   const isFeaturedPost = request.is_featured_post
+  const type = request.type
 
   if (request.idPostCreateNew !== "" && request.idPostCreateNew !== undefined) {
     filter["_id"] = { $lt: request.idPostCreateNew }
@@ -357,6 +358,16 @@ const loadFeedController = async (req, res, next) => {
     filter["created_at"] = {
       $gte: from + " 00:00:00",
       $lte: to + " 23:59:59"
+    }
+  }
+
+  if (!isEmpty(type)) {
+    if (type === "personal") {
+      filter["permission"] = {
+        $in: ["only_me", "default"]
+      }
+    } else if (type === "workspace") {
+      filter["permission"] = "workspace" 
     }
   }
 
@@ -382,10 +393,15 @@ const loadFeedController = async (req, res, next) => {
           item.reaction === null ? 0 : item.reaction.length
         data[index]["comment_number"] =
           item.comment_ids === null ? 0 : item.comment_ids.length
-        data[index]["created_at"] = moment(item.crated_at).format("DD/MM/YYYY")
+        data[index]["created_at"] = item.created_at
 
         if (item.permission === "workspace") {
-          workspaceId.push(...item.permission_ids)
+          item.permission_ids.map((workspaceIdItem) => {
+            if (workspaceIdItem.match(/^[0-9a-fA-F]{24}$/)) {
+              workspaceId.push(workspaceIdItem)
+            }
+          })
+          
         }
       })
 
@@ -1149,6 +1165,10 @@ const handleDataFeedById = async (id, loadComment = -1) => {
   const _feed = await handleDataComment(feed, loadComment)
   const data = await handleDataBeforeReturn(_feed)
   return data
+}
+
+const handleDataFeedInteractById = async (id) => {
+  const feed = await feedMongoModel.findById(id)
 }
 
 const handleUpImageComment = async (image, id_post) => {

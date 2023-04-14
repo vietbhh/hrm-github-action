@@ -37,12 +37,6 @@ const FeaturedPost = (props) => {
     })
   }
 
-  const handleChangeDate = (value, type) => {
-    setFilter({
-      [type]: value
-    })
-  }
-
   // ** render
   return (
     <Card>
@@ -53,7 +47,8 @@ const FeaturedPost = (props) => {
           )}
           from={filter.from}
           to={filter.to}
-          handleChangeDate={handleChangeDate}
+          type={filter.type}
+          setFilter={setFilter}
         />
         <TableFeaturedPost
           loading={loading}
@@ -67,7 +62,13 @@ const FeaturedPost = (props) => {
           setDataPreview={setDataPreview}
         />
       </CardBody>
-      <PreviewPostModal modal={modalPreview} handleModal={toggleModalPreview} />
+      <PreviewPostModal
+        modal={state.modalPreview}
+        dataPreview={state.dataPreview}
+        data={data}
+        handleModal={toggleModalPreview}
+        setData={setData}
+      />
     </Card>
   )
 }

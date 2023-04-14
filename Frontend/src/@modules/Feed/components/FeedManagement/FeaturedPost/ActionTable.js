@@ -13,6 +13,8 @@ const ActionTable = (props) => {
     data,
     rowData,
     // ** methods
+    toggleModalPreview,
+    setDataPreview,
     setData
   } = props
 
@@ -46,6 +48,7 @@ const ActionTable = (props) => {
   }
 
   const handleClickPreviewPost = () => {
+    setDataPreview(rowData)
     toggleModalPreview()
   }
 
@@ -63,7 +66,7 @@ const ActionTable = (props) => {
       key: "2",
       label: (
         <p className="mb-0 p-50" onClick={() => handleClickPreviewPost()}>
-          <i className="far fa-lock-alt me-50" />
+          <i className="far fa-eye me-50" />
           {useFormatMessage("modules.feed.manage_post.buttons.preview_post")}
         </p>
       )

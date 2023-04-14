@@ -16,7 +16,7 @@ const PostContentTable = (props) => {
 
   const handleClickWorkspace = (workspaceId) => {
     if (workspaceId !== undefined) {
-        navigate(`/workspace/${workspaceId}`)
+      navigate(`/workspace/${workspaceId}`)
     }
   }
 
@@ -30,12 +30,19 @@ const PostContentTable = (props) => {
               return itemFilter._id === item
             })
 
-            return (
-              <p className="text-success text-link" onClick={() => handleClickWorkspace(workspaceInfo._id)}>
-                <i className="fas fa-users me-50" />
-                {workspaceInfo.name}
-              </p>
-            )
+            if (workspaceInfo !== undefined) {
+              return (
+                <p
+                  key={`workspace-info-${workspaceInfo._id}`}
+                  className="text-success text-link"
+                  onClick={() => handleClickWorkspace(workspaceInfo?._id)}>
+                  <i className="fas fa-users me-50" />
+                  {workspaceInfo?.name}
+                </p>
+              )
+            }
+
+            return ""
           })}
         </div>
       )

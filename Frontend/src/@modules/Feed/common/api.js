@@ -44,8 +44,10 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/get-feed-child/" + id)
   },
 
-  async getGetFeed(id) {
-    return await axiosNodeApi.get("/feed/get-feed/" + id)
+  async getGetFeed(id, params) {
+    const stringFilters = object2QueryString(params)
+
+    return await axiosNodeApi.get("/feed/get-feed/" + id + "?" + stringFilters)
   },
 
   async getGetFeedAndComment(id) {
