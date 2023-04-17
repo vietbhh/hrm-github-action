@@ -4530,6 +4530,28 @@
         }
       }
     },
+    "posts": {
+      "post_details": {
+        "title": {
+          "post_details": "Post details",
+          "interactive_members": "Interactive members"
+        },
+        "text": {
+          "page_descriptions": "Reports on the quality of engagement and members who are interested in the post.",
+          "data_last_updated_on": "Data last updated on: {date}",
+          "members": "Members",
+          "email": "Email",
+          "phone_number": "Phone number"
+        },
+        "buttons": {
+          "viewers": "Viewers",
+          "reacters": "Reacters",
+          "commenters": "Commenters",
+          "sharers": "Sharers"
+        }
+
+      }
+    },
     "workspace": {
       "title": {
         "work_space": "Work Space",

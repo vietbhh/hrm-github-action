@@ -1,0 +1,53 @@
+@import "@scss/friday";
+
+.post-detail-dashboard-page {
+    .header-card {
+        .ant-picker-input {
+            input {
+                font-size: 12px !important;
+                font-weight: 500;
+                line-height: 1;
+            }
+        }
+
+        .filter {
+            .form-group {
+                margin-bottom: 0 !important;
+            }
+        }
+    }
+
+    .interactive-member-section {
+        .header-section {
+            .type-filter {
+                button {
+                    border-radius: 12px;
+                }
+            }
+
+            .time-update-text {
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+
+        .table-post-interact-member {
+            .rs-table-header-row-wrapper {
+                .rs-table-row {
+                    border-top-right-radius: 12px !important;
+                    border-top-left-radius: 12px !important;
+                }
+            }
+
+            .rs-table-body-row-wrapper {
+                .rs-table-cell-wrap {
+                    font-weight: 400;
+
+                    a {
+                        color: #130f26 !important;
+                    }
+                }
+            }
+        }
+    }
+}

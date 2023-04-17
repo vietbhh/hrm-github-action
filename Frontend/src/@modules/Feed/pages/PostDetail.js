@@ -30,11 +30,8 @@ const PostDetail = (props) => {
   // ** useEffect
   useEffect(() => {
     setState({ loadingPost: true })
-    const params = {
-      is_manage: idMedia === "manage"
-    }
     feedApi
-      .getGetFeed(idPost, params)
+      .getGetFeed(idPost)
       .then(async (res) => {
         if (!_.isEmpty(res.data)) {
           const data = res.data
@@ -42,9 +39,7 @@ const PostDetail = (props) => {
             setState({ _idMedia: idMedia })
           } else {
             setState({ _idMedia: "" })
-            if (idMedia !== "manage") {
-              window.history.replaceState(null, "", current_url)
-            }
+            window.history.replaceState(null, "", current_url)
           }
 
           const data_attachment = await handleLoadAttachmentThumb(data, cover)
@@ -60,9 +55,7 @@ const PostDetail = (props) => {
               setState({ _idMedia: idMedia })
             } else {
               setState({ _idMedia: "" })
-              if (idMedia !== "manage") {
-                window.history.replaceState(null, "", current_url)
-              }
+              window.history.replaceState(null, "", current_url)
             }
           }
 
@@ -82,10 +75,6 @@ const PostDetail = (props) => {
   }, [dataEmployee])
 
   const renderContent = () => {
-    if (idMedia === "manage") {
-      return <div>a</div>
-    }
-
     return (
       <div className="div-content div-posts">
         <div className="div-left feed">
