@@ -4,7 +4,7 @@ import { isEmpty, forEach, map } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
-import { getUsers, usersModel } from "#app/models/users.mysql.js"
+import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
@@ -314,24 +314,6 @@ const updateWorkspace = async (req, res, next) => {
       delete updateData._id
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
-        if (updateData?.membership_approval === "approver") {
-          const body =
-            "<strong> member" +
-            "</strong> {{modules.network.notification.request_workspace}}"
-          const link = "workspace/" + workspaceId + "/pending-posts"
-          await sendNotification(
-            1,
-            updateData?.administrators,
-            {
-              title: "",
-              body: body,
-              link: link
-            },
-            {
-              skipUrls: ""
-            }
-          )
-        }
       }
       if (requestData?.administrators) {
         updateData.administrators = JSON.parse(requestData.administrators)
@@ -341,11 +323,21 @@ const updateWorkspace = async (req, res, next) => {
       }
       if (requestData?.request_joins) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
+        const memberInfo = await getUser(
+          updateData.request_joins[updateData.request_joins.length - 1]
+        )
         // sent a request to join the workspace
         if (updateData?.membership_approval === "approver") {
-          const body =
-            "<strong> NVT" +
-            "</strong> {{modules.network.notification.request_workspace}}"
+          let body =
+            "<strong>" + memberInfo?.dataValues?.full_name + "</strong>"
+          if (updateData.request_joins.length >= 2) {
+            body += " and " + (updateData.request_joins.length - 1) + " others"
+          }
+          body +=
+            " sent a request to join workspace <strong>" +
+            updateData?.name +
+            "</strong>"
+
           const link = "workspace/" + workspaceId + "/pending-posts"
           await sendNotification(
             1,

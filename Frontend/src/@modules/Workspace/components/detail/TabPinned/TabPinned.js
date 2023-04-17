@@ -13,7 +13,7 @@ import { Dropdown } from "antd"
 import { PushpinOutlined } from "@ant-design/icons"
 import Introduction from "../TabIntroduction/Introduction"
 const TabPinned = (props) => {
-  const { detailWorkspace } = props
+  const { detailWorkspace, handlePinPost, handleUnPinPost } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -44,7 +44,8 @@ const TabPinned = (props) => {
               </span>
             </div>
           ),
-          key: "0"
+          key: "0",
+          onClick: () => handleUnPinPost(item?._id)
         },
         {
           label: (
@@ -56,11 +57,11 @@ const TabPinned = (props) => {
             </div>
           ),
           key: "1",
-          onClick: () => console.log(item?._id)
+          onClick: () => handlePinPost(item?._id)
         }
       ]
       return (
-        <Col sm={12}>
+        <Col sm={12} key={key}>
           <Card>
             <CardBody>
               <div className="d-flex">
@@ -71,7 +72,7 @@ const TabPinned = (props) => {
                     <i className="fa-solid fa-caret-right ms-50 me-50"></i>
                     {detailWorkspace.name}
                   </h6>
-                  <small class="text-muted">
+                  <small className="text-muted">
                     {moment(item?.created_at).format("DD MMM, YYYY")}
                   </small>
                 </div>
@@ -82,7 +83,7 @@ const TabPinned = (props) => {
                     }}
                     trigger={["click"]}>
                     <Button className="ms-1" color="flat-secondary" size="sm">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
                     </Button>
                   </Dropdown>
                 </div>

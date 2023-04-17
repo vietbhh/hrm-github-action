@@ -135,7 +135,7 @@ const EmployeesSelect = (props) => {
         label: (
           <div className="text-center">
             <i className="fa-solid fa-user-group"></i>
-            <p class="text-capitalize">
+            <p className="text-capitalize">
               {useFormatMessage("modules.workspace.text.members")}
             </p>
           </div>

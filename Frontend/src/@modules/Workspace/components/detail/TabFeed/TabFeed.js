@@ -1,24 +1,23 @@
+import { PushpinOutlined } from "@ant-design/icons"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import LoadFeed from "@modules/Feed/components/LoadFeed"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
+import { Dropdown } from "antd"
+import { map } from "lodash-es"
 import moment from "moment"
 import { useEffect } from "react"
+import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
-import WorkspaceIntroduction from "../sidebarComponents/WorkspaceIntroduction"
-import ReactHtmlParser from "react-html-parser"
-import notification from "@apps/utility/notification"
-import { Dropdown } from "antd"
-import { PushpinOutlined } from "@ant-design/icons"
-import { map } from "lodash-es"
 import Introduction from "../TabIntroduction/Introduction"
 
 const TabFeed = (props) => {
-  const { detailWorkspace } = props
+  const { detailWorkspace, handleUnPinPost } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -75,7 +74,21 @@ const TabFeed = (props) => {
     dataPinnedUpdate.splice(index, 1)
     dataPinnedUpdate.unshift({ post: idPost, stt: 1 })
 
-    //  setState({ dataPinned: dataPinned })
+    let numStt = 1
+    map(dataPinnedUpdate, (item, key) => {
+      dataPinnedUpdate[key].stt = numStt
+      numStt += 1
+    })
+
+    const dataUpdate = {
+      pinPosts: JSON.stringify(dataPinnedUpdate)
+    }
+
+    workspaceApi.update(params.id, dataUpdate).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+    })
   }
   const handlePinPost = (idPost) => {
     const dataPinned = [...detailWorkspace.pinPosts]
@@ -98,7 +111,7 @@ const TabFeed = (props) => {
       loadData()
     })
   }
-  const handleUnPinPost = (idPost) => {
+  const handleUnPinPostOLD = (idPost) => {
     const dataPinned = [...detailWorkspace.pinPosts]
     const index = dataPinned.findIndex((p) => p.post === idPost)
     dataPinned.splice(index, 1)
@@ -151,7 +164,7 @@ const TabFeed = (props) => {
         }
       ]
       return (
-        <Col sm={12}>
+        <Col sm={12} key={key}>
           <div className="post-pinned">
             <div className="content-post d-flex align-items-center mb-50">
               <div>
@@ -182,7 +195,7 @@ const TabFeed = (props) => {
                 }}
                 trigger={["click"]}>
                 <Button className="ms-1" color="flat-secondary" size="sm">
-                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                  <i className="fa-solid fa-ellipsis-vertical"></i>
                 </Button>
               </Dropdown>
             </div>
@@ -192,6 +205,11 @@ const TabFeed = (props) => {
       )
     })
   }
+
+  const checkPinPost = (_id) => {
+    const arr = [...detailWorkspace.pinPosts].map((v) => v.post)
+    return arr.includes(_id)
+  }
   const customActionPost = {
     pin_post: {
       label: (
@@ -200,8 +218,18 @@ const TabFeed = (props) => {
           <span>{useFormatMessage("modules.workspace.text.pin_post")}</span>
         </a>
       ),
-      condition: true,
+      condition: (e) => !checkPinPost(e._id),
       onClick: (e) => handlePinPost(e?._id)
+    },
+    un_pin_post: {
+      label: (
+        <a>
+          <i className="fa-light fa-thumbtack"></i>
+          <span>{useFormatMessage("modules.workspace.text.unpin_post")}</span>
+        </a>
+      ),
+      condition: (e) => checkPinPost(e._id),
+      onClick: (e) => handleUnPinPost(e?._id)
     }
   }
 

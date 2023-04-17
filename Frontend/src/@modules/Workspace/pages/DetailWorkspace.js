@@ -1,16 +1,18 @@
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { map } from "lodash-es"
 import { useEffect } from "react"
+import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { Card, CardBody, TabContent, TabPane } from "reactstrap"
+import { TabContent, TabPane } from "reactstrap"
 import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
+import TabMedia from "../components/detail/TabMedia/TabMedia"
 import TabMember from "../components/detail/TabMember/TabMember"
 import TabPinned from "../components/detail/TabPinned/TabPinned"
-import TabMedia from "../components/detail/TabMedia/TabMedia"
-import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 import TabPrivate from "../components/detail/TabPrivate"
-import { useSelector } from "react-redux"
+import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
@@ -62,6 +64,29 @@ const DetailWorkspace = () => {
       setState({ detailWorkspace: res.data })
     })
   }
+
+  const handleUnPinPost = (idPost) => {
+    const dataPinned = [...state.detailWorkspace.pinPosts]
+    const index = dataPinned.findIndex((p) => p.post === idPost)
+    dataPinned.splice(index, 1)
+    let numStt = 1
+    const dataPinnedUpdate = []
+    map(dataPinned, (item, key) => {
+      dataPinnedUpdate.push({ post: item.post, stt: numStt })
+      numStt += 1
+    })
+    // detailWorkspace.pinPosts = dataPinnedUpdate
+    const dataUpdate = {
+      pinPosts: JSON.stringify(dataPinnedUpdate)
+    }
+    workspaceApi.update(params.id, dataUpdate).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+      loadData()
+    })
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -112,7 +137,10 @@ const DetailWorkspace = () => {
               </div>
             )}
             {(state.isJoined || state.workspacePublic) && (
-              <TabFeed detailWorkspace={state.detailWorkspace} />
+              <TabFeed
+                detailWorkspace={state.detailWorkspace}
+                handleUnPinPost={handleUnPinPost}
+              />
             )}
           </TabPane>
           <TabPane tabId={2}>
@@ -122,7 +150,10 @@ const DetailWorkspace = () => {
               </div>
             )}
             {(state.isJoined || state.workspacePublic) && (
-              <TabPinned detailWorkspace={state.detailWorkspace} />
+              <TabPinned
+                detailWorkspace={state.detailWorkspace}
+                handleUnPinPost={handleUnPinPost}
+              />
             )}
           </TabPane>
           <TabPane tabId={3}>

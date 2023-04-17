@@ -4558,7 +4558,8 @@
         "uploaded_video": "Uploaded video",
         "group_link_posted": "Group link posted",
         "change_cover_img" : "Change cover image",
-        "remove_cover_photo" : "Remove cover photo"
+        "remove_cover_photo" : "Remove cover photo",
+        "and_other_request"  : "and {num_others} others sent a request to join workspace"
       },
       "fields": {
         "workspace_name": "Workspace name",
