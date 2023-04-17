@@ -43,12 +43,18 @@ const PostComment = (props) => {
   return (
     <Fragment>
       <div className="post-comment">
-        <div className="post-comment__div-comment">
-          {!_.isEmpty(data.comment_list) && (
-            <>
-              {_.map(data.comment_list, (value, index) => {
-                return (
-                  <Fragment key={index}>
+        {!_.isEmpty(data.comment_list) && (
+          <>
+            {_.map(data.comment_list, (value, index) => {
+              return (
+                <Fragment key={index}>
+                  <div className="post-comment__div-comment">
+                    {(!_.isEmpty(value.sub_comment) ||
+                      (state.dataShowFormReply &&
+                        state.dataShowFormReply[value._id])) && (
+                      <div className="div-border"></div>
+                    )}
+
                     <Comment
                       id_post={data._id}
                       id_comment={value._id}
@@ -77,39 +83,39 @@ const PostComment = (props) => {
                       comment_more_count={data.comment_more_count}
                       setDataShowFormReply={setDataShowFormReply}
                     />
-                  </Fragment>
-                )
-              })}
-            </>
-          )}
+                  </div>
+                </Fragment>
+              )
+            })}
+          </>
+        )}
 
-          {data.comment_more_count > 0 && (
-            <div className="div-comment__comment_more">
-              <span
-                onClick={() => {
-                  setCommentMoreCountOriginal()
-                  if (_.isFunction(setData)) {
-                    feedApi
-                      .getGetFeedAndComment(data._id)
-                      .then((res) => {
-                        setData(res.data)
-                      })
-                      .catch((err) => {})
-                  }
-                }}>
-                <i className="fa-regular fa-comment me-25"></i>
-                {useFormatMessage(
-                  `modules.feed.post.text.${
-                    data.comment_more_count === 1
-                      ? "view_more_comment"
-                      : "view_more_comments"
-                  }`,
-                  { comment: data.comment_more_count }
-                )}
-              </span>
-            </div>
-          )}
-        </div>
+        {data.comment_more_count > 0 && (
+          <div className="div-comment__comment_more">
+            <span
+              onClick={() => {
+                setCommentMoreCountOriginal()
+                if (_.isFunction(setData)) {
+                  feedApi
+                    .getGetFeedAndComment(data._id)
+                    .then((res) => {
+                      setData(res.data)
+                    })
+                    .catch((err) => {})
+                }
+              }}>
+              <i className="fa-regular fa-comment me-25"></i>
+              {useFormatMessage(
+                `modules.feed.post.text.${
+                  data.comment_more_count === 1
+                    ? "view_more_comment"
+                    : "view_more_comments"
+                }`,
+                { comment: data.comment_more_count }
+              )}
+            </span>
+          </div>
+        )}
 
         <PostCommentForm
           data={data}
