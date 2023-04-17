@@ -12,6 +12,7 @@ import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import DropdownReaction from "./DropdownReaction"
+import classNames from "classnames"
 
 const Comment = (props) => {
   const {
@@ -297,7 +298,9 @@ const Comment = (props) => {
 
   return (
     <Fragment>
-      <div className="div-comment__comment">
+      <div className={classNames("div-comment__comment", {})}>
+        <div className="div-border-reply div-comment"></div>
+
         <Link to={`/u/${dataComment?.created_by?.username}`}>
           <Avatar className="img" src={dataComment?.created_by?.avatar} />
         </Link>
@@ -331,7 +334,12 @@ const Comment = (props) => {
                 className="reaction reaction__reply"
                 onClick={(e) => {
                   e.preventDefault()
-                  if (_.isFunction(setDataShowFormReply)) {
+                  if (
+                    _.isFunction(setDataShowFormReply) &&
+                    ((dataShowFormReply &&
+                      !dataShowFormReply[dataComment._id]) ||
+                      !dataShowFormReply)
+                  ) {
                     const showFormReply =
                       dataShowFormReply && dataShowFormReply[dataComment._id]
                         ? { [dataComment._id]: false }
