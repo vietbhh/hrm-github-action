@@ -1,6 +1,9 @@
+import { ErpCheckbox, ErpRadio } from "@apps/components/common/ErpField"
+import UserDisplay from "@apps/components/users/UserDisplay"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
 import EmployeesSelect from "components/hrm/Employees/EmployeesSelect"
-import React from "react"
+import React, { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import {
@@ -13,19 +16,17 @@ import {
   Row,
   Spinner
 } from "reactstrap"
-const InviteWorkspaceModal = (props) => {
-  const { modal, handleModal, handleDone, member_selected } = props
+import { Alert } from "antd"
+const SelectAdminModal = (props) => {
+  const { modal, handleModal, members, handleDone } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
     search: "",
     members: [],
-    departments: [],
-    jobTitles: [],
     recordsTotal: [],
     perPage: 10,
-    dataSelected: [],
-    typeAdd: "members"
+    admins: []
   })
 
   const onSubmit = (values) => {}
@@ -35,13 +36,14 @@ const InviteWorkspaceModal = (props) => {
   const { handleSubmit, errors, control, register, reset, setValue } = methods
 
   const handleAdd = () => {
-    const dataSelected = state.dataSelected
-    handleDone(dataSelected, state.typeAdd)
+    handleDone(state.admins)
   }
 
-  const getDataSelect = (data = [], typeAdd) => {
-    setState({ dataSelected: data, typeAdd: typeAdd })
+  const handleSelect = (arr) => {
+    setState({ admins: arr })
   }
+
+  useEffect(() => {}, [members])
 
   return (
     <Modal
@@ -53,16 +55,27 @@ const InviteWorkspaceModal = (props) => {
       size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
-      <ModalHeader toggle={() => handleModal()}>
-        {useFormatMessage("modules.workspace.display.add_member_to_ws")}
-      </ModalHeader>
+      <ModalHeader toggle={() => handleModal()}></ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
           <Row className="mt-1">
+            <Col className="text-left mb-1">
+              <Alert
+                description={
+                  <>
+                    You are the only administrator.
+                    <br />
+                    To take the action to leave the group please select an
+                    alternate administrator
+                  </>
+                }
+                type="error"
+              />
+            </Col>
             <Col sm={12}>
               <EmployeesSelect
-                handleSelect={getDataSelect}
-                member_selected={member_selected}
+                handleSelect={handleSelect}
+                tabShow={["members"]}
               />
             </Col>
           </Row>
@@ -90,4 +103,4 @@ const InviteWorkspaceModal = (props) => {
     </Modal>
   )
 }
-export default InviteWorkspaceModal
+export default SelectAdminModal

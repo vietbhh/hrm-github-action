@@ -4,12 +4,12 @@ import { isEmpty, forEach, map } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
-import { getUser, usersModel } from "#app/models/users.mysql.js"
+import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
 import moment from "moment/moment.js"
-
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
     name: req.body.workspace_name,
@@ -43,6 +43,7 @@ const getWorkspace = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
 const saveCoverImage = async (req, res) => {
   const image = req.body.image
   const imageFile = {}
@@ -74,19 +75,10 @@ const addMemberByDepartment = async (req, res) => {
   }
 
   return 1
-  if (dataSave?.members) {
-    dataSave.members = JSON.parse(req.body.members)
-  }
-
-  const update = await workspaceMongoModel.findByIdAndUpdate(dataSave._id, {
-    ...dataSave
-  })
-  return res.respond(update)
 }
 
 const getPostWorkspace = async (req, res) => {
   try {
-    console.log("req.body", req.query)
     const filter = {
       permission_ids: req.query.id,
       permission: "workspace",
@@ -284,7 +276,6 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
 
 const updateWorkspace = async (req, res, next) => {
   const workspaceId = req.params.id
-
   if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
     res.fail("invalid_work_space_id")
   }
@@ -367,7 +358,44 @@ const updateWorkspace = async (req, res, next) => {
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
       }
+      if (requestData?.administrators) {
+        updateData.administrators = JSON.parse(requestData.administrators)
+      }
+      if (requestData?.pinPosts) {
+        updateData.pinPosts = JSON.parse(requestData.pinPosts)
+      }
+      if (requestData?.request_joins) {
+        updateData.request_joins = JSON.parse(requestData.request_joins)
+        const memberInfo = await getUser(
+          updateData.request_joins[updateData.request_joins.length - 1]
+        )
+        // sent a request to join the workspace
+        if (updateData?.membership_approval === "approver") {
+          let body =
+            "<strong>" + memberInfo?.dataValues?.full_name + "</strong>"
+          if (updateData.request_joins.length >= 2) {
+            body += " and " + (updateData.request_joins.length - 1) + " others"
+          }
+          body +=
+            " sent a request to join workspace <strong>" +
+            updateData?.name +
+            "</strong>"
 
+          const link = "workspace/" + workspaceId + "/pending-posts"
+          await sendNotification(
+            1,
+            updateData?.administrators,
+            {
+              title: "",
+              body: body,
+              link: link
+            },
+            {
+              skipUrls: ""
+            }
+          )
+        }
+      }
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -700,9 +728,40 @@ const _getCurrentPageRequestJoin = async (requestData, workspace) => {
 }
 const approvePost = async (req, res) => {
   try {
-    const feedUpdate = await feedMongoModel.findByIdAndUpdate(req.body?.id, {
-      ...req.body
-    })
+    const idWorkspace = req.body.idWorkspace
+    delete req.body.idWorkspace
+    const infoWorkSpace = await workspaceMongoModel.findById(idWorkspace)
+    const feedUpdate = await feedMongoModel.findOneAndUpdate(
+      { _id: req.body?.id },
+      {
+        ...req.body
+      },
+      { new: true }
+    )
+    const data = await handleDataBeforeReturn(feedUpdate)
+    if (data) {
+      const status =
+        data?.approve_status === "approved"
+          ? "has been approved"
+          : "has been rejected"
+      const full_name = data?.created_by?.full_name
+      const workspaceName = infoWorkSpace?.name
+      const body = "Post in <strong>" + workspaceName + "</strong> " + status
+      const link =
+        data?.approve_status === "approved" ? "workspace/" + idWorkspace : ""
+      await sendNotification(
+        1,
+        [data?.created_by?.id],
+        {
+          title: "",
+          body: body,
+          link: link
+        },
+        {
+          skipUrls: ""
+        }
+      )
+    }
     return res.respond(feedUpdate)
   } catch {
     return res.fail(err.message)
@@ -715,7 +774,8 @@ const loadFeed = async (req, res) => {
   const filter = {
     permission_ids: req.query.workspace,
     permission: "workspace",
-    approve_status: "approved"
+    approve_status: "approved",
+    ref: null
   }
   const feed = await feedMongoModel
     .find(filter)
@@ -728,13 +788,42 @@ const loadFeed = async (req, res) => {
   const feedCount = await feedMongoModel.find(filter).count()
   const result = {
     dataPost: data,
-    totalPost: feedCount,
+    totalPost: data.length,
     page: page * 1 + 1,
     hasMore: (page * 1 + 1) * pageLength < feedCount
   }
   return res.respond(result)
 }
 
+const loadPinned = async (req, res) => {
+  const request = req.query
+  const workspaceId = request.id
+  const workspace = await workspaceMongoModel.findById(workspaceId)
+  const arrID = workspace.pinPosts // .map((x) => x.post)
+
+  let dataPost = []
+  await Promise.all(
+    map(arrID, async (item, key) => {
+      const infoPost = await feedMongoModel.findById(item.post)
+      infoPost.stt = item.stt
+      dataPost.push({ ...infoPost._doc, stt: item.stt })
+    })
+  )
+  const feed = await feedMongoModel.find({
+    _id: { $in: arrID }
+  })
+  const data = await handleDataBeforeReturn(dataPost, true)
+  const feedCount = await feedMongoModel
+    .find({
+      _id: { $in: arrID }
+    })
+    .count()
+  const result = {
+    dataPost: data.sort((a, b) => a.stt - b.stt),
+    totalPost: feedCount
+  }
+  return res.respond(result)
+}
 const loadGCSObjectLink = async (req, res) => {
   const storage = new Storage({
     keyFilename: path.join(
@@ -807,5 +896,7 @@ export {
   approvePost,
   loadFeed,
   addMemberByDepartment,
-  loadGCSObjectLink
+  loadPinned,
+  loadGCSObjectLink,
+  removeCoverImage
 }

@@ -50,7 +50,7 @@ const MemberItem = (props) => {
           type: type,
           update_administrator: true
         }
-
+        console.log("values", values)
         workspaceApi
           .update(id, values)
           .then((res) => {

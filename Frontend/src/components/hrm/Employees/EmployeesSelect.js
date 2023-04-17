@@ -9,8 +9,13 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
 const EmployeesSelect = (props) => {
-  const { handleSelect, dataDetail, member_selected, department_selected } =
-    props
+  const {
+    handleSelect,
+    dataDetail,
+    member_selected,
+    department_selected,
+    tabShow
+  } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
@@ -96,7 +101,6 @@ const EmployeesSelect = (props) => {
   }
   const renderDepartmentSelected = (data = []) => {
     return data.map((item, key) => {
-      console.log("item", item)
       return (
         <Col sm={12} key={item.id}>
           <div
@@ -112,7 +116,6 @@ const EmployeesSelect = (props) => {
 
   const renderJobTitleSelected = (data = []) => {
     return data.map((item, key) => {
-      console.log("item", item)
       return (
         <Col sm={12} key={item.id}>
           <div
@@ -126,13 +129,13 @@ const EmployeesSelect = (props) => {
     })
   }
 
-  const itemTab = () => {
+  const itemTab = (show = []) => {
     const arr = [
       {
         label: (
           <div className="text-center">
             <i className="fa-solid fa-user-group"></i>
-            <p class="text-capitalize">
+            <p className="text-capitalize">
               {useFormatMessage("modules.workspace.text.members")}
             </p>
           </div>
@@ -155,7 +158,7 @@ const EmployeesSelect = (props) => {
                 </Col>
               </Row>
               <PerfectScrollbar
-                onYReachEnd={() => endScrollLoad()}
+                onYReachEnd={endScrollLoad}
                 style={{
                   maxHeight: "400px",
                   minHeight: "400px"
@@ -217,9 +220,9 @@ const EmployeesSelect = (props) => {
                 </Col>
               </Row>
               <PerfectScrollbar
-                onYReachEnd={() => endScrollLoad()}
+                onYReachEnd={() => endScrollDepartment()}
                 style={{
-                  maxHeight: "400px",
+                  height: "400px",
                   minHeight: "50px"
                 }}>
                 <Row className="w-100">
@@ -260,7 +263,7 @@ const EmployeesSelect = (props) => {
         label: (
           <div className="text-center">
             <i className="fa-light fa-briefcase"></i>
-            <p>Job title</p>
+            <p>{useFormatMessage("modules.workspace.text.job_title")}</p>
           </div>
         ),
         key: "jobtitles",
@@ -281,7 +284,7 @@ const EmployeesSelect = (props) => {
                 </Col>
               </Row>
               <PerfectScrollbar
-                onYReachEnd={() => endScrollLoad()}
+                onYReachEnd={() => endScrollJobtitle()}
                 style={{
                   maxHeight: "400px",
                   minHeight: "400px"
@@ -317,18 +320,19 @@ const EmployeesSelect = (props) => {
             </div>
           </div>
         )
-      },
-      {
-        label: (
-          <div className="text-center">
-            <i className="fa-light fa-file-excel"></i>
-            <p>Excel</p>
-          </div>
-        ),
-        key: 4,
-        children: "under construction"
       }
     ]
+    if (show.length > 0) {
+      const arrShow = []
+      show.map((item) => {
+        const index = arr.findIndex((p) => p.key === item)
+        if (index >= 0) {
+          arrShow.push(arr[index])
+        }
+      })
+
+      return arrShow
+    }
     return arr
   }
   const findKeyByID = (arr = [], id) => {
@@ -340,7 +344,7 @@ const EmployeesSelect = (props) => {
     const indexID = findKeyByID(state.dataSelected, id)
     return indexID
   }
-  console.log("sate", state)
+
   const loadData = (props) => {
     props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
@@ -359,7 +363,7 @@ const EmployeesSelect = (props) => {
   }
 
   const loadJobtitle = (props) => {
-    defaultModuleApi.getList("job_titles").then((res) => {
+    defaultModuleApi.getList("job_titles", props).then((res) => {
       const job_titles = state.jobtitles
       const concat = !props.search
         ? job_titles.concat(res.data.results)
@@ -376,7 +380,7 @@ const EmployeesSelect = (props) => {
 
   const loadDepartment = (props) => {
     setState({ loading: true })
-    defaultModuleApi.getList("departments").then((res) => {
+    defaultModuleApi.getList("departments", props).then((res) => {
       const departments = state.departments
       const concat = !props.search
         ? departments.concat(res.data.results)
@@ -393,30 +397,33 @@ const EmployeesSelect = (props) => {
   }
 
   const endScrollLoad = () => {
-    console.log("runnn endScrollLoad")
     const page = state.page + 1
     if (state.typeAdd === "members") {
-      console.log("run endScrollLoad members")
       if (state.recordsTotal > state.members.length) {
         loadData({ page: page, search: state.search })
       }
     }
-    if (state.typeAdd === "departments" && !state.loading) {
-      console.log("run endScrollLoad departments")
+  }
+  const endScrollDepartment = () => {
+    const page = state.page + 1
+    if (state.typeAdd === "departments") {
       if (state.recordsTotal > state.departments.length) {
-        console.log("state.recordsTotal", state.recordsTotal)
-
-        console.log("state.departments.length", state.departments.length)
-        console.log("page", page)
         loadDepartment({ page: page, search: state.search })
       }
     }
   }
 
+  const endScrollJobtitle = () => {
+    const page = state.page + 1
+    if (state.typeAdd === "jobtitles") {
+      if (state.recordsTotal > state.jobtitles.length) {
+        loadJobtitle({ page: page, search: state.search })
+      }
+    }
+  }
   const handleAdd = () => {
     const dataSelected = state.dataSelected
     handleSelect(state.dataSelected)
-    console.log("dataSelected", dataSelected)
   }
   const typingTimeoutRef = useRef(null)
 
@@ -431,7 +438,6 @@ const EmployeesSelect = (props) => {
   }
 
   useEffect(() => {
-    console.log("state.typeAdd", state.typeAdd)
     if (state.typeAdd === "members") {
       loadData({ page: 1, search: state.search })
     }
@@ -443,7 +449,6 @@ const EmployeesSelect = (props) => {
       loadDepartment({ page: 1 })
     }
   }, [state.typeAdd])
-
   useEffect(() => {
     handleSelect(state.dataSelected, state.typeAdd)
   }, [state.dataSelected])
@@ -451,10 +456,17 @@ const EmployeesSelect = (props) => {
     <Tabs
       className="tab-invite"
       tabPosition={"left"}
-      items={itemTab()}
-      onTabClick={(key) =>
-        setState({ typeAdd: key, dataSelected: [], recordsTotal: 0 })
-      }
+      items={itemTab(tabShow)}
+      onTabClick={(key) => {
+        setState({
+          typeAdd: key,
+          dataSelected: [],
+          recordsTotal: 0,
+          departments: [],
+          jobtitles: [],
+          members: []
+        })
+      }}
     />
   )
 }
