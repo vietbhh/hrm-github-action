@@ -27,13 +27,17 @@ const workspace_type = [
     value: "public",
     label: "Public",
     icon: "fa-regular fa-earth-asia",
-    text: "Anyone can see post and activites in workspace"
+    text: useFormatMessage(
+      "modules.workspace.app_options.workspace_type.public"
+    )
   },
   {
     value: "private",
     label: "Private",
     icon: "fa-regular fa-lock",
-    text: "Only member on workspace can see posts and activites"
+    text: useFormatMessage(
+      "modules.workspace.app_options.workspace_type.private"
+    )
   }
 ]
 
@@ -42,13 +46,17 @@ const workspace_mode = [
     value: "visible",
     label: "Visible",
     icon: "fa-regular fa-eye",
-    text: "Anyone can see your workspace and request to join"
+    text: useFormatMessage(
+      "modules.workspace.app_options.workspace_mode.visible"
+    )
   },
   {
     value: "hidden",
     label: "Hidden",
     icon: "fa-regular fa-eye-slash",
-    text: "Only administrator can add member and other unable to see workspace"
+    text: useFormatMessage(
+      "modules.workspace.app_options.workspace_mode.hidden"
+    )
   }
 ]
 
@@ -57,13 +65,17 @@ const membership_approval = [
     value: "approver",
     label: "Admin",
     icon: "fa-sharp fa-solid fa-shield-plus",
-    text: "Only administrators can approve joining group request"
+    text: useFormatMessage(
+      "modules.workspace.app_options.membership_approval.approver"
+    )
   },
   {
     value: "auto",
     label: "Automatically approve",
     icon: "fa-duotone fa-unlock",
-    text: "Automatically approve all joining group request"
+    text: useFormatMessage(
+      "modules.workspace.app_options.membership_approval.auto"
+    )
   }
 ]
 

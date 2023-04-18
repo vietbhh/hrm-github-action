@@ -20,7 +20,7 @@ const CoverEditor = (props) => {
     loading: true,
     editing: false
   })
-  const { currentCover, saveCoverImage } = props
+  const { currentCover, saveCoverImage, removeCover } = props
   const photoUploader = useRef()
   const photoEditor = useRef()
   const handleUploadBtnClick = (e) => {
@@ -52,9 +52,7 @@ const CoverEditor = (props) => {
       saveCoverImage(img)
     }
   }
-  const removeCoverImg = () => {
-    console.log("ssssssssssssssssssssssssssssssssss")
-  }
+
   useEffect(() => {
     setState({
       loading: true
@@ -71,21 +69,22 @@ const CoverEditor = (props) => {
   const items = [
     {
       key: "1",
-      label: "Change cover image",
+      label: useFormatMessage("modules.workspace.display.change_cover_img"),
       onClick: () => handleUploadBtnClick()
     },
     {
       key: "2",
-      label: "Remove cover photo",
-      onClick: () => removeCoverImg()
+      label: useFormatMessage("modules.workspace.display.remove_cover_photo"),
+      onClick: () => removeCover()
     }
   ]
 
   if (state.loading)
     return (
-      <ContentLoader viewBox="0 0 208 208" height={208} width={208}>
-        <circle cx="100" cy="100" r="100" width="208" height="208" />
-      </ContentLoader>
+      <ContentLoader
+        viewBox="0 0 208 208"
+        height={208}
+        width={208}></ContentLoader>
     )
   else
     return (

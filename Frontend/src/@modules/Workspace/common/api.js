@@ -91,7 +91,15 @@ export const workspaceApi = {
     const strParams = object2QueryString(params)
     return await axiosApi.get(`/employees/in-department?${strParams}`)
   },
+  async loadPinned(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/workspace/load-pinned?${strParams}`)
+  },
   async downloadMedia(src, downloadFromStorage = false) {
     return await downloadApi.getFile(src, downloadFromStorage)
+  },
+
+  async removeCover(Id) {
+    return await axiosNodeApi.post(`/workspace/remove-cover-image/` + Id)
   }
 }

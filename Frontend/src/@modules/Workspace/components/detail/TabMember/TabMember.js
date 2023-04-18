@@ -40,7 +40,6 @@ const TabMember = (props) => {
   })
 
   const { id } = useParams()
-
   const userState = useSelector((state) => state.auth.userData)
 
   const setFilter = (filter) => {

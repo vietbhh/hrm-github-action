@@ -24,7 +24,6 @@ const workspace_type = [
     label: "Oldest first"
   }
 ]
-
 const PendingPostWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
@@ -77,12 +76,14 @@ const PendingPostWorkspace = () => {
   }
 
   const handleApprove = (id, status) => {
-    workspaceApi.approvePost({ id: id, approve_status: status }).then((res) => {
-      loadData()
-      notification.showSuccess({
-        text: useFormatMessage("notification.save.success")
+    workspaceApi
+      .approvePost({ id: id, approve_status: status, idWorkspace: params.id })
+      .then((res) => {
+        loadData()
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
       })
-    })
   }
 
   const handleApproveAll = (id, status) => {
