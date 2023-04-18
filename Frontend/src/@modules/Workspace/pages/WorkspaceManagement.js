@@ -57,8 +57,8 @@ const WorkspaceManagement = () => {
     const params = {
       ...state.filter,
       workspace_type: "",
-      from: state.filterOverview.from.format("YYYY-MM-DD"),
-      to: state.filterOverview.to.format("YYYY-MM-DD")
+      from: state.filter.from.format("YYYY-MM-DD"),
+      to: state.filter.to.format("YYYY-MM-DD")
     }
     workspaceApi
       .getList(params)

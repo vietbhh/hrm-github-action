@@ -18,6 +18,9 @@ import {
   updatePostPollVote,
   updatePostPollVoteAddMoreOption
 } from "../controllers/feed.js"
+
+import { getPostInteractiveMember } from "../controllers/management.js"
+
 const router = express.Router()
 
 router.post("/upload-temp-attachment", uploadTempAttachmentController)
@@ -40,5 +43,7 @@ router.post("/update-comment", updateComment)
 router.post("/update-sub-comment", updateSubComment)
 router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
+
+router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 
 export default router

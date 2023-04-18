@@ -16,6 +16,8 @@ import { handleDataBeforeReturn } from "#app/utility/common.js"
 import commentMongoModel from "../models/comment.mongo.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { getSetting } from "#app/services/settings.js"
+import moment from "moment"
+import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -343,9 +345,32 @@ const loadFeedController = async (req, res, next) => {
   const page = request.page
   const pageLength = request.pageLength
   const filter = { ref: null }
-  if (request.idPostCreateNew !== "") {
+  const from = request.from
+  const to = request.to
+  const isFeaturedPost = request.is_featured_post
+  const type = request.type
+
+  if (request.idPostCreateNew !== "" && request.idPostCreateNew !== undefined) {
     filter["_id"] = { $lt: request.idPostCreateNew }
   }
+
+  if (!isEmpty(from) && !isEmpty(to)) {
+    filter["created_at"] = {
+      $gte: from + " 00:00:00",
+      $lte: to + " 23:59:59"
+    }
+  }
+
+  if (!isEmpty(type)) {
+    if (type === "personal") {
+      filter["permission"] = {
+        $in: ["only_me", "default"]
+      }
+    } else if (type === "workspace") {
+      filter["permission"] = "workspace" 
+    }
+  }
+
   try {
     const feed = await feedMongoModel
       .find(filter)
@@ -355,6 +380,42 @@ const loadFeedController = async (req, res, next) => {
         _id: "desc"
       })
     const feedCount = await feedMongoModel.find(filter).count()
+
+    if (isFeaturedPost === "true") {
+      const data = await handleDataBeforeReturn(feed, true)
+
+      const workspaceId = []
+
+      data.map((item, index) => {
+        data[index]["seen_count"] =
+          item.seen_count === null ? 0 : item.seen_count
+        data[index]["reaction_number"] =
+          item.reaction === null ? 0 : item.reaction.length
+        data[index]["comment_number"] =
+          item.comment_ids === null ? 0 : item.comment_ids.length
+        data[index]["created_at"] = item.created_at
+
+        if (item.permission === "workspace") {
+          item.permission_ids.map((workspaceIdItem) => {
+            if (workspaceIdItem.match(/^[0-9a-fA-F]{24}$/)) {
+              workspaceId.push(workspaceIdItem)
+            }
+          })
+          
+        }
+      })
+
+      const workspaceData = await workspaceMongoModel.find({
+        _id: { $in: workspaceId }
+      })
+
+      return res.respond({
+        data: data,
+        workspace_data: workspaceData,
+        total_data: feedCount
+      })
+    }
+
     const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
     return res.respond(result)
   } catch (err) {
@@ -1105,6 +1166,10 @@ const handleDataFeedById = async (id, loadComment = -1) => {
   const _feed = await handleDataComment(feed, loadComment)
   const data = await handleDataBeforeReturn(_feed)
   return data
+}
+
+const handleDataFeedInteractById = async (id) => {
+  const feed = await feedMongoModel.findById(id)
 }
 
 const handleUpImageComment = async (image, id_post) => {

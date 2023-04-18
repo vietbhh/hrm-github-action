@@ -93,6 +93,10 @@ const feedSchema = baseSchema("m_feed", {
     type: [mongoose.Schema.Types.ObjectId],
     default: []
   },
+  seen: {
+    type: [String],
+    default: []
+  },
   seen_count: {
     type: Number,
     default: 0
