@@ -749,28 +749,39 @@ $btn-background-color: #377dff;
     .post-comment__div-comment {
       position: relative;
 
-      .div-border {
-        position: absolute;
-        height: calc(100% - 68px);
-        width: 2px;
-        background-color: #efefef;
-        top: 43px;
-        left: 17px;
-      }
-
       .div-comment__comment {
         position: relative;
         display: flex;
         margin-top: 15px;
         padding-right: 5px;
 
-        .avatar {
-          width: 37px;
-          height: 37px;
+        .div-border {
+          position: absolute;
+          height: calc(100% - 31px);
+          width: 2px;
+          background-color: #efefef;
+          top: 43px;
+          left: 17px;
+        }
 
-          img {
-            width: 37px;
-            height: 37px;
+        &.has-form {
+          .div-border {
+            height: calc(100% - 15px);
+          }
+        }
+
+        .comment__avatar {
+          width: 35px;
+          height: 35px;
+
+          .avatar {
+            width: 35px;
+            height: 35px;
+
+            img {
+              width: 35px;
+              height: 35px;
+            }
           }
         }
 
@@ -883,6 +894,19 @@ $btn-background-color: #377dff;
         padding-left: 60px;
         position: relative;
 
+        .div-border {
+          display: none;
+        }
+
+        .div-border-reply-vertical {
+          position: absolute;
+          height: calc(100% + 30px);
+          width: 2px;
+          background-color: #efefef;
+          left: -43px;
+          top: -3px;
+        }
+
         .div-border-reply {
           position: absolute;
           height: 15px;
@@ -908,7 +932,6 @@ $btn-background-color: #377dff;
 
         .div-comment__comment-reply {
           position: relative;
-          cursor: pointer;
           margin-top: 7px;
           padding-left: 10px;
 
@@ -917,6 +940,11 @@ $btn-background-color: #377dff;
             font-size: 14px;
             color: #727e87;
           }
+        }
+
+        .comment__avatar {
+          width: 32px;
+          height: 32px;
         }
 
         .div-comment__comment,
@@ -955,14 +983,14 @@ $btn-background-color: #377dff;
       margin-top: 20px;
 
       .avatar {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
         margin-right: 20px;
         margin-top: 3px;
 
         img {
-          width: 40px;
-          height: 40px;
+          width: 35px;
+          height: 35px;
         }
       }
 
@@ -976,7 +1004,7 @@ $btn-background-color: #377dff;
         cursor: text;
         background: #f5f6f8;
         border-radius: 12px;
-        padding: 10px 20px;
+        padding: 7px 20px;
 
         .div-editor {
           width: calc(100% - 55px);

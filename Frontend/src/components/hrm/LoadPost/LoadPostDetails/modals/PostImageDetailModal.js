@@ -31,7 +31,8 @@ const PostImageDetailModal = (props) => {
     id_previous: "",
     id_next: "",
     comment_more_count_original: dataModal.comment_more_count,
-    edit_description: false
+    edit_description: false,
+    focusCommentForm: false
   })
   const imageRef = useRef(null)
   const refDivBackLeft = useRef(null)
@@ -68,6 +69,7 @@ const PostImageDetailModal = (props) => {
   }
 
   const setEditDescription = (value) => setState({ edit_description: value })
+  const setFocusCommentForm = (value) => setState({ focusCommentForm: value })
 
   // ** useEffect
   useEffect(() => {
@@ -358,6 +360,7 @@ const PostImageDetailModal = (props) => {
                     state.comment_more_count_original
                   }
                   setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                  setFocusCommentForm={setFocusCommentForm}
                 />
               </div>
               <div className="right-comment">
@@ -370,6 +373,8 @@ const PostImageDetailModal = (props) => {
                   }
                   setCommentMoreCountOriginal={setCommentMoreCountOriginal}
                   scrollToBottom={scrollToBottom}
+                  focusCommentForm={state.focusCommentForm}
+                  setFocusCommentForm={setFocusCommentForm}
                 />
               </div>
             </PerfectScrollbar>

@@ -67,53 +67,61 @@ const CommentReply = (props) => {
       )}
 
       {state.reply_count > 0 && (
-        <div
-          className="div-comment__comment-reply"
-          onClick={() => {
-            handleShowCommentReply()
-            if (
-              _.isFunction(setDataShowFormReply) &&
-              ((dataShowFormReply && !dataShowFormReply[dataComment._id]) ||
-                !dataShowFormReply)
-            ) {
-              const showFormReply =
-                dataShowFormReply && dataShowFormReply[dataComment._id]
-                  ? { [dataComment._id]: false }
-                  : { [dataComment._id]: true }
-              setDataShowFormReply(showFormReply)
-            }
-          }}>
+        <div className="div-comment__comment-reply">
+          {dataShowFormReply && dataShowFormReply[dataComment._id] && (
+            <div className="div-border-reply-vertical"></div>
+          )}
+
           <div className="div-border-reply"></div>
-          <svg
-            className="me-50"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none">
-            <path
-              d="M12.5 6.66663L16.6667 10.8333L12.5 15"
-              stroke="#727E87"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M3.33334 3.33337V8.1061C3.33334 9.61233 4.63918 10.8334 6.25001 10.8334H15"
-              stroke="#727E87"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span style={{ textTransform: "lowercase" }}>
-            {state.reply_count}{" "}
-            {useFormatMessage(
-              `modules.feed.post.text.${
-                state.reply_count === 1 ? "reply" : "replies"
-              }`
-            )}
-          </span>
+          <div className="d-flex">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                handleShowCommentReply()
+                if (
+                  _.isFunction(setDataShowFormReply) &&
+                  ((dataShowFormReply && !dataShowFormReply[dataComment._id]) ||
+                    !dataShowFormReply)
+                ) {
+                  const showFormReply =
+                    dataShowFormReply && dataShowFormReply[dataComment._id]
+                      ? { [dataComment._id]: false }
+                      : { [dataComment._id]: true }
+                  setDataShowFormReply(showFormReply)
+                }
+              }}>
+              <svg
+                className="me-50"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none">
+                <path
+                  d="M12.5 6.66663L16.6667 10.8333L12.5 15"
+                  stroke="#727E87"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M3.33334 3.33337V8.1061C3.33334 9.61233 4.63918 10.8334 6.25001 10.8334H15"
+                  stroke="#727E87"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span style={{ textTransform: "lowercase" }}>
+                {state.reply_count}{" "}
+                {useFormatMessage(
+                  `modules.feed.post.text.${
+                    state.reply_count === 1 ? "reply" : "replies"
+                  }`
+                )}
+              </span>
+            </div>
+          </div>
         </div>
       )}
 

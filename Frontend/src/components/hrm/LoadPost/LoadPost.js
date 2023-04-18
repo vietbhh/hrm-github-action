@@ -26,13 +26,15 @@ const LoadPost = (props) => {
     setIdMedia = null // function set idMedia
   } = props
   const [state, setState] = useMergedState({
-    comment_more_count_original: data.comment_more_count
+    comment_more_count_original: data.comment_more_count,
+    focusCommentForm: false
   })
 
   // ** function
   const setCommentMoreCountOriginal = (value = 0) => {
     setState({ comment_more_count_original: value })
   }
+  const setFocusCommentForm = (value) => setState({ focusCommentForm: value })
 
   // ** useEffect
 
@@ -123,6 +125,7 @@ const LoadPost = (props) => {
                 setData={setData}
                 comment_more_count_original={state.comment_more_count_original}
                 setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                setFocusCommentForm={setFocusCommentForm}
               />
             </div>
           </div>
@@ -132,6 +135,8 @@ const LoadPost = (props) => {
             setData={setData}
             comment_more_count_original={state.comment_more_count_original}
             setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+            focusCommentForm={state.focusCommentForm}
+            setFocusCommentForm={setFocusCommentForm}
           />
         </>
       )}

@@ -298,10 +298,20 @@ const Comment = (props) => {
 
   return (
     <Fragment>
-      <div className={classNames("div-comment__comment", {})}>
+      <div
+        className={classNames("div-comment__comment", {
+          "has-form": dataShowFormReply && dataShowFormReply[dataComment._id]
+        })}>
+        {((dataShowFormReply && dataShowFormReply[dataComment._id]) ||
+          !_.isEmpty(dataComment.sub_comment)) && (
+          <div className="div-border"></div>
+        )}
+        <div className="div-border-reply-vertical"></div>
         <div className="div-border-reply div-comment"></div>
 
-        <Link to={`/u/${dataComment?.created_by?.username}`}>
+        <Link
+          to={`/u/${dataComment?.created_by?.username}`}
+          className="comment__avatar">
           <Avatar className="img" src={dataComment?.created_by?.avatar} />
         </Link>
         <div className="comment__body">

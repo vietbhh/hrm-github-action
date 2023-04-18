@@ -1,6 +1,6 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect } from "react"
 import ReactionDetailModal from "../modals/ReactionDetailModal"
 import Comment from "./Comment"
 import CommentReply from "./CommentReply"
@@ -13,7 +13,9 @@ const PostComment = (props) => {
     setData,
     comment_more_count_original,
     setCommentMoreCountOriginal,
-    scrollToBottom
+    scrollToBottom,
+    focusCommentForm,
+    setFocusCommentForm
   } = props
   const [state, setState] = useMergedState({
     modal_reaction: false,
@@ -49,12 +51,6 @@ const PostComment = (props) => {
               return (
                 <Fragment key={index}>
                   <div className="post-comment__div-comment">
-                    {(!_.isEmpty(value.sub_comment) ||
-                      (state.dataShowFormReply &&
-                        state.dataShowFormReply[value._id])) && (
-                      <div className="div-border"></div>
-                    )}
-
                     <Comment
                       id_post={data._id}
                       id_comment={value._id}
@@ -127,6 +123,8 @@ const PostComment = (props) => {
           api={feedApi.postSubmitComment}
           dataEditComment={state.dataEditComment}
           setDataEditComment={setDataEditComment}
+          focusCommentForm={focusCommentForm}
+          setFocusCommentForm={setFocusCommentForm}
         />
       </div>
 
