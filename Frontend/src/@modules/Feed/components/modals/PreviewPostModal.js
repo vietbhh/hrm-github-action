@@ -39,7 +39,6 @@ const PreviewPostModal = (props) => {
             const newData = [...data].filter((item) => {
               return item._id !== dataPreview._id
             })
-            console.log("sdf")
             setData(newData)
             handleModal()
           })
