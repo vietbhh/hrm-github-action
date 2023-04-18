@@ -1,20 +1,27 @@
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { map } from "lodash-es"
 import { useEffect } from "react"
+import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { Card, CardBody, TabContent, TabPane } from "reactstrap"
+import { TabContent, TabPane } from "reactstrap"
 import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
-import TabMember from "../components/detail/TabMember/TabMember"
 import TabMedia from "../components/detail/TabMedia/TabMedia"
+import TabMember from "../components/detail/TabMember/TabMember"
+import TabPinned from "../components/detail/TabPinned/TabPinned"
+import TabPrivate from "../components/detail/TabPrivate"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 const DetailWorkspace = () => {
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     tabActive: 1,
-    detailWorkspace: {}
+    detailWorkspace: {},
+    workspacePublic: false
   })
   const params = useParams()
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const tabToggle = (tab) => {
     if (state.tabActive !== tab) {
       setState({
@@ -24,7 +31,6 @@ const DetailWorkspace = () => {
   }
   const offsetTop = 90
   const offsetBottom = 30
-
   const handleScroll = (e) => {
     if (window.scrollY < state.prevScrollY) {
       scrollUpwards()
@@ -35,17 +41,22 @@ const DetailWorkspace = () => {
   }
 
   const scrollUpwards = () => {
-    document.getElementById("div-sticky").style.top = offsetTop + "px"
+    const sticky = document.getElementById("div-sticky")
+    if (sticky) {
+      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    }
   }
 
   const scrollDownwards = () => {
     const sticky = document.getElementById("div-sticky")
-    if (sticky.offsetHeight > window.innerHeight) {
-      const offset =
-        (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
-      document.getElementById("div-sticky").style.top = offset + "px"
-    } else {
-      document.getElementById("div-sticky").style.top = offsetTop + "px"
+    if (sticky) {
+      if (sticky.offsetHeight > window.innerHeight) {
+        const offset =
+          (sticky.offsetHeight - window.innerHeight + offsetBottom) * -1
+        document.getElementById("div-sticky").style.top = offset + "px"
+      } else {
+        document.getElementById("div-sticky").style.top = offsetTop + "px"
+      }
     }
   }
   const loadData = () => {
@@ -53,6 +64,29 @@ const DetailWorkspace = () => {
       setState({ detailWorkspace: res.data })
     })
   }
+
+  const handleUnPinPost = (idPost) => {
+    const dataPinned = [...state.detailWorkspace.pinPosts]
+    const index = dataPinned.findIndex((p) => p.post === idPost)
+    dataPinned.splice(index, 1)
+    let numStt = 1
+    const dataPinnedUpdate = []
+    map(dataPinned, (item, key) => {
+      dataPinnedUpdate.push({ post: item.post, stt: numStt })
+      numStt += 1
+    })
+    // detailWorkspace.pinPosts = dataPinnedUpdate
+    const dataUpdate = {
+      pinPosts: JSON.stringify(dataPinnedUpdate)
+    }
+    workspaceApi.update(params.id, dataUpdate).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
+      loadData()
+    })
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -61,6 +95,31 @@ const DetailWorkspace = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
+  useEffect(() => {
+    const arrAdmin = state.detailWorkspace?.administrators
+      ? state.detailWorkspace?.administrators
+      : []
+    const arrMember = state.detailWorkspace?.members
+      ? state.detailWorkspace?.members
+      : []
+
+    const isAdmin = arrAdmin.includes(userId)
+    const isMember = arrMember.includes(userId)
+    let isJoined = false
+    if (isAdmin || isMember) {
+      isJoined = true
+    }
+
+    let workspacePublic = false
+    if (
+      state.detailWorkspace?.type &&
+      state.detailWorkspace?.type === "public"
+    ) {
+      workspacePublic = true
+    }
+
+    setState({ isJoined: isJoined, workspacePublic: workspacePublic })
+  }, [state.detailWorkspace])
   return (
     <div className="workspace">
       <WorkspaceHeader
@@ -72,32 +131,58 @@ const DetailWorkspace = () => {
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
           <TabPane tabId={1}>
-            <TabFeed detailWorkspace={state.detailWorkspace} />
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabFeed
+                detailWorkspace={state.detailWorkspace}
+                handleUnPinPost={handleUnPinPost}
+              />
+            )}
           </TabPane>
           <TabPane tabId={2}>
-            <div className="div-content">
-              <div className="div-left">
-                <Card>
-                  <CardBody>feed 2</CardBody>
-                </Card>
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
               </div>
-              <div className="div-right">
-                <div id="div-sticky">
-                  <Card>
-                    <CardBody>sidebar 2</CardBody>
-                  </Card>
-                </div>
-              </div>
-            </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabPinned
+                detailWorkspace={state.detailWorkspace}
+                handleUnPinPost={handleUnPinPost}
+              />
+            )}
           </TabPane>
           <TabPane tabId={3}>
-            <TabIntroduction />
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && <TabIntroduction />}
           </TabPane>
           <TabPane tabId={4}>
-            <TabMember tabActive={state.tabActive} tabId={4} />
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabMember tabActive={state.tabActive} tabId={4} />
+            )}
           </TabPane>
           <TabPane tabId={5}>
-            <TabMedia tabActive={state.tabActive} tabId={5} />
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabMedia tabActive={state.tabActive} tabId={5} />
+            )}
           </TabPane>
         </TabContent>
       </div>

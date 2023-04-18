@@ -116,10 +116,14 @@ const PostHeader = (props) => {
     },
     ..._rest
   }
-
   const items = [
     ..._.map(
-      _.filter(actions, (item) => item !== false && item.condition),
+      _.filter(actions, (item) => {
+        if (_.isFunction(item.condition)) {
+          return item.condition(data)
+        }
+        return item !== false && item.condition
+      }),
       (item, index) => {
         return {
           key: index,

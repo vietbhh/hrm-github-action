@@ -3,6 +3,7 @@ import { feedApi } from "@modules/Feed/common/api"
 import React, { useEffect } from "react"
 import Comment from "./Comment"
 import PostCommentForm from "./PostCommentForm"
+import classNames from "classnames"
 
 const CommentReply = (props) => {
   const {
@@ -39,7 +40,7 @@ const CommentReply = (props) => {
   }, [comment_more_count])
 
   return (
-    <div className="div-comment__div-reply">
+    <div className={classNames("div-comment__div-reply", {})}>
       {_.map(
         _.filter(dataComment.sub_comment, (item, key) => {
           return key >= state.reply_count
@@ -68,7 +69,21 @@ const CommentReply = (props) => {
       {state.reply_count > 0 && (
         <div
           className="div-comment__comment-reply"
-          onClick={() => handleShowCommentReply()}>
+          onClick={() => {
+            handleShowCommentReply()
+            if (
+              _.isFunction(setDataShowFormReply) &&
+              ((dataShowFormReply && !dataShowFormReply[dataComment._id]) ||
+                !dataShowFormReply)
+            ) {
+              const showFormReply =
+                dataShowFormReply && dataShowFormReply[dataComment._id]
+                  ? { [dataComment._id]: false }
+                  : { [dataComment._id]: true }
+              setDataShowFormReply(showFormReply)
+            }
+          }}>
+          <div className="div-border-reply"></div>
           <svg
             className="me-50"
             xmlns="http://www.w3.org/2000/svg"

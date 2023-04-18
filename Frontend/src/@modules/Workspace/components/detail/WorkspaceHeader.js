@@ -1,29 +1,38 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
-import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
+import { Badge, Dropdown } from "antd"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
-import { Dropdown, Space } from "antd"
+import SelectAdminModal from "../modals/SelectAdminModal"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
-import notification from "@apps/utility/notification"
-import Photo from "@apps/modules/download/pages/Photo"
-import { useEffect } from "react"
-import { Link } from "react-router-dom"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
 import CoverImage from "./CoverImage"
 
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
+const arrSplice = (arr = [], IDrm) => {
+  const index = arr.findIndex((v) => v === IDrm)
+  arr.splice(index, 1)
+  return arr
+}
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
+
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const [state, setState] = useMergedState({
     coverImage: "",
     inviteModal: false,
     setupNotifiModal: false,
     loading: false,
-    defaultWorkspaceCover: ""
+    defaultWorkspaceCover: "",
+    selectAdmin: false,
+    joined: false,
+    waitJoined: false
   })
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
@@ -35,7 +44,14 @@ const WorkspaceHeader = (props) => {
         dataUpdate.map((x) => x["id"] * 1)
       )
 
-      infoWorkspace.members = JSON.stringify(arrID)
+      if (data?.membership_approval === "approver") {
+        infoWorkspace.request_joins = JSON.stringify(
+          dataUpdate.map((x) => x["id"] * 1)
+        )
+      } else if (data?.membership_approval === "auto") {
+        infoWorkspace.members = JSON.stringify(arrID)
+      }
+
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({
@@ -43,7 +59,7 @@ const WorkspaceHeader = (props) => {
           })
           onClickInvite()
           setState({ loading: false })
-          // loadData()
+          loadData()
         }
       })
     } else {
@@ -72,47 +88,150 @@ const WorkspaceHeader = (props) => {
                   })
                   onClickInvite()
                   setState({ loading: false })
-                  //loadData()
+                  loadData()
                 }
               })
           }
         })
-
-      return
-      workspaceApi
-        .addMemberByDepartment({ departments: arrIdDepartment })
-        .then((res) => {
-          console.log("typetypetypetype", type)
-        })
     }
   }
+
+  const handleLeaveWorkspace = () => {
+    const infoWorkspace = { ...data }
+    const adminArr = [...infoWorkspace.administrators]
+    // check admin
+    const indexOfAdmin = adminArr.indexOf(userId)
+    if (indexOfAdmin >= 0 && adminArr.length <= 1) {
+      setState({ selectAdmin: true })
+      return
+    }
+
+    adminArr.splice(indexOfAdmin, 1)
+    infoWorkspace.administrators = JSON.stringify(adminArr)
+
+    const memberArr = [...infoWorkspace.members]
+    const indexOf = memberArr.indexOf(userId)
+    memberArr.splice(indexOf, 1)
+    infoWorkspace.members = JSON.stringify(memberArr)
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        loadData()
+        setState({ loading: false })
+      }
+    })
+  }
+
   const handleSetupNotification = () => {
     setState({ setupNotifiModal: !state.setupNotifiModal })
   }
+
+  const handleSelectAD = () => {
+    setState({ selectAdmin: !state.selectAdmin })
+  }
+  const handleDoneAddAD = (dataUpdate) => {
+    const infoWorkspace = { ...data }
+    const arrID = dataUpdate.map((x) => parseInt(x["id"]))
+    infoWorkspace.administrators = arrID
+    // arrSplice members
+    infoWorkspace.members = arrSplice(infoWorkspace.members, userId)
+
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        //onClickInvite()
+        setState({ loading: false })
+        // loadData()
+      }
+    })
+  }
+  const handleJoin = () => {
+    const infoWorkspace = { ...data }
+    if (data?.membership_approval === "auto") {
+      const members = [...infoWorkspace.members]
+      members.push(userId)
+      infoWorkspace.members = JSON.stringify(unique(members))
+    } else {
+      const request_joins = [...infoWorkspace.request_joins]
+      request_joins.push(userId)
+      infoWorkspace.request_joins = JSON.stringify(unique(request_joins))
+    }
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        setState({ loading: false })
+        loadData()
+      }
+    })
+  }
+
+  const handleCancelJoin = () => {
+    const infoWorkspace = { ...data }
+    const request_joinsArr = [...infoWorkspace.request_joins]
+    const indexOf = request_joinsArr.indexOf(userId)
+    request_joinsArr.splice(indexOf, 1)
+    infoWorkspace.request_joins = JSON.stringify(request_joinsArr)
+    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+      if (res.statusText) {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        setState({ loading: false, waitJoined: false })
+      }
+    })
+  }
+
   const items = [
     {
       label: (
         <Link to={`/workspace/${data._id}/pending-posts`}>
-          <i className="fa-regular fa-list-ul me-50"></i>{" "}
-          {useFormatMessage("modules.workspace.display.waiting_for_approval")}
+          <div className="d-flex align-items-center">
+            <i className="fa-regular fa-list-ul me-50"></i>
+            <span>
+              {useFormatMessage(
+                "modules.workspace.display.waiting_for_approval"
+              )}
+            </span>
+          </div>
         </Link>
       ),
-      key: "0"
+      key: "0",
+      disabled: data?.administrators
+        ? !data?.administrators.includes(userId)
+        : true
     },
     {
       label: (
         <Link to={`/workspace/${data._id}/request-join`}>
-          <i className="fa-duotone fa-user me-50"></i>{" "}
-          {useFormatMessage("modules.workspace.display.request_to_join")}
+          <div className="d-flex align-items-center">
+            <i className="fa-duotone fa-user me-50"></i>
+            <span>
+              {useFormatMessage("modules.workspace.display.request_to_join")}
+            </span>
+            <div className="ms-auto">
+              <Badge count={data?.request_joins?.length}></Badge>
+            </div>
+          </div>
         </Link>
       ),
-      key: "3"
+      key: "3",
+      disabled: data?.administrators
+        ? !data?.administrators.includes(userId)
+        : true
     },
     {
       label: (
-        <div>
-          <i className="fa-solid fa-bell me-50"></i>{" "}
-          {useFormatMessage("modules.workspace.display.setup_notification")}
+        <div className="d-flex align-items-center">
+          <i className="fa-solid fa-bell me-50"></i>
+          <span>
+            {useFormatMessage("modules.workspace.display.setup_notification")}
+          </span>
         </div>
       ),
       key: "1",
@@ -121,21 +240,53 @@ const WorkspaceHeader = (props) => {
     {
       label: (
         <Link to={`/workspace/${data._id}/setting`}>
-          <i className="fa-regular fa-gear  me-50"></i>{" "}
-          {useFormatMessage("modules.workspace.display.workspace_settings")}
+          <div className="d-flex align-items-center">
+            <i className="fa-regular fa-gear  me-50"></i>
+            <span>
+              {useFormatMessage("modules.workspace.display.workspace_settings")}
+            </span>
+          </div>
         </Link>
       ),
-      key: "2"
+      key: "2",
+      disabled: data?.administrators
+        ? !data?.administrators.includes(userId)
+        : true
     }
   ]
 
   useEffect(() => {
+    const arrAdmin = data?.administrators ? data?.administrators : []
+    const arrMember = data?.members ? data?.members : []
+    const arrRequest_joins = data?.request_joins ? data?.request_joins : []
+
+    const isAdmin = arrAdmin.includes(userId)
+    const isMember = arrMember.includes(userId)
+    let isJoined = false
+    if (isAdmin || isMember) {
+      isJoined = true
+    }
+
+    let waitJoined = false
+    if (arrRequest_joins.includes(userId)) {
+      waitJoined = true
+    }
     if (data.cover_image) {
-      setState({ coverImage: data.cover_image, defaultWorkspaceCover: "" })
+      setState({
+        coverImage: data.cover_image,
+        defaultWorkspaceCover: "",
+        joined: isJoined,
+        waitJoined: waitJoined
+      })
     } else {
-      setState({ defaultWorkspaceCover: defaultWorkspaceCover })
+      setState({
+        defaultWorkspaceCover: defaultWorkspaceCover,
+        joined: isJoined,
+        waitJoined: waitJoined
+      })
     }
   }, [data])
+
   return (
     <Card className="pb-0">
       <CoverImage
@@ -143,6 +294,7 @@ const WorkspaceHeader = (props) => {
         dataSave={{ ...data, id: data?._id }}
         isEditable={data.is_admin_group}
         saveCoverImageApi={workspaceApi.saveCoverImage}
+        loadData={loadData}
       />
 
       <CardBody className="pb-0">
@@ -150,15 +302,44 @@ const WorkspaceHeader = (props) => {
           <div className="workspaceInformation">
             <h2 className="workspaceName">{data?.name}</h2>
             <p>
-              <i className="fa-regular fa-earth-asia"></i> Public ·{" "}
-              {data?.members && data?.members.length} members ·{" "}
-              {data?.pinPosts && data?.pinPosts.length} posts
+              {data?.type === "private" && (
+                <i class="fa-solid fa-lock-keyhole me-50"></i>
+              )}
+              {data?.type !== "private" && (
+                <i className="fa-regular fa-earth-asia me-50"></i>
+              )}
+              {data?.type} · {data?.members && data?.members.length}{" "}
+              {useFormatMessage("modules.workspace.text.members")} ·{" "}
+              {data?.pinPosts && data?.pinPosts.length}{" "}
+              {useFormatMessage("modules.workspace.text.posts")}
             </p>
           </div>
           <div className="workspaceAction">
-            <Button className="btn btn-success" onClick={() => onClickInvite()}>
-              <i className="fa-regular fa-plus me-50"></i>Invite
-            </Button>
+            {state.joined && (
+              <Button
+                className="btn btn-success"
+                onClick={() => onClickInvite()}>
+                <i className="fa-regular fa-plus me-50"></i>
+                {useFormatMessage("modules.workspace.buttons.invite")}
+              </Button>
+            )}
+
+            {!state.joined && !state.waitJoined && (
+              <>
+                <Button
+                  className="btn btn-success"
+                  onClick={() => handleJoin()}>
+                  {useFormatMessage("modules.workspace.buttons.join_workspace")}
+                </Button>
+              </>
+            )}
+            {!state.joined && state.waitJoined && (
+              <Button
+                className="btn btn-secondary"
+                onClick={() => handleCancelJoin()}>
+                {useFormatMessage("button.cancel")}
+              </Button>
+            )}
           </div>
         </div>
         <hr
@@ -212,18 +393,48 @@ const WorkspaceHeader = (props) => {
               {useFormatMessage("modules.workspace.display.media")}
             </NavLink>
           </NavItem>
-          <div className="ms-auto">
-            <Dropdown
-              menu={{
-                items
-              }}
-              placement="bottomRight"
-              trigger={["click"]}>
-              <Button color="flat-secondary">
-                <i className="fa-light fa-ellipsis"></i>
-              </Button>
-            </Dropdown>
-          </div>
+          {state.joined && (
+            <div className="ms-auto">
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      label: (
+                        <>
+                          <i className="fa-light fa-right-from-bracket me-50"></i>
+                          {useFormatMessage(
+                            "modules.workspace.display.leave_workspace"
+                          )}
+                        </>
+                      ),
+                      key: "0",
+                      onClick: () => handleLeaveWorkspace()
+                    }
+                  ]
+                }}
+                placement="bottomRight"
+                trigger={["click"]}>
+                <Button className="me-50 btn-sm" color="secondary" outline>
+                  {useFormatMessage("modules.workspace.text.joined")}{" "}
+                  <i class="fa-regular fa-chevron-down"></i>
+                </Button>
+              </Dropdown>
+
+              <Dropdown
+                menu={{
+                  items
+                }}
+                placement="bottomRight"
+                trigger={["click"]}>
+                <Button
+                  color="flat-secondary"
+                  className="btn-sm"
+                  style={{ backgroundColor: "rgba(130, 134, 139, 0.12)" }}>
+                  <i className="fa-light fa-ellipsis"></i>
+                </Button>
+              </Dropdown>
+            </div>
+          )}
         </Nav>
         <InviteWorkspaceModal
           modal={state.inviteModal}
@@ -235,6 +446,12 @@ const WorkspaceHeader = (props) => {
           modal={state.setupNotifiModal}
           dataWorkspace={data}
           handleModal={handleSetupNotification}
+        />
+        <SelectAdminModal
+          modal={state.selectAdmin}
+          members={data.members}
+          handleDone={handleDoneAddAD}
+          handleModal={handleSelectAD}
         />
       </CardBody>
     </Card>

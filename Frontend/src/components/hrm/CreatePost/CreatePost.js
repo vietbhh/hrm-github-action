@@ -16,7 +16,6 @@ const CreatePost = (props) => {
     dataMention: [],
     optionCreate: ""
   })
-
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar

@@ -514,7 +514,8 @@
     "started": "Started",
     "remove": "Remove",
     "reject": "Reject",
-    "duplicate": "Duplicate"
+    "duplicate": "Duplicate",
+    "done" : "Done"
   },
   "errors": {
     "common": {
@@ -4561,6 +4562,7 @@
         "workspace": "Workspace",
         "workspace_you_have_joined": "Workspace you have joined",
         "workspace_that_you_managed": "Workspace that you managed",
+        "remove_cover_image" : "Do you want to remove the photo cover ?",
         "manage_workspace": "Manage Workspaces",
         "workspace_overview": "Workspace overview",
         "workspaces_in_the_organization": "{number} workspaces in the organization",
@@ -4588,6 +4590,8 @@
         "view_post": "View post",
         "approve_all_posts": "Approve all",
         "reject_all_posts": "Reject all",
+        "invite" : "Invite",
+        "join_workspace": "Join workspace",
         "upload": "Upload",
         "reactivate_workspace": "Reactivate workspace",
         "disable_workspace": "Disable workspace",
@@ -4619,10 +4623,15 @@
         "setup_notification": "Setup notification",
         "review_post": "Review post",
         "add_member_to_ws": "Add member to workspace",
+        "workspace_pinned_post" : "Workspace pinned post",
+        "leave_workspace" : "Leave workspace",
         "uploaded_document": "Uploaded document",
         "uploaded_photo": "Uploaded photo",
         "uploaded_video": "Uploaded video",
         "group_link_posted": "Group link posted",
+        "change_cover_img" : "Change cover image",
+        "remove_cover_photo" : "Remove cover photo",
+        "and_other_request"  : "and {num_others} others sent a request to join workspace",
         "workspace_information": "Workspace information",
         "workspace_activities": "Workspace activities",
         "all_member_workspaces": "All-members workspaces",
@@ -4705,6 +4714,27 @@
         "list_job_title": "List job title",
         "department": "Department",
         "job_title": "Job title",
+        "unpin_post": "Unpin post",
+        "move_to_top" : "Move to top",
+        "pin_post" :"Pin post",
+        "posts" : "post",
+        "public" : "Public",
+        "joined" : "Joined",
+        "excel" : "Excel"
+      },
+      "app_options": {
+        "workspace_type": {
+          "public": "Anyone can see post and activites in workspace",
+          "private": "Only member on workspace can see posts and activites"
+        },
+        "workspace_mode": {
+          "visible": "Anyone can see your workspace and request to join",
+          "hidden": "Only administrator can add member and other unable to see workspace"
+        },
+        "membership_approval" : {
+          "approver" : "Only administrators can approve joining group request",
+          "auto" : "Automatically approve all joining group request"
+        },
         "format_cannot_be_previewed": "The format cannot be previewed!",
         "search_workspace": "Search workspace...",
         "members_capitalize": "Members",
@@ -4758,7 +4788,9 @@
     "network": {
       "notification": {
         "tag_comment": "tagged you on a comment",
-        "tag_post": "tagged you on a post"
+        "tag_post": "tagged you on a post",
+        "request_workspace" : "sent a request to join the workspace",
+        "need_approval" : "needs approval"
       }
     },
     "timeline": {

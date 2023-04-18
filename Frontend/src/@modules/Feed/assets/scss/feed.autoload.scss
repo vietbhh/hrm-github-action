@@ -749,6 +749,15 @@ $btn-background-color: #377dff;
     .post-comment__div-comment {
       position: relative;
 
+      .div-border {
+        position: absolute;
+        height: calc(100% - 68px);
+        width: 2px;
+        background-color: #efefef;
+        top: 43px;
+        left: 17px;
+      }
+
       .div-comment__comment {
         position: relative;
         display: flex;
@@ -872,8 +881,33 @@ $btn-background-color: #377dff;
 
       .div-comment__div-reply {
         padding-left: 60px;
+        position: relative;
+
+        .div-border-reply {
+          position: absolute;
+          height: 15px;
+          width: 35px;
+          border-bottom-left-radius: 8px;
+          border-bottom-width: 2px;
+          border-bottom-style: solid;
+          border-bottom-color: #efefef;
+          border-left-width: 2px;
+          border-left-style: solid;
+          border-left-color: #efefef;
+          left: -43px;
+          top: -5px;
+
+          &.div-form {
+            top: 7px;
+          }
+
+          &.div-comment {
+            top: 3px;
+          }
+        }
 
         .div-comment__comment-reply {
+          position: relative;
           cursor: pointer;
           margin-top: 7px;
           padding-left: 10px;
@@ -884,17 +918,34 @@ $btn-background-color: #377dff;
             color: #727e87;
           }
         }
-      }
 
-      .div-comment__comment_more {
-        margin-top: 20px;
+        .div-comment__comment,
+        .post-comment__div-form {
+          .avatar {
+            width: 32px;
+            height: 32px;
 
-        > span {
-          cursor: pointer;
-          margin-left: 55px;
-          color: $btn-background-color;
-          font-weight: 500;
+            img {
+              width: 32px;
+              height: 32px;
+            }
+          }
         }
+
+        .post-comment__div-form .post-comment-div-editor {
+          padding: 5px 20px;
+        }
+      }
+    }
+
+    .div-comment__comment_more {
+      margin-top: 20px;
+
+      > span {
+        cursor: pointer;
+        margin-left: 55px;
+        color: $btn-background-color;
+        font-weight: 500;
       }
     }
 
@@ -1208,6 +1259,20 @@ $btn-background-color: #377dff;
   .preview-link-component {
     border: 1px solid #f1f1f5;
     height: 120px;
+  }
+
+  @media (min-width: 1366px) and (max-width: 1445px) {
+    .div-create-post .div-option .ul-option li {
+      padding: 0 12px;
+    }
+
+    .load-feed
+      .load-post
+      .post-footer
+      .post-footer-button
+      .div-button-reaction {
+      gap: 30px;
+    }
   }
 }
 

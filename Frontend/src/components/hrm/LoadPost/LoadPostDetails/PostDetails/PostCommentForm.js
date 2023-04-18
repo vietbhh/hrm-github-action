@@ -240,6 +240,7 @@ const PostCommentForm = (props) => {
   return (
     <Fragment>
       <div className="post-comment__div-form">
+        <div className="div-border-reply div-form"></div>
         <Avatar className="img" src={avatar} />
         <div className="post-comment-div-editor">
           <div className="d-flex">

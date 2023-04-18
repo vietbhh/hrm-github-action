@@ -13,7 +13,9 @@ import {
   approvePost,
   loadFeed,
   addMemberByDepartment,
-  loadGCSObjectLink
+  loadPinned,
+  loadGCSObjectLink,
+  removeCoverImage
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -21,6 +23,7 @@ router.get("/list", getListWorkspace)
 router.get("/overview", getWorkspaceOverview)
 router.get("/pending-posts", getPostWorkspace)
 router.get("/load-feed", loadFeed)
+router.get("/load-pinned", loadPinned)
 router.get("/load-gcs-object-link", loadGCSObjectLink)
 router.get("/:workspaceId", getWorkspace)
 router.post("/save", saveWorkspace)
@@ -31,4 +34,6 @@ router.get("/load-data-media/:id", loadDataMedia)
 router.post("/update/:id", updateWorkspace)
 router.post("/approvePost", approvePost)
 router.post("/add-member", addMemberByDepartment)
+router.post("/remove-cover-image/:id", removeCoverImage)
+
 export default router

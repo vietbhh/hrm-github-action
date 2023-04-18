@@ -743,7 +743,7 @@ const submitComment = async (req, res, next) => {
   const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
   const dataEditComment = body?.dataEditComment || {}
-
+  console.log("aaaaaaaaaa", body)
   try {
     const result = await handleUpImageComment(image, id_post)
     if (isEmpty(dataEditComment)) {
@@ -781,6 +781,7 @@ const submitComment = async (req, res, next) => {
 
     // send notification
     if (isEmpty(dataEditComment)) {
+      console.log("runn")
       let link_notification = `/posts/${id_post}`
       if (dataFeed.ref) {
         link_notification = `/posts/${dataFeed.ref}/${id_post}`
