@@ -17,7 +17,8 @@ const ButtonReaction = (props) => {
     data,
     setData,
     comment_more_count_original,
-    setCommentMoreCountOriginal
+    setCommentMoreCountOriginal,
+    setFocusCommentForm
   } = props
   const [state, setState] = useMergedState({
     checkLike: ""
@@ -184,7 +185,9 @@ const ButtonReaction = (props) => {
           buttonDropdown={renderButtonDropdown()}
         />
 
-        <button className="btn-comment">
+        <button
+          className="btn-comment"
+          onClick={() => setFocusCommentForm(true)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23"

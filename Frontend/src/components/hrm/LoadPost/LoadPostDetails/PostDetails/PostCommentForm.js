@@ -33,7 +33,9 @@ const PostCommentForm = (props) => {
     id_comment_parent,
     reply_count,
     dataEditComment = {},
-    setDataEditComment
+    setDataEditComment,
+    focusCommentForm = false,
+    setFocusCommentForm
   } = props
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
@@ -236,6 +238,13 @@ const PostCommentForm = (props) => {
     },
     [state.mentions]
   )
+
+  useEffect(() => {
+    if (focusCommentForm && _.isFunction(setFocusCommentForm)) {
+      handleInsertEditorState("")
+      setFocusCommentForm(false)
+    }
+  }, [focusCommentForm])
 
   return (
     <Fragment>
