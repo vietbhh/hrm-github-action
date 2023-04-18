@@ -38,7 +38,7 @@
                     border-top-left-radius: 12px !important;
 
                     .rs-table-cell {
-                        background-color: #F5F7F9 !important;
+                        background-color: #f5f7f9 !important;
                     }
                 }
             }
@@ -94,7 +94,22 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    border: 1px solid rgba(0,0,0,0.1);
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+
+                    p {
+                        margin-bottom: 0 !important;
+                    }
+                }
+
+                &.post-media {
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .post-body-media {
+                        display: none;
+                    }
 
                     p {
                         margin-bottom: 0 !important;
@@ -153,8 +168,8 @@
             margin-left: -40px;
             margin-top: 10px;
             font-size: 13px;
-            
-            .font-weight-bold  {
+
+            .font-weight-bold {
                 font-weight: 500 !important;
                 cursor: pointer;
             }

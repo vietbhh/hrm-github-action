@@ -95,7 +95,8 @@ const LoadPost = (props) => {
       <div
         className={classNames("post-body", {
           "post-body__background-image": data.type === "background_image",
-          "post-post": data.type === "post"
+          "post-post": data.source === null && _.isEmpty(data.medias),
+          "post-media": (data.source !== null || !_.isEmpty(data.medias))
         })}
         style={renderStyleBackgroundImage()}>
         <div id={`post-body-content-${data._id}`} className="post-body-content">
