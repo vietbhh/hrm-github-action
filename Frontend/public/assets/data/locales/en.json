@@ -4493,6 +4493,66 @@
           "sad": "Sad",
           "wow": "Wow"
         }
+      },
+      "manage_post": {
+        "title": {
+          "index": "Manage Posts",
+          "featured_post": "Featured posts"
+        },
+        "text": {
+          "description": "Track activities and view reports about posts in your organization.",
+          "time_update": "Data last updated on: {date}",
+          "warning_delete_post": {
+            "title": "Delete post",
+            "description": "The post will be unrecoverable and will no longer appear on the member's Profile, Feed, or Workspace. Are you sure you want to delete this post?"
+          }
+        },
+        "display": {
+          "table_featured_post": {
+            "author": "Author",
+            "post": "Post",
+            "views": "Views",
+            "comments": "Comments",
+            "reactions": "Reactions",
+            "date_crated": "Date created"
+          }
+        },
+        "buttons": {
+          "details": "Details",
+          "delete_post": "Delete post",
+          "preview_post": "Preview post"
+        },
+        "options": {
+          "type": {
+            "all_posts": "All posts",
+            "personal_posts": "Personal posts",
+            "workspace_posts": "Workspace posts"
+          }
+        }
+      }
+    },
+    "posts": {
+      "post_details": {
+        "title": {
+          "post_details": "Post details",
+          "interactive_members": "Interactive members"
+        },
+        "text": {
+          "page_descriptions": "Reports on the quality of engagement and members who are interested in the post.",
+          "data_last_updated_on": "Data last updated on: {date}",
+          "members": "Members",
+          "email": "Email",
+          "phone_number": "Phone number"
+        },
+        "buttons": {
+          "viewers": "Viewers",
+          "reacters": "Reacters",
+          "commenters": "Commenters",
+          "sharers": "Sharers",
+          "go_to_post": "Go to post",
+          "back_to_management": "Back to mangement"
+        }
+
       }
     },
     "workspace": {

@@ -7,7 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=development nodemon index.js",
-    "start_supervisor": "NODE_ENV=development supervisor index.js",
     "prod": "NODE_ENV=production nodemon index.js"
   },
   "repository": "https://github.com/FridayOs/core",
@@ -38,6 +37,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash-es": "^4.17.21",
     "mime-types": "^2.1.35",
+    "moment": "^2.29.4",
     "mongoose": "^6.7.1",
     "mongoose-paginate-v2": "^1.7.1",
     "mysql": "^2.18.1",

@@ -74,8 +74,8 @@ const PostDetail = (props) => {
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 
-  return (
-    <Fragment>
+  const renderContent = () => {
+    return (
       <div className="div-content div-posts">
         <div className="div-left feed">
           <div className="load-feed">
@@ -123,8 +123,10 @@ const PostDetail = (props) => {
           </div>
         </div>
       </div>
-    </Fragment>
-  )
+    )
+  }
+
+  return <Fragment>{renderContent()}</Fragment>
 }
 
 export default PostDetail
