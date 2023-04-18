@@ -20,6 +20,7 @@ const LoadPost = (props) => {
     setData, // function set lại data khi react, comment
     customAction = {}, // custom dropdown post header
     offPostHeaderAction = false, // hide Post header action
+    renderAppendHeaderComponent,
     // only page post details
     idMedia = "",
     setIdMedia = null // function set idMedia
@@ -89,10 +90,12 @@ const LoadPost = (props) => {
         customAction={customAction}
         setData={setData}
         offPostHeaderAction={offPostHeaderAction}
+        renderAppendHeaderComponent={renderAppendHeaderComponent}
       />
       <div
         className={classNames("post-body", {
-          "post-body__background-image": data.type === "background_image"
+          "post-body__background-image": data.type === "background_image",
+          "post-post": data.type === "post"
         })}
         style={renderStyleBackgroundImage()}>
         <div id={`post-body-content-${data._id}`} className="post-body-content">

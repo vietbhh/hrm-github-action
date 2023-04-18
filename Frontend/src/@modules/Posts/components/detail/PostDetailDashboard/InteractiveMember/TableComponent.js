@@ -33,6 +33,34 @@ const TableComponent = (props) => {
   }
 
   // ** render
+  const renderPagination = () => {
+    if (totalData > 0) {
+      return (
+        <div className="mt-1">
+          <Pagination
+            prev
+            next
+            first
+            last
+            ellipsis
+            boundaryLinks
+            maxButtons={5}
+            size="xs"
+            layout={["total", "-", "limit", "|", "pager", "skip"]}
+            total={totalData}
+            limitOptions={[10, 20, 40]}
+            limit={filter.limit}
+            activePage={filter.page + 1}
+            onChangePage={setPage}
+            onChangeLimit={handleChangeLimit}
+          />
+        </div>
+      )
+    }
+
+    return ""
+  }
+
   const MemberCell = ({ rowData, dataKey, ...props }) => {
     return (
       <Cell {...props}>
@@ -79,25 +107,7 @@ const TableComponent = (props) => {
           <Cell dataKey="phone" />
         </Column>
       </Table>
-      <div className="mt-1">
-        <Pagination
-          prev
-          next
-          first
-          last
-          ellipsis
-          boundaryLinks
-          maxButtons={5}
-          size="xs"
-          layout={["total", "-", "limit", "|", "pager", "skip"]}
-          total={totalData}
-          limitOptions={[10, 20, 40]}
-          limit={filter.limit}
-          activePage={filter.page + 1}
-          onChangePage={setPage}
-          onChangeLimit={handleChangeLimit}
-        />
-      </div>
+      <Fragment>{renderPagination()}</Fragment>
     </Fragment>
   )
 }

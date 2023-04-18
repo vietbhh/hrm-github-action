@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 // ** Styles
 // ** Components
 import InteractiveMember from "../components/detail/PostDetailDashboard/InteractiveMember/InteractiveMember"
+import PostInfo from "../components/detail/PostDetailDashboard/PostInfo/PostInfo"
 
 const PostDetailDashboard = () => {
   const { idPost } = useParams()
@@ -22,6 +23,7 @@ const PostDetailDashboard = () => {
         </p>
       </div>
       <div className="page-body">
+        <PostInfo idPost={idPost} />
         <InteractiveMember idPost={idPost} />
       </div>
     </div>

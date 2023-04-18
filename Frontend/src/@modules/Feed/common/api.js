@@ -45,7 +45,7 @@ export const feedApi = {
   },
 
   async getGetFeed(id) {
-    return await axiosNodeApi.get("/feed/get-feed/" + id + "?" + stringFilters)
+    return await axiosNodeApi.get("/feed/get-feed/" + id)
   },
 
   async getPostDetailDashboard(id, params) {

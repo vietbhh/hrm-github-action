@@ -1,11 +1,11 @@
 // ** React Imports
+import { useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "../common/api"
 import moment from "moment"
 // ** Styles
 // ** Components
 import FeaturedPost from "../components/FeedManagement/FeaturedPost/FeaturedPost"
-import { useEffect } from "react"
 
 const FeedManagement = (props) => {
   const [state, setState] = useMergedState({

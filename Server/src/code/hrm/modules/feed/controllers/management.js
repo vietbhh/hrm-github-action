@@ -50,12 +50,13 @@ const getPostInteractiveMember = async (req, res, next) => {
       return res
     })
 
-    const userId = [...new Set(resultComment)]
-
-    if (Array.isArray(userId) && userId.length > 0) {
-      userId.map((item) => {
-        if (item) {
-          arrUserId.push(item)
+    if (Array.isArray(resultComment) && resultComment.length > 0) {
+      resultComment.map((item) => {
+        if (item.hasOwnProperty("childCreated") && !arrUserId.includes(item.childCreated)) {
+          arrUserId.push(item.childCreated)
+        }
+        if (item.hasOwnProperty("parentCreated") && !arrUserId.includes(item.parentCreated)) {
+          arrUserId.push(item.parentCreated)
         }
       })
     }
@@ -122,7 +123,10 @@ const _handleGetAllPostComment = async (commentId, commentPromises = []) => {
         infoComment.sub_comment.length > 0
       ) {
         infoComment.sub_comment.map((itemSubComment) => {
-          resolve(itemSubComment.created_by)
+          resolve({
+            childCreated: itemSubComment.created_by,
+            parentCreated: infoComment.created_by
+          })
         })
       } else {
         /*resolve({
@@ -131,7 +135,9 @@ const _handleGetAllPostComment = async (commentId, commentPromises = []) => {
           //content: infoComment.content,
           created_by: infoComment.created_by
         })*/
-        resolve(infoComment.created_by)
+        resolve({
+          parentCreated: infoComment.created_by
+        })
       }
     })
   )

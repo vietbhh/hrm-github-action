@@ -58,7 +58,7 @@ const InteractiveMember = (props) => {
             data: res.data.data,
             totalData: res.data.total_data
           })
-        }, 200)
+        }, 300)
       })
       .catch({
         loading: false,

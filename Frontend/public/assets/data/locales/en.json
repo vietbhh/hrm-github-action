@@ -4547,7 +4547,9 @@
           "viewers": "Viewers",
           "reacters": "Reacters",
           "commenters": "Commenters",
-          "sharers": "Sharers"
+          "sharers": "Sharers",
+          "go_to_post": "Go to post",
+          "back_to_management": "Back to mangement"
         }
 
       }

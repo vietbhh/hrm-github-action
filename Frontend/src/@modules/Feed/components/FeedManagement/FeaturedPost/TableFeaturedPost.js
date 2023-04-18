@@ -86,7 +86,7 @@ const TableFeaturedPost = (props) => {
 
   const handleClickViewDetail = (id) => {
     if (!_.isEmpty(id)) {
-      navigate(`/posts/${id}`)
+      navigate(`/posts/${id}/dashboard`)
     }
   }
 

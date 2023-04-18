@@ -24,6 +24,7 @@ const PostHeader = (props) => {
     dataModal = {},
     customAction = {}, // custom dropdown post header
     offPostHeaderAction,
+    renderAppendHeaderComponent,
     setEditDescription // function edit description, content only modal
   } = props
   const { view_post, edit_post, delete_post, ...rest } = customAction || {}
@@ -324,6 +325,17 @@ const PostHeader = (props) => {
     )
   }
 
+  const renderAppendComponent = () => {
+    if (
+      renderAppendHeaderComponent !== undefined &&
+      typeof renderAppendHeaderComponent === "function"
+    ) {
+      return <Fragment>{renderAppendHeaderComponent()}</Fragment>
+    }
+
+    return ""
+  }
+
   return (
     <Fragment>
       <div className="post-header">
@@ -343,6 +355,7 @@ const PostHeader = (props) => {
             {data.edited &&
               ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
           </span>
+          <Fragment>{renderAppendComponent()}</Fragment>
         </div>
         <div className="post-header-right">
           <Fragment>{renderPostHeaderAction()}</Fragment>
