@@ -1,14 +1,15 @@
 // ** React Imports
-import { Fragment, useEffect, useState, useContext } from "react"
+import { Fragment, useContext, useEffect, useState } from "react"
 
 // ** Third Party Components
-import * as Icon from "react-feather"
-import moment from "moment"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { HeaderAssistantApi } from "../common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { AbilityContext } from "utility/context/Can"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Tooltip } from "antd"
+import moment from "moment"
+import * as Icon from "react-feather"
+import { AbilityContext } from "utility/context/Can"
+import { HeaderAssistantApi } from "../common/api"
+import HeaderAssistantModal from "./modal/HeaderAssistantModal"
 
 // ** Reactstrap Imports
 import { NavItem, NavLink } from "reactstrap"
@@ -17,23 +18,27 @@ import { NavItem, NavLink } from "reactstrap"
 import { useRTL } from "@hooks/useRTL"
 
 // ** Swiper
-import { Swiper, SwiperSlide } from "swiper/react/swiper-react"
-import SwiperCore, { Autoplay } from "swiper"
 import "@styles/react/libs/swiper/swiper.scss"
+import SwiperCore, { Autoplay } from "swiper"
+import { Swiper, SwiperSlide } from "swiper/react/swiper-react"
 SwiperCore.use([Autoplay])
 
 // ** image
-import image1 from "../images/image1.png"
-import Sun from "../images/Sun.svg"
-import Sunny from "../images/Sunny.svg"
-import Cloudy from "../images/Cloudy.svg"
-import Cloud from "../images/Cloud.svg"
-import Rainy from "../images/Rainy.svg"
-import Heavy from "../images/Heavy.svg"
-import birthday from "../images/birthday.svg"
-import HeaderAssistantModal from "./modal/HeaderAssistantModal"
 import Photo from "@apps/modules/download/pages/Photo"
 import { Link } from "react-router-dom"
+import Icon_01d from "../images/01d.png"
+import Icon_01n from "../images/01n.png"
+import Icon_02d from "../images/02d.png"
+import Icon_02n from "../images/02n.png"
+import Icon_09d from "../images/09d.png"
+import Icon_09n from "../images/09n.png"
+import Icon_11d from "../images/11d.png"
+import Icon_11n from "../images/11n.png"
+import Icon_13d from "../images/13d.png"
+import Icon_50d from "../images/50d.png"
+import Cloud from "../images/Cloud.svg"
+import birthday from "../images/birthday.svg"
+import image1 from "../images/image1.png"
 
 const NavbarBookmarks = (props) => {
   // ** Props
@@ -100,13 +105,27 @@ const NavbarBookmarks = (props) => {
   })
 
   const arrImageWeather = {
-    thunderstorm: Heavy,
-    drizzle: Rainy,
-    rain: Rainy,
-    snow: Cloud,
-    atmosphere: Cloud,
-    clear: Sun,
-    clouds: Cloud
+    // day
+    "01d": Icon_01d,
+    "02d": Icon_02d,
+    "03d": Icon_02d,
+    "04d": Icon_02d,
+    "09d": Icon_09d,
+    "10d": Icon_09d,
+    "11d": Icon_11d,
+    "13d": Icon_13d,
+    "50d": Icon_50d,
+
+    // night
+    "01n": Icon_01n,
+    "02n": Icon_02n,
+    "03n": Icon_02n,
+    "04n": Icon_02n,
+    "09n": Icon_09n,
+    "10n": Icon_09n,
+    "11n": Icon_11n,
+    "13n": Icon_13d,
+    "50n": Icon_50d
   }
 
   const getWeather = () => {
@@ -191,8 +210,8 @@ const NavbarBookmarks = (props) => {
                   <div className="image weather left">
                     <img
                       src={
-                        arrImageWeather[state.data_weather?.main]
-                          ? arrImageWeather[state.data_weather?.main]
+                        arrImageWeather[state.data_weather?.icon]
+                          ? arrImageWeather[state.data_weather?.icon]
                           : Cloud
                       }
                     />
@@ -200,14 +219,8 @@ const NavbarBookmarks = (props) => {
                   <div className="nav-welcome-text weather">
                     <span
                       className="text-welcome-1"
-                      title={`${
-                        state.data_weather?.temp
-                      }°C - ${useFormatMessage(
-                        `layout.header.weather.${state.data_weather?.main}.title`
-                      )}`}>
-                      {`${state.data_weather?.temp}°C - ${useFormatMessage(
-                        `layout.header.weather.${state.data_weather?.main}.title`
-                      )}`}
+                      title={`${state.data_weather?.temp}°C - ${state.data_weather?.description}`}>
+                      {`${state.data_weather?.temp}°C - ${state.data_weather?.description}`}
                     </span>
                     <span
                       className="text-welcome-2"
