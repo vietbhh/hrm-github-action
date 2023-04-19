@@ -44,7 +44,7 @@ class HeaderAssistant extends ErpController
 		}
 
 		/** get weather*/
-		$current_time = $data_location_time_get = date("Y-m-d H:i:s");
+		$current_time = date("Y-m-d H:i:s");
 		$weather_location = preference("weather_location");
 		$result = [];
 		if (!empty($weather_location)) {
@@ -52,8 +52,8 @@ class HeaderAssistant extends ErpController
 				$time = $weather_location[$city_name]['time'];
 				$second = strtotime($current_time) - strtotime($time);
 				if ($second < $this->secondLoadWeather) {
-					$data_location_time_get = $time;
-					$result = ['temp' => $weather_location[$city_name]['temp'], 'main' => $weather_location[$city_name]['main'], 'content' => rand(1, 10)];
+					$result = $weather_location[$city_name];
+					$result['content'] = rand(1, 10);
 				}
 			}
 		}
@@ -64,8 +64,7 @@ class HeaderAssistant extends ErpController
 		$result['data_location'] = [
 			'city_name' => $city_name,
 			'lat' => $lat,
-			'lon' => $lon,
-			'time' => $data_location_time_get
+			'lon' => $lon
 		];
 
 		return $this->respond($result);
@@ -160,13 +159,19 @@ class HeaderAssistant extends ErpController
 		if (!empty($res)) {
 			$temp = round($res['main']['temp'] - 273.15);
 			$main = strtolower($res['weather'][0]['main']);
-			$weather_location[$city_name] = [
+			$description = strtolower($res['weather'][0]['description']);
+			$icon = strtolower($res['weather'][0]['icon']);
+			$result = [
 				'temp' => $temp,
 				'main' => $main,
-				'time' => date('Y-m-d H:i:s')
+				'time' => date('Y-m-d H:i:s'),
+				'description' => $description,
+				'icon' => $icon
 			];
+			$weather_location[$city_name] = $result;
 			preference("weather_location", $weather_location, true);
-			return ['temp' => $temp, 'main' => $main, 'content' => rand(1, 10)];
+			$result['content'] = rand(1, 10);
+			return $result;
 		}
 
 		return [];
