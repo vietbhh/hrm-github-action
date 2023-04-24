@@ -22,7 +22,9 @@ const PreviewAndImportStep = (props) => {
     recordSkip,
     unmappedField,
     // ** methods
-    setCurrentStep
+    setCurrentStep,
+    // ** custom
+    customProps
   } = props
 
   const methods = useForm({
@@ -41,7 +43,7 @@ const PreviewAndImportStep = (props) => {
       list_field_import: listFieldImport
     }
 
-    SwAlert.showWarning({
+    let swContent = {
       title: useFormatMessage(
         "module.default.import.warning_format_module_import.title"
       ),
@@ -58,14 +60,33 @@ const PreviewAndImportStep = (props) => {
       customClass: {
         denyButton: "btn btn-danger ms-1"
       }
-    }).then((res) => {
+    }
+
+    if (customProps?.disableFormatImport === true) {
+      swContent = {
+        title: useFormatMessage(
+          "module.default.import.warning_format_module_import.title"
+        ),
+        text: useFormatMessage(
+          "module.default.import.warning_format_module_import.normal_description"
+        )
+      }
+    }
+
+    SwAlert.showWarning(swContent).then((res) => {
       if (res.isDismissed === true) {
         return true
       }
       
       submitData["format"] = !res.isConfirmed
-      defaultModuleApi
-        .postImport(module.name, submitData)
+
+      let api = defaultModuleApi.postImport
+
+      if (customProps.importApi !== undefined) {
+        api = customProps.importApi
+      }
+
+      api(module.name, submitData)
         .then((res) => {
           notification.showSuccess({
             text: useFormatMessage(

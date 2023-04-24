@@ -19,7 +19,9 @@ const UploadFileStep = (props) => {
     setListFieldImport,
     setListFieldSelect,
     setCurrentStep,
-    setFileUploadContent
+    setFileUploadContent,
+    // ** custom
+    customProps
   } = props
 
   const [state, setState] = useMergedState({
@@ -69,8 +71,13 @@ const UploadFileStep = (props) => {
     const data = {
       file_content: fileContent
     }
-    defaultModuleApi
-      .getMappingFields(module.name, data)
+
+    let api = defaultModuleApi.getMappingFields
+    if (customProps?.mappingFieldApi !== undefined) {
+      api = customProps.mappingFieldApi
+    }
+
+    api(module.name, data)
       .then((res) => {
         setListFieldImport(res.data.arr_col)
         setListFieldSelect(res.data.arr_field_select)
@@ -95,7 +102,7 @@ const UploadFileStep = (props) => {
         <Card>
           <CardBody>
             <div>
-              <DownloadTemplate module={module} />
+              <DownloadTemplate module={module} customProps={customProps} />
             </div>
             <div>
               <UploadTemplate
@@ -112,9 +119,7 @@ const UploadFileStep = (props) => {
               color="primary"
               disabled={state.disableMapFieldButton}
               onClick={() => handleClickMappingField()}>
-              {useFormatMessage(
-                "module.default.import.buttons.mapping_fields"
-              )}
+              {useFormatMessage("module.default.import.buttons.mapping_fields")}
               <i className="fas fa-arrow-right ms-50" />
             </Button.Ripple>
           </CardBody>
