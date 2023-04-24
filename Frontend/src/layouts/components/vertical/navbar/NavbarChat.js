@@ -116,50 +116,33 @@ const NavbarChat = () => {
         <Link to="/chat" className="nav-link" id="chat">
           <svg
             className="bell no-noti"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+            fill="none">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
-              d="M12.0568 2.00014C8.54687 1.98596 5.28557 3.8071 3.4605 6.80041C1.63543 9.79372 1.51292 13.5224 3.13757 16.6287L3.33789 17.0192C3.50209 17.3264 3.53644 17.6865 3.43329 18.0192C3.14742 18.7784 2.90849 19.5545 2.71784 20.343C2.71784 20.743 2.83231 20.9715 3.26158 20.962C4.0219 20.7941 4.77068 20.5778 5.50332 20.3144C5.81886 20.2275 6.15437 20.2476 6.45725 20.3715C6.73389 20.5049 7.2967 20.8477 7.31578 20.8477C10.9915 22.7805 15.4808 22.2473 18.5998 19.5075C21.7187 16.7677 22.8199 12.39 21.3676 8.5041C19.9153 4.61815 16.2111 2.03059 12.0568 2.00014V2.00014Z"
-              stroke="#00003B"
+              d="M22.2499 22.2482C18.6844 25.8141 13.4047 26.5845 9.08413 24.5863C8.4463 24.3295 7.92338 24.122 7.42625 24.122C6.04155 24.1302 4.31801 25.4728 3.42223 24.5781C2.52646 23.6823 3.87012 21.9573 3.87012 20.5643C3.87012 20.0671 3.6708 19.5535 3.41403 18.9144C1.41495 14.5945 2.18644 9.31312 5.75195 5.74839C10.3035 1.19515 17.6983 1.19515 22.2499 5.74721C26.8097 10.3075 26.8015 17.6961 22.2499 22.2482Z"
+              stroke="#32434F"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <ellipse
-              opacity="0.4"
-              cx="7.28715"
-              cy="12.0001"
-              rx="0.476965"
-              ry="0.47619"
-              stroke="#11142D"
-              strokeWidth="1.5"
+            <path
+              d="M9 17H16"
+              stroke="#32434F"
+              strokeWidth="2"
+              strokeMiterlimit="10"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <ellipse
-              opacity="0.4"
-              cx="12.0568"
-              cy="12.0001"
-              rx="0.476965"
-              ry="0.47619"
-              stroke="#11142D"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <ellipse
-              opacity="0.4"
-              cx="16.8265"
-              cy="12.0001"
-              rx="0.476965"
-              ry="0.47619"
-              stroke="#11142D"
-              strokeWidth="1.5"
+            <path
+              d="M9 12H19"
+              stroke="#32434F"
+              strokeWidth="2"
+              strokeMiterlimit="10"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
