@@ -34,7 +34,8 @@ const UserDropdown = ({
   menuCollapsed,
   windowWidth,
   windowWidthMin,
-  userId
+  userId,
+  notMenuCollapsed
 }) => {
   // ** Store Vars
   const dispatch = useDispatch()
@@ -54,7 +55,10 @@ const UserDropdown = ({
   //** Vars
   const userAvatar = (userData && userData.avatar) || defaultAvatar
   const sidebarCollapsed =
-    !menuHover && menuCollapsed === true && windowWidth >= windowWidthMin
+    !menuHover &&
+    menuCollapsed === true &&
+    windowWidth >= windowWidthMin &&
+    !notMenuCollapsed
 
   return (
     <Fragment>

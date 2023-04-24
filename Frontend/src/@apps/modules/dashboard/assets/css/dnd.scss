@@ -34,22 +34,27 @@
       &.react-draggable {
         cursor: grab;
       }
-      //border: 1px solid;
 
       .card {
         margin-bottom: 0;
       }
 
       > div {
-        //height: 100%;
         background-color: #fff;
         overflow: hidden;
         border-radius: 20px;
       }
 
       .react-resizable-handle {
-        //opacity: 0;
-        right: 15px;
+        right: 6px;
+        top: 12px;
+        height: 100%;
+        transform: unset;
+        background-image: unset;
+
+        &::after {
+          border: none;
+        }
       }
 
       .dnd-btn-delete {
@@ -170,6 +175,11 @@
           height: 30px;
           border-radius: 50%;
           background-color: $primary;
+
+          img {
+            width: 30px;
+            height: 30px;
+          }
         }
 
         .widget-drawer-title {

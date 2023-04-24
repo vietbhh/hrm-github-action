@@ -167,6 +167,7 @@ const index = (props) => {
         <CustomMenuComponent {...customProps} />
       )} */
       className="separate-sidebar-layout"
+      notMenuCollapsed={true}
       hideQuickAccess={true}
       hideVerticalMenuHeader={true}
       {...props}>

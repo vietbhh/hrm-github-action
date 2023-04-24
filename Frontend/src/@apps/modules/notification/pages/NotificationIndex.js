@@ -73,6 +73,29 @@ const NotificationIndex = (props) => {
     }
   }, [state.loading])
 
+  // ** render
+  const renderListNotification = () => {
+    if (state.notifications.length > 0) {
+      return (
+        <Fragment>
+          <div className="mb-4">
+            <ListNotification listNotification={state.notifications} />
+          </div>
+          <div className="ms-2">
+            <Pagination
+              current={state.page}
+              onChange={onChange}
+              total={state.numberNotification}
+              defaultPageSize={numberItemPerPage}
+            />
+          </div>
+        </Fragment>
+      )
+    }
+
+    return <p className="ps-2">{useFormatMessage("notification.no_notification")}</p>
+  }
+
   const renderComponent = () => {
     return (
       <Fragment>
@@ -88,15 +111,7 @@ const NotificationIndex = (props) => {
             </CardHeader>
             <CardBody>
               <div className="mb-4">
-                <ListNotification listNotification={state.notifications} />
-              </div>
-              <div className="ms-2">
-                <Pagination
-                  current={state.page}
-                  onChange={onChange}
-                  total={state.numberNotification}
-                  defaultPageSize={numberItemPerPage}
-                />
+                <Fragment>{renderListNotification()}</Fragment>
               </div>
             </CardBody>
           </Card>

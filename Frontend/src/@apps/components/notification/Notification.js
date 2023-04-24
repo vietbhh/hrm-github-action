@@ -1,8 +1,11 @@
 // ** React Imports
 import { Fragment, useContext, useEffect } from "react"
+import {
+  handleFormatMessageStr
+} from "@src/layouts/components/vertical/common/common"
 // ** redux
-import { useDispatch, useSelector } from "react-redux"
-import { handleNotification } from "redux/notification"
+import { useDispatch } from "react-redux"
+import { handleAppendNotification } from "redux/notification"
 // ** Styles
 // ** Components
 import { currentDateTime, useFormatMessage } from "@apps/utility/common"
@@ -12,40 +15,33 @@ import NotificationSound from "@src/assets/sounds/notification_sound.mp3"
 import SocketContext from "utility/context/Socket"
 
 const Notification = (props) => {
-  const notificationStore = useSelector((state) => state.notification)
-  const listNotificationStore = notificationStore.listNotification
-  const numberNotificationStore = notificationStore.numberNotification
   const dispatch = useDispatch()
   const socket = useContext(SocketContext)
 
   const addNotificationToStore = (notificationData) => {
-    const { id, title, body, link, type, image, sender_id } = notificationData
-    const listNotification = [
-      {
+    const { id, title, body, link, type, icon, sender_id } = notificationData
+
+    dispatch(
+      handleAppendNotification({
         id,
         title,
         body,
         link,
         type,
-        image,
+        icon,
         sender_id,
         created_at: currentDateTime(),
         seen: false
-      },
-      ...listNotificationStore
-    ]
-    const numberNotification = parseInt(numberNotificationStore) + 1
-    dispatch(
-      handleNotification({
-        listNotification,
-        numberNotification
       })
     )
   }
+  
   const showNotificationPopup = (payload, emitKey = "app_notification") => {
+    const newTitle = handleFormatMessageStr(payload.title)
+    const newText = handleFormatMessageStr(payload.body)
     let data = {
-      title: payload.title,
-      text: payload.body,
+      title: newTitle,
+      text: newText,
       meta: useFormatMessage("common.few_seconds_ago"),
       link: payload.link
     }
@@ -55,7 +51,7 @@ const Notification = (props) => {
     if (emitKey === "chat_notification") {
       data = {
         ...data,
-        icon: (
+        icon:  (
           <img
             className="rounded-circle me-1"
             src={payload.icon}
@@ -68,6 +64,7 @@ const Notification = (props) => {
         }
       }
     }
+    
     notification.show(data)
   }
 
