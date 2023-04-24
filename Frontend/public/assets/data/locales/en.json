@@ -603,7 +603,8 @@
         },
         "warning_format_module_import": {
           "title": "Confirm Import",
-          "description": "\"Format and import\" will format all table data and related table data."
+          "description": "\"Format and import\" will format all table data and related table data.",
+          "normal_description": ""
         },
         "buttons": {
           "format_and_import": "Format and Import",
