@@ -7,8 +7,8 @@ const menuConfig = [
     header: useFormatMessage("layout.collaboration")
   },
   {
-    id: "Feed",
-    title: "layout.feed",
+    id: "home",
+    title: "layout.home",
     type: "dropdown",
     action: "login",
     resource: "app",
@@ -17,7 +17,7 @@ const menuConfig = [
         <i className="fa-solid fa-house"></i>
       </div>
     ),
-    navLink: "/feed"
+    navLink: "/home"
   },
   {
     id: "chat",
@@ -40,7 +40,7 @@ const menuConfig = [
         </svg>
       </div>
     ),
-    navLink: "/homepage"
+    navLink: "/chat"
   },
   {
     id: "calendar",
@@ -67,7 +67,7 @@ const menuConfig = [
         </svg>
       </div>
     ),
-    navLink: "/test2"
+    navLink: "/calendar"
   },
   {
     id: "drive",
@@ -94,7 +94,7 @@ const menuConfig = [
         </svg>
       </div>
     ),
-    navLink: "/dashboard"
+    navLink: "/drive"
   },
   {
     id: "workgroup",
@@ -137,14 +137,14 @@ const menuConfig = [
         </svg>
       </div>
     ),
-    navLink: "/dashboard"
+    navLink: "/workspace"
   },
   {
     id: "setting-member",
     title: "layout.setting_member",
     type: "dropdown",
-    action: "login",
-    resource: "app",
+    action: "manage",
+    resource: "fri_net",
     icon: (
       <div className="menu-icon green">
         <i className="fa-solid fa-user-gear"></i>

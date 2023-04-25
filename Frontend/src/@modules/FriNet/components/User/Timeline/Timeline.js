@@ -11,7 +11,7 @@ const index = (props) => {
   const [state, setState] = useMergedState({
     prevScrollY: 0
   })
-  const offsetTop = 90
+  const offsetTop = 120
   const offsetBottom = 30
 
   // ** function
