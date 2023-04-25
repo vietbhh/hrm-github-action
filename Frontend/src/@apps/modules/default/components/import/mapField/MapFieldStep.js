@@ -20,7 +20,9 @@ const MapFieldStep = (props) => {
     // ** methods
     setCurrentStep,
     setListFieldImport,
-    setRecordContent
+    setRecordContent,
+    // ** custom
+    customProps
   } = props
 
   const methods = useForm({
@@ -56,8 +58,14 @@ const MapFieldStep = (props) => {
       list_field: newListFieldImport,
       file_upload_content: fileUploadContent
     }
-    defaultModuleApi
-      .getImportData(module.name, values)
+
+    let api = defaultModuleApi.getImportData
+
+    if (customProps?.previewApi !== undefined) {
+      api = customProps.previewApi
+    }
+
+    api(module.name, values)
       .then((res) => {
         setRecordContent({
           recordReadyToCreate: res.data.record_ready_to_create,

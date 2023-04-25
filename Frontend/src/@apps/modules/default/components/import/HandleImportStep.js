@@ -13,7 +13,9 @@ const HandleImportStep = (props) => {
     module,
     currentStep,
     // ** methods
-    setCurrentStep
+    setCurrentStep,
+    // ** custom
+    customProps
   } = props
 
   const [state, setState] = useMergedState({
@@ -60,6 +62,7 @@ const HandleImportStep = (props) => {
           setListFieldSelect={setListFieldSelect}
           setCurrentStep={setCurrentStep}
           setFileUploadContent={setFileUploadContent}
+          customProps={customProps}
         />
       )
     } else if (currentStep === "map_fields") {
@@ -72,6 +75,7 @@ const HandleImportStep = (props) => {
           setCurrentStep={setCurrentStep}
           setListFieldImport={setListFieldImport}
           setRecordContent={setRecordContent}
+          customProps={customProps}
         />
       )
     } else if (currentStep === "preview_and_import") {
@@ -84,6 +88,7 @@ const HandleImportStep = (props) => {
           recordSkip={state.recordSkip}
           unmappedField={state.unmappedField}
           setCurrentStep={setCurrentStep}
+          customProps={customProps}
         />
       )
     }
