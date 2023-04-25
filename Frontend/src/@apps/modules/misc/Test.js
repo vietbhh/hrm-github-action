@@ -18,7 +18,7 @@ const Test = (props) => {
   const handleData = useCallback((data) => {
     console.log(data)
   }, [])
-
+  console.log('okkk');
   useEffect(() => {
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
@@ -135,6 +135,10 @@ const Test = (props) => {
       <button onClick={testNoti}>noti</button>
     </Fragment>
   )
+}
+
+const Test2 = () => {
+  return "okkkkkk"
 }
 
 export default Test

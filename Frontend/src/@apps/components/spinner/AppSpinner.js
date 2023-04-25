@@ -1,15 +1,14 @@
-import SquareLoader from './SquareLoader';
-
-const { Spinner } = require('reactstrap');
-
+import SquareLoader from "./SquareLoader"
+import loadingWhite from "assets/friday/loading_white.gif"
 const AppSpinner = (props) => {
-	return (
-		<div className="fallback-spinner">
-			<div className="loading component-loader">
-				<SquareLoader type="grow" color="primary" {...props} />
-			</div>
-		</div>
-	);
-};
+  return (
+    <div className="fallback-spinner">
+      <div className="loading component-loader">
+        {/* <SquareLoader type="grow" color="primary" {...props} /> */}
+        <img src={loadingWhite} />
+      </div>
+    </div>
+  )
+}
 
-export default AppSpinner;
+export default AppSpinner

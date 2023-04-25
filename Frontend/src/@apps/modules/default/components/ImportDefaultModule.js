@@ -58,7 +58,7 @@ const skipFields = [
 
 const skipTypes = ["upload_one", "upload_multiple", "upload_image"]
 
-const headerHandle = (module, metas, defaultFields) => {
+const headerHandle = (module, metas, defaultFields, customProps) => {
   const columnCode = [],
     columnTitle = []
   _.map(
@@ -500,9 +500,10 @@ const ImportDefaultModule = (props) => {
         </div>
         <div>
           <HandleImportStep
-          module={module}
+            module={module}
             currentStep={state.currentStep}
             setCurrentStep={setCurrentStep}
+            customProps={customProps}
           />
         </div>
       </div>

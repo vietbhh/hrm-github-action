@@ -9,8 +9,10 @@ import notification from "@apps/utility/notification"
 const DownloadTemplate = (props) => {
   const {
     // ** props
-    module
+    module,
     // ** methods
+    // ** custom
+    customProps
   } = props
 
   const [state, setState] = useMergedState({
@@ -22,16 +24,28 @@ const DownloadTemplate = (props) => {
       loading: true
     })
 
-    defaultModuleApi
-      .exportTemplate(module.name)
+    let api = defaultModuleApi.exportTemplate(module.name)
+
+    if (customProps?.downloadTemplateApi !== undefined) {
+      api = customProps.downloadTemplateApi
+    }
+
+    api(module.name)
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement("a")
         link.href = url
-        link.setAttribute("download", `Module ${module.name} template.xlsx`)
+        const fileName =
+          customProps?.templateFileName !== undefined
+            ? customProps.templateFileName
+            : `Module ${module.name} template.xlsx`
+        link.setAttribute("download", fileName)
         document.body.appendChild(link)
         link.click()
         link.parentNode.removeChild(link)
+        setState({
+          loading: false
+        })
       })
       .catch((err) => {
         notification.showError({
@@ -72,9 +86,11 @@ const DownloadTemplate = (props) => {
             }}
             disabled={state.loading}>
             <i className="far fa-file-download me-50"></i>
-            {useFormatMessage(
-              "module.default.import.buttons.asset_template"
-            )}
+            {customProps?.templateFileName !== undefined
+              ? customProps.templateFileName
+              : useFormatMessage(
+                  "module.default.import.buttons.asset_template"
+                )}
           </Button>
         </div>
       </div>
