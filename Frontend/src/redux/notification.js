@@ -6,7 +6,8 @@ const notificationSlice = createSlice({
   initialState: {
     listNotification: [],
     numberNotification: 0,
-    openDropdown: false
+    openDropdown: false,
+    focusNotification: false
   },
   reducers: {
     handleNotification: (state, action) => {
@@ -31,7 +32,7 @@ const notificationSlice = createSlice({
     },
     toggleOpenDropdown: (state, action) => {
       state.openDropdown = action.payload !== undefined ? action.payload : !state.openDropdown
-    } 
+    }
   }
 })
 

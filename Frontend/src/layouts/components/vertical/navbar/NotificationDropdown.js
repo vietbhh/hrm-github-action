@@ -15,10 +15,10 @@ import {
 } from "reactstrap"
 
 import { defaultModuleApi } from "@apps/utility/moduleApi"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** redux
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { handleSeenNotification, toggleOpenDropdown } from "redux/notification"
 
@@ -31,6 +31,8 @@ const NotificationDropdown = () => {
   const [focusIconNotification, setFocusIconNotification] = useState(false)
 
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
 
   const handleClick = (e) => {
     defaultModuleApi
@@ -55,6 +57,17 @@ const NotificationDropdown = () => {
     dispatch(toggleOpenDropdown())
   }
 
+  const handleClickSeeAll = () => {
+    navigate("/notification")
+    dispatch(toggleOpenDropdown(false))
+  }
+
+  useEffect(() => {
+    if (!notification.openDropdown) {
+      setFocusIconNotification(false)
+    }
+  }, [notification.openDropdown])
+
   const renderListNotification = () => {
     if (listNotificationStore.length > 0) {
       return (
@@ -67,14 +80,15 @@ const NotificationDropdown = () => {
             }}>
             <ListNotification listNotification={listNotificationStore} />
           </PerfectScrollbar>
-          <li className="">
-            <Link to="/notification">
-              <Button.Ripple color="primary" block>
-                {useFormatMessage(
-                  "layout.notification.see_all_incoming_activity"
-                )}
-              </Button.Ripple>
-            </Link>
+          <li className="p-1">
+            <Button.Ripple
+              color="primary"
+              block
+              onClick={() => handleClickSeeAll()}>
+              {useFormatMessage(
+                "layout.notification.see_all_incoming_activity"
+              )}
+            </Button.Ripple>
           </li>
         </Fragment>
       )
@@ -122,24 +136,25 @@ const NotificationDropdown = () => {
           </svg>
         ) : (
           <svg
-            className="bell"
-            width="22"
-            height="24"
-            viewBox="0 0 22 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M18 11V8C18 4.13401 14.866 1 11 1C7.13401 1 4 4.13401 4 8V11C4 14.3 1 15.1 1 17C1 18.7 4.9 20 11 20C17.1 20 21 18.7 21 17C21 15.1 18 14.3 18 11Z"
-              stroke="#32434F"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M11 22C9.98902 22 9.03902 21.966 8.14502 21.9C8.53619 23.1478 9.69236 23.997 11 23.997C12.3077 23.997 13.4639 23.1478 13.855 21.9C12.961 21.966 12.011 22 11 22Z"
-              fill="#32434F"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+            id="Layer_1"
+            x="0px"
+            y="0px"
+            width="22px"
+            height="26px"
+            viewBox="0 0 23 28"
+            enableBackground="new 0 0 23 28"
+            xmlSpace="preserve">
+            {" "}
+            <image
+              id="image0"
+              width="23"
+              height="28"
+              x="0"
+              y="0"
+              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAcCAMAAAC9M9RRAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAflBMVEUAAAAwQFAwQEowQEww Qk0xQ08wRVAxQk8yQk4yRFAzQ1A0RFAyQk4yQk4wQFAxQ08yQ08yQlAyQ08wSFAxQU4yQlAyQk0y Qk4yQk8xQ04yQk8yQ08xQ08yQ08wRFA0QEwwRFAwQk4yQ08xQ08zQ04zQU44QFA1RVAyQ0////9a oLpzAAAAKHRSTlMAEDBAYL8w38CAUECA0CDv32DvIKBwcJCfoN/gz59/QEB/r9+woCAwz8KRfgAA AAFiS0dEKcq3hSQAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfnBBoCKi/Kj7W+AAAA3ElE QVQoz52S2xaCIBBFIUUpFWnIsHvabf7/C0PIlow9dV5wbWY4h0HGRvFFknBGlQocJNKIZjnK5apY lRXmaoJrXXw+1xqyEatcm2+N0TB2bCbYbYD4lGMZmS0xNDRoIs5x61cLJDO0ftntCT8ELiThR2/M 4US4hWEeZ7wQfh0CqpqWu5NdgyUp/dVcw8zVN4gxVCwXXYhf9dJNI5nhDNeMa+hURHlXa3cBs0M8 9rYMavsbogzvbJp7BRh0qB7Nk/0vZQdz1dI/KIM8TboaZkMx2rlK8+OoVzEJ8gaeBw4+FvKwDAAA ACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNC0yNlQwMjo0Mjo0NyswMDowMM68GfMAAAAldEVYdGRh dGU6bW9kaWZ5ADIwMjMtMDQtMjZUMDI6NDI6NDcrMDA6MDC/4aFPAAAAAElFTkSuQmCC"
             />
           </svg>
         )}
