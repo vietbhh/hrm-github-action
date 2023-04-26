@@ -52,7 +52,7 @@ const User = () => {
     setState({
       tabActive: getTabId(tabId)
     })
-    window.history.replaceState(null, "", `/u/${identity}/${tabId}`)
+    window.history.replaceState(null, "", `/u/${identity === "profile" ? "profile" : params.identity}/${tabId}`)
   }
 
   const loadData = async () => {

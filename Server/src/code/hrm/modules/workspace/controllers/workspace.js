@@ -131,7 +131,7 @@ const getListWorkspace = async (req, res, next) => {
       filter["status"] = status
     }
 
-    if (text.trim().length > 0) {
+    if (text !== undefined && text.trim().length > 0) {
       filter["name"] = {
         $regex: text + ".*"
       }
@@ -545,6 +545,7 @@ const loadDataMedia = async (req, res, next) => {
   const mediaTypeNumber = req.query.media_type
   const page = req.query.page
   const pageLength = req.query.page_length
+  const owner = req.query?.owner === undefined ? req.__user : req.query.owner
 
   if (isEmpty(workspaceId) || isEmpty(mediaTypeNumber)) {
     return res.fail("missing_workspace_id_or_media_type")
@@ -585,6 +586,11 @@ const loadDataMedia = async (req, res, next) => {
         type: "post"
       }
     }
+
+    feedCondition["owner"] = owner
+    postCondition["owner"] = owner
+
+    console.log(feedCondition)
 
     const listFeed = await feedMongoModel
       .find(feedCondition)
