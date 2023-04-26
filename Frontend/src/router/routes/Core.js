@@ -279,7 +279,8 @@ const CoreRoutes = [
     meta: {
       action: "login",
       resource: "app",
-      className: ""
+      className: "",
+      layout: "empty"
     }
   },
   {
