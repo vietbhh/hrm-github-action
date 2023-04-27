@@ -17,14 +17,14 @@ const AttendanceTimer = (props) => {
 
   const currentDate = moment().format("YYYY-MM-DD")
   const breakTimeFrom = moment(
-    workScheduleToday.br_time_from + ":00",
+    workScheduleToday.br_time_from + ":00 ",
     "hh:mm:ss"
   )
   const breakDateTimeFrom = moment(
     currentDate + " " + workScheduleToday.br_time_from,
     "YYYY-MM-DD hh:mm:ss"
   )
-  const breakTimeTo = moment(workScheduleToday.br_time_to + ":00", "hh:mm:ss")
+  const breakTimeTo = moment(workScheduleToday.br_time_to + ":00 ", "hh:mm:ss")
   const breakDateTimeTo = moment(
     currentDate + " " + workScheduleToday.br_time_to,
     "YYYY-MM-DD hh:mm:ss"
@@ -130,17 +130,13 @@ const AttendanceTimer = (props) => {
 
   useEffect(() => {
     const intervalTemp = setInterval(() => {
-      setSecondsCurrent(moment("YYYY-MM-DD hh:ii:ss"))
+      setSecondsCurrent(moment())
     }, 1000)
 
     return () => clearInterval(intervalTemp)
   }, [])
 
   // ** render
-  const renderAttendanceProgress = () => {
-    return <AttendanceProgress progress={progress} />
-  }
-
   const renderAttendanceWorkingTime = () => {
     return (
       <AttendanceWorkingTime
@@ -161,7 +157,10 @@ const AttendanceTimer = (props) => {
       <Fragment>
         <div className="ps-0 d-flex justify-content-between align-items-center">
           <div className="ps-0 ms-0">
-            <Fragment>{renderAttendanceProgress()}</Fragment>
+            <AttendanceProgress
+              progress={progress}
+              progressWidth={props?.progressWidth}
+            />
           </div>
           <div className="me-0">
             <Fragment>{renderAttendanceWorkingTime()}</Fragment>

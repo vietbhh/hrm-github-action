@@ -137,13 +137,24 @@ const getListWorkspace = async (req, res, next) => {
       }
     }
 
-    const workspace = await workspaceMongoModel
+    let workspace = []
+    if (limit === 0) {
+     workspace = await workspaceMongoModel
       .find(filter)
       .limit(limit)
       .skip(limit * page)
       .sort({
         _id: "desc"
       })
+    } else {
+      workspace = await workspaceMongoModel
+      .find(filter)
+      .limit(limit)
+      .skip(limit * page)
+      .sort({
+        _id: "desc"
+      })
+    }
 
     const totalWorkspace = await workspaceMongoModel.find(filter)
     const result = await handleDataBeforeReturn(workspace, true)
@@ -156,6 +167,8 @@ const getListWorkspace = async (req, res, next) => {
       }
 
       result[index]['total_member'] = Array.isArray(item.members) ? item.members.length : 0 
+
+      result[index]['is_admin_group'] = Array.isArray(item.administrators) ? item.administrators.includes(userId) : false
     })
 
     if (queryType === "activity") {

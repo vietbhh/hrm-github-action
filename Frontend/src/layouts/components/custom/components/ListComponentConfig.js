@@ -1,5 +1,6 @@
 import { useFormatMessage } from "@apps/utility/common"
 import WidgetPreview1 from "@apps/modules/dashboard/assets/images/WidgetPreview1.svg"
+import ClockInOutWidget from "@modules/Dashboard/components/details/clock/ClockInOutWidget"
 import CardAnnouncements from "@apps/modules/dashboard/main/components/CardAnnouncements"
 import Notepad from "@apps/modules/dashboard/main/components/Notepad"
 
@@ -9,6 +10,27 @@ const BackgroundWidget = () => {
 
 export const ListComponentConfig = (props) => {
   return [
+    {
+      id: "clock_in_out",
+      title: useFormatMessage("modules.attendance.title.clock_in_out"),
+      component: <ClockInOutWidget {...props} noIcon progressWidth={60}  />,
+      data_grid: {
+        i: "clock_in_out",
+        x: 8,
+        y: 0,
+        w: 1,
+        h: 10,
+        minW: 1,
+        minH: 6,
+        maxW: 2,
+        static: false,
+        isDraggable: true
+      },
+      background: <BackgroundWidget />,
+      show: false,
+      action: "login",
+      resource: "app"
+    },
     {
       id: "notepad",
       title: useFormatMessage("modules.dashboard.notepad.title"),
