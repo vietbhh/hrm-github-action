@@ -10,11 +10,6 @@ import AttendanceTimer from "./AttendanceTimer"
 import AttendanceClock from "./AttendanceClock"
 
 const ClockInOutProgress = (props) => {
-  const {
-    // ** props
-    // ** methods
-  } = props
-
   const [state, setState] = useMergedState({
     loading: true,
     infoAttendance: {},
@@ -54,51 +49,38 @@ const ClockInOutProgress = (props) => {
   }, [])
 
   // ** render
-  const renderLoading = () => {
-    return (
-      <div>
-        <div
-          className="ant-spin ant-spin-spinning text-center d-flex align-items-center justify-content-center"
-          aria-live="polite"
-          aria-busy="true">
-          <span className="ant-spin-dot ant-spin-dot-spin">
-            <i className="ant-spin-dot-item"></i>
-            <i className="ant-spin-dot-item"></i>
-            <i className="ant-spin-dot-item"></i>
-            <i className="ant-spin-dot-item"></i>
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  const renderAttendanceTimer = () => {
-    return (
-      <AttendanceTimer
-        renderTimeOnly={false}
-        attendanceToday={state.attendanceToday}
-        workScheduleToday={state.workScheduleToday}
-      />
-    )
-  }
-
-  const renderAttendanceClock = () => {
-    return <AttendanceClock attendanceToday={state.attendanceToday} />
-  }
-
   const renderBody = () => {
     if (state.loading) {
-      return <Fragment>{renderLoading()}</Fragment>
+      return (
+        <div>
+          <div
+            className="ant-spin ant-spin-spinning text-center d-flex align-items-center justify-content-center"
+            aria-live="polite"
+            aria-busy="true">
+            <span className="ant-spin-dot ant-spin-dot-spin">
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+            </span>
+          </div>
+        </div>
+      )
     }
 
     return (
       <Fragment>
         <div className="">
           <div>
-            <Fragment>{renderAttendanceTimer()}</Fragment>
+            <AttendanceTimer
+              renderTimeOnly={false}
+              attendanceToday={state.attendanceToday}
+              workScheduleToday={state.workScheduleToday}
+              {...props}
+            />
           </div>
           <div className="mt-2">
-            <Fragment>{renderAttendanceClock()}</Fragment>
+            <AttendanceClock attendanceToday={state.attendanceToday} />
           </div>
         </div>
       </Fragment>
@@ -141,7 +123,7 @@ const ClockInOutProgress = (props) => {
           ...props
         }}>
         <CardBody className="min-height-50">
-          <div className="mt-2 ps-0 content-body attendance-progress">
+          <div className="ps-0 content-body attendance-progress">
             <Fragment>{renderBody()}</Fragment>
           </div>
         </CardBody>

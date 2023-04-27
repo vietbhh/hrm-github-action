@@ -8,7 +8,8 @@ import { Progress } from "antd"
 const AttendanceProgress = (props) => {
   const {
     // ** props
-    progress
+    progress,
+    progressWidth
     // ** methods
   } = props
 
@@ -19,7 +20,7 @@ const AttendanceProgress = (props) => {
         type="circle"
         percent={progress}
         strokeWidth={8}
-        width={80}
+        width={progressWidth === undefined ? 80 : progressWidth}
         strokeColor="#69dca1"
       />
     </Fragment>

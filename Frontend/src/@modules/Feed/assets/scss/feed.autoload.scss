@@ -2885,3 +2885,114 @@ $btn-background-color: #377dff;
     }
   }
 }
+
+.dashboard-clock-in-out {
+  .card-header {
+    padding-bottom: 15px;
+
+    .new-clock-icon {
+      background-color: #69dca1 !important;
+    }
+  }
+
+  .content-body {
+    .time-attendance {
+      padding-bottom: 15px;
+
+      .time {
+        font-size: 32px;
+        font-weight: bold;
+        color: $primary-text-color;
+        padding-bottom: 10px;
+      }
+
+      .day {
+        padding-bottom: 15px;
+      }
+    }
+
+    .clock-time {
+      margin: auto;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.03);
+      border-radius: 12px;
+      .int-out-info {
+        display: flex;
+      }
+    }
+
+    .clock-button {
+      margin-top: 30px;
+    }
+
+    .btn-primary {
+      color: #ffffff !important;
+      font-size: 18px;
+      background-color: #69dca1 !important;
+      border-color: #69dca1 !important;
+      border-radius: 12px;
+
+      &:hover {
+        box-shadow: none !important;
+      }
+    }
+
+    .font-weight-bold {
+      font-weight: bold;
+    }
+
+    .text-primary {
+      color: #44d38a !important;
+    }
+  }
+
+  .attendance-progress {
+    margin-top: 0.5rem;
+    .attendance-working-time {
+      .attendance-time {
+        text-align: right;
+        margin-right: 1rem !important;
+        h4 {
+          color: $primary-text-color;
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 0 !important;
+        }
+
+        small {
+          font-size: 11px;
+        }
+      }
+
+      .attendance-status {
+        height: 40px;
+        width: 40px;
+        background: #69dca1;
+        border-radius: 15px;
+
+        i {
+          font-size: 20px;
+          font-weight: 700;
+          color: #ffffff;
+        }
+      }
+    }
+
+    .attendance-clock {
+      .clock-time {
+        height: 40px;
+
+        .clock-time-item {
+          color: #6c5dd3;
+          font-weight: 500;
+          font-size: 16px;
+        }
+
+        .clock-time-type {
+          font-weight: 400;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
