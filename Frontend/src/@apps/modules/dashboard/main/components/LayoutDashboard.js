@@ -5,7 +5,7 @@ import DashboardHeader from "./DashboardHeader"
 const LayoutDashboard = (props) => {
   return (
     <Fragment>
-      <Card>
+      <Card className={props.className}>
         {props.header ? (
           props.header({ ...props })
         ) : (
