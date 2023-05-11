@@ -4407,6 +4407,7 @@
     },
     "feed": {
       "create_post": {
+        "title": "Create post",
         "text": {
           "placeholder_input": "What are you thinking?",
           "task": "Task",
@@ -4531,6 +4532,10 @@
             "workspace_posts": "Workspace posts"
           }
         }
+      },
+      "create_event": {
+        "title": "Create event",
+        "text": {}
       }
     },
     "posts": {

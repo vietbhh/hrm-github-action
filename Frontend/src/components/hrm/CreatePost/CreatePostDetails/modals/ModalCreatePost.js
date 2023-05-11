@@ -1,7 +1,5 @@
-import { ErpRadio } from "@apps/components/common/ErpField"
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { downloadApi } from "@apps/modules/download/common/api"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
@@ -11,7 +9,7 @@ import {
   handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
-import { Dropdown, Tooltip } from "antd"
+import { Tooltip } from "antd"
 import classNames from "classnames"
 import { ContentState, EditorState, Modifier, convertToRaw } from "draft-js"
 import draftToHtml from "draftjs-to-html"
@@ -23,8 +21,8 @@ import AttachPhotoVideo from "../AttachPhotoVideo"
 import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
+import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
-import PollVoteDetail from "../PollVoteDetail"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
 
@@ -58,7 +56,6 @@ const ModalCreatePost = (props) => {
     showChooseBackgroundImage: false,
 
     // poll vote
-    modalPollVote: false,
     poll_vote: false,
     poll_vote_detail: {
       question: "",
@@ -71,6 +68,7 @@ const ModalCreatePost = (props) => {
       },
       time_end: null
     },
+    disable_btn_post: false,
 
     // tag your colleagues
     tag_your_colleagues: [],
@@ -86,6 +84,8 @@ const ModalCreatePost = (props) => {
     setState({ loadingUploadAttachment: value })
 
   const setArrLink = (value) => setState({ arrLink: value })
+
+  const setPrivacyType = (value) => setState({ privacy_type: value })
 
   const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
@@ -301,17 +301,16 @@ const ModalCreatePost = (props) => {
     handleInsertEditorState("")
   }
 
-  const toggleModalPollVote = () => {
-    setState({ modalPollVote: !state.modalPollVote })
-  }
+  const toggleModalPollVote = () => setEmptyPollVote(!state.poll_vote)
 
   const setPollVoteDetail = (value) => {
-    setState({ poll_vote: true, poll_vote_detail: value })
+    console.log(value)
+    setState({ poll_vote_detail: { ...state.poll_vote_detail, ...value } })
   }
 
-  const setEmptyPollVote = () => {
+  const setEmptyPollVote = (poll_vote = false) => {
     setState({
-      poll_vote: false,
+      poll_vote: poll_vote,
       poll_vote_detail: {
         question: "",
         options: ["", ""],
@@ -347,6 +346,7 @@ const ModalCreatePost = (props) => {
     }
   }, [dataPost])
 
+  // ** edit post
   useEffect(() => {
     if (!_.isEmpty(dataPost) && modal) {
       // ** media
@@ -397,6 +397,7 @@ const ModalCreatePost = (props) => {
         })
         poll_vote_detail["options"] = options
         setPollVoteDetail(poll_vote_detail)
+        setState({ poll_vote: true })
       }
       // **
 
@@ -426,101 +427,32 @@ const ModalCreatePost = (props) => {
     }
   }, [state.poll_vote])
 
+  // useEffect
+  useEffect(() => {
+    let check_options = true
+    _.forEach(state.poll_vote_detail.options, (value) => {
+      if (value === "") {
+        check_options = false
+      }
+    })
+    if (check_options && state.poll_vote_detail.question !== "") {
+      let disable_btn_post = false
+
+      if (
+        state.poll_vote_detail.setting.limit_time === true &&
+        state.poll_vote_detail.time_end === null
+      ) {
+        disable_btn_post = true
+      } else {
+        disable_btn_post = false
+      }
+      setState({ disable_btn_post: disable_btn_post })
+    } else {
+      setState({ disable_btn_post: true })
+    }
+  }, [state.poll_vote_detail])
+
   // ** render
-  const items = [
-    {
-      label: (
-        <a
-          className=""
-          onClick={(e) => {
-            e.preventDefault()
-            setState({ privacy_type: "workspace" })
-          }}>
-          <ErpRadio
-            checked={state.privacy_type === "workspace"}
-            onChange={() => {}}
-          />
-          <svg
-            style={{ marginRight: "0.4rem", marginLeft: "-0.1rem" }}
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none">
-            <path
-              d="M13.3575 4.1175V4.6725L10.7025 3.135C9.69746 2.5575 8.29496 2.5575 7.29746 3.135L4.64246 4.68V4.1175C4.64246 2.43 5.56496 1.5 7.25246 1.5H10.7475C12.435 1.5 13.3575 2.43 13.3575 4.1175Z"
-              fill="#139FF8"
-            />
-            <path
-              d="M13.38 5.97749L13.275 5.92499L12.255 5.33999L10.14 4.11749C9.495 3.74249 8.505 3.74249 7.86 4.11749L5.745 5.33249L4.725 5.93249L4.59 5.99999C3.2775 6.88499 3.1875 7.04999 3.1875 8.46749V11.8575C3.1875 13.275 3.2775 13.44 4.62 14.3475L7.86 16.215C8.1825 16.41 8.5875 16.4925 9 16.4925C9.405 16.4925 9.8175 16.4025 10.14 16.215L13.41 14.325C14.73 13.44 14.8125 13.2825 14.8125 11.8575V8.46749C14.8125 7.04999 14.7225 6.88499 13.38 5.97749ZM11.0925 10.125L10.635 10.6875C10.56 10.77 10.5075 10.9275 10.515 11.04L10.56 11.76C10.59 12.2025 10.275 12.4275 9.8625 12.27L9.195 12C9.09 11.9625 8.9175 11.9625 8.8125 12L8.145 12.2625C7.7325 12.4275 7.4175 12.195 7.4475 11.7525L7.4925 11.0325C7.5 10.92 7.4475 10.7625 7.3725 10.68L6.9075 10.125C6.6225 9.78749 6.75 9.41249 7.1775 9.29999L7.875 9.11999C7.9875 9.08999 8.115 8.98499 8.175 8.89499L8.565 8.29499C8.805 7.91999 9.1875 7.91999 9.435 8.29499L9.825 8.89499C9.885 8.99249 10.02 9.08999 10.125 9.11999L10.8225 9.29999C11.25 9.41249 11.3775 9.78749 11.0925 10.125Z"
-              fill="#139FF8"
-            />
-          </svg>
-          <span>
-            {useFormatMessage("modules.feed.create_post.text.workspace")}
-          </span>
-        </a>
-      ),
-      key: "1"
-    },
-    {
-      label: (
-        <a
-          className=""
-          onClick={(e) => {
-            e.preventDefault()
-            setState({ privacy_type: "only_me" })
-          }}>
-          <ErpRadio
-            checked={state.privacy_type === "only_me"}
-            onChange={() => {}}
-          />
-          <i className="fa-solid fa-lock-keyhole me-50"></i>
-          <span>
-            {useFormatMessage("modules.feed.create_post.text.only_me")}
-          </span>
-        </a>
-      ),
-      key: "2"
-    }
-  ]
-  const renderTextDropdown = (privacy) => {
-    if (privacy === "workspace") {
-      return (
-        <>
-          <svg
-            style={{ marginRight: "0.4rem", marginLeft: "-0.1rem" }}
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none">
-            <path
-              d="M13.3575 4.1175V4.6725L10.7025 3.135C9.69746 2.5575 8.29496 2.5575 7.29746 3.135L4.64246 4.68V4.1175C4.64246 2.43 5.56496 1.5 7.25246 1.5H10.7475C12.435 1.5 13.3575 2.43 13.3575 4.1175Z"
-              fill="#139FF8"
-            />
-            <path
-              d="M13.38 5.97749L13.275 5.92499L12.255 5.33999L10.14 4.11749C9.495 3.74249 8.505 3.74249 7.86 4.11749L5.745 5.33249L4.725 5.93249L4.59 5.99999C3.2775 6.88499 3.1875 7.04999 3.1875 8.46749V11.8575C3.1875 13.275 3.2775 13.44 4.62 14.3475L7.86 16.215C8.1825 16.41 8.5875 16.4925 9 16.4925C9.405 16.4925 9.8175 16.4025 10.14 16.215L13.41 14.325C14.73 13.44 14.8125 13.2825 14.8125 11.8575V8.46749C14.8125 7.04999 14.7225 6.88499 13.38 5.97749ZM11.0925 10.125L10.635 10.6875C10.56 10.77 10.5075 10.9275 10.515 11.04L10.56 11.76C10.59 12.2025 10.275 12.4275 9.8625 12.27L9.195 12C9.09 11.9625 8.9175 11.9625 8.8125 12L8.145 12.2625C7.7325 12.4275 7.4175 12.195 7.4475 11.7525L7.4925 11.0325C7.5 10.92 7.4475 10.7625 7.3725 10.68L6.9075 10.125C6.6225 9.78749 6.75 9.41249 7.1775 9.29999L7.875 9.11999C7.9875 9.08999 8.115 8.98499 8.175 8.89499L8.565 8.29499C8.805 7.91999 9.1875 7.91999 9.435 8.29499L9.825 8.89499C9.885 8.99249 10.02 9.08999 10.125 9.11999L10.8225 9.29999C11.25 9.41249 11.3775 9.78749 11.0925 10.125Z"
-              fill="#139FF8"
-            />
-          </svg>
-          {useFormatMessage("modules.feed.create_post.text.workspace")}
-        </>
-      )
-    }
-
-    if (privacy === "only_me") {
-      return (
-        <>
-          <i className="fa-solid fa-lock-keyhole me-50"></i>
-          {useFormatMessage("modules.feed.create_post.text.only_me")}
-        </>
-      )
-    }
-
-    return ""
-  }
-
   const renderPreviewAttachment = useMemo(
     () => (
       <PreviewAttachment
@@ -533,63 +465,6 @@ const ModalCreatePost = (props) => {
     [file, state.loadingUploadAttachment]
   )
 
-  const renderWithTag = () => {
-    if (!_.isEmpty(state.tag_your_colleagues)) {
-      const index_user = dataMention.findIndex(
-        (item) => item.id === state.tag_your_colleagues[0]
-      )
-      let data_user = {}
-      if (index_user !== -1) {
-        data_user = dataMention[index_user]
-      }
-      if (state.tag_your_colleagues.length > 2) {
-        return (
-          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.with")}
-            </span>{" "}
-            <span className="text-tag">{data_user?.full_name}</span>{" "}
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.and")}
-            </span>{" "}
-            <span className="text-tag">
-              {state.tag_your_colleagues.length - 1}{" "}
-              {useFormatMessage(`modules.feed.post.text.others`)}
-            </span>
-          </span>
-        )
-      } else {
-        let data_user_and = {}
-        if (state.tag_your_colleagues.length === 2) {
-          const index_user = dataMention.findIndex(
-            (item) => item.id === state.tag_your_colleagues[1]
-          )
-          if (index_user !== -1) {
-            data_user_and = dataMention[index_user]
-          }
-        }
-        return (
-          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.with")}
-            </span>{" "}
-            <span className="text-tag">{data_user?.full_name}</span>{" "}
-            {state.tag_your_colleagues.length === 2 && (
-              <>
-                <span className="text-default">
-                  {useFormatMessage("modules.feed.post.text.and")}
-                </span>{" "}
-                <span className="text-tag">{data_user_and?.full_name}</span>
-              </>
-            )}
-          </span>
-        )
-      }
-    }
-
-    return ""
-  }
-
   return (
     <Modal
       isOpen={modal}
@@ -599,28 +474,17 @@ const ModalCreatePost = (props) => {
       backdropTransition={{ timeout: 100 }}
       /* backdrop={"static"} */
     >
-      <ModalHeader toggle={() => toggleModal()}>
-        <Avatar className="img" src={avatar} />
-        <div className="modal-header-privacy">
-          <span className="modal-header-privacy-name">
-            {fullName} {renderWithTag()}
-          </span>
-          <div className="modal-header-privacy-choose">
-            <Dropdown
-              menu={{ items }}
-              trigger={["click"]}
-              overlayClassName="modal-header-privacy-choose-dropdown">
-              <a
-                onClick={(e) => e.preventDefault()}
-                className="modal-header-privacy-choose-dropdown-a">
-                <Button.Ripple size="sm" color="flat-default" className="">
-                  {renderTextDropdown(state.privacy_type)}
-                  <i className="fa-sharp fa-solid fa-caret-down ms-50"></i>
-                </Button.Ripple>
-              </a>
-            </Dropdown>
-          </div>
-        </div>
+      <ModalHeader /* toggle={() => toggleModal()} */>
+        <HeaderCreatePost
+          avatar={avatar}
+          fullName={fullName}
+          dataMention={dataMention}
+          privacy_type={state.privacy_type}
+          setPrivacyType={setPrivacyType}
+          tag_your_colleagues={state.tag_your_colleagues}
+          toggleModalTag={toggleModalTag}
+          toggleModalCreatePost={toggleModal}
+        />
       </ModalHeader>
       <ModalBody>
         <EditorComponent
@@ -652,10 +516,9 @@ const ModalCreatePost = (props) => {
         )}
 
         {state.poll_vote && (
-          <PollVoteDetail
+          <PollVote
+            setPollVoteDetail={setPollVoteDetail}
             poll_vote_detail={state.poll_vote_detail}
-            toggleModalPollVote={toggleModalPollVote}
-            setEmptyPollVote={setEmptyPollVote}
           />
         )}
 
@@ -703,14 +566,36 @@ const ModalCreatePost = (props) => {
             toggleModal={toggleModalTag}
           />
 
-          <PollVote
-            backgroundImage={state.backgroundImage}
-            setPollVoteDetail={setPollVoteDetail}
-            modalPollVote={state.modalPollVote}
-            toggleModalPollVote={toggleModalPollVote}
-            loadingSubmit={state.loadingSubmit}
-            poll_vote_detail={state.poll_vote_detail}
-          />
+          <Tooltip
+            title={useFormatMessage("modules.feed.create_post.text.poll_vote")}>
+            <li
+              className={classNames("create_post_footer-li", {
+                "cursor-not-allowed": state.backgroundImage !== null,
+                "cursor-pointer": state.backgroundImage === null
+              })}
+              onClick={() => {
+                if (state.backgroundImage === null) {
+                  toggleModalPollVote()
+                }
+              }}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9.5 2C9.5 1.44772 9.94772 1 10.5 1H13.5C14.0523 1 14.5 1.44772 14.5 2V20C14.5 20.5523 14.0523 21 13.5 21H10.5C9.94772 21 9.5 20.5523 9.5 20V2Z"
+                  fill="#FFA940"></path>
+                <path
+                  d="M17 6C17 5.44772 17.4477 5 18 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H18C17.4477 21 17 20.5523 17 20V6Z"
+                  fill="#FFA940"></path>
+                <path
+                  d="M2 10C2 9.44772 2.44772 9 3 9H6C6.55228 9 7 9.44772 7 10V20C7 20.5523 6.55228 21 6 21H3C2.44772 21 2 20.5523 2 20V10Z"
+                  fill="#FFA940"></path>
+              </svg>
+            </li>
+          </Tooltip>
 
           <Emoji handleInsertEditorState={handleInsertEditorState} />
         </ul>
@@ -719,7 +604,9 @@ const ModalCreatePost = (props) => {
           type="button"
           className="btn-post"
           onClick={() => submitPost()}
-          disabled={state.loadingSubmit}>
+          disabled={
+            state.loadingSubmit || (state.poll_vote && state.disable_btn_post)
+          }>
           {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
           {useFormatMessage("modules.feed.create_post.text.post")}
         </Button.Ripple>

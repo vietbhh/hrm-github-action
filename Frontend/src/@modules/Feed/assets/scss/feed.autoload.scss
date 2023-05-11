@@ -390,7 +390,7 @@ $background-color-checkbox: #139ff8;
       background: #ffffff;
       border-radius: 14px;
       padding: 20px 40px;
-      margin-bottom: 20px !important;
+      margin-bottom: 15px !important;
     }
 
     .infinite-scroll-component {
@@ -1349,7 +1349,7 @@ $background-color-checkbox: #139ff8;
   max-width: 600px;
 
   .modal-content {
-    padding: 30px !important;
+    padding: 20px 30px 30px !important;
   }
 
   .modal-header {
@@ -1357,6 +1357,46 @@ $background-color-checkbox: #139ff8;
     padding-bottom: 0 !important;
 
     .modal-title {
+      position: relative;
+      width: 100%;
+    }
+
+    .text-title {
+      color: #32434f;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 23px;
+    }
+
+    .div-btn-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #f8f7f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      top: -5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($color: #f8f7f7, $amount: 5);
+      }
+    }
+
+    .div-header-title {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      border-bottom: 1px solid rgba(228, 230, 232, 0.85);
+      padding-bottom: 20px;
+      margin-bottom: 15px;
+    }
+
+    .div-header-avatar {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -1371,6 +1411,7 @@ $background-color-checkbox: #139ff8;
       .modal-header-privacy {
         .modal-header-privacy-name {
           font-size: 14px;
+          margin-left: 5px;
 
           .text-default {
             font-weight: normal;
@@ -1502,7 +1543,7 @@ $background-color-checkbox: #139ff8;
       color: #ffffff !important;
       border-radius: 12px;
       box-shadow: none;
-      margin-top: 10px;
+      margin-top: 20px;
       transition: background 0.2s;
 
       &:hover {
@@ -1524,12 +1565,7 @@ $background-color-checkbox: #139ff8;
     // ** editor
     .div-editor {
       box-sizing: border-box;
-      //border: 1px solid #ddd;
-      //cursor: text;
-      //padding: 0.5rem 1rem 1rem 1rem;
       margin: 0 0rem 0.5rem 0rem;
-      //box-shadow: inset 0px 1px 5px -3px #ababab;
-      //background: #fefefe;
       border-radius: 12px;
 
       .DraftEditor-root {
@@ -1641,7 +1677,7 @@ $background-color-checkbox: #139ff8;
     .div-choose-background {
       width: 100%;
       position: absolute;
-      bottom: 105px;
+      bottom: 110px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2332,224 +2368,211 @@ $background-color-checkbox: #139ff8;
 }
 
 .modal-poll-vote {
-  .modal-content {
-    padding: 15px 30px 30px !important;
+  margin-bottom: 30px;
 
-    .modal-body {
-      padding: 0 !important;
+  .body-header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
 
-      .body-header {
+    .btn-icon {
+      width: 33px;
+      min-width: 33px;
+      height: 33px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f3ff;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+
+      &:hover {
+        background-color: darken($color: #f0f3ff, $amount: 5);
+      }
+
+      i {
         position: relative;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
+        top: 1px;
+      }
+    }
 
-        .btn-icon {
-          width: 33px;
-          min-width: 33px;
-          height: 33px;
+    .text-title {
+      font-weight: 600;
+      font-size: 18px;
+      color: #32434f;
+    }
+  }
+
+  .scrollbar-container {
+    max-height: 255px;
+    margin-right: -15px;
+    padding-right: 15px;
+  }
+
+  .body-content {
+    border-top: 1px solid rgb(245, 245, 245);
+    padding-top: 10px;
+    width: 100%;
+
+    .form-group {
+      width: 100%;
+      margin-bottom: 0;
+
+      input[type="text"] {
+        height: 50px;
+        background-color: rgb(241, 241, 245, 0.7);
+      }
+    }
+
+    .form-label {
+      color: #32434f !important;
+      font-weight: 600 !important;
+      font-size: 15px !important;
+    }
+
+    .div-question {
+      display: flex;
+      align-items: flex-end;
+      gap: 15px;
+      margin-bottom: 20px;
+
+      .div-btn-setting {
+        min-width: 50px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(241, 241, 245, 0.7);
+        border-radius: 12px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken($color: rgb(241, 241, 245, 0.7), $amount: 5);
+        }
+      }
+    }
+
+    .btn-add-option {
+      width: calc(100% - 65px);
+      height: 50px;
+      border: none;
+      color: #32434f;
+      background-color: rgb(238, 238, 241, 0.7);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      font-size: 15px;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: darken($color: rgb(238, 238, 241, 0.7), $amount: 5);
+      }
+
+      &:disabled {
+        background: rgb(241, 242, 244) !important;
+        color: rgb(195, 199, 204);
+
+        svg path {
+          stroke: rgb(195, 199, 204);
+        }
+      }
+    }
+
+    label.form-label {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      color: rgb(38, 40, 44);
+    }
+
+    .div-setting {
+      margin-top: 15px;
+
+      .form-check {
+        input,
+        label {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .div-setting-time-end {
+      margin-top: 15px;
+      padding-top: 10px;
+
+      .ant-picker {
+        height: 50px;
+        background-color: #f1f1f5;
+
+        .ant-picker-input {
+          height: 100%;
+        }
+
+        input {
+          background-color: #f1f1f5;
+
+          &:focus {
+            background-color: #f1f1f5 !important;
+          }
+        }
+      }
+    }
+
+    .btn-post {
+      height: 40px;
+      margin-top: 20px;
+    }
+
+    .div-add-options {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 0.5rem;
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      .div-btn-delete-options {
+        min-width: 50px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .btn-delete-options {
+          width: 30px;
+          min-width: 30px;
+          height: 30px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #f0f3ff;
+          padding: 0;
           border-radius: 50%;
-          position: absolute;
-          left: 0;
-
-          &:hover {
-            background-color: darken($color: #f0f3ff, $amount: 5);
-          }
+          background-color: #ffe658;
+          position: relative;
+          color: #171721;
 
           i {
             position: relative;
             top: 1px;
+            left: 0.5px;
           }
-        }
-
-        .text-title {
-          font-weight: 600;
-          font-size: 18px;
-          color: #32434f;
-        }
-      }
-
-      .scrollbar-container {
-        max-height: 255px;
-        margin-right: -15px;
-        padding-right: 15px;
-      }
-
-      .body-content {
-        border-top: 1px solid rgb(245, 245, 245);
-        padding-top: 10px;
-        width: 100%;
-
-        .form-group {
-          width: 100%;
-          margin-bottom: 0;
-
-          input[type="text"] {
-            height: 50px;
-            background-color: rgb(241, 241, 245, 0.7);
-          }
-        }
-
-        .form-label {
-          color: #32434f !important;
-          font-weight: 600 !important;
-          font-size: 15px !important;
-        }
-
-        .div-question {
-          display: flex;
-          align-items: flex-end;
-          gap: 15px;
-          margin-bottom: 20px;
-
-          .div-btn-setting {
-            min-width: 50px;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgb(241, 241, 245, 0.7);
-            border-radius: 12px;
-            cursor: pointer;
-
-            &:hover {
-              background-color: darken(
-                $color: rgb(241, 241, 245, 0.7),
-                $amount: 5
-              );
-            }
-          }
-        }
-
-        .btn-add-option {
-          width: calc(100% - 65px);
-          height: 50px;
-          border: none;
-          color: #32434f;
-          background-color: rgb(238, 238, 241, 0.7);
-          border-radius: 12px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: 600;
-          font-size: 15px;
-          margin-top: 10px;
 
           &:hover {
-            background-color: darken(
-              $color: rgb(238, 238, 241, 0.7),
-              $amount: 5
-            );
+            background-color: darken($color: #ffe658, $amount: 10);
           }
 
-          &:disabled {
-            background: rgb(241, 242, 244) !important;
-            color: rgb(195, 199, 204);
-
-            svg path {
-              stroke: rgb(195, 199, 204);
-            }
-          }
-        }
-
-        label.form-label {
-          font-weight: 600;
-          font-size: 16px;
-          line-height: 24px;
-          color: rgb(38, 40, 44);
-        }
-
-        .div-setting {
-          margin-top: 15px;
-
-          .form-check {
-            input,
-            label {
-              cursor: pointer;
-            }
-          }
-        }
-
-        .div-setting-time-end {
-          margin-top: 15px;
-          padding-top: 10px;
-
-          .ant-picker {
-            height: 50px;
-            background-color: #f1f1f5;
-
-            .ant-picker-input {
-              height: 100%;
-            }
-
-            input {
-              background-color: #f1f1f5;
-
-              &:focus {
-                background-color: #f1f1f5 !important;
-              }
-            }
-          }
-        }
-
-        .btn-post {
-          height: 40px;
-          margin-top: 20px;
-        }
-
-        .div-add-options {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          margin-bottom: 0.5rem;
-
-          .form-group {
-            width: 100%;
-            margin-bottom: 0;
-          }
-
-          .div-btn-delete-options {
-            min-width: 50px;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            .btn-delete-options {
-              width: 30px;
-              min-width: 30px;
-              height: 30px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 0;
-              border-radius: 50%;
-              background-color: #ffe658;
-              position: relative;
-              color: #171721;
-
-              i {
-                position: relative;
-                top: 1px;
-                left: 0.5px;
-              }
-
-              &:hover {
-                background-color: darken($color: #ffe658, $amount: 10);
-              }
-
-              &.visibility-hidden {
-                visibility: hidden;
-              }
-            }
+          &.visibility-hidden {
+            visibility: hidden;
           }
         }
       }
@@ -3154,6 +3177,31 @@ $background-color-checkbox: #139ff8;
       margin-right: 17px;
       width: 23px;
       height: 23px;
+    }
+  }
+}
+
+.modal-create-event {
+  max-width: 700px;
+
+  .modal-content {
+    padding: 25px 30px !important;
+
+    .modal-header {
+      border-bottom: none !important;
+      position: relative;
+      justify-content: center;
+
+      .modal-title {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .modal-body {
+      .btn-post {
+        width: 480px;
+      }
     }
   }
 }

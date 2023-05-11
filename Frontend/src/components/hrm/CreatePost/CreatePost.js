@@ -4,6 +4,7 @@ import { handleDataMention } from "@modules/Feed/common/common"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
+import ModalCreateEvent from "./CreatePostDetails/modals/ModalCreateEvent"
 
 const CreatePost = (props) => {
   const {
@@ -14,7 +15,8 @@ const CreatePost = (props) => {
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: [],
-    optionCreate: ""
+    optionCreate: "",
+    modalCreateEvent: false
   })
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
@@ -28,6 +30,9 @@ const CreatePost = (props) => {
   }
 
   const setOptionCreate = (value) => setState({ optionCreate: value })
+
+  const toggleModalCreateEvent = () =>
+    setState({ modalCreateEvent: !state.modalCreateEvent })
 
   // ** useEffect
   useEffect(() => {
@@ -70,7 +75,7 @@ const CreatePost = (props) => {
                 {useFormatMessage("modules.feed.create_post.text.task")}
               </span>
             </li>
-            <li>
+            <li onClick={() => toggleModalCreateEvent()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -150,6 +155,11 @@ const CreatePost = (props) => {
         approveStatus={approveStatus}
         optionCreate={state.optionCreate}
         setOptionCreate={setOptionCreate}
+      />
+
+      <ModalCreateEvent
+        modal={state.modalCreateEvent}
+        toggleModal={toggleModalCreateEvent}
       />
     </Fragment>
   )

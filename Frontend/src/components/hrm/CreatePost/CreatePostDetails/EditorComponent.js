@@ -11,13 +11,13 @@ import createLinkifyPlugin from "@draft-js-plugins/linkify"
 import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
+import { arrImage } from "@modules/Feed/common/common"
 import { Fragment, useCallback, useEffect, useMemo } from "react"
 
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/linkify/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
-import { arrImage } from "@modules/Feed/common/common"
 import "@styles/react/libs/editor/editor.scss"
 
 const EditorComponent = (props) => {
