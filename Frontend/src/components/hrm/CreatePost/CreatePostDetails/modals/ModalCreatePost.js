@@ -304,7 +304,6 @@ const ModalCreatePost = (props) => {
   const toggleModalPollVote = () => setEmptyPollVote(!state.poll_vote)
 
   const setPollVoteDetail = (value) => {
-    console.log(value)
     setState({ poll_vote_detail: { ...state.poll_vote_detail, ...value } })
   }
 
@@ -411,8 +410,11 @@ const ModalCreatePost = (props) => {
   useEffect(() => {
     if (optionCreate !== "" && modal) {
       if (optionCreate === "poll_vote") {
-        setState({ backgroundImage: null, showChooseBackgroundImage: false })
-        toggleModalPollVote()
+        setState({
+          backgroundImage: null,
+          showChooseBackgroundImage: false,
+          poll_vote: true
+        })
       }
 
       if (_.isFunction(setOptionCreate)) {
@@ -519,6 +521,7 @@ const ModalCreatePost = (props) => {
           <PollVote
             setPollVoteDetail={setPollVoteDetail}
             poll_vote_detail={state.poll_vote_detail}
+            toggleModalPollVote={toggleModalPollVote}
           />
         )}
 

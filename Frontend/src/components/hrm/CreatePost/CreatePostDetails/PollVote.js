@@ -4,6 +4,7 @@ import {
   ErpInput
 } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { Tooltip } from "antd"
 import classNames from "classnames"
 import moment from "moment"
 import React, { Fragment, useRef } from "react"
@@ -11,7 +12,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
 
 const PollVote = (props) => {
-  const { setPollVoteDetail, poll_vote_detail } = props
+  const { setPollVoteDetail, poll_vote_detail, toggleModalPollVote } = props
   const [state, setState] = useMergedState({
     question: "",
     options: ["", ""],
@@ -70,6 +71,16 @@ const PollVote = (props) => {
       <div className="feed modal-create-post modal-poll-vote">
         <div className="body-header"></div>
         <div className="body-content">
+          <Tooltip
+            title={useFormatMessage(
+              "modules.feed.create_post.text.close_poll_vote"
+            )}>
+            <div
+              className="div-btn-close-poll-vote"
+              onClick={() => toggleModalPollVote()}>
+              <i className="fa-regular fa-xmark"></i>
+            </div>
+          </Tooltip>
           <div className="div-question">
             <ErpInput
               label={useFormatMessage("modules.feed.create_post.text.question")}

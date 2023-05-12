@@ -1307,6 +1307,43 @@ $background-color-checkbox: #139ff8;
       gap: 30px;
     }
   }
+
+  .div-btn-color {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #5398ff;
+
+    &.blue {
+      background-color: #5398ff;
+    }
+
+    &.orange {
+      background-color: #ff6f2c;
+    }
+
+    &.green {
+      background-color: #44d38a;
+    }
+
+    &.orange-yellow {
+      background-color: #ffc66f;
+    }
+
+    &.yellow {
+      background-color: #ffe658;
+    }
+
+    &.pink {
+      background-color: #f066b9;
+    }
+
+    &.info {
+      background-color: #66e0f0;
+    }
+  }
 }
 
 .modal-header-privacy-choose-dropdown {
@@ -1559,6 +1596,7 @@ $background-color-checkbox: #139ff8;
           $color: $btn-background-color,
           $amount: 10
         ) !important;
+        pointer-events: all;
       }
     }
 
@@ -2416,6 +2454,7 @@ $background-color-checkbox: #139ff8;
     border-top: 1px solid rgb(245, 245, 245);
     padding-top: 10px;
     width: 100%;
+    position: relative;
 
     .form-group {
       width: 100%;
@@ -2431,6 +2470,28 @@ $background-color-checkbox: #139ff8;
       color: #32434f !important;
       font-weight: 600 !important;
       font-size: 15px !important;
+    }
+
+    .div-btn-close-poll-vote {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #f8f7f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      margin-left: auto;
+
+      i {
+        position: relative;
+        top: 1px;
+      }
+
+      &:hover {
+        background-color: darken($color: #f8f7f7, $amount: 5);
+      }
     }
 
     .div-question {
@@ -3185,7 +3246,7 @@ $background-color-checkbox: #139ff8;
   max-width: 700px;
 
   .modal-content {
-    padding: 25px 30px !important;
+    padding: 20px 30px 25px 30px !important;
 
     .modal-header {
       border-bottom: none !important;
@@ -3202,6 +3263,310 @@ $background-color-checkbox: #139ff8;
       .btn-post {
         width: 480px;
       }
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 0;
+
+        input.input {
+          border-radius: 12px;
+          height: 50px;
+          background-color: rgb(245, 245, 248, 0.7);
+          border-color: rgb(245, 245, 248, 0.7);
+
+          &:hover,
+          &:focus {
+            border-color: $primary-bg;
+          }
+        }
+
+        .select {
+          .select__control {
+            border-radius: 12px;
+            height: 50px;
+            background-color: rgb(245, 245, 248, 0.7);
+            border-color: rgb(245, 245, 248, 0.7);
+
+            &:hover {
+              border-color: $primary-bg;
+            }
+
+            .text-label {
+              font-weight: 400;
+              font-size: 15px;
+              line-height: 20px;
+              color: #32434f;
+            }
+          }
+        }
+
+        .form-label {
+          color: #32434f;
+          font-weight: 600;
+          font-size: 15px;
+          line-height: 20px;
+        }
+      }
+
+      .div-event-name {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+
+        .form-group {
+          width: 100%;
+          margin-bottom: 0;
+
+          input.input {
+            border-radius: 12px;
+            height: 50px;
+            background-color: rgb(245, 245, 248, 0.7);
+          }
+        }
+
+        .div-btn-color {
+          margin-top: 36px;
+        }
+      }
+
+      .div-event-time {
+        margin-bottom: 25px;
+
+        .div-select-time {
+          margin-bottom: 15px;
+          display: flex;
+          gap: 10px;
+
+          .div-select-time__div-box {
+            min-height: 90px;
+            background-color: rgb(241, 241, 245, 0.7);
+            border-radius: 12px;
+            width: 50%;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+
+            .form-label {
+              font-weight: 500;
+              font-size: 12px !important;
+              line-height: 20px;
+              color: #6d7880;
+            }
+
+            .div-box__date {
+              width: 160px;
+            }
+
+            .div-box__time {
+              width: 114px;
+            }
+          }
+        }
+
+        .div-all-day {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .div-switch {
+            .form-check-input:checked {
+              border-color: #f5bb63 !important;
+              background-color: #f5bb63 !important;
+            }
+          }
+
+          .div-repeat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+
+            .text-repeat {
+              font-weight: 400;
+              font-size: 15px;
+              line-height: 20px;
+              color: #969191;
+            }
+          }
+        }
+      }
+
+      .div-switch {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        .form-switch {
+          width: auto;
+        }
+
+        span.text {
+          font-weight: 400;
+          font-size: 15px;
+          line-height: 20px;
+          color: #969191;
+        }
+      }
+
+      .div-attendees {
+        position: relative;
+        margin-bottom: 15px;
+
+        .div-attendees-input {
+          position: relative;
+          margin-bottom: 15px;
+        }
+
+        .div-attendees-show {
+          position: relative;
+
+          .div-attendees-show__item {
+            border: 0.5px solid rgb(245, 176, 41, 0.5);
+            border-radius: 20px;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+
+            .avatar {
+              width: 30px;
+              height: 30px;
+
+              img {
+                width: 30px;
+                height: 30px;
+              }
+            }
+
+            .item__text {
+              font-family: "Poppins";
+              font-weight: 400;
+              font-size: 12px;
+              line-height: 20px;
+              color: #130f26;
+            }
+
+            .item__div-remove {
+              width: 30px;
+              min-width: 30px;
+              height: 30px;
+              background: #f5f5f8;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+
+              &:hover {
+                background: darken($color: #f5f5f8, $amount: 5);
+              }
+            }
+          }
+        }
+      }
+
+      .div-input-btn {
+        position: relative;
+
+        .btn-input {
+          width: 90px;
+          height: 36px;
+          background-color: #ffffff;
+          box-shadow: 0px 2px 4px rgba(153, 143, 143, 0.1);
+          border-radius: 10px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          color: #32434f;
+          position: absolute;
+          right: 7px;
+          top: 33px;
+
+          &:hover {
+            border: 1px solid #f9d324;
+          }
+        }
+      }
+
+      .div-meeting {
+        position: relative;
+        margin-bottom: 25px;
+
+        .div-meeting__div-input {
+          position: relative;
+          display: flex;
+          gap: 10px;
+          width: 100%;
+          margin-bottom: 15px;
+
+          .div-input__meeting-room {
+            width: 65%;
+          }
+
+          .div-input__set-reminder {
+            width: 35%;
+          }
+        }
+
+        .div-meeting__div-switch {
+          .div-switch {
+            .form-check-input:checked {
+              border-color: #69dca1 !important;
+              background-color: #69dca1 !important;
+            }
+          }
+        }
+      }
+
+      .div-details {
+        margin-bottom: 15px;
+
+        textarea {
+          height: 100px !important;
+        }
+      }
+
+      .div-add-attachment {
+        position: relative;
+
+        .div-add-attachment__choose {
+          display: inline-flex;
+          gap: 10px;
+          cursor: pointer;
+
+          .text {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            color: #139ff8;
+          }
+        }
+      }
     }
+  }
+}
+
+.dropdown-div-change-color {
+  ul {
+    border-radius: 12px;
+    margin-bottom: 5px;
+
+    li {
+      border-radius: 12px;
+      cursor: unset;
+      padding: 7px 15px;
+
+      &:hover {
+        background-color: unset !important;
+      }
+    }
+  }
+
+  .div-change-color {
+    display: flex;
+    gap: 12px;
   }
 }

@@ -4450,7 +4450,8 @@
           "list_selected": "List selected",
           "member": "member",
           "members": "members",
-          "poll_setting": "Poll setting"
+          "poll_setting": "Poll setting",
+          "close_poll_vote": "Close poll vote"
         }
       },
       "post": {
@@ -4535,7 +4536,23 @@
       },
       "create_event": {
         "title": "Create event",
-        "text": {}
+        "text": {
+          "event_name": "Event name",
+          "event_name_placeholder": "Enter event name",
+          "start_time": "Start time",
+          "end_time": "End time",
+          "all_day_event": "All-day event",
+          "no_repeat": "No repeat",
+          "attendees": "Attendees",
+          "attendees_placeholder": "Enter workgroup, email or username",
+          "meeting_room": "Meeting room",
+          "meeting_room_placeholder": "Choose meeting room",
+          "set_reminder": "Set reminder",
+          "online_meeting": "Online meeting",
+          "details": "Details",
+          "details_placeholder": "What are the details?",
+          "add_attachment_files": "Add attachment files"
+        }
       }
     },
     "posts": {
