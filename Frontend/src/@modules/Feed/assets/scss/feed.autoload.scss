@@ -3283,7 +3283,7 @@ $background-color-checkbox: #139ff8;
         .select {
           .select__control {
             border-radius: 12px;
-            height: 50px;
+            min-height: 50px;
             background-color: rgb(245, 245, 248, 0.7);
             border-color: rgb(245, 245, 248, 0.7);
 
@@ -3299,13 +3299,13 @@ $background-color-checkbox: #139ff8;
             }
           }
         }
+      }
 
-        .form-label {
-          color: #32434f;
-          font-weight: 600;
-          font-size: 15px;
-          line-height: 20px;
-        }
+      .form-label {
+        color: #32434f;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 20px;
       }
 
       .div-event-name {
@@ -3411,7 +3411,6 @@ $background-color-checkbox: #139ff8;
 
       .div-attendees {
         position: relative;
-        margin-bottom: 15px;
 
         .div-attendees-input {
           position: relative;
@@ -3491,9 +3490,44 @@ $background-color-checkbox: #139ff8;
         }
       }
 
+      .div-input-btn-select {
+        background-color: rgb(245, 245, 248, 0.7);
+        border-radius: 12px;
+
+        .form-group {
+          background-color: rgb(245, 245, 248, 0.7);
+          border: 1px solid rgb(245, 245, 248, 0.7);
+          border-radius: 12px;
+
+          &:hover {
+            border-color: #f9d324;
+          }
+        }
+
+        .select__control {
+          min-height: 50px;
+          height: auto !important;
+          width: calc(100% - 100px);
+
+          &:hover {
+            border-color: rgb(245, 245, 248, 0.7) !important;
+          }
+        }
+
+        .select__multi-value,
+        .react-select__multi-value {
+          margin-bottom: 3px;
+        }
+
+        .select__indicators {
+          display: none;
+        }
+      }
+
       .div-meeting {
         position: relative;
         margin-bottom: 25px;
+        margin-top: 20px;
 
         .div-meeting__div-input {
           position: relative;
@@ -3544,6 +3578,29 @@ $background-color-checkbox: #139ff8;
             color: #139ff8;
           }
         }
+
+        .div-attachment__div-show {
+          position: relative;
+          display: flex;
+          flex-wrap: wrap;
+          margin: -4px;
+
+          .div-attachment__div-items {
+            width: 50%;
+            margin-bottom: 5px;
+            padding: 4px;
+
+            &:last-child:nth-child(2n + 1) {
+              width: 100%;
+            }
+
+            .div-attachment__item {
+              border: 0.5px solid rgb(222, 223, 226);
+              min-height: 50px;
+              border-radius: 12px;
+            }
+          }
+        }
       }
     }
   }
@@ -3568,5 +3625,17 @@ $background-color-checkbox: #139ff8;
   .div-change-color {
     display: flex;
     gap: 12px;
+  }
+}
+
+.dropdown-div-repeat {
+  ul {
+    border-radius: 12px;
+    margin-top: 5px;
+
+    li {
+      border-radius: 12px;
+      padding: 7px 15px;
+    }
   }
 }

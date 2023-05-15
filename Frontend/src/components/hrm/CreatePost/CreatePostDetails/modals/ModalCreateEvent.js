@@ -6,21 +6,105 @@ import {
   ErpTime
 } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import React, { Fragment } from "react"
-import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
+import React, { Fragment, useEffect } from "react"
+import {
+  Button,
+  Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Spinner
+} from "reactstrap"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { Dropdown } from "antd"
 import classNames from "classnames"
 import moment from "moment"
+import { feedApi } from "@modules/Feed/common/api"
+import { useForm } from "react-hook-form"
 
 const ModalCreateEvent = (props) => {
-  const { modal, toggleModal } = props
+  const { modal, toggleModal, dataEmployee } = props
   const [state, setState] = useMergedState({
-    color: "blue"
+    loadingSubmit: false,
+
+    //
+    color: "blue",
+    valueRepeat: "no_repeat",
+
+    // ** Attendees
+    optionsAttendees: [],
+    valueAttendees: [],
+    dataAttendees: [],
+
+    // ** meeting room
+    optionsMeetingRoom: []
   })
+
+  const methods = useForm({ mode: "onSubmit" })
+  const { handleSubmit } = methods
+  const onSubmit = (values) => {
+    values.color = state.color
+    values.valueRepeat = state.valueRepeat
+    values.valueAttendees = state.valueAttendees
+    console.log(values)
+  }
 
   // ** function
   const setColor = (value) => setState({ color: value })
+  const setValueRepeat = (value) => setState({ valueRepeat: value })
+
+  const handleAddAttendees = () => {
+    const dataAttendees = [...state.dataAttendees]
+    _.forEach(state.valueAttendees, (item) => {
+      const indexData = dataAttendees.findIndex(
+        (val) => val.value === item.value
+      )
+      const indexOption = state.optionsAttendees.findIndex(
+        (val) => val.value === item.value
+      )
+      if (indexData === -1 && indexOption !== -1) {
+        dataAttendees.push(state.optionsAttendees[indexOption])
+      }
+    })
+    setState({ valueAttendees: [], dataAttendees: dataAttendees })
+  }
+
+  const handleRemoveAttendees = (index) => {
+    const dataAttendees = [...state.dataAttendees]
+    dataAttendees.splice(index, 1)
+    setState({ dataAttendees: dataAttendees })
+  }
+
+  // ** useEffect
+  useEffect(() => {
+    const data_options = []
+    _.forEach(dataEmployee, (item) => {
+      data_options.push({
+        value: `${item.id}_employee`,
+        label: item.full_name,
+        avatar: item.avatar
+      })
+    })
+    feedApi
+      .getGetInitialEvent()
+      .then((res) => {
+        _.forEach(res.data.dataDepartment, (item) => {
+          data_options.push({
+            value: `${item.id}_department`,
+            label: item.name,
+            avatar: ""
+          })
+        })
+
+        setState({
+          optionsAttendees: data_options,
+          optionsMeetingRoom: res.data.dataMeetingRoom
+        })
+      })
+      .catch((err) => {
+        setState({ optionsAttendees: data_options, optionsMeetingRoom: [] })
+      })
+  }, [])
 
   // ** render
   const itemsColor = [
@@ -86,6 +170,85 @@ const ModalCreateEvent = (props) => {
     </svg>
   )
 
+  const optionsReminder = [
+    {
+      value: "just_in_time",
+      label: useFormatMessage("modules.feed.create_event.text.just_in_time")
+    },
+    {
+      value: "5_minutes_before",
+      label: useFormatMessage("modules.feed.create_event.text.5_minutes_before")
+    },
+    {
+      value: "10_minutes_before",
+      label: useFormatMessage(
+        "modules.feed.create_event.text.10_minutes_before"
+      )
+    },
+    {
+      value: "15_minutes_before",
+      label: useFormatMessage(
+        "modules.feed.create_event.text.15_minutes_before"
+      )
+    },
+    {
+      value: "30_minutes_before",
+      label: useFormatMessage(
+        "modules.feed.create_event.text.30_minutes_before"
+      )
+    },
+    {
+      value: "1_hour_before",
+      label: useFormatMessage("modules.feed.create_event.text.1_hour_before"),
+      default: true
+    },
+    {
+      value: "1_day_before",
+      label: useFormatMessage("modules.feed.create_event.text.1_day_before")
+    },
+    {
+      value: "no_remind",
+      label: useFormatMessage("modules.feed.create_event.text.no_remind")
+    }
+  ]
+
+  const optionsRepeat = [
+    {
+      key: "no_repeat",
+      label: (
+        <div onClick={() => setValueRepeat("no_repeat")}>
+          {useFormatMessage("modules.feed.create_event.text.no_repeat")}
+        </div>
+      )
+    },
+    {
+      key: "repeat_every_day",
+      label: (
+        <div onClick={() => setValueRepeat("repeat_every_day")}>
+          {useFormatMessage("modules.feed.create_event.text.repeat_every_day")}
+        </div>
+      )
+    },
+    {
+      key: "repeat_weekday",
+      label: (
+        <div onClick={() => setValueRepeat("repeat_weekday")}>
+          {useFormatMessage("modules.feed.create_event.text.repeat_weekday")}
+        </div>
+      )
+    },
+    {
+      key: "repeat_week_on_monday",
+      label: (
+        <div onClick={() => setValueRepeat("repeat_week_on_monday")}>
+          {useFormatMessage(
+            "modules.feed.create_event.text.repeat_week_on_monday"
+          )}
+        </div>
+      )
+    }
+  ]
+
   const dateNow = moment()
 
   return (
@@ -95,10 +258,8 @@ const ModalCreateEvent = (props) => {
         toggle={() => toggleModal()}
         className="feed modal-create-post modal-create-event"
         modalTransition={{ timeout: 100 }}
-        backdropTransition={{ timeout: 100 }}
-        /* backdrop={"static"} */
-      >
-        <ModalHeader /* toggle={() => toggleModal()} */>
+        backdropTransition={{ timeout: 100 }}>
+        <ModalHeader>
           <span className="text-title">
             {useFormatMessage("modules.feed.create_event.title")}
           </span>
@@ -116,6 +277,9 @@ const ModalCreateEvent = (props) => {
                 "modules.feed.create_event.text.event_name_placeholder"
               )}
               className="input"
+              name="event_name"
+              defaultValue=""
+              useForm={methods}
             />
 
             <Dropdown
@@ -140,6 +304,8 @@ const ModalCreateEvent = (props) => {
                     )}
                     suffixIcon={iconDate}
                     defaultValue={dateNow}
+                    useForm={methods}
+                    name="start_time_date"
                   />
                 </div>
                 <div className="div-box__time">
@@ -147,6 +313,8 @@ const ModalCreateEvent = (props) => {
                     label={<>&nbsp;</>}
                     suffixIcon={iconTime}
                     defaultValue={dateNow}
+                    useForm={methods}
+                    name="start_time_time"
                   />
                 </div>
               </div>
@@ -158,6 +326,8 @@ const ModalCreateEvent = (props) => {
                     )}
                     suffixIcon={iconDate}
                     defaultValue={dateNow}
+                    useForm={methods}
+                    name="end_time_date"
                   />
                 </div>
                 <div className="div-box__time">
@@ -165,89 +335,93 @@ const ModalCreateEvent = (props) => {
                     label={<>&nbsp;</>}
                     suffixIcon={iconTime}
                     defaultValue={dateNow}
+                    useForm={methods}
+                    name="end_time_time"
                   />
                 </div>
               </div>
             </div>
             <div className="div-all-day">
               <div className="div-switch">
-                <ErpSwitch nolabel />
+                <ErpSwitch
+                  nolabel
+                  useForm={methods}
+                  name="switch_all_day"
+                  defaultValue={false}
+                />
                 <span className="text">
                   {useFormatMessage(
                     "modules.feed.create_event.text.all_day_event"
                   )}
                 </span>
               </div>
-              <div className="div-repeat">
-                <span className="text-repeat">
-                  {useFormatMessage("modules.feed.create_event.text.no_repeat")}
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10"
-                  height="6"
-                  viewBox="0 0 10 6"
-                  fill="none">
-                  <path
-                    d="M8.61251 0H4.45918H0.719181C0.0791811 0 -0.240819 0.773333 0.212515 1.22667L3.66585 4.68C4.21918 5.23333 5.11918 5.23333 5.67251 4.68L6.98585 3.36667L9.12585 1.22667C9.57251 0.773333 9.25251 0 8.61251 0Z"
-                    fill="#9399A2"
-                  />
-                </svg>
-              </div>
+
+              <Dropdown
+                menu={{ items: optionsRepeat }}
+                placement="bottom"
+                trigger={["click"]}
+                overlayClassName="feed dropdown-div-repeat">
+                <div className="div-repeat">
+                  <span className="text-repeat">
+                    {useFormatMessage(
+                      `modules.feed.create_event.text.${state.valueRepeat}`
+                    )}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="10"
+                    height="6"
+                    viewBox="0 0 10 6"
+                    fill="none">
+                    <path
+                      d="M8.61251 0H4.45918H0.719181C0.0791811 0 -0.240819 0.773333 0.212515 1.22667L3.66585 4.68C4.21918 5.23333 5.11918 5.23333 5.67251 4.68L6.98585 3.36667L9.12585 1.22667C9.57251 0.773333 9.25251 0 8.61251 0Z"
+                      fill="#9399A2"
+                    />
+                  </svg>
+                </div>
+              </Dropdown>
             </div>
           </div>
 
           <div className="div-attendees">
             <div className="div-attendees-input div-input-btn">
-              <ErpInput
-                label={useFormatMessage(
-                  "modules.feed.create_event.text.attendees"
-                )}
-                placeholder={useFormatMessage(
-                  "modules.feed.create_event.text.attendees_placeholder"
-                )}
-                className="input"
-              />
-              <button type="button" className="btn-input">
-                {useFormatMessage("button.add")}
-              </button>
+              <label title="Attendees" className="form-label">
+                {useFormatMessage("modules.feed.create_event.text.attendees")}
+              </label>
+              <div className="div-input-btn-select">
+                <ErpSelect
+                  nolabel
+                  placeholder={useFormatMessage(
+                    "modules.feed.create_event.text.attendees_placeholder"
+                  )}
+                  className="select"
+                  isMulti={true}
+                  options={state.optionsAttendees}
+                  value={state.valueAttendees}
+                  onChange={(e) => setState({ valueAttendees: e })}
+                />
+                <button
+                  type="button"
+                  className="btn-input"
+                  onClick={() => handleAddAttendees()}>
+                  {useFormatMessage("button.add")}
+                </button>
+              </div>
             </div>
             <div className="div-attendees-show">
-              <div className="div-attendees-show__item">
-                <Avatar src={""} />
-                <span className="item__text">Anh Tuan Phung</span>
-                <div className="item__div-remove">
-                  <i className="fa-solid fa-xmark"></i>
-                </div>
-              </div>
-              <div className="div-attendees-show__item">
-                <Avatar src={""} />
-                <span className="item__text">longth@lifestud.io</span>
-                <div className="item__div-remove">
-                  <i className="fa-solid fa-xmark"></i>
-                </div>
-              </div>
-              <div className="div-attendees-show__item">
-                <Avatar src={""} />
-                <span className="item__text">Do Nguyen Tu Uyen</span>
-                <div className="item__div-remove">
-                  <i className="fa-solid fa-xmark"></i>
-                </div>
-              </div>
-              <div className="div-attendees-show__item">
-                <Avatar src={""} />
-                <span className="item__text">anhlp@lifestud.io</span>
-                <div className="item__div-remove">
-                  <i className="fa-solid fa-xmark"></i>
-                </div>
-              </div>
-              <div className="div-attendees-show__item">
-                <Avatar src={""} />
-                <span className="item__text">BP. Tổng hợp</span>
-                <div className="item__div-remove">
-                  <i className="fa-solid fa-xmark"></i>
-                </div>
-              </div>
+              {_.map(state.dataAttendees, (item, index) => {
+                return (
+                  <div key={index} className="div-attendees-show__item">
+                    <Avatar src={item.avatar} />
+                    <span className="item__text">{item.label}</span>
+                    <div
+                      className="item__div-remove"
+                      onClick={() => handleRemoveAttendees(index)}>
+                      <i className="fa-solid fa-xmark"></i>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -255,18 +429,30 @@ const ModalCreateEvent = (props) => {
             <div className="div-meeting__div-input">
               <div className="div-input__meeting-room">
                 <div className="div-input-btn">
-                  <ErpInput
-                    label={useFormatMessage(
+                  <label title="Attendees" className="form-label">
+                    {useFormatMessage(
                       "modules.feed.create_event.text.meeting_room"
                     )}
-                    placeholder={useFormatMessage(
-                      "modules.feed.create_event.text.meeting_room_placeholder"
-                    )}
-                    className="input"
-                  />
-                  <button type="button" className="btn-input">
-                    {useFormatMessage("button.add")}
-                  </button>
+                  </label>
+                  <div className="div-input-btn-select">
+                    <ErpSelect
+                      nolabel
+                      placeholder={useFormatMessage(
+                        "modules.feed.create_event.text.meeting_room_placeholder"
+                      )}
+                      className="select"
+                      isMulti={true}
+                      options={state.optionsMeetingRoom}
+                      //value={state.valueAttendees}
+                      //onChange={(e) => setState({ valueAttendees: e })}
+                      defaultValue={[]}
+                      useForm={methods}
+                      name="meeting_room"
+                    />
+                    <button type="button" className="btn-input">
+                      {useFormatMessage("button.add")}
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="div-input__set-reminder">
@@ -276,14 +462,25 @@ const ModalCreateEvent = (props) => {
                   )}
                   isClearable={false}
                   className="select"
-                  defaultValue={{ value: "test", label: "1 hour before event" }}
-                  options={[{ value: "test", label: "1 hour before event" }]}
+                  defaultValue={
+                    optionsReminder[
+                      optionsReminder.findIndex((val) => val.default === true)
+                    ]
+                  }
+                  options={optionsReminder}
+                  useForm={methods}
+                  name="reminder"
                 />
               </div>
             </div>
             <div className="div-meeting__div-switch">
               <div className="div-switch">
-                <ErpSwitch nolabel />
+                <ErpSwitch
+                  nolabel
+                  useForm={methods}
+                  name="switch_online_meeting"
+                  defaultValue={false}
+                />
                 <span className="text">
                   {useFormatMessage(
                     "modules.feed.create_event.text.online_meeting"
@@ -301,57 +498,85 @@ const ModalCreateEvent = (props) => {
                 "modules.feed.create_event.text.details_placeholder"
               )}
               className="input"
+              useForm={methods}
+              name="details"
+              defaultValue=""
             />
           </div>
 
           <div className="div-add-attachment">
-            <div className="div-add-attachment__choose">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none">
-                <path
-                  d="M9.99984 18.3333C14.5832 18.3333 18.3332 14.5833 18.3332 9.99999C18.3332 5.41666 14.5832 1.66666 9.99984 1.66666C5.4165 1.66666 1.6665 5.41666 1.6665 9.99999C1.6665 14.5833 5.4165 18.3333 9.99984 18.3333Z"
-                  stroke="#139FF8"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.6665 10H13.3332"
-                  stroke="#139FF8"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10 13.3333V6.66666"
-                  stroke="#139FF8"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text">
-                {useFormatMessage(
-                  "modules.feed.create_event.text.add_attachment_files"
-                )}
-              </span>
+            <Label for="attach-doc">
+              <div className="div-add-attachment__choose">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none">
+                  <path
+                    d="M9.99984 18.3333C14.5832 18.3333 18.3332 14.5833 18.3332 9.99999C18.3332 5.41666 14.5832 1.66666 9.99984 1.66666C5.4165 1.66666 1.6665 5.41666 1.6665 9.99999C1.6665 14.5833 5.4165 18.3333 9.99984 18.3333Z"
+                    stroke="#139FF8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.6665 10H13.3332"
+                    stroke="#139FF8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10 13.3333V6.66666"
+                    stroke="#139FF8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text">
+                  {useFormatMessage(
+                    "modules.feed.create_event.text.add_attachment_files"
+                  )}
+                </span>
+              </div>
+
+              <input
+                type="file"
+                id="attach-doc"
+                multiple
+                hidden
+                onChange={(e) => {}}
+              />
+            </Label>
+
+            <div className="div-attachment__div-show">
+              <div className="div-attachment__div-items">
+                <div className="div-attachment__item"></div>
+              </div>
+              <div className="div-attachment__div-items">
+                <div className="div-attachment__item"></div>
+              </div>
+              <div className="div-attachment__div-items">
+                <div className="div-attachment__item"></div>
+              </div>
             </div>
           </div>
 
           <div className="text-center">
-            <Button.Ripple
-              color="primary"
-              type="button"
-              className="btn-post"
-              onClick={() => submitPost()}
-              disabled={state.loadingSubmit}>
-              {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
-              {useFormatMessage("modules.feed.create_event.title")}
-            </Button.Ripple>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Button.Ripple
+                color="primary"
+                type="submit"
+                className="btn-post"
+                disabled={state.loadingSubmit}>
+                {state.loadingSubmit && (
+                  <Spinner size={"sm"} className="me-50" />
+                )}
+                {useFormatMessage("modules.feed.create_event.title")}
+              </Button.Ripple>
+            </form>
           </div>
         </ModalBody>
       </Modal>

@@ -1,4 +1,4 @@
-import { axiosNodeApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 import {
   erpSelectToValues,
   object2QueryString,
@@ -115,5 +115,9 @@ export const feedApi = {
 
   async postDeleteComment(data) {
     return await axiosNodeApi.post("/feed/delete-comment", data)
+  },
+
+  async getGetInitialEvent() {
+    return await axiosApi.get("/feed/get-initial-event")
   }
 }

@@ -160,6 +160,7 @@ const CreatePost = (props) => {
       <ModalCreateEvent
         modal={state.modalCreateEvent}
         toggleModal={toggleModalCreateEvent}
+        dataEmployee={dataEmployee}
       />
     </Fragment>
   )
