@@ -5,8 +5,14 @@ import {
   ErpSwitch,
   ErpTime
 } from "@apps/components/common/ErpField"
+import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { eventApi, feedApi } from "@modules/Feed/common/api"
+import { Dropdown } from "antd"
+import classNames from "classnames"
 import React, { Fragment, useEffect } from "react"
+import { useForm } from "react-hook-form"
 import {
   Button,
   Label,
@@ -15,12 +21,6 @@ import {
   ModalHeader,
   Spinner
 } from "reactstrap"
-import Avatar from "@apps/modules/download/pages/Avatar"
-import { Dropdown } from "antd"
-import classNames from "classnames"
-import moment from "moment"
-import { feedApi } from "@modules/Feed/common/api"
-import { useForm } from "react-hook-form"
 
 const ModalCreateEvent = (props) => {
   const { modal, toggleModal, dataEmployee } = props
@@ -30,6 +30,7 @@ const ModalCreateEvent = (props) => {
     //
     color: "blue",
     valueRepeat: "no_repeat",
+    switch_all_day: false,
 
     // ** Attendees
     optionsAttendees: [],
@@ -37,21 +38,61 @@ const ModalCreateEvent = (props) => {
     dataAttendees: [],
 
     // ** meeting room
-    optionsMeetingRoom: []
+    optionsMeetingRoom: [],
+
+    // ** attachment
+    arrAttachment: []
   })
 
   const methods = useForm({ mode: "onSubmit" })
-  const { handleSubmit } = methods
+  const { handleSubmit, reset, getValues, setValue } = methods
   const onSubmit = (values) => {
     values.color = state.color
     values.valueRepeat = state.valueRepeat
-    values.valueAttendees = state.valueAttendees
-    console.log(values)
+    values.dataAttendees = state.dataAttendees
+    setState({ loadingSubmit: true })
+    eventApi
+      .postSubmitEvent(values)
+      .then((res) => {
+        eventApi
+          .postSubmitEventAttachment({
+            idEvent: res.data,
+            file: state.arrAttachment
+          })
+          .then((res) => {
+            resetAfterSubmit()
+            toggleModal()
+            setState({ loadingSubmit: false })
+            notification.showSuccess({
+              text: useFormatMessage("notification.success")
+            })
+          })
+          .catch((err) => {
+            setState({ loadingSubmit: false })
+            notification.showError({
+              text: useFormatMessage("notification.something_went_wrong")
+            })
+          })
+      })
+      .catch((err) => {
+        setState({ loadingSubmit: false })
+      })
   }
 
   // ** function
   const setColor = (value) => setState({ color: value })
   const setValueRepeat = (value) => setState({ valueRepeat: value })
+
+  const resetAfterSubmit = () => {
+    setState({
+      color: "blue",
+      valueRepeat: "no_repeat",
+      dataAttendees: [],
+      arrAttachment: [],
+      switch_all_day: false
+    })
+    reset()
+  }
 
   const handleAddAttendees = () => {
     const dataAttendees = [...state.dataAttendees]
@@ -73,6 +114,56 @@ const ModalCreateEvent = (props) => {
     const dataAttendees = [...state.dataAttendees]
     dataAttendees.splice(index, 1)
     setState({ dataAttendees: dataAttendees })
+  }
+
+  const handleChangeFile = (e) => {
+    const files = e.target.files
+    const arrAttachment = [...state.arrAttachment]
+    _.forEach(files, (item) => {
+      let _type = "file"
+      const type = item.type
+      const name = item.name
+      if (type.includes("image/")) {
+        _type = "image"
+      }
+      if (type.includes("video/")) {
+        _type = "video"
+      }
+      if (name.includes(".xlsx") || name.includes(".xls")) {
+        _type = "excel"
+      }
+      if (name.includes(".docx") || name.includes(".doc")) {
+        _type = "word"
+      }
+
+      arrAttachment.push({ file: item, type: _type })
+    })
+    setState({ arrAttachment: arrAttachment })
+  }
+
+  const renderIconAttachment = (item) => {
+    const file = item.file
+    const type = item.type
+    if (type === "image") {
+      const img = URL.createObjectURL(file)
+      return <img src={img} />
+    }
+    if (type === "video") {
+      return <i className="fa-solid fa-file-video"></i>
+    }
+    if (type === "excel") {
+      return <i className="fa-solid fa-file-excel"></i>
+    }
+    if (type === "word") {
+      return <i className="fa-solid fa-file-word"></i>
+    }
+    return <i className="fa-solid fa-file"></i>
+  }
+
+  const handleRemoveAttachment = (index) => {
+    const arrAttachment = [...state.arrAttachment]
+    arrAttachment.splice(index, 1)
+    setState({ arrAttachment: arrAttachment })
   }
 
   // ** useEffect
@@ -249,8 +340,6 @@ const ModalCreateEvent = (props) => {
     }
   ]
 
-  const dateNow = moment()
-
   return (
     <Fragment>
       <Modal
@@ -280,6 +369,7 @@ const ModalCreateEvent = (props) => {
               name="event_name"
               defaultValue=""
               useForm={methods}
+              required
             />
 
             <Dropdown
@@ -295,7 +385,10 @@ const ModalCreateEvent = (props) => {
           </div>
 
           <div className="div-event-time">
-            <div className="div-select-time">
+            <div
+              className={classNames("div-select-time", {
+                "all-day-event": state.switch_all_day
+              })}>
               <div className="div-select-time__div-box">
                 <div className="div-box__date">
                   <ErpDate
@@ -303,16 +396,18 @@ const ModalCreateEvent = (props) => {
                       "modules.feed.create_event.text.start_time"
                     )}
                     suffixIcon={iconDate}
-                    defaultValue={dateNow}
+                    defaultValue={null}
                     useForm={methods}
                     name="start_time_date"
+                    required
                   />
                 </div>
                 <div className="div-box__time">
                   <ErpTime
                     label={<>&nbsp;</>}
+                    placeholder={"Time"}
                     suffixIcon={iconTime}
-                    defaultValue={dateNow}
+                    defaultValue={null}
                     useForm={methods}
                     name="start_time_time"
                   />
@@ -325,16 +420,18 @@ const ModalCreateEvent = (props) => {
                       "modules.feed.create_event.text.end_time"
                     )}
                     suffixIcon={iconDate}
-                    defaultValue={dateNow}
+                    defaultValue={null}
                     useForm={methods}
                     name="end_time_date"
+                    required
                   />
                 </div>
                 <div className="div-box__time">
                   <ErpTime
                     label={<>&nbsp;</>}
+                    placeholder={"Time"}
                     suffixIcon={iconTime}
-                    defaultValue={dateNow}
+                    defaultValue={null}
                     useForm={methods}
                     name="end_time_time"
                   />
@@ -347,7 +444,11 @@ const ModalCreateEvent = (props) => {
                   nolabel
                   useForm={methods}
                   name="switch_all_day"
-                  defaultValue={false}
+                  defaultValue={state.switch_all_day}
+                  onChange={(e) => {
+                    setValue("switch_all_day", e.target.checked)
+                    setState({ switch_all_day: e.target.checked })
+                  }}
                 />
                 <span className="text">
                   {useFormatMessage(
@@ -547,20 +648,43 @@ const ModalCreateEvent = (props) => {
                 id="attach-doc"
                 multiple
                 hidden
-                onChange={(e) => {}}
+                onChange={handleChangeFile}
               />
             </Label>
 
             <div className="div-attachment__div-show">
-              <div className="div-attachment__div-items">
-                <div className="div-attachment__item"></div>
-              </div>
-              <div className="div-attachment__div-items">
-                <div className="div-attachment__item"></div>
-              </div>
-              <div className="div-attachment__div-items">
-                <div className="div-attachment__item"></div>
-              </div>
+              {_.map(state.arrAttachment, (item, index) => {
+                const file = item.file
+                let size = file.size / 1024
+                let size_type = "KB"
+                if (size > 1024) {
+                  size = size / 1024
+                  size_type = "MB"
+                }
+                size = Math.round(size)
+
+                return (
+                  <div key={index} className="div-attachment__div-items">
+                    <div className="div-attachment__item">
+                      <div className="div-icon">
+                        {renderIconAttachment(item)}
+                      </div>
+                      <div className="div-body">
+                        <span className="title">{file.name}</span>
+                        <span className="size">
+                          <i className="fa-regular fa-circle-info"></i> {size}{" "}
+                          {size_type}
+                        </span>
+                      </div>
+                      <div
+                        className="div-close"
+                        onClick={() => handleRemoveAttachment(index)}>
+                        <i className="fa-solid fa-xmark"></i>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
 

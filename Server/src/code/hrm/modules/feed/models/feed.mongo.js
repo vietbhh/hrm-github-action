@@ -29,7 +29,8 @@ const feedSchema = baseSchema("m_feed", {
       "link",
       "update_avatar",
       "update_cover",
-      "background_image"
+      "background_image",
+      "event"
     ],
     default: "post"
   },
@@ -170,6 +171,12 @@ const feedSchema = baseSchema("m_feed", {
       }
     },
     default: {}
+  },
+
+  // ** event
+  id_event: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null
   },
 
   // ** source child / post: 1 image/video

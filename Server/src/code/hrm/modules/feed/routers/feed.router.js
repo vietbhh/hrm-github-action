@@ -18,8 +18,8 @@ import {
   updatePostPollVote,
   updatePostPollVoteAddMoreOption
 } from "../controllers/feed.js"
-
 import { getPostInteractiveMember } from "../controllers/management.js"
+import { submitEvent, submitEventAttachment } from "../controllers/event.js"
 
 const router = express.Router()
 
@@ -45,5 +45,8 @@ router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
 
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
+
+router.post("/submit-event", submitEvent)
+router.post("/submit-event-attachment", submitEventAttachment)
 
 export default router

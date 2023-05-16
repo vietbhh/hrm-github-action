@@ -121,3 +121,21 @@ export const feedApi = {
     return await axiosApi.get("/feed/get-initial-event")
   }
 }
+
+export const eventApi = {
+  async postSubmitEvent(data) {
+    return await axiosNodeApi.post("/feed/submit-event", data)
+  },
+
+  async postSubmitEventAttachment(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-event-attachment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  }
+}
