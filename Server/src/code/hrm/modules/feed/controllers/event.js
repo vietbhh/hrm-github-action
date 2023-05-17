@@ -40,12 +40,12 @@ const submitEvent = async (req, res, next) => {
     const idEvent = saveEvent._id
 
     // ** insert feed
-    const feedModelParent = new feedMongoModel({
+    const feedModel = new feedMongoModel({
       __user: req.__user,
       type: "event",
-      id_event: idEvent
+      link_id: idEvent
     })
-    await feedModelParent.save()
+    await feedModel.save()
 
     return res.respond(idEvent)
   } catch (err) {
@@ -58,7 +58,8 @@ const submitEventAttachment = async (req, res, next) => {
   const file = req.files
 
   try {
-    const storePath = path.join("modules", "event")
+    const idEvent = body.idEvent
+    const storePath = path.join("modules", "event", idEvent)
     const promises = []
     forEach(file, (value, index) => {
       const type = body[index.replace("[file]", "[type]")]
@@ -76,7 +77,7 @@ const submitEventAttachment = async (req, res, next) => {
     const attachment = await Promise.all(promises).then((res) => {
       return res
     })
-    const idEvent = body.idEvent
+
     await calendarMongoModel.updateOne(
       { _id: idEvent },
       {

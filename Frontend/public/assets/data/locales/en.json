@@ -2640,6 +2640,9 @@
         "status": {
           "draft": "Draft",
           "published": "Published"
+        },
+        "show_announcements": {
+          "one_week": "One week"
         }
       },
       "notifications": {},
@@ -4563,6 +4566,19 @@
           "repeat_every_day": "Repeat every day",
           "repeat_weekday": "Repeat weekday",
           "repeat_week_on_monday": "Repeat week on Monday"
+        }
+      },
+      "announcement": {
+        "title": "Announcement",
+        "text": {
+          "create_announcement": "Create Announcement",
+          "announcement_title": "Announcement title",
+          "announcement_title_placeholder": "Enter annoucement title",
+          "pin_to_top": "Pin to top",
+          "show_announcement": "Show announcements",
+          "one_week": "One week",
+          "send_to": "Send to",
+          "send_to_placeholder": "Enter workgroup, email or username"
         }
       }
     },

@@ -3661,10 +3661,6 @@ $background-color-checkbox: #139ff8;
                 .size {
                   font-size: 12px;
                   color: rgb(115, 118, 130);
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  word-break: break-word;
-                  white-space: nowrap;
                 }
               }
 
@@ -3721,6 +3717,45 @@ $background-color-checkbox: #139ff8;
     li {
       border-radius: 12px;
       padding: 7px 15px;
+    }
+  }
+}
+
+.modal-announcement {
+  .modal-content {
+    .modal-body {
+      .div-event-time {
+        .div-all-day {
+          .div-switch .form-check-input:checked {
+            border-color: $background-color-checkbox !important;
+            background-color: $background-color-checkbox !important;
+          }
+
+          .div-pin {
+            gap: 10px !important;
+          }
+
+          .div-repeat .text-repeat {
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 20px;
+            color: #32434f;
+          }
+
+          .div-show-announcement {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            .text-show {
+              font-weight: 400;
+              font-size: 15px;
+              line-height: 20px;
+              color: #97a6b0;
+            }
+          }
+        }
+      }
     }
   }
 }

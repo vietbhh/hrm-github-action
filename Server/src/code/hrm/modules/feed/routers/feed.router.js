@@ -20,6 +20,11 @@ import {
 } from "../controllers/feed.js"
 import { getPostInteractiveMember } from "../controllers/management.js"
 import { submitEvent, submitEventAttachment } from "../controllers/event.js"
+import {
+  getAnnouncementById,
+  submitAnnouncement,
+  submitAnnouncementAttachment
+} from "../controllers/announcement.js"
 
 const router = express.Router()
 
@@ -48,5 +53,9 @@ router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 
 router.post("/submit-event", submitEvent)
 router.post("/submit-event-attachment", submitEventAttachment)
+
+router.post("/submit-announcement", submitAnnouncement)
+router.post("/submit-announcement-attachment", submitAnnouncementAttachment)
+router.get("/get-announcement-by-id/:id", getAnnouncementById)
 
 export default router

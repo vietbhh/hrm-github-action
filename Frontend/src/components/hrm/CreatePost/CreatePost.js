@@ -1,10 +1,12 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { feedApi } from "@modules/Feed/common/api"
 import { handleDataMention } from "@modules/Feed/common/common"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
-import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
+import ModalAnnouncement from "./CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "./CreatePostDetails/modals/ModalCreateEvent"
+import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
   const {
@@ -16,7 +18,14 @@ const CreatePost = (props) => {
     modalCreatePost: false,
     dataMention: [],
     optionCreate: "",
-    modalCreateEvent: false
+
+    // ** event
+    modalCreateEvent: false,
+    options_employee_department: [],
+    optionsMeetingRoom: [],
+
+    // ** announcement
+    modalAnnouncement: false
   })
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
@@ -28,17 +37,50 @@ const CreatePost = (props) => {
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
-
   const setOptionCreate = (value) => setState({ optionCreate: value })
-
   const toggleModalCreateEvent = () =>
     setState({ modalCreateEvent: !state.modalCreateEvent })
+  const toggleModalAnnouncement = () =>
+    setState({ modalAnnouncement: !state.modalAnnouncement })
 
   // ** useEffect
   useEffect(() => {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
+
+  useEffect(() => {
+    const data_options = []
+    _.forEach(dataEmployee, (item) => {
+      data_options.push({
+        value: `${item.id}_employee`,
+        label: item.full_name,
+        avatar: item.avatar
+      })
+    })
+    feedApi
+      .getGetInitialEvent()
+      .then((res) => {
+        _.forEach(res.data.dataDepartment, (item) => {
+          data_options.push({
+            value: `${item.id}_department`,
+            label: item.name,
+            avatar: ""
+          })
+        })
+
+        setState({
+          options_employee_department: data_options,
+          optionsMeetingRoom: res.data.dataMeetingRoom
+        })
+      })
+      .catch((err) => {
+        setState({
+          options_employee_department: data_options,
+          optionsMeetingRoom: []
+        })
+      })
+  }, [])
 
   return (
     <Fragment>
@@ -117,7 +159,7 @@ const CreatePost = (props) => {
                 {useFormatMessage("modules.feed.create_post.text.poll")}
               </span>
             </li>
-            <li>
+            <li onClick={() => toggleModalAnnouncement()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -160,7 +202,14 @@ const CreatePost = (props) => {
       <ModalCreateEvent
         modal={state.modalCreateEvent}
         toggleModal={toggleModalCreateEvent}
-        dataEmployee={dataEmployee}
+        options_employee_department={state.options_employee_department}
+        optionsMeetingRoom={state.optionsMeetingRoom}
+      />
+
+      <ModalAnnouncement
+        modal={state.modalAnnouncement}
+        toggleModal={toggleModalAnnouncement}
+        options_employee_department={state.options_employee_department}
       />
     </Fragment>
   )

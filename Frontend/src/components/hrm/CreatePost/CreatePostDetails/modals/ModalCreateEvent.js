@@ -8,10 +8,10 @@ import {
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { eventApi, feedApi } from "@modules/Feed/common/api"
+import { eventApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
 import classNames from "classnames"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment } from "react"
 import { useForm } from "react-hook-form"
 import {
   Button,
@@ -23,7 +23,12 @@ import {
 } from "reactstrap"
 
 const ModalCreateEvent = (props) => {
-  const { modal, toggleModal, dataEmployee } = props
+  const {
+    modal,
+    toggleModal,
+    options_employee_department,
+    optionsMeetingRoom
+  } = props
   const [state, setState] = useMergedState({
     loadingSubmit: false,
 
@@ -33,12 +38,8 @@ const ModalCreateEvent = (props) => {
     switch_all_day: false,
 
     // ** Attendees
-    optionsAttendees: [],
     valueAttendees: [],
     dataAttendees: [],
-
-    // ** meeting room
-    optionsMeetingRoom: [],
 
     // ** attachment
     arrAttachment: []
@@ -100,11 +101,11 @@ const ModalCreateEvent = (props) => {
       const indexData = dataAttendees.findIndex(
         (val) => val.value === item.value
       )
-      const indexOption = state.optionsAttendees.findIndex(
+      const indexOption = options_employee_department.findIndex(
         (val) => val.value === item.value
       )
       if (indexData === -1 && indexOption !== -1) {
-        dataAttendees.push(state.optionsAttendees[indexOption])
+        dataAttendees.push(options_employee_department[indexOption])
       }
     })
     setState({ valueAttendees: [], dataAttendees: dataAttendees })
@@ -165,37 +166,6 @@ const ModalCreateEvent = (props) => {
     arrAttachment.splice(index, 1)
     setState({ arrAttachment: arrAttachment })
   }
-
-  // ** useEffect
-  useEffect(() => {
-    const data_options = []
-    _.forEach(dataEmployee, (item) => {
-      data_options.push({
-        value: `${item.id}_employee`,
-        label: item.full_name,
-        avatar: item.avatar
-      })
-    })
-    feedApi
-      .getGetInitialEvent()
-      .then((res) => {
-        _.forEach(res.data.dataDepartment, (item) => {
-          data_options.push({
-            value: `${item.id}_department`,
-            label: item.name,
-            avatar: ""
-          })
-        })
-
-        setState({
-          optionsAttendees: data_options,
-          optionsMeetingRoom: res.data.dataMeetingRoom
-        })
-      })
-      .catch((err) => {
-        setState({ optionsAttendees: data_options, optionsMeetingRoom: [] })
-      })
-  }, [])
 
   // ** render
   const itemsColor = [
@@ -497,7 +467,7 @@ const ModalCreateEvent = (props) => {
                   )}
                   className="select"
                   isMulti={true}
-                  options={state.optionsAttendees}
+                  options={options_employee_department}
                   value={state.valueAttendees}
                   onChange={(e) => setState({ valueAttendees: e })}
                 />
@@ -543,7 +513,7 @@ const ModalCreateEvent = (props) => {
                       )}
                       className="select"
                       isMulti={true}
-                      options={state.optionsMeetingRoom}
+                      options={optionsMeetingRoom}
                       //value={state.valueAttendees}
                       //onChange={(e) => setState({ valueAttendees: e })}
                       defaultValue={[]}

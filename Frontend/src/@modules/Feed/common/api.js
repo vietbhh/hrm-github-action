@@ -139,3 +139,25 @@ export const eventApi = {
     )
   }
 }
+
+export const announcementApi = {
+  async postSubmitAnnouncement(data) {
+    return await axiosNodeApi.post("/feed/submit-announcement", data)
+  },
+
+  async postSubmitAnnouncementAttachment(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-announcement-attachment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async getAnnouncementById(id) {
+    return await axiosNodeApi.get("/feed/get-announcement-by-id/" + id)
+  }
+}
