@@ -1,23 +1,45 @@
 import calendarMongoModel from "#app/models/calendar.mongo.js"
+import { usersModel } from "#app/models/users.mysql.js"
 import { _uploadServices } from "#app/services/upload.js"
-import { forEach } from "lodash-es"
+import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 
 const submitEvent = async (req, res, next) => {
   const body = req.body
 
-  const attendees = []
+  const employee = []
+  const department = []
   forEach(body.dataAttendees, (item) => {
     const value = item.value
     const value_arr = value.split("_")
-    attendees.push({ id: value_arr[0], type: value_arr[1] })
+    if (value_arr[1] === "employee") {
+      employee.push({
+        id: value_arr[0],
+        status: "yes",
+        dateUpdate: Date.now()
+      })
+    }
+    if (value_arr[1] === "department") {
+      department.push(value_arr[0])
+    }
   })
 
-  const meeting_room = []
-  forEach(body.meeting_room, (item) => {
-    meeting_room.push(item.value)
-  })
+  if (!isEmpty(department)) {
+    const dataEmployeeDepartment = await usersModel.findAll({
+      where: { department_id: department }
+    })
+    forEach(dataEmployeeDepartment, (item) => {
+      const index = employee.findIndex((val) => val.id === item.id)
+      if (index === -1) {
+        employee.push({
+          id: item.id,
+          status: "yes",
+          dateUpdate: Date.now()
+        })
+      }
+    })
+  }
 
   try {
     const eventModel = new calendarMongoModel({
@@ -30,8 +52,9 @@ const submitEvent = async (req, res, next) => {
       end_time_time: body.switch_all_day ? null : body.end_time_time,
       all_day_event: body.switch_all_day,
       repeat: body.valueRepeat,
-      attendees: attendees,
-      meeting_room: meeting_room,
+      employee: employee,
+      department: department,
+      meeting_room: body.meeting_room,
       reminder: body.reminder.value,
       online_meeting: body.switch_online_meeting,
       details: body.details
@@ -90,4 +113,14 @@ const submitEventAttachment = async (req, res, next) => {
   }
 }
 
-export { submitEvent, submitEventAttachment }
+const getEventById = async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const data = await calendarMongoModel.findById(id)
+    return res.respond(data)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+export { submitEvent, submitEventAttachment, getEventById }

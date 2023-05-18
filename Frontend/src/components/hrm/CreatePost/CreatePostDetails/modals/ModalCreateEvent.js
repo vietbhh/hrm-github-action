@@ -33,7 +33,7 @@ const ModalCreateEvent = (props) => {
     loadingSubmit: false,
 
     //
-    color: "blue",
+    color: "#5398ff",
     valueRepeat: "no_repeat",
     switch_all_day: false,
 
@@ -46,7 +46,7 @@ const ModalCreateEvent = (props) => {
   })
 
   const methods = useForm({ mode: "onSubmit" })
-  const { handleSubmit, reset, getValues, setValue } = methods
+  const { handleSubmit, reset, setValue } = methods
   const onSubmit = (values) => {
     values.color = state.color
     values.valueRepeat = state.valueRepeat
@@ -86,7 +86,7 @@ const ModalCreateEvent = (props) => {
 
   const resetAfterSubmit = () => {
     setState({
-      color: "blue",
+      color: "#5398ff",
       valueRepeat: "no_repeat",
       dataAttendees: [],
       arrAttachment: [],
@@ -174,26 +174,33 @@ const ModalCreateEvent = (props) => {
       label: (
         <div className="div-change-color">
           <div
-            className="div-btn-color blue"
-            onClick={() => setColor("blue")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#5398ff" }}
+            onClick={() => setColor("#5398ff")}></div>
           <div
-            className="div-btn-color orange"
-            onClick={() => setColor("orange")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#ff6f2c" }}
+            onClick={() => setColor("#ff6f2c")}></div>
           <div
-            className="div-btn-color green"
-            onClick={() => setColor("green")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#44d38a" }}
+            onClick={() => setColor("#44d38a")}></div>
           <div
-            className="div-btn-color orange-yellow"
-            onClick={() => setColor("orange-yellow")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#ffc66f" }}
+            onClick={() => setColor("#ffc66f")}></div>
           <div
-            className="div-btn-color yellow"
-            onClick={() => setColor("yellow")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#ffe658" }}
+            onClick={() => setColor("#ffe658")}></div>
           <div
-            className="div-btn-color pink"
-            onClick={() => setColor("pink")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#f066b9" }}
+            onClick={() => setColor("#f066b9")}></div>
           <div
-            className="div-btn-color info"
-            onClick={() => setColor("info")}></div>
+            className="div-btn-color"
+            style={{ backgroundColor: "#66e0f0" }}
+            onClick={() => setColor("#66e0f0")}></div>
         </div>
       )
     }
@@ -348,9 +355,8 @@ const ModalCreateEvent = (props) => {
               trigger={["click"]}
               overlayClassName="feed dropdown-div-change-color">
               <div
-                className={classNames("div-btn-color", {
-                  [state.color]: state.color
-                })}></div>
+                className="div-btn-color"
+                style={{ backgroundColor: state.color }}></div>
             </Dropdown>
           </div>
 
@@ -505,25 +511,17 @@ const ModalCreateEvent = (props) => {
                       "modules.feed.create_event.text.meeting_room"
                     )}
                   </label>
-                  <div className="div-input-btn-select">
-                    <ErpSelect
-                      nolabel
-                      placeholder={useFormatMessage(
-                        "modules.feed.create_event.text.meeting_room_placeholder"
-                      )}
-                      className="select"
-                      isMulti={true}
-                      options={optionsMeetingRoom}
-                      //value={state.valueAttendees}
-                      //onChange={(e) => setState({ valueAttendees: e })}
-                      defaultValue={[]}
-                      useForm={methods}
-                      name="meeting_room"
-                    />
-                    <button type="button" className="btn-input">
-                      {useFormatMessage("button.add")}
-                    </button>
-                  </div>
+                  <ErpSelect
+                    nolabel
+                    placeholder={useFormatMessage(
+                      "modules.feed.create_event.text.meeting_room_placeholder"
+                    )}
+                    className="select"
+                    options={optionsMeetingRoom}
+                    defaultValue={null}
+                    useForm={methods}
+                    name="meeting_room"
+                  />
                 </div>
               </div>
               <div className="div-input__set-reminder">

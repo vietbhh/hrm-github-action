@@ -4499,6 +4499,14 @@
           "haha": "Haha",
           "sad": "Sad",
           "wow": "Wow"
+        },
+        "event": {
+          "created_an": "created an",
+          "event": "event",
+          "yes": "Yes",
+          "no": "No",
+          "maybe": "Maybe",
+          "people_invited": "people invited"
         }
       },
       "manage_post": {

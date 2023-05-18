@@ -137,6 +137,10 @@ export const eventApi = {
         }
       }
     )
+  },
+
+  async getGetEventById(id) {
+    return await axiosNodeApi.get("/feed/get-event-by-id/" + id)
   }
 }
 

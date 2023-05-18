@@ -220,6 +220,19 @@ const PostHeader = (props) => {
       )
     }
 
+    if (data.type === "event") {
+      return (
+        <>
+          <span className="after-name">
+            {useFormatMessage("modules.feed.post.event.created_an")}
+          </span>{" "}
+          <span className="after-name-bold">
+            {useFormatMessage("modules.feed.post.event.event")}
+          </span>
+        </>
+      )
+    }
+
     return ""
   }
 

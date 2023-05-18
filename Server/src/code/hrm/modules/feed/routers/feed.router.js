@@ -19,7 +19,11 @@ import {
   updatePostPollVoteAddMoreOption
 } from "../controllers/feed.js"
 import { getPostInteractiveMember } from "../controllers/management.js"
-import { submitEvent, submitEventAttachment } from "../controllers/event.js"
+import {
+  getEventById,
+  submitEvent,
+  submitEventAttachment
+} from "../controllers/event.js"
 import {
   getAnnouncementById,
   submitAnnouncement,
@@ -53,6 +57,7 @@ router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 
 router.post("/submit-event", submitEvent)
 router.post("/submit-event-attachment", submitEventAttachment)
+router.get("/get-event-by-id/:id", getEventById)
 
 router.post("/submit-announcement", submitAnnouncement)
 router.post("/submit-announcement-attachment", submitAnnouncementAttachment)

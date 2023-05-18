@@ -448,6 +448,100 @@ $background-color-checkbox: #139ff8;
             font-size: 18px;
           }
         }
+
+        .post-body__event {
+          position: relative;
+          display: flex;
+          min-height: 160px;
+          background-color: #ffe2ac;
+          border-radius: 15px;
+          gap: 20px;
+          padding: 20px;
+          align-items: center;
+
+          .event-date {
+            background: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+            height: 120px;
+            justify-content: center;
+            align-items: center;
+
+            .event-date__day-of-week {
+              font-weight: 500;
+              font-size: 15px;
+              line-height: 16px;
+              color: #808191;
+            }
+
+            .event-date__day {
+              font-weight: 600;
+              font-size: 40px;
+              line-height: 51px;
+              color: #11142d;
+            }
+          }
+
+          .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            position: relative;
+            top: -4px;
+
+            .event-content__title {
+              font-weight: 600;
+              font-size: 20px;
+              color: #32434f;
+            }
+
+            .event-content__meeting-room {
+              font-weight: 400;
+              font-size: 14px;
+              color: rgba(50, 67, 79, 0.73);
+            }
+
+            .event-content__people {
+              font-weight: 300;
+              font-size: 14px;
+              color: rgba(50, 67, 79, 0.73);
+            }
+
+            .event-content__time {
+              width: 85px;
+              height: 24px;
+              background: #5f75ee;
+              border-radius: 8px;
+              font-weight: 600;
+              font-size: 13px;
+              color: #ffe2ac;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+
+          .event-status {
+            margin-left: auto;
+
+            .event-status__dropdown {
+              background: #cdd6e6;
+              border-radius: 6px;
+              font-weight: 600;
+              font-size: 14px;
+              color: #139ff8;
+              padding: 5px 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 7px;
+              cursor: pointer;
+              text-transform: capitalize;
+            }
+          }
+        }
       }
 
       .post-body__poll-vote {
@@ -615,9 +709,15 @@ $background-color-checkbox: #139ff8;
       }
 
       .after-name {
-        font-size: 14px;
-        color: #32434f;
         font-weight: 400;
+        font-size: 15px;
+        color: #8f969b;
+      }
+
+      .after-name-bold {
+        font-weight: 600;
+        font-size: 15px;
+        color: #32434f;
       }
 
       .time {
@@ -1315,34 +1415,6 @@ $background-color-checkbox: #139ff8;
     border-radius: 12px;
     cursor: pointer;
     background-color: #5398ff;
-
-    &.blue {
-      background-color: #5398ff;
-    }
-
-    &.orange {
-      background-color: #ff6f2c;
-    }
-
-    &.green {
-      background-color: #44d38a;
-    }
-
-    &.orange-yellow {
-      background-color: #ffc66f;
-    }
-
-    &.yellow {
-      background-color: #ffe658;
-    }
-
-    &.pink {
-      background-color: #f066b9;
-    }
-
-    &.info {
-      background-color: #66e0f0;
-    }
   }
 }
 
@@ -2859,9 +2931,15 @@ $background-color-checkbox: #139ff8;
             }
 
             .after-name {
-              font-size: 14px;
-              color: #32434f;
               font-weight: 400;
+              font-size: 13px;
+              color: #8f969b;
+            }
+
+            .after-name-bold {
+              font-weight: 600;
+              font-size: 13px;
+              color: #32434f;
             }
 
             .time {
@@ -3757,5 +3835,11 @@ $background-color-checkbox: #139ff8;
         }
       }
     }
+  }
+}
+
+.dropdown-event-status {
+  li {
+    min-width: 100px;
   }
 }

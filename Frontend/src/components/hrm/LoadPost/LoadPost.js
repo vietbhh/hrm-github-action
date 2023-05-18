@@ -2,7 +2,7 @@ import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import React from "react"
+import React, { useEffect } from "react"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
 import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
 import PostComment from "./LoadPostDetails/PostDetails/PostComment"
@@ -10,6 +10,9 @@ import PostHeader from "./LoadPostDetails/PostDetails/PostHeader"
 import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import { eventApi } from "@modules/Feed/common/api"
+import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
 
 const LoadPost = (props) => {
   const {
@@ -27,7 +30,9 @@ const LoadPost = (props) => {
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
-    focusCommentForm: false
+    focusCommentForm: false,
+    loadingDataLink: false,
+    dataLink: {}
   })
 
   // ** function
@@ -37,9 +42,26 @@ const LoadPost = (props) => {
   const setFocusCommentForm = (value) => setState({ focusCommentForm: value })
 
   // ** useEffect
+  useEffect(() => {
+    if (data?.type === "event" && data?.link_id !== null) {
+      setState({ loadingDataLink: true })
+      eventApi
+        .getGetEventById(data?.link_id)
+        .then((res) => {
+          setState({ loadingDataLink: false, dataLink: res.data })
+        })
+        .catch((err) => {
+          setState({ loadingDataLink: false, dataLink: {} })
+        })
+    }
+  }, [])
 
   // ** render
   const renderBody = () => {
+    if (state.loadingDataLink) {
+      return <DefaultSpinner />
+    }
+
     if (data.type === "link" && data.link[0]) {
       return (
         <LinkPreview
@@ -65,6 +87,10 @@ const LoadPost = (props) => {
           customAction={customAction}
         />
       )
+    }
+
+    if (data.type === "event") {
+      return <RenderPostEvent dataLink={state.dataLink} />
     }
 
     return ""
@@ -98,7 +124,7 @@ const LoadPost = (props) => {
         className={classNames("post-body", {
           "post-body__background-image": data.type === "background_image",
           "post-post": data.source === null && _.isEmpty(data.medias),
-          "post-media": (data.source !== null || !_.isEmpty(data.medias))
+          "post-media": data.source !== null || !_.isEmpty(data.medias)
         })}
         style={renderStyleBackgroundImage()}>
         <div id={`post-body-content-${data._id}`} className="post-body-content">

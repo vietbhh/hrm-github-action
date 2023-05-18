@@ -39,24 +39,43 @@ const calendarSchema = baseSchema("m_calendar", {
     type: String,
     default: "no_repeat"
   },
-  attendees: {
+  // ** employee: bao gồm employee được chọn và employee trong department được chọn
+  employee: {
     type: [
       {
-        // ** id: idEmployee / idDepartment
         id: {
-          type: String
-        },
-        type: {
           type: String,
-          enum: ["employee", "department"]
+          default: ""
+        },
+        status: {
+          type: String,
+          default: ""
+        },
+        dateUpdate: {
+          type: Date,
+          default: Date.now()
         }
       }
     ],
     default: []
   },
-  meeting_room: {
+  // ** department: lưu lại department được chọn, dùng để hiển thị lại department đã chọn
+  department: {
     type: [String],
     default: []
+  },
+  meeting_room: {
+    type: {
+      value: {
+        type: String,
+        default: ""
+      },
+      label: {
+        type: String,
+        default: ""
+      }
+    },
+    default: {}
   },
   reminder: {
     type: String,
