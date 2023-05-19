@@ -127,6 +127,10 @@ export const eventApi = {
     return await axiosNodeApi.post("/feed/submit-event", data)
   },
 
+  async postUpdateEventStatus(data) {
+    return await axiosNodeApi.post("/feed/update-event-status", data)
+  },
+
   async postSubmitEventAttachment(data) {
     return await axiosNodeApi.post(
       "/feed/submit-event-attachment",

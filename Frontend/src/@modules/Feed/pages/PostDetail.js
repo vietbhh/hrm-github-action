@@ -17,7 +17,11 @@ const PostDetail = (props) => {
     dataMedia: [],
     loadingPost: true,
     _idMedia: "",
-    dataMention: []
+    dataMention: [],
+
+    // ** event
+    options_employee_department: [],
+    optionsMeetingRoom: []
   })
   const { idPost, idMedia } = useParams()
 
@@ -74,6 +78,39 @@ const PostDetail = (props) => {
     setState({ dataMention: data_mention })
   }, [dataEmployee])
 
+  useEffect(() => {
+    const data_options = []
+    _.forEach(dataEmployee, (item) => {
+      data_options.push({
+        value: `${item.id}_employee`,
+        label: item.full_name,
+        avatar: item.avatar
+      })
+    })
+    feedApi
+      .getGetInitialEvent()
+      .then((res) => {
+        _.forEach(res.data.dataDepartment, (item) => {
+          data_options.push({
+            value: `${item.id}_department`,
+            label: item.name,
+            avatar: ""
+          })
+        })
+
+        setState({
+          options_employee_department: data_options,
+          optionsMeetingRoom: res.data.dataMeetingRoom
+        })
+      })
+      .catch((err) => {
+        setState({
+          options_employee_department: data_options,
+          optionsMeetingRoom: []
+        })
+      })
+  }, [])
+
   const renderContent = () => {
     return (
       <div className="div-content div-posts">
@@ -118,6 +155,8 @@ const PostDetail = (props) => {
                   }
                 }}
                 customAction={customAction}
+                options_employee_department={state.options_employee_department}
+                optionsMeetingRoom={state.optionsMeetingRoom}
               />
             )}
           </div>

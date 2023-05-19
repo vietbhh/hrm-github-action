@@ -1,6 +1,5 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { feedApi } from "@modules/Feed/common/api"
 import { handleDataMention } from "@modules/Feed/common/common"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
@@ -12,7 +11,11 @@ const CreatePost = (props) => {
   const {
     workspace, // arr workspace: []
     setDataCreateNew, // function set Data then create new post
-    approveStatus = "approved" // approved / rejected / pending
+    approveStatus = "approved", // approved / rejected / pending
+
+    // create event / announcement
+    options_employee_department = [],
+    optionsMeetingRoom = []
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
@@ -21,8 +24,6 @@ const CreatePost = (props) => {
 
     // ** event
     modalCreateEvent: false,
-    options_employee_department: [],
-    optionsMeetingRoom: [],
 
     // ** announcement
     modalAnnouncement: false
@@ -48,39 +49,6 @@ const CreatePost = (props) => {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
-
-  useEffect(() => {
-    const data_options = []
-    _.forEach(dataEmployee, (item) => {
-      data_options.push({
-        value: `${item.id}_employee`,
-        label: item.full_name,
-        avatar: item.avatar
-      })
-    })
-    feedApi
-      .getGetInitialEvent()
-      .then((res) => {
-        _.forEach(res.data.dataDepartment, (item) => {
-          data_options.push({
-            value: `${item.id}_department`,
-            label: item.name,
-            avatar: ""
-          })
-        })
-
-        setState({
-          options_employee_department: data_options,
-          optionsMeetingRoom: res.data.dataMeetingRoom
-        })
-      })
-      .catch((err) => {
-        setState({
-          options_employee_department: data_options,
-          optionsMeetingRoom: []
-        })
-      })
-  }, [])
 
   return (
     <Fragment>
@@ -202,14 +170,16 @@ const CreatePost = (props) => {
       <ModalCreateEvent
         modal={state.modalCreateEvent}
         toggleModal={toggleModalCreateEvent}
-        options_employee_department={state.options_employee_department}
-        optionsMeetingRoom={state.optionsMeetingRoom}
+        options_employee_department={options_employee_department}
+        optionsMeetingRoom={optionsMeetingRoom}
+        setDataCreateNew={setDataCreateNew}
       />
 
       <ModalAnnouncement
         modal={state.modalAnnouncement}
         toggleModal={toggleModalAnnouncement}
-        options_employee_department={state.options_employee_department}
+        options_employee_department={options_employee_department}
+        setDataCreateNew={setDataCreateNew}
       />
     </Fragment>
   )

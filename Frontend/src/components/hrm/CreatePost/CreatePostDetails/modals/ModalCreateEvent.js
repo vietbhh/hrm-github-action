@@ -5,13 +5,15 @@ import {
   ErpSwitch,
   ErpTime
 } from "@apps/components/common/ErpField"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { eventApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
 import classNames from "classnames"
-import React, { Fragment } from "react"
+import moment from "moment"
+import React, { Fragment, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import {
   Button,
@@ -27,7 +29,14 @@ const ModalCreateEvent = (props) => {
     modal,
     toggleModal,
     options_employee_department,
-    optionsMeetingRoom
+    optionsMeetingRoom,
+    setDataCreateNew,
+
+    // ** edit
+    idEvent = null,
+    setData,
+    setDataLink,
+    idPost = null
   } = props
   const [state, setState] = useMergedState({
     loadingSubmit: false,
@@ -42,7 +51,11 @@ const ModalCreateEvent = (props) => {
     dataAttendees: [],
 
     // ** attachment
-    arrAttachment: []
+    arrAttachment: [],
+
+    // ** edit
+    loadingEdit: false,
+    dataEdit: {}
   })
 
   const methods = useForm({ mode: "onSubmit" })
@@ -51,13 +64,25 @@ const ModalCreateEvent = (props) => {
     values.color = state.color
     values.valueRepeat = state.valueRepeat
     values.dataAttendees = state.dataAttendees
+    values.idEvent = idEvent
+    values.idPost = idPost
+
     setState({ loadingSubmit: true })
     eventApi
       .postSubmitEvent(values)
       .then((res) => {
+        if (_.isFunction(setDataCreateNew)) {
+          setDataCreateNew(res.data.dataFeed)
+        }
+        if (_.isFunction(setData)) {
+          setData(res.data.dataFeed)
+        }
+        if (_.isFunction(setDataLink)) {
+          setDataLink(res.data.dataLink)
+        }
         eventApi
           .postSubmitEventAttachment({
-            idEvent: res.data,
+            idEvent: res.data.idEvent,
             file: state.arrAttachment
           })
           .then((res) => {
@@ -166,6 +191,28 @@ const ModalCreateEvent = (props) => {
     arrAttachment.splice(index, 1)
     setState({ arrAttachment: arrAttachment })
   }
+
+  // ** useEffect
+  useEffect(() => {
+    if (modal && idEvent) {
+      setState({ loadingEdit: true })
+      eventApi
+        .getGetEventById(idEvent)
+        .then((res) => {
+          setState({
+            loadingEdit: false,
+            dataEdit: res.data,
+            color: res.data.color,
+            valueRepeat: res.data.repeat,
+            switch_all_day: res.data.all_day_event,
+            dataAttendees: res.data.attendees
+          })
+        })
+        .catch((err) => {
+          setState({ loadingEdit: false, dataEdit: {} })
+        })
+    }
+  }, [modal, idEvent])
 
   // ** render
   const itemsColor = [
@@ -334,6 +381,8 @@ const ModalCreateEvent = (props) => {
           </div>
         </ModalHeader>
         <ModalBody>
+          {state.loadingEdit && <DefaultSpinner />}
+
           <div className="div-event-name">
             <ErpInput
               label={useFormatMessage(
@@ -344,7 +393,8 @@ const ModalCreateEvent = (props) => {
               )}
               className="input"
               name="event_name"
-              defaultValue=""
+              defaultValue={state.dataEdit?.name || ""}
+              loading={state.loadingEdit}
               useForm={methods}
               required
             />
@@ -372,7 +422,12 @@ const ModalCreateEvent = (props) => {
                       "modules.feed.create_event.text.start_time"
                     )}
                     suffixIcon={iconDate}
-                    defaultValue={null}
+                    defaultValue={
+                      state.dataEdit.start_time_date
+                        ? moment(state.dataEdit.start_time_date)
+                        : null
+                    }
+                    loading={state.loadingEdit}
                     useForm={methods}
                     name="start_time_date"
                     required
@@ -383,7 +438,12 @@ const ModalCreateEvent = (props) => {
                     label={<>&nbsp;</>}
                     placeholder={"Time"}
                     suffixIcon={iconTime}
-                    defaultValue={null}
+                    defaultValue={
+                      state.dataEdit.start_time_time
+                        ? moment(state.dataEdit.start_time_time)
+                        : null
+                    }
+                    loading={state.loadingEdit}
                     useForm={methods}
                     name="start_time_time"
                   />
@@ -396,7 +456,12 @@ const ModalCreateEvent = (props) => {
                       "modules.feed.create_event.text.end_time"
                     )}
                     suffixIcon={iconDate}
-                    defaultValue={null}
+                    defaultValue={
+                      state.dataEdit.end_time_date
+                        ? moment(state.dataEdit.end_time_date)
+                        : null
+                    }
+                    loading={state.loadingEdit}
                     useForm={methods}
                     name="end_time_date"
                     required
@@ -407,7 +472,12 @@ const ModalCreateEvent = (props) => {
                     label={<>&nbsp;</>}
                     placeholder={"Time"}
                     suffixIcon={iconTime}
-                    defaultValue={null}
+                    defaultValue={
+                      state.dataEdit.end_time_time
+                        ? moment(state.dataEdit.end_time_time)
+                        : null
+                    }
+                    loading={state.loadingEdit}
                     useForm={methods}
                     name="end_time_time"
                   />
@@ -421,6 +491,7 @@ const ModalCreateEvent = (props) => {
                   useForm={methods}
                   name="switch_all_day"
                   defaultValue={state.switch_all_day}
+                  loading={state.loadingEdit}
                   onChange={(e) => {
                     setValue("switch_all_day", e.target.checked)
                     setState({ switch_all_day: e.target.checked })
@@ -518,7 +589,8 @@ const ModalCreateEvent = (props) => {
                     )}
                     className="select"
                     options={optionsMeetingRoom}
-                    defaultValue={null}
+                    defaultValue={state.dataEdit?.meeting_room || null}
+                    loading={state.loadingEdit}
                     useForm={methods}
                     name="meeting_room"
                   />
@@ -533,9 +605,19 @@ const ModalCreateEvent = (props) => {
                   className="select"
                   defaultValue={
                     optionsReminder[
-                      optionsReminder.findIndex((val) => val.default === true)
+                      optionsReminder.findIndex((val) => {
+                        if (
+                          state.dataEdit.reminder &&
+                          state.dataEdit.reminder === val.value
+                        ) {
+                          return true
+                        } else {
+                          return val.default === true
+                        }
+                      })
                     ]
                   }
+                  loading={state.loadingEdit}
                   options={optionsReminder}
                   useForm={methods}
                   name="reminder"
@@ -548,7 +630,8 @@ const ModalCreateEvent = (props) => {
                   nolabel
                   useForm={methods}
                   name="switch_online_meeting"
-                  defaultValue={false}
+                  defaultValue={state.dataEdit?.online_meeting || false}
+                  loading={state.loadingEdit}
                 />
                 <span className="text">
                   {useFormatMessage(
@@ -569,7 +652,8 @@ const ModalCreateEvent = (props) => {
               className="input"
               useForm={methods}
               name="details"
-              defaultValue=""
+              defaultValue={state.dataEdit?.details || ""}
+              loading={state.loadingEdit}
             />
           </div>
 
@@ -662,7 +746,7 @@ const ModalCreateEvent = (props) => {
                 color="primary"
                 type="submit"
                 className="btn-post"
-                disabled={state.loadingSubmit}>
+                disabled={state.loadingSubmit || state.loadingEdit}>
                 {state.loadingSubmit && (
                   <Spinner size={"sm"} className="me-50" />
                 )}

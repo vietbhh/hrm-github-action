@@ -59,9 +59,24 @@ const calendarSchema = baseSchema("m_calendar", {
     ],
     default: []
   },
-  // ** department: lưu lại department được chọn, dùng để hiển thị lại department đã chọn
-  department: {
-    type: [String],
+  // ** attendees: lưu lại dùng để edit
+  attendees: {
+    type: [
+      {
+        value: {
+          type: String,
+          default: ""
+        },
+        label: {
+          type: String,
+          default: ""
+        },
+        avatar: {
+          type: String,
+          default: ""
+        }
+      }
+    ],
     default: []
   },
   meeting_room: {
@@ -106,6 +121,10 @@ const calendarSchema = baseSchema("m_calendar", {
       }
     ],
     default: []
+  },
+  id_post: {
+    type: String,
+    default: ""
   }
 })
 

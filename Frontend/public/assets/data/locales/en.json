@@ -2642,7 +2642,9 @@
           "published": "Published"
         },
         "show_announcements": {
-          "one_week": "One week"
+          "one_day": "One day",
+          "one_week": "One week",
+          "one_month": "One month"
         }
       },
       "notifications": {},

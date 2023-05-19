@@ -25,10 +25,18 @@ const ModalAnnouncement = (props) => {
     modal,
     toggleModal,
     options_employee_department,
-    idEdit = null
+    setDataCreateNew,
+
+    // ** edit
+    idAnnouncement = null,
+    setData,
+    setDataLink,
+    idPost = null
   } = props
   const [state, setState] = useMergedState({
     loadingSubmit: false,
+    loadingEdit: false,
+    dataEdit: {},
 
     //
     valueShowAnnouncement: "643",
@@ -51,14 +59,26 @@ const ModalAnnouncement = (props) => {
   const onSubmit = (values) => {
     values.valueShowAnnouncement = state.valueShowAnnouncement
     values.dataAttendees = state.dataAttendees
+    values.idAnnouncement = idAnnouncement
+    values.idPost = idPost
 
     setState({ loadingSubmit: true })
     announcementApi
       .postSubmitAnnouncement(values)
       .then((res) => {
+        if (_.isFunction(setDataCreateNew)) {
+          setDataCreateNew(res.data.dataFeed)
+        }
+        if (_.isFunction(setData)) {
+          setData(res.data.dataFeed)
+        }
+        if (_.isFunction(setDataLink)) {
+          setDataLink(res.data.dataLink)
+        }
+
         announcementApi
           .postSubmitAnnouncementAttachment({
-            idAnnouncement: res.data,
+            idAnnouncement: res.data.idAnnouncement,
             file: state.arrAttachment
           })
           .then((res) => {
@@ -82,9 +102,6 @@ const ModalAnnouncement = (props) => {
   }
 
   // ** function
-  const setValueShowAnnouncement = (value) =>
-    setState({ valueShowAnnouncement: value })
-
   const resetAfterSubmit = () => {
     setState({
       dataAttendees: [],
@@ -170,13 +187,40 @@ const ModalAnnouncement = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    if (modal && idEdit) {
+    if (modal && idAnnouncement) {
+      setState({ loadingEdit: true })
       announcementApi
-        .getAnnouncementById(idEdit)
-        .then((res) => {})
-        .catch((err) => {})
+        .getAnnouncementById(idAnnouncement)
+        .then((res) => {
+          const indexOptionShow = optionsShowAnnouncement.findIndex(
+            (val) => val.value === res.data.show_announcements
+          )
+          if (indexOptionShow !== -1) {
+            setState({
+              nameOptionShowAnnouncement:
+                optionsShowAnnouncement[indexOptionShow].name_option,
+              valueShowAnnouncement:
+                optionsShowAnnouncement[indexOptionShow].value
+            })
+          } else {
+            setState({
+              valueShowAnnouncement: "643",
+              nameOptionShowAnnouncement: "one_week"
+            })
+          }
+
+          setState({
+            loadingEdit: false,
+            dataEdit: res.data,
+            dataAttendees: res.data.send_to
+          })
+          setValue("pin_to_top", res.data.pin && res.data.pin === 1)
+        })
+        .catch((err) => {
+          setState({ loadingEdit: false, dataEdit: {} })
+        })
     }
-  }, [modal, idEdit])
+  }, [modal, idAnnouncement])
 
   // ** render
   const optionShowAnnouncement = [
@@ -186,8 +230,10 @@ const ModalAnnouncement = (props) => {
         label: (
           <div
             onClick={() => {
-              setValueShowAnnouncement(item.value)
-              setState({ nameOptionShowAnnouncement: item.name_option })
+              setState({
+                nameOptionShowAnnouncement: item.name_option,
+                valueShowAnnouncement: item.value
+              })
             }}>
             {useFormatMessage(item.label)}
           </div>
@@ -223,7 +269,8 @@ const ModalAnnouncement = (props) => {
               )}
               className="input"
               name="announcement_title"
-              defaultValue=""
+              defaultValue={state.dataEdit?.title || ""}
+              loading={state.loadingEdit}
               useForm={methods}
               required
             />
@@ -330,7 +377,8 @@ const ModalAnnouncement = (props) => {
               className="input"
               useForm={methods}
               name="details"
-              defaultValue=""
+              defaultValue={state.dataEdit?.content || ""}
+              loading={state.loadingEdit}
             />
           </div>
 

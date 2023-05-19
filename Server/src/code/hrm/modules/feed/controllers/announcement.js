@@ -3,9 +3,12 @@ import { forEach } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 
 const submitAnnouncement = async (req, res, next) => {
   const body = req.body
+  const idEdit = body.idAnnouncement
+  const idPost = body.idPost
 
   const employee = []
   const department = []
@@ -21,28 +24,76 @@ const submitAnnouncement = async (req, res, next) => {
   })
 
   try {
-    const announcement = await newsModel.create(
-      {
-        title: body.announcement_title,
-        content: body.details,
-        employee: JSON.stringify(employee),
-        department: JSON.stringify(department),
-        pin: body.pin_to_top ? 1 : 0,
-        show_announcements: body.valueShowAnnouncement
-      },
-      { __user: req.__user }
-    )
-    const idAnnouncement = announcement.id
+    const dataInsert = {
+      title: body.announcement_title,
+      content: body.details,
+      employee: JSON.stringify(employee),
+      department: JSON.stringify(department),
+      pin: body.pin_to_top ? 1 : 0,
+      show_announcements: body.valueShowAnnouncement,
+      send_to: JSON.stringify(body.dataAttendees)
+    }
 
-    // ** insert feed
-    const feedModelParent = new feedMongoModel({
-      __user: req.__user,
-      type: "announcement",
-      link_id: idAnnouncement
-    })
-    await feedModelParent.save()
+    if (!idEdit) {
+      const announcement = await newsModel.create(dataInsert, {
+        __user: req.__user
+      })
+      const idAnnouncement = announcement.id
 
-    return res.respond(idAnnouncement)
+      // ** insert feed
+      const feedModelParent = new feedMongoModel({
+        __user: req.__user,
+        type: "announcement",
+        link_id: idAnnouncement
+      })
+      const feedData = await feedModelParent.save()
+      await newsModel.update(
+        { id_post: feedData._id.toString() },
+        {
+          where: {
+            id: idAnnouncement
+          }
+        }
+      )
+
+      const _feedData = await handleDataBeforeReturn(feedData)
+      const result = {
+        dataFeed: _feedData,
+        idAnnouncement: idAnnouncement,
+        dataLink: {}
+      }
+      return res.respond(result)
+    } else {
+      await newsModel.update(dataInsert, {
+        where: {
+          id: idEdit
+        }
+      })
+
+      let _dataFeed = {}
+      if (idPost) {
+        await feedMongoModel.updateOne(
+          { _id: idPost },
+          {
+            edited: true,
+            edited_at: Date.now()
+          }
+        )
+        const dataFeed = await feedMongoModel.findById(idPost)
+        _dataFeed = await handleDataBeforeReturn(dataFeed)
+      }
+
+      const dataAnnouncement = await newsModel.findByPk(idEdit)
+      dataAnnouncement.dataValues.send_to = JSON.parse(
+        dataAnnouncement.dataValues.send_to
+      )
+      const result = {
+        dataFeed: _dataFeed,
+        idAnnouncement: idEdit,
+        dataLink: dataAnnouncement
+      }
+      return res.respond(result)
+    }
   } catch (err) {
     return res.fail(err.message)
   }
@@ -88,16 +139,13 @@ const submitAnnouncementAttachment = async (req, res, next) => {
 
 const getAnnouncementById = async (req, res, next) => {
   const id = req.params.id
-  console.log("_______________________________________________________")
-  console.log(id)
-
   try {
     const data = await newsModel.findByPk(id)
-    console.log(data)
+    data.dataValues.send_to = JSON.parse(data.dataValues.send_to)
+    return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
   }
-  return res.fail("err.message")
 }
 
 export { submitAnnouncement, submitAnnouncementAttachment, getAnnouncementById }

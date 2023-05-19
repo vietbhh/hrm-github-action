@@ -1,5 +1,6 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
+import { eventApi } from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
 import React, { useEffect } from "react"
@@ -10,8 +11,6 @@ import PostHeader from "./LoadPostDetails/PostDetails/PostHeader"
 import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { eventApi } from "@modules/Feed/common/api"
 import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
 
 const LoadPost = (props) => {
@@ -26,12 +25,16 @@ const LoadPost = (props) => {
     renderAppendHeaderComponent,
     // only page post details
     idMedia = "",
-    setIdMedia = null // function set idMedia
+    setIdMedia = null, // function set idMedia
+
+    // create event / announcement
+    options_employee_department = [],
+    optionsMeetingRoom = []
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
     focusCommentForm: false,
-    loadingDataLink: false,
+    loadingDataLink: true,
     dataLink: {}
   })
 
@@ -40,6 +43,7 @@ const LoadPost = (props) => {
     setState({ comment_more_count_original: value })
   }
   const setFocusCommentForm = (value) => setState({ focusCommentForm: value })
+  const setDataLink = (value) => setState({ dataLink: value })
 
   // ** useEffect
   useEffect(() => {
@@ -54,14 +58,10 @@ const LoadPost = (props) => {
           setState({ loadingDataLink: false, dataLink: {} })
         })
     }
-  }, [])
+  }, [data])
 
   // ** render
   const renderBody = () => {
-    if (state.loadingDataLink) {
-      return <DefaultSpinner />
-    }
-
     if (data.type === "link" && data.link[0]) {
       return (
         <LinkPreview
@@ -90,7 +90,16 @@ const LoadPost = (props) => {
     }
 
     if (data.type === "event") {
-      return <RenderPostEvent dataLink={state.dataLink} />
+      return (
+        <RenderPostEvent
+          dataLink={state.dataLink}
+          loadingDataLink={state.loadingDataLink}
+        />
+      )
+    }
+
+    if (data.type === "announcement") {
+      return "announcement: " + data?._id
     }
 
     return ""
@@ -119,6 +128,9 @@ const LoadPost = (props) => {
         setData={setData}
         offPostHeaderAction={offPostHeaderAction}
         renderAppendHeaderComponent={renderAppendHeaderComponent}
+        setDataLink={setDataLink}
+        options_employee_department={options_employee_department}
+        optionsMeetingRoom={optionsMeetingRoom}
       />
       <div
         className={classNames("post-body", {

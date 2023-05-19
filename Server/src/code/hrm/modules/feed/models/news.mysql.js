@@ -34,6 +34,12 @@ const newsModel = appModelMysql("m_news", {
   },
   department: {
     type: DataTypes.STRING
+  },
+  id_post: {
+    type: DataTypes.STRING
+  },
+  send_to: {
+    type: DataTypes.STRING
   }
 })
 

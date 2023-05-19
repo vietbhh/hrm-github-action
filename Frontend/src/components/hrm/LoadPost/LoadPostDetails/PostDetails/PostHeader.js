@@ -15,6 +15,8 @@ import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import MemberVoteModal from "../modals/MemberVoteModal"
+import ModalCreateEvent from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreateEvent"
+import ModalAnnouncement from "components/hrm/CreatePost/CreatePostDetails/modals/ModalAnnouncement"
 
 const PostHeader = (props) => {
   const {
@@ -25,7 +27,12 @@ const PostHeader = (props) => {
     customAction = {}, // custom dropdown post header
     offPostHeaderAction,
     renderAppendHeaderComponent,
-    setEditDescription // function edit description, content only modal
+    setEditDescription, // function edit description, content only modal
+    setDataLink, // function set data link_id
+
+    // create event / announcement
+    options_employee_department,
+    optionsMeetingRoom
   } = props
   const { view_post, edit_post, delete_post, ...rest } = customAction || {}
   const userData = useSelector((state) => state.auth.userData)
@@ -40,7 +47,13 @@ const PostHeader = (props) => {
 
     // with tag
     modalWith: false,
-    dataUserOtherWith: []
+    dataUserOtherWith: [],
+
+    // event
+    modalCreateEvent: false,
+
+    // announcement
+    modalAnnouncement: false
   })
 
   let _rest = {}
@@ -75,7 +88,13 @@ const PostHeader = (props) => {
             setEditDescription(true)
           }
         } else {
-          toggleModalCreatePost()
+          if (data?.type === "event") {
+            toggleModalCreateEvent()
+          } else if (data?.type === "announcement") {
+            toggleModalAnnouncement()
+          } else {
+            toggleModalCreatePost()
+          }
         }
       },
       label: (
@@ -143,7 +162,9 @@ const PostHeader = (props) => {
         setState({ loadingDelete: true })
         const params = {
           ref: data.ref,
-          _id: data._id
+          _id: data._id,
+          type: data.type,
+          link_id: data.link_id
         }
 
         feedApi
@@ -195,6 +216,10 @@ const PostHeader = (props) => {
   }
 
   const toggleModalWith = () => setState({ modalWith: !state.modalWith })
+  const toggleModalCreateEvent = () =>
+    setState({ modalCreateEvent: !state.modalCreateEvent })
+  const toggleModalAnnouncement = () =>
+    setState({ modalAnnouncement: !state.modalAnnouncement })
 
   // ** useEffect
   useEffect(() => {
@@ -399,6 +424,31 @@ const PostHeader = (props) => {
         dataUserVote={state.dataUserOtherWith}
         title={useFormatMessage("modules.feed.post.text.people")}
       />
+
+      {data?.type === "event" && (
+        <ModalCreateEvent
+          modal={state.modalCreateEvent}
+          toggleModal={toggleModalCreateEvent}
+          idEvent={data?.link_id}
+          setData={setData}
+          setDataLink={setDataLink}
+          idPost={data?._id}
+          options_employee_department={options_employee_department}
+          optionsMeetingRoom={optionsMeetingRoom}
+        />
+      )}
+
+      {data?.type === "announcement" && (
+        <ModalAnnouncement
+          modal={state.modalAnnouncement}
+          toggleModal={toggleModalAnnouncement}
+          options_employee_department={options_employee_department}
+          idAnnouncement={data?.link_id}
+          setData={setData}
+          setDataLink={setDataLink}
+          idPost={data?._id}
+        />
+      )}
     </Fragment>
   )
 }

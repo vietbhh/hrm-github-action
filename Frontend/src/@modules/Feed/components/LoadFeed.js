@@ -15,7 +15,11 @@ const LoadFeed = (props) => {
     workspace, // arr workspace: []
     apiLoadFeed, // api load feed
     paramsLoadFeed = {}, // add param load feed api
-    customAction = {} // custom dropdown post header
+    customAction = {}, // custom dropdown post header
+
+    // create event / announcement
+    options_employee_department = [],
+    optionsMeetingRoom = []
   } = props
   const [state, setState] = useMergedState({
     dataPost: [],
@@ -164,6 +168,8 @@ const LoadFeed = (props) => {
                 }
               }}
               customAction={customAction}
+              options_employee_department={options_employee_department}
+              optionsMeetingRoom={optionsMeetingRoom}
             />
           )
         })}
@@ -196,6 +202,8 @@ const LoadFeed = (props) => {
                   }
                 }}
                 customAction={customAction}
+                options_employee_department={options_employee_department}
+                optionsMeetingRoom={optionsMeetingRoom}
               />
             </LazyLoadComponent>
           )

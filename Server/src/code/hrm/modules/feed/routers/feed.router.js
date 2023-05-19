@@ -22,7 +22,8 @@ import { getPostInteractiveMember } from "../controllers/management.js"
 import {
   getEventById,
   submitEvent,
-  submitEventAttachment
+  submitEventAttachment,
+  updateEventStatus
 } from "../controllers/event.js"
 import {
   getAnnouncementById,
@@ -58,6 +59,7 @@ router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 router.post("/submit-event", submitEvent)
 router.post("/submit-event-attachment", submitEventAttachment)
 router.get("/get-event-by-id/:id", getEventById)
+router.post("/update-event-status", updateEventStatus)
 
 router.post("/submit-announcement", submitAnnouncement)
 router.post("/submit-announcement-attachment", submitAnnouncementAttachment)
