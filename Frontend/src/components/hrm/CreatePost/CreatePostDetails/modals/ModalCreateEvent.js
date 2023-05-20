@@ -6,10 +6,12 @@ import {
   ErpTime
 } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { eventApi } from "@modules/Feed/common/api"
+import { renderIconAttachment } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
 import classNames from "classnames"
 import moment from "moment"
@@ -52,6 +54,7 @@ const ModalCreateEvent = (props) => {
 
     // ** attachment
     arrAttachment: [],
+    loadingAttachment: false,
 
     // ** edit
     loadingEdit: false,
@@ -83,7 +86,8 @@ const ModalCreateEvent = (props) => {
         eventApi
           .postSubmitEventAttachment({
             idEvent: res.data.idEvent,
-            file: state.arrAttachment
+            file: state.arrAttachment,
+            countAttachment: state.arrAttachment.length
           })
           .then((res) => {
             resetAfterSubmit()
@@ -162,28 +166,9 @@ const ModalCreateEvent = (props) => {
         _type = "word"
       }
 
-      arrAttachment.push({ file: item, type: _type })
+      arrAttachment.push({ file: item, type: _type, new: true })
     })
     setState({ arrAttachment: arrAttachment })
-  }
-
-  const renderIconAttachment = (item) => {
-    const file = item.file
-    const type = item.type
-    if (type === "image") {
-      const img = URL.createObjectURL(file)
-      return <img src={img} />
-    }
-    if (type === "video") {
-      return <i className="fa-solid fa-file-video"></i>
-    }
-    if (type === "excel") {
-      return <i className="fa-solid fa-file-excel"></i>
-    }
-    if (type === "word") {
-      return <i className="fa-solid fa-file-word"></i>
-    }
-    return <i className="fa-solid fa-file"></i>
   }
 
   const handleRemoveAttachment = (index) => {
@@ -207,6 +192,32 @@ const ModalCreateEvent = (props) => {
             switch_all_day: res.data.all_day_event,
             dataAttendees: res.data.attendees
           })
+
+          if (!_.isEmpty(res.data.attachment)) {
+            setState({ loadingAttachment: true })
+            const promises = []
+            _.forEach(res.data.attachment, (item) => {
+              const promise = new Promise(async (resolve, reject) => {
+                if (item.type === "image") {
+                  const _item = { ...item }
+                  await downloadApi.getPhoto(item.src).then((response) => {
+                    _item.url = URL.createObjectURL(response.data)
+                    resolve(_item)
+                  })
+                } else {
+                  resolve(item)
+                }
+              })
+              promises.push(promise)
+            })
+            Promise.all(promises)
+              .then((res) => {
+                setState({ arrAttachment: res, loadingAttachment: false })
+              })
+              .catch((err) => {
+                setState({ loadingAttachment: false })
+              })
+          }
         })
         .catch((err) => {
           setState({ loadingEdit: false, dataEdit: {} })
@@ -705,9 +716,25 @@ const ModalCreateEvent = (props) => {
             </Label>
 
             <div className="div-attachment__div-show">
+              {state.loadingAttachment && (
+                <div className="w-100">
+                  <DefaultSpinner />
+                </div>
+              )}
+
               {_.map(state.arrAttachment, (item, index) => {
-                const file = item.file
-                let size = file.size / 1024
+                let size = 0
+                let name = ""
+                if (item.new) {
+                  const file = item.file
+                  size = file.size
+                  name = file.name
+                } else {
+                  size = item.size
+                  name = item.name
+                }
+
+                size = size / 1024
                 let size_type = "KB"
                 if (size > 1024) {
                   size = size / 1024
@@ -722,7 +749,7 @@ const ModalCreateEvent = (props) => {
                         {renderIconAttachment(item)}
                       </div>
                       <div className="div-body">
-                        <span className="title">{file.name}</span>
+                        <span className="title">{name}</span>
                         <span className="size">
                           <i className="fa-regular fa-circle-info"></i> {size}{" "}
                           {size_type}

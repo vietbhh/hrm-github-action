@@ -5,6 +5,7 @@ import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
+import moment from "moment/moment.js"
 
 const submitEvent = async (req, res, next) => {
   const body = req.body
@@ -45,6 +46,12 @@ const submitEvent = async (req, res, next) => {
   }
 
   try {
+    const reminder_date = handleReminderDate(
+      body.start_time_date,
+      body.start_time_time,
+      body.reminder.value
+    )
+
     const dataInsert = {
       __user: req.__user,
       name: body.event_name,
@@ -59,6 +66,7 @@ const submitEvent = async (req, res, next) => {
       attendees: body.dataAttendees,
       meeting_room: body.meeting_room,
       reminder: body.reminder.value,
+      reminder_date: reminder_date,
       online_meeting: body.switch_online_meeting,
       details: body.details
     }
@@ -117,19 +125,34 @@ const submitEventAttachment = async (req, res, next) => {
     const idEvent = body.idEvent
     const storePath = path.join("modules", "event", idEvent)
     const promises = []
-    forEach(file, (value, index) => {
-      const type = body[index.replace("[file]", "[type]")]
+    const countAttachment = body.countAttachment ? body.countAttachment : 0
+    for (let index = 0; index < countAttachment; index++) {
+      const type = body[`file[${index}][type]`]
       const promise = new Promise(async (resolve, reject) => {
-        const resultUpload = await _uploadServices(storePath, [value])
-        const result = {
-          type: type,
-          source: resultUpload.uploadSuccess[0].path,
-          source_attribute: resultUpload.uploadSuccess[0]
+        if (body[`file[${index}][new]`]) {
+          const resultUpload = await _uploadServices(storePath, [
+            file[`file[${index}][file]`]
+          ])
+          const result = {
+            type: type,
+            name: resultUpload.uploadSuccess[0].name,
+            size: resultUpload.uploadSuccess[0].size,
+            src: resultUpload.uploadSuccess[0].path
+          }
+          resolve(result)
+        } else {
+          const result = {
+            type: type,
+            name: body[`file[${index}][name]`],
+            size: body[`file[${index}][size]`],
+            src: body[`file[${index}][src]`]
+          }
+          resolve(result)
         }
-        resolve(result)
       })
       promises.push(promise)
-    })
+    }
+
     const attachment = await Promise.all(promises).then((res) => {
       return res
     })
@@ -176,6 +199,47 @@ const updateEventStatus = async (req, res, next) => {
   } catch (err) {
     return res.fail(err.message)
   }
+}
+
+// ** support function
+const handleReminderDate = (date, time, reminder) => {
+  let date_reminder = null
+
+  if (time) {
+    const _date = `${moment(date).format("YYYY-MM-DD")} ${moment(time).format(
+      "HH:mm:ss"
+    )}`
+
+    if (reminder === "just_in_time") {
+      date_reminder = date
+    }
+
+    if (reminder === "5_minutes_before") {
+      date_reminder = moment(_date).subtract(5, "minutes")
+    }
+
+    if (reminder === "10_minutes_before") {
+      date_reminder = moment(_date).subtract(10, "minutes")
+    }
+
+    if (reminder === "15_minutes_before") {
+      date_reminder = moment(_date).subtract(15, "minutes")
+    }
+
+    if (reminder === "30_minutes_before") {
+      date_reminder = moment(_date).subtract(30, "minutes")
+    }
+
+    if (reminder === "1_hour_before") {
+      date_reminder = moment(_date).subtract(1, "hours")
+    }
+
+    if (reminder === "1_day_before") {
+      date_reminder = moment(_date).subtract(1, "days")
+    }
+  }
+
+  return date_reminder
 }
 
 export { submitEvent, submitEventAttachment, getEventById, updateEventStatus }

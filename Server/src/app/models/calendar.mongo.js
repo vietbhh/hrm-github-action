@@ -96,6 +96,10 @@ const calendarSchema = baseSchema("m_calendar", {
     type: String,
     default: ""
   },
+  reminder_date: {
+    type: Date,
+    default: null
+  },
   online_meeting: {
     type: Boolean,
     default: false
@@ -108,15 +112,20 @@ const calendarSchema = baseSchema("m_calendar", {
     type: [
       {
         type: {
-          type: String
+          type: String,
+          default: ""
         },
-        source: {
+        name: {
+          type: String,
+          default: ""
+        },
+        src: {
           type: String,
           default: null
         },
-        source_attribute: {
-          type: {},
-          default: {}
+        size: {
+          type: Number,
+          default: 0
         }
       }
     ],

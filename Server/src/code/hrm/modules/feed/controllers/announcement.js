@@ -87,6 +87,9 @@ const submitAnnouncement = async (req, res, next) => {
       dataAnnouncement.dataValues.send_to = JSON.parse(
         dataAnnouncement.dataValues.send_to
       )
+      dataAnnouncement.dataValues.attachment = JSON.parse(
+        dataAnnouncement.dataValues.attachment
+      )
       const result = {
         dataFeed: _dataFeed,
         idAnnouncement: idEdit,
@@ -107,18 +110,33 @@ const submitAnnouncementAttachment = async (req, res, next) => {
     const idAnnouncement = body.idAnnouncement
     const storePath = path.join("modules", "news", idAnnouncement)
     const promises = []
-    forEach(file, (value, index) => {
-      const type = body[index.replace("[file]", "[type]")]
+    const countAttachment = body.countAttachment ? body.countAttachment : 0
+    for (let index = 0; index < countAttachment; index++) {
+      const type = body[`file[${index}][type]`]
       const promise = new Promise(async (resolve, reject) => {
-        const resultUpload = await _uploadServices(storePath, [value])
-        const result = {
-          type: type,
-          name: resultUpload.uploadSuccess[0].name
+        if (body[`file[${index}][new]`]) {
+          const resultUpload = await _uploadServices(storePath, [
+            file[`file[${index}][file]`]
+          ])
+          const result = {
+            type: type,
+            name: resultUpload.uploadSuccess[0].name,
+            size: resultUpload.uploadSuccess[0].size,
+            src: resultUpload.uploadSuccess[0].path
+          }
+          resolve(result)
+        } else {
+          const result = {
+            type: type,
+            name: body[`file[${index}][name]`],
+            size: body[`file[${index}][size]`],
+            src: body[`file[${index}][src]`]
+          }
+          resolve(result)
         }
-        resolve(result)
       })
       promises.push(promise)
-    })
+    }
     const attachment = await Promise.all(promises).then((res) => {
       return res
     })
@@ -142,6 +160,7 @@ const getAnnouncementById = async (req, res, next) => {
   try {
     const data = await newsModel.findByPk(id)
     data.dataValues.send_to = JSON.parse(data.dataValues.send_to)
+    data.dataValues.attachment = JSON.parse(data.dataValues.attachment)
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)

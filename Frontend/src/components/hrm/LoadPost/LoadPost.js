@@ -1,6 +1,6 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
-import { eventApi } from "@modules/Feed/common/api"
+import { announcementApi, eventApi } from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
 import React, { useEffect } from "react"
@@ -51,6 +51,18 @@ const LoadPost = (props) => {
       setState({ loadingDataLink: true })
       eventApi
         .getGetEventById(data?.link_id)
+        .then((res) => {
+          setState({ loadingDataLink: false, dataLink: res.data })
+        })
+        .catch((err) => {
+          setState({ loadingDataLink: false, dataLink: {} })
+        })
+    }
+
+    if (data?.type === "announcement" && data?.link_id !== null) {
+      setState({ loadingDataLink: true })
+      announcementApi
+        .getAnnouncementById(data?.link_id)
         .then((res) => {
           setState({ loadingDataLink: false, dataLink: res.data })
         })
