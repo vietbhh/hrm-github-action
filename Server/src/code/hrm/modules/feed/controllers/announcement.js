@@ -4,6 +4,7 @@ import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitAnnouncement = async (req, res, next) => {
   const body = req.body
@@ -53,6 +54,26 @@ const submitAnnouncement = async (req, res, next) => {
           where: {
             id: idAnnouncement
           }
+        }
+      )
+
+      // ** send notification
+      const userId = req.__user
+      const receivers = []
+      const body = "{{modules.network.you_have_a_new_announcement}}"
+      const link = `/posts/${feedData._id}`
+      await sendNotification(
+        userId,
+        receivers,
+        {
+          title: "",
+          body: body,
+          link: link
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
         }
       )
 

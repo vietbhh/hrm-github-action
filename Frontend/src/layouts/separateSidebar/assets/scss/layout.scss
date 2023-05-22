@@ -1,7 +1,6 @@
 @import "@scss/friday";
 
 .separate-sidebar-layout {
-
   .wrapper__menu-content {
     position: relative;
     max-width: calc(1480px + 120px);
@@ -386,6 +385,14 @@
                 width: 20px !important;
                 height: 20px !important;
                 font-size: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              svg,
+              i {
+                top: 0 !important;
               }
             }
           }

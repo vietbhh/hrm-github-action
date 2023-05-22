@@ -6,6 +6,7 @@ import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import moment from "moment/moment.js"
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEvent = async (req, res, next) => {
   const body = req.body
@@ -85,6 +86,26 @@ const submitEvent = async (req, res, next) => {
       const out = await feedModel.save()
       await calendarMongoModel.updateOne({ _id: idEvent }, { id_post: out._id })
 
+      // ** send notification
+      const userId = req.__user
+      const receivers = []
+      const body = "{{modules.network.you_have_a_new_event}}"
+      const link = `/posts/${out._id}`
+      await sendNotification(
+        userId,
+        receivers,
+        {
+          title: "",
+          body: body,
+          link: link
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
+        }
+      )
+
       const _out = await handleDataBeforeReturn(out)
       const result = { dataFeed: _out, idEvent: idEvent, dataLink: {} }
       return res.respond(result)
@@ -110,6 +131,7 @@ const submitEvent = async (req, res, next) => {
         idEvent: idEdit,
         dataLink: dataEvent
       }
+
       return res.respond(result)
     }
   } catch (err) {

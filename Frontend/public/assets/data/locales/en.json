@@ -115,6 +115,7 @@
     "your_projects": "Your Projects",
     "your_workgroup": "Your Workgroup",
     "setting_member": "Member Info Settings",
+    "manage_endorsement": "Manage Endorsement",
     "header": {
       "welcome": {
         "morning": {
@@ -4850,13 +4851,31 @@
         "tag_comment": "tagged you on a comment",
         "tag_post": "tagged you on a post",
         "request_workspace": "sent a request to join the workspace",
-        "need_approval": "needs approval"
+        "need_approval": "needs approval",
+        "you_have_a_new_event": "You have a new event",
+        "you_have_a_new_announcement": "You have a new announcement"
       }
     },
     "timeline": {
       "text": {
         "introduction": "Introduction",
         "edit_information": "Edit informarion"
+      }
+    },
+    "manage_endorsement": {
+      "badge_setting": {
+        "title": "Badge Setting",
+        "organization_badge": "Organization's badge",
+        "create_badge": "Create badge",
+        "edit_badge": "Edit",
+        "delete_badge": "Delete",
+        "create_new_badge": "Create new badge",
+        "badge_name": "Badge name",
+        "select_badge": "Select badge",
+        "please_select_badge": "Please select badge"
+      },
+      "leaderboard": {
+        "title": "Leaderboard"
       }
     }
   }

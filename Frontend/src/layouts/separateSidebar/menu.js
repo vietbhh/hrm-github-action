@@ -151,6 +151,19 @@ const menuConfig = [
       </div>
     ),
     navLink: "/fri-net/setting-member"
+  },
+  {
+    id: "manage-endorsement",
+    title: "layout.manage_endorsement",
+    type: "dropdown",
+    action: "manage",
+    resource: "fri_net",
+    icon: (
+      <div className="menu-icon blue">
+        <i className="fa-solid fa-medal"></i>
+      </div>
+    ),
+    navLink: "/fri-net/manage-endorsement"
   }
 ]
 
