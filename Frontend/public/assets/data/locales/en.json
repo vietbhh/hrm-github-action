@@ -4458,6 +4458,13 @@
           "members": "members",
           "poll_setting": "Poll setting",
           "close_poll_vote": "Close poll vote"
+        },
+        "endorsement": {
+          "title": "Endorsement",
+          "appreciation": "Appreciation",
+          "select_member_for_endorsing": "Select member for endorsing",
+          "add_cover_photo": "Add cover photo",
+          "list_badges": "List badges"
         }
       },
       "post": {

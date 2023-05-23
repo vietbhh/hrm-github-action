@@ -2,7 +2,9 @@ import badgeSettingMongoModel from "../models/badge_setting.mongo.js"
 
 const getListDataBadgeSetting = async (req, res, next) => {
   try {
-    const data = await badgeSettingMongoModel.find()
+    const data = await badgeSettingMongoModel.find().sort({
+      _id: "desc"
+    })
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)

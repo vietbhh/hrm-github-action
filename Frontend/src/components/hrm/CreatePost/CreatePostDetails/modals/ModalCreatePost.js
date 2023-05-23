@@ -25,6 +25,7 @@ import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
+import Endorsement from "../Endorsement"
 
 const ModalCreatePost = (props) => {
   const {
@@ -72,7 +73,10 @@ const ModalCreatePost = (props) => {
 
     // tag your colleagues
     tag_your_colleagues: [],
-    modal_tag: false
+    modal_tag: false,
+
+    // endorsement
+    modalEndorsement: false
   })
   const [file, setFile] = useState([])
 
@@ -330,6 +334,9 @@ const ModalCreatePost = (props) => {
 
   const toggleModalTag = () => setState({ modal_tag: !state.modal_tag })
 
+  const toggleModalEndorsement = () =>
+    setState({ modalEndorsement: !state.modalEndorsement })
+
   // ** useEffect
   useEffect(() => {
     if (!_.isEmpty(dataPost)) {
@@ -521,7 +528,6 @@ const ModalCreatePost = (props) => {
           <PollVote
             setPollVoteDetail={setPollVoteDetail}
             poll_vote_detail={state.poll_vote_detail}
-            toggleModalPollVote={toggleModalPollVote}
           />
         )}
 
@@ -599,6 +605,12 @@ const ModalCreatePost = (props) => {
               </svg>
             </li>
           </Tooltip>
+
+          <Endorsement
+            modal={state.modalEndorsement}
+            toggleModal={toggleModalEndorsement}
+            toggleModalCreatePost={toggleModal}
+          />
 
           <Emoji handleInsertEditorState={handleInsertEditorState} />
         </ul>

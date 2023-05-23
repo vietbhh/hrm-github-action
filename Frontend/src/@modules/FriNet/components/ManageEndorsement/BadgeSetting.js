@@ -11,6 +11,7 @@ import React, { Fragment, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
+import { EmptyContent } from "@apps/components/common/EmptyContent"
 
 const BadgeSetting = () => {
   const [state, setState] = useMergedState({
@@ -147,6 +148,8 @@ const BadgeSetting = () => {
         </div>
         <div className="div-body">
           {state.loadingData && <DefaultSpinner />}
+
+          {!state.loadingData && _.isEmpty(state.dataBadge) && <EmptyContent />}
 
           {!state.loadingData && (
             <div className="div-list-item">
