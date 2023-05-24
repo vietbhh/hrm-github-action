@@ -114,6 +114,10 @@ const LoadPost = (props) => {
       return "announcement: " + data?._id
     }
 
+    if (data.type === "endorsement") {
+      return "endorsement: " + data?._id
+    }
+
     return ""
   }
 

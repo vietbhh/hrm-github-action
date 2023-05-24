@@ -13,7 +13,12 @@ const badgeSettingSchema = baseSchema("m_badge_setting_calendar", {
   },
   badge: {
     type: String,
-    required: true
+    default: ""
+  },
+  badge_type: {
+    type: String,
+    enum: ["local", "upload"],
+    default: "local"
   }
 })
 

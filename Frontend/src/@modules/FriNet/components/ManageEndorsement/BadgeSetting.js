@@ -1,75 +1,56 @@
-import { ErpInput } from "@apps/components/common/ErpField"
+import { EmptyContent } from "@apps/components/common/EmptyContent"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { manageEndorsementApi } from "@modules/FriNet/common/api"
-import { getBadgeFromKey, listBadge } from "@modules/FriNet/common/common"
+import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import { Dropdown } from "antd"
-import classNames from "classnames"
 import React, { Fragment, useEffect } from "react"
-import { useForm } from "react-hook-form"
-import PerfectScrollbar from "react-perfect-scrollbar"
-import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
-import { EmptyContent } from "@apps/components/common/EmptyContent"
+import { Button } from "reactstrap"
+import ModalCreateBadge from "./modals/ModalCreateBadge"
+import { downloadApi } from "@apps/modules/download/common/api"
 
 const BadgeSetting = () => {
   const [state, setState] = useMergedState({
     modal: false,
-    loadingSubmit: false,
-    selectedBadge: "",
     loadingData: false,
     dataBadge: [],
 
     // edit
-    idEdit: "",
-    dataEdit: {},
-    loadingEdit: false
+    idEdit: ""
   })
-
-  const methods = useForm({ mode: "onSubmit" })
-  const { handleSubmit, reset, setValue } = methods
-  const onSubmit = (values) => {
-    if (state.selectedBadge === "") {
-      notification.showError({
-        text: useFormatMessage(
-          "modules.manage_endorsement.badge_setting.please_select_badge"
-        )
-      })
-
-      return
-    }
-
-    values.selectedBadge = state.selectedBadge
-    values.idEdit = state.idEdit
-
-    setState({ loadingSubmit: true })
-    manageEndorsementApi
-      .postSubmitCreateBadge(values)
-      .then((res) => {
-        setState({ loadingSubmit: false, modal: false, selectedBadge: "" })
-        reset()
-
-        loadData()
-      })
-      .catch((err) => {
-        notification.showError({
-          text: useFormatMessage("notification.something_went_wrong")
-        })
-        setState({ loadingSubmit: false })
-      })
-  }
 
   // ** function
   const toggleModal = () => setState({ modal: !state.modal, idEdit: "" })
-  const setSelectedBadge = (value) => setState({ selectedBadge: value })
 
   const loadData = () => {
     setState({ loadingData: true })
     manageEndorsementApi
       .getListDataBadgeSetting()
       .then((res) => {
-        setState({ loadingData: false, dataBadge: res.data })
+        const promises = []
+        _.forEach(res.data, (item) => {
+          const promise = new Promise(async (resolve, reject) => {
+            const _item = { ...item }
+            if (_item.badge_type === "upload") {
+              await downloadApi.getPhoto(item.badge).then((response) => {
+                _item.url = URL.createObjectURL(response.data)
+                resolve(_item)
+              })
+            } else {
+              resolve(_item)
+            }
+          })
+          promises.push(promise)
+        })
+        Promise.all(promises)
+          .then((res) => {
+            setState({ loadingData: false, dataBadge: res })
+          })
+          .catch((err) => {
+            setState({ loadingData: false })
+          })
       })
       .catch((err) => {
         setState({ loadingData: false })
@@ -103,24 +84,6 @@ const BadgeSetting = () => {
     loadData()
   }, [])
 
-  useEffect(() => {
-    if (state.modal && state.idEdit) {
-      setState({ loadingEdit: true })
-      manageEndorsementApi
-        .getBadgeSettingById(state.idEdit)
-        .then((res) => {
-          setState({
-            loadingEdit: false,
-            dataEdit: res.data,
-            selectedBadge: res.data.badge
-          })
-        })
-        .catch((err) => {
-          setState({ loadingEdit: false })
-        })
-    }
-  }, [state.idEdit, state.modal])
-
   // ** render
 
   return (
@@ -138,8 +101,6 @@ const BadgeSetting = () => {
             className="ms-auto"
             onClick={() => {
               toggleModal()
-              setState({ selectedBadge: "" })
-              setValue("badge_name", "")
             }}>
             {useFormatMessage(
               "modules.manage_endorsement.badge_setting.create_badge"
@@ -221,8 +182,11 @@ const BadgeSetting = () => {
                     <div className="item-badge__body">
                       <div className="div-img">
                         <img
-                          src={getBadgeFromKey(item.badge)}
-                          alt={getBadgeFromKey(item.badge)}
+                          src={
+                            item.badge_type === "local"
+                              ? getBadgeFromKey(item.badge)
+                              : item.url
+                          }
                         />
                       </div>
                       <div className="div-text">{item.name}</div>
@@ -235,83 +199,12 @@ const BadgeSetting = () => {
         </div>
       </div>
 
-      <Modal
-        isOpen={state.modal}
-        toggle={() => toggleModal()}
-        className="feed modal-create-post modal-create-event modal-create-badge"
-        modalTransition={{ timeout: 100 }}
-        backdropTransition={{ timeout: 100 }}>
-        <ModalHeader>
-          <span className="text-title">
-            {useFormatMessage(
-              "modules.manage_endorsement.badge_setting.create_new_badge"
-            )}
-          </span>
-          <div className="div-btn-close" onClick={() => toggleModal()}>
-            <i className="fa-solid fa-xmark"></i>
-          </div>
-        </ModalHeader>
-        <ModalBody>
-          <ErpInput
-            label={useFormatMessage(
-              "modules.manage_endorsement.badge_setting.badge_name"
-            )}
-            placeholder={useFormatMessage(
-              "modules.manage_endorsement.badge_setting.badge_name"
-            )}
-            className="input"
-            name="badge_name"
-            defaultValue={state.dataEdit?.name || ""}
-            loading={state.loadingEdit}
-            useForm={methods}
-            required
-          />
-
-          <label title="Attendees" className="form-label mt-2">
-            {useFormatMessage(
-              "modules.manage_endorsement.badge_setting.select_badge"
-            )}{" "}
-            *
-          </label>
-          <PerfectScrollbar options={{ wheelPropagation: false }}>
-            <div className="div-list-badge">
-              {_.map(listBadge, (item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={classNames("div-badge-item", {
-                      selected: index === state.selectedBadge
-                    })}
-                    onClick={() => setSelectedBadge(index)}>
-                    <div className="div-badge-item__body">
-                      <div className="div-img mb-1">
-                        <img src={item} />
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </PerfectScrollbar>
-
-          <div className="text-center mt-1">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Button.Ripple
-                color="primary"
-                type="submit"
-                className="btn-post"
-                disabled={state.loadingSubmit || state.loadingEdit}>
-                {state.loadingSubmit && (
-                  <Spinner size={"sm"} className="me-50" />
-                )}
-                {useFormatMessage(
-                  "modules.manage_endorsement.badge_setting.create_badge"
-                )}
-              </Button.Ripple>
-            </form>
-          </div>
-        </ModalBody>
-      </Modal>
+      <ModalCreateBadge
+        modal={state.modal}
+        toggleModal={toggleModal}
+        idEdit={state.idEdit}
+        loadData={loadData}
+      />
     </Fragment>
   )
 }

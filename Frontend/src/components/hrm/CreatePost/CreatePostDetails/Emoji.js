@@ -1,11 +1,11 @@
 import { useMergedState } from "@apps/utility/common"
+import { handleInsertEditorState } from "@modules/Feed/common/common"
 import { Tooltip } from "antd"
 import EmojiPicker, { Categories, EmojiStyle, Theme } from "emoji-picker-react"
 import { Fragment, useEffect, useRef } from "react"
-import { Smile } from "react-feather"
 
 const Emoji = (props) => {
-  const { handleInsertEditorState } = props
+  const { editorState, setEditorState } = props
   const [state, setState] = useMergedState({
     showEmotion: false
   })
@@ -53,7 +53,11 @@ const Emoji = (props) => {
           <div className="div-emoji" ref={emotionRef}>
             <EmojiPicker
               onEmojiClick={(emojiData) => {
-                handleInsertEditorState(emojiData.emoji)
+                handleInsertEditorState(
+                  emojiData.emoji,
+                  editorState,
+                  setEditorState
+                )
               }}
               autoFocusSearch={false}
               theme={Theme.AUTO}

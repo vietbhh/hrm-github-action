@@ -31,7 +31,8 @@ const feedSchema = baseSchema("m_feed", {
       "update_cover",
       "background_image",
       "event",
-      "announcement"
+      "announcement",
+      "endorsement"
     ],
     default: "post"
   },

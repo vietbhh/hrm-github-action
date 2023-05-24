@@ -4464,7 +4464,8 @@
           "appreciation": "Appreciation",
           "select_member_for_endorsing": "Select member for endorsing",
           "add_cover_photo": "Add cover photo",
-          "list_badges": "List badges"
+          "list_badges": "List badges",
+          "editor_placeholder": "Write something about this..."
         }
       },
       "post": {
@@ -4879,7 +4880,9 @@
         "create_new_badge": "Create new badge",
         "badge_name": "Badge name",
         "select_badge": "Select badge",
-        "please_select_badge": "Please select badge"
+        "please_select_badge": "Please select badge",
+        "custom": "Custom",
+        "image_error": "Image type is not allow, (just {allowType})"
       },
       "leaderboard": {
         "title": "Leaderboard"

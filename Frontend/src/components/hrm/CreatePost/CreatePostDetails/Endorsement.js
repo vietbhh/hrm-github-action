@@ -1,7 +1,12 @@
+import { ErpSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { manageEndorsementApi } from "@modules/FriNet/common/api"
+import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import { Tooltip } from "antd"
 import classNames from "classnames"
+import { EditorState, convertToRaw } from "draft-js"
 import React, { Fragment, useEffect } from "react"
+import { useSelector } from "react-redux"
 import {
   Button,
   Label,
@@ -10,19 +15,38 @@ import {
   ModalHeader,
   Spinner
 } from "reactstrap"
+import { Carousel } from "rsuite"
 import {
   getKeyCoverEndorsement,
   iconEndorsement,
   listCoverEndorsement
 } from "../../common/common"
-import { ErpSelect } from "@apps/components/common/ErpField"
-import { useSelector } from "react-redux"
-import { Carousel } from "rsuite"
-import { manageEndorsementApi } from "@modules/FriNet/common/api"
-import { getBadgeFromKey } from "@modules/FriNet/common/common"
+import EditorComponent from "./EditorComponent"
+import Emoji from "./Emoji"
+import { downloadApi } from "@apps/modules/download/common/api"
+import notification from "@apps/utility/notification"
+import draftToHtml from "draftjs-to-html"
+import {
+  decodeHTMLEntities,
+  detectUrl,
+  handleTagUserAndReplaceContent
+} from "@modules/Feed/common/common"
+import { endorsementApi } from "@modules/Feed/common/api"
 
 const Endorsement = (props) => {
-  const { modal, toggleModal } = props
+  const {
+    modal,
+    toggleModal,
+    toggleModalCreatePost,
+    dataMention,
+    setDataCreateNew,
+
+    // ** edit
+    idEndorsement = null,
+    setData,
+    setDataLink,
+    idPost = null
+  } = props
   const [state, setState] = useMergedState({
     loadingSubmit: false,
     optionSelectMember: [],
@@ -34,14 +58,133 @@ const Endorsement = (props) => {
     activeCoverNumber: 0,
     activeCoverString: "cover0",
     coverImg: null,
-    valueBadge: {}
+    valueBadge: {},
+    editorState: EditorState.createEmpty()
   })
 
   const dataEmployee = useSelector((state) => state.users.list)
 
   // ** function
+  const onEditorStateChange = (editorState) => {
+    setState({ editorState: editorState })
+  }
+  const setEmptyEditorState = () => {
+    const emptyEditorState = EditorState.moveFocusToEnd(
+      EditorState.createEmpty()
+    )
+    setState({ editorState: emptyEditorState })
+  }
   const toggleModalChooseBadge = () =>
     setState({ modalChooseBadge: !state.modalChooseBadge })
+
+  const handleCheckContentBeforeSubmit = () => {
+    const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+    let html = draftToHtml(editorStateRaw)
+    html = decodeHTMLEntities(html)
+    let check_content = false
+    if (html.trim().length) {
+      check_content = true
+    }
+
+    let check_can_submit = false
+    if (
+      check_content === true &&
+      !_.isEmpty(state.valueSelectMember) &&
+      !_.isEmpty(state.valueBadge)
+    ) {
+      check_can_submit = true
+    }
+
+    return check_can_submit
+  }
+
+  const submitEndorsement = () => {
+    const checkSubmit = handleCheckContentBeforeSubmit()
+    if (checkSubmit) {
+      setState({ loadingSubmit: true })
+
+      const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+      const content = draftToHtml(editorStateRaw)
+      const _content = detectUrl(content)
+      const result_tag_user = handleTagUserAndReplaceContent(
+        dataMention,
+        _content
+      )
+      const __content = result_tag_user.content
+
+      const params = {
+        content: __content,
+        valueSelectMember: state.valueSelectMember,
+        activeCoverString: state.activeCoverString,
+        valueBadge: state.valueBadge,
+        idEndorsement: idEndorsement,
+        idPost: idPost
+      }
+
+      endorsementApi
+        .postSubmitEndorsement(params)
+        .then((res) => {
+          if (_.isFunction(setDataCreateNew)) {
+            setDataCreateNew(res.data.dataFeed)
+          }
+          if (_.isFunction(setData)) {
+            setData(res.data.dataFeed)
+          }
+          if (_.isFunction(setDataLink)) {
+            setDataLink(res.data.dataLink)
+          }
+
+          if (state.coverImg !== null) {
+            endorsementApi
+              .postSubmitEndorsementCover({
+                idEndorsement: res.data.idEndorsement,
+                file: state.coverImg
+              })
+              .then((res) => {
+                resetAfterSubmit()
+                notification.showSuccess({
+                  text: useFormatMessage("notification.success")
+                })
+              })
+              .catch((err) => {
+                setState({ loadingSubmit: false })
+                notification.showError({
+                  text: useFormatMessage("notification.something_went_wrong")
+                })
+              })
+          } else {
+            resetAfterSubmit()
+            notification.showSuccess({
+              text: useFormatMessage("notification.success")
+            })
+          }
+        })
+        .catch((err) => {
+          setState({ loadingSubmit: false })
+          notification.showError({
+            text: useFormatMessage("notification.something_went_wrong")
+          })
+        })
+    } else {
+      notification.showError({
+        text: useFormatMessage("notification.something_went_wrong")
+      })
+    }
+  }
+
+  const resetAfterSubmit = () => {
+    toggleModal()
+    toggleModalCreatePost()
+    setEmptyEditorState()
+    setState({
+      valueSelectMember: [],
+      activeCoverNumber: 0,
+      activeCoverString: "cover0",
+      coverImg: null,
+      valueBadge: {},
+      loadingSubmit: false
+    })
+  }
 
   // ** useEffect
   useEffect(() => {
@@ -54,7 +197,24 @@ const Endorsement = (props) => {
     manageEndorsementApi
       .getListDataBadgeSetting()
       .then((res) => {
-        setState({ listBadge: res.data })
+        const promises = []
+        _.forEach(res.data, (item) => {
+          const promise = new Promise(async (resolve, reject) => {
+            const _item = { ...item }
+            if (_item.badge_type === "upload") {
+              await downloadApi.getPhoto(item.badge).then((response) => {
+                _item.url = URL.createObjectURL(response.data)
+                resolve(_item)
+              })
+            } else {
+              resolve(_item)
+            }
+          })
+          promises.push(promise)
+        })
+        Promise.all(promises).then((res) => {
+          setState({ listBadge: res })
+        })
       })
       .catch((err) => {})
   }, [])
@@ -221,7 +381,9 @@ const Endorsement = (props) => {
               <img
                 src={
                   state.valueBadge.badge
-                    ? getBadgeFromKey(state.valueBadge.badge)
+                    ? state.valueBadge.url
+                      ? state.valueBadge.url
+                      : getBadgeFromKey(state.valueBadge.badge)
                     : listCoverEndorsement[0]["cover"]
                 }
               />
@@ -255,15 +417,125 @@ const Endorsement = (props) => {
             </div>
           </div>
 
-          <div className="text-center mt-2">
+          <div className="div-write-editor">
+            <EditorComponent
+              editorState={state.editorState}
+              onEditorStateChange={onEditorStateChange}
+              dataMention={dataMention}
+              backgroundImage={null}
+              placeholder={useFormatMessage(
+                "modules.feed.create_post.endorsement.editor_placeholder"
+              )}
+            />
+            <Emoji
+              editorState={state.editorState}
+              setEditorState={onEditorStateChange}
+            />
+          </div>
+
+          <div className="div-btn-post">
             <Button.Ripple
               color="primary"
               type="submit"
               className="btn-post"
-              disabled={state.loadingSubmit}>
+              disabled={state.loadingSubmit}
+              onClick={() => submitEndorsement()}>
               {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
               {useFormatMessage("modules.feed.create_post.text.post")}
             </Button.Ripple>
+            <div className="div-icon-date">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="33"
+                height="33"
+                viewBox="0 0 33 33"
+                fill="none">
+                <path
+                  d="M11 2.75V6.875"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M22 2.75V6.875"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M4.8125 12.4987H28.1875"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M28.875 11.6875V23.375C28.875 27.5 26.8125 30.25 22 30.25H11C6.1875 30.25 4.125 27.5 4.125 23.375V11.6875C4.125 7.5625 6.1875 4.8125 11 4.8125H22C26.8125 4.8125 28.875 7.5625 28.875 11.6875Z"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M21.5803 18.8375H21.5927"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M21.5803 22.9625H21.5927"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16.4934 18.8375H16.5058"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16.4934 22.9625H16.5058"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M11.4046 18.8375H11.4169"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M11.4046 22.9625H11.4169"
+                  stroke="#32434F"
+                  strokeOpacity="0.8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
           </div>
         </ModalBody>
       </Modal>
@@ -325,14 +597,22 @@ const Endorsement = (props) => {
                   className="div-item-badge"
                   onClick={() => {
                     setState({
-                      valueBadge: { name: item.name, badge: item.badge },
+                      valueBadge: {
+                        name: item.name,
+                        badge: item.badge,
+                        url: item.url ? item.url : "",
+                        badge_type: item.badge_type
+                      },
                       modalChooseBadge: false
                     })
                   }}>
                   <div className="div-img">
                     <img
-                      src={getBadgeFromKey(item.badge)}
-                      alt={getBadgeFromKey(item.badge)}
+                      src={
+                        item.badge_type === "local"
+                          ? getBadgeFromKey(item.badge)
+                          : item.url
+                      }
                     />
                   </div>
                   <div className="div-text">“{item.name}”</div>

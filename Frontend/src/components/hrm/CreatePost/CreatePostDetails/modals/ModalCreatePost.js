@@ -6,12 +6,13 @@ import { feedApi } from "@modules/Feed/common/api"
 import {
   decodeHTMLEntities,
   detectUrl,
+  handleInsertEditorState,
   handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { Tooltip } from "antd"
 import classNames from "classnames"
-import { ContentState, EditorState, Modifier, convertToRaw } from "draft-js"
+import { ContentState, EditorState, convertToRaw } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import htmlToDraft from "html-to-draftjs"
 import { useEffect, useMemo, useState } from "react"
@@ -21,11 +22,11 @@ import AttachPhotoVideo from "../AttachPhotoVideo"
 import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
+import Endorsement from "../Endorsement"
 import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
-import Endorsement from "../Endorsement"
 
 const ModalCreatePost = (props) => {
   const {
@@ -43,7 +44,8 @@ const ModalCreatePost = (props) => {
     dataPost = {},
     setData,
     optionCreate = "",
-    setOptionCreate
+    setOptionCreate,
+    setDataLink
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -101,31 +103,6 @@ const ModalCreatePost = (props) => {
     setArrLink(arr_link)
   }
 
-  const insertCharacter = (characterToInsert, editorState) => {
-    const currentContent = editorState.getCurrentContent(),
-      currentSelection = editorState.getSelection()
-
-    const newContent = Modifier.replaceText(
-      currentContent,
-      currentSelection,
-      characterToInsert
-    )
-
-    const newEditorState = EditorState.push(
-      editorState,
-      newContent,
-      "insert-characters"
-    )
-
-    return EditorState.forceSelection(
-      newEditorState,
-      newContent.getSelectionAfter()
-    )
-  }
-  const handleInsertEditorState = (characterToInsert) => {
-    const newEditorState = insertCharacter(characterToInsert, state.editorState)
-    setState({ editorState: newEditorState })
-  }
   const setEmptyEditorState = () => {
     const emptyEditorState = EditorState.moveFocusToEnd(
       EditorState.createEmpty()
@@ -302,7 +279,7 @@ const ModalCreatePost = (props) => {
       }
     }
     setState({ backgroundImage: backgroundImage })
-    handleInsertEditorState("")
+    handleInsertEditorState("", state.editorState, onEditorStateChange)
   }
 
   const toggleModalPollVote = () => setEmptyPollVote(!state.poll_vote)
@@ -610,9 +587,18 @@ const ModalCreatePost = (props) => {
             modal={state.modalEndorsement}
             toggleModal={toggleModalEndorsement}
             toggleModalCreatePost={toggleModal}
+            dataMention={dataMention}
+            setDataCreateNew={setDataCreateNew}
+            idEndorsement={dataPost?.link_id}
+            setData={setData}
+            setDataLink={setDataLink}
+            idPost={dataPost?._id}
           />
 
-          <Emoji handleInsertEditorState={handleInsertEditorState} />
+          <Emoji
+            editorState={state.editorState}
+            setEditorState={onEditorStateChange}
+          />
         </ul>
         <Button.Ripple
           color="primary"

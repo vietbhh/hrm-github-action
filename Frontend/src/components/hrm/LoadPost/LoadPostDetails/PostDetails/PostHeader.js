@@ -416,6 +416,7 @@ const PostHeader = (props) => {
         approveStatus={data?.approve_status}
         dataPost={data}
         setData={setData}
+        setDataLink={setDataLink}
       />
 
       <MemberVoteModal

@@ -26,7 +26,8 @@ const EditorComponent = (props) => {
     editorState,
     onEditorStateChange,
     backgroundImage,
-    showChooseBackgroundImage
+    showChooseBackgroundImage,
+    placeholder = null
   } = props
   const [state, setState] = useMergedState({
     // mention
@@ -110,9 +111,13 @@ const EditorComponent = (props) => {
         editorState={editorState}
         onChange={onEditorStateChange}
         plugins={plugins}
-        placeholder={useFormatMessage(
-          "modules.feed.create_post.text.placeholder_input"
-        )}
+        placeholder={
+          placeholder === null
+            ? useFormatMessage(
+                "modules.feed.create_post.text.placeholder_input"
+              )
+            : placeholder
+        }
       />
 
       <div id="div-tool-bar">

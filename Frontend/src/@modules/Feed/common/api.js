@@ -169,3 +169,25 @@ export const announcementApi = {
     return await axiosNodeApi.get("/feed/get-announcement-by-id/" + id)
   }
 }
+
+export const endorsementApi = {
+  async postSubmitEndorsement(data) {
+    return await axiosNodeApi.post("/feed/submit-endorsement", data)
+  },
+
+  async postSubmitEndorsementCover(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-endorsement-cover",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async getEndorsementById(id) {
+    return await axiosNodeApi.get("/feed/get-endorsement-by-id/" + id)
+  }
+}

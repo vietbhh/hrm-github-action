@@ -30,6 +30,11 @@ import {
   submitAnnouncement,
   submitAnnouncementAttachment
 } from "../controllers/announcement.js"
+import {
+  getEndorsementById,
+  submitEndorsement,
+  submitEndorsementCover
+} from "../controllers/endorsement.js"
 
 const router = express.Router()
 
@@ -64,5 +69,9 @@ router.post("/update-event-status", updateEventStatus)
 router.post("/submit-announcement", submitAnnouncement)
 router.post("/submit-announcement-attachment", submitAnnouncementAttachment)
 router.get("/get-announcement-by-id/:id", getAnnouncementById)
+
+router.post("/submit-endorsement", submitEndorsement)
+router.post("/submit-endorsement-cover", submitEndorsementCover)
+router.get("/get-endorsement-by-id/:id", getEndorsementById)
 
 export default router

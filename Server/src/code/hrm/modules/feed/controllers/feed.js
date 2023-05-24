@@ -20,6 +20,7 @@ import moment from "moment"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
 import calendarMongoModel from "#app/models/calendar.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
+import endorsementMongoModel from "../models/endorsement.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -538,6 +539,10 @@ const deletePost = async (req, res, next) => {
 
           if (type === "announcement") {
             await newsModel.destroy({ where: { id: link_id } })
+          }
+
+          if (type === "endorsement") {
+            await endorsementMongoModel.deleteOne({ _id: link_id })
           }
         }
 
