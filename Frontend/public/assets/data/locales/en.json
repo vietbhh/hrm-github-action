@@ -115,6 +115,7 @@
     "your_projects": "Your Projects",
     "your_workgroup": "Your Workgroup",
     "setting_member": "Member Info Settings",
+    "manage_endorsement": "Manage Endorsement",
     "header": {
       "welcome": {
         "morning": {
@@ -516,7 +517,7 @@
     "remove": "Remove",
     "reject": "Reject",
     "duplicate": "Duplicate",
-    "done" : "Done"
+    "done": "Done"
   },
   "errors": {
     "common": {
@@ -2640,6 +2641,11 @@
         "status": {
           "draft": "Draft",
           "published": "Published"
+        },
+        "show_announcements": {
+          "one_day": "One day",
+          "one_week": "One week",
+          "one_month": "One month"
         }
       },
       "notifications": {},
@@ -4407,6 +4413,7 @@
     },
     "feed": {
       "create_post": {
+        "title": "Create post",
         "text": {
           "placeholder_input": "What are you thinking?",
           "task": "Task",
@@ -4425,8 +4432,8 @@
           "add_photo_video": "Add Photo/Video",
           "add_description": "Add description...",
           "choose_a_background": "Choose a background",
-          "create_poll": "Create Poll",
-          "question": "Question",
+          "create_poll": "Add Poll",
+          "question": "Question?",
           "enter_question": "Enter question",
           "add_options": "Add options",
           "option": "Option {number}",
@@ -4448,7 +4455,17 @@
           "no_member_selected_yet": "No member selected yet",
           "list_selected": "List selected",
           "member": "member",
-          "members": "members"
+          "members": "members",
+          "poll_setting": "Poll setting",
+          "close_poll_vote": "Close poll vote"
+        },
+        "endorsement": {
+          "title": "Endorsement",
+          "appreciation": "Appreciation",
+          "select_member_for_endorsing": "Select member for endorsing",
+          "add_cover_photo": "Add cover photo",
+          "list_badges": "List badges",
+          "editor_placeholder": "Write something about this..."
         }
       },
       "post": {
@@ -4493,6 +4510,19 @@
           "haha": "Haha",
           "sad": "Sad",
           "wow": "Wow"
+        },
+        "event": {
+          "created_an": "created an",
+          "event": "event",
+          "yes": "Yes",
+          "no": "No",
+          "maybe": "Maybe",
+          "people_invited": "people invited"
+        },
+        "endorsement": {
+          "endorsed": "endorsed",
+          "congratulate": "Congratulate",
+          "is_endorsed": "is endorsed"
         }
       },
       "manage_post": {
@@ -4530,6 +4560,50 @@
             "workspace_posts": "Workspace posts"
           }
         }
+      },
+      "create_event": {
+        "title": "Create event",
+        "text": {
+          "event_name": "Event name",
+          "event_name_placeholder": "Enter event name",
+          "start_time": "Start time",
+          "end_time": "End time",
+          "all_day_event": "All-day event",
+          "attendees": "Attendees",
+          "attendees_placeholder": "Enter workgroup, email or username",
+          "meeting_room": "Meeting room",
+          "meeting_room_placeholder": "Choose meeting room",
+          "set_reminder": "Set reminder",
+          "online_meeting": "Online meeting",
+          "details": "Details",
+          "details_placeholder": "What are the details?",
+          "add_attachment_files": "Add attachment files",
+          "just_in_time": "Just in time",
+          "5_minutes_before": "5 minutes before",
+          "10_minutes_before": "10 minutes before",
+          "15_minutes_before": "15 minutes before",
+          "30_minutes_before": "30 minutes before",
+          "1_hour_before": "1 hour before",
+          "1_day_before": "1 day before",
+          "no_remind": "No remind",
+          "no_repeat": "No repeat",
+          "repeat_every_day": "Repeat every day",
+          "repeat_weekday": "Repeat weekday",
+          "repeat_week_on_monday": "Repeat week on Monday"
+        }
+      },
+      "announcement": {
+        "title": "Announcement",
+        "text": {
+          "create_announcement": "Create Announcement",
+          "announcement_title": "Announcement title",
+          "announcement_title_placeholder": "Enter annoucement title",
+          "pin_to_top": "Pin to top",
+          "show_announcement": "Show announcements",
+          "one_week": "One week",
+          "send_to": "Send to",
+          "send_to_placeholder": "Enter workgroup, email or username"
+        }
       }
     },
     "posts": {
@@ -4553,7 +4627,6 @@
           "go_to_post": "Go to post",
           "back_to_management": "Back to mangement"
         }
-
       }
     },
     "workspace": {
@@ -4563,7 +4636,7 @@
         "workspace": "Workspace",
         "workspace_you_have_joined": "Workspace you have joined",
         "workspace_that_you_managed": "Workspace that you managed",
-        "remove_cover_image" : "Do you want to remove the photo cover ?",
+        "remove_cover_image": "Do you want to remove the photo cover ?",
         "manage_workspace": "Manage Workspaces",
         "workspace_overview": "Workspace overview",
         "workspaces_in_the_organization": "{number} workspaces in the organization",
@@ -4591,7 +4664,7 @@
         "view_post": "View post",
         "approve_all_posts": "Approve all",
         "reject_all_posts": "Reject all",
-        "invite" : "Invite",
+        "invite": "Invite",
         "join_workspace": "Join workspace",
         "upload": "Upload",
         "reactivate_workspace": "Reactivate workspace",
@@ -4624,15 +4697,15 @@
         "setup_notification": "Setup notification",
         "review_post": "Review post",
         "add_member_to_ws": "Add member to workspace",
-        "workspace_pinned_post" : "Workspace pinned post",
-        "leave_workspace" : "Leave workspace",
+        "workspace_pinned_post": "Workspace pinned post",
+        "leave_workspace": "Leave workspace",
         "uploaded_document": "Uploaded document",
         "uploaded_photo": "Uploaded photo",
         "uploaded_video": "Uploaded video",
         "group_link_posted": "Group link posted",
-        "change_cover_img" : "Change cover image",
-        "remove_cover_photo" : "Remove cover photo",
-        "and_other_request"  : "and {num_others} others sent a request to join workspace",
+        "change_cover_img": "Change cover image",
+        "remove_cover_photo": "Remove cover photo",
+        "and_other_request": "and {num_others} others sent a request to join workspace",
         "workspace_information": "Workspace information",
         "workspace_activities": "Workspace activities",
         "all_member_workspaces": "All-members workspaces",
@@ -4716,12 +4789,12 @@
         "department": "Department",
         "job_title": "Job title",
         "unpin_post": "Unpin post",
-        "move_to_top" : "Move to top",
-        "pin_post" :"Pin post",
-        "posts" : "post",
-        "public" : "Public",
-        "joined" : "Joined",
-        "excel" : "Excel"
+        "move_to_top": "Move to top",
+        "pin_post": "Pin post",
+        "posts": "post",
+        "public": "Public",
+        "joined": "Joined",
+        "excel": "Excel"
       },
       "app_options": {
         "workspace_type": {
@@ -4732,9 +4805,9 @@
           "visible": "Anyone can see your workspace and request to join",
           "hidden": "Only administrator can add member and other unable to see workspace"
         },
-        "membership_approval" : {
-          "approver" : "Only administrators can approve joining group request",
-          "auto" : "Automatically approve all joining group request"
+        "membership_approval": {
+          "approver": "Only administrators can approve joining group request",
+          "auto": "Automatically approve all joining group request"
         },
         "format_cannot_be_previewed": "The format cannot be previewed!",
         "search_workspace": "Search workspace...",
@@ -4790,14 +4863,34 @@
       "notification": {
         "tag_comment": "tagged you on a comment",
         "tag_post": "tagged you on a post",
-        "request_workspace" : "sent a request to join the workspace",
-        "need_approval" : "needs approval"
+        "request_workspace": "sent a request to join the workspace",
+        "need_approval": "needs approval",
+        "you_have_a_new_event": "You have a new event",
+        "you_have_a_new_announcement": "You have a new announcement"
       }
     },
     "timeline": {
       "text": {
         "introduction": "Introduction",
         "edit_information": "Edit informarion"
+      }
+    },
+    "manage_endorsement": {
+      "badge_setting": {
+        "title": "Badge Setting",
+        "organization_badge": "Organization's badge",
+        "create_badge": "Create badge",
+        "edit_badge": "Edit",
+        "delete_badge": "Delete",
+        "create_new_badge": "Create new badge",
+        "badge_name": "Badge name",
+        "select_badge": "Select badge",
+        "please_select_badge": "Please select badge",
+        "custom": "Custom",
+        "image_error": "Image type is not allow, (just {allowType})"
+      },
+      "leaderboard": {
+        "title": "Leaderboard"
       }
     }
   }

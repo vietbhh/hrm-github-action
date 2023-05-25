@@ -1,11 +1,9 @@
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import React, { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
 import { Card, CardBody, CardHeader } from "reactstrap"
-import "../assets/scss/setting_member.scss"
 import { settingMemberApi } from "../common/api"
 import FormSetting from "../components/SettingMember/FormSetting"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 
 const SettingMember = () => {
   const [state, setState] = useMergedState({

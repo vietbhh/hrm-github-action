@@ -2,27 +2,23 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import createLinkPlugin from "@draft-js-plugins/anchor"
 import {
   BoldButton,
-  CodeBlockButton,
   ItalicButton,
-  OrderedListButton,
-  UnderlineButton,
-  UnorderedListButton
+  UnderlineButton
 } from "@draft-js-plugins/buttons"
 import Editor from "@draft-js-plugins/editor"
 import createInlineToolbarPlugin from "@draft-js-plugins/inline-toolbar"
+import createLinkifyPlugin from "@draft-js-plugins/linkify"
 import createMentionPlugin, {
   defaultSuggestionsFilter
 } from "@draft-js-plugins/mention"
-import createToolbarPlugin from "@draft-js-plugins/static-toolbar"
-import { useCallback, useEffect, useMemo, Fragment } from "react"
-import createLinkifyPlugin from "@draft-js-plugins/linkify"
+import { arrImage } from "@modules/Feed/common/common"
+import { Fragment, useCallback, useEffect, useMemo } from "react"
 
-import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
+import "@draft-js-plugins/linkify/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
-import "@draft-js-plugins/linkify/lib/plugin.css"
-import { arrImage } from "@modules/Feed/common/common"
+import "@styles/react/libs/editor/editor.scss"
 
 const EditorComponent = (props) => {
   const {
@@ -30,7 +26,8 @@ const EditorComponent = (props) => {
     editorState,
     onEditorStateChange,
     backgroundImage,
-    showChooseBackgroundImage
+    showChooseBackgroundImage,
+    placeholder = null
   } = props
   const [state, setState] = useMergedState({
     // mention
@@ -61,13 +58,10 @@ const EditorComponent = (props) => {
   }, [backgroundImage, showChooseBackgroundImage])
 
   // ** mention
-  const { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin } =
+  const { plugins, MentionSuggestions, InlineToolbar, linkPlugin } =
     useMemo(() => {
       const mentionPlugin = createMentionPlugin()
       const { MentionSuggestions } = mentionPlugin
-
-      const staticToolbarPlugin = createToolbarPlugin()
-      const { Toolbar } = staticToolbarPlugin
 
       const inlineToolbarPlugin = createInlineToolbarPlugin()
       const { InlineToolbar } = inlineToolbarPlugin
@@ -77,12 +71,11 @@ const EditorComponent = (props) => {
 
       const plugins = [
         mentionPlugin,
-        staticToolbarPlugin,
         inlineToolbarPlugin,
         linkPlugin,
         linkifyPlugin
       ]
-      return { plugins, MentionSuggestions, Toolbar, InlineToolbar, linkPlugin }
+      return { plugins, MentionSuggestions, InlineToolbar, linkPlugin }
     }, [])
   const onOpenChange = useCallback((_open) => {
     setTimeout(() => {
@@ -110,7 +103,7 @@ const EditorComponent = (props) => {
   return (
     <div
       className={`div-editor ${
-        backgroundImage !== null && "div-editor-background"
+        backgroundImage !== null ? "div-editor-background" : ""
       }`}
       style={renderStyleBackgroundImage()}>
       <Editor
@@ -118,28 +111,16 @@ const EditorComponent = (props) => {
         editorState={editorState}
         onChange={onEditorStateChange}
         plugins={plugins}
-        placeholder={useFormatMessage(
-          "modules.feed.create_post.text.placeholder_input"
-        )}
+        placeholder={
+          placeholder === null
+            ? useFormatMessage(
+                "modules.feed.create_post.text.placeholder_input"
+              )
+            : placeholder
+        }
       />
 
       <div id="div-tool-bar">
-        <Toolbar>
-          {
-            // may be use React.Fragment instead of div to improve performance after React 16
-            (externalProps) => (
-              <Fragment>
-                <BoldButton {...externalProps} />
-                <ItalicButton {...externalProps} />
-                <UnderlineButton {...externalProps} />
-                <UnorderedListButton {...externalProps} />
-                <OrderedListButton {...externalProps} />
-                <CodeBlockButton {...externalProps} />
-              </Fragment>
-            )
-          }
-        </Toolbar>
-
         <InlineToolbar>
           {
             // may be use React.Fragment instead of div to improve performance after React 16

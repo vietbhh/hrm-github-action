@@ -139,21 +139,21 @@ const getListWorkspace = async (req, res, next) => {
 
     let workspace = []
     if (limit === 0) {
-     workspace = await workspaceMongoModel
-      .find(filter)
-      .limit(limit)
-      .skip(limit * page)
-      .sort({
-        _id: "desc"
-      })
+      workspace = await workspaceMongoModel
+        .find(filter)
+        .limit(limit)
+        .skip(limit * page)
+        .sort({
+          _id: "desc"
+        })
     } else {
       workspace = await workspaceMongoModel
-      .find(filter)
-      .limit(limit)
-      .skip(limit * page)
-      .sort({
-        _id: "desc"
-      })
+        .find(filter)
+        .limit(limit)
+        .skip(limit * page)
+        .sort({
+          _id: "desc"
+        })
     }
 
     const totalWorkspace = await workspaceMongoModel.find(filter)
@@ -166,9 +166,13 @@ const getListWorkspace = async (req, res, next) => {
         result[index]["post_created"] = 0
       }
 
-      result[index]['total_member'] = Array.isArray(item.members) ? item.members.length : 0 
+      result[index]["total_member"] = Array.isArray(item.members)
+        ? item.members.length
+        : 0
 
-      result[index]['is_admin_group'] = Array.isArray(item.administrators) ? item.administrators.includes(userId) : false
+      result[index]["is_admin_group"] = Array.isArray(item.administrators)
+        ? item.administrators.includes(userId)
+        : false
     })
 
     if (queryType === "activity") {
@@ -602,8 +606,6 @@ const loadDataMedia = async (req, res, next) => {
 
     feedCondition["owner"] = owner
     postCondition["owner"] = owner
-
-    console.log(feedCondition)
 
     const listFeed = await feedMongoModel
       .find(feedCondition)

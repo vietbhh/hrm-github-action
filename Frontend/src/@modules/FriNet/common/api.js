@@ -1,4 +1,4 @@
-import { axiosApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 import { serialize } from "@apps/utility/handleData"
 
 export const settingMemberApi = {
@@ -43,5 +43,23 @@ export const userApi = {
 export const introductionApi = {
   async getSettingMember() {
     return await axiosApi.get("/fri-net-introduction/get-setting-member")
+  }
+}
+
+export const manageEndorsementApi = {
+  async postSubmitCreateBadge(data) {
+    return await axiosNodeApi.post("/frinet/submit-create-badge", data)
+  },
+
+  async getListDataBadgeSetting() {
+    return await axiosNodeApi.get("/frinet/get-list-data-badge-setting")
+  },
+
+  async getDeleteBadgeSetting(id) {
+    return await axiosNodeApi.get("/frinet/delete-badge-setting/" + id)
+  },
+
+  async getBadgeSettingById(id) {
+    return await axiosNodeApi.get("/frinet/get-badge-setting-by-id/" + id)
   }
 }

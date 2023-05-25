@@ -18,6 +18,9 @@ import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { getSetting } from "#app/services/settings.js"
 import moment from "moment"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
+import calendarMongoModel from "#app/models/calendar.mongo.js"
+import { newsModel } from "../models/news.mysql.js"
+import endorsementMongoModel from "../models/endorsement.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -107,26 +110,28 @@ const submitPostController = async (req, res, next) => {
     let _id_parent = ""
     let data_feed_old = {}
 
+    const dataInsert = {
+      __user: req.__user,
+      permission_ids: body.workspace,
+      permission: workspace_type,
+      content: body.content,
+      type: type_feed_parent,
+      medias: [],
+      source: null,
+      source_attribute: {},
+      thumb: null,
+      thumb_attribute: {},
+      ref: null,
+      approve_status: body.approveStatus,
+      link: link,
+      tag_user: tag_user,
+      background_image: body.backgroundImage,
+      has_poll_vote: has_poll_vote,
+      poll_vote_detail: save_poll_vote_detail
+    }
+
     if (!is_edit) {
-      const feedModelParent = new feedMongoModel({
-        __user: req.__user,
-        permission_ids: body.workspace,
-        permission: workspace_type,
-        content: body.content,
-        type: type_feed_parent,
-        medias: [],
-        source: null,
-        source_attribute: {},
-        thumb: null,
-        thumb_attribute: {},
-        ref: null,
-        approve_status: body.approveStatus,
-        link: link,
-        tag_user: tag_user,
-        background_image: body.backgroundImage,
-        has_poll_vote: has_poll_vote,
-        poll_vote_detail: save_poll_vote_detail
-      })
+      const feedModelParent = new feedMongoModel(dataInsert)
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
       out = saveFeedParent
@@ -136,24 +141,9 @@ const submitPostController = async (req, res, next) => {
       await feedMongoModel.updateOne(
         { _id: _id_post_edit },
         {
-          permission_ids: body.workspace,
-          permission: workspace_type,
-          content: body.content,
-          type: type_feed_parent,
-          medias: [],
-          source: null,
-          source_attribute: {},
-          thumb: null,
-          thumb_attribute: {},
-          ref: null,
-          approve_status: body.approveStatus,
-          link: link,
-          tag_user: tag_user,
-          background_image: body.backgroundImage,
+          ...dataInsert,
           edited: true,
-          edited_at: Date.now(),
-          has_poll_vote: has_poll_vote,
-          poll_vote_detail: save_poll_vote_detail
+          edited_at: Date.now()
         }
       )
     }
@@ -367,7 +357,7 @@ const loadFeedController = async (req, res, next) => {
         $in: ["only_me", "default"]
       }
     } else if (type === "workspace") {
-      filter["permission"] = "workspace" 
+      filter["permission"] = "workspace"
     }
   }
 
@@ -401,7 +391,6 @@ const loadFeedController = async (req, res, next) => {
               workspaceId.push(workspaceIdItem)
             }
           })
-          
         }
       })
 
@@ -521,6 +510,8 @@ const deletePost = async (req, res, next) => {
   const body = req.body
   const ref = body.ref
   const _id = body._id
+  const type = body.type
+  const link_id = body.link_id
 
   if (_id) {
     // delete feed
@@ -540,6 +531,21 @@ const deletePost = async (req, res, next) => {
         await commentMongoModel.deleteMany({
           post_id: { $in: arr_id_delete }
         })
+
+        if (link_id) {
+          if (type === "event") {
+            await calendarMongoModel.deleteOne({ _id: link_id })
+          }
+
+          if (type === "announcement") {
+            await newsModel.destroy({ where: { id: link_id } })
+          }
+
+          if (type === "endorsement") {
+            await endorsementMongoModel.deleteOne({ _id: link_id })
+          }
+        }
+
         const out = { status: "empty" }
         return res.respond(out)
       } catch (err) {
@@ -743,7 +749,7 @@ const submitComment = async (req, res, next) => {
   const comment_more_count_original = body.comment_more_count_original
   const image = req.files !== null ? req.files.image : null
   const dataEditComment = body?.dataEditComment || {}
-  console.log("aaaaaaaaaa", body)
+
   try {
     const result = await handleUpImageComment(image, id_post)
     if (isEmpty(dataEditComment)) {
@@ -781,7 +787,6 @@ const submitComment = async (req, res, next) => {
 
     // send notification
     if (isEmpty(dataEditComment)) {
-      console.log("runn")
       let link_notification = `/posts/${id_post}`
       if (dataFeed.ref) {
         link_notification = `/posts/${dataFeed.ref}/${id_post}`

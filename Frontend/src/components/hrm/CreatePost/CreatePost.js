@@ -3,18 +3,30 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { handleDataMention } from "@modules/Feed/common/common"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
+import ModalAnnouncement from "./CreatePostDetails/modals/ModalAnnouncement"
+import ModalCreateEvent from "./CreatePostDetails/modals/ModalCreateEvent"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
 
 const CreatePost = (props) => {
   const {
     workspace, // arr workspace: []
     setDataCreateNew, // function set Data then create new post
-    approveStatus = "approved" // approved / rejected / pending
+    approveStatus = "approved", // approved / rejected / pending
+
+    // create event / announcement
+    options_employee_department = [],
+    optionsMeetingRoom = []
   } = props
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: [],
-    optionCreate: ""
+    optionCreate: "",
+
+    // ** event
+    modalCreateEvent: false,
+
+    // ** announcement
+    modalAnnouncement: false
   })
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
@@ -26,8 +38,11 @@ const CreatePost = (props) => {
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
-
   const setOptionCreate = (value) => setState({ optionCreate: value })
+  const toggleModalCreateEvent = () =>
+    setState({ modalCreateEvent: !state.modalCreateEvent })
+  const toggleModalAnnouncement = () =>
+    setState({ modalAnnouncement: !state.modalAnnouncement })
 
   // ** useEffect
   useEffect(() => {
@@ -70,7 +85,7 @@ const CreatePost = (props) => {
                 {useFormatMessage("modules.feed.create_post.text.task")}
               </span>
             </li>
-            <li>
+            <li onClick={() => toggleModalCreateEvent()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -112,7 +127,7 @@ const CreatePost = (props) => {
                 {useFormatMessage("modules.feed.create_post.text.poll")}
               </span>
             </li>
-            <li>
+            <li onClick={() => toggleModalAnnouncement()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -150,6 +165,21 @@ const CreatePost = (props) => {
         approveStatus={approveStatus}
         optionCreate={state.optionCreate}
         setOptionCreate={setOptionCreate}
+      />
+
+      <ModalCreateEvent
+        modal={state.modalCreateEvent}
+        toggleModal={toggleModalCreateEvent}
+        options_employee_department={options_employee_department}
+        optionsMeetingRoom={optionsMeetingRoom}
+        setDataCreateNew={setDataCreateNew}
+      />
+
+      <ModalAnnouncement
+        modal={state.modalAnnouncement}
+        toggleModal={toggleModalAnnouncement}
+        options_employee_department={options_employee_department}
+        setDataCreateNew={setDataCreateNew}
       />
     </Fragment>
   )

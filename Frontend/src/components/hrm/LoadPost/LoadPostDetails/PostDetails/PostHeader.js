@@ -15,6 +15,9 @@ import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import MemberVoteModal from "../modals/MemberVoteModal"
+import ModalCreateEvent from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreateEvent"
+import ModalAnnouncement from "components/hrm/CreatePost/CreatePostDetails/modals/ModalAnnouncement"
+import birthdayImg from "@src/layouts/components/vertical/images/birthday.svg"
 
 const PostHeader = (props) => {
   const {
@@ -25,7 +28,13 @@ const PostHeader = (props) => {
     customAction = {}, // custom dropdown post header
     offPostHeaderAction,
     renderAppendHeaderComponent,
-    setEditDescription // function edit description, content only modal
+    setEditDescription, // function edit description, content only modal
+    setDataLink, // function set data link_id
+    dataLink = {},
+
+    // create event / announcement
+    options_employee_department,
+    optionsMeetingRoom
   } = props
   const { view_post, edit_post, delete_post, ...rest } = customAction || {}
   const userData = useSelector((state) => state.auth.userData)
@@ -40,7 +49,13 @@ const PostHeader = (props) => {
 
     // with tag
     modalWith: false,
-    dataUserOtherWith: []
+    dataUserOtherWith: [],
+
+    // event
+    modalCreateEvent: false,
+
+    // announcement
+    modalAnnouncement: false
   })
 
   let _rest = {}
@@ -75,7 +90,13 @@ const PostHeader = (props) => {
             setEditDescription(true)
           }
         } else {
-          toggleModalCreatePost()
+          if (data?.type === "event") {
+            toggleModalCreateEvent()
+          } else if (data?.type === "announcement") {
+            toggleModalAnnouncement()
+          } else {
+            toggleModalCreatePost()
+          }
         }
       },
       label: (
@@ -143,7 +164,9 @@ const PostHeader = (props) => {
         setState({ loadingDelete: true })
         const params = {
           ref: data.ref,
-          _id: data._id
+          _id: data._id,
+          type: data.type,
+          link_id: data.link_id
         }
 
         feedApi
@@ -195,6 +218,10 @@ const PostHeader = (props) => {
   }
 
   const toggleModalWith = () => setState({ modalWith: !state.modalWith })
+  const toggleModalCreateEvent = () =>
+    setState({ modalCreateEvent: !state.modalCreateEvent })
+  const toggleModalAnnouncement = () =>
+    setState({ modalAnnouncement: !state.modalAnnouncement })
 
   // ** useEffect
   useEffect(() => {
@@ -217,6 +244,69 @@ const PostHeader = (props) => {
         <span className="after-name">
           {useFormatMessage("modules.feed.post.text.updated_avatar")}
         </span>
+      )
+    }
+
+    if (data.type === "event") {
+      return (
+        <>
+          <span className="after-name">
+            {useFormatMessage("modules.feed.post.event.created_an")}
+          </span>{" "}
+          <span className="after-name-bold">
+            {useFormatMessage("modules.feed.post.event.event")}
+          </span>
+        </>
+      )
+    }
+
+    if (data.type === "endorsement") {
+      const member = []
+      if (!_.isEmpty(dataLink?.member)) {
+        _.forEach(dataLink.member, (item) => {
+          if (dataEmployee[item]) {
+            member.push({
+              username: dataEmployee[item].username,
+              full_name: dataEmployee[item].full_name
+            })
+          }
+        })
+      }
+      return (
+        <>
+          <span className="after-name">
+            {useFormatMessage("modules.feed.post.endorsement.endorsed")}
+          </span>{" "}
+          <span className="after-name-bold">
+            {_.map(member, (item, key) => {
+              return (
+                <Fragment>
+                  <Link key={key} to={`/u/${item.username}`}>
+                    <span className="name">{item.full_name}</span>
+                  </Link>
+
+                  {key < member.length - 1 && <span>, </span>}
+                </Fragment>
+              )
+            })}
+          </span>{" "}
+          <svg
+            className="ms-25 me-50"
+            style={{ position: "relative", top: "-2px" }}
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="2"
+            viewBox="0 0 16 2"
+            fill="none">
+            <line x1="0.990417" y1="1" x2="15.9904" y2="1" stroke="#CDC4C4" />
+          </svg>
+          <span className="after-name-bold me-50">{dataLink?.badge_name}</span>
+          <img
+            src={birthdayImg}
+            width={"18px"}
+            style={{ position: "relative", top: "-2px" }}
+          />
+        </>
       )
     }
 
@@ -354,11 +444,15 @@ const PostHeader = (props) => {
             {renderAfterName()}
             {renderWithTag()}
           </div>
+
           <span className="time">
-            {timeDifference(data.created_at)}{" "}
-            {data.edited &&
-              ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+            <Link to={`/u/${data?.created_by?.username}`}>
+              {timeDifference(data.created_at)}{" "}
+              {data.edited &&
+                ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+            </Link>
           </span>
+
           <Fragment>{renderAppendComponent()}</Fragment>
         </div>
         <div className="post-header-right">
@@ -378,6 +472,7 @@ const PostHeader = (props) => {
         approveStatus={data?.approve_status}
         dataPost={data}
         setData={setData}
+        setDataLink={setDataLink}
       />
 
       <MemberVoteModal
@@ -386,6 +481,31 @@ const PostHeader = (props) => {
         dataUserVote={state.dataUserOtherWith}
         title={useFormatMessage("modules.feed.post.text.people")}
       />
+
+      {data?.type === "event" && (
+        <ModalCreateEvent
+          modal={state.modalCreateEvent}
+          toggleModal={toggleModalCreateEvent}
+          idEvent={data?.link_id}
+          setData={setData}
+          setDataLink={setDataLink}
+          idPost={data?._id}
+          options_employee_department={options_employee_department}
+          optionsMeetingRoom={optionsMeetingRoom}
+        />
+      )}
+
+      {data?.type === "announcement" && (
+        <ModalAnnouncement
+          modal={state.modalAnnouncement}
+          toggleModal={toggleModalAnnouncement}
+          options_employee_department={options_employee_department}
+          idAnnouncement={data?.link_id}
+          setData={setData}
+          setDataLink={setDataLink}
+          idPost={data?._id}
+        />
+      )}
     </Fragment>
   )
 }

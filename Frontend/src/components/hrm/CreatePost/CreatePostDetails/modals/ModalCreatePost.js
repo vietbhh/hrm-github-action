@@ -1,19 +1,18 @@
-import { ErpRadio } from "@apps/components/common/ErpField"
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { downloadApi } from "@apps/modules/download/common/api"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
 import {
   decodeHTMLEntities,
   detectUrl,
+  handleInsertEditorState,
   handleLoadAttachmentThumb,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
-import { Dropdown, Tooltip } from "antd"
+import { Tooltip } from "antd"
 import classNames from "classnames"
-import { ContentState, EditorState, Modifier, convertToRaw } from "draft-js"
+import { ContentState, EditorState, convertToRaw } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import htmlToDraft from "html-to-draftjs"
 import { useEffect, useMemo, useState } from "react"
@@ -23,8 +22,9 @@ import AttachPhotoVideo from "../AttachPhotoVideo"
 import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
+import Endorsement from "../Endorsement"
+import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
-import PollVoteDetail from "../PollVoteDetail"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
 
@@ -44,7 +44,8 @@ const ModalCreatePost = (props) => {
     dataPost = {},
     setData,
     optionCreate = "",
-    setOptionCreate
+    setOptionCreate,
+    setDataLink
   } = props
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
@@ -58,7 +59,6 @@ const ModalCreatePost = (props) => {
     showChooseBackgroundImage: false,
 
     // poll vote
-    modalPollVote: false,
     poll_vote: false,
     poll_vote_detail: {
       question: "",
@@ -71,10 +71,14 @@ const ModalCreatePost = (props) => {
       },
       time_end: null
     },
+    disable_btn_post: false,
 
     // tag your colleagues
     tag_your_colleagues: [],
-    modal_tag: false
+    modal_tag: false,
+
+    // endorsement
+    modalEndorsement: false
   })
   const [file, setFile] = useState([])
 
@@ -87,6 +91,8 @@ const ModalCreatePost = (props) => {
 
   const setArrLink = (value) => setState({ arrLink: value })
 
+  const setPrivacyType = (value) => setState({ privacy_type: value })
+
   const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
 
@@ -97,31 +103,6 @@ const ModalCreatePost = (props) => {
     setArrLink(arr_link)
   }
 
-  const insertCharacter = (characterToInsert, editorState) => {
-    const currentContent = editorState.getCurrentContent(),
-      currentSelection = editorState.getSelection()
-
-    const newContent = Modifier.replaceText(
-      currentContent,
-      currentSelection,
-      characterToInsert
-    )
-
-    const newEditorState = EditorState.push(
-      editorState,
-      newContent,
-      "insert-characters"
-    )
-
-    return EditorState.forceSelection(
-      newEditorState,
-      newContent.getSelectionAfter()
-    )
-  }
-  const handleInsertEditorState = (characterToInsert) => {
-    const newEditorState = insertCharacter(characterToInsert, state.editorState)
-    setState({ editorState: newEditorState })
-  }
   const setEmptyEditorState = () => {
     const emptyEditorState = EditorState.moveFocusToEnd(
       EditorState.createEmpty()
@@ -298,20 +279,18 @@ const ModalCreatePost = (props) => {
       }
     }
     setState({ backgroundImage: backgroundImage })
-    handleInsertEditorState("")
+    handleInsertEditorState("", state.editorState, onEditorStateChange)
   }
 
-  const toggleModalPollVote = () => {
-    setState({ modalPollVote: !state.modalPollVote })
-  }
+  const toggleModalPollVote = () => setEmptyPollVote(!state.poll_vote)
 
   const setPollVoteDetail = (value) => {
-    setState({ poll_vote: true, poll_vote_detail: value })
+    setState({ poll_vote_detail: { ...state.poll_vote_detail, ...value } })
   }
 
-  const setEmptyPollVote = () => {
+  const setEmptyPollVote = (poll_vote = false) => {
     setState({
-      poll_vote: false,
+      poll_vote: poll_vote,
       poll_vote_detail: {
         question: "",
         options: ["", ""],
@@ -332,6 +311,9 @@ const ModalCreatePost = (props) => {
 
   const toggleModalTag = () => setState({ modal_tag: !state.modal_tag })
 
+  const toggleModalEndorsement = () =>
+    setState({ modalEndorsement: !state.modalEndorsement })
+
   // ** useEffect
   useEffect(() => {
     if (!_.isEmpty(dataPost)) {
@@ -347,62 +329,69 @@ const ModalCreatePost = (props) => {
     }
   }, [dataPost])
 
+  // ** edit post
   useEffect(() => {
     if (!_.isEmpty(dataPost) && modal) {
-      // ** media
-      const _file = []
-      if (dataPost.source) {
-        _file.push({
-          description: "",
-          source: dataPost?.source,
-          thumb: dataPost?.thumb,
-          name_source: dataPost?.source_attribute?.name || "",
-          name_thumb: dataPost?.thumb_attribute?.name || "",
-          type: dataPost?.source_attribute?.mime || "",
-          url_thumb: dataPost?.url_thumb,
-          db: true
-        })
-      }
-
-      if (!_.isEmpty(dataPost.medias)) {
-        _.forEach(dataPost.medias, (value) => {
+      // ** endorsement
+      if (dataPost.type === "endorsement") {
+        toggleModalEndorsement()
+      } else {
+        // ** media
+        const _file = []
+        if (dataPost.source) {
           _file.push({
-            ...value,
-            name_source: value?.source_attribute?.name || "",
-            name_thumb: value?.thumb_attribute?.name || "",
-            type: value?.source_attribute?.mime || "",
+            description: "",
+            source: dataPost?.source,
+            thumb: dataPost?.thumb,
+            name_source: dataPost?.source_attribute?.name || "",
+            name_thumb: dataPost?.thumb_attribute?.name || "",
+            type: dataPost?.source_attribute?.mime || "",
+            url_thumb: dataPost?.url_thumb,
             db: true
           })
-        })
-      }
+        }
 
-      setFile(_file)
-      // **
+        if (!_.isEmpty(dataPost.medias)) {
+          _.forEach(dataPost.medias, (value) => {
+            _file.push({
+              ...value,
+              name_source: value?.source_attribute?.name || "",
+              name_thumb: value?.thumb_attribute?.name || "",
+              type: value?.source_attribute?.mime || "",
+              db: true
+            })
+          })
+        }
 
-      // ** background_image
-      if (
-        dataPost.type === "background_image" &&
-        dataPost.background_image !== null
-      ) {
-        setState({ backgroundImage: dataPost.background_image })
-      }
-      // **
+        setFile(_file)
+        // **
 
-      // ** poll_vote
-      if (dataPost.has_poll_vote === true) {
-        const poll_vote_detail = { ...dataPost.poll_vote_detail }
-        const options = []
-        _.forEach(dataPost.poll_vote_detail.options, (item) => {
-          options.push(item.option_name)
-        })
-        poll_vote_detail["options"] = options
-        setPollVoteDetail(poll_vote_detail)
-      }
-      // **
+        // ** background_image
+        if (
+          dataPost.type === "background_image" &&
+          dataPost.background_image !== null
+        ) {
+          setState({ backgroundImage: dataPost.background_image })
+        }
+        // **
 
-      // tag_your_colleagues
-      if (!_.isEmpty(dataPost.tag_user)) {
-        setState({ tag_your_colleagues: dataPost.tag_user.tag })
+        // ** poll_vote
+        if (dataPost.has_poll_vote === true) {
+          const poll_vote_detail = { ...dataPost.poll_vote_detail }
+          const options = []
+          _.forEach(dataPost.poll_vote_detail.options, (item) => {
+            options.push(item.option_name)
+          })
+          poll_vote_detail["options"] = options
+          setPollVoteDetail(poll_vote_detail)
+          setState({ poll_vote: true })
+        }
+        // **
+
+        // tag_your_colleagues
+        if (!_.isEmpty(dataPost.tag_user)) {
+          setState({ tag_your_colleagues: dataPost.tag_user.tag })
+        }
       }
     }
   }, [dataPost, modal])
@@ -410,8 +399,11 @@ const ModalCreatePost = (props) => {
   useEffect(() => {
     if (optionCreate !== "" && modal) {
       if (optionCreate === "poll_vote") {
-        setState({ backgroundImage: null, showChooseBackgroundImage: false })
-        toggleModalPollVote()
+        setState({
+          backgroundImage: null,
+          showChooseBackgroundImage: false,
+          poll_vote: true
+        })
       }
 
       if (_.isFunction(setOptionCreate)) {
@@ -426,71 +418,32 @@ const ModalCreatePost = (props) => {
     }
   }, [state.poll_vote])
 
+  // useEffect
+  useEffect(() => {
+    let check_options = true
+    _.forEach(state.poll_vote_detail.options, (value) => {
+      if (value === "") {
+        check_options = false
+      }
+    })
+    if (check_options && state.poll_vote_detail.question !== "") {
+      let disable_btn_post = false
+
+      if (
+        state.poll_vote_detail.setting.limit_time === true &&
+        state.poll_vote_detail.time_end === null
+      ) {
+        disable_btn_post = true
+      } else {
+        disable_btn_post = false
+      }
+      setState({ disable_btn_post: disable_btn_post })
+    } else {
+      setState({ disable_btn_post: true })
+    }
+  }, [state.poll_vote_detail])
+
   // ** render
-  const items = [
-    {
-      label: (
-        <a
-          className=""
-          onClick={(e) => {
-            e.preventDefault()
-            setState({ privacy_type: "workspace" })
-          }}>
-          <ErpRadio
-            checked={state.privacy_type === "workspace"}
-            onChange={() => {}}
-          />
-          <i className="fa-regular fa-briefcase me-50"></i>
-          <span>
-            {useFormatMessage("modules.feed.create_post.text.workspace")}
-          </span>
-        </a>
-      ),
-      key: "1"
-    },
-    {
-      label: (
-        <a
-          className=""
-          onClick={(e) => {
-            e.preventDefault()
-            setState({ privacy_type: "only_me" })
-          }}>
-          <ErpRadio
-            checked={state.privacy_type === "only_me"}
-            onChange={() => {}}
-          />
-          <i className="fa-solid fa-lock-keyhole me-50"></i>
-          <span>
-            {useFormatMessage("modules.feed.create_post.text.only_me")}
-          </span>
-        </a>
-      ),
-      key: "2"
-    }
-  ]
-  const renderTextDropdown = (privacy) => {
-    if (privacy === "workspace") {
-      return (
-        <>
-          <i className="fa-regular fa-briefcase me-50"></i>
-          {useFormatMessage("modules.feed.create_post.text.workspace")}
-        </>
-      )
-    }
-
-    if (privacy === "only_me") {
-      return (
-        <>
-          <i className="fa-solid fa-lock-keyhole me-50"></i>
-          {useFormatMessage("modules.feed.create_post.text.only_me")}
-        </>
-      )
-    }
-
-    return ""
-  }
-
   const renderPreviewAttachment = useMemo(
     () => (
       <PreviewAttachment
@@ -503,63 +456,6 @@ const ModalCreatePost = (props) => {
     [file, state.loadingUploadAttachment]
   )
 
-  const renderWithTag = () => {
-    if (!_.isEmpty(state.tag_your_colleagues)) {
-      const index_user = dataMention.findIndex(
-        (item) => item.id === state.tag_your_colleagues[0]
-      )
-      let data_user = {}
-      if (index_user !== -1) {
-        data_user = dataMention[index_user]
-      }
-      if (state.tag_your_colleagues.length > 2) {
-        return (
-          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.with")}
-            </span>{" "}
-            <span className="text-tag">{data_user?.full_name}</span>{" "}
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.and")}
-            </span>{" "}
-            <span className="text-tag">
-              {state.tag_your_colleagues.length - 1}{" "}
-              {useFormatMessage(`modules.feed.post.text.others`)}
-            </span>
-          </span>
-        )
-      } else {
-        let data_user_and = {}
-        if (state.tag_your_colleagues.length === 2) {
-          const index_user = dataMention.findIndex(
-            (item) => item.id === state.tag_your_colleagues[1]
-          )
-          if (index_user !== -1) {
-            data_user_and = dataMention[index_user]
-          }
-        }
-        return (
-          <span className="cursor-pointer" onClick={() => toggleModalTag()}>
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.with")}
-            </span>{" "}
-            <span className="text-tag">{data_user?.full_name}</span>{" "}
-            {state.tag_your_colleagues.length === 2 && (
-              <>
-                <span className="text-default">
-                  {useFormatMessage("modules.feed.post.text.and")}
-                </span>{" "}
-                <span className="text-tag">{data_user_and?.full_name}</span>
-              </>
-            )}
-          </span>
-        )
-      }
-    }
-
-    return ""
-  }
-
   return (
     <Modal
       isOpen={modal}
@@ -569,28 +465,17 @@ const ModalCreatePost = (props) => {
       backdropTransition={{ timeout: 100 }}
       /* backdrop={"static"} */
     >
-      <ModalHeader toggle={() => toggleModal()}>
-        <Avatar className="img" src={avatar} />
-        <div className="modal-header-privacy">
-          <span className="modal-header-privacy-name">
-            {fullName} {renderWithTag()}
-          </span>
-          <div className="modal-header-privacy-choose">
-            <Dropdown
-              menu={{ items }}
-              trigger={["click"]}
-              overlayClassName="modal-header-privacy-choose-dropdown">
-              <a
-                onClick={(e) => e.preventDefault()}
-                className="modal-header-privacy-choose-dropdown-a">
-                <Button.Ripple size="sm" color="flat-default" className="">
-                  {renderTextDropdown(state.privacy_type)}
-                  <i className="fa-sharp fa-solid fa-caret-down ms-50"></i>
-                </Button.Ripple>
-              </a>
-            </Dropdown>
-          </div>
-        </div>
+      <ModalHeader /* toggle={() => toggleModal()} */>
+        <HeaderCreatePost
+          avatar={avatar}
+          fullName={fullName}
+          dataMention={dataMention}
+          privacy_type={state.privacy_type}
+          setPrivacyType={setPrivacyType}
+          tag_your_colleagues={state.tag_your_colleagues}
+          toggleModalTag={toggleModalTag}
+          toggleModalCreatePost={toggleModal}
+        />
       </ModalHeader>
       <ModalBody>
         <EditorComponent
@@ -622,10 +507,9 @@ const ModalCreatePost = (props) => {
         )}
 
         {state.poll_vote && (
-          <PollVoteDetail
+          <PollVote
+            setPollVoteDetail={setPollVoteDetail}
             poll_vote_detail={state.poll_vote_detail}
-            toggleModalPollVote={toggleModalPollVote}
-            setEmptyPollVote={setEmptyPollVote}
           />
         )}
 
@@ -673,23 +557,62 @@ const ModalCreatePost = (props) => {
             toggleModal={toggleModalTag}
           />
 
-          <PollVote
-            backgroundImage={state.backgroundImage}
-            setPollVoteDetail={setPollVoteDetail}
-            modalPollVote={state.modalPollVote}
-            toggleModalPollVote={toggleModalPollVote}
-            loadingSubmit={state.loadingSubmit}
-            poll_vote_detail={state.poll_vote_detail}
+          <Tooltip
+            title={useFormatMessage("modules.feed.create_post.text.poll_vote")}>
+            <li
+              className={classNames("create_post_footer-li", {
+                "cursor-not-allowed": state.backgroundImage !== null,
+                "cursor-pointer": state.backgroundImage === null
+              })}
+              onClick={() => {
+                if (state.backgroundImage === null) {
+                  toggleModalPollVote()
+                }
+              }}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9.5 2C9.5 1.44772 9.94772 1 10.5 1H13.5C14.0523 1 14.5 1.44772 14.5 2V20C14.5 20.5523 14.0523 21 13.5 21H10.5C9.94772 21 9.5 20.5523 9.5 20V2Z"
+                  fill="#FFA940"></path>
+                <path
+                  d="M17 6C17 5.44772 17.4477 5 18 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H18C17.4477 21 17 20.5523 17 20V6Z"
+                  fill="#FFA940"></path>
+                <path
+                  d="M2 10C2 9.44772 2.44772 9 3 9H6C6.55228 9 7 9.44772 7 10V20C7 20.5523 6.55228 21 6 21H3C2.44772 21 2 20.5523 2 20V10Z"
+                  fill="#FFA940"></path>
+              </svg>
+            </li>
+          </Tooltip>
+
+          <Endorsement
+            modal={state.modalEndorsement}
+            toggleModal={toggleModalEndorsement}
+            toggleModalCreatePost={toggleModal}
+            dataMention={dataMention}
+            setDataCreateNew={setDataCreateNew}
+            idEndorsement={dataPost?.link_id}
+            setData={setData}
+            setDataLink={setDataLink}
+            idPost={dataPost?._id}
           />
 
-          <Emoji handleInsertEditorState={handleInsertEditorState} />
+          <Emoji
+            editorState={state.editorState}
+            setEditorState={onEditorStateChange}
+          />
         </ul>
         <Button.Ripple
           color="primary"
           type="button"
           className="btn-post"
           onClick={() => submitPost()}
-          disabled={state.loadingSubmit}>
+          disabled={
+            state.loadingSubmit || (state.poll_vote && state.disable_btn_post)
+          }>
           {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
           {useFormatMessage("modules.feed.create_post.text.post")}
         </Button.Ripple>

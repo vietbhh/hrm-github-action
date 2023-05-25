@@ -29,7 +29,10 @@ const feedSchema = baseSchema("m_feed", {
       "link",
       "update_avatar",
       "update_cover",
-      "background_image"
+      "background_image",
+      "event",
+      "announcement",
+      "endorsement"
     ],
     default: "post"
   },
@@ -73,7 +76,7 @@ const feedSchema = baseSchema("m_feed", {
   },
   approve_status: {
     type: String,
-    enum: ["approved", "rejected", "pending"],
+    enum: ["approved", "rejected", "pending", "schedule"],
     default: "approved"
   },
   reaction: {
@@ -170,6 +173,16 @@ const feedSchema = baseSchema("m_feed", {
       }
     },
     default: {}
+  },
+  schedule: {
+    type: Date,
+    default: null
+  },
+
+  // ** id: event / announcement
+  link_id: {
+    type: String,
+    default: null
   },
 
   // ** source child / post: 1 image/video

@@ -31,6 +31,8 @@ import image_21 from "@modules/Feed/assets/images/background-feed/21.png"
 import image_22 from "@modules/Feed/assets/images/background-feed/22.png"
 import image_23 from "@modules/Feed/assets/images/background-feed/23.png"
 
+import { EditorState, Modifier } from "draft-js"
+
 export const decodeHTMLEntities = (text) => {
   const entities = [
     ["amp", "&"],
@@ -266,3 +268,62 @@ export const arrImage = [
   { image: image_22, color: "#fff" },
   { image: image_23, color: "#fff" }
 ]
+
+export const renderIconAttachment = (item) => {
+  const type = item.type
+
+  if (type === "image") {
+    let img = ""
+    if (item.new) {
+      img = URL.createObjectURL(item.file)
+    } else {
+      img = item.url
+    }
+    if (img) {
+      return <img src={img} />
+    }
+  }
+  if (type === "video") {
+    return <i className="fa-solid fa-file-video"></i>
+  }
+  if (type === "excel") {
+    return <i className="fa-solid fa-file-excel"></i>
+  }
+  if (type === "word") {
+    return <i className="fa-solid fa-file-word"></i>
+  }
+  return <i className="fa-solid fa-file"></i>
+}
+
+// ** editor
+export const insertCharacter = (characterToInsert, editorState) => {
+  const currentContent = editorState.getCurrentContent(),
+    currentSelection = editorState.getSelection()
+
+  const newContent = Modifier.replaceText(
+    currentContent,
+    currentSelection,
+    characterToInsert
+  )
+
+  const newEditorState = EditorState.push(
+    editorState,
+    newContent,
+    "insert-characters"
+  )
+
+  return EditorState.forceSelection(
+    newEditorState,
+    newContent.getSelectionAfter()
+  )
+}
+
+export const handleInsertEditorState = (
+  characterToInsert,
+  editorState,
+  setEditorState
+) => {
+  const newEditorState = insertCharacter(characterToInsert, editorState)
+  setEditorState(newEditorState)
+}
+// ** end editor

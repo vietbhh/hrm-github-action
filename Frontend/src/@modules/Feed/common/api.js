@@ -1,4 +1,4 @@
-import { axiosNodeApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 import {
   erpSelectToValues,
   object2QueryString,
@@ -115,5 +115,79 @@ export const feedApi = {
 
   async postDeleteComment(data) {
     return await axiosNodeApi.post("/feed/delete-comment", data)
+  },
+
+  async getGetInitialEvent() {
+    return await axiosApi.get("/feed/get-initial-event")
+  }
+}
+
+export const eventApi = {
+  async postSubmitEvent(data) {
+    return await axiosNodeApi.post("/feed/submit-event", data)
+  },
+
+  async postUpdateEventStatus(data) {
+    return await axiosNodeApi.post("/feed/update-event-status", data)
+  },
+
+  async postSubmitEventAttachment(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-event-attachment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async getGetEventById(id) {
+    return await axiosNodeApi.get("/feed/get-event-by-id/" + id)
+  }
+}
+
+export const announcementApi = {
+  async postSubmitAnnouncement(data) {
+    return await axiosNodeApi.post("/feed/submit-announcement", data)
+  },
+
+  async postSubmitAnnouncementAttachment(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-announcement-attachment",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async getAnnouncementById(id) {
+    return await axiosNodeApi.get("/feed/get-announcement-by-id/" + id)
+  }
+}
+
+export const endorsementApi = {
+  async postSubmitEndorsement(data) {
+    return await axiosNodeApi.post("/feed/submit-endorsement", data)
+  },
+
+  async postSubmitEndorsementCover(data) {
+    return await axiosNodeApi.post(
+      "/feed/submit-endorsement-cover",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  async getEndorsementById(id) {
+    return await axiosNodeApi.get("/feed/get-endorsement-by-id/" + id)
   }
 }

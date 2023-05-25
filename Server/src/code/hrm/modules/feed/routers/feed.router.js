@@ -18,8 +18,23 @@ import {
   updatePostPollVote,
   updatePostPollVoteAddMoreOption
 } from "../controllers/feed.js"
-
 import { getPostInteractiveMember } from "../controllers/management.js"
+import {
+  getEventById,
+  submitEvent,
+  submitEventAttachment,
+  updateEventStatus
+} from "../controllers/event.js"
+import {
+  getAnnouncementById,
+  submitAnnouncement,
+  submitAnnouncementAttachment
+} from "../controllers/announcement.js"
+import {
+  getEndorsementById,
+  submitEndorsement,
+  submitEndorsementCover
+} from "../controllers/endorsement.js"
 
 const router = express.Router()
 
@@ -45,5 +60,18 @@ router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
 
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
+
+router.post("/submit-event", submitEvent)
+router.post("/submit-event-attachment", submitEventAttachment)
+router.get("/get-event-by-id/:id", getEventById)
+router.post("/update-event-status", updateEventStatus)
+
+router.post("/submit-announcement", submitAnnouncement)
+router.post("/submit-announcement-attachment", submitAnnouncementAttachment)
+router.get("/get-announcement-by-id/:id", getAnnouncementById)
+
+router.post("/submit-endorsement", submitEndorsement)
+router.post("/submit-endorsement-cover", submitEndorsementCover)
+router.get("/get-endorsement-by-id/:id", getEndorsementById)
 
 export default router
