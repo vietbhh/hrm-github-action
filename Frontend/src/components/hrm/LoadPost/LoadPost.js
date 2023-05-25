@@ -1,6 +1,10 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
-import { announcementApi, eventApi } from "@modules/Feed/common/api"
+import {
+  announcementApi,
+  endorsementApi,
+  eventApi
+} from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
 import React, { useEffect } from "react"
@@ -12,6 +16,8 @@ import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
+import RenderPostEndorsement from "./LoadPostDetails/PostDetails/RenderPostEndorsement"
+import { downloadApi } from "@apps/modules/download/common/api"
 
 const LoadPost = (props) => {
   const {
@@ -70,7 +76,37 @@ const LoadPost = (props) => {
           setState({ loadingDataLink: false, dataLink: {} })
         })
     }
-  }, [data])
+
+    if (data?.type === "endorsement" && data?.link_id !== null) {
+      setState({ loadingDataLink: true })
+      endorsementApi
+        .getEndorsementById(data?.link_id)
+        .then((res) => {
+          setState({ loadingDataLink: false, dataLink: res.data })
+
+          const promise = new Promise(async (resolve, reject) => {
+            const _data = { ...res.data }
+            if (_data.cover_type === "upload") {
+              await downloadApi.getPhoto(_data.cover).then((response) => {
+                _data.cover_url = URL.createObjectURL(response.data)
+              })
+            }
+            if (_data.badge_type === "upload") {
+              await downloadApi.getPhoto(_data.badge).then((response) => {
+                _data.badge_url = URL.createObjectURL(response.data)
+              })
+            }
+            resolve(_data)
+          })
+          promise.then((res_promise) => {
+            setState({ dataLink: res_promise })
+          })
+        })
+        .catch((err) => {
+          setState({ loadingDataLink: false, dataLink: {} })
+        })
+    }
+  }, [data.type, data.link_id])
 
   // ** render
   const renderBody = () => {
@@ -110,12 +146,17 @@ const LoadPost = (props) => {
       )
     }
 
-    if (data.type === "announcement") {
-      return "announcement: " + data?._id
+    if (data.type === "endorsement") {
+      return (
+        <RenderPostEndorsement
+          dataLink={state.dataLink}
+          loadingDataLink={state.loadingDataLink}
+        />
+      )
     }
 
-    if (data.type === "endorsement") {
-      return "endorsement: " + data?._id
+    if (data.type === "announcement") {
+      return "announcement: " + data?._id
     }
 
     return ""
@@ -147,6 +188,7 @@ const LoadPost = (props) => {
         setDataLink={setDataLink}
         options_employee_department={options_employee_department}
         optionsMeetingRoom={optionsMeetingRoom}
+        dataLink={state.dataLink}
       />
       <div
         className={classNames("post-body", {

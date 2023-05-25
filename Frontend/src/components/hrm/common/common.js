@@ -246,3 +246,10 @@ export const getCoverEndorsementByKey = (keyCover) => {
   )
   return index === -1 ? "" : listCoverEndorsement[index]["cover"]
 }
+
+export const getKeyNumberCoverEndorsementByKeyCover = (keyCover) => {
+  const index = listCoverEndorsement.findIndex(
+    (item) => item.key_cover === keyCover
+  )
+  return index === -1 ? 0 : listCoverEndorsement[index]["key"]
+}

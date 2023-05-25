@@ -4,7 +4,7 @@ import { manageEndorsementApi } from "@modules/FriNet/common/api"
 import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import { Tooltip } from "antd"
 import classNames from "classnames"
-import { EditorState, convertToRaw } from "draft-js"
+import { ContentState, EditorState, convertToRaw } from "draft-js"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import {
@@ -18,6 +18,7 @@ import {
 import { Carousel } from "rsuite"
 import {
   getKeyCoverEndorsement,
+  getKeyNumberCoverEndorsementByKeyCover,
   iconEndorsement,
   listCoverEndorsement
 } from "../../common/common"
@@ -32,6 +33,8 @@ import {
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
 import { endorsementApi } from "@modules/Feed/common/api"
+import htmlToDraft from "html-to-draftjs"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 
 const Endorsement = (props) => {
   const {
@@ -52,6 +55,11 @@ const Endorsement = (props) => {
     optionSelectMember: [],
     modalChooseBadge: false,
     listBadge: [],
+
+    // edit
+    loadingEdit: false,
+    dataEdit: {},
+    cover_url: null,
 
     //
     valueSelectMember: [],
@@ -116,6 +124,7 @@ const Endorsement = (props) => {
         content: __content,
         valueSelectMember: state.valueSelectMember,
         activeCoverString: state.activeCoverString,
+        cover_url: state.cover_url,
         valueBadge: state.valueBadge,
         idEndorsement: idEndorsement,
         idPost: idPost
@@ -123,15 +132,12 @@ const Endorsement = (props) => {
 
       endorsementApi
         .postSubmitEndorsement(params)
-        .then((res) => {
+        .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             setDataCreateNew(res.data.dataFeed)
           }
           if (_.isFunction(setData)) {
             setData(res.data.dataFeed)
-          }
-          if (_.isFunction(setDataLink)) {
-            setDataLink(res.data.dataLink)
           }
 
           if (state.coverImg !== null) {
@@ -140,8 +146,12 @@ const Endorsement = (props) => {
                 idEndorsement: res.data.idEndorsement,
                 file: state.coverImg
               })
-              .then((res) => {
+              .then(async (res) => {
                 resetAfterSubmit()
+                if (_.isFunction(setDataLink)) {
+                  const _data = await dataUrlImageAfterSubmit(res.data)
+                  setDataLink(_data)
+                }
                 notification.showSuccess({
                   text: useFormatMessage("notification.success")
                 })
@@ -154,6 +164,10 @@ const Endorsement = (props) => {
               })
           } else {
             resetAfterSubmit()
+            if (_.isFunction(setDataLink)) {
+              const _data = await dataUrlImageAfterSubmit(res.data.dataLink)
+              setDataLink(_data)
+            }
             notification.showSuccess({
               text: useFormatMessage("notification.success")
             })
@@ -184,6 +198,30 @@ const Endorsement = (props) => {
       valueBadge: {},
       loadingSubmit: false
     })
+  }
+
+  const dataUrlImageAfterSubmit = (data) => {
+    const promise = new Promise(async (resolve, reject) => {
+      const _data = { ...data }
+      if (_data.cover_type === "upload") {
+        await downloadApi.getPhoto(_data.cover).then((response) => {
+          _data.cover_url = URL.createObjectURL(response.data)
+        })
+      }
+      if (_data.badge_type === "upload") {
+        await downloadApi.getPhoto(_data.badge).then((response) => {
+          _data.badge_url = URL.createObjectURL(response.data)
+        })
+      }
+      resolve(_data)
+    })
+    return promise
+      .then((res_promise) => {
+        return res_promise
+      })
+      .catch((err) => {
+        return data
+      })
   }
 
   // ** useEffect
@@ -219,6 +257,89 @@ const Endorsement = (props) => {
       .catch((err) => {})
   }, [])
 
+  useEffect(() => {
+    if (modal && idEndorsement) {
+      setState({ loadingEdit: true })
+      endorsementApi
+        .getEndorsementById(idEndorsement)
+        .then((res) => {
+          const content_html = res.data.content
+          const contentBlock = htmlToDraft(content_html)
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(
+              contentBlock.contentBlocks
+            )
+            const editorState = EditorState.createWithContent(contentState)
+            setState({ editorState: editorState })
+          }
+
+          const valueSelectMember = []
+          if (!_.isEmpty(res.data.member)) {
+            _.forEach(res.data.member, (item) => {
+              if (dataEmployee[item]) {
+                valueSelectMember.push({
+                  value: dataEmployee[item].id,
+                  label: dataEmployee[item].full_name
+                })
+              }
+            })
+          }
+
+          setState({
+            dataEdit: res.data,
+            valueSelectMember: valueSelectMember,
+            activeCoverString: res.data.cover,
+            activeCoverNumber: getKeyNumberCoverEndorsementByKeyCover(
+              res.data.cover
+            )
+          })
+
+          const promise = new Promise(async (resolve, reject) => {
+            const result = { cover_url: null, badge_url: "" }
+            if (res.data.cover_type === "upload") {
+              await downloadApi.getPhoto(res.data.cover).then((response) => {
+                result.cover_url = URL.createObjectURL(response.data)
+              })
+            }
+            if (res.data.badge_type === "upload") {
+              await downloadApi.getPhoto(res.data.badge).then((response) => {
+                result.badge_url = URL.createObjectURL(response.data)
+              })
+            }
+            resolve(result)
+          })
+          promise
+            .then((res_promise) => {
+              setState({
+                loadingEdit: false,
+                cover_url: res_promise.cover_url,
+                valueBadge: {
+                  name: res.data.badge_name,
+                  badge: res.data.badge,
+                  url: res_promise.badge_url,
+                  badge_type: res.data.badge_type
+                }
+              })
+            })
+            .catch((err) => {
+              setState({
+                loadingEdit: false,
+                cover_url: null,
+                valueBadge: {
+                  name: res.data.badge_name,
+                  badge: res.data.badge,
+                  url: "",
+                  badge_type: res.data.badge_type
+                }
+              })
+            })
+        })
+        .catch((err) => {
+          setState({ loadingEdit: false, dataEdit: {} })
+        })
+    }
+  }, [idEndorsement, modal])
+
   return (
     <Fragment>
       <Tooltip
@@ -249,6 +370,8 @@ const Endorsement = (props) => {
           </div>
         </ModalHeader>
         <ModalBody>
+          {state.loadingEdit && <DefaultSpinner />}
+
           <div className="div-select mt-1">
             <label title="Attendees" className="form-label">
               {useFormatMessage(
@@ -266,18 +389,28 @@ const Endorsement = (props) => {
           </div>
 
           <div className="div-cover">
-            {state.coverImg !== null && (
+            {(state.coverImg !== null || state.cover_url !== null) && (
               <Fragment>
                 <div className="div-cover-img">
                   <img
                     className="img-cover-img"
-                    src={URL.createObjectURL(state.coverImg)}
+                    src={
+                      state.coverImg
+                        ? URL.createObjectURL(state.coverImg)
+                        : state.cover_url
+                    }
                   />
                 </div>
                 <div
                   className="btn-remove-cover"
                   onClick={() => {
-                    setState({ coverImg: null })
+                    setState({ coverImg: null, cover_url: null })
+                    if (state.cover_url !== null) {
+                      setState({
+                        activeCoverNumber: 0,
+                        activeCoverString: "cover0"
+                      })
+                    }
                     if (document.getElementById("attach-cover-photo")) {
                       document.getElementById("attach-cover-photo").value = null
                     }

@@ -4518,6 +4518,11 @@
           "no": "No",
           "maybe": "Maybe",
           "people_invited": "people invited"
+        },
+        "endorsement": {
+          "endorsed": "endorsed",
+          "congratulate": "Congratulate",
+          "is_endorsed": "is endorsed"
         }
       },
       "manage_post": {

@@ -28,6 +28,10 @@ const endorsementSchema = baseSchema("m_endorsement", {
     type: String,
     default: ""
   },
+  badge_name: {
+    type: String,
+    default: ""
+  },
   badge_type: {
     type: String,
     enum: ["local", "upload"],

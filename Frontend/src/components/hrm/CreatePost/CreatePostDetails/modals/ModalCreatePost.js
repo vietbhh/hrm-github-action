@@ -332,61 +332,66 @@ const ModalCreatePost = (props) => {
   // ** edit post
   useEffect(() => {
     if (!_.isEmpty(dataPost) && modal) {
-      // ** media
-      const _file = []
-      if (dataPost.source) {
-        _file.push({
-          description: "",
-          source: dataPost?.source,
-          thumb: dataPost?.thumb,
-          name_source: dataPost?.source_attribute?.name || "",
-          name_thumb: dataPost?.thumb_attribute?.name || "",
-          type: dataPost?.source_attribute?.mime || "",
-          url_thumb: dataPost?.url_thumb,
-          db: true
-        })
-      }
-
-      if (!_.isEmpty(dataPost.medias)) {
-        _.forEach(dataPost.medias, (value) => {
+      // ** endorsement
+      if (dataPost.type === "endorsement") {
+        toggleModalEndorsement()
+      } else {
+        // ** media
+        const _file = []
+        if (dataPost.source) {
           _file.push({
-            ...value,
-            name_source: value?.source_attribute?.name || "",
-            name_thumb: value?.thumb_attribute?.name || "",
-            type: value?.source_attribute?.mime || "",
+            description: "",
+            source: dataPost?.source,
+            thumb: dataPost?.thumb,
+            name_source: dataPost?.source_attribute?.name || "",
+            name_thumb: dataPost?.thumb_attribute?.name || "",
+            type: dataPost?.source_attribute?.mime || "",
+            url_thumb: dataPost?.url_thumb,
             db: true
           })
-        })
-      }
+        }
 
-      setFile(_file)
-      // **
+        if (!_.isEmpty(dataPost.medias)) {
+          _.forEach(dataPost.medias, (value) => {
+            _file.push({
+              ...value,
+              name_source: value?.source_attribute?.name || "",
+              name_thumb: value?.thumb_attribute?.name || "",
+              type: value?.source_attribute?.mime || "",
+              db: true
+            })
+          })
+        }
 
-      // ** background_image
-      if (
-        dataPost.type === "background_image" &&
-        dataPost.background_image !== null
-      ) {
-        setState({ backgroundImage: dataPost.background_image })
-      }
-      // **
+        setFile(_file)
+        // **
 
-      // ** poll_vote
-      if (dataPost.has_poll_vote === true) {
-        const poll_vote_detail = { ...dataPost.poll_vote_detail }
-        const options = []
-        _.forEach(dataPost.poll_vote_detail.options, (item) => {
-          options.push(item.option_name)
-        })
-        poll_vote_detail["options"] = options
-        setPollVoteDetail(poll_vote_detail)
-        setState({ poll_vote: true })
-      }
-      // **
+        // ** background_image
+        if (
+          dataPost.type === "background_image" &&
+          dataPost.background_image !== null
+        ) {
+          setState({ backgroundImage: dataPost.background_image })
+        }
+        // **
 
-      // tag_your_colleagues
-      if (!_.isEmpty(dataPost.tag_user)) {
-        setState({ tag_your_colleagues: dataPost.tag_user.tag })
+        // ** poll_vote
+        if (dataPost.has_poll_vote === true) {
+          const poll_vote_detail = { ...dataPost.poll_vote_detail }
+          const options = []
+          _.forEach(dataPost.poll_vote_detail.options, (item) => {
+            options.push(item.option_name)
+          })
+          poll_vote_detail["options"] = options
+          setPollVoteDetail(poll_vote_detail)
+          setState({ poll_vote: true })
+        }
+        // **
+
+        // tag_your_colleagues
+        if (!_.isEmpty(dataPost.tag_user)) {
+          setState({ tag_your_colleagues: dataPost.tag_user.tag })
+        }
       }
     }
   }, [dataPost, modal])

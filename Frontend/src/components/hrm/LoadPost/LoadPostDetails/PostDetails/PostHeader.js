@@ -17,6 +17,7 @@ import { Link } from "react-router-dom"
 import MemberVoteModal from "../modals/MemberVoteModal"
 import ModalCreateEvent from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreateEvent"
 import ModalAnnouncement from "components/hrm/CreatePost/CreatePostDetails/modals/ModalAnnouncement"
+import birthdayImg from "@src/layouts/components/vertical/images/birthday.svg"
 
 const PostHeader = (props) => {
   const {
@@ -29,6 +30,7 @@ const PostHeader = (props) => {
     renderAppendHeaderComponent,
     setEditDescription, // function edit description, content only modal
     setDataLink, // function set data link_id
+    dataLink = {},
 
     // create event / announcement
     options_employee_department,
@@ -258,6 +260,56 @@ const PostHeader = (props) => {
       )
     }
 
+    if (data.type === "endorsement") {
+      const member = []
+      if (!_.isEmpty(dataLink?.member)) {
+        _.forEach(dataLink.member, (item) => {
+          if (dataEmployee[item]) {
+            member.push({
+              username: dataEmployee[item].username,
+              full_name: dataEmployee[item].full_name
+            })
+          }
+        })
+      }
+      return (
+        <>
+          <span className="after-name">
+            {useFormatMessage("modules.feed.post.endorsement.endorsed")}
+          </span>{" "}
+          <span className="after-name-bold">
+            {_.map(member, (item, key) => {
+              return (
+                <Fragment>
+                  <Link key={key} to={`/u/${item.username}`}>
+                    <span className="name">{item.full_name}</span>
+                  </Link>
+
+                  {key < member.length - 1 && <span>, </span>}
+                </Fragment>
+              )
+            })}
+          </span>{" "}
+          <svg
+            className="ms-25 me-50"
+            style={{ position: "relative", top: "-2px" }}
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="2"
+            viewBox="0 0 16 2"
+            fill="none">
+            <line x1="0.990417" y1="1" x2="15.9904" y2="1" stroke="#CDC4C4" />
+          </svg>
+          <span className="after-name-bold me-50">{dataLink?.badge_name}</span>
+          <img
+            src={birthdayImg}
+            width={"18px"}
+            style={{ position: "relative", top: "-2px" }}
+          />
+        </>
+      )
+    }
+
     return ""
   }
 
@@ -392,11 +444,15 @@ const PostHeader = (props) => {
             {renderAfterName()}
             {renderWithTag()}
           </div>
+
           <span className="time">
-            {timeDifference(data.created_at)}{" "}
-            {data.edited &&
-              ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+            <Link to={`/u/${data?.created_by?.username}`}>
+              {timeDifference(data.created_at)}{" "}
+              {data.edited &&
+                ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+            </Link>
           </span>
+
           <Fragment>{renderAppendComponent()}</Fragment>
         </div>
         <div className="post-header-right">

@@ -1,4 +1,3 @@
-import calendarMongoModel from "#app/models/calendar.mongo.js"
 import { _uploadServices } from "#app/services/upload.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { forEach } from "lodash-es"
@@ -23,8 +22,9 @@ const submitEndorsement = async (req, res, next) => {
       content: body.content,
       member: member,
       cover: body.activeCoverString,
-      cover_type: "local",
+      cover_type: body.cover_url === null ? "local" : "upload",
       badge: body.valueBadge.badge,
+      badge_name: body.valueBadge.name,
       badge_type: body.valueBadge.badge_type
     }
 
@@ -104,7 +104,10 @@ const submitEndorsementCover = async (req, res, next) => {
         cover_type: "upload"
       }
     )
-    return res.respond("success")
+
+    const dataEndorsement = await endorsementMongoModel.findById(idEndorsement)
+
+    return res.respond(dataEndorsement)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -113,7 +116,7 @@ const submitEndorsementCover = async (req, res, next) => {
 const getEndorsementById = async (req, res, next) => {
   const id = req.params.id
   try {
-    const data = await endorsementMongoModel.findByPk(id)
+    const data = await endorsementMongoModel.findById(id)
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
