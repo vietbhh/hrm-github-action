@@ -51,8 +51,8 @@ const RenderPostEndorsement = (props) => {
         <span className="text-bold">
           {_.map(member, (item, key) => {
             return (
-              <Fragment>
-                <Link key={key} to={`/u/${item.username}`}>
+              <Fragment key={key}>
+                <Link to={`/u/${item.username}`}>
                   <span className="name">{item.full_name}</span>
                 </Link>
 

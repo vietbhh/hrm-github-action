@@ -4147,6 +4147,31 @@ $background-color-checkbox: #139ff8;
       background: #f5f5f8;
       border-radius: 10px;
       cursor: pointer;
+
+      .form-control {
+        padding: 0 !important;
+        background: #f5f5f8 !important;
+
+        &:hover,
+        &:focus,
+        &:focus-within,
+        &:focus-visible {
+          border-color: transparent !important;
+          background: #f5f5f8 !important;
+        }
+
+        input {
+          display: none;
+        }
+
+        .ant-picker-input {
+          height: 100%;
+        }
+
+        .ant-picker-suffix {
+          margin: auto;
+        }
+      }
     }
   }
 }

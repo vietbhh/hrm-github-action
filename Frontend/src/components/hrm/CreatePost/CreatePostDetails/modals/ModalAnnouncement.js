@@ -109,6 +109,7 @@ const ModalAnnouncement = (props) => {
   // ** function
   const resetAfterSubmit = () => {
     setState({
+      valueAttendees: [],
       dataAttendees: [],
       arrAttachment: [],
       valueShowAnnouncement: "643",
@@ -198,6 +199,7 @@ const ModalAnnouncement = (props) => {
           setState({
             loadingEdit: false,
             dataEdit: res.data,
+            valueAttendees: [],
             dataAttendees: res.data.send_to
           })
 
