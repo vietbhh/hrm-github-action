@@ -25,7 +25,8 @@ const submitEndorsement = async (req, res, next) => {
       cover_type: body.cover_url === null ? "local" : "upload",
       badge: body.valueBadge.badge,
       badge_name: body.valueBadge.name,
-      badge_type: body.valueBadge.badge_type
+      badge_type: body.valueBadge.badge_type,
+      date: body.date
     }
 
     if (!idEdit) {

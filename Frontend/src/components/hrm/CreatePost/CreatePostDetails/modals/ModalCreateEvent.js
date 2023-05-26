@@ -117,6 +117,7 @@ const ModalCreateEvent = (props) => {
     setState({
       color: "#5398ff",
       valueRepeat: "no_repeat",
+      valueAttendees: [],
       dataAttendees: [],
       arrAttachment: [],
       switch_all_day: false
@@ -190,7 +191,8 @@ const ModalCreateEvent = (props) => {
             color: res.data.color,
             valueRepeat: res.data.repeat,
             switch_all_day: res.data.all_day_event,
-            dataAttendees: res.data.attendees
+            dataAttendees: res.data.attendees,
+            valueAttendees: []
           })
 
           if (!_.isEmpty(res.data.attachment)) {

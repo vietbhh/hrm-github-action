@@ -13,7 +13,7 @@ export const ListComponentConfig = (props) => {
     {
       id: "clock_in_out",
       title: useFormatMessage("modules.attendance.title.clock_in_out"),
-      component: <ClockInOutWidget {...props} noIcon progressWidth={60}  />,
+      component: <ClockInOutWidget {...props} noIcon progressWidth={60} />,
       data_grid: {
         i: "clock_in_out",
         x: 8,
@@ -51,8 +51,8 @@ export const ListComponentConfig = (props) => {
       show: false,
       action: "login",
       resource: "app"
-    },
-    {
+    }
+    /* {
       id: "announcement",
       title: useFormatMessage("modules.dashboard.announcement.title"),
       component: <CardAnnouncements {...props} noIcon />,
@@ -72,6 +72,6 @@ export const ListComponentConfig = (props) => {
       show: false,
       action: "login",
       resource: "app"
-    }
+    } */
   ]
 }

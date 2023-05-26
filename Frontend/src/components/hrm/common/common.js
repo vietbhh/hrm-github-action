@@ -253,3 +253,97 @@ export const getKeyNumberCoverEndorsementByKeyCover = (keyCover) => {
   )
   return index === -1 ? 0 : listCoverEndorsement[index]["key"]
 }
+
+export const iconDateEndorsement = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="33"
+    height="33"
+    viewBox="0 0 33 33"
+    fill="none">
+    <path
+      d="M11 2.75V6.875"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M22 2.75V6.875"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4.8125 12.4987H28.1875"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M28.875 11.6875V23.375C28.875 27.5 26.8125 30.25 22 30.25H11C6.1875 30.25 4.125 27.5 4.125 23.375V11.6875C4.125 7.5625 6.1875 4.8125 11 4.8125H22C26.8125 4.8125 28.875 7.5625 28.875 11.6875Z"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M21.5803 18.8375H21.5927"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M21.5803 22.9625H21.5927"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M16.4934 18.8375H16.5058"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M16.4934 22.9625H16.5058"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M11.4046 18.8375H11.4169"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M11.4046 22.9625H11.4169"
+      stroke="#32434F"
+      strokeOpacity="0.8"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)

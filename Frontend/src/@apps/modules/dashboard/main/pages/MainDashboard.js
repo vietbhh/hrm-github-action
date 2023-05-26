@@ -358,7 +358,11 @@ const MainDashboard = ({
 
   const renderButtonAddWidget = () => {
     return (
-      <div className="d-flex mb-1">
+      <div
+        className={classNames("d-flex", {
+          "mt-1": customButtonPosition === "bottom",
+          "mb-1": customButtonPosition === "top"
+        })}>
         <a
           className="ms-auto"
           href="/"

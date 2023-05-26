@@ -1,26 +1,26 @@
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import calendarMongoModel from "#app/models/calendar.mongo.js"
+import { getSetting } from "#app/services/settings.js"
 import {
+  _uploadServices,
   copyFilesServices,
   localSavePath,
-  moveFileFromServerToGCS,
-  _uploadServices
+  moveFileFromServerToGCS
 } from "#app/services/upload.js"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
 import { forEach, isEmpty, union } from "lodash-es"
 import path from "path"
-import feedMongoModel from "../models/feed.mongo.js"
 import sharp from "sharp"
-import { handleDataBeforeReturn } from "#app/utility/common.js"
-import commentMongoModel from "../models/comment.mongo.js"
-import { sendNotification } from "#app/libraries/notifications/Notifications.js"
-import { getSetting } from "#app/services/settings.js"
-import moment from "moment"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
-import calendarMongoModel from "#app/models/calendar.mongo.js"
-import { newsModel } from "../models/news.mysql.js"
+import commentMongoModel from "../models/comment.mongo.js"
 import endorsementMongoModel from "../models/endorsement.mongo.js"
+import feedMongoModel from "../models/feed.mongo.js"
+import { newsModel } from "../models/news.mysql.js"
+import { handleDataComment } from "./comment.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -633,313 +633,6 @@ const updateContentMedia = async (req, res, next) => {
 
   return res.fail("not-found")
 }
-
-// update post poll vote
-const updatePostPollVote = async (req, res, next) => {
-  const body = req.body
-  const _id_post = body._id_post
-  const _id_option = body._id_option
-  const action = body.action
-  const multiple_selection = body.multiple_selection
-  const comment_more_count_original = body.comment_more_count_original
-  const time_end = body.time_end
-
-  if (time_end !== null) {
-    const now = moment()
-    const date = moment(time_end)
-    if (date <= now) {
-      return res.fail("poll_expired")
-    }
-  }
-
-  try {
-    if (action === "add") {
-      await feedMongoModel.updateOne(
-        {
-          _id: _id_post,
-          "poll_vote_detail.options._id": _id_option
-        },
-        { $push: { "poll_vote_detail.options.$.user_vote": req.__user } }
-      )
-    } else {
-      await feedMongoModel.updateOne(
-        {
-          _id: _id_post,
-          "poll_vote_detail.options._id": _id_option
-        },
-        { $pull: { "poll_vote_detail.options.$.user_vote": req.__user } }
-      )
-    }
-
-    if (multiple_selection === false) {
-      const feed = await feedMongoModel.findById(_id_post)
-      const promises = []
-      forEach(feed.poll_vote_detail.options, (item) => {
-        const promise = new Promise(async (resolve, reject) => {
-          if (
-            item._id.toString() !== _id_option.toString() &&
-            item.user_vote.indexOf(req.__user) !== -1
-          ) {
-            await feedMongoModel.updateOne(
-              {
-                _id: _id_post,
-                "poll_vote_detail.options._id": item._id
-              },
-              { $pull: { "poll_vote_detail.options.$.user_vote": req.__user } }
-            )
-          }
-          resolve("success")
-        })
-        promises.push(promise)
-      })
-      await Promise.all(promises).then((res) => {})
-    }
-
-    const data = await handleDataFeedById(_id_post, comment_more_count_original)
-    return res.respond(data)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-
-// poll_vote_detail add more option
-const updatePostPollVoteAddMoreOption = async (req, res, next) => {
-  const body = req.body
-  const _id_post = body._id_post
-  const option_name = body.option_name
-  const comment_more_count_original = body.comment_more_count_original
-  const time_end = body.time_end
-
-  if (time_end !== null) {
-    const now = moment()
-    const date = moment(time_end)
-    if (date <= now) {
-      return res.fail("poll_expired")
-    }
-  }
-
-  try {
-    await feedMongoModel.updateOne(
-      {
-        _id: _id_post
-      },
-      {
-        $push: {
-          "poll_vote_detail.options": {
-            option_name: option_name,
-            user_vote: []
-          }
-        }
-      }
-    )
-
-    const data = await handleDataFeedById(_id_post, comment_more_count_original)
-    return res.respond(data)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-// **
-
-// ** comment
-const submitComment = async (req, res, next) => {
-  const body = JSON.parse(req.body.body)
-  const content = body.content
-  const id_post = body.id_post
-  const comment_more_count_original = body.comment_more_count_original
-  const image = req.files !== null ? req.files.image : null
-  const dataEditComment = body?.dataEditComment || {}
-
-  try {
-    const result = await handleUpImageComment(image, id_post)
-    if (isEmpty(dataEditComment)) {
-      // insert
-      const commentModel = new commentMongoModel({
-        __user: req.__user,
-        post_id: id_post,
-        content: content,
-        image_source: result.source,
-        image_source_attribute: result.source_attribute
-      })
-      const saveComment = await commentModel.save()
-      await feedMongoModel.updateOne(
-        { _id: id_post },
-        { $push: { comment_ids: saveComment._id } }
-      )
-    } else {
-      // update
-      const data_update = { content: content }
-      if (!dataEditComment.image) {
-        data_update["image_source"] = result.source
-        data_update["image_source_attribute"] = result.source_attribute
-      }
-      await commentMongoModel.updateOne(
-        { _id: dataEditComment._id_comment },
-        data_update
-      )
-      // xoa file
-    }
-
-    const dataFeed = await handleDataFeedById(
-      id_post,
-      comment_more_count_original
-    )
-
-    // send notification
-    if (isEmpty(dataEditComment)) {
-      let link_notification = `/posts/${id_post}`
-      if (dataFeed.ref) {
-        link_notification = `/posts/${dataFeed.ref}/${id_post}`
-      }
-      await handleSendNotification(
-        "comment",
-        body.tag_user,
-        body.data_user,
-        link_notification
-      )
-    }
-
-    return res.respond(dataFeed)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-
-const submitCommentReply = async (req, res, next) => {
-  const body = JSON.parse(req.body.body)
-  const content = body.content
-  const id_post = body.id_post
-  const id_comment_parent = body.id_comment_parent
-  const comment_more_count_original = body.comment_more_count_original
-  const image = req.files !== null ? req.files.image : null
-  const dataEditComment = body?.dataEditComment || {}
-
-  try {
-    const result = await handleUpImageComment(image, id_post)
-    if (isEmpty(dataEditComment)) {
-      const dataSaveSubComment = {
-        post_id: id_post,
-        content: content,
-        image_source: result.source,
-        image_source_attribute: result.source_attribute,
-        created_by: req.__user,
-        updated_by: req.__user,
-        created_at: Date.now()
-      }
-
-      await commentMongoModel.updateOne(
-        { _id: id_comment_parent },
-        { $push: { sub_comment: dataSaveSubComment } }
-      )
-    } else {
-      // update
-      const data_update = { "sub_comment.$.content": content }
-      if (!dataEditComment.image || image) {
-        data_update["sub_comment.$.image_source"] = result.source
-        data_update["sub_comment.$.image_source_attribute"] =
-          result.source_attribute
-      }
-      await commentMongoModel.updateOne(
-        {
-          _id: dataEditComment._id_comment,
-          "sub_comment._id": dataEditComment._id_sub_comment
-        },
-        { $set: data_update }
-      )
-      // xoa file
-    }
-
-    const dataFeed = await handleDataFeedById(
-      id_post,
-      comment_more_count_original
-    )
-
-    // send notification
-    if (isEmpty(dataEditComment)) {
-      let link_notification = `/posts/${id_post}`
-      if (dataFeed.ref) {
-        link_notification = `/posts/${dataFeed.ref}/${id_post}`
-      }
-      await handleSendNotification(
-        "comment",
-        body.tag_user,
-        body.data_user,
-        link_notification
-      )
-    }
-
-    return res.respond(dataFeed)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-
-// update comment
-const updateComment = async (req, res, next) => {
-  const body = req.body
-  const _id_post = body._id_post
-  const _id_comment = body._id_comment
-  const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_update
-  try {
-    await commentMongoModel.updateOne({ _id: _id_comment }, body_update)
-    const data = await handleDataFeedById(_id_post, comment_more_count_original)
-    return res.respond(data)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-
-const updateSubComment = async (req, res, next) => {
-  const body = req.body
-  const _id_post = body._id_post
-  const _id_comment = body._id_comment
-  const _id_sub_comment = body._id_sub_comment
-  const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_update
-  try {
-    await commentMongoModel.updateOne(
-      { _id: _id_comment, "sub_comment._id": _id_sub_comment },
-      { $set: { "sub_comment.$.reaction": body_update.reaction } }
-    )
-    const data = await handleDataFeedById(_id_post, comment_more_count_original)
-    return res.respond(data)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
-
-// delete comment
-const deleteComment = async (req, res, next) => {
-  const body = req.body
-  const _id_post = body._id_post
-  const _id_comment = body._id_comment
-  const _id_sub_comment = body._id_sub_comment
-  const comment_more_count_original = body.comment_more_count_original
-
-  try {
-    if (_id_sub_comment === "") {
-      // delete comment parent
-      await commentMongoModel.deleteOne({ _id: _id_comment })
-      // xoa file
-      await feedMongoModel.updateOne(
-        { _id: _id_post },
-        { $pull: { comment_ids: _id_comment } }
-      )
-    } else {
-      // delete comment sub
-      await commentMongoModel.updateOne(
-        { _id: _id_comment },
-        { $pull: { sub_comment: { _id: _id_sub_comment } } }
-      )
-      // xoa file
-    }
-    const data = await handleDataFeedById(_id_post, comment_more_count_original)
-    return res.respond(data)
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
 // **
 
 // ** support function
@@ -1093,20 +786,6 @@ const handleMoveFileTempToMain = async (
   return result
 }
 
-const handleDeleteFile = (file) => {
-  if (fs.existsSync(path.join(localSavePath, file.source))) {
-    fs.unlinkSync(path.join(localSavePath, file.source))
-  }
-  if (
-    file.type.includes("video/") &&
-    fs.existsSync(path.join(localSavePath, file.thumb))
-  ) {
-    fs.unlinkSync(path.join(localSavePath, file.thumb))
-  }
-
-  return true
-}
-
 const handleCompressImage = async (file, savePath) => {
   const image = sharp(file.data)
   /* image.metadata().then((metadata) => {
@@ -1120,116 +799,11 @@ const handleCompressImage = async (file, savePath) => {
   return savePath
 }
 
-const handleDataComment = async (feed, loadComment = -1) => {
-  const comment_ids = feed.comment_ids
-  let comment_more_count = 0
-  let comment_list = []
-  let sub_comment_count = 0
-  if (!isEmpty(comment_ids)) {
-    if (loadComment === -1) {
-      const id_comment_last = comment_ids[comment_ids.length - 1]
-      const data_comment = await commentMongoModel.findById(id_comment_last)
-      const _data_comment = await handleDataBeforeReturn(data_comment)
-      const __data_comment = await handleDataSubComment(_data_comment)
-      comment_more_count = comment_ids.length - 1
-      comment_list.push(__data_comment)
-    } else if (loadComment === 0) {
-      const data_comment = await commentMongoModel.find({
-        _id: { $in: comment_ids }
-      })
-      const _data_comment = await handleDataBeforeReturn(data_comment, true)
-      const __data_comment = await handleDataSubComment(_data_comment, true)
-      comment_more_count = 0
-      comment_list = __data_comment
-    } else {
-      const key_filter = loadComment - 1
-      const comment_ids_filter = comment_ids.filter((item, key) => {
-        return key > key_filter
-      })
-      const data_comment = await commentMongoModel.find({
-        _id: { $in: comment_ids_filter }
-      })
-      const _data_comment = await handleDataBeforeReturn(data_comment, true)
-      const __data_comment = await handleDataSubComment(_data_comment, true)
-      comment_more_count = comment_ids.length - comment_ids_filter.length
-      comment_list = __data_comment
-    }
-  }
-  forEach(comment_list, (item) => {
-    sub_comment_count += item.sub_comment.length
-  })
-  const _feed = { ...feed }
-  _feed["_doc"]["comment_more_count"] = comment_more_count
-  _feed["_doc"]["comment_count"] = comment_ids.length + sub_comment_count
-  _feed["_doc"]["comment_list"] = comment_list
-
-  return _feed["_doc"]
-}
-
 const handleDataFeedById = async (id, loadComment = -1) => {
   const feed = await feedMongoModel.findById(id)
   const _feed = await handleDataComment(feed, loadComment)
   const data = await handleDataBeforeReturn(_feed)
   return data
-}
-
-const handleDataFeedInteractById = async (id) => {
-  const feed = await feedMongoModel.findById(id)
-}
-
-const handleUpImageComment = async (image, id_post) => {
-  const dateToDay = handleCurrentYMD()
-  const storePathTemp = path.join("modules", "comment_temp")
-  if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
-    fs.mkdirSync(path.join(localSavePath, storePathTemp), { recursive: true })
-  }
-  const storePath = path.join("modules", "comment", id_post, dateToDay)
-
-  const result = {
-    source: null,
-    source_attribute: {}
-  }
-  if (image) {
-    const image_name = Date.now() + "_" + Math.random() * 1000001 + ".webp"
-    const image_path = path.join(storePathTemp, image_name)
-    const image_source_webp = await handleCompressImage(image, image_path)
-    const file_info = {
-      source: image_source_webp,
-      name_source: image_name,
-      type: image.mimetype
-    }
-    const result_image = await handleMoveFileTempToMain(
-      file_info,
-      storePathTemp,
-      storePath
-    )
-    result["source"] = result_image.source
-    result["source_attribute"] = result_image.source_attribute
-  }
-
-  return result
-}
-
-const handleDataSubComment = async (dataComment, multiData = false) => {
-  const arrData = multiData ? dataComment : [dataComment]
-  const promises = []
-  forEach(arrData, (value) => {
-    const promise = new Promise(async (resolve, reject) => {
-      const _dataItem = { ...value }
-      const dataSubComment = value.sub_comment
-      const _dataSubComment = await handleDataBeforeReturn(dataSubComment, true)
-      _dataItem["sub_comment"] = _dataSubComment
-
-      resolve(_dataItem)
-    })
-    promises.push(promise)
-  })
-
-  const result = await Promise.all(promises).then((res_promise) => {
-    return res_promise
-  })
-
-  return multiData ? result : result[0]
 }
 
 const handleSendNotification = async (
@@ -1306,15 +880,13 @@ export {
   getFeedChild,
   getFeedById,
   updatePost,
-  submitComment,
   getFeedByIdAndViewAllComment,
-  updateComment,
-  submitCommentReply,
-  updateSubComment,
   loadFeedProfile,
   deletePost,
   updateContentMedia,
-  deleteComment,
-  updatePostPollVote,
-  updatePostPollVoteAddMoreOption
+  handleDataFeedById,
+  handleSendNotification,
+  handleCurrentYMD,
+  handleCompressImage,
+  handleMoveFileTempToMain
 }
