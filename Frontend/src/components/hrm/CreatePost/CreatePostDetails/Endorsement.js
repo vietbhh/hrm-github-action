@@ -205,7 +205,7 @@ const Endorsement = (props) => {
     })
   }
 
-  const dataUrlImageAfterSubmit = (data) => {
+  const dataUrlImageAfterSubmit = async (data) => {
     const promise = new Promise(async (resolve, reject) => {
       const _data = { ...data }
       if (_data.cover_type === "upload") {

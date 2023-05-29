@@ -58,8 +58,8 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/get-feed-and-comment/" + id)
   },
 
-  async postUpdatePost(data) {
-    return await axiosNodeApi.post("/feed/update-post", data)
+  async postUpdatePostReaction(data) {
+    return await axiosNodeApi.post("/feed/update-post-reaction", data)
   },
 
   async postUpdatePostPollVote(data) {
@@ -81,12 +81,12 @@ export const feedApi = {
     return await axiosNodeApi.post("/feed/delete-post", data)
   },
 
-  async postUpdateComment(data) {
-    return await axiosNodeApi.post("/feed/update-comment", data)
+  async postUpdateCommentReaction(data) {
+    return await axiosNodeApi.post("/feed/update-comment-reaction", data)
   },
 
-  async postUpdateSubComment(data) {
-    return await axiosNodeApi.post("/feed/update-sub-comment", data)
+  async postUpdateSubCommentReaction(data) {
+    return await axiosNodeApi.post("/feed/update-sub-comment-reaction", data)
   },
 
   async postSubmitComment(data) {

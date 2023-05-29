@@ -4,6 +4,7 @@ import { forEach } from "lodash-es"
 import path from "path"
 import endorsementMongoModel from "../models/endorsement.mongo.js"
 import feedMongoModel from "../models/feed.mongo.js"
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEndorsement = async (req, res, next) => {
   const body = req.body
@@ -44,6 +45,26 @@ const submitEndorsement = async (req, res, next) => {
       await endorsementMongoModel.updateOne(
         { _id: idEndorsement },
         { id_post: feedData._id }
+      )
+
+      // ** send notification
+      const userId = req.__user
+      const receivers = member
+      const body = "{{modules.network.notification.you_have_a_new_endorse}}"
+      const link = `/posts/${feedData._id}`
+      await sendNotification(
+        userId,
+        receivers,
+        {
+          title: "",
+          body: body,
+          link: link
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
+        }
       )
 
       const _feedData = await handleDataBeforeReturn(feedData)

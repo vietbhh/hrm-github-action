@@ -35,7 +35,8 @@ const PostCommentForm = (props) => {
     dataEditComment = {},
     setDataEditComment,
     focusCommentForm = false,
-    setFocusCommentForm
+    setFocusCommentForm,
+    created_by_comment_parent = null
   } = props
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
@@ -133,7 +134,10 @@ const PostCommentForm = (props) => {
             id: userId,
             full_name: full_name
           },
-          dataEditComment: dataEditComment
+          dataEditComment: dataEditComment,
+          created_by: created_by_comment_parent
+            ? created_by_comment_parent
+            : data.created_by.id
         }),
         image: state.image
       }

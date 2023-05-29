@@ -510,6 +510,7 @@ const ModalCreatePost = (props) => {
           <PollVote
             setPollVoteDetail={setPollVoteDetail}
             poll_vote_detail={state.poll_vote_detail}
+            toggleModalPollVote={toggleModalPollVote}
           />
         )}
 

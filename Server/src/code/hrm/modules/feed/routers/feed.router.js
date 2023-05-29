@@ -8,8 +8,8 @@ import {
   deleteComment,
   submitComment,
   submitCommentReply,
-  updateComment,
-  updateSubComment
+  updateCommentReaction,
+  updateSubCommentReaction
 } from "../controllers/comment.js"
 import {
   getEndorsementById,
@@ -31,7 +31,7 @@ import {
   loadFeedProfile,
   submitPostController,
   updateContentMedia,
-  updatePost,
+  updatePostReaction,
   uploadTempAttachmentController
 } from "../controllers/feed.js"
 import { getPostInteractiveMember } from "../controllers/management.js"
@@ -48,7 +48,7 @@ router.get("/load-feed", loadFeedController)
 router.get("/get-feed-child/:id", getFeedChild)
 router.get("/get-feed/:id", getFeedById)
 router.get("/get-feed-and-comment/:id", getFeedByIdAndViewAllComment)
-router.post("/update-post", updatePost)
+router.post("/update-post-reaction", updatePostReaction)
 router.post("/update-content-media", updateContentMedia)
 router.post("/delete-post", deletePost)
 router.post("/update-post-poll-vote", updatePostPollVote)
@@ -58,8 +58,8 @@ router.post(
 )
 router.post("/submit-comment", submitComment)
 router.post("/submit-comment-reply", submitCommentReply)
-router.post("/update-comment", updateComment)
-router.post("/update-sub-comment", updateSubComment)
+router.post("/update-comment-reaction", updateCommentReaction)
+router.post("/update-sub-comment-reaction", updateSubCommentReaction)
 router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
 

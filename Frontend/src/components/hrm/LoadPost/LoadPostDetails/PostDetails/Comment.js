@@ -31,6 +31,7 @@ const Comment = (props) => {
   } = props
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
+  const full_name = userData.full_name
 
   const actions = {
     edit_comment: {
@@ -87,7 +88,9 @@ const Comment = (props) => {
       comment_more_count_original: comment_more_count_original,
       body_update: {
         reaction: _reaction
-      }
+      },
+      full_name: full_name,
+      created_by: data_comment.created_by.id
     }
     if (_.isFunction(setData)) {
       apiReaction(params)

@@ -60,7 +60,7 @@ const PostComment = (props) => {
                       dataComment={value}
                       setDataShowFormReply={setDataShowFormReply}
                       dataShowFormReply={state.dataShowFormReply}
-                      apiReaction={feedApi.postUpdateComment}
+                      apiReaction={feedApi.postUpdateCommentReaction}
                       setDataReactionAndModal={setDataReactionAndModal}
                       setDataEditComment={setDataEditComment}
                     />

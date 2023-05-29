@@ -490,14 +490,49 @@ const getFeedChild = async (req, res, next) => {
   }
 }
 
-// update post
-const updatePost = async (req, res, next) => {
+// update reaction
+const updatePostReaction = async (req, res, next) => {
   const body = req.body
   const id = body._id
   const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_update
+  const react_type = body.react_type
+  const reaction = body.reaction
+  const full_name = body.full_name
+  const created_by = body.created_by
   try {
-    await feedMongoModel.updateOne({ _id: id }, body_update)
+    await feedMongoModel.updateOne({ _id: id }, { reaction })
+    /*  await feedMongoModel.updateOne(
+      { _id: id },
+      { $pull: { "reaction.$.react_user": req.__user } }
+    )
+    await feedMongoModel.updateOne(
+      { _id: id, "reaction.react_type": react_type },
+      { $push: { "reaction.$.react_user": req.__user } }
+    ) */
+
+    // ** send notification
+    if (req.__user.toString() !== created_by.toString()) {
+      const userId = req.__user
+      const receivers = created_by
+      const body =
+        full_name + " {{modules.network.notification.liked_your_post}}"
+      const link = `/posts/${id}`
+      await sendNotification(
+        userId,
+        receivers,
+        {
+          title: "",
+          body: body,
+          link: link
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
+        }
+      )
+    }
+
     const data = await handleDataFeedById(id, comment_more_count_original)
     return res.respond(data)
   } catch (err) {
@@ -879,7 +914,7 @@ export {
   loadFeedController,
   getFeedChild,
   getFeedById,
-  updatePost,
+  updatePostReaction,
   getFeedByIdAndViewAllComment,
   loadFeedProfile,
   deletePost,

@@ -1,10 +1,11 @@
 import { _uploadServices } from "#app/services/upload.js"
-import { forEach } from "lodash-es"
+import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { usersModel } from "#app/models/users.mysql.js"
 
 const submitAnnouncement = async (req, res, next) => {
   const body = req.body
@@ -24,12 +25,24 @@ const submitAnnouncement = async (req, res, next) => {
     }
   })
 
+  if (!isEmpty(department)) {
+    const dataEmployeeDepartment = await usersModel.findAll({
+      where: { department_id: department }
+    })
+    forEach(dataEmployeeDepartment, (item) => {
+      const index = employee.findIndex((val) => val.id === item.id)
+      if (index === -1) {
+        employee.push(item.id.toString())
+      }
+    })
+  }
+
   try {
     const dataInsert = {
       title: body.announcement_title,
       content: body.details,
       employee: JSON.stringify(employee),
-      department: JSON.stringify(department),
+      //department: JSON.stringify(department),
       pin: body.pin_to_top ? 1 : 0,
       show_announcements: body.valueShowAnnouncement,
       send_to: JSON.stringify(body.dataAttendees)
@@ -59,8 +72,9 @@ const submitAnnouncement = async (req, res, next) => {
 
       // ** send notification
       const userId = req.__user
-      const receivers = []
-      const body = "{{modules.network.you_have_a_new_announcement}}"
+      const receivers = employee
+      const body =
+        "{{modules.network.notification.you_have_a_new_announcement}}"
       const link = `/posts/${feedData._id}`
       await sendNotification(
         userId,

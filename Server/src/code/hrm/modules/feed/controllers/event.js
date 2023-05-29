@@ -14,6 +14,7 @@ const submitEvent = async (req, res, next) => {
   const idPost = body.idPost
 
   const employee = []
+  const employee_arr_id = []
   const department = []
   forEach(body.dataAttendees, (item) => {
     const value = item.value
@@ -24,6 +25,7 @@ const submitEvent = async (req, res, next) => {
         status: "yes",
         dateUpdate: Date.now()
       })
+      employee_arr_id.push(value_arr[0])
     }
     if (value_arr[1] === "department") {
       department.push(value_arr[0])
@@ -42,6 +44,7 @@ const submitEvent = async (req, res, next) => {
           status: "yes",
           dateUpdate: Date.now()
         })
+        employee_arr_id.push(item.id)
       }
     })
   }
@@ -88,8 +91,8 @@ const submitEvent = async (req, res, next) => {
 
       // ** send notification
       const userId = req.__user
-      const receivers = []
-      const body = "{{modules.network.you_have_a_new_event}}"
+      const receivers = employee_arr_id
+      const body = "{{modules.network.notification.you_have_a_new_event}}"
       const link = `/posts/${out._id}`
       await sendNotification(
         userId,
