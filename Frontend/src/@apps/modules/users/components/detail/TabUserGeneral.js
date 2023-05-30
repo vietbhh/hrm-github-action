@@ -88,8 +88,8 @@ const DetailForm = (props) => {
                   updateData: updateData?.[field.field],
                   updateDataId: updateId,
                   labelInline: true,
-                  inlineClassLabel: "col-md-3",
-                  inlineClassInput: "col-md-9"
+                  inlineClassLabel: "col-xxl-3",
+                  inlineClassInput: "col-xxl-9"
                 }
                 return (
                   <Fragment key={key}>

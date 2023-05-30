@@ -345,8 +345,14 @@ ul.nav-left-newStyle {
           }
         }
       }
-
-      @include media-breakpoint-up(lg) {
+      @media (min-width: 768px) and (max-width: 1699.98px) {
+        flex: 0 0 23%;
+        max-width: 23%;
+        padding-left: 25px;
+        padding-right: 25px;
+        border-right: 1px solid #badffe;
+      }
+      @media (min-width: 1700px) {
         flex: 0 0 21.657%;
         max-width: 21.657%;
         padding-left: 45px;
@@ -358,9 +364,15 @@ ul.nav-left-newStyle {
       .card-inside {
         box-shadow: 0px 0px 11.0571px -3.68571px rgba(0, 0, 0, 0.3) !important;
       }
-      @include media-breakpoint-up(lg) {
-        flex: 0 0 78.343%;
-        max-width: 78.343%;
+      @media (min-width: 768px) and (max-width: 1699.98px) {
+        flex: 0 0 77%;
+        max-width: 77%;
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+      @media (min-width: 1700px) {
+        flex: 0 0 77%;
+        max-width: 77%;
         padding-left: 45px;
         padding-right: 45px;
       }
