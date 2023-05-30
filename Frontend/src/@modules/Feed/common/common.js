@@ -130,34 +130,18 @@ export const handleLoadAttachmentThumb = async (data, cover) => {
 }
 
 export const handleReaction = (userId, react_type, reaction) => {
+  let react_action = "add"
   const index_react_type = reaction.findIndex(
     (item) => item.react_type === react_type
   )
   if (index_react_type !== -1) {
     const index_user = reaction[index_react_type]["react_user"].indexOf(userId)
     if (index_user !== -1) {
-      reaction[index_react_type]["react_user"].splice(index_user, 1)
-    } else {
-      reaction[index_react_type]["react_user"].push(userId)
+      react_action = "remove"
     }
-  } else {
-    reaction.push({
-      react_type: react_type,
-      react_user: [userId]
-    })
   }
 
-  // remove user from react_user
-  _.forEach(reaction, (value) => {
-    if (react_type !== value.react_type) {
-      const index = value["react_user"].indexOf(userId)
-      if (index !== -1) {
-        value["react_user"].splice(index, 1)
-      }
-    }
-  })
-
-  return reaction
+  return react_action
 }
 
 export const renderImageReact = (type) => {

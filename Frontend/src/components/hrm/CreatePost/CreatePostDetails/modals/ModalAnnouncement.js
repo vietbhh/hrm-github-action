@@ -65,10 +65,12 @@ const ModalAnnouncement = (props) => {
     values.dataAttendees = state.dataAttendees
     values.idAnnouncement = idAnnouncement
     values.idPost = idPost
+    values.file = state.arrAttachment
+    const params = { body: JSON.stringify(values), file: state.arrAttachment }
 
     setState({ loadingSubmit: true })
     announcementApi
-      .postSubmitAnnouncement(values)
+      .postSubmitAnnouncement(params)
       .then((res) => {
         if (_.isFunction(setDataCreateNew)) {
           setDataCreateNew(res.data.dataFeed)
@@ -80,29 +82,18 @@ const ModalAnnouncement = (props) => {
           setDataLink(res.data.dataLink)
         }
 
-        announcementApi
-          .postSubmitAnnouncementAttachment({
-            idAnnouncement: res.data.idAnnouncement,
-            file: state.arrAttachment,
-            countAttachment: state.arrAttachment.length
-          })
-          .then((res) => {
-            resetAfterSubmit()
-            toggleModal()
-            setState({ loadingSubmit: false })
-            notification.showSuccess({
-              text: useFormatMessage("notification.success")
-            })
-          })
-          .catch((err) => {
-            setState({ loadingSubmit: false })
-            notification.showError({
-              text: useFormatMessage("notification.something_went_wrong")
-            })
-          })
+        resetAfterSubmit()
+        toggleModal()
+        setState({ loadingSubmit: false })
+        notification.showSuccess({
+          text: useFormatMessage("notification.success")
+        })
       })
       .catch((err) => {
         setState({ loadingSubmit: false })
+        notification.showError({
+          text: useFormatMessage("notification.something_went_wrong")
+        })
       })
   }
 
@@ -262,7 +253,7 @@ const ModalAnnouncement = (props) => {
       <Modal
         isOpen={modal}
         toggle={() => toggleModal()}
-        className="feed modal-create-post modal-create-event modal-announcement"
+        className="modal-dialog-centered feed modal-create-post modal-create-event modal-announcement"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader>

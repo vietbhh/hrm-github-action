@@ -31,14 +31,14 @@ const ButtonReaction = (props) => {
   const updateReaction = (react_type) => {
     const _data = { ...data }
     const reaction = _data.reaction ? _data.reaction : []
-    const _reaction = handleReaction(userId, react_type, reaction)
+    const react_action = handleReaction(userId, react_type, reaction)
 
     const params = {
       _id: _data._id,
       created_by: _data.created_by.id,
       comment_more_count_original: comment_more_count_original,
       react_type: react_type,
-      reaction: _reaction,
+      react_action: react_action,
       full_name: full_name
     }
     if (_.isFunction(setData)) {

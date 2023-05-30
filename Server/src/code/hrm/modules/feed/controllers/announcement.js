@@ -8,10 +8,12 @@ import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { usersModel } from "#app/models/users.mysql.js"
 
 const submitAnnouncement = async (req, res, next) => {
-  const body = req.body
+  const file = req.files
+  const body = JSON.parse(req.body.body)
   const idEdit = body.idAnnouncement
   const idPost = body.idPost
 
+  const receivers = []
   const employee = []
   const department = []
   forEach(body.dataAttendees, (item) => {
@@ -19,6 +21,10 @@ const submitAnnouncement = async (req, res, next) => {
     const value_arr = value.split("_")
     if (value_arr[1] === "employee") {
       employee.push(value_arr[0])
+
+      if (req.__user.toString() !== value_arr[0].toString()) {
+        receivers.push(value_arr[0])
+      }
     }
     if (value_arr[1] === "department") {
       department.push(value_arr[0])
@@ -33,6 +39,10 @@ const submitAnnouncement = async (req, res, next) => {
       const index = employee.findIndex((val) => val.id === item.id)
       if (index === -1) {
         employee.push(item.id.toString())
+
+        if (req.__user.toString() !== item.id.toString()) {
+          receivers.push(item.id)
+        }
       }
     })
   }
@@ -48,6 +58,11 @@ const submitAnnouncement = async (req, res, next) => {
       send_to: JSON.stringify(body.dataAttendees)
     }
 
+    let _id = idEdit
+    let result = {
+      dataFeed: {},
+      dataLink: {}
+    }
     if (!idEdit) {
       const announcement = await newsModel.create(dataInsert, {
         __user: req.__user
@@ -72,11 +87,10 @@ const submitAnnouncement = async (req, res, next) => {
 
       // ** send notification
       const userId = req.__user
-      const receivers = employee
       const body =
         "{{modules.network.notification.you_have_a_new_announcement}}"
       const link = `/posts/${feedData._id}`
-      await sendNotification(
+      sendNotification(
         userId,
         receivers,
         {
@@ -91,13 +105,12 @@ const submitAnnouncement = async (req, res, next) => {
         }
       )
 
+      _id = idAnnouncement
       const _feedData = await handleDataBeforeReturn(feedData)
-      const result = {
+      result = {
         dataFeed: _feedData,
-        idAnnouncement: idAnnouncement,
         dataLink: {}
       }
-      return res.respond(result)
     } else {
       await newsModel.update(dataInsert, {
         where: {
@@ -125,31 +138,19 @@ const submitAnnouncement = async (req, res, next) => {
       dataAnnouncement.dataValues.attachment = JSON.parse(
         dataAnnouncement.dataValues.attachment
       )
-      const result = {
+      result = {
         dataFeed: _dataFeed,
-        idAnnouncement: idEdit,
         dataLink: dataAnnouncement
       }
-      return res.respond(result)
     }
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
 
-const submitAnnouncementAttachment = async (req, res, next) => {
-  const body = req.body
-  const file = req.files
-
-  try {
-    const idAnnouncement = body.idAnnouncement
-    const storePath = path.join("modules", "news", idAnnouncement)
+    // attachment
+    const storePath = path.join("modules", "news", _id.toString())
     const promises = []
-    const countAttachment = body.countAttachment ? body.countAttachment : 0
-    for (let index = 0; index < countAttachment; index++) {
-      const type = body[`file[${index}][type]`]
+    forEach(body.file, (item, index) => {
+      const type = item.type
       const promise = new Promise(async (resolve, reject) => {
-        if (body[`file[${index}][new]`]) {
+        if (item.new) {
           const resultUpload = await _uploadServices(storePath, [
             file[`file[${index}][file]`]
           ])
@@ -163,28 +164,28 @@ const submitAnnouncementAttachment = async (req, res, next) => {
         } else {
           const result = {
             type: type,
-            name: body[`file[${index}][name]`],
-            size: body[`file[${index}][size]`],
-            src: body[`file[${index}][src]`]
+            name: item.name,
+            size: item.size,
+            src: item.src
           }
           resolve(result)
         }
       })
       promises.push(promise)
-    }
+    })
     const attachment = await Promise.all(promises).then((res) => {
       return res
     })
-
     await newsModel.update(
       { attachment: JSON.stringify(attachment) },
       {
         where: {
-          id: idAnnouncement
+          id: _id
         }
       }
     )
-    return res.respond("success")
+
+    return res.respond(result)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -202,4 +203,4 @@ const getAnnouncementById = async (req, res, next) => {
   }
 }
 
-export { submitAnnouncement, submitAnnouncementAttachment, getAnnouncementById }
+export { submitAnnouncement, getAnnouncementById }

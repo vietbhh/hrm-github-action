@@ -496,41 +496,52 @@ const updatePostReaction = async (req, res, next) => {
   const id = body._id
   const comment_more_count_original = body.comment_more_count_original
   const react_type = body.react_type
-  const reaction = body.reaction
+  const react_action = body.react_action
   const full_name = body.full_name
   const created_by = body.created_by
   try {
-    await feedMongoModel.updateOne({ _id: id }, { reaction })
-    /*  await feedMongoModel.updateOne(
-      { _id: id },
+    await feedMongoModel.updateMany(
+      { _id: id, "reaction.react_user": req.__user },
       { $pull: { "reaction.$.react_user": req.__user } }
     )
-    await feedMongoModel.updateOne(
-      { _id: id, "reaction.react_type": react_type },
-      { $push: { "reaction.$.react_user": req.__user } }
-    ) */
-
-    // ** send notification
-    if (req.__user.toString() !== created_by.toString()) {
-      const userId = req.__user
-      const receivers = created_by
-      const body =
-        full_name + " {{modules.network.notification.liked_your_post}}"
-      const link = `/posts/${id}`
-      await sendNotification(
-        userId,
-        receivers,
-        {
-          title: "",
-          body: body,
-          link: link
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
+    if (react_action === "add") {
+      const update = await feedMongoModel.updateOne(
+        { _id: id, "reaction.react_type": react_type },
+        { $push: { "reaction.$.react_user": req.__user } }
       )
+      if (update.matchedCount === 0) {
+        await feedMongoModel.updateOne(
+          { _id: id },
+          {
+            $push: {
+              reaction: { react_type: react_type, react_user: req.__user }
+            }
+          }
+        )
+      }
+
+      // ** send notification
+      if (req.__user.toString() !== created_by.toString()) {
+        const userId = req.__user
+        const receivers = created_by
+        const body =
+          full_name + " {{modules.network.notification.liked_your_post}}"
+        const link = `/posts/${id}`
+        sendNotification(
+          userId,
+          receivers,
+          {
+            title: "",
+            body: body,
+            link: link
+            //icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          {
+            skipUrls: ""
+          }
+        )
+      }
     }
 
     const data = await handleDataFeedById(id, comment_more_count_original)
@@ -857,7 +868,7 @@ const handleSendNotification = async (
       "</strong> {{modules.network.notification." +
       lang +
       "}}"
-    await sendNotification(
+    sendNotification(
       userId,
       receivers,
       {

@@ -9,7 +9,8 @@ import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEvent = async (req, res, next) => {
-  const body = req.body
+  const file = req.files
+  const body = JSON.parse(req.body.body)
   const idEdit = body.idEvent
   const idPost = body.idPost
 
@@ -25,7 +26,10 @@ const submitEvent = async (req, res, next) => {
         status: "yes",
         dateUpdate: Date.now()
       })
-      employee_arr_id.push(value_arr[0])
+
+      if (req.__user.toString() !== value_arr[0].toString()) {
+        employee_arr_id.push(value_arr[0])
+      }
     }
     if (value_arr[1] === "department") {
       department.push(value_arr[0])
@@ -44,7 +48,10 @@ const submitEvent = async (req, res, next) => {
           status: "yes",
           dateUpdate: Date.now()
         })
-        employee_arr_id.push(item.id)
+
+        if (req.__user.toString() !== item.id.toString()) {
+          employee_arr_id.push(item.id)
+        }
       }
     })
   }
@@ -75,6 +82,12 @@ const submitEvent = async (req, res, next) => {
       details: body.details
     }
 
+    let _id = idEdit
+    let result = {
+      dataFeed: {},
+      dataLink: {}
+    }
+
     if (!idEdit) {
       const eventModel = new calendarMongoModel(dataInsert)
       const saveEvent = await eventModel.save()
@@ -94,7 +107,7 @@ const submitEvent = async (req, res, next) => {
       const receivers = employee_arr_id
       const body = "{{modules.network.notification.you_have_a_new_event}}"
       const link = `/posts/${out._id}`
-      await sendNotification(
+      sendNotification(
         userId,
         receivers,
         {
@@ -109,9 +122,9 @@ const submitEvent = async (req, res, next) => {
         }
       )
 
+      _id = idEvent
       const _out = await handleDataBeforeReturn(out)
-      const result = { dataFeed: _out, idEvent: idEvent, dataLink: {} }
-      return res.respond(result)
+      result = { dataFeed: _out, dataLink: {} }
     } else {
       await calendarMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
@@ -129,32 +142,19 @@ const submitEvent = async (req, res, next) => {
       }
 
       const dataEvent = await calendarMongoModel.findById(idEdit)
-      const result = {
+      result = {
         dataFeed: _dataFeed,
-        idEvent: idEdit,
         dataLink: dataEvent
       }
-
-      return res.respond(result)
     }
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
 
-const submitEventAttachment = async (req, res, next) => {
-  const body = req.body
-  const file = req.files
-
-  try {
-    const idEvent = body.idEvent
-    const storePath = path.join("modules", "event", idEvent)
+    // attachment
+    const storePath = path.join("modules", "event", _id.toString())
     const promises = []
-    const countAttachment = body.countAttachment ? body.countAttachment : 0
-    for (let index = 0; index < countAttachment; index++) {
-      const type = body[`file[${index}][type]`]
+    forEach(body.file, (item, index) => {
+      const type = item.type
       const promise = new Promise(async (resolve, reject) => {
-        if (body[`file[${index}][new]`]) {
+        if (item.new) {
           const resultUpload = await _uploadServices(storePath, [
             file[`file[${index}][file]`]
           ])
@@ -168,27 +168,26 @@ const submitEventAttachment = async (req, res, next) => {
         } else {
           const result = {
             type: type,
-            name: body[`file[${index}][name]`],
-            size: body[`file[${index}][size]`],
-            src: body[`file[${index}][src]`]
+            name: item.name,
+            size: item.size,
+            src: item.src
           }
           resolve(result)
         }
       })
       promises.push(promise)
-    }
-
+    })
     const attachment = await Promise.all(promises).then((res) => {
       return res
     })
-
     await calendarMongoModel.updateOne(
-      { _id: idEvent },
+      { _id: _id },
       {
         attachment: attachment
       }
     )
-    return res.respond("success")
+
+    return res.respond(result)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -267,4 +266,4 @@ const handleReminderDate = (date, time, reminder) => {
   return date_reminder
 }
 
-export { submitEvent, submitEventAttachment, getEventById, updateEventStatus }
+export { submitEvent, getEventById, updateEventStatus }

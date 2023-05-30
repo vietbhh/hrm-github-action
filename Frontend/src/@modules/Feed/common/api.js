@@ -124,16 +124,8 @@ export const feedApi = {
 
 export const eventApi = {
   async postSubmitEvent(data) {
-    return await axiosNodeApi.post("/feed/submit-event", data)
-  },
-
-  async postUpdateEventStatus(data) {
-    return await axiosNodeApi.post("/feed/update-event-status", data)
-  },
-
-  async postSubmitEventAttachment(data) {
     return await axiosNodeApi.post(
-      "/feed/submit-event-attachment",
+      "/feed/submit-event",
       serialize(_.cloneDeep(data)),
       {
         headers: {
@@ -143,6 +135,10 @@ export const eventApi = {
     )
   },
 
+  async postUpdateEventStatus(data) {
+    return await axiosNodeApi.post("/feed/update-event-status", data)
+  },
+
   async getGetEventById(id) {
     return await axiosNodeApi.get("/feed/get-event-by-id/" + id)
   }
@@ -150,12 +146,8 @@ export const eventApi = {
 
 export const announcementApi = {
   async postSubmitAnnouncement(data) {
-    return await axiosNodeApi.post("/feed/submit-announcement", data)
-  },
-
-  async postSubmitAnnouncementAttachment(data) {
     return await axiosNodeApi.post(
-      "/feed/submit-announcement-attachment",
+      "/feed/submit-announcement",
       serialize(_.cloneDeep(data)),
       {
         headers: {
@@ -172,12 +164,8 @@ export const announcementApi = {
 
 export const endorsementApi = {
   async postSubmitEndorsement(data) {
-    return await axiosNodeApi.post("/feed/submit-endorsement", data)
-  },
-
-  async postSubmitEndorsementCover(data) {
     return await axiosNodeApi.post(
-      "/feed/submit-endorsement-cover",
+      "/feed/submit-endorsement",
       serialize(_.cloneDeep(data)),
       {
         headers: {

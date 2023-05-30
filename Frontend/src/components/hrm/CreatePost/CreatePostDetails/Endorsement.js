@@ -134,8 +134,10 @@ const Endorsement = (props) => {
         idPost: idPost
       }
 
+      const _params = { body: JSON.stringify(params), file: state.coverImg }
+
       endorsementApi
-        .postSubmitEndorsement(params)
+        .postSubmitEndorsement(_params)
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             setDataCreateNew(res.data.dataFeed)
@@ -143,39 +145,15 @@ const Endorsement = (props) => {
           if (_.isFunction(setData)) {
             setData(res.data.dataFeed)
           }
-
-          if (state.coverImg !== null) {
-            endorsementApi
-              .postSubmitEndorsementCover({
-                idEndorsement: res.data.idEndorsement,
-                file: state.coverImg
-              })
-              .then(async (res) => {
-                resetAfterSubmit()
-                if (_.isFunction(setDataLink)) {
-                  const _data = await dataUrlImageAfterSubmit(res.data)
-                  setDataLink(_data)
-                }
-                notification.showSuccess({
-                  text: useFormatMessage("notification.success")
-                })
-              })
-              .catch((err) => {
-                setState({ loadingSubmit: false })
-                notification.showError({
-                  text: useFormatMessage("notification.something_went_wrong")
-                })
-              })
-          } else {
-            resetAfterSubmit()
-            if (_.isFunction(setDataLink)) {
-              const _data = await dataUrlImageAfterSubmit(res.data.dataLink)
-              setDataLink(_data)
-            }
-            notification.showSuccess({
-              text: useFormatMessage("notification.success")
-            })
+          if (_.isFunction(setDataLink)) {
+            const _data = await dataUrlImageAfterSubmit(res.data.dataLink)
+            setDataLink(_data)
           }
+
+          resetAfterSubmit()
+          notification.showSuccess({
+            text: useFormatMessage("notification.success")
+          })
         })
         .catch((err) => {
           setState({ loadingSubmit: false })
@@ -361,7 +339,10 @@ const Endorsement = (props) => {
 
       <Modal
         isOpen={modal}
-        toggle={() => toggleModal()}
+        toggle={() => {
+          toggleModal()
+          toggleModalCreatePost()
+        }}
         className="feed modal-dialog-centered modal-create-post modal-create-event modal-create-endorsement"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
@@ -371,7 +352,12 @@ const Endorsement = (props) => {
               "modules.feed.create_post.endorsement.appreciation"
             )}
           </span>
-          <div className="div-btn-close" onClick={() => toggleModal()}>
+          <div
+            className="div-btn-close"
+            onClick={() => {
+              toggleModal()
+              toggleModalCreatePost()
+            }}>
             <i className="fa-solid fa-xmark"></i>
           </div>
         </ModalHeader>

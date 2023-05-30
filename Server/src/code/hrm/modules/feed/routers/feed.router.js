@@ -1,8 +1,7 @@
 import express from "express"
 import {
   getAnnouncementById,
-  submitAnnouncement,
-  submitAnnouncementAttachment
+  submitAnnouncement
 } from "../controllers/announcement.js"
 import {
   deleteComment,
@@ -13,13 +12,11 @@ import {
 } from "../controllers/comment.js"
 import {
   getEndorsementById,
-  submitEndorsement,
-  submitEndorsementCover
+  submitEndorsement
 } from "../controllers/endorsement.js"
 import {
   getEventById,
   submitEvent,
-  submitEventAttachment,
   updateEventStatus
 } from "../controllers/event.js"
 import {
@@ -66,16 +63,13 @@ router.get("/load-feed-profile", loadFeedProfile)
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 
 router.post("/submit-event", submitEvent)
-router.post("/submit-event-attachment", submitEventAttachment)
 router.get("/get-event-by-id/:id", getEventById)
 router.post("/update-event-status", updateEventStatus)
 
 router.post("/submit-announcement", submitAnnouncement)
-router.post("/submit-announcement-attachment", submitAnnouncementAttachment)
 router.get("/get-announcement-by-id/:id", getAnnouncementById)
 
 router.post("/submit-endorsement", submitEndorsement)
-router.post("/submit-endorsement-cover", submitEndorsementCover)
 router.get("/get-endorsement-by-id/:id", getEndorsementById)
 
 export default router

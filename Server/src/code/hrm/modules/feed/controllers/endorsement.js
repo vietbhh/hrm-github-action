@@ -7,15 +7,21 @@ import feedMongoModel from "../models/feed.mongo.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEndorsement = async (req, res, next) => {
-  const body = req.body
+  const file = req.files
+  const body = JSON.parse(req.body.body)
   const idEdit = body.idEndorsement
   const idPost = body.idPost
 
   try {
     const member = []
+    const receivers = []
     forEach(body.valueSelectMember, (item) => {
       const value = item.value
       member.push(value)
+
+      if (req.__user.toString() !== value.toString()) {
+        receivers.push(value)
+      }
     })
 
     const dataInsert = {
@@ -30,6 +36,11 @@ const submitEndorsement = async (req, res, next) => {
       date: body.date
     }
 
+    let _id = idEdit
+    let result = {
+      dataFeed: {},
+      dataLink: {}
+    }
     if (!idEdit) {
       const endorsementModel = new endorsementMongoModel(dataInsert)
       const saveEndorsement = await endorsementModel.save()
@@ -49,10 +60,9 @@ const submitEndorsement = async (req, res, next) => {
 
       // ** send notification
       const userId = req.__user
-      const receivers = member
       const body = "{{modules.network.notification.you_have_a_new_endorse}}"
       const link = `/posts/${feedData._id}`
-      await sendNotification(
+      sendNotification(
         userId,
         receivers,
         {
@@ -67,13 +77,12 @@ const submitEndorsement = async (req, res, next) => {
         }
       )
 
+      _id = idEndorsement
       const _feedData = await handleDataBeforeReturn(feedData)
-      const result = {
+      result = {
         dataFeed: _feedData,
-        idEndorsement: idEndorsement,
         dataLink: {}
       }
-      return res.respond(result)
     } else {
       await endorsementMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
@@ -90,46 +99,35 @@ const submitEndorsement = async (req, res, next) => {
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
 
-      const dataEndorsement = await endorsementMongoModel.findById(idEdit)
-      const result = {
+      result = {
         dataFeed: _dataFeed,
-        idEndorsement: idEdit,
-        dataLink: dataEndorsement
+        dataLink: {}
       }
-      return res.respond(result)
     }
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
 
-const submitEndorsementCover = async (req, res, next) => {
-  const body = req.body
-  const file = req.files
+    // upload image cover
+    if (file !== null) {
+      const storePath = path.join("modules", "endorsement", _id.toString())
+      const promise = new Promise(async (resolve, reject) => {
+        const resultUpload = await _uploadServices(storePath, [file[`file`]])
+        resolve(resultUpload.uploadSuccess[0].path)
+      })
+      const cover = await promise.then((res) => {
+        return res
+      })
+      await endorsementMongoModel.updateOne(
+        { _id: _id },
+        {
+          cover: cover,
+          cover_type: "upload"
+        }
+      )
+    }
 
-  try {
-    const idEndorsement = body.idEndorsement
-    const storePath = path.join("modules", "endorsement", idEndorsement)
-    const promise = new Promise(async (resolve, reject) => {
-      const resultUpload = await _uploadServices(storePath, [file[`file`]])
-      resolve(resultUpload.uploadSuccess[0].path)
-    })
+    const dataEndorsement = await endorsementMongoModel.findById(_id)
+    result.dataLink = dataEndorsement
 
-    const cover = await promise.then((res) => {
-      return res
-    })
-
-    await endorsementMongoModel.updateOne(
-      { _id: idEndorsement },
-      {
-        cover: cover,
-        cover_type: "upload"
-      }
-    )
-
-    const dataEndorsement = await endorsementMongoModel.findById(idEndorsement)
-
-    return res.respond(dataEndorsement)
+    return res.respond(result)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -145,4 +143,4 @@ const getEndorsementById = async (req, res, next) => {
   }
 }
 
-export { submitEndorsement, submitEndorsementCover, getEndorsementById }
+export { submitEndorsement, getEndorsementById }

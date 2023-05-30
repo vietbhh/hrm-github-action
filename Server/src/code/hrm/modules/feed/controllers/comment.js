@@ -50,7 +50,7 @@ const submitComment = async (req, res, next) => {
           data_user.full_name +
           " {{modules.network.notification.commented_on_your_post}}"
         const link = `/posts/${id_post}`
-        await sendNotification(
+        sendNotification(
           userId,
           receivers,
           {
@@ -141,7 +141,7 @@ const submitCommentReply = async (req, res, next) => {
           data_user.full_name +
           " {{modules.network.notification.replied_on_your_comment}}"
         const link = `/posts/${id_post}`
-        await sendNotification(
+        sendNotification(
           userId,
           receivers,
           {
@@ -205,33 +205,53 @@ const updateCommentReaction = async (req, res, next) => {
   const _id_post = body._id_post
   const _id_comment = body._id_comment
   const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_update
   const full_name = body.full_name
   const created_by = body.created_by
+  const react_type = body.react_type
+  const react_action = body.react_action
   try {
-    await commentMongoModel.updateOne({ _id: _id_comment }, body_update)
-
-    // ** send notification
-    if (req.__user.toString() !== created_by.toString()) {
-      const userId = req.__user
-      const receivers = created_by
-      const body =
-        full_name + " {{modules.network.notification.liked_your_comment}}"
-      const link = `/posts/${_id_post}`
-      await sendNotification(
-        userId,
-        receivers,
-        {
-          title: "",
-          body: body,
-          link: link
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
+    await commentMongoModel.updateMany(
+      { _id: _id_comment, "reaction.react_user": req.__user },
+      { $pull: { "reaction.$.react_user": req.__user } }
+    )
+    if (react_action === "add") {
+      const update = await commentMongoModel.updateOne(
+        { _id: _id_comment, "reaction.react_type": react_type },
+        { $push: { "reaction.$.react_user": req.__user } }
       )
+      if (update.matchedCount === 0) {
+        await commentMongoModel.updateOne(
+          { _id: _id_comment },
+          {
+            $push: {
+              reaction: { react_type: react_type, react_user: req.__user }
+            }
+          }
+        )
+      }
+
+      // ** send notification
+      if (req.__user.toString() !== created_by.toString()) {
+        const userId = req.__user
+        const receivers = created_by
+        const body =
+          full_name + " {{modules.network.notification.liked_your_comment}}"
+        const link = `/posts/${_id_post}`
+        sendNotification(
+          userId,
+          receivers,
+          {
+            title: "",
+            body: body,
+            link: link
+            //icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          {
+            skipUrls: ""
+          }
+        )
+      }
     }
 
     const data = await handleDataFeedById(_id_post, comment_more_count_original)
@@ -247,36 +267,84 @@ const updateSubCommentReaction = async (req, res, next) => {
   const _id_comment = body._id_comment
   const _id_sub_comment = body._id_sub_comment
   const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_update
   const full_name = body.full_name
   const created_by = body.created_by
+  const react_type = body.react_type
+  const react_action = body.react_action
   try {
-    await commentMongoModel.updateOne(
-      { _id: _id_comment, "sub_comment._id": _id_sub_comment },
-      { $set: { "sub_comment.$.reaction": body_update.reaction } }
+    await commentMongoModel.updateMany(
+      {
+        _id: _id_comment,
+        "sub_comment._id": _id_sub_comment,
+        "sub_comment.reaction.react_user": req.__user
+      },
+      { $pull: { "sub_comment.$[i].reaction.$[].react_user": req.__user } },
+      { arrayFilters: [{ "i._id": _id_sub_comment }] }
     )
-
-    // ** send notification
-    if (req.__user.toString() !== created_by.toString()) {
-      const userId = req.__user
-      const receivers = created_by
-      const body =
-        full_name + " {{modules.network.notification.liked_your_comment}}"
-      const link = `/posts/${_id_post}`
-      await sendNotification(
-        userId,
-        receivers,
-        {
-          title: "",
-          body: body,
-          link: link
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
+    if (react_action === "add") {
+      const data_comment = await commentMongoModel.findById(_id_comment)
+      const index_sub_comment = data_comment.sub_comment.findIndex(
+        (item) => item._id.toString() === _id_sub_comment.toString()
       )
+      if (index_sub_comment !== -1) {
+        const data_sub_comment = data_comment["sub_comment"][index_sub_comment]
+        const index_reaction = data_sub_comment.reaction.findIndex(
+          (val) => val.react_type === react_type
+        )
+        if (index_reaction !== -1) {
+          await commentMongoModel.updateOne(
+            {
+              _id: _id_comment,
+              "sub_comment._id": _id_sub_comment,
+              "sub_comment.reaction.react_type": react_type
+            },
+            {
+              $push: { "sub_comment.$[i].reaction.$[j].react_user": req.__user }
+            },
+            {
+              arrayFilters: [
+                { "i._id": _id_sub_comment },
+                { "j.react_type": react_type }
+              ]
+            }
+          )
+        } else {
+          await commentMongoModel.updateOne(
+            { _id: _id_comment, "sub_comment._id": _id_sub_comment },
+            {
+              $push: {
+                "sub_comment.$.reaction": {
+                  react_type: react_type,
+                  react_user: req.__user
+                }
+              }
+            }
+          )
+        }
+      }
+
+      // ** send notification
+      if (req.__user.toString() !== created_by.toString()) {
+        const userId = req.__user
+        const receivers = created_by
+        const body =
+          full_name + " {{modules.network.notification.liked_your_comment}}"
+        const link = `/posts/${_id_post}`
+        sendNotification(
+          userId,
+          receivers,
+          {
+            title: "",
+            body: body,
+            link: link
+            //icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          {
+            skipUrls: ""
+          }
+        )
+      }
     }
 
     const data = await handleDataFeedById(_id_post, comment_more_count_original)
