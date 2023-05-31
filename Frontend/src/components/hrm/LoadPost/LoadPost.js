@@ -18,6 +18,7 @@ import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
 import RenderPostEndorsement from "./LoadPostDetails/PostDetails/RenderPostEndorsement"
 import { downloadApi } from "@apps/modules/download/common/api"
+import RenderAnnouncement from "./LoadPostDetails/PostDetails/RenderAnnouncement"
 
 const LoadPost = (props) => {
   const {
@@ -69,8 +70,12 @@ const LoadPost = (props) => {
       setState({ loadingDataLink: true })
       announcementApi
         .getAnnouncementById(data?.link_id)
-        .then((res) => {
-          setState({ loadingDataLink: false, dataLink: res.data })
+        .then(async (res) => {
+          const _data = { ...res.data }
+          await downloadApi.getPhoto(_data.cover_image).then((response) => {
+            _data.cover_url = URL.createObjectURL(response.data)
+            setState({ loadingDataLink: false, dataLink: _data })
+          })
         })
         .catch((err) => {
           setState({ loadingDataLink: false, dataLink: {} })
@@ -156,7 +161,12 @@ const LoadPost = (props) => {
     }
 
     if (data.type === "announcement") {
-      return "announcement: " + data?._id
+      return (
+        <RenderAnnouncement
+          dataLink={state.dataLink}
+          loadingDataLink={state.loadingDataLink}
+        />
+      )
     }
 
     return ""

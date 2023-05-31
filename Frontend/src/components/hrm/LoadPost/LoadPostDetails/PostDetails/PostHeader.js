@@ -260,6 +260,19 @@ const PostHeader = (props) => {
       )
     }
 
+    if (data.type === "announcement") {
+      return (
+        <>
+          <span className="after-name">
+            {useFormatMessage("modules.feed.post.event.created_an")}
+          </span>{" "}
+          <span className="after-name-bold">
+            {useFormatMessage("modules.feed.post.announcement.announcement")}
+          </span>
+        </>
+      )
+    }
+
     if (data.type === "endorsement") {
       const member = []
       if (!_.isEmpty(dataLink?.member)) {

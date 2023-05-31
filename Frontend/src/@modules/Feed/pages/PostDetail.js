@@ -79,6 +79,7 @@ const PostDetail = (props) => {
   }, [dataEmployee])
 
   useEffect(() => {
+    //
     const data_options = []
     _.forEach(dataEmployee, (item) => {
       data_options.push({
@@ -109,63 +110,89 @@ const PostDetail = (props) => {
           optionsMeetingRoom: []
         })
       })
+
+    // hidden menu
+    if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
+      document.getElementsByClassName(`main-menu menu-fixed`)[0].style.display =
+        "none"
+    }
+    if (document.getElementsByClassName(`app-content content`)[0]) {
+      document.getElementsByClassName(
+        `app-content content`
+      )[0].style.marginLeft = 0
+      document.getElementsByClassName(`app-content content`)[0].style.minWidth =
+        "calc(1150px + 330px)"
+    }
+
+    return () => {
+      // show menu
+      if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
+        document.getElementsByClassName(
+          `main-menu menu-fixed`
+        )[0].style.display = "unset"
+      }
+      if (document.getElementsByClassName(`app-content content`)[0]) {
+        document.getElementsByClassName(
+          `app-content content`
+        )[0].style.marginLeft = "330px"
+        document.getElementsByClassName(
+          `app-content content`
+        )[0].style.minWidth = "1150px"
+      }
+    }
   }, [])
 
-  const renderContent = () => {
-    return (
-      <div className="div-content div-posts">
-        <div className="div-left feed">
-          <div className="load-feed">
-            {state.loadingPost && (
-              <div className="div-loading">
-                <Skeleton avatar active paragraph={{ rows: 2 }} />
-              </div>
-            )}
+  return (
+    <div className="div-content div-posts">
+      <div className="div-left feed">
+        <div className="load-feed">
+          {state.loadingPost && (
+            <div className="div-loading">
+              <Skeleton avatar active paragraph={{ rows: 2 }} />
+            </div>
+          )}
 
-            {!state.loadingPost && _.isEmpty(state.dataPost) && (
-              <div className="load-post">
-                <EmptyContent
-                  title={useFormatMessage(
-                    "modules.feed.post.text.post_not_found"
-                  )}
-                />
-              </div>
-            )}
-
-            {!state.loadingPost && !_.isEmpty(state.dataPost) && (
-              <LoadPost
-                data={state.dataPost}
-                current_url={current_url}
-                idMedia={state._idMedia}
-                setIdMedia={(value) => setState({ _idMedia: value })}
-                dataMention={state.dataMention}
-                setData={(data, empty = false, dataCustom = {}) => {
-                  if (empty) {
-                    setState({ dataPost: {} })
-                  } else {
-                    setState({
-                      dataPost: {
-                        ...data,
-                        url_thumb: state.dataPost.url_thumb,
-                        url_source: state.dataPost.url_source,
-                        medias: state.dataPost.medias,
-                        ...dataCustom
-                      }
-                    })
-                  }
-                }}
-                customAction={customAction}
-                options_employee_department={state.options_employee_department}
-                optionsMeetingRoom={state.optionsMeetingRoom}
+          {!state.loadingPost && _.isEmpty(state.dataPost) && (
+            <div className="load-post">
+              <EmptyContent
+                title={useFormatMessage(
+                  "modules.feed.post.text.post_not_found"
+                )}
               />
-            )}
-          </div>
+            </div>
+          )}
+
+          {!state.loadingPost && !_.isEmpty(state.dataPost) && (
+            <LoadPost
+              data={state.dataPost}
+              current_url={current_url}
+              idMedia={state._idMedia}
+              setIdMedia={(value) => setState({ _idMedia: value })}
+              dataMention={state.dataMention}
+              setData={(data, empty = false, dataCustom = {}) => {
+                if (empty) {
+                  setState({ dataPost: {} })
+                } else {
+                  setState({
+                    dataPost: {
+                      ...data,
+                      url_thumb: state.dataPost.url_thumb,
+                      url_source: state.dataPost.url_source,
+                      medias: state.dataPost.medias,
+                      ...dataCustom
+                    }
+                  })
+                }
+              }}
+              customAction={customAction}
+              options_employee_department={state.options_employee_department}
+              optionsMeetingRoom={state.optionsMeetingRoom}
+            />
+          )}
         </div>
       </div>
-    )
-  }
-
-  return <Fragment>{renderContent()}</Fragment>
+    </div>
+  )
 }
 
 export default PostDetail

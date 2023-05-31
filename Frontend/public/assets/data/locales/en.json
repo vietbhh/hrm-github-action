@@ -4513,7 +4513,7 @@
         },
         "event": {
           "created_an": "created an",
-          "event": "event",
+          "event": "Event",
           "yes": "Yes",
           "no": "No",
           "maybe": "Maybe",
@@ -4523,6 +4523,9 @@
           "endorsed": "endorsed",
           "congratulate": "Congratulate",
           "is_endorsed": "is endorsed"
+        },
+        "announcement": {
+          "announcement": "Announcement"
         }
       },
       "manage_post": {

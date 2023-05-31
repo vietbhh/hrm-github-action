@@ -1,3 +1,4 @@
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import {
@@ -91,6 +92,8 @@ const RenderPostEndorsement = (props) => {
           }
         />
       </div>
+
+      {loadingDataLink && <DefaultSpinner className="mt-2" />}
 
       <div className="endorsement__div-title">{renderTitle()}</div>
 

@@ -140,8 +140,18 @@ const submitAnnouncement = async (req, res, next) => {
       )
       result = {
         dataFeed: _dataFeed,
-        dataLink: dataAnnouncement
+        dataLink: {}
       }
+    }
+
+    // cover image
+    let cover_image = body.coverImage.src
+    if (body.coverImage.image !== null) {
+      const storePath = path.join("modules", "news_cover_image", _id.toString())
+      const resultUploadCoverImage = await _uploadServices(storePath, [
+        file[`coverImage[image]`]
+      ])
+      cover_image = resultUploadCoverImage.uploadSuccess[0].path
     }
 
     // attachment
@@ -177,13 +187,22 @@ const submitAnnouncement = async (req, res, next) => {
       return res
     })
     await newsModel.update(
-      { attachment: JSON.stringify(attachment) },
+      { attachment: JSON.stringify(attachment), cover_image: cover_image },
       {
         where: {
           id: _id
         }
       }
     )
+
+    const dataAnnouncement = await newsModel.findByPk(_id)
+    dataAnnouncement.dataValues.send_to = JSON.parse(
+      dataAnnouncement.dataValues.send_to
+    )
+    dataAnnouncement.dataValues.attachment = JSON.parse(
+      dataAnnouncement.dataValues.attachment
+    )
+    result.dataLink = dataAnnouncement
 
     return res.respond(result)
   } catch (err) {
