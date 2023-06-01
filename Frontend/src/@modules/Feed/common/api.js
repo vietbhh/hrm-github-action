@@ -119,6 +119,12 @@ export const feedApi = {
 
   async getGetInitialEvent() {
     return await axiosApi.get("/feed/get-initial-event")
+  },
+
+  async getUpdateSeenPost(post_id) {
+    return await axiosNodeApi.get("/feed/update-seen-post/" + post_id, {
+      disableLoading: true
+    })
   }
 }
 

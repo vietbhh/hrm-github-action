@@ -163,6 +163,7 @@ const TabFeed = (props) => {
           onClick: () => handlePinTop(item?._id)
         }
       ]
+      console.log(item)
       return (
         <Col sm={12} key={key}>
           <div className="post-pinned">
@@ -182,7 +183,7 @@ const TabFeed = (props) => {
                   </div>
                   <div>
                     <i className="fa-regular fa-eye me-50"></i>{" "}
-                    {item.seen_count}
+                    {item.seen.length}
                   </div>
                 </div>
               </div>

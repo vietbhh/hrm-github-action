@@ -100,10 +100,6 @@ const feedSchema = baseSchema("m_feed", {
     type: [String],
     default: []
   },
-  seen_count: {
-    type: Number,
-    default: 0
-  },
   link: {
     type: [String],
     default: []

@@ -32,7 +32,8 @@ const LoadFeed = (props) => {
     loadingPostCreateNew: false,
     idPostCreateNew: "",
     dataCreateNewTemp: [],
-    dataMention: []
+    dataMention: [],
+    arrPostIdSeen: []
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -54,11 +55,18 @@ const LoadFeed = (props) => {
     const api = apiLoadFeed ? apiLoadFeed(params) : feedApi.getLoadFeed(params)
     api
       .then((res) => {
+        const arrPostIdSeen = [...state.arrPostIdSeen]
+        _.forEach(res.data.dataPost, (item) => {
+          const seen = item.seen.indexOf(userId) !== -1
+          arrPostIdSeen.push({ id: item._id, seen: seen })
+        })
+
         setState({
           dataPost: [...state.dataPost, ...res.data.dataPost],
           totalPost: res.data.totalPost,
           page: res.data.page,
-          hasMore: res.data.hasMore
+          hasMore: res.data.hasMore,
+          arrPostIdSeen: arrPostIdSeen
         })
 
         setTimeout(() => {
@@ -74,6 +82,17 @@ const LoadFeed = (props) => {
     setState({ loadingPost: false })
     if (state.hasMore) {
       setState({ hasMoreLazy: true })
+    }
+
+    if (state.arrPostIdSeen[0] && state.arrPostIdSeen[0].id === value._id) {
+      feedApi
+        .getUpdateSeenPost(value._id)
+        .then((res) => {
+          const _arrPostIdSeen = [...state.arrPostIdSeen]
+          _arrPostIdSeen[0].seen = true
+          setState({ arrPostIdSeen: _arrPostIdSeen })
+        })
+        .catch((err) => {})
     }
 
     // load media
@@ -107,16 +126,63 @@ const LoadFeed = (props) => {
     setDataCreateNew({})
   }
 
+  // detect element on screen
+  const checkVisible = (idPost) => {
+    if (document.getElementById(`post_id_${idPost}`)) {
+      const elm = document.getElementById(`post_id_${idPost}`)
+      const rect = elm.getBoundingClientRect()
+      const viewHeight = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight
+      )
+      return rect.bottom > 0 && rect.top - viewHeight < 0
+    }
+    return false
+  }
+
   // ** useEffect
   useEffect(() => {
     loadData()
   }, [])
 
   useEffect(() => {
+    // event stopped scrolling
+    let timer = null
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (timer !== null) {
+          clearTimeout(timer)
+        }
+        timer = setTimeout(function () {
+          const _arrPostIdSeen = [...state.arrPostIdSeen]
+          _.forEach(_arrPostIdSeen, (item, index) => {
+            if (!item.seen && checkVisible(item.id)) {
+              _arrPostIdSeen[index].seen = true
+
+              feedApi
+                .getUpdateSeenPost(item.id)
+                .then((res) => {})
+                .catch((err) => {})
+            }
+          })
+          setState({ arrPostIdSeen: _arrPostIdSeen })
+        }, 200)
+      },
+      false
+    )
+  }, [state.arrPostIdSeen])
+
+  useEffect(() => {
     if (!_.isEmpty(dataCreateNew)) {
       loadDataCreateNew()
+
+      const _arrPostIdSeen = [...state.arrPostIdSeen]
+      _arrPostIdSeen.push({ id: dataCreateNew._id, seen: true })
+      setState({ arrPostIdSeen: _arrPostIdSeen })
     }
   }, [dataCreateNew])
+
   useEffect(() => {
     if (!_.isEmpty(dataCreateNew) && state.idPostCreateNew === "") {
       setState({ idPostCreateNew: dataCreateNew._id })
@@ -127,8 +193,6 @@ const LoadFeed = (props) => {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
-
-  // ** function
 
   return (
     <div className="load-feed">

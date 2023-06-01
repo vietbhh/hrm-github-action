@@ -131,7 +131,10 @@ const submitPostController = async (req, res, next) => {
     }
 
     if (!is_edit) {
-      const feedModelParent = new feedMongoModel(dataInsert)
+      const feedModelParent = new feedMongoModel({
+        ...dataInsert,
+        seen: [req.__user]
+      })
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
       out = saveFeedParent
@@ -377,8 +380,7 @@ const loadFeedController = async (req, res, next) => {
       const workspaceId = []
 
       data.map((item, index) => {
-        data[index]["seen_count"] =
-          item.seen_count === null ? 0 : item.seen_count
+        data[index]["seen_count"] = item.seen === null ? 0 : item.seen.length
         data[index]["reaction_number"] =
           item.reaction === null ? 0 : item.reaction.length
         data[index]["comment_number"] =
@@ -679,6 +681,21 @@ const updateContentMedia = async (req, res, next) => {
 
   return res.fail("not-found")
 }
+
+// update seen post
+const updateSeenPost = async (req, res, next) => {
+  try {
+    const post_id = req.params.post_id
+    await feedMongoModel.updateOne(
+      { _id: post_id },
+      { $addToSet: { seen: req.__user } }
+    )
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 // **
 
 // ** support function
@@ -934,5 +951,6 @@ export {
   handleSendNotification,
   handleCurrentYMD,
   handleCompressImage,
-  handleMoveFileTempToMain
+  handleMoveFileTempToMain,
+  updateSeenPost
 }

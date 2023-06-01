@@ -111,7 +111,7 @@ const PostDetail = (props) => {
         })
       })
 
-    // hidden menu
+    // hide menu
     if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
       document.getElementsByClassName(`main-menu menu-fixed`)[0].style.display =
         "none"

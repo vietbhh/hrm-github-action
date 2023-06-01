@@ -188,7 +188,7 @@ const LoadPost = (props) => {
   }
 
   return (
-    <div className="load-post">
+    <div className="load-post" id={`post_id_${data?._id}`}>
       <PostHeader
         data={data}
         customAction={customAction}

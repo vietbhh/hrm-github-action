@@ -29,6 +29,7 @@ import {
   submitPostController,
   updateContentMedia,
   updatePostReaction,
+  updateSeenPost,
   uploadTempAttachmentController
 } from "../controllers/feed.js"
 import { getPostInteractiveMember } from "../controllers/management.js"
@@ -59,6 +60,7 @@ router.post("/update-comment-reaction", updateCommentReaction)
 router.post("/update-sub-comment-reaction", updateSubCommentReaction)
 router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
+router.get("/update-seen-post/:post_id", updateSeenPost)
 
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 
