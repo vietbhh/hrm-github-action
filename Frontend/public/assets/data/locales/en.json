@@ -4501,7 +4501,8 @@
           "delete_comment": "Delete comment",
           "cancel_edit": "Cancel edit",
           "with": "with",
-          "people": "People"
+          "people": "People",
+          "btn_send_noti_unseen": "Send notifications to those who haven't seen it yet"
         },
         "react": {
           "like": "Like",
@@ -4874,7 +4875,9 @@
         "liked_your_post": "liked your post",
         "commented_on_your_post": "commented on your post",
         "liked_your_comment": "liked your comment",
-        "replied_on_your_comment": "replied on your comment"
+        "replied_on_your_comment": "replied on your comment",
+        "notification_unseen": "There's a post you haven't seen yet, check it out",
+        "sent_notification": "Sent notification"
       }
     },
     "timeline": {

@@ -30,6 +30,7 @@ const LoadPost = (props) => {
     customAction = {}, // custom dropdown post header
     offPostHeaderAction = false, // hide Post header action
     renderAppendHeaderComponent,
+
     // only page post details
     idMedia = "",
     setIdMedia = null, // function set idMedia

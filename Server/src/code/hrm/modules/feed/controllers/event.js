@@ -1,12 +1,12 @@
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import calendarMongoModel from "#app/models/calendar.mongo.js"
-import { usersModel } from "#app/models/users.mysql.js"
+import { getUserActivated } from "#app/models/users.mysql.js"
 import { _uploadServices } from "#app/services/upload.js"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { forEach, isEmpty } from "lodash-es"
+import moment from "moment/moment.js"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
-import { handleDataBeforeReturn } from "#app/utility/common.js"
-import moment from "moment/moment.js"
-import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEvent = async (req, res, next) => {
   const file = req.files
@@ -14,6 +14,7 @@ const submitEvent = async (req, res, next) => {
   const idEdit = body.idEvent
   const idPost = body.idPost
 
+  const arrEmployeeAttendeesCheck = []
   const employee = []
   const employee_arr_id = []
   const department = []
@@ -21,6 +22,8 @@ const submitEvent = async (req, res, next) => {
     const value = item.value
     const value_arr = value.split("_")
     if (value_arr[1] === "employee") {
+      arrEmployeeAttendeesCheck.push(value_arr[0].toString())
+
       employee.push({
         id: value_arr[0],
         status: "yes",
@@ -37,12 +40,15 @@ const submitEvent = async (req, res, next) => {
   })
 
   if (!isEmpty(department)) {
-    const dataEmployeeDepartment = await usersModel.findAll({
-      where: { department_id: department }
+    const dataEmployeeDepartment = await getUserActivated({
+      department_id: department
     })
     forEach(dataEmployeeDepartment, (item) => {
       const index = employee.findIndex((val) => val.id === item.id)
-      if (index === -1) {
+      if (
+        index === -1 &&
+        arrEmployeeAttendeesCheck.indexOf(item.id.toString()) === -1
+      ) {
         employee.push({
           id: item.id,
           status: "yes",

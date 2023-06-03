@@ -1,5 +1,6 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import calendarMongoModel from "#app/models/calendar.mongo.js"
+import { getUserActivated } from "#app/models/users.mysql.js"
 import { getSetting } from "#app/services/settings.js"
 import {
   _uploadServices,
@@ -696,6 +697,60 @@ const updateSeenPost = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
+// send notification unseen
+const sendNotificationUnseen = async (req, res, next) => {
+  try {
+    const post_id = req.params.post_id
+    const feed = await feedMongoModel.findById(post_id)
+    const seen = feed.seen
+    const permission = feed.permission
+    const permission_ids = feed.permission_ids
+    let receivers = []
+    if (permission === "default") {
+      const dataUser = await getUserActivated()
+      const arrIdUser = []
+      forEach(dataUser, (item) => {
+        arrIdUser.push(item.id.toString())
+      })
+      receivers = arrIdUser.filter((x) => !seen.includes(x))
+    } else if (permission === "workspace") {
+      if (!isEmpty(permission_ids)) {
+        const dataWorkspace = await workspaceMongoModel.findById(
+          permission_ids[0]
+        )
+        const members = []
+        forEach(dataWorkspace.members, (item) => {
+          members.push(item.toString())
+        })
+        receivers = members.filter((x) => !seen.includes(x))
+      }
+    } else if (permission === "employee") {
+      receivers = permission_ids.filter((x) => !seen.includes(x))
+    }
+
+    if (!isEmpty(receivers)) {
+      sendNotification(
+        req.__user,
+        receivers,
+        {
+          title: "",
+          body: "{{modules.network.notification.notification_unseen}}",
+          link: `/posts/${post_id}`
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
+        }
+      )
+    }
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 // **
 
 // ** support function
@@ -952,5 +1007,6 @@ export {
   handleCurrentYMD,
   handleCompressImage,
   handleMoveFileTempToMain,
-  updateSeenPost
+  updateSeenPost,
+  sendNotificationUnseen
 }

@@ -30,7 +30,7 @@ const RenderPostEvent = (props) => {
   // ** useEffect
   useEffect(() => {
     const employee = dataLink?.employee || []
-    if (!_.isEmpty(employee)) {
+    if (!_.isEmpty(employee) && employee !== "[]") {
       const index = employee.findIndex((val) => val.id === userId)
       if (index !== -1) {
         const status = employee[index].status

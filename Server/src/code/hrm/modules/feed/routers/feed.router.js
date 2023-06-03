@@ -26,6 +26,7 @@ import {
   getFeedChild,
   loadFeedController,
   loadFeedProfile,
+  sendNotificationUnseen,
   submitPostController,
   updateContentMedia,
   updatePostReaction,
@@ -61,6 +62,7 @@ router.post("/update-sub-comment-reaction", updateSubCommentReaction)
 router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
 router.get("/update-seen-post/:post_id", updateSeenPost)
+router.get("/send-noti-unseen/:post_id", sendNotificationUnseen)
 
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 

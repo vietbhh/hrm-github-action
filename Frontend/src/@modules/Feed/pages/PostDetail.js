@@ -3,7 +3,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
-import React, { Fragment, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
@@ -61,6 +61,16 @@ const PostDetail = (props) => {
               setState({ _idMedia: "" })
               window.history.replaceState(null, "", current_url)
             }
+          }
+
+          // check seen
+          if (data.seen.indexOf(userId) === -1) {
+            await feedApi
+              .getUpdateSeenPost(data._id)
+              .then((res) => {
+                data.seen.push(userId.toString())
+              })
+              .catch((err) => {})
           }
 
           setState({ loadingPost: false, dataPost: data })

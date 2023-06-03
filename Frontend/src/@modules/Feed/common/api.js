@@ -125,6 +125,12 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/update-seen-post/" + post_id, {
       disableLoading: true
     })
+  },
+
+  async getSendNotiUnseen(post_id) {
+    return await axiosNodeApi.get("/feed/send-noti-unseen/" + post_id, {
+      disableLoading: true
+    })
   }
 }
 

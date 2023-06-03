@@ -84,7 +84,11 @@ const LoadFeed = (props) => {
       setState({ hasMoreLazy: true })
     }
 
-    if (state.arrPostIdSeen[0] && state.arrPostIdSeen[0].id === value._id) {
+    if (
+      state.arrPostIdSeen[0] &&
+      state.arrPostIdSeen[0].seen === false &&
+      state.arrPostIdSeen[0].id === value._id
+    ) {
       feedApi
         .getUpdateSeenPost(value._id)
         .then((res) => {

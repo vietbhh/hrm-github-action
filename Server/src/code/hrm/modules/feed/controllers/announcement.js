@@ -1,11 +1,11 @@
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { getUserActivated } from "#app/models/users.mysql.js"
 import { _uploadServices } from "#app/services/upload.js"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
-import { handleDataBeforeReturn } from "#app/utility/common.js"
-import { sendNotification } from "#app/libraries/notifications/Notifications.js"
-import { usersModel } from "#app/models/users.mysql.js"
 
 const submitAnnouncement = async (req, res, next) => {
   const file = req.files
@@ -13,6 +13,7 @@ const submitAnnouncement = async (req, res, next) => {
   const idEdit = body.idAnnouncement
   const idPost = body.idPost
 
+  const arrEmployeeAttendeesCheck = []
   const receivers = []
   const employee = []
   const department = []
@@ -20,6 +21,7 @@ const submitAnnouncement = async (req, res, next) => {
     const value = item.value
     const value_arr = value.split("_")
     if (value_arr[1] === "employee") {
+      arrEmployeeAttendeesCheck.push(value_arr[0].toString())
       employee.push(value_arr[0])
 
       if (req.__user.toString() !== value_arr[0].toString()) {
@@ -32,12 +34,15 @@ const submitAnnouncement = async (req, res, next) => {
   })
 
   if (!isEmpty(department)) {
-    const dataEmployeeDepartment = await usersModel.findAll({
-      where: { department_id: department }
+    const dataEmployeeDepartment = await getUserActivated({
+      department_id: department
     })
     forEach(dataEmployeeDepartment, (item) => {
       const index = employee.findIndex((val) => val.id === item.id)
-      if (index === -1) {
+      if (
+        index === -1 &&
+        arrEmployeeAttendeesCheck.indexOf(item.id.toString()) === -1
+      ) {
         employee.push(item.id.toString())
 
         if (req.__user.toString() !== item.id.toString()) {
