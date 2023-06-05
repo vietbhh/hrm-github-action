@@ -129,6 +129,43 @@ export const handleLoadAttachmentThumb = async (data, cover) => {
   return out
 }
 
+export const loadUrlDataLink = async (_dataPost) => {
+  const out = { cover_url: "", badge_url: "" }
+
+  const dataPost = { ..._dataPost }
+  if (dataPost.type === "announcement") {
+    await downloadApi
+      .getPhoto(dataPost.dataLink.cover_image)
+      .then((response) => {
+        out.cover_url = URL.createObjectURL(response.data)
+      })
+  }
+
+  if (dataPost.type === "endorsement") {
+    const promise = new Promise(async (resolve, reject) => {
+      const _data = { cover_url: "", badge_url: "" }
+      if (dataPost.dataLink.cover_type === "upload") {
+        await downloadApi.getPhoto(dataPost.dataLink.cover).then((response) => {
+          _data.cover_url = URL.createObjectURL(response.data)
+        })
+      }
+      if (dataPost.dataLink.badge_type === "upload") {
+        await downloadApi.getPhoto(dataPost.dataLink.badge).then((response) => {
+          _data.badge_url = URL.createObjectURL(response.data)
+        })
+      }
+      resolve(_data)
+    })
+    const data_url = await promise.then((res_promise) => {
+      return res_promise
+    })
+    out.cover_url = data_url.cover_url
+    out.badge_url = data_url.badge_url
+  }
+
+  return out
+}
+
 export const handleReaction = (userId, react_type, reaction) => {
   let react_action = "add"
   const index_react_type = reaction.findIndex(

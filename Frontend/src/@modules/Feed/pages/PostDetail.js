@@ -6,7 +6,11 @@ import { Skeleton } from "antd"
 import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
+import {
+  handleDataMention,
+  handleLoadAttachmentThumb,
+  loadUrlDataLink
+} from "../common/common"
 
 const PostDetail = (props) => {
   const {
@@ -72,6 +76,11 @@ const PostDetail = (props) => {
               })
               .catch((err) => {})
           }
+
+          // check data link
+          const dataUrl = await loadUrlDataLink(data)
+          data["dataLink"].cover_url = dataUrl.cover_url
+          data["dataLink"].badge_url = dataUrl.badge_url
 
           setState({ loadingPost: false, dataPost: data })
         } else {
@@ -175,6 +184,7 @@ const PostDetail = (props) => {
           {!state.loadingPost && !_.isEmpty(state.dataPost) && (
             <LoadPost
               data={state.dataPost}
+              dataLink={state.dataPost.dataLink}
               current_url={current_url}
               idMedia={state._idMedia}
               setIdMedia={(value) => setState({ _idMedia: value })}
@@ -193,6 +203,11 @@ const PostDetail = (props) => {
                     }
                   })
                 }
+              }}
+              setDataLink={(data) => {
+                const _data = { ...state.dataPost }
+                _data["dataLink"] = data
+                setState({ dataPost: _data })
               }}
               customAction={customAction}
               options_employee_department={state.options_employee_department}

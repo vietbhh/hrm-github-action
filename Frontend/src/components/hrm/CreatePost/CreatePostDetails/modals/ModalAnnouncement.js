@@ -292,8 +292,16 @@ const ModalAnnouncement = (props) => {
               required
             />
 
-            <Label for="announcement-cover-image" className="mb-0">
-              <div className="div-announcement-cover-image">
+            <Label
+              for="announcement-cover-image"
+              className="mb-0 label-announcement-cover-image">
+              <div
+                className="div-announcement-cover-image"
+                onClick={() =>
+                  setState({
+                    coverImage: { src: "", image: null }
+                  })
+                }>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="28"

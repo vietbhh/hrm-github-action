@@ -1,4 +1,3 @@
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import {
@@ -11,7 +10,7 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 
 const RenderPostEndorsement = (props) => {
-  const { dataLink, loadingDataLink } = props
+  const { dataLink } = props
   const [state, setState] = useMergedState({
     showSeeMore: false,
     seeMore: false
@@ -92,8 +91,6 @@ const RenderPostEndorsement = (props) => {
           }
         />
       </div>
-
-      {loadingDataLink && <DefaultSpinner className="mt-2" />}
 
       <div className="endorsement__div-title">{renderTitle()}</div>
 

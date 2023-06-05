@@ -1,11 +1,10 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import React, { useEffect } from "react"
 import cover_image_default from "@modules/Feed/assets/images/announcement/cover_image.png"
+import React, { useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 
 const RenderAnnouncement = (props) => {
-  const { dataLink, loadingDataLink } = props
+  const { dataLink } = props
   const [state, setState] = useMergedState({
     showSeeMore: false,
     seeMore: false
@@ -33,8 +32,6 @@ const RenderAnnouncement = (props) => {
         />
       </div>
       <div className="announcement__div-title">{dataLink?.title}</div>
-
-      {loadingDataLink && <DefaultSpinner />}
 
       <div
         className="announcement__div-content"

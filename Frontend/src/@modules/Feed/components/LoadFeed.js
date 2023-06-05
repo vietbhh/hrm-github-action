@@ -6,7 +6,11 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
-import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
+import {
+  handleDataMention,
+  handleLoadAttachmentThumb,
+  loadUrlDataLink
+} from "../common/common"
 
 const LoadFeed = (props) => {
   const {
@@ -105,6 +109,12 @@ const LoadFeed = (props) => {
     dataPost[index]["url_thumb"] = data_attachment["url_thumb"]
     dataPost[index]["url_cover"] = data_attachment["url_cover"]
     dataPost[index]["medias"] = data_attachment["medias"]
+
+    // check data link
+    const dataUrl = await loadUrlDataLink(dataPost[index])
+    dataPost[index].dataLink.cover_url = dataUrl.cover_url
+    dataPost[index].dataLink.badge_url = dataUrl.badge_url
+
     setState({ dataPost: dataPost })
   }
 
@@ -121,6 +131,11 @@ const LoadFeed = (props) => {
     dataCreateNew["url_thumb"] = data_attachment["url_thumb"]
     dataCreateNew["url_cover"] = data_attachment["url_cover"]
     dataCreateNew["medias"] = data_attachment["medias"]
+
+    // check data link
+    const dataUrl = await loadUrlDataLink(dataCreateNew)
+    dataCreateNew["dataLink"].cover_url = dataUrl.cover_url
+    dataCreateNew["dataLink"].badge_url = dataUrl.badge_url
 
     setState({
       dataCreateNewTemp: [...[dataCreateNew], ...state.dataCreateNewTemp],
@@ -215,6 +230,7 @@ const LoadFeed = (props) => {
             <LoadPost
               key={index}
               data={value}
+              dataLink={value.dataLink}
               current_url={current_url}
               dataMention={state.dataMention}
               setData={(data, empty = false, dataCustom = {}) => {
@@ -235,6 +251,11 @@ const LoadFeed = (props) => {
                   setState({ dataCreateNewTemp: _data })
                 }
               }}
+              setDataLink={(data) => {
+                const _data = [...state.dataCreateNewTemp]
+                _data[index]["dataLink"] = data
+                setState({ dataCreateNewTemp: _data })
+              }}
               customAction={customAction}
               options_employee_department={options_employee_department}
               optionsMeetingRoom={optionsMeetingRoom}
@@ -249,6 +270,7 @@ const LoadFeed = (props) => {
               afterLoad={() => handleAfterLoadLazyLoadComponent(value, index)}>
               <LoadPost
                 data={value}
+                dataLink={value.dataLink}
                 current_url={current_url}
                 dataMention={state.dataMention}
                 setData={(data, empty = false, dataCustom = {}) => {
@@ -268,6 +290,11 @@ const LoadFeed = (props) => {
                     }
                     setState({ dataPost: _data })
                   }
+                }}
+                setDataLink={(data) => {
+                  const _data = [...state.dataPost]
+                  _data[index]["dataLink"] = data
+                  setState({ dataPost: _data })
                 }}
                 customAction={customAction}
                 options_employee_department={options_employee_department}

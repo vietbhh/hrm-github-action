@@ -202,7 +202,7 @@ const submitEvent = async (req, res, next) => {
 const getEventById = async (req, res, next) => {
   try {
     const id = req.params.id
-    const data = await calendarMongoModel.findById(id)
+    const data = await handleGetEventById(id)
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
@@ -272,4 +272,9 @@ const handleReminderDate = (date, time, reminder) => {
   return date_reminder
 }
 
-export { submitEvent, getEventById, updateEventStatus }
+const handleGetEventById = async (id) => {
+  const data = await calendarMongoModel.findById(id)
+  return data
+}
+
+export { submitEvent, getEventById, updateEventStatus, handleGetEventById }

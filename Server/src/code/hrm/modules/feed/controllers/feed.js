@@ -22,6 +22,9 @@ import endorsementMongoModel from "../models/endorsement.mongo.js"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
 import { handleDataComment } from "./comment.js"
+import { handleGetAnnouncementById } from "./announcement.js"
+import { handleGetEventById } from "./event.js"
+import { handleGetEndorsementById } from "./endorsement.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -921,6 +924,20 @@ const handleDataFeedById = async (id, loadComment = -1) => {
   const feed = await feedMongoModel.findById(id)
   const _feed = await handleDataComment(feed, loadComment)
   const data = await handleDataBeforeReturn(_feed)
+
+  // check data link
+  let dataLink = {}
+  if (data.type === "announcement") {
+    dataLink = await handleGetAnnouncementById(data.link_id)
+  }
+  if (data.type === "event") {
+    dataLink = await handleGetEventById(data.link_id)
+  }
+  if (data.type === "endorsement") {
+    dataLink = await handleGetEndorsementById(data.link_id)
+  }
+  data["dataLink"] = dataLink
+
   return data
 }
 
@@ -964,6 +981,20 @@ const handleDataLoadFeed = async (page, pageLength, feed, feedCount) => {
   forEach(feed, (value, key) => {
     const promise = new Promise(async (resolve, reject) => {
       const _value = await handleDataComment(value)
+
+      // check data link
+      let dataLink = {}
+      if (_value.type === "announcement") {
+        dataLink = await handleGetAnnouncementById(_value.link_id)
+      }
+      if (_value.type === "event") {
+        dataLink = await handleGetEventById(_value.link_id)
+      }
+      if (_value.type === "endorsement") {
+        dataLink = await handleGetEndorsementById(_value.link_id)
+      }
+
+      _value["dataLink"] = dataLink
       resolve(_value)
     })
     promises.push(promise)

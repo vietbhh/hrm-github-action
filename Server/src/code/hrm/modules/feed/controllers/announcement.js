@@ -208,6 +208,7 @@ const submitAnnouncement = async (req, res, next) => {
       dataAnnouncement.dataValues.attachment
     )
     result.dataLink = dataAnnouncement
+    result.dataFeed.dataLink = dataAnnouncement
 
     return res.respond(result)
   } catch (err) {
@@ -218,13 +219,19 @@ const submitAnnouncement = async (req, res, next) => {
 const getAnnouncementById = async (req, res, next) => {
   const id = req.params.id
   try {
-    const data = await newsModel.findByPk(id)
-    data.dataValues.send_to = JSON.parse(data.dataValues.send_to)
-    data.dataValues.attachment = JSON.parse(data.dataValues.attachment)
+    const data = await handleGetAnnouncementById(id)
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
   }
 }
 
-export { submitAnnouncement, getAnnouncementById }
+// ** support function
+const handleGetAnnouncementById = async (id) => {
+  const data = await newsModel.findByPk(id)
+  data.dataValues.send_to = JSON.parse(data.dataValues.send_to)
+  data.dataValues.attachment = JSON.parse(data.dataValues.attachment)
+  return data
+}
+
+export { submitAnnouncement, getAnnouncementById, handleGetAnnouncementById }

@@ -136,11 +136,17 @@ const submitEndorsement = async (req, res, next) => {
 const getEndorsementById = async (req, res, next) => {
   const id = req.params.id
   try {
-    const data = await endorsementMongoModel.findById(id)
+    const data = await handleGetEndorsementById(id)
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
   }
 }
 
-export { submitEndorsement, getEndorsementById }
+// ** support function
+const handleGetEndorsementById = async (id) => {
+  const data = await endorsementMongoModel.findById(id)
+  return data
+}
+
+export { submitEndorsement, getEndorsementById, handleGetEndorsementById }
