@@ -13,12 +13,14 @@ import createMentionPlugin, {
 } from "@draft-js-plugins/mention"
 import { arrImage } from "@modules/Feed/common/common"
 import { Fragment, useCallback, useEffect, useMemo } from "react"
+import createHashtagPlugin from "@draft-js-plugins/hashtag"
 
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css"
 import "@draft-js-plugins/linkify/lib/plugin.css"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import "@styles/react/libs/editor/editor.scss"
+import "@draft-js-plugins/hashtag/lib/plugin.css"
 
 const EditorComponent = (props) => {
   const {
@@ -69,13 +71,21 @@ const EditorComponent = (props) => {
       const linkPlugin = createLinkPlugin()
       const linkifyPlugin = createLinkifyPlugin()
 
+      const hashtagPlugin = createHashtagPlugin()
+
       const plugins = [
         mentionPlugin,
         inlineToolbarPlugin,
         linkPlugin,
-        linkifyPlugin
+        linkifyPlugin,
+        hashtagPlugin
       ]
-      return { plugins, MentionSuggestions, InlineToolbar, linkPlugin }
+      return {
+        plugins,
+        MentionSuggestions,
+        InlineToolbar,
+        linkPlugin
+      }
     }, [])
   const onOpenChange = useCallback((_open) => {
     setTimeout(() => {

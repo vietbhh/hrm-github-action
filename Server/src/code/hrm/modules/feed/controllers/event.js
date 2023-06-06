@@ -147,10 +147,9 @@ const submitEvent = async (req, res, next) => {
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
 
-      const dataEvent = await calendarMongoModel.findById(idEdit)
       result = {
         dataFeed: _dataFeed,
-        dataLink: dataEvent
+        dataLink: {}
       }
     }
 
@@ -193,6 +192,9 @@ const submitEvent = async (req, res, next) => {
       }
     )
 
+    const dataEvent = await calendarMongoModel.findById(_id)
+    result.dataLink = dataEvent
+    result.dataFeed.dataLink = dataEvent
     return res.respond(result)
   } catch (err) {
     return res.fail(err.message)

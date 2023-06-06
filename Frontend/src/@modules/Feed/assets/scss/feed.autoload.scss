@@ -619,18 +619,6 @@ $background-color-checkbox: #139ff8;
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
             }
-
-            .btn-see-more {
-              font-weight: 600;
-              font-size: 14px;
-              line-height: 25px;
-              color: #32434f;
-              display: inline-block;
-
-              &:hover {
-                text-decoration: underline;
-              }
-            }
           }
         }
 
@@ -672,18 +660,6 @@ $background-color-checkbox: #139ff8;
               display: -webkit-box;
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
-            }
-
-            .btn-see-more {
-              font-weight: 600;
-              font-size: 14px;
-              line-height: 25px;
-              color: #32434f;
-              display: inline-block;
-
-              &:hover {
-                text-decoration: underline;
-              }
             }
           }
         }
@@ -1445,6 +1421,19 @@ $background-color-checkbox: #139ff8;
     }
   }
 
+  .btn-see-more {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 25px;
+    color: #32434f;
+    display: inline-block;
+
+    &:hover {
+      text-decoration: underline;
+      color: #32434f;
+    }
+  }
+
   .post-body-content,
   .right-content {
     .hide {
@@ -1455,17 +1444,12 @@ $background-color-checkbox: #139ff8;
       -webkit-box-orient: vertical;
     }
 
-    .btn-see-more {
-      color: $btn-background-color;
-
-      &:hover {
-        text-decoration-line: underline;
-      }
-    }
-
     p {
       margin-bottom: 0;
-      margin-top: 0;
+    }
+
+    p + p {
+      margin-top: 4px;
     }
 
     .div-edit-description {
@@ -1924,6 +1908,11 @@ $background-color-checkbox: #139ff8;
             padding-top: 0;
           }
         }
+      }
+
+      // ** hashtag
+      .hngfxw3 {
+        color: #5398ff;
       }
     }
 
@@ -3291,10 +3280,15 @@ $background-color-checkbox: #139ff8;
         }
 
         .btn-see-more {
-          color: $btn-background-color;
+          font-weight: 600;
+          font-size: 14px;
+          line-height: 25px;
+          color: #32434f;
+          display: inline-block;
 
           &:hover {
-            text-decoration-line: underline;
+            text-decoration: underline;
+            color: #32434f;
           }
         }
 

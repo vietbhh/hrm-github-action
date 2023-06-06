@@ -348,3 +348,39 @@ export const handleInsertEditorState = (
   setEditorState(newEditorState)
 }
 // ** end editor
+
+export const detectHashtag = (txt) => {
+  const arr_hashtag = txt.match(/#\w+/g)
+  const uniqueChars = [...new Set(arr_hashtag)]
+  return uniqueChars
+}
+
+export const renderContentHashtag = (content, arrHashtag) => {
+  const mapObj = {}
+  let mapReg = ""
+  if (!_.isEmpty(arrHashtag)) {
+    _.forEach(arrHashtag, (item, index) => {
+      mapObj[item] =
+        '<a href="/hashtag/' +
+        item.replace("#", "") +
+        '" target="_blank">' +
+        item +
+        "</a>"
+      if (index === 0) {
+        mapReg = item
+      } else {
+        mapReg += "|" + item
+      }
+    })
+  }
+  if (!_.isEmpty(mapObj)) {
+    const _content = content.replace(
+      new RegExp(mapReg, "gi"),
+      function (matched) {
+        return mapObj[matched]
+      }
+    )
+    return _content
+  }
+  return content
+}

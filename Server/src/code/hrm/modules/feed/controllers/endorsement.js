@@ -1,10 +1,11 @@
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { _uploadServices } from "#app/services/upload.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { forEach } from "lodash-es"
 import path from "path"
 import endorsementMongoModel from "../models/endorsement.mongo.js"
 import feedMongoModel from "../models/feed.mongo.js"
-import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { handleInsertHashTag, handlePullHashtag } from "./feed.js"
 
 const submitEndorsement = async (req, res, next) => {
   const file = req.files
@@ -33,7 +34,8 @@ const submitEndorsement = async (req, res, next) => {
       badge: body.valueBadge.badge,
       badge_name: body.valueBadge.name,
       badge_type: body.valueBadge.badge_type,
-      date: body.date
+      date: body.date,
+      hashtag: body.arrHashtag
     }
 
     let _id = idEdit
@@ -41,6 +43,7 @@ const submitEndorsement = async (req, res, next) => {
       dataFeed: {},
       dataLink: {}
     }
+    let _id_post = idPost
     if (!idEdit) {
       const endorsementModel = new endorsementMongoModel(dataInsert)
       const saveEndorsement = await endorsementModel.save()
@@ -50,9 +53,11 @@ const submitEndorsement = async (req, res, next) => {
       const feedModelParent = new feedMongoModel({
         __user: req.__user,
         type: "endorsement",
-        link_id: idEndorsement
+        link_id: idEndorsement,
+        hashtag: body.arrHashtag
       })
       const feedData = await feedModelParent.save()
+      _id_post = feedData._id
       await endorsementMongoModel.updateOne(
         { _id: idEndorsement },
         { id_post: feedData._id }
@@ -60,14 +65,14 @@ const submitEndorsement = async (req, res, next) => {
 
       // ** send notification
       const userId = req.__user
-      const body = "{{modules.network.notification.you_have_a_new_endorse}}"
+      const bodyNoti = "{{modules.network.notification.you_have_a_new_endorse}}"
       const link = `/posts/${feedData._id}`
       sendNotification(
         userId,
         receivers,
         {
           title: "",
-          body: body,
+          body: bodyNoti,
           link: link
           //icon: icon
           //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
@@ -88,13 +93,19 @@ const submitEndorsement = async (req, res, next) => {
 
       let _dataFeed = {}
       if (idPost) {
+        // pull hashtag
+        const dataFeedOld = await feedMongoModel.findById(idPost)
+        await handlePullHashtag(dataFeedOld)
+
         await feedMongoModel.updateOne(
           { _id: idPost },
           {
             edited: true,
-            edited_at: Date.now()
+            edited_at: Date.now(),
+            hashtag: body.arrHashtag
           }
         )
+
         const dataFeed = await feedMongoModel.findById(idPost)
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
@@ -104,6 +115,9 @@ const submitEndorsement = async (req, res, next) => {
         dataLink: {}
       }
     }
+
+    // insert hashtag
+    await handleInsertHashTag(body.arrHashtag, req.__user, _id_post)
 
     // upload image cover
     if (file !== null) {
@@ -126,6 +140,7 @@ const submitEndorsement = async (req, res, next) => {
 
     const dataEndorsement = await endorsementMongoModel.findById(_id)
     result.dataLink = dataEndorsement
+    result.dataFeed.dataLink = dataEndorsement
 
     return res.respond(result)
   } catch (err) {

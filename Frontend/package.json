@@ -9,6 +9,7 @@
     "@craco/craco": "^6.4.3",
     "@draft-js-plugins/anchor": "^4.2.0",
     "@draft-js-plugins/editor": "4.1.1",
+    "@draft-js-plugins/hashtag": "^4.2.2",
     "@draft-js-plugins/inline-toolbar": "^4.2.0",
     "@draft-js-plugins/linkify": "^4.2.1",
     "@draft-js-plugins/mention": "^5.2.1",

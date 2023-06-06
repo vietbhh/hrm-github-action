@@ -25,6 +25,7 @@ import { handleDataComment } from "./comment.js"
 import { handleGetAnnouncementById } from "./announcement.js"
 import { handleGetEventById } from "./event.js"
 import { handleGetEndorsementById } from "./endorsement.js"
+import hashtagMongoModel from "../models/hashtag.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -131,7 +132,8 @@ const submitPostController = async (req, res, next) => {
       tag_user: tag_user,
       background_image: body.backgroundImage,
       has_poll_vote: has_poll_vote,
-      poll_vote_detail: save_poll_vote_detail
+      poll_vote_detail: save_poll_vote_detail,
+      hashtag: body.arrHashtag
     }
 
     if (!is_edit) {
@@ -153,7 +155,13 @@ const submitPostController = async (req, res, next) => {
           edited_at: Date.now()
         }
       )
+
+      // pull hashtag
+      await handlePullHashtag(data_feed_old)
     }
+
+    // insert hashtag
+    await handleInsertHashTag(body.arrHashtag, req.__user, _id_parent)
 
     // send notification
     if (!is_edit && body.approveStatus === "approved") {
@@ -179,9 +187,11 @@ const submitPostController = async (req, res, next) => {
 
       if (!is_edit) {
         const _out = await handleDataBeforeReturn(out)
+        _out["dataLink"] = {}
         return res.respond(_out)
       } else {
         const _out = await handleDataFeedById(_id_parent)
+        _out["dataLink"] = {}
         return res.respond(_out)
       }
     } else {
@@ -230,9 +240,11 @@ const submitPostController = async (req, res, next) => {
         if (!is_edit) {
           out = await feedMongoModel.findById(_id_parent)
           const _out = await handleDataBeforeReturn(out)
+          _out["dataLink"] = {}
           return res.respond(_out)
         } else {
           const _out = await handleDataFeedById(_id_parent)
+          _out["dataLink"] = {}
           return res.respond(_out)
         }
       } else {
@@ -322,9 +334,11 @@ const submitPostController = async (req, res, next) => {
           if (!is_edit) {
             out = await feedMongoModel.findById(_id_parent)
             const _out = await handleDataBeforeReturn(out)
+            _out["dataLink"] = {}
             return res.respond(_out)
           } else {
             const _out = await handleDataFeedById(_id_parent)
+            _out["dataLink"] = {}
             return res.respond(_out)
           }
         })
@@ -1022,6 +1036,64 @@ const handleCurrentYMD = () => {
   return ymd
 }
 
+const handlePullHashtag = async (data_feed_old) => {
+  // pull hashtag
+  if (!isEmpty(data_feed_old.hashtag)) {
+    const hashtag_promises = []
+    forEach(data_feed_old.hashtag, (hashtag) => {
+      const promise = new Promise(async (resolve, reject) => {
+        await hashtagMongoModel.updateOne(
+          {
+            hashtag: hashtag
+          },
+          { $pull: { post_id: data_feed_old._id } }
+        )
+
+        resolve("success")
+      })
+      hashtag_promises.push(promise)
+    })
+    await Promise.all(hashtag_promises)
+      .then((res) => {})
+      .catch((err) => {})
+  }
+}
+
+const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
+  // insert hashtag
+  if (!isEmpty(arrHashtag)) {
+    const hashtag_promises = []
+    forEach(arrHashtag, (hashtag) => {
+      const promise = new Promise(async (resolve, reject) => {
+        const check_hashtag = await hashtagMongoModel.findOne({
+          hashtag: hashtag
+        })
+        if (check_hashtag) {
+          await hashtagMongoModel.updateOne(
+            {
+              hashtag: hashtag
+            },
+            { $push: { post_id: idPost } }
+          )
+        } else {
+          const insertHashtag = new hashtagMongoModel({
+            __user: userId,
+            hashtag: hashtag,
+            post_id: [idPost]
+          })
+          await insertHashtag.save()
+        }
+
+        resolve("success")
+      })
+      hashtag_promises.push(promise)
+    })
+    await Promise.all(hashtag_promises)
+      .then((res) => {})
+      .catch((err) => {})
+  }
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1039,5 +1111,7 @@ export {
   handleCompressImage,
   handleMoveFileTempToMain,
   updateSeenPost,
-  sendNotificationUnseen
+  sendNotificationUnseen,
+  handlePullHashtag,
+  handleInsertHashTag
 }

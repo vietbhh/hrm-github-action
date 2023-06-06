@@ -1,6 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
+import { renderContentHashtag } from "@modules/Feed/common/common"
 import React, { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { Spinner } from "reactstrap"
@@ -52,6 +53,15 @@ const RenderContentPost = (props) => {
     setState({ description: data?.content })
   }, [data, edit_description])
 
+  // ** render
+  const renderContent = () => {
+    if (data.content) {
+      const content = renderContentHashtag(data.content, data.hashtag)
+      return content
+    }
+    return ""
+  }
+
   return (
     <Fragment>
       {!edit_description ? (
@@ -60,7 +70,7 @@ const RenderContentPost = (props) => {
             className={`${
               state.showSeeMore && state.seeMore === false ? "hide" : ""
             }`}>
-            {ReactHtmlParser(data?.content)}
+            {ReactHtmlParser(renderContent())}
           </div>
           {state.showSeeMore && (
             <a

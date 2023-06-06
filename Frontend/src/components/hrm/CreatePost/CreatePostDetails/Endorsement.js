@@ -30,6 +30,7 @@ import notification from "@apps/utility/notification"
 import draftToHtml from "draftjs-to-html"
 import {
   decodeHTMLEntities,
+  detectHashtag,
   detectUrl,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
@@ -122,6 +123,7 @@ const Endorsement = (props) => {
         _content
       )
       const __content = result_tag_user.content
+      const arrHashtag = detectHashtag(__content)
 
       const params = {
         content: __content,
@@ -131,7 +133,8 @@ const Endorsement = (props) => {
         valueBadge: state.valueBadge,
         date: state.date,
         idEndorsement: idEndorsement,
-        idPost: idPost
+        idPost: idPost,
+        arrHashtag: arrHashtag
       }
 
       const _params = { body: JSON.stringify(params), file: state.coverImg }
