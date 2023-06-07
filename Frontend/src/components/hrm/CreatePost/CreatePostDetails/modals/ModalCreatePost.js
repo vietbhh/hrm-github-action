@@ -28,6 +28,7 @@ import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
+import { manageEndorsementApi } from "@modules/FriNet/common/api"
 
 const ModalCreatePost = (props) => {
   const {

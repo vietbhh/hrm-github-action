@@ -246,6 +246,11 @@ const LoadFeed = (props) => {
                     url_thumb: _data[index].url_thumb,
                     url_source: _data[index].url_source,
                     medias: _data[index].medias,
+                    dataLink: {
+                      ...data.dataLink,
+                      cover_url: _data[index]["dataLink"].cover_url,
+                      badge_url: _data[index]["dataLink"].badge_url
+                    },
                     ...dataCustom
                   }
                   setState({ dataCreateNewTemp: _data })
@@ -286,6 +291,11 @@ const LoadFeed = (props) => {
                       url_thumb: _data[index].url_thumb,
                       url_source: _data[index].url_source,
                       medias: _data[index].medias,
+                      dataLink: {
+                        ...data.dataLink,
+                        cover_url: _data[index]["dataLink"].cover_url,
+                        badge_url: _data[index]["dataLink"].badge_url
+                      },
                       ...dataCustom
                     }
                     setState({ dataPost: _data })

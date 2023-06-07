@@ -4903,6 +4903,10 @@
       "leaderboard": {
         "title": "Leaderboard"
       }
+    },
+    "hashtag": {
+      "post": "post",
+      "posts": "posts"
     }
   }
 }
