@@ -1,4 +1,3 @@
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { eventApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
@@ -7,7 +6,7 @@ import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 
 const RenderPostEvent = (props) => {
-  const { dataLink, loadingDataLink } = props
+  const { dataLink } = props
   const [state, setState] = useMergedState({
     valueStatus: "yes"
   })
@@ -30,7 +29,7 @@ const RenderPostEvent = (props) => {
   // ** useEffect
   useEffect(() => {
     const employee = dataLink?.employee || []
-    if (!_.isEmpty(employee)) {
+    if (!_.isEmpty(employee) && employee !== "[]") {
       const index = employee.findIndex((val) => val.id === userId)
       if (index !== -1) {
         const status = employee[index].status
@@ -66,10 +65,6 @@ const RenderPostEvent = (props) => {
       )
     }
   ]
-
-  if (loadingDataLink) {
-    return <DefaultSpinner />
-  }
 
   return (
     <Fragment>

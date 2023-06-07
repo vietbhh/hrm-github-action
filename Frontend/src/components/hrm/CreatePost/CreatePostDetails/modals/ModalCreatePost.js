@@ -5,6 +5,7 @@ import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
 import {
   decodeHTMLEntities,
+  detectHashtag,
   detectUrl,
   handleInsertEditorState,
   handleLoadAttachmentThumb,
@@ -153,6 +154,7 @@ const ModalCreatePost = (props) => {
       )
       const __content = result_tag_user.content
       const mention = result_tag_user.tag_user
+      const arrHashtag = detectHashtag(__content)
 
       const params = {
         content: __content,
@@ -170,7 +172,8 @@ const ModalCreatePost = (props) => {
         backgroundImage: state.backgroundImage,
         poll_vote: state.poll_vote,
         poll_vote_detail: state.poll_vote_detail,
-        tag_your_colleagues: state.tag_your_colleagues
+        tag_your_colleagues: state.tag_your_colleagues,
+        arrHashtag: arrHashtag
       }
       feedApi
         .postSubmitPost(params)
@@ -510,6 +513,7 @@ const ModalCreatePost = (props) => {
           <PollVote
             setPollVoteDetail={setPollVoteDetail}
             poll_vote_detail={state.poll_vote_detail}
+            toggleModalPollVote={toggleModalPollVote}
           />
         )}
 

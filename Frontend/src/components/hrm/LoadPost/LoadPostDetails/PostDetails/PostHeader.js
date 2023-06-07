@@ -83,6 +83,26 @@ const PostHeader = (props) => {
       condition: true,
       ...view_post
     },
+    send_noti_unseen: {
+      onClick: () => {
+        handleSendNotiUnseen()
+      },
+      label: (
+        <a
+          onClick={(e) => {
+            e.preventDefault()
+          }}>
+          <i className="fa-light fa-bell-on"></i>
+          <span>
+            {delete_post?.title
+              ? delete_post?.title
+              : useFormatMessage("modules.feed.post.text.btn_send_noti_unseen")}
+          </span>
+        </a>
+      ),
+      condition: parseInt(data?.created_by?.id) === parseInt(userId),
+      ...delete_post
+    },
     edit_post: {
       onClick: () => {
         if (_.isFunction(handleCloseModal)) {
@@ -213,6 +233,25 @@ const PostHeader = (props) => {
     })
   }
 
+  const handleSendNotiUnseen = () => {
+    SwAlert.showWarning({
+      confirmButtonText: useFormatMessage("button.confirm"),
+      html: ""
+    }).then((res) => {
+      if (res.value && state.loadingDelete === false) {
+        notification.showSuccess({
+          text: useFormatMessage(
+            "modules.network.notification.sent_notification"
+          )
+        })
+        feedApi
+          .getSendNotiUnseen(data._id)
+          .then((res) => {})
+          .catch((err) => {})
+      }
+    })
+  }
+
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
@@ -255,6 +294,19 @@ const PostHeader = (props) => {
           </span>{" "}
           <span className="after-name-bold">
             {useFormatMessage("modules.feed.post.event.event")}
+          </span>
+        </>
+      )
+    }
+
+    if (data.type === "announcement") {
+      return (
+        <>
+          <span className="after-name">
+            {useFormatMessage("modules.feed.post.event.created_an")}
+          </span>{" "}
+          <span className="after-name-bold">
+            {useFormatMessage("modules.feed.post.announcement.announcement")}
           </span>
         </>
       )

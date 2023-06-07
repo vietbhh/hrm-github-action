@@ -100,10 +100,6 @@ const feedSchema = baseSchema("m_feed", {
     type: [String],
     default: []
   },
-  seen_count: {
-    type: Number,
-    default: 0
-  },
   link: {
     type: [String],
     default: []
@@ -178,8 +174,12 @@ const feedSchema = baseSchema("m_feed", {
     type: Date,
     default: null
   },
+  hashtag: {
+    type: [String],
+    default: []
+  },
 
-  // ** id: event / announcement
+  // ** id: event / announcement / endorsement
   link_id: {
     type: String,
     default: null

@@ -1,5 +1,6 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import calendarMongoModel from "#app/models/calendar.mongo.js"
+import { getUserActivated } from "#app/models/users.mysql.js"
 import { getSetting } from "#app/services/settings.js"
 import {
   _uploadServices,
@@ -21,6 +22,10 @@ import endorsementMongoModel from "../models/endorsement.mongo.js"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
 import { handleDataComment } from "./comment.js"
+import { handleGetAnnouncementById } from "./announcement.js"
+import { handleGetEventById } from "./event.js"
+import { handleGetEndorsementById } from "./endorsement.js"
+import hashtagMongoModel from "../models/hashtag.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -127,11 +132,15 @@ const submitPostController = async (req, res, next) => {
       tag_user: tag_user,
       background_image: body.backgroundImage,
       has_poll_vote: has_poll_vote,
-      poll_vote_detail: save_poll_vote_detail
+      poll_vote_detail: save_poll_vote_detail,
+      hashtag: body.arrHashtag
     }
 
     if (!is_edit) {
-      const feedModelParent = new feedMongoModel(dataInsert)
+      const feedModelParent = new feedMongoModel({
+        ...dataInsert,
+        seen: [req.__user]
+      })
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
       out = saveFeedParent
@@ -146,7 +155,13 @@ const submitPostController = async (req, res, next) => {
           edited_at: Date.now()
         }
       )
+
+      // pull hashtag
+      await handlePullHashtag(data_feed_old)
     }
+
+    // insert hashtag
+    await handleInsertHashTag(body.arrHashtag, req.__user, _id_parent)
 
     // send notification
     if (!is_edit && body.approveStatus === "approved") {
@@ -172,9 +187,11 @@ const submitPostController = async (req, res, next) => {
 
       if (!is_edit) {
         const _out = await handleDataBeforeReturn(out)
+        _out["dataLink"] = {}
         return res.respond(_out)
       } else {
         const _out = await handleDataFeedById(_id_parent)
+        _out["dataLink"] = {}
         return res.respond(_out)
       }
     } else {
@@ -223,9 +240,11 @@ const submitPostController = async (req, res, next) => {
         if (!is_edit) {
           out = await feedMongoModel.findById(_id_parent)
           const _out = await handleDataBeforeReturn(out)
+          _out["dataLink"] = {}
           return res.respond(_out)
         } else {
           const _out = await handleDataFeedById(_id_parent)
+          _out["dataLink"] = {}
           return res.respond(_out)
         }
       } else {
@@ -315,9 +334,11 @@ const submitPostController = async (req, res, next) => {
           if (!is_edit) {
             out = await feedMongoModel.findById(_id_parent)
             const _out = await handleDataBeforeReturn(out)
+            _out["dataLink"] = {}
             return res.respond(_out)
           } else {
             const _out = await handleDataFeedById(_id_parent)
+            _out["dataLink"] = {}
             return res.respond(_out)
           }
         })
@@ -377,8 +398,7 @@ const loadFeedController = async (req, res, next) => {
       const workspaceId = []
 
       data.map((item, index) => {
-        data[index]["seen_count"] =
-          item.seen_count === null ? 0 : item.seen_count
+        data[index]["seen_count"] = item.seen === null ? 0 : item.seen.length
         data[index]["reaction_number"] =
           item.reaction === null ? 0 : item.reaction.length
         data[index]["comment_number"] =
@@ -490,14 +510,60 @@ const getFeedChild = async (req, res, next) => {
   }
 }
 
-// update post
-const updatePost = async (req, res, next) => {
+// update reaction
+const updatePostReaction = async (req, res, next) => {
   const body = req.body
   const id = body._id
   const comment_more_count_original = body.comment_more_count_original
-  const body_update = body.body_update
+  const react_type = body.react_type
+  const react_action = body.react_action
+  const full_name = body.full_name
+  const created_by = body.created_by
   try {
-    await feedMongoModel.updateOne({ _id: id }, body_update)
+    await feedMongoModel.updateMany(
+      { _id: id, "reaction.react_user": req.__user },
+      { $pull: { "reaction.$.react_user": req.__user } }
+    )
+    if (react_action === "add") {
+      const update = await feedMongoModel.updateOne(
+        { _id: id, "reaction.react_type": react_type },
+        { $push: { "reaction.$.react_user": req.__user } }
+      )
+      if (update.matchedCount === 0) {
+        await feedMongoModel.updateOne(
+          { _id: id },
+          {
+            $push: {
+              reaction: { react_type: react_type, react_user: req.__user }
+            }
+          }
+        )
+      }
+
+      // ** send notification
+      if (req.__user.toString() !== created_by.toString()) {
+        const userId = req.__user
+        const receivers = created_by
+        const body =
+          full_name + " {{modules.network.notification.liked_your_post}}"
+        const link = `/posts/${id}`
+        sendNotification(
+          userId,
+          receivers,
+          {
+            title: "",
+            body: body,
+            link: link
+            //icon: icon
+            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+          },
+          {
+            skipUrls: ""
+          }
+        )
+      }
+    }
+
     const data = await handleDataFeedById(id, comment_more_count_original)
     return res.respond(data)
   } catch (err) {
@@ -632,6 +698,75 @@ const updateContentMedia = async (req, res, next) => {
   }
 
   return res.fail("not-found")
+}
+
+// update seen post
+const updateSeenPost = async (req, res, next) => {
+  try {
+    const post_id = req.params.post_id
+    await feedMongoModel.updateOne(
+      { _id: post_id },
+      { $addToSet: { seen: req.__user } }
+    )
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// send notification unseen
+const sendNotificationUnseen = async (req, res, next) => {
+  try {
+    const post_id = req.params.post_id
+    const feed = await feedMongoModel.findById(post_id)
+    const seen = feed.seen
+    const permission = feed.permission
+    const permission_ids = feed.permission_ids
+    let receivers = []
+    if (permission === "default") {
+      const dataUser = await getUserActivated()
+      const arrIdUser = []
+      forEach(dataUser, (item) => {
+        arrIdUser.push(item.id.toString())
+      })
+      receivers = arrIdUser.filter((x) => !seen.includes(x))
+    } else if (permission === "workspace") {
+      if (!isEmpty(permission_ids)) {
+        const dataWorkspace = await workspaceMongoModel.findById(
+          permission_ids[0]
+        )
+        const members = []
+        forEach(dataWorkspace.members, (item) => {
+          members.push(item.toString())
+        })
+        receivers = members.filter((x) => !seen.includes(x))
+      }
+    } else if (permission === "employee") {
+      receivers = permission_ids.filter((x) => !seen.includes(x))
+    }
+
+    if (!isEmpty(receivers)) {
+      sendNotification(
+        req.__user,
+        receivers,
+        {
+          title: "",
+          body: "{{modules.network.notification.notification_unseen}}",
+          link: `/posts/${post_id}`
+          //icon: icon
+          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+        },
+        {
+          skipUrls: ""
+        }
+      )
+    }
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
 }
 // **
 
@@ -803,6 +938,20 @@ const handleDataFeedById = async (id, loadComment = -1) => {
   const feed = await feedMongoModel.findById(id)
   const _feed = await handleDataComment(feed, loadComment)
   const data = await handleDataBeforeReturn(_feed)
+
+  // check data link
+  let dataLink = {}
+  if (data.type === "announcement") {
+    dataLink = await handleGetAnnouncementById(data.link_id)
+  }
+  if (data.type === "event") {
+    dataLink = await handleGetEventById(data.link_id)
+  }
+  if (data.type === "endorsement") {
+    dataLink = await handleGetEndorsementById(data.link_id)
+  }
+  data["dataLink"] = dataLink
+
   return data
 }
 
@@ -822,7 +971,7 @@ const handleSendNotification = async (
       "</strong> {{modules.network.notification." +
       lang +
       "}}"
-    await sendNotification(
+    sendNotification(
       userId,
       receivers,
       {
@@ -846,6 +995,20 @@ const handleDataLoadFeed = async (page, pageLength, feed, feedCount) => {
   forEach(feed, (value, key) => {
     const promise = new Promise(async (resolve, reject) => {
       const _value = await handleDataComment(value)
+
+      // check data link
+      let dataLink = {}
+      if (_value.type === "announcement") {
+        dataLink = await handleGetAnnouncementById(_value.link_id)
+      }
+      if (_value.type === "event") {
+        dataLink = await handleGetEventById(_value.link_id)
+      }
+      if (_value.type === "endorsement") {
+        dataLink = await handleGetEndorsementById(_value.link_id)
+      }
+
+      _value["dataLink"] = dataLink
       resolve(_value)
     })
     promises.push(promise)
@@ -873,13 +1036,71 @@ const handleCurrentYMD = () => {
   return ymd
 }
 
+const handlePullHashtag = async (data_feed_old) => {
+  // pull hashtag
+  if (!isEmpty(data_feed_old.hashtag)) {
+    const hashtag_promises = []
+    forEach(data_feed_old.hashtag, (hashtag) => {
+      const promise = new Promise(async (resolve, reject) => {
+        await hashtagMongoModel.updateOne(
+          {
+            hashtag: hashtag
+          },
+          { $pull: { post_id: data_feed_old._id } }
+        )
+
+        resolve("success")
+      })
+      hashtag_promises.push(promise)
+    })
+    await Promise.all(hashtag_promises)
+      .then((res) => {})
+      .catch((err) => {})
+  }
+}
+
+const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
+  // insert hashtag
+  if (!isEmpty(arrHashtag)) {
+    const hashtag_promises = []
+    forEach(arrHashtag, (hashtag) => {
+      const promise = new Promise(async (resolve, reject) => {
+        const check_hashtag = await hashtagMongoModel.findOne({
+          hashtag: hashtag
+        })
+        if (check_hashtag) {
+          await hashtagMongoModel.updateOne(
+            {
+              hashtag: hashtag
+            },
+            { $push: { post_id: idPost } }
+          )
+        } else {
+          const insertHashtag = new hashtagMongoModel({
+            __user: userId,
+            hashtag: hashtag,
+            post_id: [idPost]
+          })
+          await insertHashtag.save()
+        }
+
+        resolve("success")
+      })
+      hashtag_promises.push(promise)
+    })
+    await Promise.all(hashtag_promises)
+      .then((res) => {})
+      .catch((err) => {})
+  }
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
   loadFeedController,
   getFeedChild,
   getFeedById,
-  updatePost,
+  updatePostReaction,
   getFeedByIdAndViewAllComment,
   loadFeedProfile,
   deletePost,
@@ -888,5 +1109,9 @@ export {
   handleSendNotification,
   handleCurrentYMD,
   handleCompressImage,
-  handleMoveFileTempToMain
+  handleMoveFileTempToMain,
+  updateSeenPost,
+  sendNotificationUnseen,
+  handlePullHashtag,
+  handleInsertHashTag
 }

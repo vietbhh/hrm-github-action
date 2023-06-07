@@ -44,6 +44,10 @@ const endorsementSchema = baseSchema("m_endorsement", {
   id_post: {
     type: String,
     default: ""
+  },
+  hashtag: {
+    type: [String],
+    default: []
   }
 })
 

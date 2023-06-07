@@ -25,23 +25,25 @@ const ButtonReaction = (props) => {
   })
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
+  const full_name = userData.full_name
 
   // ** function
   const updateReaction = (react_type) => {
     const _data = { ...data }
     const reaction = _data.reaction ? _data.reaction : []
-    const _reaction = handleReaction(userId, react_type, reaction)
+    const react_action = handleReaction(userId, react_type, reaction)
 
     const params = {
       _id: _data._id,
+      created_by: _data.created_by.id,
       comment_more_count_original: comment_more_count_original,
-      body_update: {
-        reaction: _reaction
-      }
+      react_type: react_type,
+      react_action: react_action,
+      full_name: full_name
     }
     if (_.isFunction(setData)) {
       feedApi
-        .postUpdatePost(params)
+        .postUpdatePostReaction(params)
         .then((res) => {
           setData(res.data)
           setCommentMoreCountOriginal(res.data?.comment_more_count || 0)

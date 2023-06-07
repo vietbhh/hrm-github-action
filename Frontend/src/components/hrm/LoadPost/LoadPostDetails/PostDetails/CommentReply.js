@@ -56,7 +56,7 @@ const CommentReply = (props) => {
               comment_more_count_original={comment_more_count_original}
               setCommentMoreCountOriginal={setCommentMoreCountOriginal}
               dataComment={value}
-              apiReaction={feedApi.postUpdateSubComment}
+              apiReaction={feedApi.postUpdateSubCommentReaction}
               setDataReactionAndModal={setDataReactionAndModal}
               setDataEditComment={setDataEditComment}
               setDataShowFormReply={setDataShowFormReply}
@@ -137,6 +137,7 @@ const CommentReply = (props) => {
           id_comment_parent={id_comment_parent}
           dataEditComment={state.dataEditComment}
           setDataEditComment={setDataEditComment}
+          created_by_comment_parent={dataComment.created_by.id}
         />
       )}
     </div>

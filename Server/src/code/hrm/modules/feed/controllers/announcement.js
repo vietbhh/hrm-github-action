@@ -1,40 +1,73 @@
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { getUserActivated } from "#app/models/users.mysql.js"
 import { _uploadServices } from "#app/services/upload.js"
-import { forEach } from "lodash-es"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
+import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
-import { handleDataBeforeReturn } from "#app/utility/common.js"
-import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitAnnouncement = async (req, res, next) => {
-  const body = req.body
+  const file = req.files
+  const body = JSON.parse(req.body.body)
   const idEdit = body.idAnnouncement
   const idPost = body.idPost
 
+  const arrEmployeeAttendeesCheck = []
+  const receivers = []
   const employee = []
   const department = []
   forEach(body.dataAttendees, (item) => {
     const value = item.value
     const value_arr = value.split("_")
     if (value_arr[1] === "employee") {
+      arrEmployeeAttendeesCheck.push(value_arr[0].toString())
       employee.push(value_arr[0])
+
+      if (req.__user.toString() !== value_arr[0].toString()) {
+        receivers.push(value_arr[0])
+      }
     }
     if (value_arr[1] === "department") {
       department.push(value_arr[0])
     }
   })
 
+  if (!isEmpty(department)) {
+    const dataEmployeeDepartment = await getUserActivated({
+      department_id: department
+    })
+    forEach(dataEmployeeDepartment, (item) => {
+      const index = employee.findIndex((val) => val.id === item.id)
+      if (
+        index === -1 &&
+        arrEmployeeAttendeesCheck.indexOf(item.id.toString()) === -1
+      ) {
+        employee.push(item.id.toString())
+
+        if (req.__user.toString() !== item.id.toString()) {
+          receivers.push(item.id)
+        }
+      }
+    })
+  }
+
   try {
     const dataInsert = {
       title: body.announcement_title,
       content: body.details,
       employee: JSON.stringify(employee),
-      department: JSON.stringify(department),
+      //department: JSON.stringify(department),
       pin: body.pin_to_top ? 1 : 0,
       show_announcements: body.valueShowAnnouncement,
       send_to: JSON.stringify(body.dataAttendees)
     }
 
+    let _id = idEdit
+    let result = {
+      dataFeed: {},
+      dataLink: {}
+    }
     if (!idEdit) {
       const announcement = await newsModel.create(dataInsert, {
         __user: req.__user
@@ -59,10 +92,10 @@ const submitAnnouncement = async (req, res, next) => {
 
       // ** send notification
       const userId = req.__user
-      const receivers = []
-      const body = "{{modules.network.you_have_a_new_announcement}}"
+      const body =
+        "{{modules.network.notification.you_have_a_new_announcement}}"
       const link = `/posts/${feedData._id}`
-      await sendNotification(
+      sendNotification(
         userId,
         receivers,
         {
@@ -77,13 +110,12 @@ const submitAnnouncement = async (req, res, next) => {
         }
       )
 
+      _id = idAnnouncement
       const _feedData = await handleDataBeforeReturn(feedData)
-      const result = {
+      result = {
         dataFeed: _feedData,
-        idAnnouncement: idAnnouncement,
         dataLink: {}
       }
-      return res.respond(result)
     } else {
       await newsModel.update(dataInsert, {
         where: {
@@ -111,31 +143,29 @@ const submitAnnouncement = async (req, res, next) => {
       dataAnnouncement.dataValues.attachment = JSON.parse(
         dataAnnouncement.dataValues.attachment
       )
-      const result = {
+      result = {
         dataFeed: _dataFeed,
-        idAnnouncement: idEdit,
-        dataLink: dataAnnouncement
+        dataLink: {}
       }
-      return res.respond(result)
     }
-  } catch (err) {
-    return res.fail(err.message)
-  }
-}
 
-const submitAnnouncementAttachment = async (req, res, next) => {
-  const body = req.body
-  const file = req.files
+    // cover image
+    let cover_image = body.coverImage.src
+    if (body.coverImage.image !== null) {
+      const storePath = path.join("modules", "news_cover_image", _id.toString())
+      const resultUploadCoverImage = await _uploadServices(storePath, [
+        file[`coverImage[image]`]
+      ])
+      cover_image = resultUploadCoverImage.uploadSuccess[0].path
+    }
 
-  try {
-    const idAnnouncement = body.idAnnouncement
-    const storePath = path.join("modules", "news", idAnnouncement)
+    // attachment
+    const storePath = path.join("modules", "news", _id.toString())
     const promises = []
-    const countAttachment = body.countAttachment ? body.countAttachment : 0
-    for (let index = 0; index < countAttachment; index++) {
-      const type = body[`file[${index}][type]`]
+    forEach(body.file, (item, index) => {
+      const type = item.type
       const promise = new Promise(async (resolve, reject) => {
-        if (body[`file[${index}][new]`]) {
+        if (item.new) {
           const resultUpload = await _uploadServices(storePath, [
             file[`file[${index}][file]`]
           ])
@@ -149,28 +179,38 @@ const submitAnnouncementAttachment = async (req, res, next) => {
         } else {
           const result = {
             type: type,
-            name: body[`file[${index}][name]`],
-            size: body[`file[${index}][size]`],
-            src: body[`file[${index}][src]`]
+            name: item.name,
+            size: item.size,
+            src: item.src
           }
           resolve(result)
         }
       })
       promises.push(promise)
-    }
+    })
     const attachment = await Promise.all(promises).then((res) => {
       return res
     })
-
     await newsModel.update(
-      { attachment: JSON.stringify(attachment) },
+      { attachment: JSON.stringify(attachment), cover_image: cover_image },
       {
         where: {
-          id: idAnnouncement
+          id: _id
         }
       }
     )
-    return res.respond("success")
+
+    const dataAnnouncement = await newsModel.findByPk(_id)
+    dataAnnouncement.dataValues.send_to = JSON.parse(
+      dataAnnouncement.dataValues.send_to
+    )
+    dataAnnouncement.dataValues.attachment = JSON.parse(
+      dataAnnouncement.dataValues.attachment
+    )
+    result.dataLink = dataAnnouncement
+    result.dataFeed.dataLink = dataAnnouncement
+
+    return res.respond(result)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -179,13 +219,19 @@ const submitAnnouncementAttachment = async (req, res, next) => {
 const getAnnouncementById = async (req, res, next) => {
   const id = req.params.id
   try {
-    const data = await newsModel.findByPk(id)
-    data.dataValues.send_to = JSON.parse(data.dataValues.send_to)
-    data.dataValues.attachment = JSON.parse(data.dataValues.attachment)
+    const data = await handleGetAnnouncementById(id)
     return res.respond(data)
   } catch (err) {
     return res.fail(err.message)
   }
 }
 
-export { submitAnnouncement, submitAnnouncementAttachment, getAnnouncementById }
+// ** support function
+const handleGetAnnouncementById = async (id) => {
+  const data = await newsModel.findByPk(id)
+  data.dataValues.send_to = JSON.parse(data.dataValues.send_to)
+  data.dataValues.attachment = JSON.parse(data.dataValues.attachment)
+  return data
+}
+
+export { submitAnnouncement, getAnnouncementById, handleGetAnnouncementById }

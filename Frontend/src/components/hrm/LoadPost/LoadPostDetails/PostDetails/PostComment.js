@@ -1,6 +1,6 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment } from "react"
 import ReactionDetailModal from "../modals/ReactionDetailModal"
 import Comment from "./Comment"
 import CommentReply from "./CommentReply"
@@ -60,7 +60,7 @@ const PostComment = (props) => {
                       dataComment={value}
                       setDataShowFormReply={setDataShowFormReply}
                       dataShowFormReply={state.dataShowFormReply}
-                      apiReaction={feedApi.postUpdateComment}
+                      apiReaction={feedApi.postUpdateCommentReaction}
                       setDataReactionAndModal={setDataReactionAndModal}
                       setDataEditComment={setDataEditComment}
                     />
@@ -100,15 +100,9 @@ const PostComment = (props) => {
                     .catch((err) => {})
                 }
               }}>
-              <i className="fa-regular fa-comment me-25"></i>
-              {useFormatMessage(
-                `modules.feed.post.text.${
-                  data.comment_more_count === 1
-                    ? "view_more_comment"
-                    : "view_more_comments"
-                }`,
-                { comment: data.comment_more_count }
-              )}
+              {useFormatMessage(`modules.feed.post.text.view_more_comments`, {
+                comment: ""
+              })}
             </span>
           </div>
         )}

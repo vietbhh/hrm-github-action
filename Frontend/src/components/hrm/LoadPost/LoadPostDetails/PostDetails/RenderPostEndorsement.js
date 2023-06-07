@@ -1,4 +1,5 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { renderContentHashtag } from "@modules/Feed/common/common"
 import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import {
   getCoverEndorsementByKey,
@@ -10,7 +11,7 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 
 const RenderPostEndorsement = (props) => {
-  const { dataLink, loadingDataLink } = props
+  const { dataLink } = props
   const [state, setState] = useMergedState({
     showSeeMore: false,
     seeMore: false
@@ -69,6 +70,14 @@ const RenderPostEndorsement = (props) => {
     )
   }
 
+  const renderContent = () => {
+    if (dataLink.content) {
+      const content = renderContentHashtag(dataLink.content, dataLink.hashtag)
+      return content
+    }
+    return ""
+  }
+
   return (
     <div className="post-body__endorsement">
       <div className="endorsement__div-cover">
@@ -101,7 +110,7 @@ const RenderPostEndorsement = (props) => {
           className={`${
             state.showSeeMore && state.seeMore === false ? "hide" : ""
           }`}>
-          {ReactHtmlParser(dataLink?.content)}
+          {ReactHtmlParser(renderContent())}
         </div>
         {state.showSeeMore && (
           <a

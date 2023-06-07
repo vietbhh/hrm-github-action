@@ -3,10 +3,14 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
-import React, { Fragment, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
+import {
+  handleDataMention,
+  handleLoadAttachmentThumb,
+  loadUrlDataLink
+} from "../common/common"
 
 const PostDetail = (props) => {
   const {
@@ -63,6 +67,21 @@ const PostDetail = (props) => {
             }
           }
 
+          // check seen
+          if (data.seen.indexOf(userId) === -1) {
+            await feedApi
+              .getUpdateSeenPost(data._id)
+              .then((res) => {
+                data.seen.push(userId.toString())
+              })
+              .catch((err) => {})
+          }
+
+          // check data link
+          const dataUrl = await loadUrlDataLink(data)
+          data["dataLink"].cover_url = dataUrl.cover_url
+          data["dataLink"].badge_url = dataUrl.badge_url
+
           setState({ loadingPost: false, dataPost: data })
         } else {
           setState({ loadingPost: false, dataPost: {} })
@@ -79,6 +98,7 @@ const PostDetail = (props) => {
   }, [dataEmployee])
 
   useEffect(() => {
+    //
     const data_options = []
     _.forEach(dataEmployee, (item) => {
       data_options.push({
@@ -109,63 +129,95 @@ const PostDetail = (props) => {
           optionsMeetingRoom: []
         })
       })
+
+    // hide menu
+    if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
+      document.getElementsByClassName(`main-menu menu-fixed`)[0].style.display =
+        "none"
+    }
+    if (document.getElementsByClassName(`app-content content`)[0]) {
+      document.getElementsByClassName(
+        `app-content content`
+      )[0].style.marginLeft = 0
+      document.getElementsByClassName(`app-content content`)[0].style.minWidth =
+        "calc(1150px + 330px)"
+    }
+
+    return () => {
+      // show menu
+      if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
+        document.getElementsByClassName(
+          `main-menu menu-fixed`
+        )[0].style.display = "unset"
+      }
+      if (document.getElementsByClassName(`app-content content`)[0]) {
+        document.getElementsByClassName(
+          `app-content content`
+        )[0].style.marginLeft = "330px"
+        document.getElementsByClassName(
+          `app-content content`
+        )[0].style.minWidth = "1150px"
+      }
+    }
   }, [])
 
-  const renderContent = () => {
-    return (
-      <div className="div-content div-posts">
-        <div className="div-left feed">
-          <div className="load-feed">
-            {state.loadingPost && (
-              <div className="div-loading">
-                <Skeleton avatar active paragraph={{ rows: 2 }} />
-              </div>
-            )}
+  return (
+    <div className="div-content div-posts">
+      <div className="div-left feed">
+        <div className="load-feed">
+          {state.loadingPost && (
+            <div className="div-loading">
+              <Skeleton avatar active paragraph={{ rows: 2 }} />
+            </div>
+          )}
 
-            {!state.loadingPost && _.isEmpty(state.dataPost) && (
-              <div className="load-post">
-                <EmptyContent
-                  title={useFormatMessage(
-                    "modules.feed.post.text.post_not_found"
-                  )}
-                />
-              </div>
-            )}
-
-            {!state.loadingPost && !_.isEmpty(state.dataPost) && (
-              <LoadPost
-                data={state.dataPost}
-                current_url={current_url}
-                idMedia={state._idMedia}
-                setIdMedia={(value) => setState({ _idMedia: value })}
-                dataMention={state.dataMention}
-                setData={(data, empty = false, dataCustom = {}) => {
-                  if (empty) {
-                    setState({ dataPost: {} })
-                  } else {
-                    setState({
-                      dataPost: {
-                        ...data,
-                        url_thumb: state.dataPost.url_thumb,
-                        url_source: state.dataPost.url_source,
-                        medias: state.dataPost.medias,
-                        ...dataCustom
-                      }
-                    })
-                  }
-                }}
-                customAction={customAction}
-                options_employee_department={state.options_employee_department}
-                optionsMeetingRoom={state.optionsMeetingRoom}
+          {!state.loadingPost && _.isEmpty(state.dataPost) && (
+            <div className="load-post">
+              <EmptyContent
+                title={useFormatMessage(
+                  "modules.feed.post.text.post_not_found"
+                )}
               />
-            )}
-          </div>
+            </div>
+          )}
+
+          {!state.loadingPost && !_.isEmpty(state.dataPost) && (
+            <LoadPost
+              data={state.dataPost}
+              dataLink={state.dataPost.dataLink}
+              current_url={current_url}
+              idMedia={state._idMedia}
+              setIdMedia={(value) => setState({ _idMedia: value })}
+              dataMention={state.dataMention}
+              setData={(data, empty = false, dataCustom = {}) => {
+                if (empty) {
+                  setState({ dataPost: {} })
+                } else {
+                  setState({
+                    dataPost: {
+                      ...data,
+                      url_thumb: state.dataPost.url_thumb,
+                      url_source: state.dataPost.url_source,
+                      medias: state.dataPost.medias,
+                      ...dataCustom
+                    }
+                  })
+                }
+              }}
+              setDataLink={(data) => {
+                const _data = { ...state.dataPost }
+                _data["dataLink"] = data
+                setState({ dataPost: _data })
+              }}
+              customAction={customAction}
+              options_employee_department={state.options_employee_department}
+              optionsMeetingRoom={state.optionsMeetingRoom}
+            />
+          )}
         </div>
       </div>
-    )
-  }
-
-  return <Fragment>{renderContent()}</Fragment>
+    </div>
+  )
 }
 
 export default PostDetail

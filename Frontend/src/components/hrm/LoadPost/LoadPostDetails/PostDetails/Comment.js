@@ -31,6 +31,7 @@ const Comment = (props) => {
   } = props
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
+  const full_name = userData.full_name
 
   const actions = {
     edit_comment: {
@@ -78,16 +79,17 @@ const Comment = (props) => {
   // ** function
   const updateReaction = (react_type, data_comment) => {
     const reaction = data_comment.reaction ? data_comment.reaction : []
-    const _reaction = handleReaction(userId, react_type, reaction)
+    const react_action = handleReaction(userId, react_type, reaction)
 
     const params = {
       _id_post: id_post,
       _id_comment: id_comment,
       _id_sub_comment: id_sub_comment,
       comment_more_count_original: comment_more_count_original,
-      body_update: {
-        reaction: _reaction
-      }
+      react_type: react_type,
+      react_action: react_action,
+      full_name: full_name,
+      created_by: data_comment.created_by.id
     }
     if (_.isFunction(setData)) {
       apiReaction(params)

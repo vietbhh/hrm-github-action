@@ -69,10 +69,12 @@ const ModalCreateEvent = (props) => {
     values.dataAttendees = state.dataAttendees
     values.idEvent = idEvent
     values.idPost = idPost
+    values.file = state.arrAttachment
+    const params = { body: JSON.stringify(values), file: state.arrAttachment }
 
     setState({ loadingSubmit: true })
     eventApi
-      .postSubmitEvent(values)
+      .postSubmitEvent(params)
       .then((res) => {
         if (_.isFunction(setDataCreateNew)) {
           setDataCreateNew(res.data.dataFeed)
@@ -83,29 +85,19 @@ const ModalCreateEvent = (props) => {
         if (_.isFunction(setDataLink)) {
           setDataLink(res.data.dataLink)
         }
-        eventApi
-          .postSubmitEventAttachment({
-            idEvent: res.data.idEvent,
-            file: state.arrAttachment,
-            countAttachment: state.arrAttachment.length
-          })
-          .then((res) => {
-            resetAfterSubmit()
-            toggleModal()
-            setState({ loadingSubmit: false })
-            notification.showSuccess({
-              text: useFormatMessage("notification.success")
-            })
-          })
-          .catch((err) => {
-            setState({ loadingSubmit: false })
-            notification.showError({
-              text: useFormatMessage("notification.something_went_wrong")
-            })
-          })
+
+        resetAfterSubmit()
+        toggleModal()
+        setState({ loadingSubmit: false })
+        notification.showSuccess({
+          text: useFormatMessage("notification.success")
+        })
       })
       .catch((err) => {
         setState({ loadingSubmit: false })
+        notification.showError({
+          text: useFormatMessage("notification.something_went_wrong")
+        })
       })
   }
 
@@ -382,7 +374,7 @@ const ModalCreateEvent = (props) => {
       <Modal
         isOpen={modal}
         toggle={() => toggleModal()}
-        className="feed modal-create-post modal-create-event"
+        className="modal-dialog-centered feed modal-create-post modal-create-event"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader>

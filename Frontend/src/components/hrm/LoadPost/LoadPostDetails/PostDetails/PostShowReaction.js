@@ -8,12 +8,15 @@ import img_sad from "@modules/Feed/assets/images/sad.png"
 import img_wow from "@modules/Feed/assets/images/wow.png"
 import { useSelector } from "react-redux"
 import ReactionDetailModal from "../modals/ReactionDetailModal"
+import MemberVoteModal from "../modals/MemberVoteModal"
 
 const PostShowReaction = (props) => {
   const { short, data } = props
   const [state, setState] = useMergedState({
     dataReaction: {},
-    modal_reaction: false
+    modal_reaction: false,
+    modalPeopleSeen: false,
+    arrPeopleSeen: []
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -23,6 +26,8 @@ const PostShowReaction = (props) => {
   const toggleModalReaction = () => {
     setState({ modal_reaction: !state.modal_reaction })
   }
+  const toggleModalPeopleSeen = () =>
+    setState({ modalPeopleSeen: !state.modalPeopleSeen })
 
   // ** useEffect
   useEffect(() => {
@@ -122,9 +127,13 @@ const PostShowReaction = (props) => {
             </div>
           )}
 
-          {data?.seen_count > 0 && !short && (
-            <div className="div-seen">
-              {data?.seen_count}{" "}
+          {data.seen && data.seen.length > 0 && !short && (
+            <div
+              className="div-seen cursor-pointer"
+              onClick={() => {
+                setState({ arrPeopleSeen: data.seen, modalPeopleSeen: true })
+              }}>
+              {data.seen.length}{" "}
               {useFormatMessage("modules.feed.post.text.people_seen")}
             </div>
           )}
@@ -135,6 +144,13 @@ const PostShowReaction = (props) => {
         modal={state.modal_reaction}
         toggleModal={toggleModalReaction}
         dataReaction={state.dataReaction}
+      />
+
+      <MemberVoteModal
+        modal={state.modalPeopleSeen}
+        toggleModal={toggleModalPeopleSeen}
+        dataUserVote={state.arrPeopleSeen}
+        title={useFormatMessage("modules.feed.post.text.people")}
       />
     </Fragment>
   )

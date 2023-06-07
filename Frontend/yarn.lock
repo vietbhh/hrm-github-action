@@ -1237,6 +1237,13 @@
     immutable "~3.7.4"
     prop-types "^15.8.1"
 
+"@draft-js-plugins/hashtag@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@draft-js-plugins/hashtag/-/hashtag-4.2.2.tgz#c84625deb05330b115d30a75cb063b168ef81600"
+  integrity sha512-iSKrZw5hwU7ME5cT6p9P71Mcz2BKnRhNjvNvwt4EUUkneou8z/sRkjKTv15hXizIamKv+BI68N5IfiIQH6WWvw==
+  dependencies:
+    clsx "^1.0.4"
+
 "@draft-js-plugins/inline-toolbar@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@draft-js-plugins/inline-toolbar/-/inline-toolbar-4.2.0.tgz#345b596675e36fe8c9a37affac171fe1f3940f12"

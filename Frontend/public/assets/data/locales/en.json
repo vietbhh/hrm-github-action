@@ -4491,8 +4491,8 @@
           "and": "and",
           "all": "All",
           "chat": "Chat",
-          "view_more_comment": "View more {comment} comment",
-          "view_more_comments": "View more {comment} comments",
+          "view_more_comment": "Load more {comment} comment",
+          "view_more_comments": "Load more {comment} comments",
           "replies": "replies",
           "updated_cover": "updated cover",
           "updated_avatar": "updated avatar",
@@ -4501,7 +4501,8 @@
           "delete_comment": "Delete comment",
           "cancel_edit": "Cancel edit",
           "with": "with",
-          "people": "People"
+          "people": "People",
+          "btn_send_noti_unseen": "Send notifications to those who haven't seen it yet"
         },
         "react": {
           "like": "Like",
@@ -4513,7 +4514,7 @@
         },
         "event": {
           "created_an": "created an",
-          "event": "event",
+          "event": "Event",
           "yes": "Yes",
           "no": "No",
           "maybe": "Maybe",
@@ -4523,6 +4524,9 @@
           "endorsed": "endorsed",
           "congratulate": "Congratulate",
           "is_endorsed": "is endorsed"
+        },
+        "announcement": {
+          "announcement": "Announcement"
         }
       },
       "manage_post": {
@@ -4866,7 +4870,14 @@
         "request_workspace": "sent a request to join the workspace",
         "need_approval": "needs approval",
         "you_have_a_new_event": "You have a new event",
-        "you_have_a_new_announcement": "You have a new announcement"
+        "you_have_a_new_announcement": "You have a new announcement",
+        "you_have_a_new_endorse": "You have a new endorse",
+        "liked_your_post": "liked your post",
+        "commented_on_your_post": "commented on your post",
+        "liked_your_comment": "liked your comment",
+        "replied_on_your_comment": "replied on your comment",
+        "notification_unseen": "There's a post you haven't seen yet, check it out",
+        "sent_notification": "Sent notification"
       }
     },
     "timeline": {

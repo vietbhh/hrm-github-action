@@ -40,6 +40,9 @@ const newsModel = appModelMysql("m_news", {
   },
   send_to: {
     type: DataTypes.STRING
+  },
+  cover_image: {
+    type: DataTypes.STRING
   }
 })
 

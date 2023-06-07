@@ -6,7 +6,11 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
-import { handleDataMention, handleLoadAttachmentThumb } from "../common/common"
+import {
+  handleDataMention,
+  handleLoadAttachmentThumb,
+  loadUrlDataLink
+} from "../common/common"
 
 const LoadFeed = (props) => {
   const {
@@ -32,7 +36,8 @@ const LoadFeed = (props) => {
     loadingPostCreateNew: false,
     idPostCreateNew: "",
     dataCreateNewTemp: [],
-    dataMention: []
+    dataMention: [],
+    arrPostIdSeen: []
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -54,11 +59,18 @@ const LoadFeed = (props) => {
     const api = apiLoadFeed ? apiLoadFeed(params) : feedApi.getLoadFeed(params)
     api
       .then((res) => {
+        const arrPostIdSeen = [...state.arrPostIdSeen]
+        _.forEach(res.data.dataPost, (item) => {
+          const seen = item.seen.indexOf(userId) !== -1
+          arrPostIdSeen.push({ id: item._id, seen: seen })
+        })
+
         setState({
           dataPost: [...state.dataPost, ...res.data.dataPost],
           totalPost: res.data.totalPost,
           page: res.data.page,
-          hasMore: res.data.hasMore
+          hasMore: res.data.hasMore,
+          arrPostIdSeen: arrPostIdSeen
         })
 
         setTimeout(() => {
@@ -76,12 +88,33 @@ const LoadFeed = (props) => {
       setState({ hasMoreLazy: true })
     }
 
+    if (
+      state.arrPostIdSeen[0] &&
+      state.arrPostIdSeen[0].seen === false &&
+      state.arrPostIdSeen[0].id === value._id
+    ) {
+      feedApi
+        .getUpdateSeenPost(value._id)
+        .then((res) => {
+          const _arrPostIdSeen = [...state.arrPostIdSeen]
+          _arrPostIdSeen[0].seen = true
+          setState({ arrPostIdSeen: _arrPostIdSeen })
+        })
+        .catch((err) => {})
+    }
+
     // load media
     const data_attachment = await handleLoadAttachmentThumb(value, cover)
     const dataPost = [...state.dataPost]
     dataPost[index]["url_thumb"] = data_attachment["url_thumb"]
     dataPost[index]["url_cover"] = data_attachment["url_cover"]
     dataPost[index]["medias"] = data_attachment["medias"]
+
+    // check data link
+    const dataUrl = await loadUrlDataLink(dataPost[index])
+    dataPost[index].dataLink.cover_url = dataUrl.cover_url
+    dataPost[index].dataLink.badge_url = dataUrl.badge_url
+
     setState({ dataPost: dataPost })
   }
 
@@ -99,6 +132,11 @@ const LoadFeed = (props) => {
     dataCreateNew["url_cover"] = data_attachment["url_cover"]
     dataCreateNew["medias"] = data_attachment["medias"]
 
+    // check data link
+    const dataUrl = await loadUrlDataLink(dataCreateNew)
+    dataCreateNew["dataLink"].cover_url = dataUrl.cover_url
+    dataCreateNew["dataLink"].badge_url = dataUrl.badge_url
+
     setState({
       dataCreateNewTemp: [...[dataCreateNew], ...state.dataCreateNewTemp],
       loadingPostCreateNew: false
@@ -107,16 +145,63 @@ const LoadFeed = (props) => {
     setDataCreateNew({})
   }
 
+  // detect element on screen
+  const checkVisible = (idPost) => {
+    if (document.getElementById(`post_id_${idPost}`)) {
+      const elm = document.getElementById(`post_id_${idPost}`)
+      const rect = elm.getBoundingClientRect()
+      const viewHeight = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight
+      )
+      return rect.bottom > 0 && rect.top - viewHeight < 0
+    }
+    return false
+  }
+
   // ** useEffect
   useEffect(() => {
     loadData()
   }, [])
 
   useEffect(() => {
+    // event stopped scrolling
+    let timer = null
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (timer !== null) {
+          clearTimeout(timer)
+        }
+        timer = setTimeout(function () {
+          const _arrPostIdSeen = [...state.arrPostIdSeen]
+          _.forEach(_arrPostIdSeen, (item, index) => {
+            if (!item.seen && checkVisible(item.id)) {
+              _arrPostIdSeen[index].seen = true
+
+              feedApi
+                .getUpdateSeenPost(item.id)
+                .then((res) => {})
+                .catch((err) => {})
+            }
+          })
+          setState({ arrPostIdSeen: _arrPostIdSeen })
+        }, 200)
+      },
+      false
+    )
+  }, [state.arrPostIdSeen])
+
+  useEffect(() => {
     if (!_.isEmpty(dataCreateNew)) {
       loadDataCreateNew()
+
+      const _arrPostIdSeen = [...state.arrPostIdSeen]
+      _arrPostIdSeen.push({ id: dataCreateNew._id, seen: true })
+      setState({ arrPostIdSeen: _arrPostIdSeen })
     }
   }, [dataCreateNew])
+
   useEffect(() => {
     if (!_.isEmpty(dataCreateNew) && state.idPostCreateNew === "") {
       setState({ idPostCreateNew: dataCreateNew._id })
@@ -127,8 +212,6 @@ const LoadFeed = (props) => {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
-
-  // ** function
 
   return (
     <div className="load-feed">
@@ -147,6 +230,7 @@ const LoadFeed = (props) => {
             <LoadPost
               key={index}
               data={value}
+              dataLink={value.dataLink}
               current_url={current_url}
               dataMention={state.dataMention}
               setData={(data, empty = false, dataCustom = {}) => {
@@ -167,6 +251,11 @@ const LoadFeed = (props) => {
                   setState({ dataCreateNewTemp: _data })
                 }
               }}
+              setDataLink={(data) => {
+                const _data = [...state.dataCreateNewTemp]
+                _data[index]["dataLink"] = data
+                setState({ dataCreateNewTemp: _data })
+              }}
               customAction={customAction}
               options_employee_department={options_employee_department}
               optionsMeetingRoom={optionsMeetingRoom}
@@ -181,6 +270,7 @@ const LoadFeed = (props) => {
               afterLoad={() => handleAfterLoadLazyLoadComponent(value, index)}>
               <LoadPost
                 data={value}
+                dataLink={value.dataLink}
                 current_url={current_url}
                 dataMention={state.dataMention}
                 setData={(data, empty = false, dataCustom = {}) => {
@@ -200,6 +290,11 @@ const LoadFeed = (props) => {
                     }
                     setState({ dataPost: _data })
                   }
+                }}
+                setDataLink={(data) => {
+                  const _data = [...state.dataPost]
+                  _data[index]["dataLink"] = data
+                  setState({ dataPost: _data })
                 }}
                 customAction={customAction}
                 options_employee_department={options_employee_department}

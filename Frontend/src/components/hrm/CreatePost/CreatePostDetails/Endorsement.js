@@ -30,6 +30,7 @@ import notification from "@apps/utility/notification"
 import draftToHtml from "draftjs-to-html"
 import {
   decodeHTMLEntities,
+  detectHashtag,
   detectUrl,
   handleTagUserAndReplaceContent
 } from "@modules/Feed/common/common"
@@ -122,6 +123,7 @@ const Endorsement = (props) => {
         _content
       )
       const __content = result_tag_user.content
+      const arrHashtag = detectHashtag(__content)
 
       const params = {
         content: __content,
@@ -131,11 +133,14 @@ const Endorsement = (props) => {
         valueBadge: state.valueBadge,
         date: state.date,
         idEndorsement: idEndorsement,
-        idPost: idPost
+        idPost: idPost,
+        arrHashtag: arrHashtag
       }
 
+      const _params = { body: JSON.stringify(params), file: state.coverImg }
+
       endorsementApi
-        .postSubmitEndorsement(params)
+        .postSubmitEndorsement(_params)
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             setDataCreateNew(res.data.dataFeed)
@@ -143,39 +148,15 @@ const Endorsement = (props) => {
           if (_.isFunction(setData)) {
             setData(res.data.dataFeed)
           }
-
-          if (state.coverImg !== null) {
-            endorsementApi
-              .postSubmitEndorsementCover({
-                idEndorsement: res.data.idEndorsement,
-                file: state.coverImg
-              })
-              .then(async (res) => {
-                resetAfterSubmit()
-                if (_.isFunction(setDataLink)) {
-                  const _data = await dataUrlImageAfterSubmit(res.data)
-                  setDataLink(_data)
-                }
-                notification.showSuccess({
-                  text: useFormatMessage("notification.success")
-                })
-              })
-              .catch((err) => {
-                setState({ loadingSubmit: false })
-                notification.showError({
-                  text: useFormatMessage("notification.something_went_wrong")
-                })
-              })
-          } else {
-            resetAfterSubmit()
-            if (_.isFunction(setDataLink)) {
-              const _data = await dataUrlImageAfterSubmit(res.data.dataLink)
-              setDataLink(_data)
-            }
-            notification.showSuccess({
-              text: useFormatMessage("notification.success")
-            })
+          if (_.isFunction(setDataLink)) {
+            const _data = await dataUrlImageAfterSubmit(res.data.dataLink)
+            setDataLink(_data)
           }
+
+          resetAfterSubmit()
+          notification.showSuccess({
+            text: useFormatMessage("notification.success")
+          })
         })
         .catch((err) => {
           setState({ loadingSubmit: false })
@@ -205,7 +186,7 @@ const Endorsement = (props) => {
     })
   }
 
-  const dataUrlImageAfterSubmit = (data) => {
+  const dataUrlImageAfterSubmit = async (data) => {
     const promise = new Promise(async (resolve, reject) => {
       const _data = { ...data }
       if (_data.cover_type === "upload") {
@@ -361,7 +342,10 @@ const Endorsement = (props) => {
 
       <Modal
         isOpen={modal}
-        toggle={() => toggleModal()}
+        toggle={() => {
+          toggleModal()
+          toggleModalCreatePost()
+        }}
         className="feed modal-dialog-centered modal-create-post modal-create-event modal-create-endorsement"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
@@ -371,7 +355,12 @@ const Endorsement = (props) => {
               "modules.feed.create_post.endorsement.appreciation"
             )}
           </span>
-          <div className="div-btn-close" onClick={() => toggleModal()}>
+          <div
+            className="div-btn-close"
+            onClick={() => {
+              toggleModal()
+              toggleModalCreatePost()
+            }}>
             <i className="fa-solid fa-xmark"></i>
           </div>
         </ModalHeader>

@@ -44,6 +44,7 @@ const ModalAnnouncement = (props) => {
     //
     valueShowAnnouncement: "643",
     nameOptionShowAnnouncement: "one_week",
+    coverImage: { src: "", image: null },
 
     // ** Attendees
     valueAttendees: [],
@@ -65,11 +66,18 @@ const ModalAnnouncement = (props) => {
     values.dataAttendees = state.dataAttendees
     values.idAnnouncement = idAnnouncement
     values.idPost = idPost
+    values.file = state.arrAttachment
+    values.coverImage = state.coverImage
+    const params = {
+      body: JSON.stringify(values),
+      file: state.arrAttachment,
+      coverImage: state.coverImage
+    }
 
     setState({ loadingSubmit: true })
     announcementApi
-      .postSubmitAnnouncement(values)
-      .then((res) => {
+      .postSubmitAnnouncement(params)
+      .then(async (res) => {
         if (_.isFunction(setDataCreateNew)) {
           setDataCreateNew(res.data.dataFeed)
         }
@@ -77,32 +85,25 @@ const ModalAnnouncement = (props) => {
           setData(res.data.dataFeed)
         }
         if (_.isFunction(setDataLink)) {
-          setDataLink(res.data.dataLink)
+          const _data = { ...res.data.dataLink }
+          await downloadApi.getPhoto(_data.cover_image).then((response) => {
+            _data.cover_url = URL.createObjectURL(response.data)
+            setDataLink(_data)
+          })
         }
 
-        announcementApi
-          .postSubmitAnnouncementAttachment({
-            idAnnouncement: res.data.idAnnouncement,
-            file: state.arrAttachment,
-            countAttachment: state.arrAttachment.length
-          })
-          .then((res) => {
-            resetAfterSubmit()
-            toggleModal()
-            setState({ loadingSubmit: false })
-            notification.showSuccess({
-              text: useFormatMessage("notification.success")
-            })
-          })
-          .catch((err) => {
-            setState({ loadingSubmit: false })
-            notification.showError({
-              text: useFormatMessage("notification.something_went_wrong")
-            })
-          })
+        resetAfterSubmit()
+        toggleModal()
+        setState({ loadingSubmit: false })
+        notification.showSuccess({
+          text: useFormatMessage("notification.success")
+        })
       })
       .catch((err) => {
         setState({ loadingSubmit: false })
+        notification.showError({
+          text: useFormatMessage("notification.something_went_wrong")
+        })
       })
   }
 
@@ -200,7 +201,8 @@ const ModalAnnouncement = (props) => {
             loadingEdit: false,
             dataEdit: res.data,
             valueAttendees: [],
-            dataAttendees: res.data.send_to
+            dataAttendees: res.data.send_to,
+            coverImage: { src: res.data?.cover_image || "", image: null }
           })
 
           setValue("pin_to_top", res.data.pin && res.data.pin === 1)
@@ -262,7 +264,7 @@ const ModalAnnouncement = (props) => {
       <Modal
         isOpen={modal}
         toggle={() => toggleModal()}
-        className="feed modal-create-post modal-create-event modal-announcement"
+        className="modal-dialog-centered feed modal-create-post modal-create-event modal-announcement"
         modalTransition={{ timeout: 100 }}
         backdropTransition={{ timeout: 100 }}>
         <ModalHeader>
@@ -289,6 +291,65 @@ const ModalAnnouncement = (props) => {
               useForm={methods}
               required
             />
+
+            <Label
+              for="announcement-cover-image"
+              className="mb-0 label-announcement-cover-image">
+              <div
+                className="div-announcement-cover-image"
+                onClick={() =>
+                  setState({
+                    coverImage: { src: "", image: null }
+                  })
+                }>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  viewBox="0 0 28 28"
+                  fill="none">
+                  <path
+                    d="M10.5002 25.6667H17.5002C23.3335 25.6667 25.6668 23.3333 25.6668 17.5V10.5C25.6668 4.66668 23.3335 2.33334 17.5002 2.33334H10.5002C4.66683 2.33334 2.3335 4.66668 2.3335 10.5V17.5C2.3335 23.3333 4.66683 25.6667 10.5002 25.6667Z"
+                    stroke="#737B81"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.4998 11.6667C11.7885 11.6667 12.8332 10.622 12.8332 9.33333C12.8332 8.04467 11.7885 7 10.4998 7C9.21117 7 8.1665 8.04467 8.1665 9.33333C8.1665 10.622 9.21117 11.6667 10.4998 11.6667Z"
+                    stroke="#737B81"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M3.11523 22.1083L8.8669 18.2467C9.78857 17.6283 11.1186 17.6983 11.9469 18.41L12.3319 18.7483C13.2419 19.53 14.7119 19.53 15.6219 18.7483L20.4752 14.5833C21.3852 13.8017 22.8552 13.8017 23.7652 14.5833L25.6669 16.2167"
+                    stroke="#737B81"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+
+              <input
+                type="file"
+                id="announcement-cover-image"
+                hidden
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files[0]) {
+                    setState({
+                      coverImage: { src: "", image: e.target.files[0] }
+                    })
+                  } else {
+                    setState({
+                      coverImage: { src: "", image: null }
+                    })
+                  }
+                }}
+              />
+            </Label>
           </div>
           <div className="div-event-time">
             <div className="div-all-day">

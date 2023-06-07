@@ -82,10 +82,11 @@ const getUsers = (ids, condition = {}) => {
   })
 }
 
-const getUserActivated = () => {
+const getUserActivated = (condition = {}) => {
   return usersModel.findAll({
     where: {
-      account_status: "activated"
+      account_status: "activated",
+      ...condition
     }
   })
 }

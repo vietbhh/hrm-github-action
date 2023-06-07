@@ -129,35 +129,56 @@ export const handleLoadAttachmentThumb = async (data, cover) => {
   return out
 }
 
+export const loadUrlDataLink = async (_dataPost) => {
+  const out = { cover_url: "", badge_url: "" }
+
+  const dataPost = { ..._dataPost }
+  if (dataPost.type === "announcement") {
+    await downloadApi
+      .getPhoto(dataPost.dataLink.cover_image)
+      .then((response) => {
+        out.cover_url = URL.createObjectURL(response.data)
+      })
+  }
+
+  if (dataPost.type === "endorsement") {
+    const promise = new Promise(async (resolve, reject) => {
+      const _data = { cover_url: "", badge_url: "" }
+      if (dataPost.dataLink.cover_type === "upload") {
+        await downloadApi.getPhoto(dataPost.dataLink.cover).then((response) => {
+          _data.cover_url = URL.createObjectURL(response.data)
+        })
+      }
+      if (dataPost.dataLink.badge_type === "upload") {
+        await downloadApi.getPhoto(dataPost.dataLink.badge).then((response) => {
+          _data.badge_url = URL.createObjectURL(response.data)
+        })
+      }
+      resolve(_data)
+    })
+    const data_url = await promise.then((res_promise) => {
+      return res_promise
+    })
+    out.cover_url = data_url.cover_url
+    out.badge_url = data_url.badge_url
+  }
+
+  return out
+}
+
 export const handleReaction = (userId, react_type, reaction) => {
+  let react_action = "add"
   const index_react_type = reaction.findIndex(
     (item) => item.react_type === react_type
   )
   if (index_react_type !== -1) {
     const index_user = reaction[index_react_type]["react_user"].indexOf(userId)
     if (index_user !== -1) {
-      reaction[index_react_type]["react_user"].splice(index_user, 1)
-    } else {
-      reaction[index_react_type]["react_user"].push(userId)
+      react_action = "remove"
     }
-  } else {
-    reaction.push({
-      react_type: react_type,
-      react_user: [userId]
-    })
   }
 
-  // remove user from react_user
-  _.forEach(reaction, (value) => {
-    if (react_type !== value.react_type) {
-      const index = value["react_user"].indexOf(userId)
-      if (index !== -1) {
-        value["react_user"].splice(index, 1)
-      }
-    }
-  })
-
-  return reaction
+  return react_action
 }
 
 export const renderImageReact = (type) => {
@@ -327,3 +348,39 @@ export const handleInsertEditorState = (
   setEditorState(newEditorState)
 }
 // ** end editor
+
+export const detectHashtag = (txt) => {
+  const arr_hashtag = txt.match(/#\w+/g)
+  const uniqueChars = [...new Set(arr_hashtag)]
+  return uniqueChars
+}
+
+export const renderContentHashtag = (content, arrHashtag) => {
+  const mapObj = {}
+  let mapReg = ""
+  if (!_.isEmpty(arrHashtag)) {
+    _.forEach(arrHashtag, (item, index) => {
+      mapObj[item] =
+        '<a href="/hashtag/' +
+        item.replace("#", "") +
+        '" target="_blank">' +
+        item +
+        "</a>"
+      if (index === 0) {
+        mapReg = item
+      } else {
+        mapReg += "|" + item
+      }
+    })
+  }
+  if (!_.isEmpty(mapObj)) {
+    const _content = content.replace(
+      new RegExp(mapReg, "gi"),
+      function (matched) {
+        return mapObj[matched]
+      }
+    )
+    return _content
+  }
+  return content
+}

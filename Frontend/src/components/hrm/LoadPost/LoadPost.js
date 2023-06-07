@@ -1,23 +1,18 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useMergedState } from "@apps/utility/common"
-import {
-  announcementApi,
-  endorsementApi,
-  eventApi
-} from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import React, { useEffect } from "react"
+import React from "react"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
 import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
 import PostComment from "./LoadPostDetails/PostDetails/PostComment"
 import PostHeader from "./LoadPostDetails/PostDetails/PostHeader"
 import PostShowReaction from "./LoadPostDetails/PostDetails/PostShowReaction"
+import RenderAnnouncement from "./LoadPostDetails/PostDetails/RenderAnnouncement"
 import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
-import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
 import RenderPostEndorsement from "./LoadPostDetails/PostDetails/RenderPostEndorsement"
-import { downloadApi } from "@apps/modules/download/common/api"
+import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
 
 const LoadPost = (props) => {
   const {
@@ -29,6 +24,8 @@ const LoadPost = (props) => {
     customAction = {}, // custom dropdown post header
     offPostHeaderAction = false, // hide Post header action
     renderAppendHeaderComponent,
+    setDataLink,
+
     // only page post details
     idMedia = "",
     setIdMedia = null, // function set idMedia
@@ -39,9 +36,7 @@ const LoadPost = (props) => {
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
-    focusCommentForm: false,
-    loadingDataLink: true,
-    dataLink: {}
+    focusCommentForm: false
   })
 
   // ** function
@@ -49,64 +44,8 @@ const LoadPost = (props) => {
     setState({ comment_more_count_original: value })
   }
   const setFocusCommentForm = (value) => setState({ focusCommentForm: value })
-  const setDataLink = (value) => setState({ dataLink: value })
 
   // ** useEffect
-  useEffect(() => {
-    if (data?.type === "event" && data?.link_id !== null) {
-      setState({ loadingDataLink: true })
-      eventApi
-        .getGetEventById(data?.link_id)
-        .then((res) => {
-          setState({ loadingDataLink: false, dataLink: res.data })
-        })
-        .catch((err) => {
-          setState({ loadingDataLink: false, dataLink: {} })
-        })
-    }
-
-    if (data?.type === "announcement" && data?.link_id !== null) {
-      setState({ loadingDataLink: true })
-      announcementApi
-        .getAnnouncementById(data?.link_id)
-        .then((res) => {
-          setState({ loadingDataLink: false, dataLink: res.data })
-        })
-        .catch((err) => {
-          setState({ loadingDataLink: false, dataLink: {} })
-        })
-    }
-
-    if (data?.type === "endorsement" && data?.link_id !== null) {
-      setState({ loadingDataLink: true })
-      endorsementApi
-        .getEndorsementById(data?.link_id)
-        .then((res) => {
-          setState({ loadingDataLink: false, dataLink: res.data })
-
-          const promise = new Promise(async (resolve, reject) => {
-            const _data = { ...res.data }
-            if (_data.cover_type === "upload") {
-              await downloadApi.getPhoto(_data.cover).then((response) => {
-                _data.cover_url = URL.createObjectURL(response.data)
-              })
-            }
-            if (_data.badge_type === "upload") {
-              await downloadApi.getPhoto(_data.badge).then((response) => {
-                _data.badge_url = URL.createObjectURL(response.data)
-              })
-            }
-            resolve(_data)
-          })
-          promise.then((res_promise) => {
-            setState({ dataLink: res_promise })
-          })
-        })
-        .catch((err) => {
-          setState({ loadingDataLink: false, dataLink: {} })
-        })
-    }
-  }, [data.type, data.link_id])
 
   // ** render
   const renderBody = () => {
@@ -138,25 +77,15 @@ const LoadPost = (props) => {
     }
 
     if (data.type === "event") {
-      return (
-        <RenderPostEvent
-          dataLink={state.dataLink}
-          loadingDataLink={state.loadingDataLink}
-        />
-      )
+      return <RenderPostEvent dataLink={data.dataLink} />
     }
 
     if (data.type === "endorsement") {
-      return (
-        <RenderPostEndorsement
-          dataLink={state.dataLink}
-          loadingDataLink={state.loadingDataLink}
-        />
-      )
+      return <RenderPostEndorsement dataLink={data.dataLink} />
     }
 
     if (data.type === "announcement") {
-      return "announcement: " + data?._id
+      return <RenderAnnouncement dataLink={data.dataLink} />
     }
 
     return ""
@@ -178,7 +107,7 @@ const LoadPost = (props) => {
   }
 
   return (
-    <div className="load-post">
+    <div className="load-post" id={`post_id_${data?._id}`}>
       <PostHeader
         data={data}
         customAction={customAction}
@@ -188,7 +117,7 @@ const LoadPost = (props) => {
         setDataLink={setDataLink}
         options_employee_department={options_employee_department}
         optionsMeetingRoom={optionsMeetingRoom}
-        dataLink={state.dataLink}
+        dataLink={data.dataLink}
       />
       <div
         className={classNames("post-body", {
