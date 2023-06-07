@@ -110,7 +110,7 @@ const getListWorkspace = async (req, res, next) => {
   const limit = req.query.limit
   const workspaceType = req.query.workspace_type
   const status = req.query.status
-  const text = req.query.text
+  const text = req.query.text === undefined ? "" : req.query.text
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
   const queryType = req.query.query_type
   try {
@@ -132,7 +132,7 @@ const getListWorkspace = async (req, res, next) => {
       filter["status"] = status
     }
 
-    if (text !== undefined && text.trim().length > 0) {
+    if (text.trim().length > 0) {
       filter["name"] = {
         $regex: text + ".*"
       }
@@ -454,16 +454,12 @@ const sortGroupRule = async (req, res, next) => {
 
 const loadDataMember = async (req, res, next) => {
   const workspaceId = req.params.id
-  const text = isEmpty(req.query?.text)
-    ? ""
-    : req.query.text.trim().length === 0
-    ? ""
-    : req.query.text
+  const text = req.query.text === undefined ? "" : req.query.text
 
   try {
     const workspace = await workspaceMongoModel.findById(workspaceId)
     let condition = {}
-    if (text !== "") {
+    if (text.trim().length > 0) {
       condition = {
         username: {
           [Op.like]: `${text}%`
