@@ -191,3 +191,21 @@ export const endorsementApi = {
     return await axiosNodeApi.get("/feed/get-endorsement-by-id/" + id)
   }
 }
+
+export const hashtagApi = {
+  async getGetDataHashtag(hashtag) {
+    return await axiosNodeApi.get("/feed/get-data-hashtag/" + hashtag)
+  },
+
+  async getLoadFeedHashtag(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosNodeApi.get(
+      "/feed/get-load-feed-hashtag?" + stringFilters,
+      {
+        disableLoading: true
+      }
+    )
+  }
+}

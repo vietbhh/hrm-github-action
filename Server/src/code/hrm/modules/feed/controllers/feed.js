@@ -1113,5 +1113,6 @@ export {
   updateSeenPost,
   sendNotificationUnseen,
   handlePullHashtag,
-  handleInsertHashTag
+  handleInsertHashTag,
+  handleDataLoadFeed
 }

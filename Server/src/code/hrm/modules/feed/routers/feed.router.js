@@ -38,6 +38,7 @@ import {
   updatePostPollVote,
   updatePostPollVoteAddMoreOption
 } from "../controllers/poll_vote.js"
+import { getDataHashtag, loadFeedHashtag } from "../controllers/hashtag.js"
 
 const router = express.Router()
 
@@ -75,5 +76,8 @@ router.get("/get-announcement-by-id/:id", getAnnouncementById)
 
 router.post("/submit-endorsement", submitEndorsement)
 router.get("/get-endorsement-by-id/:id", getEndorsementById)
+
+router.get("/get-data-hashtag/:hashtag", getDataHashtag)
+router.get("/get-load-feed-hashtag", loadFeedHashtag)
 
 export default router

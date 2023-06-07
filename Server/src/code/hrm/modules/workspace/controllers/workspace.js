@@ -10,6 +10,7 @@ import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
 import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { handleDataLoadFeed } from "../../feed/controllers/feed.js"
 const saveWorkspace = async (req, res, next) => {
   const workspace = new workspaceMongoModel({
     name: req.body.workspace_name,
@@ -805,14 +806,8 @@ const loadFeed = async (req, res) => {
     .sort({
       _id: "desc"
     })
-  const data = await handleDataBeforeReturn(feed, true)
   const feedCount = await feedMongoModel.find(filter).count()
-  const result = {
-    dataPost: data,
-    totalPost: data.length,
-    page: page * 1 + 1,
-    hasMore: (page * 1 + 1) * pageLength < feedCount
-  }
+  const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
   return res.respond(result)
 }
 

@@ -199,6 +199,11 @@ const PostDetail = (props) => {
                       url_thumb: state.dataPost.url_thumb,
                       url_source: state.dataPost.url_source,
                       medias: state.dataPost.medias,
+                      dataLink: {
+                        ...state.dataPost.dataLink,
+                        cover_url: state.dataPost["dataLink"].cover_url,
+                        badge_url: state.dataPost["dataLink"].badge_url
+                      },
                       ...dataCustom
                     }
                   })
