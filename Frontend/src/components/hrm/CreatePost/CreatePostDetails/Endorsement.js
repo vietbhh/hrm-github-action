@@ -46,7 +46,6 @@ const Endorsement = (props) => {
     toggleModalCreatePost,
     dataMention,
     setDataCreateNew,
-    listBadge,
 
     // ** edit
     idEndorsement = null,
@@ -58,6 +57,7 @@ const Endorsement = (props) => {
     loadingSubmit: false,
     optionSelectMember: [],
     modalChooseBadge: false,
+    listBadge: [],
 
     // edit
     loadingEdit: false,
@@ -217,6 +217,30 @@ const Endorsement = (props) => {
       optionSelectMember.push({ value: item.id, label: item.full_name })
     })
     setState({ optionSelectMember: optionSelectMember })
+
+    manageEndorsementApi
+      .getListDataBadgeSetting()
+      .then((res) => {
+        const promises = []
+        _.forEach(res.data, (item) => {
+          const promise = new Promise(async (resolve, reject) => {
+            const _item = { ...item }
+            if (_item.badge_type === "upload") {
+              await downloadApi.getPhoto(item.badge).then((response) => {
+                _item.url = URL.createObjectURL(response.data)
+                resolve(_item)
+              })
+            } else {
+              resolve(_item)
+            }
+          })
+          promises.push(promise)
+        })
+        Promise.all(promises).then((res) => {
+          setState({ listBadge: res })
+        })
+      })
+      .catch((err) => {})
   }, [])
 
   useEffect(() => {
@@ -612,7 +636,7 @@ const Endorsement = (props) => {
         </ModalHeader>
         <ModalBody>
           <div className="div-list-badge">
-            {_.map(listBadge, (item, index) => {
+            {_.map(state.listBadge, (item, index) => {
               return (
                 <div
                   key={index}

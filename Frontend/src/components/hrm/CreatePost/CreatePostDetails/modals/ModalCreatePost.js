@@ -80,8 +80,7 @@ const ModalCreatePost = (props) => {
     modal_tag: false,
 
     // endorsement
-    modalEndorsement: false,
-    listBadge: []
+    modalEndorsement: false
   })
   const [file, setFile] = useState([])
 
@@ -320,32 +319,6 @@ const ModalCreatePost = (props) => {
     setState({ modalEndorsement: !state.modalEndorsement })
 
   // ** useEffect
-  useEffect(() => {
-    manageEndorsementApi
-      .getListDataBadgeSetting()
-      .then((res) => {
-        const promises = []
-        _.forEach(res.data, (item) => {
-          const promise = new Promise(async (resolve, reject) => {
-            const _item = { ...item }
-            if (_item.badge_type === "upload") {
-              await downloadApi.getPhoto(item.badge).then((response) => {
-                _item.url = URL.createObjectURL(response.data)
-                resolve(_item)
-              })
-            } else {
-              resolve(_item)
-            }
-          })
-          promises.push(promise)
-        })
-        Promise.all(promises).then((res) => {
-          setState({ listBadge: res })
-        })
-      })
-      .catch((err) => {})
-  }, [])
-
   useEffect(() => {
     if (!_.isEmpty(dataPost)) {
       const content_html = dataPost.content
@@ -630,7 +603,6 @@ const ModalCreatePost = (props) => {
             setData={setData}
             setDataLink={setDataLink}
             idPost={dataPost?._id}
-            listBadge={state.listBadge}
           />
 
           <Emoji
