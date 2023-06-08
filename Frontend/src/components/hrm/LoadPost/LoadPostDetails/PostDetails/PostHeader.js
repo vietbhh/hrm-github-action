@@ -1,23 +1,19 @@
 import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
+import SwAlert from "@apps/utility/SwAlert"
 import {
   timeDifference,
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import SwAlert from "@apps/utility/SwAlert"
 import { feedApi } from "@modules/Feed/common/api"
 import { handleDataMention } from "@modules/Feed/common/common"
+import birthdayImg from "@src/layouts/components/vertical/images/birthday.svg"
 import { Dropdown } from "antd"
-import ModalCreatePost from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreatePost"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import MemberVoteModal from "../modals/MemberVoteModal"
-import ModalCreateEvent from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreateEvent"
-import ModalAnnouncement from "components/hrm/CreatePost/CreatePostDetails/modals/ModalAnnouncement"
-import birthdayImg from "@src/layouts/components/vertical/images/birthday.svg"
 
 const PostHeader = (props) => {
   const {
@@ -29,33 +25,23 @@ const PostHeader = (props) => {
     offPostHeaderAction,
     renderAppendHeaderComponent,
     setEditDescription, // function edit description, content only modal
-    setDataLink, // function set data link_id
     dataLink = {},
-
-    // create event / announcement
-    options_employee_department,
-    optionsMeetingRoom
+    toggleModalCreatePost,
+    toggleModalCreateEvent,
+    toggleModalAnnouncement,
+    toggleModalWith,
+    setDataUserOtherWith
   } = props
-  const { view_post, edit_post, delete_post, ...rest } = customAction || {}
+  const { view_post, edit_post, delete_post, send_noti_unseen, ...rest } =
+    customAction || {}
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const dataEmployee = useSelector((state) => state.users.list)
 
   const [state, setState] = useMergedState({
     loadingDelete: false,
-    modalCreatePost: false,
     dataMention: [],
-    _rest: {},
-
-    // with tag
-    modalWith: false,
-    dataUserOtherWith: [],
-
-    // event
-    modalCreateEvent: false,
-
-    // announcement
-    modalAnnouncement: false
+    _rest: {}
   })
 
   let _rest = {}
@@ -94,14 +80,14 @@ const PostHeader = (props) => {
           }}>
           <i className="fa-light fa-bell-on"></i>
           <span>
-            {delete_post?.title
-              ? delete_post?.title
+            {send_noti_unseen?.title
+              ? send_noti_unseen?.title
               : useFormatMessage("modules.feed.post.text.btn_send_noti_unseen")}
           </span>
         </a>
       ),
       condition: parseInt(data?.created_by?.id) === parseInt(userId),
-      ...delete_post
+      ...send_noti_unseen
     },
     edit_post: {
       onClick: () => {
@@ -252,16 +238,6 @@ const PostHeader = (props) => {
     })
   }
 
-  const toggleModalCreatePost = () => {
-    setState({ modalCreatePost: !state.modalCreatePost })
-  }
-
-  const toggleModalWith = () => setState({ modalWith: !state.modalWith })
-  const toggleModalCreateEvent = () =>
-    setState({ modalCreateEvent: !state.modalCreateEvent })
-  const toggleModalAnnouncement = () =>
-    setState({ modalAnnouncement: !state.modalAnnouncement })
-
   // ** useEffect
   useEffect(() => {
     const data_mention = handleDataMention(dataEmployee, userId)
@@ -386,7 +362,7 @@ const PostHeader = (props) => {
               onClick={() => {
                 const data_tag = [...data.tag_user.tag]
                 data_tag.shift()
-                setState({ dataUserOtherWith: data_tag })
+                setDataUserOtherWith(data_tag)
                 toggleModalWith()
               }}>
               {data.tag_user.tag.length - 1}{" "}
@@ -511,53 +487,6 @@ const PostHeader = (props) => {
           <Fragment>{renderPostHeaderAction()}</Fragment>
         </div>
       </div>
-
-      <ModalCreatePost
-        modal={state.modalCreatePost}
-        toggleModal={toggleModalCreatePost}
-        setModal={(value) => setState({ modalCreatePost: value })}
-        avatar={data?.created_by?.avatar}
-        fullName={data?.created_by?.full_name}
-        userId={data?.created_by?.id}
-        dataMention={state.dataMention}
-        workspace={[]}
-        approveStatus={data?.approve_status}
-        dataPost={data}
-        setData={setData}
-        setDataLink={setDataLink}
-      />
-
-      <MemberVoteModal
-        modal={state.modalWith}
-        toggleModal={toggleModalWith}
-        dataUserVote={state.dataUserOtherWith}
-        title={useFormatMessage("modules.feed.post.text.people")}
-      />
-
-      {data?.type === "event" && (
-        <ModalCreateEvent
-          modal={state.modalCreateEvent}
-          toggleModal={toggleModalCreateEvent}
-          idEvent={data?.link_id}
-          setData={setData}
-          setDataLink={setDataLink}
-          idPost={data?._id}
-          options_employee_department={options_employee_department}
-          optionsMeetingRoom={optionsMeetingRoom}
-        />
-      )}
-
-      {data?.type === "announcement" && (
-        <ModalAnnouncement
-          modal={state.modalAnnouncement}
-          toggleModal={toggleModalAnnouncement}
-          options_employee_department={options_employee_department}
-          idAnnouncement={data?.link_id}
-          setData={setData}
-          setDataLink={setDataLink}
-          idPost={data?._id}
-        />
-      )}
     </Fragment>
   )
 }

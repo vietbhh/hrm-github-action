@@ -50,38 +50,41 @@ const Emoji = (props) => {
             }
           }
         }}>
-        <div
-          className={`emotions-dropdown-menu shadow ${
-            state.showEmotion ? "show" : ""
-          } ${state.position === "bottom" ? "bottom" : ""}`}>
-          <div className="emotions-dropdown-arrow"></div>
-          <div className="div-emoji" ref={emotionRef}>
-            <EmojiPicker
-              onEmojiClick={(emojiData) => {
-                handleInsertEditorState(emojiData.emoji)
-              }}
-              autoFocusSearch={false}
-              theme={Theme.AUTO}
-              emojiStyle={EmojiStyle.NATIVE}
-              emojiVersion="5.0"
-              searchDisabled={false}
-              skinTonesDisabled
-              previewConfig={{
-                showPreview: false
-              }}
-              categories={[
-                {
-                  category: "suggested",
-                  name: "Recently Used"
-                },
-                {
-                  name: "Smiles & Emotions",
-                  category: Categories.SMILEYS_PEOPLE
-                }
-              ]}
-            />
+        {state.showEmotion && (
+          <div
+            className={`emotions-dropdown-menu shadow ${
+              state.showEmotion ? "show" : ""
+            } ${state.position === "bottom" ? "bottom" : ""}`}>
+            <div className="emotions-dropdown-arrow"></div>
+            <div className="div-emoji" ref={emotionRef}>
+              <EmojiPicker
+                onEmojiClick={(emojiData) => {
+                  handleInsertEditorState(emojiData.emoji)
+                }}
+                autoFocusSearch={false}
+                theme={Theme.AUTO}
+                emojiStyle={EmojiStyle.NATIVE}
+                emojiVersion="5.0"
+                searchDisabled={false}
+                lazyLoadEmojis={true}
+                skinTonesDisabled
+                previewConfig={{
+                  showPreview: false
+                }}
+                categories={[
+                  {
+                    category: "suggested",
+                    name: "Recently Used"
+                  },
+                  {
+                    name: "Smiles & Emotions",
+                    category: Categories.SMILEYS_PEOPLE
+                  }
+                ]}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="div-form__icon">
           <svg

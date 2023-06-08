@@ -1,28 +1,31 @@
+import AvatarList from "@apps/components/common/AvatarList"
 import {
   ErpCheckbox,
   ErpInput,
   ErpRadio
 } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { feedApi } from "@modules/Feed/common/api"
+import classNames from "classnames"
 import moment from "moment"
 import React, { Fragment, useRef } from "react"
-import AvatarList from "@apps/components/common/AvatarList"
-import { useSelector } from "react-redux"
-import { feedApi } from "@modules/Feed/common/api"
-import notification from "@apps/utility/notification"
-import { FormProvider, useForm } from "react-hook-form"
-import { Spinner } from "reactstrap"
-import PerfectScrollbar from "react-perfect-scrollbar"
 import ReactDOM from "react-dom"
-import classNames from "classnames"
-import MemberVoteModal from "../modals/MemberVoteModal"
+import { FormProvider, useForm } from "react-hook-form"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import { useSelector } from "react-redux"
+import { Spinner } from "reactstrap"
 
 const RenderPollVote = (props) => {
-  const { data, setData, comment_more_count_original } = props
+  const {
+    data,
+    setData,
+    comment_more_count_original,
+    toggleModalWith,
+    setDataUserOtherWith
+  } = props
   const [state, setState] = useMergedState({
-    loadingAddMoreOption: false,
-    modalMemberVote: false,
-    dataMemberVote: []
+    loadingAddMoreOption: false
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -156,10 +159,6 @@ const RenderPollVote = (props) => {
       })
   }
 
-  const toggleModalMemberVote = () => {
-    setState({ modalMemberVote: !state.modalMemberVote })
-  }
-
   return (
     <Fragment>
       <div className="post-body__poll-vote div-poll-vote-detail">
@@ -262,8 +261,8 @@ const RenderPollVote = (props) => {
                       <div
                         className="content-options__user-vote"
                         onClick={() => {
-                          setState({ dataMemberVote: value.user_vote })
-                          toggleModalMemberVote()
+                          setDataUserOtherWith(value.user_vote)
+                          toggleModalWith()
                         }}>
                         <AvatarList
                           data={dataUserVote}
@@ -307,12 +306,6 @@ const RenderPollVote = (props) => {
             </div>
           )}
       </div>
-
-      <MemberVoteModal
-        modal={state.modalMemberVote}
-        toggleModal={toggleModalMemberVote}
-        dataUserVote={state.dataMemberVote}
-      />
     </Fragment>
   )
 }

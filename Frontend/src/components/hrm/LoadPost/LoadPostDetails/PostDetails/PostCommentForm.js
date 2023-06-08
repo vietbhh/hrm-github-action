@@ -181,6 +181,7 @@ const PostCommentForm = (props) => {
 
   const changeImage = (files) => {
     if (files[0]) {
+      dataEditComment.image = ""
       const type = files[0].type
       if (!type.includes("image/")) {
         notification.showError({
@@ -203,10 +204,10 @@ const PostCommentForm = (props) => {
     setState({ mentions: dataMention, suggestions: dataMention })
   }, [dataMention])
 
-  useEffect(() => {
+  /*  useEffect(() => {
     //setEmptyEditorState()
     setState({ image: null })
-  }, [data])
+  }, [data]) */
 
   useEffect(() => {
     if (!_.isEmpty(dataEditComment)) {
