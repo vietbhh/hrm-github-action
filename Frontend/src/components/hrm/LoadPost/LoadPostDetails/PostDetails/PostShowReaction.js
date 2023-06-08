@@ -1,22 +1,19 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import React, { Fragment, useEffect } from "react"
 import img_care from "@modules/Feed/assets/images/care.png"
 import img_smile from "@modules/Feed/assets/images/haha.png"
 import img_like from "@modules/Feed/assets/images/like.png"
 import img_love from "@modules/Feed/assets/images/love.png"
 import img_sad from "@modules/Feed/assets/images/sad.png"
 import img_wow from "@modules/Feed/assets/images/wow.png"
+import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import ReactionDetailModal from "../modals/ReactionDetailModal"
-import MemberVoteModal from "../modals/MemberVoteModal"
 
 const PostShowReaction = (props) => {
-  const { short, data } = props
+  const { short, data, toggleModalWith, setDataUserOtherWith } = props
   const [state, setState] = useMergedState({
     dataReaction: {},
-    modal_reaction: false,
-    modalPeopleSeen: false,
-    arrPeopleSeen: []
+    modal_reaction: false
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -26,8 +23,6 @@ const PostShowReaction = (props) => {
   const toggleModalReaction = () => {
     setState({ modal_reaction: !state.modal_reaction })
   }
-  const toggleModalPeopleSeen = () =>
-    setState({ modalPeopleSeen: !state.modalPeopleSeen })
 
   // ** useEffect
   useEffect(() => {
@@ -131,7 +126,8 @@ const PostShowReaction = (props) => {
             <div
               className="div-seen cursor-pointer"
               onClick={() => {
-                setState({ arrPeopleSeen: data.seen, modalPeopleSeen: true })
+                setDataUserOtherWith(data.seen)
+                toggleModalWith()
               }}>
               {data.seen.length}{" "}
               {useFormatMessage("modules.feed.post.text.people_seen")}
@@ -144,13 +140,6 @@ const PostShowReaction = (props) => {
         modal={state.modal_reaction}
         toggleModal={toggleModalReaction}
         dataReaction={state.dataReaction}
-      />
-
-      <MemberVoteModal
-        modal={state.modalPeopleSeen}
-        toggleModal={toggleModalPeopleSeen}
-        dataUserVote={state.arrPeopleSeen}
-        title={useFormatMessage("modules.feed.post.text.people")}
       />
     </Fragment>
   )

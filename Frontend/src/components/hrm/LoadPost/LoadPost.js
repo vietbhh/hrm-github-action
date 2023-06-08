@@ -1,8 +1,8 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
-import { useMergedState } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import React from "react"
+import React, { Fragment } from "react"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
 import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
 import PostComment from "./LoadPostDetails/PostDetails/PostComment"
@@ -13,6 +13,10 @@ import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 import RenderPostEndorsement from "./LoadPostDetails/PostDetails/RenderPostEndorsement"
 import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
+import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreatePost"
+import MemberVoteModal from "./LoadPostDetails/modals/MemberVoteModal"
+import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
+import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
 
 const LoadPost = (props) => {
   const {
@@ -36,7 +40,20 @@ const LoadPost = (props) => {
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
-    focusCommentForm: false
+    focusCommentForm: false,
+
+    //
+    modalCreatePost: false,
+
+    //
+    modalCreateEvent: false,
+
+    //
+    modalAnnouncement: false,
+
+    // with tag
+    modalWith: false,
+    dataUserOtherWith: []
   })
 
   // ** function
@@ -44,6 +61,18 @@ const LoadPost = (props) => {
     setState({ comment_more_count_original: value })
   }
   const setFocusCommentForm = (value) => setState({ focusCommentForm: value })
+
+  const toggleModalCreatePost = () =>
+    setState({ modalCreatePost: !state.modalCreatePost })
+
+  const toggleModalCreateEvent = () =>
+    setState({ modalCreateEvent: !state.modalCreateEvent })
+
+  const toggleModalAnnouncement = () =>
+    setState({ modalAnnouncement: !state.modalAnnouncement })
+
+  const toggleModalWith = () => setState({ modalWith: !state.modalWith })
+  const setDataUserOtherWith = (value) => setState({ dataUserOtherWith: value })
 
   // ** useEffect
 
@@ -107,65 +136,127 @@ const LoadPost = (props) => {
   }
 
   return (
-    <div className="load-post" id={`post_id_${data?._id}`}>
-      <PostHeader
-        data={data}
-        customAction={customAction}
-        setData={setData}
-        offPostHeaderAction={offPostHeaderAction}
-        renderAppendHeaderComponent={renderAppendHeaderComponent}
-        setDataLink={setDataLink}
-        options_employee_department={options_employee_department}
-        optionsMeetingRoom={optionsMeetingRoom}
-        dataLink={data.dataLink}
-      />
-      <div
-        className={classNames("post-body", {
-          "post-body__background-image": data.type === "background_image",
-          "post-post": data.source === null && _.isEmpty(data.medias),
-          "post-media": data.source !== null || !_.isEmpty(data.medias)
-        })}
-        style={renderStyleBackgroundImage()}>
-        <div id={`post-body-content-${data._id}`} className="post-body-content">
-          <RenderContentPost data={data} />
+    <Fragment>
+      <div className="load-post" id={`post_id_${data?._id}`}>
+        <PostHeader
+          data={data}
+          customAction={customAction}
+          setData={setData}
+          offPostHeaderAction={offPostHeaderAction}
+          renderAppendHeaderComponent={renderAppendHeaderComponent}
+          dataLink={data.dataLink}
+          toggleModalCreatePost={toggleModalCreatePost}
+          toggleModalCreateEvent={toggleModalCreateEvent}
+          toggleModalAnnouncement={toggleModalAnnouncement}
+          toggleModalWith={toggleModalWith}
+          setDataUserOtherWith={setDataUserOtherWith}
+        />
+        <div
+          className={classNames("post-body", {
+            "post-body__background-image": data.type === "background_image",
+            "post-post": data.source === null && _.isEmpty(data.medias),
+            "post-media": data.source !== null || !_.isEmpty(data.medias)
+          })}
+          style={renderStyleBackgroundImage()}>
+          <div
+            id={`post-body-content-${data._id}`}
+            className="post-body-content">
+            <RenderContentPost data={data} />
+          </div>
+
+          {renderBody()}
+
+          {data.has_poll_vote === true && (
+            <RenderPollVote
+              data={data}
+              setData={setData}
+              comment_more_count_original={state.comment_more_count_original}
+              toggleModalWith={toggleModalWith}
+              setDataUserOtherWith={setDataUserOtherWith}
+            />
+          )}
         </div>
-
-        {renderBody()}
-
-        {data.has_poll_vote === true && (
-          <RenderPollVote
-            data={data}
-            setData={setData}
-            comment_more_count_original={state.comment_more_count_original}
-          />
+        {!offReactionAndComment && (
+          <>
+            <div className="post-footer">
+              <PostShowReaction
+                data={data}
+                toggleModalWith={toggleModalWith}
+                setDataUserOtherWith={setDataUserOtherWith}
+              />
+              <div className="post-footer-button">
+                <ButtonReaction
+                  data={data}
+                  setData={setData}
+                  comment_more_count_original={
+                    state.comment_more_count_original
+                  }
+                  setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+                  setFocusCommentForm={setFocusCommentForm}
+                />
+              </div>
+            </div>
+            <PostComment
+              data={data}
+              dataMention={dataMention}
+              setData={setData}
+              comment_more_count_original={state.comment_more_count_original}
+              setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+              focusCommentForm={state.focusCommentForm}
+              setFocusCommentForm={setFocusCommentForm}
+            />
+          </>
         )}
       </div>
-      {!offReactionAndComment && (
-        <>
-          <div className="post-footer">
-            <PostShowReaction data={data} />
-            <div className="post-footer-button">
-              <ButtonReaction
-                data={data}
-                setData={setData}
-                comment_more_count_original={state.comment_more_count_original}
-                setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-                setFocusCommentForm={setFocusCommentForm}
-              />
-            </div>
-          </div>
-          <PostComment
-            data={data}
-            dataMention={dataMention}
-            setData={setData}
-            comment_more_count_original={state.comment_more_count_original}
-            setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-            focusCommentForm={state.focusCommentForm}
-            setFocusCommentForm={setFocusCommentForm}
-          />
-        </>
+
+      {/* render modal */}
+      <ModalCreatePost
+        modal={state.modalCreatePost}
+        toggleModal={toggleModalCreatePost}
+        setModal={(value) => setState({ modalCreatePost: value })}
+        dataMention={dataMention}
+        workspace={[]}
+        avatar={data?.created_by?.avatar}
+        fullName={data?.created_by?.full_name}
+        userId={data?.created_by?.id}
+        approveStatus={data?.approve_status}
+        dataPost={data}
+        setData={setData}
+        setDataLink={setDataLink}
+      />
+
+      <MemberVoteModal
+        modal={state.modalWith}
+        toggleModal={toggleModalWith}
+        dataUserVote={state.dataUserOtherWith}
+        title={useFormatMessage("modules.feed.post.text.people")}
+      />
+
+      {data?.type === "event" && (
+        <ModalCreateEvent
+          modal={state.modalCreateEvent}
+          toggleModal={toggleModalCreateEvent}
+          idEvent={data?.link_id}
+          setData={setData}
+          setDataLink={setDataLink}
+          idPost={data?._id}
+          options_employee_department={options_employee_department}
+          optionsMeetingRoom={optionsMeetingRoom}
+        />
       )}
-    </div>
+
+      {data?.type === "announcement" && (
+        <ModalAnnouncement
+          modal={state.modalAnnouncement}
+          toggleModal={toggleModalAnnouncement}
+          options_employee_department={options_employee_department}
+          idAnnouncement={data?.link_id}
+          setData={setData}
+          setDataLink={setDataLink}
+          idPost={data?._id}
+        />
+      )}
+    </Fragment>
   )
 }
 
