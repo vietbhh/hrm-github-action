@@ -779,8 +779,18 @@ $margin-navigation-a: 22px !default;
           }
         }
 
-        .dropdown-menu .dropdown-item {
-          width: 100%;
+        .dropdown-menu {
+          transform: translate(0px, -40px) !important;
+
+          .dropdown-item {
+            width: 100%;
+          }
+        }
+
+        &.hide-div {
+          .dropdown-menu {
+            display: none !important;
+          }
         }
       }
     }
