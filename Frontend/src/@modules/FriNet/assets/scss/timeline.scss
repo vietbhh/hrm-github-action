@@ -1,11 +1,14 @@
 @import "@scss/friday";
 
+$btn-background-color: #377dff;
+
 .div-timeline {
   display: flex;
   gap: 30px;
   position: relative;
 
-  .timeline__profile {
+  .timeline__profile,
+  .timeline__endorsement {
     .card {
       border-radius: 14px;
 
@@ -51,6 +54,110 @@
 
         &:hover {
           background: lighten($color: #0082ff, $amount: 40);
+        }
+      }
+    }
+  }
+
+  .timeline__endorsement {
+    .div-header {
+      display: flex;
+      align-items: center;
+
+      .div-header-left {
+        .count {
+          color: rgb(128, 128, 128);
+          margin-left: 10px;
+        }
+      }
+
+      .div-header-right {
+        margin-left: auto;
+
+        .text-right {
+          font-weight: 400;
+          color: $btn-background-color !important;
+        }
+      }
+    }
+
+    .div-body {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+
+      .div-item-badge {
+        border: 1px solid rgb(233, 234, 236);
+        border-radius: 8px;
+        width: 135px;
+        min-height: 170px;
+        display: flex;
+        align-items: center;
+        padding-bottom: 5px;
+
+        .item-badge__body {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          .div-img {
+            position: relative;
+            box-shadow: 0px 8px 16px rgba(47, 49, 54, 0.1);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+
+            img {
+              object-fit: cover;
+              position: absolute;
+              width: 65px;
+              height: 65px;
+              border-radius: 50%;
+            }
+          }
+
+          .div-text {
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-top: 20px;
+          }
+
+          .div-count {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgb(233, 234, 236);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .div-number {
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: rgb(241, 242, 244);
+
+              .number {
+                color: rgb(38, 40, 44);
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 20px;
+              }
+            }
+          }
         }
       }
     }

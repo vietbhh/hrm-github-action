@@ -98,6 +98,13 @@ const PageHeader = (props) => {
               {useFormatMessage("modules.employees.tabs.photo.title")}
             </NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink
+              active={tabActive === 5}
+              onClick={() => handleChangeTab("achievement")}>
+              {useFormatMessage("modules.employees.tabs.endorsement.title")}
+            </NavLink>
+          </NavItem>
         </Nav>
       </CardBody>
     </Card>

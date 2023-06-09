@@ -1536,6 +1536,9 @@
         },
         "photo": {
           "title": "Photo"
+        },
+        "endorsement": {
+          "title": "Endorsement"
         }
       },
       "fields": {
@@ -4883,7 +4886,9 @@
     "timeline": {
       "text": {
         "introduction": "Introduction",
-        "edit_information": "Edit informarion"
+        "edit_information": "Edit informarion",
+        "endorsement": "Endorsement",
+        "view_all": "View All"
       }
     },
     "manage_endorsement": {

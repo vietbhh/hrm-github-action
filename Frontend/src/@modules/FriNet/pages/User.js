@@ -1,19 +1,19 @@
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { useMergedState } from "@apps/utility/common"
+import { getTabId } from "@modules/FriNet/common/common"
+import { Skeleton } from "antd"
 import { Fragment, useEffect } from "react"
+import { useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
+import { TabContent, TabPane } from "reactstrap"
+import "../assets/scss/user.scss"
 import { userApi } from "../common/api"
+import Endorsement from "../components/User/Endorsement/Endorsement"
 import Introduction from "../components/User/Introduction/Introduction"
+import PageHeader from "../components/User/PageHeader/PageHeader"
+import Photo from "../components/User/Photo/Photo"
 import TimeLine from "../components/User/Timeline/Timeline"
 import WorkSpace from "../components/User/Workspace/Workspace"
-import Photo from "../components/User/Photo/Photo"
-import { workspaceApi } from "@modules/Workspace/common/api"
-import "../assets/scss/user.scss"
-import { Skeleton } from "antd"
-import PageHeader from "../components/User/PageHeader/PageHeader"
-import { TabContent, TabPane } from "reactstrap"
-import { getTabId } from "@modules/FriNet/common/common"
-import { useSelector } from "react-redux"
 
 const User = () => {
   const params = useParams()
@@ -52,7 +52,11 @@ const User = () => {
     setState({
       tabActive: getTabId(tabId)
     })
-    window.history.replaceState(null, "", `/u/${identity === "profile" ? "profile" : params.identity}/${tabId}`)
+    window.history.replaceState(
+      null,
+      "",
+      `/u/${identity === "profile" ? "profile" : params.identity}/${tabId}`
+    )
   }
 
   const loadData = async () => {
@@ -130,6 +134,12 @@ const User = () => {
             </TabPane>
             <TabPane tabId={4}>
               <Photo identity={identity} />
+            </TabPane>
+            <TabPane tabId={5}>
+              <Endorsement
+                identity={identity}
+                employeeId={state.employeeData?.id}
+              />
             </TabPane>
           </TabContent>
         </div>
