@@ -138,8 +138,8 @@ const menuConfig = [
       </div>
     ),
     navLink: "/workspace"
-  },
-  {
+  }
+  /* {
     id: "setting-member",
     title: "layout.setting_member",
     type: "dropdown",
@@ -164,7 +164,7 @@ const menuConfig = [
       </div>
     ),
     navLink: "/fri-net/manage-endorsement"
-  }
+  } */
 ]
 
 export default menuConfig
