@@ -1,5 +1,9 @@
 import { axiosApi, axiosNodeApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
+import {
+  erpSelectToValues,
+  object2QueryString,
+  serialize
+} from "@apps/utility/handleData"
 
 export const settingMemberApi = {
   async getMetas() {
@@ -61,5 +65,25 @@ export const manageEndorsementApi = {
 
   async getBadgeSettingById(id) {
     return await axiosNodeApi.get("/frinet/get-badge-setting-by-id/" + id)
+  }
+}
+
+export const timelineEndorsementApi = {
+  async getGetEmployeeEndorsement(employeeId) {
+    return await axiosNodeApi.get(
+      "/frinet//get-employee-endorsement/" + employeeId
+    )
+  },
+
+  async getLoadFeedEndorsement(params) {
+    const stringFilters = object2QueryString(
+      erpSelectToValues(_.cloneDeep(params))
+    )
+    return await axiosNodeApi.get(
+      "/frinet/get-feed-endorsement?" + stringFilters,
+      {
+        disableLoading: true
+      }
+    )
   }
 }

@@ -1,14 +1,11 @@
+import React, { Fragment, useEffect } from "react"
+import TimelineEndorsement from "../Timeline/TimelineEndorsement"
+import LoadFeed from "@modules/Feed/components/LoadFeed"
 import { useMergedState } from "@apps/utility/common"
-import { feedApi } from "@modules/Feed/common/api"
-import FeedCreateAndLoad from "@modules/Feed/components/FeedCreateAndLoad"
-import { Skeleton } from "antd"
-import { Fragment, useEffect, useMemo } from "react"
-import "../../../assets/scss/timeline.scss"
-import TimelineProfile from "./TimelineProfile"
-import TimelineEndorsement from "./TimelineEndorsement"
+import { timelineEndorsementApi } from "@modules/FriNet/common/api"
 
-const index = (props) => {
-  const { employeeData } = props
+const Endorsement = (props) => {
+  const { identity, employeeId } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0
   })
@@ -26,8 +23,8 @@ const index = (props) => {
   }
 
   const scrollUpwards = () => {
-    const sticky = document.getElementById("div-sticky")
-    const sticky_div_height = document.getElementById("div-sticky-height")
+    const sticky = document.getElementById("div-sticky-2")
+    const sticky_div_height = document.getElementById("div-sticky-height-2")
     if (sticky_div_height) {
       const height = window.pageYOffset - offsetTop
       sticky_div_height.style.height = height + "px"
@@ -50,8 +47,8 @@ const index = (props) => {
   }
 
   const scrollDownwards = () => {
-    const sticky = document.getElementById("div-sticky")
-    const sticky_div_height = document.getElementById("div-sticky-height")
+    const sticky = document.getElementById("div-sticky-2")
+    const sticky_div_height = document.getElementById("div-sticky-height-2")
     if (sticky_div_height) {
       sticky_div_height.style.height = "0px"
     }
@@ -74,42 +71,21 @@ const index = (props) => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [state.prevScrollY])
 
-  // ** render
-  const renderLoadFeed = useMemo(() => {
-    if (employeeData.id) {
-      return (
-        <FeedCreateAndLoad
-          workspace={[]}
-          apiLoadFeed={feedApi.getLoadFeedProfile}
-          approveStatus={"approved"}
-          paramsLoadFeed={{ id_profile: employeeData.id }}
-        />
-      )
-    }
-
-    return (
-      <div className="feed">
-        <div className="load-feed">
-          <div className="div-loading">
-            <Skeleton avatar active paragraph={{ rows: 2 }} />
-          </div>
-        </div>
-      </div>
-    )
-  }, [employeeData])
-
   return (
     <Fragment>
-      <div className="div-timeline div-content">
-        <div className="div-left">{renderLoadFeed}</div>
-        <div className="div-right">
-          <div id="div-sticky-height"></div>
-          <div id="div-sticky">
-            <TimelineProfile employeeData={employeeData} />
-            <TimelineEndorsement
-              employeeId={employeeData?.id}
-              employeeData={employeeData}
+      <div className="div-timeline div-content user-endorsement-page">
+        <div className="div-left">
+          <div className="feed">
+            <LoadFeed
+              apiLoadFeed={timelineEndorsementApi.getLoadFeedEndorsement}
+              paramsLoadFeed={{ employeeId: employeeId }}
             />
+          </div>
+        </div>
+        <div className="div-right">
+          <div id="div-sticky-height-2"></div>
+          <div id="div-sticky-2">
+            <TimelineEndorsement employeeId={employeeId} />
           </div>
         </div>
       </div>
@@ -117,4 +93,4 @@ const index = (props) => {
   )
 }
 
-export default index
+export default Endorsement

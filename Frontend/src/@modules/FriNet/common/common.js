@@ -24,6 +24,8 @@ export const getTabId = (tabText) => {
     return 3
   } else if (tabText === "photo") {
     return 4
+  } else if (tabText === "achievement") {
+    return 5
   }
 
   return ""

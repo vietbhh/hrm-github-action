@@ -1,11 +1,15 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { _uploadServices } from "#app/services/upload.js"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
-import { forEach } from "lodash-es"
+import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import endorsementMongoModel from "../models/endorsement.mongo.js"
 import feedMongoModel from "../models/feed.mongo.js"
-import { handleInsertHashTag, handlePullHashtag } from "./feed.js"
+import {
+  handleDataLoadFeed,
+  handleInsertHashTag,
+  handlePullHashtag
+} from "./feed.js"
 
 const submitEndorsement = async (req, res, next) => {
   const file = req.files
@@ -158,10 +162,79 @@ const getEndorsementById = async (req, res, next) => {
   }
 }
 
+const getEmployeeEndorsement = async (req, res, next) => {
+  try {
+    const employeeId = req.params.id
+    const data = await endorsementMongoModel.find({ member: employeeId })
+    const result = {}
+    forEach(data, (item) => {
+      if (result[item.badge_name]) {
+        result[item.badge_name]["count"] = result[item.badge_name]["count"] + 1
+      } else {
+        result[item.badge_name] = {
+          badge: item.badge,
+          badge_name: item.badge_name,
+          badge_type: item.badge_type,
+          count: 1
+        }
+      }
+    })
+    const sortable = Object.entries(result)
+      .sort(([, a], [, b]) => b.count - a.count)
+      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {})
+    return res.respond(sortable)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+const loadFeedEndorsement = async (req, res, next) => {
+  const request = req.query
+  const page = request.page
+  const pageLength = request.pageLength
+  const employeeId = request.employeeId
+  const filter = { member: employeeId }
+  try {
+    const endorsement = await endorsementMongoModel
+      .find(filter)
+      .skip(page * pageLength)
+      .limit(pageLength)
+      .sort({
+        _id: "desc"
+      })
+    const feedCount = await endorsementMongoModel.find(filter).count()
+    const feed_id = []
+    forEach(endorsement, (item) => {
+      if (item.id_post) {
+        feed_id.push(item.id_post)
+      }
+    })
+    if (!isEmpty(feed_id)) {
+      const feed = await feedMongoModel.find({
+        _id: {
+          $in: feed_id
+        }
+      })
+      const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
+      return res.respond(result)
+    }
+
+    return res.fail("empty")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
 // ** support function
 const handleGetEndorsementById = async (id) => {
   const data = await endorsementMongoModel.findById(id)
   return data
 }
 
-export { submitEndorsement, getEndorsementById, handleGetEndorsementById }
+export {
+  submitEndorsement,
+  getEndorsementById,
+  handleGetEndorsementById,
+  getEmployeeEndorsement,
+  loadFeedEndorsement
+}
