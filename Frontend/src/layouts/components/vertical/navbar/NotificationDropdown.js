@@ -15,10 +15,10 @@ import {
 } from "reactstrap"
 
 import { defaultModuleApi } from "@apps/utility/moduleApi"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** redux
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { handleSeenNotification, toggleOpenDropdown } from "redux/notification"
 
@@ -31,6 +31,8 @@ const NotificationDropdown = () => {
   const [focusIconNotification, setFocusIconNotification] = useState(false)
 
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
 
   const handleClick = (e) => {
     defaultModuleApi
@@ -55,6 +57,17 @@ const NotificationDropdown = () => {
     dispatch(toggleOpenDropdown())
   }
 
+  const handleClickSeeAll = () => {
+    navigate("/notification")
+    dispatch(toggleOpenDropdown(false))
+  }
+
+  useEffect(() => {
+    if (!notification.openDropdown) {
+      setFocusIconNotification(false)
+    }
+  }, [notification.openDropdown])
+
   const renderListNotification = () => {
     if (listNotificationStore.length > 0) {
       return (
@@ -67,14 +80,15 @@ const NotificationDropdown = () => {
             }}>
             <ListNotification listNotification={listNotificationStore} />
           </PerfectScrollbar>
-          <li className="">
-            <Link to="/notification">
-              <Button.Ripple color="primary" block>
-                {useFormatMessage(
-                  "layout.notification.see_all_incoming_activity"
-                )}
-              </Button.Ripple>
-            </Link>
+          <li className="p-1">
+            <Button.Ripple
+              color="primary"
+              block
+              onClick={() => handleClickSeeAll()}>
+              {useFormatMessage(
+                "layout.notification.see_all_incoming_activity"
+              )}
+            </Button.Ripple>
           </li>
         </Fragment>
       )
@@ -122,24 +136,26 @@ const NotificationDropdown = () => {
           </svg>
         ) : (
           <svg
-            className="bell"
-            width="22"
-            height="24"
-            viewBox="0 0 22 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
+            xmlns="http://www.w3.org/2000/svg"
+            width="23"
+            height="28"
+            viewBox="0 0 23 28"
+            fill="none">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
-              d="M18 11V8C18 4.13401 14.866 1 11 1C7.13401 1 4 4.13401 4 8V11C4 14.3 1 15.1 1 17C1 18.7 4.9 20 11 20C17.1 20 21 18.7 21 17C21 15.1 18 14.3 18 11Z"
+              d="M11.5 21.3096C18.549 21.3096 21.8101 20.4053 22.125 16.7756C22.125 13.1485 19.8514 13.3817 19.8514 8.93139C19.8514 5.45517 16.5565 1.5 11.5 1.5C6.44346 1.5 3.14856 5.45517 3.14856 8.93139C3.14856 13.3817 0.875 13.1485 0.875 16.7756C1.19119 20.419 4.45222 21.3096 11.5 21.3096Z"
               stroke="#32434F"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
-              d="M11 22C9.98902 22 9.03902 21.966 8.14502 21.9C8.53619 23.1478 9.69236 23.997 11 23.997C12.3077 23.997 13.4639 23.1478 13.855 21.9C12.961 21.966 12.011 22 11 22Z"
-              fill="#32434F"
+              d="M14.486 25.0715C12.7808 26.9649 10.1208 26.9874 8.39935 25.0715"
+              stroke="#32434F"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         )}
