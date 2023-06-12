@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { Card, CardBody } from "reactstrap"
 
 const TimelineEndorsement = (props) => {
-  const { employeeId } = props
+  const { employeeId, employeeData } = props
   const [state, setState] = useMergedState({
     dataEndorsement: [],
     countEndorsement: 0
@@ -63,11 +63,15 @@ const TimelineEndorsement = (props) => {
                 </span>
                 <span className="count">{state.countEndorsement}</span>
               </div>
-              <div className="div-header-right">
-                <Link to={"#"} className="text-right">
-                  {useFormatMessage("modules.timeline.text.view_all")}
-                </Link>
-              </div>
+              {employeeData?.username && (
+                <div className="div-header-right">
+                  <Link
+                    to={`/u/${employeeData?.username}/achievement`}
+                    className="text-right">
+                    {useFormatMessage("modules.timeline.text.view_all")}
+                  </Link>
+                </div>
+              )}
             </div>
             <div className="div-body">
               {_.map(state.dataEndorsement, (item, index) => {
