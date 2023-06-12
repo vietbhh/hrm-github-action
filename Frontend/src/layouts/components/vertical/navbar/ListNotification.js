@@ -33,7 +33,7 @@ const ListNotification = (props) => {
 
   const handleClickNotification = (notificationLink) => {
     if (notificationLink.length > 0) {
-      dispatch(toggleOpenDropdown())
+      dispatch(toggleOpenDropdown(false))
       navigate(notificationLink)
     }
   }

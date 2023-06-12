@@ -508,10 +508,10 @@ section.select-app-option {
 
 .employeeSidebar {
   .employeeAvatar {
-    @include media-breakpoint-up(lg) {
+    /* @include media-breakpoint-up(lg) {
       height: 208px;
       width: 208px;
-    }
+    } */
 
     position: relative;
     cursor: pointer;
@@ -522,6 +522,9 @@ section.select-app-option {
       position: absolute;
       bottom: 0;
       right: 20px;
+      img {
+        width: 100%;
+      }
     }
   }
 
@@ -532,6 +535,12 @@ section.select-app-option {
     color: #130f26;
     text-transform: capitalize;
     margin-top: 33px;
+    @media (max-width: 767.98px) {
+      font-size: 21px;
+    }
+    @media (min-width: 768px) and (max-width: 1700px) {
+      font-size: 24px;
+    }
   }
 }
 
@@ -544,8 +553,4 @@ section.select-app-option {
   .text-value-fastedit {
     cursor: pointer;
   }
-}
-
-.nav-tabs .nav-link.active {
-  color: $primary;
 }

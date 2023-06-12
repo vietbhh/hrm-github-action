@@ -1,5 +1,5 @@
 // ** React Imports
-import { useContext, useEffect, useState } from "react"
+import { Fragment, useContext, useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
 // ** Store & Actions
@@ -58,7 +58,8 @@ const Layout = (props) => {
     logoLeft,
     hideQuickAccess,
     hideVerticalMenuHeader,
-    notMenuCollapsed = false
+    notMenuCollapsed = false,
+    hideSidebar = false
   } = props
 
   // ** Hooks
@@ -229,6 +230,37 @@ const Layout = (props) => {
   if (!isMounted) {
     return null
   }
+
+  const renderSidebar = () => {
+    if (hideSidebar) {
+      return ""
+    }
+
+    return (
+      <Sidebar
+        skin={skin}
+        menuData={menuData}
+        menuCollapsed={menuCollapsed}
+        menuVisibility={menuVisibility}
+        setMenuCollapsed={setMenuCollapsed}
+        setMenuVisibility={setMenuVisibility}
+        windowWidth={windowWidth}
+        windowWidthMin={windowWidthMin}
+        toogleCustomizer={toogleCustomizer}
+        saveQuickAccess={saveQuickAccess}
+        defaultMenuNav={defaultMenuNav}
+        settingPermits={settingPermits}
+        fixedSidebarCollapsed={fixedSidebarCollapsed}
+        customMenuComponent={customMenuComponent}
+        outerCustomMenuComponent={outerCustomMenuComponent}
+        hideQuickAccess={hideQuickAccess}
+        hideVerticalMenuHeader={hideVerticalMenuHeader}
+        userId={userId}
+        notMenuCollapsed={notMenuCollapsed}
+      />
+    )
+  }
+
   return (
     <div
       className={classnames(
@@ -294,29 +326,9 @@ const Layout = (props) => {
         </div>
       </Navbar>
 
+      {/* sidebar */}
       <div className="wrapper__menu-content">
-        <Sidebar
-          skin={skin}
-          menuData={menuData}
-          menuCollapsed={menuCollapsed}
-          menuVisibility={menuVisibility}
-          setMenuCollapsed={setMenuCollapsed}
-          setMenuVisibility={setMenuVisibility}
-          windowWidth={windowWidth}
-          windowWidthMin={windowWidthMin}
-          toogleCustomizer={toogleCustomizer}
-          saveQuickAccess={saveQuickAccess}
-          defaultMenuNav={defaultMenuNav}
-          settingPermits={settingPermits}
-          fixedSidebarCollapsed={fixedSidebarCollapsed}
-          customMenuComponent={customMenuComponent}
-          outerCustomMenuComponent={outerCustomMenuComponent}
-          hideQuickAccess={hideQuickAccess}
-          hideVerticalMenuHeader={hideVerticalMenuHeader}
-          userId={userId}
-          notMenuCollapsed={notMenuCollapsed}
-        />
-
+        <Fragment>{renderSidebar()}</Fragment>
         {children}
       </div>
 

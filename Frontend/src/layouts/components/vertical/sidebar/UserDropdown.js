@@ -25,6 +25,7 @@ import {
 import { handleLogout } from "redux/authentication"
 import SocketContext from "utility/context/Socket"
 import ChangePasswordModal from "./ChangePasswordModal"
+import classNames from "classnames"
 
 const UserDropdown = ({
   toogleCustomizer,
@@ -44,6 +45,7 @@ const UserDropdown = ({
   const [userData, setUserData] = useState(null)
   const [changePwdModal, setchangePwdModal] = useState(false)
   const tooglePasswdModal = () => setchangePwdModal(!changePwdModal)
+  const [openDropdownUser, setOpenDropdownUser] = useState(false)
 
   //** ComponentDidMount
   useEffect(() => {
@@ -60,9 +62,20 @@ const UserDropdown = ({
     windowWidth >= windowWidthMin &&
     !notMenuCollapsed
 
+  useEffect(() => {
+    if (sidebarCollapsed) {
+      setOpenDropdownUser(false)
+    }
+  }, [sidebarCollapsed])
+
   return (
     <Fragment>
-      <UncontrolledDropdown className="dropdown-user nav-item">
+      <UncontrolledDropdown
+        isOpen={openDropdownUser}
+        toggle={() => setOpenDropdownUser(!openDropdownUser)}
+        className={classNames("dropdown-user nav-item", {
+          "hide-div": sidebarCollapsed
+        })}>
         <DropdownToggle
           href="/"
           tag="a"
