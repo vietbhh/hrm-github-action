@@ -137,24 +137,25 @@ const NotificationDropdown = () => {
         ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="Layer_1"
-            x="0px"
-            y="0px"
-            width="22px"
-            height="26px"
+            width="23"
+            height="28"
             viewBox="0 0 23 28"
-            enableBackground="new 0 0 23 28"
-            xmlSpace="preserve">
-            {" "}
-            <image
-              id="image0"
-              width="23"
-              height="28"
-              x="0"
-              y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAcCAMAAAC9M9RRAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAflBMVEUAAAAwQFAwQEowQEww Qk0xQ08wRVAxQk8yQk4yRFAzQ1A0RFAyQk4yQk4wQFAxQ08yQ08yQlAyQ08wSFAxQU4yQlAyQk0y Qk4yQk8xQ04yQk8yQ08xQ08yQ08wRFA0QEwwRFAwQk4yQ08xQ08zQ04zQU44QFA1RVAyQ0////9a oLpzAAAAKHRSTlMAEDBAYL8w38CAUECA0CDv32DvIKBwcJCfoN/gz59/QEB/r9+woCAwz8KRfgAA AAFiS0dEKcq3hSQAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfnBBoCKi/Kj7W+AAAA3ElE QVQoz52S2xaCIBBFIUUpFWnIsHvabf7/C0PIlow9dV5wbWY4h0HGRvFFknBGlQocJNKIZjnK5apY lRXmaoJrXXw+1xqyEatcm2+N0TB2bCbYbYD4lGMZmS0xNDRoIs5x61cLJDO0ftntCT8ELiThR2/M 4US4hWEeZ7wQfh0CqpqWu5NdgyUp/dVcw8zVN4gxVCwXXYhf9dJNI5nhDNeMa+hURHlXa3cBs0M8 9rYMavsbogzvbJp7BRh0qB7Nk/0vZQdz1dI/KIM8TboaZkMx2rlK8+OoVzEJ8gaeBw4+FvKwDAAA ACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNC0yNlQwMjo0Mjo0NyswMDowMM68GfMAAAAldEVYdGRh dGU6bW9kaWZ5ADIwMjMtMDQtMjZUMDI6NDI6NDcrMDA6MDC/4aFPAAAAAElFTkSuQmCC"
+            fill="none">
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M11.5 21.3096C18.549 21.3096 21.8101 20.4053 22.125 16.7756C22.125 13.1485 19.8514 13.3817 19.8514 8.93139C19.8514 5.45517 16.5565 1.5 11.5 1.5C6.44346 1.5 3.14856 5.45517 3.14856 8.93139C3.14856 13.3817 0.875 13.1485 0.875 16.7756C1.19119 20.419 4.45222 21.3096 11.5 21.3096Z"
+              stroke="#32434F"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14.486 25.0715C12.7808 26.9649 10.1208 26.9874 8.39935 25.0715"
+              stroke="#32434F"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         )}
