@@ -13,7 +13,7 @@ import birthdayImg from "@src/layouts/components/vertical/images/birthday.svg"
 import { Dropdown } from "antd"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const PostHeader = (props) => {
   const {
@@ -38,6 +38,8 @@ const PostHeader = (props) => {
   const userId = userData.id
   const dataEmployee = useSelector((state) => state.users.list)
 
+  const history = useNavigate()
+
   const [state, setState] = useMergedState({
     loadingDelete: false,
     dataMention: [],
@@ -55,16 +57,21 @@ const PostHeader = (props) => {
 
   const actions = {
     view_post: {
-      onClick: () => {},
+      onClick: () => {
+        history(`/posts/${data.ref ? data.ref : data._id}`)
+      },
       label: (
-        <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
+        <a
+          onClick={(e) => {
+            e.preventDefault()
+          }}>
           <i className="fa-light fa-eye"></i>
           <span>
             {view_post?.title
               ? view_post?.title
               : useFormatMessage("modules.feed.post.text.view_post")}
           </span>
-        </Link>
+        </a>
       ),
       condition: true,
       ...view_post
@@ -154,7 +161,11 @@ const PostHeader = (props) => {
       (item, index) => {
         return {
           key: index,
-          label: <div onClick={item.onClick}>{item.label}</div>
+          label: (
+            <div className="div-item-drop" onClick={item.onClick}>
+              {item.label}
+            </div>
+          )
         }
       }
     )
