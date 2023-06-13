@@ -206,77 +206,71 @@ const RenderPollVote = (props) => {
           </div>
         </div>
         <div className="poll-vote-detail-content">
-          <PerfectScrollbar
-            options={{ wheelPropagation: false }}
-            ref={refContent}>
-            {!_.isEmpty(data.poll_vote_detail.options) &&
-              _.map(data.poll_vote_detail.options, (value, index) => {
-                let checked = false
-                const index_user = value.user_vote.indexOf(userId)
-                if (index_user !== -1) {
-                  checked = true
-                }
+          {!_.isEmpty(data.poll_vote_detail.options) &&
+            _.map(data.poll_vote_detail.options, (value, index) => {
+              let checked = false
+              const index_user = value.user_vote.indexOf(userId)
+              if (index_user !== -1) {
+                checked = true
+              }
 
-                const dataUserVote = []
-                _.forEach(value.user_vote, (item) => {
-                  const dataUser = { id: item }
-                  dataUser["avatar"] = userList[item]
-                    ? userList[item].avatar
-                    : ""
-                  dataUser["full_name"] = userList[item]
-                    ? userList[item].full_name
-                    : ""
-                  dataUserVote.push(dataUser)
-                })
-                return (
-                  <div key={index} className="content-options">
-                    <div
-                      className="content-options__check"
-                      onClick={() => handleChecked(value._id)}>
-                      {data.poll_vote_detail.setting.multiple_selection ===
-                      true ? (
-                        <ErpCheckbox checked={checked} onChange={() => {}} />
-                      ) : (
-                        <ErpRadio
-                          name={`vote_${data._id}`}
-                          checked={checked}
-                          onChange={() => {}}
-                        />
-                      )}
-                    </div>
-                    <div
-                      className="content-options__option"
-                      onClick={() => handleChecked(value._id)}>
-                      <span className="title">{value.option_name}</span>
-                      <span className="vote">
-                        {value.user_vote.length}{" "}
-                        {useFormatMessage(
-                          `modules.feed.create_post.text.vote${
-                            value.user_vote.length > 1 ? "s" : ""
-                          }`
-                        )}
-                      </span>
-                    </div>
-                    {data.poll_vote_detail.setting.incognito === false && (
-                      <div
-                        className="content-options__user-vote"
-                        onClick={() => {
-                          setDataUserOtherWith(value.user_vote)
-                          toggleModalWith()
-                        }}>
-                        <AvatarList
-                          data={dataUserVote}
-                          avatarKey="avatar"
-                          titleKey="full_name"
-                        />
-                      </div>
+              const dataUserVote = []
+              _.forEach(value.user_vote, (item) => {
+                const dataUser = { id: item }
+                dataUser["avatar"] = userList[item] ? userList[item].avatar : ""
+                dataUser["full_name"] = userList[item]
+                  ? userList[item].full_name
+                  : ""
+                dataUserVote.push(dataUser)
+              })
+              return (
+                <div key={index} className="content-options">
+                  <div
+                    className="content-options__check"
+                    onClick={() => handleChecked(value._id)}>
+                    {data.poll_vote_detail.setting.multiple_selection ===
+                    true ? (
+                      <ErpCheckbox checked={checked} onChange={() => {}} />
+                    ) : (
+                      <ErpRadio
+                        name={`vote_${data._id}`}
+                        checked={checked}
+                        onChange={() => {}}
+                      />
                     )}
-
-                    <div className="div-background"></div>
                   </div>
-                )
-              })}
-          </PerfectScrollbar>
+                  <div
+                    className="content-options__option"
+                    onClick={() => handleChecked(value._id)}>
+                    <span className="title">{value.option_name}</span>
+                    <span className="vote">
+                      {value.user_vote.length}{" "}
+                      {useFormatMessage(
+                        `modules.feed.create_post.text.vote${
+                          value.user_vote.length > 1 ? "s" : ""
+                        }`
+                      )}
+                    </span>
+                  </div>
+                  {data.poll_vote_detail.setting.incognito === false && (
+                    <div
+                      className="content-options__user-vote"
+                      onClick={() => {
+                        setDataUserOtherWith(value.user_vote)
+                        toggleModalWith()
+                      }}>
+                      <AvatarList
+                        data={dataUserVote}
+                        avatarKey="avatar"
+                        titleKey="full_name"
+                      />
+                    </div>
+                  )}
+
+                  <div className="div-background"></div>
+                </div>
+              )
+            })}
         </div>
 
         {data.poll_vote_detail.setting.adding_more_options === true &&
