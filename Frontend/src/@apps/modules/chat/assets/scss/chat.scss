@@ -1543,6 +1543,7 @@ $font-family: Helvetica;
               width: calc(100% - 120px);
               border: 1px solid #fff;
               border-left: none !important;
+              border-right: none !important;
               cursor: auto;
               margin: 0;
               border-radius: 0;
@@ -1696,6 +1697,10 @@ $font-family: Helvetica;
 
                     [class*="avatar-status-"] {
                       right: 10px;
+                    }
+
+                    .avatar span {
+                      display: none;
                     }
                   }
 
@@ -2157,6 +2162,7 @@ $font-family: Helvetica;
           display: flex;
           flex-direction: column;
           min-width: 70%;
+          overflow-wrap: anywhere;
         }
       }
     }
@@ -2182,8 +2188,8 @@ $font-family: Helvetica;
     }
 
     &:has(> .no-image) {
-      height: 70px;
-      min-height: 70px;
+      height: 110px;
+      min-height: 110px;
     }
   }
 
