@@ -1643,8 +1643,8 @@ $background-color-checkbox: #139ff8;
 
       .avatar {
         img {
-          width: 40px;
-          height: 40px;
+          width: 50px;
+          height: 50px;
         }
       }
 
@@ -1694,6 +1694,8 @@ $background-color-checkbox: #139ff8;
   }
 
   .modal-body {
+    margin-top: 5px;
+
     .form-group {
       margin-bottom: 0.5rem;
     }
@@ -1785,6 +1787,9 @@ $background-color-checkbox: #139ff8;
       box-shadow: none;
       margin-top: 20px;
       transition: background 0.2s;
+      height: 50px;
+      font-size: 18px;
+      font-weight: 500;
 
       &:hover {
         box-shadow: none;
@@ -2625,6 +2630,11 @@ $background-color-checkbox: #139ff8;
 
 .modal-poll-vote {
   margin-bottom: 30px;
+
+  .modal-body {
+    padding-top: 0 !important;
+    padding: 0 !important;
+  }
 
   .body-header {
     position: relative;
@@ -3670,7 +3680,6 @@ $background-color-checkbox: #139ff8;
         span.text {
           font-weight: 400;
           font-size: 15px;
-          line-height: 20px;
           color: #969191;
         }
       }
@@ -4135,14 +4144,14 @@ $background-color-checkbox: #139ff8;
     flex-direction: column;
     gap: 15px;
     z-index: 6;
-    width: 150px;
+    width: 140px;
     margin-top: -75px !important;
     margin: 0 auto;
 
     .div-img {
       img {
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #ffe658;
@@ -4165,8 +4174,8 @@ $background-color-checkbox: #139ff8;
     }
 
     .div-handle-choose-badge {
-      width: 150px;
-      height: 150px;
+      width: 140px;
+      height: 140px;
       position: absolute;
       top: 0;
       border-radius: 50%;
@@ -4270,7 +4279,7 @@ $background-color-checkbox: #139ff8;
     height: 30px;
     background: rgb(68, 211, 138, 0.8);
     opacity: 0.8;
-    border-radius: 6px;
+    border-radius: 11px;
     margin-right: 10px;
   }
 
@@ -4312,6 +4321,267 @@ $background-color-checkbox: #139ff8;
 
       &:hover {
         border: 1px solid rgb(233, 234, 236);
+      }
+    }
+  }
+}
+
+@media (max-width: 1920px) {
+  .div-left.feed > div,
+  .div-left .feed > div {
+    max-width: 680px;
+  }
+
+  .feed {
+    .div-create-post {
+      padding: 20px;
+      padding-bottom: 15px;
+
+      .div-post {
+        .div-post-input {
+          height: 46px;
+        }
+      }
+
+      hr {
+        margin-top: 13px;
+        margin-bottom: 12px;
+      }
+
+      .div-option .ul-option li span {
+        font-size: 14px;
+      }
+    }
+
+    .load-feed {
+      .load-post {
+        padding: 20px;
+      }
+    }
+
+    .post-reaction {
+      .reaction-left {
+        .div-text {
+          font-weight: 300;
+          font-size: 12px;
+          color: #716e6e;
+        }
+      }
+    }
+  }
+
+  .separate-sidebar-layout {
+    .wrapper__menu-content {
+      max-width: calc(1360px + 120px) !important;
+    }
+
+    .app-content {
+      max-width: 1020px !important; // margin 40px
+      margin-left: 340px !important;
+
+      .content-wrapper .div-content {
+        gap: 40px !important;
+
+        .div-left {
+          max-width: 680px !important;
+        }
+
+        .div-right {
+          min-width: 300px !important;
+          max-width: 300px !important;
+        }
+      }
+    }
+
+    .div-timeline .timeline__endorsement .div-body {
+      gap: 5px !important;
+
+      .div-item-badge {
+        width: 122px !important;
+      }
+    }
+
+    .main-menu .main-menu-content .scrollbar-container .navigation li a {
+      font-size: 14px !important;
+    }
+
+    #dashboard-analytics .card > .card-header .card-title .title {
+      font-size: 14px !important;
+    }
+  }
+
+  .modal-create-post {
+    max-width: 500px;
+
+    .modal-content {
+      padding: 20px 20px 30px 20px !important;
+    }
+
+    .modal-header {
+      .div-header-title {
+        padding-bottom: 15px;
+      }
+
+      .text-title {
+        font-size: 16px;
+      }
+
+      .div-header-avatar
+        .modal-header-privacy
+        .modal-header-privacy-choose
+        .modal-header-privacy-choose-dropdown-a
+        button {
+        font-size: 12px;
+      }
+    }
+
+    .modal-body .btn-post {
+      height: 46px;
+      font-size: 14px;
+    }
+  }
+
+  .modal-poll-vote {
+    .body-header .text-title {
+      font-size: 16px;
+    }
+
+    .body-content {
+      .form-label {
+        font-weight: 500 !important;
+        font-size: 14px !important;
+      }
+
+      .form-group input[type="text"] {
+        height: 46px;
+      }
+
+      .div-question .div-btn-setting {
+        width: 46px;
+        height: 46px;
+      }
+
+      .div-setting-time-end .ant-picker {
+        height: 46px;
+      }
+
+      .btn-add-option {
+        height: 46px;
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .modal-create-event {
+    max-width: 650px;
+
+    .modal-content .modal-body {
+      .div-event-name {
+        .form-group input.input {
+          height: 46px;
+        }
+
+        .div-btn-color {
+          margin-top: 34px;
+        }
+
+        .label-announcement-cover-image {
+          height: 46px;
+        }
+
+        .div-announcement-cover-image {
+          min-width: 46px;
+          width: 46px;
+          height: 46px;
+        }
+      }
+
+      .div-event-time {
+        .div-select-time .div-select-time__div-box {
+          min-height: 85px;
+
+          .erp-date .form-control {
+            height: 36px;
+            padding: 6px 12px;
+          }
+        }
+
+        .div-all-day .div-repeat .text-repeat {
+          font-size: 12px;
+        }
+      }
+
+      .div-switch {
+        gap: 10px;
+
+        span.text {
+          font-size: 12px;
+          position: relative;
+          top: 1px;
+        }
+      }
+
+      .form-group .select .select__control {
+        min-height: 46px;
+      }
+
+      .div-input-btn .btn-input {
+        width: 80px;
+        height: 32px;
+        top: 34px;
+      }
+    }
+  }
+
+  .modal-announcement {
+    .modal-content
+      .modal-body
+      .div-event-time
+      .div-all-day
+      .div-show-announcement
+      .text-show {
+      font-size: 12px;
+    }
+  }
+
+  .modal-create-endorsement {
+    max-width: 560px;
+
+    .div-badge .div-text {
+      font-size: 18px;
+    }
+
+    .div-btn-post {
+      .btn-post {
+        height: 46px !important;
+      }
+
+      .div-icon-date {
+        min-width: 46px;
+        width: 46px;
+        height: 46px;
+      }
+    }
+  }
+
+  .modal-choose-badge {
+    max-width: 402px;
+
+    .modal-header .text-title {
+      font-size: 14px;
+    }
+
+    .div-list-badge .div-item-badge .div-img img {
+      width: 66px;
+      height: 66px;
+    }
+
+    .div-list-badge {
+      gap: 7px;
+
+      .div-item-badge {
+        width: 85px;
       }
     }
   }

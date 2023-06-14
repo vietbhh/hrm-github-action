@@ -485,7 +485,7 @@ const PostHeader = (props) => {
           </div>
 
           <span className="time">
-            <Link to={`/u/${data?.created_by?.username}`}>
+            <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
               {timeDifference(data.created_at)}{" "}
               {data.edited &&
                 ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
