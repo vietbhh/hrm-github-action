@@ -9,7 +9,7 @@ const Endorsement = (props) => {
   const [state, setState] = useMergedState({
     prevScrollY: 0
   })
-  const offsetTop = 120
+  const offsetTop = 95
   const offsetBottom = 30
 
   // ** function

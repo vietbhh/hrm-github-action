@@ -4505,7 +4505,13 @@
           "cancel_edit": "Cancel edit",
           "with": "with",
           "people": "People",
-          "btn_send_noti_unseen": "Send notifications to those who haven't seen it yet"
+          "btn_send_noti_unseen": "Send notifications to those who haven't seen it yet",
+          "save_post": "Save post",
+          "save_post_des": "Add this to your saved items",
+          "turn_off_notification": "Turn off notification",
+          "copy_link": "Copy Link",
+          "turn_off_commenting": "Turn off commenting",
+          "view_edit_history": "View edit history"
         },
         "react": {
           "like": "Like",
