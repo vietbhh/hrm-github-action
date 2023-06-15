@@ -119,8 +119,8 @@ const NotificationDropdown = () => {
         {focusIconNotification ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="23"
-            height="27"
+            width="22"
+            height="26"
             viewBox="0 0 23 27"
             fill="none">
             <path
@@ -136,8 +136,8 @@ const NotificationDropdown = () => {
         ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="23"
-            height="28"
+            width="22"
+            height="26"
             viewBox="0 0 23 28"
             fill="none">
             <path
