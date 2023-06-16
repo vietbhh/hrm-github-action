@@ -1189,6 +1189,14 @@ $background-color-checkbox: #139ff8;
         .post-comment__div-form .post-comment-div-editor {
           padding: 5px 20px;
         }
+
+        &.off_commenting {
+          .div-comment__comment:last-child {
+            .div-border-reply-vertical {
+              display: none;
+            }
+          }
+        }
       }
     }
 
@@ -2476,8 +2484,6 @@ $background-color-checkbox: #139ff8;
 
       .div-item-drop {
         padding: 7px 15px;
-        display: flex;
-        align-items: center;
 
         a {
           display: flex;

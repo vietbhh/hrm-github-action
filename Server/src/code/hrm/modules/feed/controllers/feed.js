@@ -167,11 +167,18 @@ const submitPostController = async (req, res, next) => {
     if (!is_edit && body.approveStatus === "approved") {
       const receivers = union(mention, tag)
       const link_notification = `/posts/${_id_parent}`
+      const userId = body.data_user.id
+      const full_name = body.data_user.full_name
+      const body_noti =
+        "<strong>" +
+        full_name +
+        "</strong> {{modules.network.notification.tag_post}}"
       await handleSendNotification(
-        "post",
+        userId,
         receivers,
-        body.data_user,
-        link_notification
+        body_noti,
+        link_notification,
+        _id_parent
       )
     }
 
@@ -543,24 +550,11 @@ const updatePostReaction = async (req, res, next) => {
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
-        const receivers = created_by
-        const body =
+        const receivers = [created_by]
+        const body_noti =
           full_name + " {{modules.network.notification.liked_your_post}}"
         const link = `/posts/${id}`
-        sendNotification(
-          userId,
-          receivers,
-          {
-            title: "",
-            body: body,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
-        )
+        await handleSendNotification(userId, receivers, body_noti, link, id)
       }
     }
 
@@ -768,6 +762,68 @@ const sendNotificationUnseen = async (req, res, next) => {
     return res.fail(err.message)
   }
 }
+
+// turn off notification
+const turnOffNotification = async (req, res, next) => {
+  try {
+    const body = req.body
+    const action = body.action
+    const post_id = body.post_id
+
+    if (action !== "add" && action !== "remove") {
+      return res.fail("err action")
+    }
+
+    if (action === "add") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { $push: { turn_off_notification: req.__user } }
+      )
+    }
+
+    if (action === "remove") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { $pull: { turn_off_notification: req.__user } }
+      )
+    }
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// turn off commenting
+const turnOffCommenting = async (req, res, next) => {
+  try {
+    const body = req.body
+    const action = body.action
+    const post_id = body.post_id
+
+    if (action !== "on" && action !== "off") {
+      return res.fail("err action")
+    }
+
+    if (action === "on") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { turn_off_commenting: false }
+      )
+    }
+
+    if (action === "off") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { turn_off_commenting: true }
+      )
+    }
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 // **
 
 // ** support function
@@ -956,24 +1012,29 @@ const handleDataFeedById = async (id, loadComment = -1) => {
 }
 
 const handleSendNotification = async (
-  type,
+  userId,
   receivers,
-  data_user,
-  link = "#"
+  body,
+  link = "#",
+  id_post = ""
 ) => {
-  if (!isEmpty(receivers) && !isEmpty(data_user)) {
-    const userId = data_user.id
-    const full_name = data_user.full_name
-    const lang = type === "post" ? "tag_post" : "tag_comment"
-    const body =
-      "<strong>" +
-      full_name +
-      "</strong> {{modules.network.notification." +
-      lang +
-      "}}"
+  if (!isEmpty(receivers)) {
+    let _receivers = receivers
+    if (id_post) {
+      const data_feed = await feedMongoModel.findById(id_post)
+      if (data_feed) {
+        const turn_off_notification = data_feed.turn_off_notification
+        if (!isEmpty(turn_off_notification)) {
+          _receivers = receivers.filter(
+            (x) => !turn_off_notification.includes(x.toString())
+          )
+        }
+      }
+    }
+
     sendNotification(
       userId,
-      receivers,
+      _receivers,
       {
         title: "",
         body: body,
@@ -1114,5 +1175,7 @@ export {
   sendNotificationUnseen,
   handlePullHashtag,
   handleInsertHashTag,
-  handleDataLoadFeed
+  handleDataLoadFeed,
+  turnOffNotification,
+  turnOffCommenting
 }

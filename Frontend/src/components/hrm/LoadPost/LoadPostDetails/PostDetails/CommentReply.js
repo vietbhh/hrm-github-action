@@ -40,7 +40,10 @@ const CommentReply = (props) => {
   }, [comment_more_count])
 
   return (
-    <div className={classNames("div-comment__div-reply", {})}>
+    <div
+      className={classNames("div-comment__div-reply", {
+        off_commenting: data.turn_off_commenting
+      })}>
       {_.map(
         _.filter(dataComment.sub_comment, (item, key) => {
           return key >= state.reply_count
@@ -125,21 +128,23 @@ const CommentReply = (props) => {
         </div>
       )}
 
-      {dataShowFormReply && dataShowFormReply[id_comment_parent] && (
-        <PostCommentForm
-          data={data}
-          dataMention={dataMention}
-          setData={setData}
-          comment_more_count_original={comment_more_count_original}
-          setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-          reply_count={state.reply_count}
-          api={feedApi.postSubmitCommentReply}
-          id_comment_parent={id_comment_parent}
-          dataEditComment={state.dataEditComment}
-          setDataEditComment={setDataEditComment}
-          created_by_comment_parent={dataComment.created_by.id}
-        />
-      )}
+      {dataShowFormReply &&
+        dataShowFormReply[id_comment_parent] &&
+        !data.turn_off_commenting && (
+          <PostCommentForm
+            data={data}
+            dataMention={dataMention}
+            setData={setData}
+            comment_more_count_original={comment_more_count_original}
+            setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+            reply_count={state.reply_count}
+            api={feedApi.postSubmitCommentReply}
+            id_comment_parent={id_comment_parent}
+            dataEditComment={state.dataEditComment}
+            setDataEditComment={setDataEditComment}
+            created_by_comment_parent={dataComment.created_by.id}
+          />
+        )}
     </div>
   )
 }

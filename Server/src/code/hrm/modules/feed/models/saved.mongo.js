@@ -12,13 +12,13 @@ const savedSchema = baseSchema("m_saved", {
     enum: ["post"],
     default: ""
   },
-  id: {
-    type: [String],
-    default: []
-  },
   user_id: {
     type: String,
     default: ""
+  },
+  id: {
+    type: [String],
+    default: []
   }
 })
 
