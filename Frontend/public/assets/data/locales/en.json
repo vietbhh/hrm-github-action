@@ -4515,7 +4515,8 @@
           "copy_link": "Copy Link",
           "turn_off_commenting": "Turn off commenting",
           "turn_on_commenting": "Turn on commenting",
-          "view_edit_history": "View edit history"
+          "view_edit_history": "View edit history",
+          "history": "History"
         },
         "react": {
           "like": "Like",

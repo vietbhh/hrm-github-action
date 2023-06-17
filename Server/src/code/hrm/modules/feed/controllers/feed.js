@@ -13,7 +13,7 @@ import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { forEach, isEmpty, union } from "lodash-es"
+import { cloneDeep, forEach, isEmpty, union } from "lodash-es"
 import path from "path"
 import sharp from "sharp"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
@@ -147,12 +147,13 @@ const submitPostController = async (req, res, next) => {
     } else {
       _id_parent = _id_post_edit
       data_feed_old = await feedMongoModel.findById(_id_parent)
+      const data_edit_history = handleDataHistory(data_feed_old, req.__user)
       await feedMongoModel.updateOne(
         { _id: _id_post_edit },
         {
           ...dataInsert,
           edited: true,
-          edited_at: Date.now()
+          $push: { edit_history: data_edit_history }
         }
       )
 
@@ -666,7 +667,7 @@ const updateContentMedia = async (req, res, next) => {
     try {
       await feedMongoModel.updateOne(
         { _id: data._id },
-        { content: content, edited: true, edited_at: Date.now() }
+        { content: content, edited: true }
       )
       if (data.ref) {
         const feed_parent = await feedMongoModel.findById(data.ref)
@@ -820,6 +821,23 @@ const turnOffCommenting = async (req, res, next) => {
     }
 
     return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// get data history
+const getDataEditHistory = async (req, res, next) => {
+  try {
+    const post_id = req.params.post_id
+    const data_feed = await feedMongoModel.findById(post_id)
+    const dataHistory = data_feed
+      ? data_feed.edit_history
+        ? data_feed.edit_history
+        : []
+      : []
+
+    return res.respond(dataHistory)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -1155,6 +1173,35 @@ const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
   }
 }
 
+const handleDataHistory = (data_old, userId) => {
+  const _data_old_history = { ...data_old }
+  let data_old_history = _data_old_history
+  if (_data_old_history._doc) {
+    data_old_history = _data_old_history._doc
+  }
+  if (_data_old_history.dataValues) {
+    data_old_history = _data_old_history.dataValues
+  }
+
+  delete data_old_history.owner
+  delete data_old_history.created_by
+  delete data_old_history.created_at
+  delete data_old_history.updated_by
+  delete data_old_history.updated_at
+  delete data_old_history.deleted_by
+  delete data_old_history.deleted_at
+  delete data_old_history.edited
+  delete data_old_history.edit_history
+
+  const edit_history = {
+    ...data_old_history,
+    edited_at: Date.now(),
+    edited_by: userId
+  }
+
+  return edit_history
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1177,5 +1224,7 @@ export {
   handleInsertHashTag,
   handleDataLoadFeed,
   turnOffNotification,
-  turnOffCommenting
+  turnOffCommenting,
+  handleDataHistory,
+  getDataEditHistory
 }

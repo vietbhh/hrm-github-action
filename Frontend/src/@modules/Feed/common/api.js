@@ -139,6 +139,10 @@ export const feedApi = {
 
   async postTurnOffCommenting(data) {
     return await axiosNodeApi.post("/feed/turn-off-commenting", data)
+  },
+
+  async getGetDataEditHistory(post_id) {
+    return await axiosNodeApi.get("/feed/get-data-edit-history/" + post_id)
   }
 }
 

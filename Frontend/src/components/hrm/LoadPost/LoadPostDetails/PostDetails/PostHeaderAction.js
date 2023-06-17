@@ -6,6 +6,7 @@ import { feedApi, savedApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
 import React, { Fragment } from "react"
 import { useSelector } from "react-redux"
+import ModalViewEditHistory from "../modals/ModalViewEditHistory"
 
 const PostHeaderAction = (props) => {
   const {
@@ -22,7 +23,8 @@ const PostHeaderAction = (props) => {
   } = props
 
   const [state, setState] = useMergedState({
-    loadingDelete: false
+    loadingDelete: false,
+    modal_view_edit_history: false
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -98,21 +100,21 @@ const PostHeaderAction = (props) => {
               <path
                 d="M10.0208 10.3042C11.9491 11.0084 14.0508 11.0084 15.9791 10.3042"
                 stroke="#32434F"
-                strokeWidth="1.5"
+                strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M18.2217 2.66663H7.77835C5.47085 2.66663 3.59668 4.55163 3.59668 6.84829V22.1125C3.59668 24.0625 4.99418 24.8858 6.70585 23.9433L11.9925 21.0075C12.5558 20.6933 13.4658 20.6933 14.0183 21.0075L19.305 23.9433C21.0167 24.8966 22.4142 24.0733 22.4142 22.1125V6.84829C22.4033 4.55163 20.5292 2.66663 18.2217 2.66663Z"
                 stroke="#32434F"
-                strokeWidth="1.5"
+                strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M18.2217 2.66663H7.77835C5.47085 2.66663 3.59668 4.55163 3.59668 6.84829V22.1125C3.59668 24.0625 4.99418 24.8858 6.70585 23.9433L11.9925 21.0075C12.5558 20.6933 13.4658 20.6933 14.0183 21.0075L19.305 23.9433C21.0167 24.8966 22.4142 24.0733 22.4142 22.1125V6.84829C22.4033 4.55163 20.5292 2.66663 18.2217 2.66663Z"
                 stroke="#32434F"
-                strokeWidth="1.5"
+                strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -476,7 +478,9 @@ const PostHeaderAction = (props) => {
       ...turn_off_commenting
     },
     view_edit_history: {
-      onClick: () => {},
+      onClick: () => {
+        toggleModalViewEditHistory()
+      },
       label: (
         <a
           onClick={(e) => {
@@ -765,6 +769,9 @@ const PostHeaderAction = (props) => {
       })
   }
 
+  const toggleModalViewEditHistory = () =>
+    setState({ modal_view_edit_history: !state.modal_view_edit_history })
+
   // ** render
   const renderPostHeaderAction = () => {
     if (offPostHeaderAction) {
@@ -811,7 +818,17 @@ const PostHeaderAction = (props) => {
     )
   }
 
-  return <Fragment>{renderPostHeaderAction()}</Fragment>
+  return (
+    <Fragment>
+      {renderPostHeaderAction()}
+
+      <ModalViewEditHistory
+        modal={state.modal_view_edit_history}
+        toggleModal={toggleModalViewEditHistory}
+        post_id={data?._id}
+      />
+    </Fragment>
+  )
 }
 
 export default PostHeaderAction

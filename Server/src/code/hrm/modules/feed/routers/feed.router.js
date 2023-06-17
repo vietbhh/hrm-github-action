@@ -21,6 +21,7 @@ import {
 } from "../controllers/event.js"
 import {
   deletePost,
+  getDataEditHistory,
   getFeedById,
   getFeedByIdAndViewAllComment,
   getFeedChild,
@@ -69,6 +70,7 @@ router.get("/update-seen-post/:post_id", updateSeenPost)
 router.get("/send-noti-unseen/:post_id", sendNotificationUnseen)
 router.post("/turn-off-notification", turnOffNotification)
 router.post("/turn-off-commenting", turnOffCommenting)
+router.get("/get-data-edit-history/:post_id", getDataEditHistory)
 
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 

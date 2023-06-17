@@ -121,10 +121,6 @@ const feedSchema = baseSchema("m_feed", {
     type: Boolean,
     default: false
   },
-  edited_at: {
-    type: Date,
-    default: null
-  },
   background_image: {
     type: Number,
     default: null
@@ -189,6 +185,10 @@ const feedSchema = baseSchema("m_feed", {
   turn_off_commenting: {
     type: Boolean,
     default: false
+  },
+  edit_history: {
+    type: [{}],
+    default: []
   },
 
   // ** id: event / announcement / endorsement

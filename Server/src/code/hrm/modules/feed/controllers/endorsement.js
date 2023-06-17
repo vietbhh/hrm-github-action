@@ -6,6 +6,7 @@ import path from "path"
 import endorsementMongoModel from "../models/endorsement.mongo.js"
 import feedMongoModel from "../models/feed.mongo.js"
 import {
+  handleDataHistory,
   handleDataLoadFeed,
   handleInsertHashTag,
   handlePullHashtag
@@ -93,6 +94,7 @@ const submitEndorsement = async (req, res, next) => {
         dataLink: {}
       }
     } else {
+      const data_old = await endorsementMongoModel.findById(idEdit)
       await endorsementMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
       let _dataFeed = {}
@@ -101,12 +103,13 @@ const submitEndorsement = async (req, res, next) => {
         const dataFeedOld = await feedMongoModel.findById(idPost)
         await handlePullHashtag(dataFeedOld)
 
+        const data_edit_history = handleDataHistory(data_old, req.__user)
         await feedMongoModel.updateOne(
           { _id: idPost },
           {
             edited: true,
-            edited_at: Date.now(),
-            hashtag: body.arrHashtag
+            hashtag: body.arrHashtag,
+            $push: { edit_history: data_edit_history }
           }
         )
 

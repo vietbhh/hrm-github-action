@@ -7,6 +7,7 @@ import { forEach, isEmpty } from "lodash-es"
 import moment from "moment/moment.js"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
+import { handleDataHistory } from "./feed.js"
 
 const submitEvent = async (req, res, next) => {
   const file = req.files
@@ -132,15 +133,17 @@ const submitEvent = async (req, res, next) => {
       const _out = await handleDataBeforeReturn(out)
       result = { dataFeed: _out, dataLink: {} }
     } else {
+      const data_old = await calendarMongoModel.findById(idEdit)
       await calendarMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
       let _dataFeed = {}
       if (idPost) {
+        const data_edit_history = handleDataHistory(data_old, req.__user)
         await feedMongoModel.updateOne(
           { _id: idPost },
           {
             edited: true,
-            edited_at: Date.now()
+            $push: { edit_history: data_edit_history }
           }
         )
         const dataFeed = await feedMongoModel.findById(idPost)

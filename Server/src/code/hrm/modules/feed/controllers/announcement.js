@@ -6,6 +6,7 @@ import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
+import { handleDataHistory } from "./feed.js"
 
 const submitAnnouncement = async (req, res, next) => {
   const file = req.files
@@ -117,6 +118,7 @@ const submitAnnouncement = async (req, res, next) => {
         dataLink: {}
       }
     } else {
+      const data_old = await newsModel.findByPk(idEdit)
       await newsModel.update(dataInsert, {
         where: {
           id: idEdit
@@ -125,24 +127,18 @@ const submitAnnouncement = async (req, res, next) => {
 
       let _dataFeed = {}
       if (idPost) {
+        const data_edit_history = handleDataHistory(data_old, req.__user)
         await feedMongoModel.updateOne(
           { _id: idPost },
           {
             edited: true,
-            edited_at: Date.now()
+            $push: { edit_history: data_edit_history }
           }
         )
         const dataFeed = await feedMongoModel.findById(idPost)
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
 
-      const dataAnnouncement = await newsModel.findByPk(idEdit)
-      dataAnnouncement.dataValues.send_to = JSON.parse(
-        dataAnnouncement.dataValues.send_to
-      )
-      dataAnnouncement.dataValues.attachment = JSON.parse(
-        dataAnnouncement.dataValues.attachment
-      )
       result = {
         dataFeed: _dataFeed,
         dataLink: {}
