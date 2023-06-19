@@ -43,6 +43,7 @@ const submitEndorsement = async (req, res, next) => {
       hashtag: body.arrHashtag
     }
 
+    let data_old = {}
     let _id = idEdit
     let result = {
       dataFeed: {},
@@ -94,7 +95,7 @@ const submitEndorsement = async (req, res, next) => {
         dataLink: {}
       }
     } else {
-      const data_old = await endorsementMongoModel.findById(idEdit)
+      data_old = await endorsementMongoModel.findById(idEdit)
       await endorsementMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
       let _dataFeed = {}
@@ -103,13 +104,11 @@ const submitEndorsement = async (req, res, next) => {
         const dataFeedOld = await feedMongoModel.findById(idPost)
         await handlePullHashtag(dataFeedOld)
 
-        const data_edit_history = handleDataHistory(data_old, req.__user)
         await feedMongoModel.updateOne(
           { _id: idPost },
           {
             edited: true,
-            hashtag: body.arrHashtag,
-            $push: { edit_history: data_edit_history }
+            hashtag: body.arrHashtag
           }
         )
 
@@ -146,6 +145,34 @@ const submitEndorsement = async (req, res, next) => {
     }
 
     const dataEndorsement = await endorsementMongoModel.findById(_id)
+
+    if (idEdit && idPost) {
+      // update history
+      const field_compare = [
+        "content",
+        "member",
+        "cover",
+        "cover_type",
+        "badge",
+        "badge_name",
+        "badge_type"
+      ]
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        dataEndorsement,
+        data_old,
+        field_compare
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: idPost },
+          {
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+    }
+
     result.dataLink = dataEndorsement
     result.dataFeed.dataLink = dataEndorsement
 

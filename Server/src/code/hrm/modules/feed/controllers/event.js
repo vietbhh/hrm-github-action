@@ -89,6 +89,7 @@ const submitEvent = async (req, res, next) => {
       details: body.details
     }
 
+    let data_old = {}
     let _id = idEdit
     let result = {
       dataFeed: {},
@@ -133,19 +134,11 @@ const submitEvent = async (req, res, next) => {
       const _out = await handleDataBeforeReturn(out)
       result = { dataFeed: _out, dataLink: {} }
     } else {
-      const data_old = await calendarMongoModel.findById(idEdit)
+      data_old = await calendarMongoModel.findById(idEdit)
       await calendarMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
       let _dataFeed = {}
       if (idPost) {
-        const data_edit_history = handleDataHistory(data_old, req.__user)
-        await feedMongoModel.updateOne(
-          { _id: idPost },
-          {
-            edited: true,
-            $push: { edit_history: data_edit_history }
-          }
-        )
         const dataFeed = await feedMongoModel.findById(idPost)
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
@@ -196,6 +189,42 @@ const submitEvent = async (req, res, next) => {
     )
 
     const dataEvent = await calendarMongoModel.findById(_id)
+
+    if (idEdit && idPost) {
+      // update history
+      const field_compare = [
+        "name",
+        "color",
+        "start_time_date",
+        "start_time_time",
+        "end_time_date",
+        "end_time_time",
+        "all_day_event",
+        "repeat",
+        "attendees",
+        "meeting_room",
+        "reminder",
+        "online_meeting",
+        "details",
+        "attachment"
+      ]
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        dataEvent,
+        data_old,
+        field_compare
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: idPost },
+          {
+            edited: true,
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+    }
+
     result.dataLink = dataEvent
     result.dataFeed.dataLink = dataEvent
     return res.respond(result)

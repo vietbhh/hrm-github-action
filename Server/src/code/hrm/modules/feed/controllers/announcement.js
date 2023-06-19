@@ -64,6 +64,7 @@ const submitAnnouncement = async (req, res, next) => {
       send_to: JSON.stringify(body.dataAttendees)
     }
 
+    let data_old = {}
     let _id = idEdit
     let result = {
       dataFeed: {},
@@ -118,7 +119,7 @@ const submitAnnouncement = async (req, res, next) => {
         dataLink: {}
       }
     } else {
-      const data_old = await newsModel.findByPk(idEdit)
+      data_old = await newsModel.findByPk(idEdit)
       await newsModel.update(dataInsert, {
         where: {
           id: idEdit
@@ -127,14 +128,6 @@ const submitAnnouncement = async (req, res, next) => {
 
       let _dataFeed = {}
       if (idPost) {
-        const data_edit_history = handleDataHistory(data_old, req.__user)
-        await feedMongoModel.updateOne(
-          { _id: idPost },
-          {
-            edited: true,
-            $push: { edit_history: data_edit_history }
-          }
-        )
         const dataFeed = await feedMongoModel.findById(idPost)
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
@@ -197,6 +190,34 @@ const submitAnnouncement = async (req, res, next) => {
     )
 
     const dataAnnouncement = await newsModel.findByPk(_id)
+
+    if (idEdit && idPost) {
+      // update history
+      const field_compare = [
+        "title",
+        "pin",
+        "show_announcements",
+        "content",
+        "send_to",
+        "attachment"
+      ]
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        dataAnnouncement,
+        data_old,
+        field_compare
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: idPost },
+          {
+            edited: true,
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+    }
+
     dataAnnouncement.dataValues.send_to = JSON.parse(
       dataAnnouncement.dataValues.send_to
     )

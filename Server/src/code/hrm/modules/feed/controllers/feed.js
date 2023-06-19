@@ -13,7 +13,7 @@ import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { cloneDeep, forEach, isEmpty, union } from "lodash-es"
+import { cloneDeep, forEach, isArray, isEmpty, union } from "lodash-es"
 import path from "path"
 import sharp from "sharp"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
@@ -147,13 +147,11 @@ const submitPostController = async (req, res, next) => {
     } else {
       _id_parent = _id_post_edit
       data_feed_old = await feedMongoModel.findById(_id_parent)
-      const data_edit_history = handleDataHistory(data_feed_old, req.__user)
       await feedMongoModel.updateOne(
         { _id: _id_post_edit },
         {
           ...dataInsert,
-          edited: true,
-          $push: { edit_history: data_edit_history }
+          edited: true
         }
       )
 
@@ -191,16 +189,6 @@ const submitPostController = async (req, res, next) => {
         })
         await feedMongoModel.deleteMany({ _id: { $in: id_medias_delete } })
         // xoa file
-      }
-
-      if (!is_edit) {
-        const _out = await handleDataBeforeReturn(out)
-        _out["dataLink"] = {}
-        return res.respond(_out)
-      } else {
-        const _out = await handleDataFeedById(_id_parent)
-        _out["dataLink"] = {}
-        return res.respond(_out)
       }
     } else {
       // ** check file image/video
@@ -243,17 +231,6 @@ const submitPostController = async (req, res, next) => {
             _id: { $in: id_medias_delete }
           })
           // xoa file
-        }
-
-        if (!is_edit) {
-          out = await feedMongoModel.findById(_id_parent)
-          const _out = await handleDataBeforeReturn(out)
-          _out["dataLink"] = {}
-          return res.respond(_out)
-        } else {
-          const _out = await handleDataFeedById(_id_parent)
-          _out["dataLink"] = {}
-          return res.respond(_out)
         }
       } else {
         const promises = []
@@ -315,7 +292,7 @@ const submitPostController = async (req, res, next) => {
           promises.push(promise)
         })
 
-        return Promise.all(promises).then(async (arr_id_child) => {
+        await Promise.all(promises).then(async (arr_id_child) => {
           await feedMongoModel.updateOne(
             { _id: _id_parent },
             { medias: arr_id_child }
@@ -338,19 +315,46 @@ const submitPostController = async (req, res, next) => {
               // xoa file
             }
           }
-
-          if (!is_edit) {
-            out = await feedMongoModel.findById(_id_parent)
-            const _out = await handleDataBeforeReturn(out)
-            _out["dataLink"] = {}
-            return res.respond(_out)
-          } else {
-            const _out = await handleDataFeedById(_id_parent)
-            _out["dataLink"] = {}
-            return res.respond(_out)
-          }
         })
       }
+    }
+
+    if (!is_edit) {
+      out = await feedMongoModel.findById(_id_parent)
+      const _out = await handleDataBeforeReturn(out)
+      _out["dataLink"] = {}
+      return res.respond(_out)
+    } else {
+      // update history
+      const field_compare = [
+        "type",
+        "content",
+        "medias",
+        "source",
+        "thumb",
+        "tag_user",
+        "background_image",
+        "poll_vote_detail"
+      ]
+      const data_new = await feedMongoModel.findById(_id_parent)
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        data_new,
+        data_feed_old,
+        field_compare
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: _id_parent },
+          {
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+
+      const _out = await handleDataFeedById(_id_parent)
+      _out["dataLink"] = {}
+      return res.respond(_out)
     }
   } catch (err) {
     return res.fail(err.message)
@@ -1173,33 +1177,71 @@ const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
   }
 }
 
-const handleDataHistory = (data_old, userId) => {
-  const _data_old_history = { ...data_old }
-  let data_old_history = _data_old_history
-  if (_data_old_history._doc) {
-    data_old_history = _data_old_history._doc
-  }
-  if (_data_old_history.dataValues) {
-    data_old_history = _data_old_history.dataValues
+const handleDataHistory = (userId, data_new, data_old, field_compare) => {
+  const data_history = {}
+  forEach(field_compare, (field) => {
+    // endorsement
+    if (field === "member") {
+      const check_different = differentCompare2ArrayNoKey(
+        data_new[field],
+        data_old[field]
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+
+    if (data_new[field] !== data_old[field]) {
+      data_history[field] = data_old[field]
+
+      if (field === "cover" && data_old["cover_type"]) {
+        data_history["cover_type"] = data_old["cover_type"]
+      }
+
+      if (field === "badge" && data_old["badge_type"]) {
+        data_history["badge_type"] = data_old["badge_type"]
+      }
+    }
+  })
+
+  if (!isEmpty(data_history)) {
+    const edit_history = {
+      ...data_history,
+      edited_at: Date.now(),
+      edited_by: userId
+    }
+    return edit_history
   }
 
-  delete data_old_history.owner
-  delete data_old_history.created_by
-  delete data_old_history.created_at
-  delete data_old_history.updated_by
-  delete data_old_history.updated_at
-  delete data_old_history.deleted_by
-  delete data_old_history.deleted_at
-  delete data_old_history.edited
-  delete data_old_history.edit_history
+  return {}
+}
 
-  const edit_history = {
-    ...data_old_history,
-    edited_at: Date.now(),
-    edited_by: userId
+const differentCompare2ArrayNoKey = (arr1 = [], arr2 = []) => {
+  if (!isArray(arr1) || !isArray(arr2)) {
+    return false
   }
 
-  return edit_history
+  if (arr1.length === 0 && arr2.length === 0) {
+    return false
+  }
+
+  if (arr1.length !== arr2.length) {
+    return true
+  }
+
+  let check = false
+  for (let index = 0; index < arr1.length; index++) {
+    if (arr1[index] !== arr2[index]) {
+      check = true
+    }
+
+    if (check === true) {
+      return
+    }
+  }
+
+  return check
 }
 
 export {
