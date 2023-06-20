@@ -13,7 +13,15 @@ import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { cloneDeep, forEach, isArray, isEmpty, union } from "lodash-es"
+import {
+  cloneDeep,
+  forEach,
+  isArray,
+  isEmpty,
+  isObject,
+  reverse,
+  union
+} from "lodash-es"
 import path from "path"
 import sharp from "sharp"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
@@ -841,7 +849,11 @@ const getDataEditHistory = async (req, res, next) => {
         : []
       : []
 
-    return res.respond(dataHistory)
+    const out = {
+      dataFeed: await handleDataBeforeReturn(data_feed),
+      dataHistory: reverse(dataHistory)
+    }
+    return res.respond(out)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -1180,9 +1192,77 @@ const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
 const handleDataHistory = (userId, data_new, data_old, field_compare) => {
   const data_history = {}
   forEach(field_compare, (field) => {
+    // post
+    if (field === "medias") {
+      const check_different = differentCompare2ArrayValueObject(
+        data_new[field],
+        data_old[field],
+        "_id"
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+    if (field === "tag_user") {
+      const check_different = differentCompare2Array(
+        data_new[field]["tag"],
+        data_old[field]["tag"]
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+    if (field === "poll_vote_detail") {
+      const check_different = differentCompare2Object(
+        data_new[field],
+        data_old[field],
+        "question"
+      )
+      const check_different2 = differentCompare2Object(
+        data_new[field],
+        data_old[field],
+        "time_end"
+      )
+      const check_different3 = differentCompare2ArrayValueObject(
+        data_new[field]["options"],
+        data_old[field]["options"],
+        "_id"
+      )
+      if (check_different || check_different2 || check_different3) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+
+    // event
+    if (field === "attendees") {
+      const check_different = differentCompare2ArrayValueObject(
+        data_new[field],
+        data_old[field],
+        "value"
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+    if (field === "meeting_room") {
+      const check_different = differentCompare2Object(
+        data_new[field],
+        data_old[field],
+        "value"
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+
     // endorsement
     if (field === "member") {
-      const check_different = differentCompare2ArrayNoKey(
+      const check_different = differentCompare2Array(
         data_new[field],
         data_old[field]
       )
@@ -1194,6 +1274,10 @@ const handleDataHistory = (userId, data_new, data_old, field_compare) => {
 
     if (data_new[field] !== data_old[field]) {
       data_history[field] = data_old[field]
+
+      if (field === "content" && data_old["hashtag"]) {
+        data_history["hashtag"] = data_old["hashtag"]
+      }
 
       if (field === "cover" && data_old["cover_type"]) {
         data_history["cover_type"] = data_old["cover_type"]
@@ -1217,7 +1301,7 @@ const handleDataHistory = (userId, data_new, data_old, field_compare) => {
   return {}
 }
 
-const differentCompare2ArrayNoKey = (arr1 = [], arr2 = []) => {
+const differentCompare2Array = (arr1 = [], arr2 = []) => {
   if (!isArray(arr1) || !isArray(arr2)) {
     return false
   }
@@ -1232,16 +1316,62 @@ const differentCompare2ArrayNoKey = (arr1 = [], arr2 = []) => {
 
   let check = false
   for (let index = 0; index < arr1.length; index++) {
-    if (arr1[index] !== arr2[index]) {
-      check = true
-    }
-
     if (check === true) {
       return
+    }
+
+    if (arr1[index] !== arr2[index]) {
+      check = true
     }
   }
 
   return check
+}
+
+const differentCompare2ArrayValueObject = (
+  arr1 = [],
+  arr2 = [],
+  keyObjectCheck = ""
+) => {
+  if (!isArray(arr1) || !isArray(arr2)) {
+    return false
+  }
+
+  if (arr1.length === 0 && arr2.length === 0) {
+    return false
+  }
+
+  if (arr1.length !== arr2.length) {
+    return true
+  }
+
+  if (keyObjectCheck === "") {
+    return false
+  }
+  let check = false
+  for (let index = 0; index < arr1.length; index++) {
+    if (check === true) {
+      return
+    }
+
+    if (arr1[index][keyObjectCheck] !== arr2[index][keyObjectCheck]) {
+      check = true
+    }
+  }
+
+  return check
+}
+
+const differentCompare2Object = (obj1 = {}, obj2 = {}, keyCheck) => {
+  if (!isObject(obj1) || !isObject(obj2)) {
+    return false
+  }
+
+  if (obj1[keyCheck] != obj2[keyCheck]) {
+    return true
+  }
+
+  return false
 }
 
 export {

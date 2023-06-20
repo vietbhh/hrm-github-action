@@ -11,6 +11,7 @@ import img_like from "@modules/Feed/assets/images/like.png"
 import img_love from "@modules/Feed/assets/images/love.png"
 import img_sad from "@modules/Feed/assets/images/sad.png"
 import img_wow from "@modules/Feed/assets/images/wow.png"
+import { Dropdown } from "antd"
 
 const ButtonReaction = (props) => {
   const {
@@ -197,6 +198,94 @@ const ButtonReaction = (props) => {
     }
   }
 
+  const items = [
+    {
+      key: "1",
+      label: (
+        <div className="div-item-drop" onClick={() => {}}>
+          <a
+            onClick={(e) => {
+              e.preventDefault()
+            }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none">
+              <path
+                d="M5.22492 16.8666V20.1666L8.24992 18.425C9.07492 18.7 9.99158 18.7916 10.9999 18.7916C16.0416 18.7916 20.1666 15.0333 20.1666 10.2666C20.1666 5.59165 16.0416 1.83331 10.9999 1.83331C5.95825 1.83331 1.83325 5.59165 1.83325 10.3583C1.83325 13.0166 3.11659 15.3083 5.22492 16.8666Z"
+                stroke="#32434F"
+                strokeWidth="1.5"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M10.3583 8.43335L6.875 12.5583L10.2667 11.7334L11.6417 12.5583L15.125 8.43335L11.9167 9.25835L10.3583 8.43335Z"
+                stroke="#32434F"
+                strokeWidth="1.5"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <div className="div-text">
+              <span className="div-text__title">
+                {useFormatMessage("modules.feed.post.text.send_in_messenger")}
+              </span>
+            </div>
+          </a>
+        </div>
+      )
+    },
+    {
+      key: "2",
+      label: (
+        <div className="div-item-drop" onClick={() => {}}>
+          <a
+            onClick={(e) => {
+              e.preventDefault()
+            }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none">
+              <path
+                d="M4.26001 11.02V15.99C4.26001 17.81 4.26001 17.81 5.98001 18.97L10.71 21.7C11.42 22.11 12.58 22.11 13.29 21.7L18.02 18.97C19.74 17.81 19.74 17.81 19.74 15.99V11.02C19.74 9.2 19.74 9.2 18.02 8.04L13.29 5.31C12.58 4.9 11.42 4.9 10.71 5.31L5.98001 8.04C4.26001 9.2 4.26001 9.2 4.26001 11.02Z"
+                stroke="#32434F"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17.5 7.63V5C17.5 3 16.5 2 14.5 2H9.5C7.5 2 6.5 3 6.5 5V7.56"
+                stroke="#32434F"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12.63 10.99L13.2 11.88C13.29 12.02 13.49 12.16 13.64 12.2L14.66 12.46C15.29 12.62 15.46 13.16 15.05 13.66L14.38 14.47C14.28 14.6 14.2 14.83 14.21 14.99L14.27 16.04C14.31 16.69 13.85 17.02 13.25 16.78L12.27 16.39C12.12 16.33 11.87 16.33 11.72 16.39L10.74 16.78C10.14 17.02 9.68002 16.68 9.72002 16.04L9.78002 14.99C9.79002 14.83 9.71002 14.59 9.61002 14.47L8.94002 13.66C8.53002 13.16 8.70002 12.62 9.33002 12.46L10.35 12.2C10.51 12.16 10.71 12.01 10.79 11.88L11.36 10.99C11.72 10.45 12.28 10.45 12.63 10.99Z"
+                stroke="#32434F"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <div className="div-text">
+              <span className="div-text__title">
+                {useFormatMessage("modules.feed.post.text.share_to_a_group")}
+              </span>
+            </div>
+          </a>
+        </div>
+      )
+    }
+  ]
+
   return (
     <Fragment>
       <div className="div-button-reaction">
@@ -226,7 +315,11 @@ const ButtonReaction = (props) => {
           <span>{useFormatMessage("modules.feed.post.text.comment")}</span>
         </button>
 
-        <Link to={`/chat/${data?.created_by?.username}`}>
+        <Dropdown
+          menu={{ items }}
+          placement="bottom"
+          overlayClassName="post-header-button-dot"
+          trigger={["click"]}>
           <button className="btn-send">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -253,7 +346,7 @@ const ButtonReaction = (props) => {
             </svg>
             <span>{useFormatMessage("modules.feed.post.text.send")}</span>
           </button>
-        </Link>
+        </Dropdown>
       </div>
     </Fragment>
   )

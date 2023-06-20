@@ -26,7 +26,8 @@ const PostHeader = (props) => {
     toggleModalCreateEvent,
     toggleModalAnnouncement,
     toggleModalWith,
-    setDataUserOtherWith
+    setDataUserOtherWith,
+    isViewEditHistory = false // only view edit history
   } = props
 
   const userData = useSelector((state) => state.auth.userData)
@@ -215,42 +216,60 @@ const PostHeader = (props) => {
   return (
     <Fragment>
       <div className="post-header">
-        <Link to={`/u/${data?.created_by?.username}`}>
+        <Link
+          to={`/u/${data?.created_by?.username}`}
+          onClick={(e) => {
+            if (isViewEditHistory) {
+              e.preventDefault()
+            }
+          }}>
           <Avatar className="img" src={data?.created_by?.avatar} />
         </Link>
         <div className="post-header-title">
           <div className="div-name">
-            <Link to={`/u/${data?.created_by?.username}`}>
+            <Link
+              to={`/u/${data?.created_by?.username}`}
+              onClick={(e) => {
+                if (isViewEditHistory) {
+                  e.preventDefault()
+                }
+              }}>
               <span className="name">{data?.created_by?.full_name || ""}</span>{" "}
             </Link>
             {renderAfterName()}
             {renderWithTag()}
           </div>
 
-          <span className="time">
-            <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
-              {timeDifference(data.created_at)}{" "}
-              {data.edited &&
-                ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
-            </Link>
-          </span>
+          {!isViewEditHistory && (
+            <Fragment>
+              <span className="time">
+                <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
+                  {timeDifference(data.created_at)}{" "}
+                  {data.edited &&
+                    ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+                </Link>
+              </span>
 
-          <Fragment>{renderAppendComponent()}</Fragment>
+              <Fragment>{renderAppendComponent()}</Fragment>
+            </Fragment>
+          )}
         </div>
-        <div className="post-header-right">
-          <PostHeaderAction
-            data={data}
-            setData={setData}
-            handleCloseModal={handleCloseModal}
-            dataModal={dataModal}
-            customAction={customAction}
-            offPostHeaderAction={offPostHeaderAction}
-            setEditDescription={setEditDescription}
-            toggleModalCreatePost={toggleModalCreatePost}
-            toggleModalCreateEvent={toggleModalCreateEvent}
-            toggleModalAnnouncement={toggleModalAnnouncement}
-          />
-        </div>
+        {!isViewEditHistory && (
+          <div className="post-header-right">
+            <PostHeaderAction
+              data={data}
+              setData={setData}
+              handleCloseModal={handleCloseModal}
+              dataModal={dataModal}
+              customAction={customAction}
+              offPostHeaderAction={offPostHeaderAction}
+              setEditDescription={setEditDescription}
+              toggleModalCreatePost={toggleModalCreatePost}
+              toggleModalCreateEvent={toggleModalCreateEvent}
+              toggleModalAnnouncement={toggleModalAnnouncement}
+            />
+          </div>
+        )}
       </div>
     </Fragment>
   )

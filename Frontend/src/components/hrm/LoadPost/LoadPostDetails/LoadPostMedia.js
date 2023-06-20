@@ -18,7 +18,8 @@ const LoadPostMedia = (props) => {
     dataMention,
     setData,
     setCommentMoreCountOriginal,
-    customAction = {} // custom dropdown post header
+    customAction = {}, // custom dropdown post header
+    isViewEditHistory = false
   } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
@@ -37,49 +38,55 @@ const LoadPostMedia = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    setCommentMoreCountOriginal(-1)
-    if (state.modalPostImageDetail) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-      //setState({ dataModal: {}, idImage: "", postType: "" })
-    }
-
-    if (!state.modalPostImageDetail) {
-      if (isMounted.current) {
-        if (_.isFunction(setData)) {
-          feedApi
-            .getGetFeed(data._id)
-            .then((res) => {
-              setData(res.data)
-            })
-            .catch((err) => {})
-        }
+    if (!isViewEditHistory) {
+      setCommentMoreCountOriginal(-1)
+      if (state.modalPostImageDetail) {
+        document.body.style.overflow = "hidden"
       } else {
-        isMounted.current = true
+        document.body.style.overflow = ""
+        //setState({ dataModal: {}, idImage: "", postType: "" })
+      }
+
+      if (!state.modalPostImageDetail) {
+        if (isMounted.current) {
+          if (_.isFunction(setData)) {
+            feedApi
+              .getGetFeed(data._id)
+              .then((res) => {
+                setData(res.data)
+              })
+              .catch((err) => {})
+          }
+        } else {
+          isMounted.current = true
+        }
       }
     }
-  }, [state.modalPostImageDetail])
+  }, [state.modalPostImageDetail, isViewEditHistory])
 
   useEffect(() => {
-    setCommentMoreCountOriginal(data?.comment_more_count || 0)
-  }, [state.modalPostImageDetail, data])
+    if (!isViewEditHistory) {
+      setCommentMoreCountOriginal(data?.comment_more_count || 0)
+    }
+  }, [state.modalPostImageDetail, data, isViewEditHistory])
 
   useEffect(() => {
-    if (idMedia !== undefined && idMedia !== "") {
-      setState({
-        idImage: idMedia,
-        modalPostImageDetail: true,
-        dataModal: data,
-        postType: data.type,
-        dataMedias: data.medias
-      })
+    if (!isViewEditHistory) {
+      if (idMedia !== undefined && idMedia !== "") {
+        setState({
+          idImage: idMedia,
+          modalPostImageDetail: true,
+          dataModal: data,
+          postType: data.type,
+          dataMedias: data.medias
+        })
 
-      if (_.isFunction(setIdMedia)) {
-        setIdMedia("")
+        if (_.isFunction(setIdMedia)) {
+          setIdMedia("")
+        }
       }
     }
-  }, [idMedia, data])
+  }, [idMedia, data, isViewEditHistory])
 
   // ** render
   const renderMedia = () => {
@@ -87,17 +94,19 @@ const LoadPostMedia = (props) => {
       return (
         <div
           onClick={() => {
-            toggleModalPostImageDetail()
-            window.history.replaceState(
-              null,
-              "",
-              `/posts/${data._id}/${data._id}`
-            )
-            setState({
-              dataModal: data,
-              idImage: data._id,
-              postType: data.type
-            })
+            if (!isViewEditHistory) {
+              toggleModalPostImageDetail()
+              window.history.replaceState(
+                null,
+                "",
+                `/posts/${data._id}/${data._id}`
+              )
+              setState({
+                dataModal: data,
+                idImage: data._id,
+                postType: data.type
+              })
+            }
           }}
           className="div-attachment-item item-image item-count-1"
           style={{
@@ -126,17 +135,19 @@ const LoadPostMedia = (props) => {
       return (
         <div
           onClick={() => {
-            toggleModalPostImageDetail()
-            window.history.replaceState(
-              null,
-              "",
-              `/posts/${data._id}/${data._id}`
-            )
-            setState({
-              dataModal: data,
-              idImage: data._id,
-              postType: data.type
-            })
+            if (!isViewEditHistory) {
+              toggleModalPostImageDetail()
+              window.history.replaceState(
+                null,
+                "",
+                `/posts/${data._id}/${data._id}`
+              )
+              setState({
+                dataModal: data,
+                idImage: data._id,
+                postType: data.type
+              })
+            }
           }}
           className="div-attachment-cover">
           {data.url_thumb && <img src={data.url_thumb} />}
@@ -159,17 +170,19 @@ const LoadPostMedia = (props) => {
       return (
         <div
           onClick={() => {
-            toggleModalPostImageDetail()
-            window.history.replaceState(
-              null,
-              "",
-              `/posts/${data._id}/${data._id}`
-            )
-            setState({
-              dataModal: data,
-              idImage: data._id,
-              postType: data.type
-            })
+            if (!isViewEditHistory) {
+              toggleModalPostImageDetail()
+              window.history.replaceState(
+                null,
+                "",
+                `/posts/${data._id}/${data._id}`
+              )
+              setState({
+                dataModal: data,
+                idImage: data._id,
+                postType: data.type
+              })
+            }
           }}
           className="div-attachment-avatar">
           <div
@@ -190,18 +203,20 @@ const LoadPostMedia = (props) => {
           <div
             key={key}
             onClick={() => {
-              toggleModalPostImageDetail()
-              window.history.replaceState(
-                null,
-                "",
-                `/posts/${data._id}/${item._id}`
-              )
-              setState({
-                dataModal: data,
-                idImage: item._id,
-                postType: data.type,
-                dataMedias: data.medias
-              })
+              if (!isViewEditHistory) {
+                toggleModalPostImageDetail()
+                window.history.replaceState(
+                  null,
+                  "",
+                  `/posts/${data._id}/${item._id}`
+                )
+                setState({
+                  dataModal: data,
+                  idImage: item._id,
+                  postType: data.type,
+                  dataMedias: data.medias
+                })
+              }
             }}
             className={classNames(`div-attachment-item item-${key + 1}`, {
               "item-count-1": data.medias.length === 1,
@@ -238,19 +253,21 @@ const LoadPostMedia = (props) => {
         <div className="post-body-media">{renderMedia()}</div>
       )}
 
-      <PostImageDetailModal
-        modal={state.modalPostImageDetail}
-        toggleModal={toggleModalPostImageDetail}
-        dataModal={state.dataModal}
-        idImage={state.idImage}
-        setIdImage={(value) => setState({ idImage: value })}
-        postType={state.postType}
-        dataMedias={state.dataMedias}
-        current_url={current_url}
-        dataMention={dataMention}
-        customAction={customAction}
-        setDataPost={setData}
-      />
+      {!isViewEditHistory && (
+        <PostImageDetailModal
+          modal={state.modalPostImageDetail}
+          toggleModal={toggleModalPostImageDetail}
+          dataModal={state.dataModal}
+          idImage={state.idImage}
+          setIdImage={(value) => setState({ idImage: value })}
+          postType={state.postType}
+          dataMedias={state.dataMedias}
+          current_url={current_url}
+          dataMention={dataMention}
+          customAction={customAction}
+          setDataPost={setData}
+        />
+      )}
     </Fragment>
   )
 }
