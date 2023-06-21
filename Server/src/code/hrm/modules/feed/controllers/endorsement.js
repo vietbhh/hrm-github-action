@@ -161,7 +161,8 @@ const submitEndorsement = async (req, res, next) => {
         req.__user,
         dataEndorsement,
         data_old,
-        field_compare
+        field_compare,
+        { type: "endorsement" }
       )
       if (!isEmpty(data_edit_history)) {
         await feedMongoModel.updateOne(

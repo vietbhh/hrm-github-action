@@ -272,7 +272,7 @@ const ModalAnnouncement = (props) => {
             {useFormatMessage("modules.feed.announcement.title")}
           </span>
           <div className="div-btn-close" onClick={() => toggleModal()}>
-            <i className="fa-solid fa-xmark"></i>
+            <i className="fa-regular fa-xmark"></i>
           </div>
         </ModalHeader>
         <ModalBody>

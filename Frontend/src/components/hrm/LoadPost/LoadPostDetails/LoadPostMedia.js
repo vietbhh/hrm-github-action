@@ -19,7 +19,7 @@ const LoadPostMedia = (props) => {
     setData,
     setCommentMoreCountOriginal,
     customAction = {}, // custom dropdown post header
-    isViewEditHistory = false
+    isViewEditHistory = false // only view edit history
   } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,

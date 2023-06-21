@@ -1,19 +1,20 @@
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import Avatar from "@apps/modules/download/pages/Avatar"
 import {
   timeDifference,
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
-import { useEffect } from "react"
-import { Modal, ModalBody } from "reactstrap"
-import PostHeader from "../PostDetails/PostHeader"
 import {
   handleLoadAttachmentThumb,
   renderContentHashtag
 } from "@modules/Feed/common/common"
+import { useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
-import LoadPostMedia from "../LoadPostMedia"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import { Link } from "react-router-dom"
+import { Modal, ModalBody } from "reactstrap"
+import LoadPost from "../../LoadPost"
 
 const ModalViewEditHistory = (props) => {
   const { modal, toggleModal, post_id } = props
@@ -74,6 +75,61 @@ const ModalViewEditHistory = (props) => {
     return ""
   }
 
+  const renderHistory = (item) => {
+    if (
+      item.type === "announcement" ||
+      item.type === "event" ||
+      item.type === "endorsement"
+    ) {
+      let content = ""
+      if (item.content) {
+        content = "Content: " + item.content
+      }
+      if (item.details) {
+        content = "Details: " + item.details
+      }
+
+      return (
+        <div className="load-post">
+          <div className="div-history-item__header">
+            <div className="post-header">
+              <Link
+                to={``}
+                onClick={(e) => {
+                  e.preventDefault()
+                }}>
+                <Avatar className="img" src={item?.created_by?.avatar} />
+              </Link>
+              <div className="post-header-title">
+                <div className="div-name">
+                  <Link
+                    to={``}
+                    onClick={(e) => {
+                      e.preventDefault()
+                    }}>
+                    <span className="name">
+                      {item?.created_by?.full_name || ""}
+                    </span>{" "}
+                  </Link>
+                  <span className="after-name">
+                    {useFormatMessage(
+                      "modules.feed.post.text.this_post_has_been_edited"
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="div-history-item__body">
+            {ReactHtmlParser(content)}
+          </div>
+        </div>
+      )
+    }
+
+    return <LoadPost data={item} isViewEditHistory={true} />
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -108,19 +164,7 @@ const ModalViewEditHistory = (props) => {
                     {timeDifference(item.edited_at)}
                   </div>
                   <div className="div-history-item">
-                    <div className="div-history-item__header">
-                      <PostHeader
-                        data={state.dataFeed}
-                        isViewEditHistory={true}
-                      />
-                    </div>
-                    <div className="div-history-item__body">
-                      {ReactHtmlParser(
-                        renderContent(item.content, item.hashtag)
-                      )}
-
-                      <LoadPostMedia data={item} isViewEditHistory={true} />
-                    </div>
+                    <div className="load-feed">{renderHistory(item)}</div>
                   </div>
                 </div>
               )

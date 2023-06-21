@@ -212,7 +212,8 @@ const submitEvent = async (req, res, next) => {
         req.__user,
         dataEvent,
         data_old,
-        field_compare
+        field_compare,
+        { type: "event" }
       )
       if (!isEmpty(data_edit_history)) {
         await feedMongoModel.updateOne(

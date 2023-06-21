@@ -335,7 +335,6 @@ const submitPostController = async (req, res, next) => {
     } else {
       // update history
       const field_compare = [
-        "type",
         "content",
         "medias",
         "source",
@@ -349,7 +348,8 @@ const submitPostController = async (req, res, next) => {
         req.__user,
         data_new,
         data_feed_old,
-        field_compare
+        field_compare,
+        { type: data_feed_old.type }
       )
       if (!isEmpty(data_edit_history)) {
         await feedMongoModel.updateOne(
@@ -848,10 +848,11 @@ const getDataEditHistory = async (req, res, next) => {
         ? data_feed.edit_history
         : []
       : []
+    const _dataHistory = await handleDataBeforeReturn(dataHistory, true)
 
     const out = {
       dataFeed: await handleDataBeforeReturn(data_feed),
-      dataHistory: reverse(dataHistory)
+      dataHistory: reverse(_dataHistory)
     }
     return res.respond(out)
   } catch (err) {
@@ -1189,7 +1190,13 @@ const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
   }
 }
 
-const handleDataHistory = (userId, data_new, data_old, field_compare) => {
+const handleDataHistory = (
+  userId,
+  data_new,
+  data_old,
+  field_compare,
+  data_save = {}
+) => {
   const data_history = {}
   forEach(field_compare, (field) => {
     // post
@@ -1232,6 +1239,7 @@ const handleDataHistory = (userId, data_new, data_old, field_compare) => {
       )
       if (check_different || check_different2 || check_different3) {
         data_history[field] = data_old[field]
+        data_history["has_poll_vote"] = true
       }
       return
     }
@@ -1292,8 +1300,10 @@ const handleDataHistory = (userId, data_new, data_old, field_compare) => {
   if (!isEmpty(data_history)) {
     const edit_history = {
       ...data_history,
+      created_by: data_old["created_by"],
       edited_at: Date.now(),
-      edited_by: userId
+      edited_by: userId,
+      ...data_save
     }
     return edit_history
   }

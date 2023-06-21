@@ -205,7 +205,8 @@ const submitAnnouncement = async (req, res, next) => {
         req.__user,
         dataAnnouncement,
         data_old,
-        field_compare
+        field_compare,
+        { type: "announcement" }
       )
       if (!isEmpty(data_edit_history)) {
         await feedMongoModel.updateOne(

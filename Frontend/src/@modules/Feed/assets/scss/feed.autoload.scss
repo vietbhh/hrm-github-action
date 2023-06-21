@@ -119,7 +119,7 @@ $background-color-checkbox: #139ff8;
             font-weight: 400;
             font-size: 16px;
             line-height: 29px;
-            color: #32434f;
+            color: $primary-text-color;
           }
         }
       }
@@ -498,7 +498,7 @@ $background-color-checkbox: #139ff8;
             .event-content__title {
               font-weight: 600;
               font-size: 20px;
-              color: #32434f;
+              color: $primary-text-color;
             }
 
             .event-content__meeting-room {
@@ -588,12 +588,12 @@ $background-color-checkbox: #139ff8;
             font-weight: 300;
             font-size: 18px;
             line-height: 23px;
-            color: #32434f !important;
+            color: $primary-text-color !important;
             margin-top: 20px;
             margin-bottom: 20px;
 
             a {
-              color: #32434f !important;
+              color: $primary-text-color !important;
             }
 
             .text-bold {
@@ -605,7 +605,7 @@ $background-color-checkbox: #139ff8;
             font-weight: 400;
             font-size: 14px;
             line-height: 25px;
-            color: #32434f;
+            color: $primary-text-color;
             margin-bottom: 20px;
 
             p:last-child {
@@ -642,7 +642,7 @@ $background-color-checkbox: #139ff8;
             font-weight: 600;
             font-size: 20px;
             line-height: 25px;
-            color: #32434f;
+            color: $primary-text-color;
             margin-top: 15px;
             margin-bottom: 15px;
           }
@@ -651,7 +651,7 @@ $background-color-checkbox: #139ff8;
             font-weight: 400;
             font-size: 14px;
             line-height: 25px;
-            color: #32434f;
+            color: $primary-text-color;
             white-space: pre-wrap;
 
             .hide {
@@ -825,7 +825,7 @@ $background-color-checkbox: #139ff8;
       .name {
         font-weight: 600;
         font-size: 15px;
-        color: #32434f;
+        color: $primary-text-color;
       }
 
       .after-name {
@@ -837,7 +837,7 @@ $background-color-checkbox: #139ff8;
       .after-name-bold {
         font-weight: 600;
         font-size: 15px;
-        color: #32434f;
+        color: $primary-text-color;
       }
 
       .time,
@@ -1027,10 +1027,10 @@ $background-color-checkbox: #139ff8;
             .content__name {
               font-weight: 600;
               font-size: 14px;
-              color: #32434f !important;
+              color: $primary-text-color !important;
 
               a {
-                color: #32434f !important;
+                color: $primary-text-color !important;
 
                 &:hover {
                   text-decoration: unset !important;
@@ -1041,7 +1041,7 @@ $background-color-checkbox: #139ff8;
             .content__comment {
               font-weight: 400;
               font-size: 14px;
-              color: #32434f;
+              color: $primary-text-color;
 
               p {
                 margin-bottom: 0;
@@ -1433,12 +1433,12 @@ $background-color-checkbox: #139ff8;
     font-weight: 600;
     font-size: 14px;
     line-height: 25px;
-    color: #32434f;
+    color: $primary-text-color;
     display: inline-block;
 
     &:hover {
       text-decoration: underline;
-      color: #32434f;
+      color: $primary-text-color;
     }
   }
 
@@ -1610,7 +1610,7 @@ $background-color-checkbox: #139ff8;
     }
 
     .text-title {
-      color: #32434f;
+      color: $primary-text-color;
       font-weight: 600;
       font-size: 18px;
       line-height: 23px;
@@ -1620,13 +1620,12 @@ $background-color-checkbox: #139ff8;
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background-color: #f8f7f7;
       display: flex;
       align-items: center;
       justify-content: center;
       position: absolute;
       right: 0;
-      top: -5px;
+      top: -8px;
       cursor: pointer;
 
       &:hover {
@@ -1759,7 +1758,7 @@ $background-color-checkbox: #139ff8;
           &.icon-arrow {
             background-color: #e7e2e2;
             font-size: 14px;
-            color: #32434f;
+            color: $primary-text-color;
             position: relative;
 
             i {
@@ -1940,7 +1939,7 @@ $background-color-checkbox: #139ff8;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 19px;
+      gap: 14px;
       padding: 0 10px;
       z-index: 1;
 
@@ -2501,13 +2500,13 @@ $background-color-checkbox: #139ff8;
             .div-text__title {
               font-weight: 400;
               font-size: 12px;
-              color: #32434f;
+              color: $primary-text-color;
             }
 
             .div-text__des {
               font-weight: 300;
               font-size: 10px;
-              color: #32434f;
+              color: $primary-text-color;
             }
           }
         }
@@ -2549,7 +2548,7 @@ $background-color-checkbox: #139ff8;
         right: 0;
         border-radius: 10px;
         z-index: 10;
-        background: #f0f0f0;
+        background: transparent;
 
         &:hover {
           background: #e6e6e6;
@@ -2589,7 +2588,7 @@ $background-color-checkbox: #139ff8;
       .name {
         font-weight: 500;
         font-size: 15px;
-        color: #32434f;
+        color: $primary-text-color;
       }
 
       .btn-chat {
@@ -2730,7 +2729,7 @@ $background-color-checkbox: #139ff8;
     .text-title {
       font-weight: 600;
       font-size: 18px;
-      color: #32434f;
+      color: $primary-text-color;
     }
   }
 
@@ -2757,7 +2756,7 @@ $background-color-checkbox: #139ff8;
     }
 
     .form-label {
-      color: #32434f !important;
+      color: $primary-text-color !important;
       font-weight: 600 !important;
       font-size: 15px !important;
     }
@@ -2766,7 +2765,6 @@ $background-color-checkbox: #139ff8;
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background-color: #f8f7f7;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2811,7 +2809,7 @@ $background-color-checkbox: #139ff8;
       width: calc(100% - 65px);
       height: 50px;
       border: none;
-      color: #32434f;
+      color: $primary-text-color;
       background-color: rgb(238, 238, 241, 0.7);
       border-radius: 12px;
       display: flex;
@@ -2936,7 +2934,7 @@ $background-color-checkbox: #139ff8;
     .text-title {
       font-weight: 500;
       font-size: 15px;
-      color: #32434f;
+      color: $primary-text-color;
     }
 
     .div-member-vote {
@@ -3145,7 +3143,7 @@ $background-color-checkbox: #139ff8;
             .name {
               font-weight: 600;
               font-size: 13px;
-              color: #32434f;
+              color: $primary-text-color;
             }
 
             .after-name {
@@ -3157,7 +3155,7 @@ $background-color-checkbox: #139ff8;
             .after-name-bold {
               font-weight: 600;
               font-size: 13px;
-              color: #32434f;
+              color: $primary-text-color;
             }
 
             .time {
@@ -3365,12 +3363,12 @@ $background-color-checkbox: #139ff8;
           font-weight: 600;
           font-size: 14px;
           line-height: 25px;
-          color: #32434f;
+          color: $primary-text-color;
           display: inline-block;
 
           &:hover {
             text-decoration: underline;
-            color: #32434f;
+            color: $primary-text-color;
           }
         }
 
@@ -3596,14 +3594,14 @@ $background-color-checkbox: #139ff8;
               font-weight: 400;
               font-size: 15px;
               line-height: 20px;
-              color: #32434f;
+              color: $primary-text-color;
             }
           }
         }
       }
 
       .form-label {
-        color: #32434f;
+        color: $primary-text-color;
         font-weight: 600;
         font-size: 15px;
         line-height: 20px;
@@ -3816,7 +3814,7 @@ $background-color-checkbox: #139ff8;
           font-weight: 500;
           font-size: 14px;
           line-height: 20px;
-          color: #32434f;
+          color: $primary-text-color;
           position: absolute;
           right: 7px;
           top: 33px;
@@ -4056,7 +4054,7 @@ $background-color-checkbox: #139ff8;
             font-weight: 500;
             font-size: 15px;
             line-height: 20px;
-            color: #32434f;
+            color: $primary-text-color;
           }
 
           .div-show-announcement {
@@ -4225,7 +4223,7 @@ $background-color-checkbox: #139ff8;
       font-weight: 500;
       font-size: 20px;
       line-height: 20px;
-      color: #32434f;
+      color: $primary-text-color;
       text-align: center;
     }
 
@@ -4671,6 +4669,11 @@ $background-color-checkbox: #139ff8;
         padding: 15px;
         margin-top: 10px;
 
+        .load-post {
+          background: transparent !important;
+          padding: 0 !important;
+        }
+
         .div-history-item__header {
           .avatar {
             img {
@@ -4690,5 +4693,110 @@ $background-color-checkbox: #139ff8;
 
   @media (max-width: 1920px) {
     max-width: 680px;
+  }
+}
+
+.modal-send-in-messenger {
+  max-width: 540px;
+
+  .div-header-title {
+    margin-bottom: 0 !important;
+  }
+
+  .modal-body {
+    .div-content-post {
+      padding: 15px;
+      background: #f5f5f8;
+      border-radius: 10px;
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+
+      .div-content-post__content {
+        width: 100%;
+
+        .content-header {
+          width: 100%;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .avatar {
+            img {
+              width: 40px;
+              height: 40px;
+            }
+          }
+
+          .content-header__name {
+            display: flex;
+            flex-direction: column;
+
+            .name-title {
+              font-weight: 600;
+              font-size: 14px;
+              color: $primary-text-color;
+            }
+
+            .name-time {
+              font-weight: 400;
+              font-size: 12px;
+              color: #b0b7c3;
+            }
+          }
+        }
+
+        .content-body {
+          width: 100%;
+          font-weight: 400;
+          font-size: 14px;
+          color: $primary-text-color;
+          line-height: 25px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+      }
+
+      .div-content-post__image {
+        width: 85px;
+        height: 100%;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 15px;
+        }
+      }
+    }
+
+    .div-input-editor {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid rgba(228, 230, 232, 0.85);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+
+      .avatar {
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 0;
+
+        .form-control {
+          border: none;
+        }
+      }
+    }
   }
 }

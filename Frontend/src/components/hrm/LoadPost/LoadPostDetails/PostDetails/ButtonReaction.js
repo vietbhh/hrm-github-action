@@ -1,17 +1,16 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { feedApi } from "@modules/Feed/common/api"
-import { handleReaction } from "@modules/Feed/common/common"
-import React, { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
-import DropdownReaction from "./DropdownReaction"
 import img_care from "@modules/Feed/assets/images/care.png"
 import img_smile from "@modules/Feed/assets/images/haha.png"
-import img_like from "@modules/Feed/assets/images/like.png"
 import img_love from "@modules/Feed/assets/images/love.png"
 import img_sad from "@modules/Feed/assets/images/sad.png"
 import img_wow from "@modules/Feed/assets/images/wow.png"
+import { feedApi } from "@modules/Feed/common/api"
+import { handleReaction } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
+import React, { Fragment, useEffect } from "react"
+import { useSelector } from "react-redux"
+import ModalSendInMessenger from "../modals/ModalSendInMessenger"
+import DropdownReaction from "./DropdownReaction"
 
 const ButtonReaction = (props) => {
   const {
@@ -22,7 +21,8 @@ const ButtonReaction = (props) => {
     setFocusCommentForm
   } = props
   const [state, setState] = useMergedState({
-    checkLike: ""
+    checkLike: "",
+    modalSendInMessenger: false
   })
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
@@ -52,6 +52,9 @@ const ButtonReaction = (props) => {
         .catch((err) => {})
     }
   }
+
+  const toggleModalSendInMessenger = () =>
+    setState({ modalSendInMessenger: !state.modalSendInMessenger })
 
   // ** useEffect
   useEffect(() => {
@@ -202,7 +205,11 @@ const ButtonReaction = (props) => {
     {
       key: "1",
       label: (
-        <div className="div-item-drop" onClick={() => {}}>
+        <div
+          className="div-item-drop"
+          onClick={() => {
+            toggleModalSendInMessenger()
+          }}>
           <a
             onClick={(e) => {
               e.preventDefault()
@@ -242,7 +249,11 @@ const ButtonReaction = (props) => {
     {
       key: "2",
       label: (
-        <div className="div-item-drop" onClick={() => {}}>
+        <div
+          className="div-item-drop"
+          onClick={() => {
+            toggleModalSendInMessenger()
+          }}>
           <a
             onClick={(e) => {
               e.preventDefault()
@@ -348,6 +359,11 @@ const ButtonReaction = (props) => {
           </button>
         </Dropdown>
       </div>
+
+      <ModalSendInMessenger
+        modal={state.modalSendInMessenger}
+        toggleModal={toggleModalSendInMessenger}
+      />
     </Fragment>
   )
 }
