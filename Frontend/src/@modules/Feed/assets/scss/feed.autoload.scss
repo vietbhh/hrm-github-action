@@ -4777,7 +4777,7 @@ $background-color-checkbox: #139ff8;
     .div-input-editor {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 5px;
       border-bottom: 1px solid rgba(228, 230, 232, 0.85);
       padding-bottom: 20px;
       margin-bottom: 20px;
@@ -4796,6 +4796,69 @@ $background-color-checkbox: #139ff8;
         .form-control {
           border: none;
         }
+      }
+    }
+  }
+
+  .div-send-to {
+    margin-bottom: 15px;
+  }
+
+  .form-label {
+    color: $primary-text-color;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .input-group {
+    &:focus-within {
+      .input-group-text {
+        background-color: #ffffff !important;
+      }
+    }
+
+    .input-group-text {
+      padding: 0 !important;
+      width: 50px;
+      background-color: rgb(241, 241, 245, 0.7);
+    }
+
+    .form-control {
+      font-size: 14px !important;
+      background-color: rgb(241, 241, 245, 0.7);
+      height: 46px;
+    }
+  }
+
+  .recent-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+
+    .avatar {
+      img {
+        width: 45px;
+        height: 45px;
+      }
+    }
+
+    .recent-item__text {
+      color: $primary-text-color;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .recent-item__button {
+      border-radius: 6px;
+      background: rgba(255, 230, 88, 0.6);
+      width: 80px;
+      height: 40px;
+      color: $primary-text-color;
+      margin-left: auto;
+
+      &:hover {
+        background: darken($color: rgba(255, 230, 88, 0.6), $amount: 5);
       }
     }
   }
