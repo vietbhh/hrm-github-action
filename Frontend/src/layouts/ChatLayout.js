@@ -6,7 +6,8 @@ import { Outlet } from "react-router-dom"
 import Layout from "./components/vertical/Layout"
 
 // ** Menu Items Array
-import navigation from "@src/navigation/menuChat"
+//import navigation from "@src/navigation/menuChat"
+import navigation from "@src/navigation/menuConfig"
 
 // ** import component
 import Navbar2 from "./components/custom/Navbar2"
@@ -21,7 +22,8 @@ const ChatLayout = (props) => {
       )} */
       className="navbar-2 chat"
       fixedSidebarCollapsed={true}
-      {...props}>
+      {...props}
+      logoLeft={true}>
       <Outlet />
     </Layout>
   )
