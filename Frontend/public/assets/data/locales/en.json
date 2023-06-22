@@ -4548,8 +4548,6 @@
           "announcement": "Announcement"
         },
         "modal_send_in_messenger": {
-          "title": "Send in Messenger",
-          "share_to_a_group": "Share to a group",
           "say_something": "Say something...",
           "send_to": "Send to",
           "enter_email_or_username": "Enter email or username",

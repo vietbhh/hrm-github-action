@@ -1,10 +1,111 @@
 import { ErpInput } from "@apps/components/common/ErpField"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { useFormatMessage } from "@apps/utility/common"
+import {
+  timeDifference,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
+import { useSelector } from "react-redux"
+import ReactHtmlParser from "react-html-parser"
+import { useEffect, useRef } from "react"
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
+import { db } from "firebase"
 
 const ModalSendInMessenger = (props) => {
-  const { modal, toggleModal, title = "" } = props
+  const { modal, toggleModal, data, title = "", typeChat = "" } = props
+  const [state, setState] = useMergedState({
+    dataChat: []
+  })
+
+  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
+  const avatar = userData.avatar
+  const dataEmployee = useSelector((state) => state.users.list)
+
+  const useEffectWasCalled = useRef(false)
+
+  // ** useEffect
+  useEffect(() => {
+    if (modal) {
+      if (useEffectWasCalled.current) return
+      useEffectWasCalled.current = true
+
+      if (firestoreDb) {
+        const q = query(
+          collection(db, `${firestoreDb}/chat_groups/groups`),
+          where("user", "array-contains", userId),
+          orderBy("timestamp", "desc")
+        )
+        console.log("zxc")
+
+        getDocs(q).then((res) => {
+          const dataChat = []
+          res.forEach((docData) => {
+            const dataGroup = docData.data()
+            const idChat = docData.id
+            if (dataGroup.type === "employee") {
+              const index = dataGroup.user.findIndex((item) => item !== userId)
+              const employeeId = dataGroup.user[index]
+                ? dataGroup.user[index]
+                : 0
+              const employee = dataEmployee[employeeId]
+                ? dataEmployee[employeeId]
+                : dataEmployee[userId]
+
+              if (!_.isEmpty(employee)) {
+                dataGroup["idChat"] = idChat
+                dataGroup["idEmployee"] = employee.id
+                dataGroup["username"] = employee.username
+                dataGroup["avatar"] = employee.avatar
+                dataGroup["full_name"] = employee.full_name
+                dataChat.push(dataGroup)
+              }
+            } else {
+              dataGroup["idChat"] = idChat
+              dataGroup["idEmployee"] = ""
+              dataGroup["username"] = ""
+              dataGroup["avatar"] = dataGroup.avatar
+              dataGroup["full_name"] = dataGroup.name
+              dataChat.push(dataGroup)
+            }
+          })
+          setState({ dataChat: dataChat })
+        })
+      }
+    }
+  }, [modal, useEffectWasCalled, dataEmployee])
+
+  // ** render
+  const renderContent = () => {
+    if (data?.content) return ReactHtmlParser(data?.content)
+    if (data?.dataLink?.title) return ReactHtmlParser(data?.dataLink?.title)
+    if (data?.dataLink?.name) return ReactHtmlParser(data?.dataLink?.name)
+    if (data?.dataLink?.content) return ReactHtmlParser(data?.dataLink?.content)
+
+    return ""
+  }
+
+  const renderImage = () => {
+    if (data?.url_thumb) {
+      return (
+        <div className="div-content-post__image">
+          <img src={data.url_thumb} />
+        </div>
+      )
+    }
+
+    if (data?.medias?.[0]?.url_thumb) {
+      return (
+        <div className="div-content-post__image">
+          <img src={data.medias[0].url_thumb} />
+        </div>
+      )
+    }
+
+    return ""
+  }
 
   return (
     <Modal
@@ -17,13 +118,7 @@ const ModalSendInMessenger = (props) => {
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader>
         <div className="div-header-title">
-          <span className="text-title">
-            {title !== ""
-              ? title
-              : useFormatMessage(
-                  `modules.feed.post.modal_send_in_messenger.title`
-                )}
-          </span>
+          <span className="text-title">{title}</span>
           <div
             className="div-btn-close"
             onClick={() => toggleModalCreatePost()}>
@@ -35,24 +130,23 @@ const ModalSendInMessenger = (props) => {
         <div className="div-content-post">
           <div className="div-content-post__content">
             <div className="content-header">
-              <Avatar className="img" src={""} />
+              <Avatar className="img" src={data?.created_by?.avatar} />
               <div className="content-header__name">
-                <span className="name-title">Life. HR</span>
-                <span className="name-time">June 10, 2023</span>
+                <span className="name-title">
+                  {data?.created_by?.full_name}
+                </span>
+                <span className="name-time">
+                  {timeDifference(data.created_at)}
+                </span>
               </div>
             </div>
-            <div className="content-body">
-              Tối nay ăn gì? of working in an international company is sharing
-              knowledge with your colleagues Tối nay ăn gì? of working in an
-              international company is sharing knowledge with your colleagues
-            </div>
+            <div className="content-body">{renderContent()}</div>
           </div>
-          <div className="div-content-post__image">
-            <img src="https://picsum.photos/id/237/200/300" />
-          </div>
+
+          {renderImage()}
         </div>
         <div className="div-input-editor">
-          <Avatar className="img" src={""} />
+          <Avatar className="img" src={avatar} />
           <ErpInput
             nolabel
             placeholder={useFormatMessage(

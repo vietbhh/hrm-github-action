@@ -6,10 +6,7 @@ import {
   useMergedState
 } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
-import {
-  handleLoadAttachmentThumb,
-  renderContentHashtag
-} from "@modules/Feed/common/common"
+import { handleLoadAttachmentThumb } from "@modules/Feed/common/common"
 import { useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { Link } from "react-router-dom"
@@ -66,15 +63,6 @@ const ModalViewEditHistory = (props) => {
   }, [modal, post_id])
 
   // ** render
-  const renderContent = (content, hashtag) => {
-    if (content) {
-      const _hashtag = hashtag ? hashtag : []
-      const _content = renderContentHashtag(content, _hashtag)
-      return _content
-    }
-    return ""
-  }
-
   const renderHistory = (item) => {
     if (
       item.type === "announcement" ||

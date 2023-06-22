@@ -22,7 +22,9 @@ const ButtonReaction = (props) => {
   } = props
   const [state, setState] = useMergedState({
     checkLike: "",
-    modalSendInMessenger: false
+    modalSendInMessenger: false,
+    titleModalInMessenger: "",
+    typeChat: ""
   })
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
@@ -209,6 +211,12 @@ const ButtonReaction = (props) => {
           className="div-item-drop"
           onClick={() => {
             toggleModalSendInMessenger()
+            setState({
+              titleModalInMessenger: useFormatMessage(
+                "modules.feed.post.text.send_in_messenger"
+              ),
+              typeChat: "employee"
+            })
           }}>
           <a
             onClick={(e) => {
@@ -253,6 +261,12 @@ const ButtonReaction = (props) => {
           className="div-item-drop"
           onClick={() => {
             toggleModalSendInMessenger()
+            setState({
+              titleModalInMessenger: useFormatMessage(
+                "modules.feed.post.text.share_to_a_group"
+              ),
+              typeChat: "group"
+            })
           }}>
           <a
             onClick={(e) => {
@@ -363,6 +377,9 @@ const ButtonReaction = (props) => {
       <ModalSendInMessenger
         modal={state.modalSendInMessenger}
         toggleModal={toggleModalSendInMessenger}
+        data={data}
+        title={state.titleModalInMessenger}
+        typeChat={state.typeChat}
       />
     </Fragment>
   )
