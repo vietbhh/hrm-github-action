@@ -158,5 +158,4 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 		return $users;
 
 	}
-
 }

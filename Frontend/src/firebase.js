@@ -1,5 +1,6 @@
 import { userApi } from "@apps/modules/users/common/api"
 import firebase from "firebase/compat/app"
+import { getFirestore } from "firebase/firestore"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
 
 // ** firebase config
@@ -26,6 +27,7 @@ const getAccessToken = () => {
 }
 
 export const messaging = getMessaging(firebaseApp)
+export const db = getFirestore(firebaseApp)
 
 export const requestPermission = () => {
   if (!("Notification" in window)) {

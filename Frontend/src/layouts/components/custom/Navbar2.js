@@ -3,14 +3,14 @@ import { Fragment } from "react"
 
 // ** Custom Components
 import { useSelector } from "react-redux"
-import NavbarUser from "../vertical/navbar/NavbarUser"
 import NavbarSearch from "../navbar/NavbarSearch"
+import NavbarUser from "../vertical/navbar/NavbarUser"
 
 // ** import
-import "./scss/navbar2.scss"
 import classNames from "classnames"
 import * as Icon from "react-feather"
 import { NavItem, NavLink } from "reactstrap"
+import "./scss/navbar2.scss"
 import { Link } from "react-router-dom"
 
 const Navbar2 = (props) => {
