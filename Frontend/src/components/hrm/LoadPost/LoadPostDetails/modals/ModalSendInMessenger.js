@@ -11,11 +11,17 @@ import ReactHtmlParser from "react-html-parser"
 import { useEffect, useRef } from "react"
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
 import { db } from "firebase"
+import { renderAvatar } from "@apps/modules/chat/common/common"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import { EmptyContent } from "@apps/components/common/EmptyContent"
 
 const ModalSendInMessenger = (props) => {
   const { modal, toggleModal, data, title = "", typeChat = "" } = props
   const [state, setState] = useMergedState({
-    dataChat: []
+    dataChat: [],
+    dataFilter: [],
+    filterChat: "",
+    arrEmployee: []
   })
 
   const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
@@ -26,11 +32,31 @@ const ModalSendInMessenger = (props) => {
 
   const useEffectWasCalled = useRef(false)
 
+  // ** function
+  const handleFilter = (e) => {
+    setState({ filterChat: e.target.value })
+    const searchFilterFunction = (item) =>
+      item.full_name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      item.username.toLowerCase().includes(e.target.value.toLowerCase())
+    const filteredChatsArr =
+      typeChat === "employee"
+        ? state.arrEmployee.filter(searchFilterFunction)
+        : state.dataChat.filter(searchFilterFunction)
+    setState({ dataFilter: [...filteredChatsArr] })
+  }
+
   // ** useEffect
   useEffect(() => {
     if (modal) {
+      setState({ filterChat: "" })
+
       if (useEffectWasCalled.current) return
       useEffectWasCalled.current = true
+      const arrEmployee = []
+      _.forEach(dataEmployee, (item) => {
+        arrEmployee.push(item)
+      })
+      setState({ arrEmployee: arrEmployee })
 
       if (firestoreDb) {
         const q = query(
@@ -38,13 +64,12 @@ const ModalSendInMessenger = (props) => {
           where("user", "array-contains", userId),
           orderBy("timestamp", "desc")
         )
-        console.log("zxc")
 
         getDocs(q).then((res) => {
           const dataChat = []
           res.forEach((docData) => {
             const dataGroup = docData.data()
-            const idChat = docData.id
+            const id = docData.id
             if (dataGroup.type === "employee") {
               const index = dataGroup.user.findIndex((item) => item !== userId)
               const employeeId = dataGroup.user[index]
@@ -55,17 +80,19 @@ const ModalSendInMessenger = (props) => {
                 : dataEmployee[userId]
 
               if (!_.isEmpty(employee)) {
-                dataGroup["idChat"] = idChat
+                dataGroup["id"] = id
                 dataGroup["idEmployee"] = employee.id
                 dataGroup["username"] = employee.username
+                dataGroup["email"] = employee.email
                 dataGroup["avatar"] = employee.avatar
                 dataGroup["full_name"] = employee.full_name
                 dataChat.push(dataGroup)
               }
             } else {
-              dataGroup["idChat"] = idChat
+              dataGroup["id"] = id
               dataGroup["idEmployee"] = ""
               dataGroup["username"] = ""
+              dataGroup["email"] = ""
               dataGroup["avatar"] = dataGroup.avatar
               dataGroup["full_name"] = dataGroup.name
               dataChat.push(dataGroup)
@@ -105,6 +132,33 @@ const ModalSendInMessenger = (props) => {
     }
 
     return ""
+  }
+
+  const renderListMessenger = () => {
+    const filterType = (val) => val.type === typeChat
+    const arrToMap = state.filterChat.length
+      ? typeChat === "employee"
+        ? state.dataFilter
+        : state.dataFilter.filter(filterType)
+      : state.dataChat.filter(filterType).splice(0, 5)
+
+    if (arrToMap.length === 0) return <EmptyContent text={""} />
+    return _.map(arrToMap, (item) => {
+      return (
+        <div key={item.id} className="recent-item">
+          {renderAvatar(item, "", "45", "45")}
+          <div className="recent-item__div-name">
+            <span className="recent-item__text">{item.full_name}</span>
+            <span className="recent-item__username">
+              {item.username && `@${item.username}`}
+            </span>
+          </div>
+          <button className="recent-item__button">
+            {useFormatMessage("modules.feed.post.text.send")}
+          </button>
+        </div>
+      )
+    })
   }
 
   return (
@@ -156,11 +210,13 @@ const ModalSendInMessenger = (props) => {
         </div>
         <div className="div-send-to">
           <ErpInput
+            value={state.filterChat}
+            onChange={handleFilter}
             label={useFormatMessage(
               "modules.feed.post.modal_send_in_messenger.send_to"
             )}
             placeholder={useFormatMessage(
-              "modules.feed.post.modal_send_in_messenger.enter_email_or_username"
+              "modules.feed.post.modal_send_in_messenger.enter_name_or_username"
             )}
             prepend={
               <svg
@@ -194,26 +250,9 @@ const ModalSendInMessenger = (props) => {
             )}
           </label>
 
-          <div className="recent-item">
-            <Avatar className="img" src={""} />
-            <span className="recent-item__text">Life. HR</span>
-            <button className="recent-item__button">Send</button>
-          </div>
-          <div className="recent-item">
-            <Avatar className="img" src={""} />
-            <span className="recent-item__text">Life. HR</span>
-            <button className="recent-item__button">Send</button>
-          </div>
-          <div className="recent-item">
-            <Avatar className="img" src={""} />
-            <span className="recent-item__text">Life. HR</span>
-            <button className="recent-item__button">Send</button>
-          </div>
-          <div className="recent-item">
-            <Avatar className="img" src={""} />
-            <span className="recent-item__text">Life. HR</span>
-            <button className="recent-item__button">Send</button>
-          </div>
+          <PerfectScrollbar className="" options={{ wheelPropagation: false }}>
+            {renderListMessenger()}
+          </PerfectScrollbar>
         </div>
       </ModalBody>
     </Modal>

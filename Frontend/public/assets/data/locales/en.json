@@ -4550,7 +4550,7 @@
         "modal_send_in_messenger": {
           "say_something": "Say something...",
           "send_to": "Send to",
-          "enter_email_or_username": "Enter email or username",
+          "enter_name_or_username": "Enter name or username",
           "recent": "Recent"
         }
       },
