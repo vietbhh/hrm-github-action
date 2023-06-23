@@ -46,6 +46,7 @@ import {
 import "@styles/base/pages/app-chat-list.scss"
 import "@styles/base/pages/app-chat.scss"
 import "../assets/scss/chat.scss"
+import { handleCountFile } from "../common/firebaseCommon"
 
 const AppChat = (props) => {
   const [store, setStore] = useMergedState({
@@ -557,38 +558,6 @@ const AppChat = (props) => {
     return []
   }
 
-  const handleCountFile = (groupId, type, action = "plus") => {
-    const index_groups = store.groups.findIndex((item) => item.id === groupId)
-    let file_count = {}
-    if (index_groups !== 1) {
-      const group_file_count = store.groups[index_groups]?.file_count || {}
-      if (type === "link") {
-        const count_link = group_file_count?.link
-          ? action === "plus"
-            ? group_file_count?.link + 1
-            : group_file_count?.link - 1
-          : 1
-        file_count = { ...group_file_count, link: count_link }
-      } else if (type === "image" || type === "image_gif") {
-        const count_image = group_file_count?.image
-          ? action === "plus"
-            ? group_file_count?.image + 1
-            : group_file_count?.image - 1
-          : 1
-        file_count = { ...group_file_count, image: count_image }
-      } else if (type === "file" || type === "audio" || type === "video") {
-        const count_file = group_file_count?.file
-          ? action === "plus"
-            ? group_file_count?.file + 1
-            : group_file_count?.file - 1
-          : 1
-        file_count = { ...group_file_count, file: count_file }
-      }
-    }
-
-    return file_count
-  }
-
   const handleSendNotification = (groupId, msg, dataGroups, receivers) => {
     let notification_name = dataGroups.name
     let icon = dataGroups.avatar
@@ -721,9 +690,9 @@ const AppChat = (props) => {
   const sendMessage = async (groupId = "", msg, dataAddFile = {}) => {
     setState({ checkAddMessage: true })
     const timestamp = Date.now()
-    const file_count = handleCountFile(groupId, dataAddFile.type)
+    const file_count = handleCountFile(store.groups, groupId, dataAddFile.type)
     const break_type = dataAddFile.break_type
-      ? ""
+      ? dataAddFile.break_type
       : await handleBreakType(groupId, timestamp, dataAddFile)
 
     // ** encrypt
@@ -901,7 +870,11 @@ const AppChat = (props) => {
             ...handleTimestampFile(dataUpdate)
           })
           if (dataUpdate.status && dataUpdate.status === "success") {
-            const file_count = handleCountFile(groupId, dataUpdate.type)
+            const file_count = handleCountFile(
+              store.groups,
+              groupId,
+              dataUpdate.type
+            )
             if (!_.isEmpty(file_count)) {
               handleUpdateGroup(groupId, {
                 file_count: file_count
@@ -1731,7 +1704,6 @@ const AppChat = (props) => {
                 checkShowDataChat={state.checkShowDataChat}
                 getChatScrollBottom={getChatScrollBottom}
                 handleUpdateGroup={handleUpdateGroup}
-                handleCountFile={handleCountFile}
                 selectedGroup={state.selectedGroup}
                 keyEncrypt={keyEncrypt}
               />
