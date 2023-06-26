@@ -23,6 +23,7 @@ import {
   replaceMessageBreakLine,
   replaceTextMessage
 } from "../../common/common"
+import { handleCountFile } from "../../common/firebaseCommon"
 
 const ChatMessage = (props) => {
   const {
@@ -42,7 +43,6 @@ const ChatMessage = (props) => {
     checkShowDataChat,
     handleHeight,
     handleUpdateGroup,
-    handleCountFile,
     keyEncrypt
   } = props
   const { selectedUser, groups } = store
@@ -941,6 +941,7 @@ const ChatMessage = (props) => {
                           unsent: 1
                         })
                         const file_count = handleCountFile(
+                          groups,
                           selectedUser.chat.id,
                           chat.type,
                           "minus"
