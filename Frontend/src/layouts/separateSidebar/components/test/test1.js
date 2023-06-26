@@ -15,23 +15,25 @@ const test1 = () => {
     <Card>
       <CardBody style={{ minHeight: "1500px" }}>test1</CardBody>
 
-      <Button
-        color="primary"
-        onClick={async () => {
-          return
-          await handleSendMessage(
-            "",
-            "vao ne",
-            {},
-            userId,
-            userFullName,
-            {},
-            "8",
-            socket
-          )
-        }}>
-        test chat
-      </Button>
+      <div>
+        <Button
+          color="primary"
+          onClick={async () => {
+            return
+            await handleSendMessage(
+              "",
+              "vao ne",
+              {},
+              userId,
+              userFullName,
+              {},
+              "8",
+              socket
+            )
+          }}>
+          test chat
+        </Button>
+      </div>
     </Card>
   )
 }

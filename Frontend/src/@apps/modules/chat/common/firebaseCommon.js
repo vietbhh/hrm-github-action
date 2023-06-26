@@ -547,10 +547,7 @@ const handleSendMessage = async (
 
 export {
   handleCountFile,
-  handleBreakType,
   handleTimestampFile,
-  handleSendNotification,
-  handleLastMessage,
   setDataUnseenDetail,
   handleUpdateGroup,
   handleAddNewGroup,
