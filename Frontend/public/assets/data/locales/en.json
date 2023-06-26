@@ -4641,8 +4641,9 @@
         "work_space": "Work Space",
         "workspaces": "Workspaces",
         "workspace": "Workspace",
-        "workspace_you_have_joined": "Workspace you have joined",
-        "workspace_that_you_managed": "Workspace that you managed",
+        "workgroup": "Workgroup",
+        "workspace_joined": "Workspace you've joined",
+        "workspace_manage": "Workspace you manage",
         "remove_cover_image": "Do you want to remove the photo cover ?",
         "manage_workspace": "Manage Workspaces",
         "workspace_overview": "Workspace overview",
@@ -4652,6 +4653,7 @@
       "buttons": {
         "create": "Create Workspace",
         "view_all": "View All",
+        "see_all": "See All",
         "load_more": "Load More",
         "add_description": "Add description",
         "edit": "Edit",
@@ -4679,7 +4681,8 @@
         "become_admin_workspace": "Become Admin of the workspace",
         "view_detail": "View details",
         "leave_admin_workspace": "Leave Admin of the workspace",
-        "export_excel_file": "Export excel file"
+        "export_excel_file": "Export excel file",
+        "view_workspace": "View Space"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4801,7 +4804,11 @@
         "posts": "post",
         "public": "Public",
         "joined": "Joined",
-        "excel": "Excel"
+        "excel": "Excel",
+        "description_workspace_card": {
+          "manage": "Manage content, member & settings",
+          "joined": "Collaborate with your team"
+        }
       },
       "app_options": {
         "workspace_type": {
