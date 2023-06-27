@@ -4551,7 +4551,8 @@
           "say_something": "Say something...",
           "send_to": "Send to",
           "enter_name_or_username": "Enter name or username",
-          "recent": "Recent"
+          "recent": "Recent",
+          "sent": "Sent"
         }
       },
       "manage_post": {

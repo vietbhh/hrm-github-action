@@ -4859,14 +4859,18 @@ $background-color-checkbox: #139ff8;
 
     .recent-item__button {
       border-radius: 6px;
-      background: rgba(255, 230, 88, 0.6);
+      background: rgba(255, 230, 88, 0.85);
       width: 80px;
       height: 40px;
       color: $primary-text-color;
       margin-left: auto;
 
       &:hover {
-        background: darken($color: rgba(255, 230, 88, 0.6), $amount: 5);
+        background: darken($color: rgba(255, 230, 88, 0.85), $amount: 5);
+      }
+
+      &:disabled {
+        background: rgba(255, 230, 88, 0.6) !important;
       }
     }
   }
@@ -4878,5 +4882,27 @@ $background-color-checkbox: #139ff8;
   .scrollbar-container {
     padding-right: 13px;
     margin-right: -13px;
+  }
+}
+
+.dropdown-btn-send {
+  ul {
+    border-radius: 12px;
+    padding: 0;
+    min-width: max-content;
+
+    li {
+      padding: 0;
+      border-radius: 12px;
+      margin-bottom: 5px;
+
+      &:hover {
+        background-color: #f5f6f8 !important;
+      }
+
+      .div-item-drop {
+        padding: 10px 35px 10px 25px;
+      }
+    }
   }
 }

@@ -343,7 +343,7 @@ const ButtonReaction = (props) => {
         <Dropdown
           menu={{ items }}
           placement="bottom"
-          overlayClassName="post-header-button-dot"
+          overlayClassName="post-header-button-dot dropdown-btn-send"
           trigger={["click"]}>
           <button className="btn-send">
             <svg

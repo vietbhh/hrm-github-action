@@ -5,15 +5,18 @@ import {
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
-import { Modal, ModalBody, ModalHeader } from "reactstrap"
+import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
 import { useSelector } from "react-redux"
 import ReactHtmlParser from "react-html-parser"
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
 import { db } from "firebase"
 import { renderAvatar } from "@apps/modules/chat/common/common"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import SocketContext from "utility/context/Socket"
+import { handleSendMessage } from "@apps/modules/chat/common/firebaseCommon"
+import notification from "@apps/utility/notification"
 
 const ModalSendInMessenger = (props) => {
   const { modal, toggleModal, data, title = "", typeChat = "" } = props
@@ -21,14 +24,19 @@ const ModalSendInMessenger = (props) => {
     dataChat: [],
     dataFilter: [],
     filterChat: "",
-    arrEmployee: []
+    arrEmployee: [],
+    arrSent: [],
+    loading: {},
+    textSaySomething: ""
   })
 
   const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const avatar = userData.avatar
+  const userFullName = userData.full_name
   const dataEmployee = useSelector((state) => state.users.list)
+  const socket = useContext(SocketContext)
 
   const useEffectWasCalled = useRef(false)
 
@@ -45,13 +53,36 @@ const ModalSendInMessenger = (props) => {
     setState({ dataFilter: [...filteredChatsArr] })
   }
 
+  const setArrSent = (id, idEmployee) => {
+    const arrSent = [...state.arrSent]
+    if (id) {
+      arrSent.push(id)
+    }
+    if (idEmployee) {
+      arrSent.push(idEmployee)
+    }
+    setState({ arrSent: arrSent })
+  }
+
+  const setLoading = (id, status) => {
+    const loading = { ...state.loading }
+    loading[id] = status
+    setState({ loading: loading })
+  }
+
   // ** useEffect
   useEffect(() => {
     if (modal) {
-      setState({ filterChat: "" })
+      setState({
+        filterChat: "",
+        textSaySomething: "",
+        arrSent: [],
+        loading: {}
+      })
 
       if (useEffectWasCalled.current) return
       useEffectWasCalled.current = true
+
       const arrEmployee = []
       _.forEach(dataEmployee, (item) => {
         arrEmployee.push(item)
@@ -80,6 +111,7 @@ const ModalSendInMessenger = (props) => {
                 : dataEmployee[userId]
 
               if (!_.isEmpty(employee)) {
+                dataGroup["idChat"] = id
                 dataGroup["id"] = id
                 dataGroup["idEmployee"] = employee.id
                 dataGroup["username"] = employee.username
@@ -89,6 +121,7 @@ const ModalSendInMessenger = (props) => {
                 dataChat.push(dataGroup)
               }
             } else {
+              dataGroup["idChat"] = id
               dataGroup["id"] = id
               dataGroup["idEmployee"] = ""
               dataGroup["username"] = ""
@@ -144,6 +177,7 @@ const ModalSendInMessenger = (props) => {
 
     if (arrToMap.length === 0) return <EmptyContent text={""} />
     return _.map(arrToMap, (item) => {
+      const id = item.id ? item.id : item.idEmployee
       return (
         <div key={item.id} className="recent-item">
           {renderAvatar(item, "", "45", "45")}
@@ -153,8 +187,45 @@ const ModalSendInMessenger = (props) => {
               {item.username && `@${item.username}`}
             </span>
           </div>
-          <button className="recent-item__button">
-            {useFormatMessage("modules.feed.post.text.send")}
+          <button
+            className="recent-item__button"
+            disabled={
+              state.loading[id] ||
+              state.arrSent.indexOf(id) !== -1 ||
+              state.arrSent.indexOf(item.idEmployee) !== -1
+            }
+            onClick={() => {
+              setLoading(id, true)
+              setTimeout(async () => {
+                const link_post = `${process.env.REACT_APP_URL}/posts/${
+                  data.ref ? data.ref : data._id
+                }`
+                const msg = state.textSaySomething + " <br />" + link_post
+                await handleSendMessage(
+                  item.idChat ? item.idChat : "",
+                  msg,
+                  { type: "link" },
+                  userId,
+                  userFullName,
+                  [],
+                  item.id ? item.id : item.idEmployee,
+                  socket
+                )
+                setArrSent(id, item.idEmployee)
+                setLoading(id, false)
+                notification.showSuccess({
+                  text: useFormatMessage("notification.success")
+                })
+              }, 500)
+            }}>
+            {state.loading[id] && <Spinner size={"sm"} />}
+            {!state.loading[id] &&
+              (state.arrSent.indexOf(id) !== -1 ||
+              state.arrSent.indexOf(item.idEmployee) !== -1
+                ? useFormatMessage(
+                    "modules.feed.post.modal_send_in_messenger.sent"
+                  )
+                : useFormatMessage("modules.feed.post.text.send"))}
           </button>
         </div>
       )
@@ -173,9 +244,7 @@ const ModalSendInMessenger = (props) => {
       <ModalHeader>
         <div className="div-header-title">
           <span className="text-title">{title}</span>
-          <div
-            className="div-btn-close"
-            onClick={() => toggleModalCreatePost()}>
+          <div className="div-btn-close" onClick={() => toggleModal()}>
             <i className="fa-regular fa-xmark"></i>
           </div>
         </div>
@@ -206,6 +275,8 @@ const ModalSendInMessenger = (props) => {
             placeholder={useFormatMessage(
               "modules.feed.post.modal_send_in_messenger.say_something"
             )}
+            value={state.textSaySomething}
+            onChange={(e) => setState({ textSaySomething: e.target.value })}
           />
         </div>
         <div className="div-send-to">
