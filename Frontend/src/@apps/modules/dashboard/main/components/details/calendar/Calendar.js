@@ -1,10 +1,10 @@
 // ** React Imports
 import { Fragment, useEffect, useRef } from "react"
-import { calendarApi } from "../../../../../calendar/common/api"
-import moment from "moment"
+
 // ** Styles
 // ** Components
-import notification from "@apps/utility/notification"
+
+import "@fullcalendar/react/dist/vdom"
 import FullCalendar from "@fullcalendar/react"
 import listPlugin from "@fullcalendar/list"
 import dayGridPlugin from "@fullcalendar/daygrid"
@@ -14,6 +14,9 @@ import CalendarDescription from "./CalendarDescription"
 import AddCalendarButton from "./AddCalendarButton"
 import GroupAllDayEvent from "@apps/modules/calendar/components/calendar/GroupAllDayEvent"
 
+import { calendarApi } from "../../../../../calendar/common/api"
+import moment from "moment"
+import notification from "@apps/utility/notification"
 const Calendar = (props) => {
   const {
     // ** props

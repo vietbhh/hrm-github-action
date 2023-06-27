@@ -1,5 +1,5 @@
 import { useFormatMessage } from "@apps/utility/common"
-import settingMenu from "navigation/settingMenu"
+import settingMenu from "@/configs/settingMenu"
 import React, { useContext, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { NavLink as RRNavLink } from "react-router-dom"

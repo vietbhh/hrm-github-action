@@ -33,7 +33,7 @@ import DetailAuditDataDefaultModule from "../../detail/DetailAuditDataDefaultMod
 import PermissionModalDefaultModule, {
   handlePermissionArray
 } from "../../modals/PermissionModalDefaultModule"
-import FileUploadFormDefaultModule from "./FileUploadFormDefaultModule"
+//import FileUploadFormDefaultModule from "./FileUploadFormDefaultModule"
 const NavForm = (props) => {
   const { active, toggle, isUpdate } = props
   return (
@@ -272,7 +272,7 @@ const MainFormDefaultModule = (props) => {
                 </Form>
               </TabPane>
               <TabPane tabId="2">
-                <FileUploadFormDefaultModule
+                {/* <FileUploadFormDefaultModule
                   files_upload_module={files_upload_module}
                   setFiles={(filesNew, filesUpdate) => {
                     setState({
@@ -288,7 +288,7 @@ const MainFormDefaultModule = (props) => {
                       ]
                     })
                   }}
-                />
+                /> */}
               </TabPane>
               {isUpdate && (
                 <TabPane tabId="3">

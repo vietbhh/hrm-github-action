@@ -25,10 +25,10 @@ import {
   CardTitle,
   Spinner
 } from "reactstrap"
-import { initAppData } from "redux/app/app"
-import { updateListUsers } from "redux/app/users"
-import { handleLogin } from "redux/authentication"
-import { initialLayout } from "redux/layout"
+import { initAppData } from "@store/app/app"
+import { updateListUsers } from "@store/app/users"
+import { handleLogin } from "@store/authentication"
+import { initialLayout } from "@store/layout"
 import Header from "./Header"
 
 const Login = (props) => {
@@ -36,6 +36,7 @@ const Login = (props) => {
   const methods = useForm({
     mode: "onChange"
   })
+
   const { i18n } = useTranslation()
   const { handleSubmit } = methods
   const ability = useContext(AbilityContext)
@@ -84,10 +85,6 @@ const Login = (props) => {
         dispatch(updateListUsers(list_user))
         ability.update(permits)
         navigate(from)
-        notification.show({
-          title: "Welcome " + userData.full_name || userData.username,
-          text: useFormatMessage("auth.welcomeMessage")
-        })
       })
       .catch((err) => {
         setLoading(false)

@@ -1,9 +1,9 @@
 import BlankLayout from "@layouts/BlankLayout"
-import VerticalLayout from "@src/layouts/VerticalLayout"
-import ChatLayout from "./ChatLayout"
-import DriveLayout from "./DriveLayout"
-import SeparateSidebar from "./separateSidebar/index"
-import EmptyLayout from "./emptyLayout/EmptyLayout"
+import VerticalLayout from "./VerticalLayout/VerticalLayout"
+import ChatLayout from "./ChatLayout/ChatLayout"
+import DriveLayout from "./DriveLayout/DriveLayout"
+import SeparateSidebar from "./SeparateSidebarLayout/SeparateSidebarLayout"
+import EmptyLayout from "./EmptyLayout/EmptyLayout"
 
 const defaultLayout = "vertical"
 const layoutList = ["blank", "vertical", "chat", "drive", "separateSidebar", "empty"]

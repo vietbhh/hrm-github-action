@@ -471,7 +471,7 @@ export const addColButtonTable = (
                   className="w-100"
                   onClick={() =>
                     coppyLink(
-                      `${process.env.REACT_APP_URL}/${module}/detail/${row.id}`
+                      `${import.meta.env.VITE_APP_URL}/${module}/detail/${row.id}`
                     )
                   }>
                   <Link2 size={14} className="me-50" />

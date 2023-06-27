@@ -30,13 +30,13 @@ import {
   Form,
   Spinner
 } from "reactstrap"
-import { initAppData } from "redux/app/app"
-import { handleLogin } from "redux/authentication"
-import { initialLayout } from "redux/layout"
+import { initAppData } from "@store/app/app"
+import { handleLogin } from "@store/authentication"
+import { initialLayout } from "@store/layout"
 import * as yup from "yup"
 import Header from "./Header"
 import { useTranslation } from "react-i18next"
-import { updateListUsers } from "redux/app/users"
+import { updateListUsers } from "@store/app/users"
 
 const Activation = () => {
   const { i18n } = useTranslation()
@@ -68,7 +68,7 @@ const Activation = () => {
     })
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/auth/active/validate?token=${token}`
+        `${import.meta.env.VITE_APP_API_URL}/auth/active/validate?token=${token}`
       )
       .then((res) => {
         setState({
@@ -126,7 +126,7 @@ const Activation = () => {
     })
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}/auth/active`,
+        `${import.meta.env.VITE_APP_API_URL}/auth/active`,
         serialize(
           cloneDeep({
             token: token,

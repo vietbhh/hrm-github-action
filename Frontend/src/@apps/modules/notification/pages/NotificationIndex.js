@@ -8,7 +8,7 @@ import { Pagination } from "antd"
 import { Card, CardBody, CardHeader } from "reactstrap"
 // ** Components
 import notification from "@apps/utility/notification"
-import ListNotification from "../../../../layouts/components/vertical/navbar/ListNotification"
+import ListNotification from "layouts/_components/vertical/navbar/ListNotification"
 
 const NotificationIndex = (props) => {
   const [state, setState] = useMergedState({

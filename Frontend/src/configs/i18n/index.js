@@ -1,8 +1,17 @@
 // ** I18n Imports
 import i18n from "i18next"
-import Backend from "i18next-xhr-backend"
+import Backend from "i18next-http-backend"
 import { initReactI18next } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
+
+// ** Languages Imports
+const en = new URL("../../assets/data/locales/en.json", import.meta.url).href
+const vi = new URL("../../assets/data/locales/vi.json", import.meta.url).href
+
+const languages = {
+  en,
+  vi
+}
 
 i18n
 
@@ -18,10 +27,11 @@ i18n
     lng: "en",
     backend: {
       /* translation file path */
-      loadPath: `${process.env.PUBLIC_URL}/assets/data/locales/{{lng}}.json`
+      loadPath: (lng) => languages[lng]
     },
     fallbackLng: "en",
     debug: false,
+    keySeparator: ".",
     react: {
       useSuspense: false
     },

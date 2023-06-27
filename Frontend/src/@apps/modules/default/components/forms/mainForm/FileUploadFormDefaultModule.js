@@ -1,16 +1,16 @@
 import React from "react"
-import Uppy from "@uppy/core"
-
-import { Dashboard } from "@uppy/react"
 import { Row, Col } from "reactstrap"
 
+/* import Uppy from "@uppy/core"
+import { Dashboard } from "@uppy/react"
 import "uppy/dist/uppy.css"
 import "@uppy/status-bar/dist/style.css"
 import "@styles/react/libs/file-uploader/file-uploader.scss"
 import "@uppy/core/dist/style.css"
 import "@uppy/dashboard/dist/style.css"
 import { Webcam } from "uppy"
-import ImageEditor from "@uppy/image-editor"
+import ImageEditor from "@uppy/image-editor" */
+
 import { useSelector } from "react-redux"
 import { downloadApi } from "@apps/modules/download/common/api"
 import { useMergedState } from "@apps/utility/common"

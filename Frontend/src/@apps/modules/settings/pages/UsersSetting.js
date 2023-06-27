@@ -1,15 +1,22 @@
 import { ErpInput } from "@apps/components/common/ErpField"
 import TableLoader from "@apps/components/spinner/TableLoader"
 import Avatar from "@apps/modules/download/pages/Avatar"
+import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import SwAlert from "@apps/utility/SwAlert"
 import { debounce } from "lodash"
 import React, { Fragment, useEffect, useRef } from "react"
 import { MoreVertical, Trash } from "react-feather"
 import { useSelector } from "react-redux"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
-import { Dropdown, Pagination, Popover, Table, Whisper } from "rsuite"
+import {
+  Button as ButtonRS,
+  Dropdown,
+  Pagination,
+  Popover,
+  Table,
+  Whisper
+} from "rsuite"
 import { usersApi } from "../common/api"
 import SettingLayout from "../components/SettingLayout"
 import AddUserModal from "../components/users/AddUserModal"
@@ -46,7 +53,7 @@ const UsersSetting = (props) => {
         setState({
           searchValue: nextValue
         }),
-      process.env.REACT_APP_DEBOUNCE_INPUT_DELAY
+      import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY
     )
   ).current
 
@@ -320,26 +327,24 @@ const UsersSetting = (props) => {
                 <HeaderCell></HeaderCell>
                 <Cell>
                   {(row, rowIndex) => {
+                    const whisperRef = useRef()
                     return (
                       <Fragment>
-                        <Button.Ripple
+                        <ButtonRS
                           color="flat-dark"
                           size="sm"
-                          className="btn-delete btn-sm"
+                          className="btn-delete btn-sm me-10"
                           onClick={() => {
                             handleDeleteClick(row.id)
                           }}>
                           <Trash size={15} />
-                        </Button.Ripple>
+                        </ButtonRS>
                         <Whisper
                           placement="autoVerticalStart"
                           trigger="click"
+                          ref={whisperRef}
                           speaker={({ onClose, left, top, className }, ref) => (
-                            <Popover
-                              ref={ref}
-                              className={className}
-                              style={{ left, top }}
-                              full>
+                            <Popover ref={ref} className={className} full>
                               <Dropdown.Menu>
                                 <Dropdown.Item
                                   onSelect={() => {
@@ -405,12 +410,12 @@ const UsersSetting = (props) => {
                               </Dropdown.Menu>
                             </Popover>
                           )}>
-                          <Button
+                          <ButtonRS
                             color="flat-dark"
                             size="sm"
                             className="btn-sm">
                             <MoreVertical size={15} />
-                          </Button>
+                          </ButtonRS>
                         </Whisper>
                       </Fragment>
                     )

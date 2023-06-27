@@ -1,14 +1,17 @@
-import { Button } from "reactstrap"
-import { Link } from "react-router-dom"
 import notAuthImg from "@src/assets/images/pages/not-authorized.svg"
+import { Link } from "react-router-dom"
+import { Button } from "reactstrap"
 
 import "@styles/base/pages/page-misc.scss"
+import { useSelector } from "react-redux"
+import Logo from "../download/pages/Logo"
 
 const NotAuthorized = () => {
+  const logo = useSelector((state) => state.layout.logo_default)
   return (
     <div className="misc-wrapper">
       <a className="brand-logo" href="/">
-        <h2 className="brand-text text-primary ms-1">Life.</h2>
+        <Logo src={logo} className="logo" />
       </a>
       <div className="misc-inner p-2 p-sm-3">
         <div className="w-100 text-center">
@@ -18,7 +21,7 @@ const NotAuthorized = () => {
           </p>
           <Button
             tag={Link}
-            to="/login"
+            to="/"
             color="primary"
             className="btn-sm-block mb-1">
             Back to home

@@ -24,7 +24,7 @@ class Filters extends BaseConfig
 	public $globals = [
 		'before' => [
 			'cors',
-			'login' => ['except' => ['auth/*', 'download/public/*', 'download/logo/*','download/avatar', 'download/avatar/*', 'lib/download/*']]
+			'login' => ['except' => ['auth/*', 'header-assistant/*', 'download/public/*', 'download/logo/*', 'download/avatar', 'download/avatar/*', 'lib/download/*']]
 			//'honeypot'
 			// 'csrf',
 		],

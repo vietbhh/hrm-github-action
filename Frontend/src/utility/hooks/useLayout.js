@@ -4,7 +4,7 @@ import { useEffect } from "react"
 // ** Store Imports
 import { useDispatch, useSelector } from "react-redux"
 import { handleLayout, handleLastLayout } from "@store/layout"
-import { updateUserSetting } from "redux/api"
+import { updateUserSetting } from "@store/api"
 
 export const useLayout = () => {
   // ** Hooks

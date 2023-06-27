@@ -1,11 +1,11 @@
-import { UncontrolledTooltip } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap"
 
-const { useFormatMessage, timeDifference } = require("@apps/utility/common");
-const { isEmpty } = require("lodash");
-const { Fragment } = require("react");
-import { Link } from "react-router-dom";
+import { useFormatMessage, timeDifference } from "@apps/utility/common"
+import { isEmpty } from "lodash"
+import { Fragment } from "react"
+import { Link } from "react-router-dom"
 const DetailAuditDataDefaultModule = (props) => {
-  const { data } = props;
+  const { data } = props
   return (
     <Fragment>
       <p className="mb-0">
@@ -46,21 +46,18 @@ const DetailAuditDataDefaultModule = (props) => {
                 <Fragment>
                   <span
                     className="text-primary cursor-pointer"
-                    id="update_permissions"
-                  >
+                    id="update_permissions">
                     {data.update_permissions.length}{" "}
                     {useFormatMessage("common.others")}
                   </span>{" "}
                   {useFormatMessage("common.can_update")}{" "}
                   <UncontrolledTooltip
                     placement="top"
-                    target="update_permissions"
-                  >
+                    target="update_permissions">
                     {data.update_permissions.map((item, index) => {
-                      let str = `@${item.label}`;
-                      if (index !== data.view_permissions.length - 1)
-                        str += ",";
-                      return str;
+                      let str = `@${item.label}`
+                      if (index !== data.view_permissions.length - 1) str += ","
+                      return str
                     })}
                   </UncontrolledTooltip>
                 </Fragment>
@@ -69,21 +66,18 @@ const DetailAuditDataDefaultModule = (props) => {
                 <Fragment>
                   <span
                     className="text-primary cursor-pointer"
-                    id="view_permissions"
-                  >
+                    id="view_permissions">
                     {data.view_permissions.length}{" "}
                     {useFormatMessage("common.others")}
                   </span>{" "}
                   {useFormatMessage("common.can_view")}
                   <UncontrolledTooltip
                     placement="top"
-                    target="view_permissions"
-                  >
+                    target="view_permissions">
                     {data.view_permissions.map((item, index) => {
-                      let str = `@${item.label}`;
-                      if (index !== data.view_permissions.length - 1)
-                        str += ",";
-                      return str;
+                      let str = `@${item.label}`
+                      if (index !== data.view_permissions.length - 1) str += ","
+                      return str
                     })}
                   </UncontrolledTooltip>
                 </Fragment>
@@ -95,7 +89,7 @@ const DetailAuditDataDefaultModule = (props) => {
         </small>
       </p>
     </Fragment>
-  );
-};
+  )
+}
 
-export default DetailAuditDataDefaultModule;
+export default DetailAuditDataDefaultModule

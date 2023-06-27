@@ -1,49 +1,28 @@
-import AvatarList from "@apps/components/common/AvatarList"
-import { ErpCheckbox } from "@apps/components/common/ErpField"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import SwAlert from "@apps/utility/SwAlert"
 import {
-  ExportData,
   objectMap,
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
 import { isArray } from "@apps/utility/handleData"
 import notification from "@apps/utility/notification"
-import SwAlert from "@apps/utility/SwAlert"
-import UILoader from "@core/components/ui-loader"
 import Uppy from "@uppy/core"
-import { DragDrop } from "@uppy/react"
 import { isEmpty } from "lodash"
 import { Fragment, useEffect } from "react"
-import { AlertCircle, AlertTriangle, Settings } from "react-feather"
+import { AlertCircle } from "react-feather"
 import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
 import {
-  Alert,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Col,
-  Input,
-  Label,
-  Row,
-  Spinner,
-  Table,
-  UncontrolledTooltip
+  Alert
 } from "reactstrap"
 import * as XLSX from "xlsx"
 import { defaultModuleApi } from "../../../utility/moduleApi"
 import { DetailToolbarWarpperDefaultModule } from "./detail/DetailToolbarDefaultModule"
-import LinkedModuleModalDefaultModule from "./modals/LinkedModuleModalDefaultModule"
-import PermissionModalDefaultModule, {
+import {
   handlePermissionArray
 } from "./modals/PermissionModalDefaultModule"
 
-import ImportStep from "../components/import/ImportStep"
 import HandleImportStep from "../components/import/HandleImportStep"
+import ImportStep from "../components/import/ImportStep"
 
 const skipFields = [
   "owner",

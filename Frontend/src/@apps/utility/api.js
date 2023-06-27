@@ -130,7 +130,7 @@ class API {
 }
 
 export const axiosApi = new API({
-  url: process.env.REACT_APP_API_URL,
+  url: import.meta.env.VITE_APP_API_URL,
   onErrors: {
     invalid_auth_token: () => {
       localStorage.clear()
@@ -142,7 +142,7 @@ export const axiosApi = new API({
 })
 
 export const axiosNodeApi = new API({
-  url: process.env.REACT_APP_NODE_API_URL,
+  url: import.meta.env.VITE_APP_NODE_API_URL,
   onErrors: {
     invalid_auth_token: () => {
       localStorage.clear()

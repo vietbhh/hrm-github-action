@@ -42,10 +42,7 @@ const Maintenance = lazy(() => import("@apps/modules/misc/Maintenance"))
 const NotAuthorized = lazy(() => import("@apps/modules/misc/NotAuthorized"))
 const Restrict = lazy(() => import("@apps/modules/misc/Restrict"))
 const Error = lazy(() => import("@apps/modules/misc/Error"))
-const Test = lazy(() => import("@apps/modules/misc/Test"))
-const TestUploadService = lazy(() =>
-  import("@apps/modules/misc/TestUploadService")
-)
+
 const Start = lazy(() => import("@apps/modules/misc/Start"))
 const Faq = lazy(() => import("@apps/modules/misc/faq/index"))
 const Tasks = lazy(() => import("@apps/modules/tasks/index"))
@@ -58,10 +55,10 @@ const Notification = lazy(() =>
   import("@apps/modules/notification/pages/NotificationIndex")
 )
 const Test1 = lazy(() =>
-  import("@src/layouts/separateSidebar/components/test/test1")
+  import("@src/layouts/SeparateSidebarLayout/components/test/test1")
 )
 const Test2 = lazy(() =>
-  import("@src/layouts/separateSidebar/components/test/test2")
+  import("@src/layouts/SeparateSidebarLayout/components/test/test2")
 )
 
 const CoreRoutes = [
@@ -86,6 +83,7 @@ const CoreRoutes = [
     path: "/settings/app/:action?/:id?",
     element: <AppSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "app"
     }
@@ -94,6 +92,7 @@ const CoreRoutes = [
     path: "/settings/general",
     element: <GeneralSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "app"
     }
@@ -102,6 +101,7 @@ const CoreRoutes = [
     path: "/settings/modules",
     element: <ModulesSetting />,
     meta: {
+      layout: "empty",
       action: "modules",
       resource: "sys"
     }
@@ -110,6 +110,7 @@ const CoreRoutes = [
     path: "/settings/users/:action?/:id?",
     element: <UsersSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "users"
     }
@@ -118,6 +119,7 @@ const CoreRoutes = [
     path: "/settings/offices/:action?/:id?",
     element: <OfficesSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "offices"
     }
@@ -126,6 +128,7 @@ const CoreRoutes = [
     path: "/settings/departments/:action?/:id?",
     element: <DepartmentsSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "departments"
     }
@@ -134,6 +137,7 @@ const CoreRoutes = [
     path: "/settings/groups/:action?/:id?",
     element: <GroupsSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "groups"
     }
@@ -142,6 +146,7 @@ const CoreRoutes = [
     path: "/settings/job-titles/:action?/:id?",
     element: <JobTitlesSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "job_titles"
     }
@@ -150,6 +155,7 @@ const CoreRoutes = [
     path: "/settings/permissions",
     element: <PermitsSetting />,
     meta: {
+      layout: "empty",
       action: "manage",
       resource: "permits"
     }
@@ -269,6 +275,7 @@ const CoreRoutes = [
     path: "/calendar",
     element: <Calendar />,
     meta: {
+      layout: "empty",
       action: "login",
       resource: "app",
       className: "erp-fullWidth"
@@ -285,15 +292,6 @@ const CoreRoutes = [
     }
   },
   {
-    path: "/test/dev",
-    element: <Test />,
-    meta: {
-      action: "login",
-      resource: "app",
-      className: ""
-    }
-  },
-  {
     path: "/homepage",
     element: <Test1 />,
     meta: {
@@ -301,25 +299,6 @@ const CoreRoutes = [
       resource: "app",
       className: "",
       layout: "separateSidebar"
-    }
-  },
-  {
-    path: "/test2",
-    element: <Test2 />,
-    meta: {
-      action: "login",
-      resource: "app",
-      className: "",
-      layout: "separateSidebar"
-    }
-  },
-  {
-    path: "/test-upload",
-    element: <TestUploadService />,
-    meta: {
-      action: "login",
-      resource: "app",
-      className: ""
     }
   }
 ]

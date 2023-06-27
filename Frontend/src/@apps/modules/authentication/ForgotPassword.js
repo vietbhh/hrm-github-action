@@ -50,7 +50,7 @@ const ForgotPassword = () => {
     })
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}/auth/forgot`,
+        `${import.meta.env.VITE_APP_API_URL}/auth/forgot`,
         serialize(cloneDeep(values)),
         {
           headers: {

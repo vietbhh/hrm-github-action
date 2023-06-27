@@ -3,12 +3,12 @@ import { Outlet } from "react-router-dom"
 
 // ** Core Layout Import
 // !Do not remove the Layout import
-import Layout from "../components/vertical/Layout"
+import Layout from "layouts/_components/vertical/Layout"
 
 // ** Menu Items Array
 
 // ** import component
-import NavBar from "../separateSidebar/Navbar"
+import NavBar from "layouts/SeparateSidebarLayout/Navbar"
 import "./assets/scss/layout.scss"
 
 const EmptyLayout = (props) => {
@@ -16,10 +16,7 @@ const EmptyLayout = (props) => {
     <Layout
       menuData={[]}
       navbar={(navProps) => <NavBar {...navProps} />}
-      /* customMenuComponent={(customProps) => (
-        <CustomMenuComponent {...customProps} />
-      )} */
-      className="navbar-2 empty-layout"
+      className="separate-sidebar-layout empty-layout"
       hideSidebar={true}
       {...props}>
       <Outlet />
