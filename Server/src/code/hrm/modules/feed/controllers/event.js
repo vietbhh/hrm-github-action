@@ -7,6 +7,7 @@ import { forEach, isEmpty } from "lodash-es"
 import moment from "moment/moment.js"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
+import { handleDataHistory } from "./feed.js"
 
 const submitEvent = async (req, res, next) => {
   const file = req.files
@@ -88,6 +89,7 @@ const submitEvent = async (req, res, next) => {
       details: body.details
     }
 
+    let data_old = {}
     let _id = idEdit
     let result = {
       dataFeed: {},
@@ -132,17 +134,11 @@ const submitEvent = async (req, res, next) => {
       const _out = await handleDataBeforeReturn(out)
       result = { dataFeed: _out, dataLink: {} }
     } else {
+      data_old = await calendarMongoModel.findById(idEdit)
       await calendarMongoModel.updateOne({ _id: idEdit }, dataInsert)
 
       let _dataFeed = {}
       if (idPost) {
-        await feedMongoModel.updateOne(
-          { _id: idPost },
-          {
-            edited: true,
-            edited_at: Date.now()
-          }
-        )
         const dataFeed = await feedMongoModel.findById(idPost)
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
@@ -193,6 +189,43 @@ const submitEvent = async (req, res, next) => {
     )
 
     const dataEvent = await calendarMongoModel.findById(_id)
+
+    if (idEdit && idPost) {
+      // update history
+      const field_compare = [
+        "name",
+        "color",
+        "start_time_date",
+        "start_time_time",
+        "end_time_date",
+        "end_time_time",
+        "all_day_event",
+        "repeat",
+        "attendees",
+        "meeting_room",
+        "reminder",
+        "online_meeting",
+        "details",
+        "attachment"
+      ]
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        dataEvent,
+        data_old,
+        field_compare,
+        { type: "event" }
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: idPost },
+          {
+            edited: true,
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+    }
+
     result.dataLink = dataEvent
     result.dataFeed.dataLink = dataEvent
     return res.respond(result)

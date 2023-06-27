@@ -173,7 +173,7 @@ const HeaderCreatePost = (props) => {
           {useFormatMessage("modules.feed.create_post.title")}
         </span>
         <div className="div-btn-close" onClick={() => toggleModalCreatePost()}>
-          <i className="fa-solid fa-xmark"></i>
+          <i className="fa-regular fa-xmark"></i>
         </div>
       </div>
       <div className="div-header-avatar">

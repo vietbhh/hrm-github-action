@@ -12,7 +12,6 @@ import moment from "moment"
 import React, { Fragment, useRef } from "react"
 import ReactDOM from "react-dom"
 import { FormProvider, useForm } from "react-hook-form"
-import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
 import { Spinner } from "reactstrap"
 
@@ -22,7 +21,8 @@ const RenderPollVote = (props) => {
     setData,
     comment_more_count_original,
     toggleModalWith,
-    setDataUserOtherWith
+    setDataUserOtherWith,
+    isViewEditHistory = false // only view edit history
   } = props
   const [state, setState] = useMergedState({
     loadingAddMoreOption: false
@@ -227,7 +227,11 @@ const RenderPollVote = (props) => {
                 <div key={index} className="content-options">
                   <div
                     className="content-options__check"
-                    onClick={() => handleChecked(value._id)}>
+                    onClick={() => {
+                      if (!isViewEditHistory) {
+                        handleChecked(value._id)
+                      }
+                    }}>
                     {data.poll_vote_detail.setting.multiple_selection ===
                     true ? (
                       <ErpCheckbox checked={checked} onChange={() => {}} />
@@ -241,7 +245,11 @@ const RenderPollVote = (props) => {
                   </div>
                   <div
                     className="content-options__option"
-                    onClick={() => handleChecked(value._id)}>
+                    onClick={() => {
+                      if (!isViewEditHistory) {
+                        handleChecked(value._id)
+                      }
+                    }}>
                     <span className="title">{value.option_name}</span>
                     <span className="vote">
                       {value.user_vote.length}{" "}
@@ -256,8 +264,10 @@ const RenderPollVote = (props) => {
                     <div
                       className="content-options__user-vote"
                       onClick={() => {
-                        setDataUserOtherWith(value.user_vote)
-                        toggleModalWith()
+                        if (!isViewEditHistory) {
+                          setDataUserOtherWith(value.user_vote)
+                          toggleModalWith()
+                        }
                       }}>
                       <AvatarList
                         data={dataUserVote}
@@ -273,32 +283,40 @@ const RenderPollVote = (props) => {
             })}
         </div>
 
-        {data.poll_vote_detail.setting.adding_more_options === true &&
-          data.poll_vote_detail.options.length < 10 &&
-          (data.poll_vote_detail.time_end === null ||
-            (data.poll_vote_detail.time_end !== null &&
-              moment(data.poll_vote_detail.time_end) > moment())) && (
-            <div className="poll-vote-add-more-option">
-              <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmitAddMoreOptions)}>
-                  <ErpInput
-                    nolabel
-                    name={`add_more_options`}
-                    useForm={methods}
-                    defaultValue={``}
-                    placeholder={useFormatMessage(
-                      "modules.feed.create_post.text.enter_options"
-                    )}
-                    required
-                    disabled={state.loadingAddMoreOption}
-                    append={
-                      state.loadingAddMoreOption ? <Spinner size={"sm"} /> : " "
-                    }
-                  />
-                </form>
-              </FormProvider>
-            </div>
-          )}
+        {!isViewEditHistory && (
+          <Fragment>
+            {data.poll_vote_detail.setting.adding_more_options === true &&
+              data.poll_vote_detail.options.length < 10 &&
+              (data.poll_vote_detail.time_end === null ||
+                (data.poll_vote_detail.time_end !== null &&
+                  moment(data.poll_vote_detail.time_end) > moment())) && (
+                <div className="poll-vote-add-more-option">
+                  <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(onSubmitAddMoreOptions)}>
+                      <ErpInput
+                        nolabel
+                        name={`add_more_options`}
+                        useForm={methods}
+                        defaultValue={``}
+                        placeholder={useFormatMessage(
+                          "modules.feed.create_post.text.enter_options"
+                        )}
+                        required
+                        disabled={state.loadingAddMoreOption}
+                        append={
+                          state.loadingAddMoreOption ? (
+                            <Spinner size={"sm"} />
+                          ) : (
+                            " "
+                          )
+                        }
+                      />
+                    </form>
+                  </FormProvider>
+                </div>
+              )}
+          </Fragment>
+        )}
       </div>
     </Fragment>
   )

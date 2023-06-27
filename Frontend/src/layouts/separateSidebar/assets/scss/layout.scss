@@ -312,6 +312,12 @@
         .navigation {
           padding: 0;
 
+          > li > a svg,
+          > li > a i {
+            height: 20px !important;
+            width: 20px !important;
+          }
+
           .navigation-header {
             padding: 20px 15px 10px 15px;
             text-transform: unset;
@@ -357,8 +363,6 @@
                 margin-right: 15px;
 
                 svg {
-                  width: 18px;
-                  height: 18px;
                   margin: 0;
                 }
 
@@ -382,8 +386,6 @@
               i {
                 margin-right: 0;
                 color: #ffffff;
-                width: 20px !important;
-                height: 20px !important;
                 font-size: 18px;
                 display: flex;
                 align-items: center;

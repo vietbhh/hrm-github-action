@@ -382,8 +382,14 @@ const handleSendMessage = async (
           dataGroup.user.indexOf(userId) !== -1 &&
           dataGroup.user.indexOf(_idEmployee) !== -1
         ) {
-          groupId = idChat
-          return true
+          if (
+            (dataGroup.user[0] === userId &&
+              dataGroup.user[1] === _idEmployee) ||
+            (dataGroup.user[1] === userId && dataGroup.user[0] === _idEmployee)
+          ) {
+            groupId = idChat
+            return true
+          }
         }
       })
     })

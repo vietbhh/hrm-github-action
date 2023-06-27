@@ -63,6 +63,7 @@ const PostComment = (props) => {
                       apiReaction={feedApi.postUpdateCommentReaction}
                       setDataReactionAndModal={setDataReactionAndModal}
                       setDataEditComment={setDataEditComment}
+                      data={data}
                     />
 
                     <CommentReply
@@ -107,19 +108,21 @@ const PostComment = (props) => {
           </div>
         )}
 
-        <PostCommentForm
-          data={data}
-          dataMention={dataMention}
-          setData={setData}
-          comment_more_count_original={comment_more_count_original}
-          setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-          scrollToBottom={scrollToBottom}
-          api={feedApi.postSubmitComment}
-          dataEditComment={state.dataEditComment}
-          setDataEditComment={setDataEditComment}
-          focusCommentForm={focusCommentForm}
-          setFocusCommentForm={setFocusCommentForm}
-        />
+        {!data.turn_off_commenting && (
+          <PostCommentForm
+            data={data}
+            dataMention={dataMention}
+            setData={setData}
+            comment_more_count_original={comment_more_count_original}
+            setCommentMoreCountOriginal={setCommentMoreCountOriginal}
+            scrollToBottom={scrollToBottom}
+            api={feedApi.postSubmitComment}
+            dataEditComment={state.dataEditComment}
+            setDataEditComment={setDataEditComment}
+            focusCommentForm={focusCommentForm}
+            setFocusCommentForm={setFocusCommentForm}
+          />
+        )}
       </div>
 
       <ReactionDetailModal

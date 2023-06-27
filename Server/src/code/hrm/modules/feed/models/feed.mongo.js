@@ -121,10 +121,6 @@ const feedSchema = baseSchema("m_feed", {
     type: Boolean,
     default: false
   },
-  edited_at: {
-    type: Date,
-    default: null
-  },
   background_image: {
     type: Number,
     default: null
@@ -176,6 +172,22 @@ const feedSchema = baseSchema("m_feed", {
   },
   hashtag: {
     type: [String],
+    default: []
+  },
+  user_saved: {
+    type: [String], // user_id
+    default: []
+  },
+  turn_off_notification: {
+    type: [String], // user_id
+    default: []
+  },
+  turn_off_commenting: {
+    type: Boolean,
+    default: false
+  },
+  edit_history: {
+    type: [{}],
     default: []
   },
 

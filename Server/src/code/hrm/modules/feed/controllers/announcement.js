@@ -6,6 +6,7 @@ import { forEach, isEmpty } from "lodash-es"
 import path from "path"
 import feedMongoModel from "../models/feed.mongo.js"
 import { newsModel } from "../models/news.mysql.js"
+import { handleDataHistory } from "./feed.js"
 
 const submitAnnouncement = async (req, res, next) => {
   const file = req.files
@@ -63,6 +64,7 @@ const submitAnnouncement = async (req, res, next) => {
       send_to: JSON.stringify(body.dataAttendees)
     }
 
+    let data_old = {}
     let _id = idEdit
     let result = {
       dataFeed: {},
@@ -117,6 +119,7 @@ const submitAnnouncement = async (req, res, next) => {
         dataLink: {}
       }
     } else {
+      data_old = await newsModel.findByPk(idEdit)
       await newsModel.update(dataInsert, {
         where: {
           id: idEdit
@@ -125,24 +128,10 @@ const submitAnnouncement = async (req, res, next) => {
 
       let _dataFeed = {}
       if (idPost) {
-        await feedMongoModel.updateOne(
-          { _id: idPost },
-          {
-            edited: true,
-            edited_at: Date.now()
-          }
-        )
         const dataFeed = await feedMongoModel.findById(idPost)
         _dataFeed = await handleDataBeforeReturn(dataFeed)
       }
 
-      const dataAnnouncement = await newsModel.findByPk(idEdit)
-      dataAnnouncement.dataValues.send_to = JSON.parse(
-        dataAnnouncement.dataValues.send_to
-      )
-      dataAnnouncement.dataValues.attachment = JSON.parse(
-        dataAnnouncement.dataValues.attachment
-      )
       result = {
         dataFeed: _dataFeed,
         dataLink: {}
@@ -201,6 +190,35 @@ const submitAnnouncement = async (req, res, next) => {
     )
 
     const dataAnnouncement = await newsModel.findByPk(_id)
+
+    if (idEdit && idPost) {
+      // update history
+      const field_compare = [
+        "title",
+        "pin",
+        "show_announcements",
+        "content",
+        "send_to",
+        "attachment"
+      ]
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        dataAnnouncement,
+        data_old,
+        field_compare,
+        { type: "announcement" }
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: idPost },
+          {
+            edited: true,
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+    }
+
     dataAnnouncement.dataValues.send_to = JSON.parse(
       dataAnnouncement.dataValues.send_to
     )

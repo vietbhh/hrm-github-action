@@ -131,6 +131,18 @@ export const feedApi = {
     return await axiosNodeApi.get("/feed/send-noti-unseen/" + post_id, {
       disableLoading: true
     })
+  },
+
+  async postTurnOffNotification(data) {
+    return await axiosNodeApi.post("/feed/turn-off-notification", data)
+  },
+
+  async postTurnOffCommenting(data) {
+    return await axiosNodeApi.post("/feed/turn-off-commenting", data)
+  },
+
+  async getGetDataEditHistory(post_id) {
+    return await axiosNodeApi.get("/feed/get-data-edit-history/" + post_id)
   }
 }
 
@@ -207,5 +219,11 @@ export const hashtagApi = {
         disableLoading: true
       }
     )
+  }
+}
+
+export const savedApi = {
+  async postSaveSaved(data) {
+    return await axiosNodeApi.post("/feed/save-saved", data)
   }
 }

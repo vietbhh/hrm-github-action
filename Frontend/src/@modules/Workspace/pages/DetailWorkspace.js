@@ -29,7 +29,7 @@ const DetailWorkspace = () => {
       })
     }
   }
-  const offsetTop = 90
+  const offsetTop = 95
   const offsetBottom = 30
   const handleScroll = (e) => {
     if (window.scrollY < state.prevScrollY) {

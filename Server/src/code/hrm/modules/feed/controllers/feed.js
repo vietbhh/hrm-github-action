@@ -13,7 +13,15 @@ import ffmpegPath from "@ffmpeg-installer/ffmpeg"
 import ffprobePath from "@ffprobe-installer/ffprobe"
 import FfmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import { forEach, isEmpty, union } from "lodash-es"
+import {
+  cloneDeep,
+  forEach,
+  isArray,
+  isEmpty,
+  isObject,
+  reverse,
+  union
+} from "lodash-es"
 import path from "path"
 import sharp from "sharp"
 import workspaceMongoModel from "../../workspace/models/workspace.mongo.js"
@@ -151,8 +159,7 @@ const submitPostController = async (req, res, next) => {
         { _id: _id_post_edit },
         {
           ...dataInsert,
-          edited: true,
-          edited_at: Date.now()
+          edited: true
         }
       )
 
@@ -167,11 +174,18 @@ const submitPostController = async (req, res, next) => {
     if (!is_edit && body.approveStatus === "approved") {
       const receivers = union(mention, tag)
       const link_notification = `/posts/${_id_parent}`
+      const userId = body.data_user.id
+      const full_name = body.data_user.full_name
+      const body_noti =
+        "<strong>" +
+        full_name +
+        "</strong> {{modules.network.notification.tag_post}}"
       await handleSendNotification(
-        "post",
+        userId,
         receivers,
-        body.data_user,
-        link_notification
+        body_noti,
+        link_notification,
+        _id_parent
       )
     }
 
@@ -183,16 +197,6 @@ const submitPostController = async (req, res, next) => {
         })
         await feedMongoModel.deleteMany({ _id: { $in: id_medias_delete } })
         // xoa file
-      }
-
-      if (!is_edit) {
-        const _out = await handleDataBeforeReturn(out)
-        _out["dataLink"] = {}
-        return res.respond(_out)
-      } else {
-        const _out = await handleDataFeedById(_id_parent)
-        _out["dataLink"] = {}
-        return res.respond(_out)
       }
     } else {
       // ** check file image/video
@@ -235,17 +239,6 @@ const submitPostController = async (req, res, next) => {
             _id: { $in: id_medias_delete }
           })
           // xoa file
-        }
-
-        if (!is_edit) {
-          out = await feedMongoModel.findById(_id_parent)
-          const _out = await handleDataBeforeReturn(out)
-          _out["dataLink"] = {}
-          return res.respond(_out)
-        } else {
-          const _out = await handleDataFeedById(_id_parent)
-          _out["dataLink"] = {}
-          return res.respond(_out)
         }
       } else {
         const promises = []
@@ -307,7 +300,7 @@ const submitPostController = async (req, res, next) => {
           promises.push(promise)
         })
 
-        return Promise.all(promises).then(async (arr_id_child) => {
+        await Promise.all(promises).then(async (arr_id_child) => {
           await feedMongoModel.updateOne(
             { _id: _id_parent },
             { medias: arr_id_child }
@@ -330,19 +323,46 @@ const submitPostController = async (req, res, next) => {
               // xoa file
             }
           }
-
-          if (!is_edit) {
-            out = await feedMongoModel.findById(_id_parent)
-            const _out = await handleDataBeforeReturn(out)
-            _out["dataLink"] = {}
-            return res.respond(_out)
-          } else {
-            const _out = await handleDataFeedById(_id_parent)
-            _out["dataLink"] = {}
-            return res.respond(_out)
-          }
         })
       }
+    }
+
+    if (!is_edit) {
+      out = await feedMongoModel.findById(_id_parent)
+      const _out = await handleDataBeforeReturn(out)
+      _out["dataLink"] = {}
+      return res.respond(_out)
+    } else {
+      // update history
+      const field_compare = [
+        "content",
+        "medias",
+        "source",
+        "thumb",
+        "tag_user",
+        "background_image",
+        "poll_vote_detail"
+      ]
+      const data_new = await feedMongoModel.findById(_id_parent)
+      const data_edit_history = handleDataHistory(
+        req.__user,
+        data_new,
+        data_feed_old,
+        field_compare,
+        { type: data_feed_old.type }
+      )
+      if (!isEmpty(data_edit_history)) {
+        await feedMongoModel.updateOne(
+          { _id: _id_parent },
+          {
+            $push: { edit_history: data_edit_history }
+          }
+        )
+      }
+
+      const _out = await handleDataFeedById(_id_parent)
+      _out["dataLink"] = {}
+      return res.respond(_out)
     }
   } catch (err) {
     return res.fail(err.message)
@@ -543,24 +563,11 @@ const updatePostReaction = async (req, res, next) => {
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
-        const receivers = created_by
-        const body =
+        const receivers = [created_by]
+        const body_noti =
           full_name + " {{modules.network.notification.liked_your_post}}"
         const link = `/posts/${id}`
-        sendNotification(
-          userId,
-          receivers,
-          {
-            title: "",
-            body: body,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
-        )
+        await handleSendNotification(userId, receivers, body_noti, link, id)
       }
     }
 
@@ -672,7 +679,7 @@ const updateContentMedia = async (req, res, next) => {
     try {
       await feedMongoModel.updateOne(
         { _id: data._id },
-        { content: content, edited: true, edited_at: Date.now() }
+        { content: content, edited: true }
       )
       if (data.ref) {
         const feed_parent = await feedMongoModel.findById(data.ref)
@@ -764,6 +771,90 @@ const sendNotificationUnseen = async (req, res, next) => {
     }
 
     return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// turn off notification
+const turnOffNotification = async (req, res, next) => {
+  try {
+    const body = req.body
+    const action = body.action
+    const post_id = body.post_id
+
+    if (action !== "add" && action !== "remove") {
+      return res.fail("err action")
+    }
+
+    if (action === "add") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { $push: { turn_off_notification: req.__user } }
+      )
+    }
+
+    if (action === "remove") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { $pull: { turn_off_notification: req.__user } }
+      )
+    }
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// turn off commenting
+const turnOffCommenting = async (req, res, next) => {
+  try {
+    const body = req.body
+    const action = body.action
+    const post_id = body.post_id
+
+    if (action !== "on" && action !== "off") {
+      return res.fail("err action")
+    }
+
+    if (action === "on") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { turn_off_commenting: false }
+      )
+    }
+
+    if (action === "off") {
+      await feedMongoModel.updateOne(
+        { _id: post_id },
+        { turn_off_commenting: true }
+      )
+    }
+
+    return res.respond("success")
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+// get data history
+const getDataEditHistory = async (req, res, next) => {
+  try {
+    const post_id = req.params.post_id
+    const data_feed = await feedMongoModel.findById(post_id)
+    const dataHistory = data_feed
+      ? data_feed.edit_history
+        ? data_feed.edit_history
+        : []
+      : []
+    const _dataHistory = await handleDataBeforeReturn(dataHistory, true)
+
+    const out = {
+      dataFeed: await handleDataBeforeReturn(data_feed),
+      dataHistory: reverse(_dataHistory)
+    }
+    return res.respond(out)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -956,24 +1047,29 @@ const handleDataFeedById = async (id, loadComment = -1) => {
 }
 
 const handleSendNotification = async (
-  type,
+  userId,
   receivers,
-  data_user,
-  link = "#"
+  body,
+  link = "#",
+  id_post = ""
 ) => {
-  if (!isEmpty(receivers) && !isEmpty(data_user)) {
-    const userId = data_user.id
-    const full_name = data_user.full_name
-    const lang = type === "post" ? "tag_post" : "tag_comment"
-    const body =
-      "<strong>" +
-      full_name +
-      "</strong> {{modules.network.notification." +
-      lang +
-      "}}"
+  if (!isEmpty(receivers)) {
+    let _receivers = receivers
+    if (id_post) {
+      const data_feed = await feedMongoModel.findById(id_post)
+      if (data_feed) {
+        const turn_off_notification = data_feed.turn_off_notification
+        if (!isEmpty(turn_off_notification)) {
+          _receivers = receivers.filter(
+            (x) => !turn_off_notification.includes(x.toString())
+          )
+        }
+      }
+    }
+
     sendNotification(
       userId,
-      receivers,
+      _receivers,
       {
         title: "",
         body: body,
@@ -1094,6 +1190,200 @@ const handleInsertHashTag = async (arrHashtag, userId, idPost) => {
   }
 }
 
+const handleDataHistory = (
+  userId,
+  data_new,
+  data_old,
+  field_compare,
+  data_save = {}
+) => {
+  const data_history = {}
+  forEach(field_compare, (field) => {
+    // post
+    if (field === "medias") {
+      const check_different = differentCompare2ArrayValueObject(
+        data_new[field],
+        data_old[field],
+        "_id"
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+    if (field === "tag_user") {
+      const check_different = differentCompare2Array(
+        data_new[field]["tag"],
+        data_old[field]["tag"]
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+    if (field === "poll_vote_detail") {
+      const check_different = differentCompare2Object(
+        data_new[field],
+        data_old[field],
+        "question"
+      )
+      const check_different2 = differentCompare2Object(
+        data_new[field],
+        data_old[field],
+        "time_end"
+      )
+      const check_different3 = differentCompare2ArrayValueObject(
+        data_new[field]["options"],
+        data_old[field]["options"],
+        "_id"
+      )
+      if (check_different || check_different2 || check_different3) {
+        data_history[field] = data_old[field]
+        data_history["has_poll_vote"] = true
+      }
+      return
+    }
+
+    // event
+    if (field === "attendees") {
+      const check_different = differentCompare2ArrayValueObject(
+        data_new[field],
+        data_old[field],
+        "value"
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+    if (field === "meeting_room") {
+      const check_different = differentCompare2Object(
+        data_new[field],
+        data_old[field],
+        "value"
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+
+    // endorsement
+    if (field === "member") {
+      const check_different = differentCompare2Array(
+        data_new[field],
+        data_old[field]
+      )
+      if (check_different) {
+        data_history[field] = data_old[field]
+      }
+      return
+    }
+
+    if (data_new[field] !== data_old[field]) {
+      data_history[field] = data_old[field]
+
+      if (field === "content" && data_old["hashtag"]) {
+        data_history["hashtag"] = data_old["hashtag"]
+      }
+
+      if (field === "cover" && data_old["cover_type"]) {
+        data_history["cover_type"] = data_old["cover_type"]
+      }
+
+      if (field === "badge" && data_old["badge_type"]) {
+        data_history["badge_type"] = data_old["badge_type"]
+      }
+    }
+  })
+
+  if (!isEmpty(data_history)) {
+    const edit_history = {
+      ...data_history,
+      created_by: data_old["created_by"],
+      edited_at: Date.now(),
+      edited_by: userId,
+      ...data_save
+    }
+    return edit_history
+  }
+
+  return {}
+}
+
+const differentCompare2Array = (arr1 = [], arr2 = []) => {
+  if (!isArray(arr1) || !isArray(arr2)) {
+    return false
+  }
+
+  if (arr1.length === 0 && arr2.length === 0) {
+    return false
+  }
+
+  if (arr1.length !== arr2.length) {
+    return true
+  }
+
+  let check = false
+  for (let index = 0; index < arr1.length; index++) {
+    if (check === true) {
+      return
+    }
+
+    if (arr1[index] !== arr2[index]) {
+      check = true
+    }
+  }
+
+  return check
+}
+
+const differentCompare2ArrayValueObject = (
+  arr1 = [],
+  arr2 = [],
+  keyObjectCheck = ""
+) => {
+  if (!isArray(arr1) || !isArray(arr2)) {
+    return false
+  }
+
+  if (arr1.length === 0 && arr2.length === 0) {
+    return false
+  }
+
+  if (arr1.length !== arr2.length) {
+    return true
+  }
+
+  if (keyObjectCheck === "") {
+    return false
+  }
+  let check = false
+  for (let index = 0; index < arr1.length; index++) {
+    if (check === true) {
+      return
+    }
+
+    if (arr1[index][keyObjectCheck] !== arr2[index][keyObjectCheck]) {
+      check = true
+    }
+  }
+
+  return check
+}
+
+const differentCompare2Object = (obj1 = {}, obj2 = {}, keyCheck) => {
+  if (!isObject(obj1) || !isObject(obj2)) {
+    return false
+  }
+
+  if (obj1[keyCheck] != obj2[keyCheck]) {
+    return true
+  }
+
+  return false
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1114,5 +1404,9 @@ export {
   sendNotificationUnseen,
   handlePullHashtag,
   handleInsertHashTag,
-  handleDataLoadFeed
+  handleDataLoadFeed,
+  turnOffNotification,
+  turnOffCommenting,
+  handleDataHistory,
+  getDataEditHistory
 }
