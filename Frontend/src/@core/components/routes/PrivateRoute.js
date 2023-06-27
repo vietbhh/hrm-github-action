@@ -6,7 +6,6 @@ import { Navigate } from "react-router-dom"
 import { AbilityContext } from "@src/utility/context/Can"
 
 // ** Spinner Import
-import Spinner from "../spinner/Loading-spinner"
 
 const PrivateRoute = ({ children, route }) => {
   // ** Hooks & Vars
@@ -37,7 +36,7 @@ const PrivateRoute = ({ children, route }) => {
   }
 
   return (
-    <Suspense fallback={<Spinner className="content-loader" />}>
+    <Suspense fallback={null}>
       {children}
     </Suspense>
   )
