@@ -1,7 +1,7 @@
 import AvatarList from "@apps/components/common/AvatarList"
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { handleTyping } from "redux/chat"
+import { handleTyping } from "@store/chat"
 import ReactDOM from "react-dom"
 import moment from "moment"
 

@@ -1,5 +1,5 @@
 import { getPublicDownloadUrl, useFormatMessage } from "@apps/utility/common"
-import { db } from "firebase"
+import { db } from "@/firebase"
 import {
   addDoc,
   collection,
@@ -17,7 +17,7 @@ import moment from "moment"
 import { imageGroup, replaceHtmlMessage, triGram } from "./common"
 import { AES } from "crypto-js"
 
-const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
 const keyEncrypt = "Friday"
 
 const handleCountFile = (groups, groupId, type, action = "plus") => {

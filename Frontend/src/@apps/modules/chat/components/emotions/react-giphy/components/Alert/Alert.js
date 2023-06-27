@@ -3,12 +3,7 @@ import React from 'react'
 import { useStyle } from '../../style'
 import { styles } from './alertStyles'
 
-type Props = {
-  show: boolean,
-  message: string,
-}
-
-const Alert = ({ show, message }: Props) => {
+const Alert = ({ show, message }) => {
   useStyle('Alert', styles)
 
   return (

@@ -1,8 +1,8 @@
+import { db } from "@/firebase"
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { formatTime } from "@apps/modules/chat/common/common"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Image } from "antd"
-import { db } from "firebase"
 import {
   collection,
   getDocs,
@@ -15,7 +15,6 @@ import {
 import React, { Fragment, useEffect } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
-import { ReactTinyLink } from "react-tiny-link"
 import { Button, Spinner } from "reactstrap"
 import DownloadFileComponent from "./DownloadFile"
 import Photo from "./Photo"
@@ -44,7 +43,7 @@ const index = (props) => {
     loadMoreLink: false
   })
 
-  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+  const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
   const queryLimit = 20
 
   // ** redux
@@ -541,7 +540,7 @@ const index = (props) => {
                             maxLine={1}
                             minLine={1}
                             showGraphic={true}
-                            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                            defaultImage={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
                             componentClassName="link-preview link-preview-profile-sidebar"
                           />
                         </Fragment>
@@ -558,7 +557,7 @@ const index = (props) => {
                             maxLine={1}
                             minLine={1}
                             showGraphic={true}
-                            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                            defaultImage={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
                             componentClassName="link-preview link-preview-profile-sidebar"
                           />
 
@@ -569,7 +568,7 @@ const index = (props) => {
                             minLine={1}
                             url={item.file}
                             loadSecureUrl={true}
-                            defaultMedia={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+                            defaultMedia={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
                           /> */}
                         </Fragment>
                       )

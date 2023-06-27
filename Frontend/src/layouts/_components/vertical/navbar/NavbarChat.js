@@ -6,10 +6,10 @@ import { Link } from "react-router-dom"
 import { Badge, UncontrolledTooltip } from "reactstrap"
 
 // ** firebase
-import { db } from "firebase"
+import { db } from "@/firebase"
 import { collection, onSnapshot, query, where } from "firebase/firestore"
 import { useSelector, useDispatch } from "react-redux"
-import { handleTitleChat, handleUnseen } from "redux/chat"
+import { handleTitleChat, handleUnseen } from "@store/chat"
 
 export const BlinkingTitle = () => {
   const chat = useSelector((state) => state.chat)
@@ -51,7 +51,7 @@ const NavbarChat = () => {
   const userId = settingUser.id
 
   // ** env
-  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+  const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
 
   useEffect(() => {
     let unseen = 0

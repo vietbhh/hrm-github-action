@@ -4,11 +4,7 @@ import { useStyle } from '../../style'
 import { styles } from './poweredByGiphyStyles'
 import PoweredByGiphyLogo from '../../assets/PoweredByGiphyLogo'
 
-type Props = {
-  image: ?string,
-}
-
-const PoweredByGiphy = ({ image }: Props) => {
+const PoweredByGiphy = ({ image }) => {
   useStyle('PoweredByGiphy', styles)
 
   return (

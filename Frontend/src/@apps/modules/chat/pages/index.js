@@ -6,7 +6,7 @@ import ReactDOM from "react-dom"
 import { IdleTimerProvider } from "react-idle-timer"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import { handleChats, handleTitleChat } from "redux/chat"
+import { handleChats, handleTitleChat } from "@store/chat"
 import SocketContext from "utility/context/Socket"
 import { ChatApi } from "../common/api"
 import { triGram } from "../common/common"
@@ -17,7 +17,7 @@ import Sidebar from "../components/SidebarLeft"
 import UserProfileSidebar from "../components/UserProfileSidebar"
 
 // ** firebase
-import { db } from "firebase"
+import { db } from "@/firebase"
 import {
   arrayRemove,
   collection,
@@ -156,7 +156,7 @@ const AppChat = (props) => {
   }, [id, store.groups, state.checkLoadUrlActiveId])
 
   // ** env
-  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+  const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
   if (_.isUndefined(firestoreDb) || firestoreDb === "") {
     return <>env: not found firestore db</>
   }
