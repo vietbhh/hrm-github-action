@@ -3,3 +3,8 @@
   font-size: 1.1rem;
   line-height: 1.45;
 }
+
+// Dark Layout
+.accordion .accordion-body {
+  color: $theme-dark-body-color;
+}

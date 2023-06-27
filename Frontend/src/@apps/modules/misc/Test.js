@@ -6,7 +6,7 @@ import { socketConnect } from "@apps/utility/socketHandler"
 import { Fragment, useCallback, useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button } from "reactstrap"
-import SocketContext from "utility/context/Socket"
+import SocketContext from "@/utility/context/Socket"
 import Photo from "../download/pages/Photo"
 const Test = (props) => {
   const socketDoc = socketConnect({

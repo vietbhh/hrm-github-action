@@ -3,12 +3,12 @@ import useJwt from "@src/auth/jwt/useJwt"
 import React, { useEffect } from "react"
 import { IdleTimerProvider } from "react-idle-timer"
 import { useDispatch, useSelector } from "react-redux"
-import { updateOnlineUsers } from "redux/app/users"
+import { updateOnlineUsers } from "@store/app/users"
 import socketio from "socket.io-client"
 const SocketContext = React.createContext()
 
 export const SocketContextWrap = (props) => {
-  const socket = socketio.connect(process.env.REACT_APP_NODE_API_URL, {
+  const socket = socketio.connect(import.meta.env.VITE_APP_NODE_API_URL, {
     autoConnect: false,
     reconnection: true,
     reconnectionAttempts: 2,

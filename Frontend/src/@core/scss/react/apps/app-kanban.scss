@@ -29,7 +29,8 @@
           white-space: nowrap;
           background-color: transparent;
 
-          &:hover {
+          &:hover,
+          &:focus {
             background-color: $white;
           }
         }

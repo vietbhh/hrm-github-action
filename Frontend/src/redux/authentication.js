@@ -62,7 +62,9 @@ export const authSlice = createSlice({
         state[config.storageTokenKeyName] = null
         state[config.storageRefreshTokenKeyName] = null
         // ** Remove user, accessToken & refreshToken from localStorage
+        const customIndex = localStorage.getItem("indexCustom")
         localStorage.clear()
+        localStorage.setItem("indexCustom", customIndex)
       })
       .addCase(handleLogout.rejected, (state, action) => {
         state.userData = {}
@@ -71,7 +73,9 @@ export const authSlice = createSlice({
         state[config.storageTokenKeyName] = null
         state[config.storageRefreshTokenKeyName] = null
         // ** Remove user, accessToken & refreshToken from localStorage
+        const customIndex = localStorage.getItem("indexCustom")
         localStorage.clear()
+        localStorage.setItem("indexCustom", customIndex)
       })
   }
 })

@@ -12,11 +12,15 @@ import { Bell, X, Check, AlertTriangle } from 'react-feather'
 // ** Reactstrap Imports
 import { Button, Badge, Input, DropdownMenu, DropdownItem, DropdownToggle, UncontrolledDropdown } from 'reactstrap'
 
+// ** Avatar Imports
+import avatar3 from '@src/assets/images/portrait/small/avatar-s-3.jpg'
+import avatar15 from '@src/assets/images/portrait/small/avatar-s-15.jpg'
+
 const NotificationDropdown = () => {
   // ** Notification Array
   const notificationsArray = [
     {
-      img: require('@src/assets/images/portrait/small/avatar-s-15.jpg').default,
+      img: avatar3,
       subtitle: 'Won the monthly best seller badge.',
       title: (
         <p className='media-heading'>
@@ -25,7 +29,7 @@ const NotificationDropdown = () => {
       )
     },
     {
-      img: require('@src/assets/images/portrait/small/avatar-s-3.jpg').default,
+      img: avatar15,
       subtitle: 'You have 10 unread messages.',
       title: (
         <p className='media-heading'>

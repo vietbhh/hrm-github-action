@@ -1,12 +1,11 @@
 import { ErpUserSelect } from "@apps/components/common/ErpField";
-import { useMergedState } from "@apps/utility/common";
-import { Button, ListGroup, ListGroupItem } from "reactstrap";
-const { Fragment } = require("react");
-import PerfectScrollbar from "react-perfect-scrollbar";
-import { isEmpty, map, reverse, some } from "lodash";
-import { useEffect } from "react";
 import Avatar from "@apps/modules/download/pages/Avatar";
+import { useMergedState } from "@apps/utility/common";
+import { isEmpty, map, some } from "lodash";
+import { Fragment, useEffect } from "react";
 import { Trash } from "react-feather";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { Button, ListGroup, ListGroupItem } from "reactstrap";
 const PermitFormTabMembers = (props) => {
   const { selectUsers, updateUsers } = props;
   const [state, setState] = useMergedState({

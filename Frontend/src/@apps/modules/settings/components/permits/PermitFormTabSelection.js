@@ -1,15 +1,14 @@
+import AppCollapse from "@apps/components/app-collapse"
 import { ErpCheckbox } from "@apps/components/common/ErpField"
 import {
   objectMap,
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
-import AppCollapse from "@apps/components/app-collapse"
 import { filter, forEach, isEmpty, map } from "lodash"
 import { isUndefined } from "lodash-es"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
-const { Fragment } = require("react")
 
 const getPermitId = (permits, list, defaultVal = false) => {
   let data = { ...list }

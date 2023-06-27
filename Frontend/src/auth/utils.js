@@ -1,11 +1,10 @@
-import { initAppData, initAppRoutes } from "redux/app/app"
-import { handleFetchProfile } from "redux/authentication"
-import { initialLayout } from "redux/layout"
-import { store } from "redux/store"
+import { initAppData, initAppRoutes } from "@store/app/app"
+import { updateListUsers } from "@store/app/users"
+import { handleFetchProfile } from "@store/authentication"
+import { initialLayout } from "@store/layout"
+import { handleNotification } from "@store/notification"
+import { store } from "@store/store"
 import jwt from "./jwt/useJwt"
-import { createIndexedDB, recrateNotificationData } from "../indexedDB"
-import { handleNotification } from "redux/notification"
-import { updateListUsers } from "redux/app/users"
 /**
  * Return if user is logged in
  * This is completely up to you and how you want to store the token in your frontend application
@@ -41,6 +40,7 @@ export const fetchProfile = () => {
       const listNotification = res.data.list_notification
       const numberNotification = res.data.number_notification
       store.dispatch(initialLayout(settings))
+      setIndexCustom(settings)
       store.dispatch(
         handleFetchProfile({
           userData,
@@ -70,7 +70,20 @@ export const authSetting = () => {
     jwt.setting().then((res) => {
       store.dispatch(initAppRoutes(res.data.routes))
       store.dispatch(initialLayout(res.data.settings))
+      setIndexCustom(res.data.settings)
       resolve(res.data)
     })
   })
+}
+
+const setIndexCustom = (data) => {
+  const { indexCustomPath, indexCustomLayout, indexCustomComponent } = data
+  localStorage.setItem(
+    "indexCustom",
+    JSON.stringify({
+      indexCustomPath,
+      indexCustomLayout,
+      indexCustomComponent
+    })
+  )
 }

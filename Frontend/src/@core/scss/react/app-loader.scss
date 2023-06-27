@@ -11,17 +11,22 @@
       margin-top: 1rem;
     }
   }
+  &.content-loader {
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    margin-top: -2rem;
+    height: calc(100vh - 10rem);
+  }
 
   .loading {
-    width: 80px;
-    height: 80px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     border: 3px solid transparent;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    img{
-      width: 80px;
-    }
+
     .effect-1,
     .effect-2,
     .effect-3 {

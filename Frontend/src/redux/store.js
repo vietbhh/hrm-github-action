@@ -1,7 +1,6 @@
 // ** Redux Imports
 import rootReducer from "./rootReducer"
 import { configureStore } from "@reduxjs/toolkit"
-
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => {
@@ -9,7 +8,7 @@ const store = configureStore({
       serializableCheck: false
     })
   },
-  devTools: process.env.NODE_ENV === "development"
+  devTools: import.meta.env.DEV === true
 })
 
 export { store }
