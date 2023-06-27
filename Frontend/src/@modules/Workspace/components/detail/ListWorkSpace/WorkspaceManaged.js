@@ -1,62 +1,163 @@
 // ** React Imports
 import { useFormatMessage } from "@apps/utility/common"
 import { Fragment } from "react"
+import { useNavigate } from "react-router-dom"
 // ** Styles
-import { Card, CardBody, CardHeader, Col, Row } from "reactstrap"
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Button,
+  Spinner
+} from "reactstrap"
 // ** Components
 import WorkspaceItem from "./WorkspaceItem"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 
 const WorkspaceManaged = (props) => {
   const {
     // ** props
     workspaceType,
+    linkTo,
     loading,
-    data
+    loadingPaginate,
+    data,
+    showSeeAll = true,
+    showBack = false,
+    showLoadMore,
+    disableLoadMore,
     // ** methods
+    handleCLickLoadMore,
+    renderLoadingPaginate
   } = props
 
+  const navigate = useNavigate()
+
   // ** render
+  const renderLoadMore = () => {
+    if (showLoadMore === false) {
+      return ""
+    }
+
+    return (
+      <Row className="mt-1">
+        <Col sm={2} xs={2} className="w-100 d-flex justify-content-center">
+          <Button.Ripple
+            color="flat"
+            className="text-color-link btn-load-more"
+            disabled={loadingPaginate || disableLoadMore}
+            onClick={() => handleCLickLoadMore()}>
+            {loadingPaginate ? (
+              <Spinner size="sm" className="me-50" />
+            ) : (
+              <i className="fas fa-angle-down me-50" />
+            )}
+            {useFormatMessage("modules.workspace.buttons.load_more")}
+          </Button.Ripple>
+        </Col>
+      </Row>
+    )
+  }
+
   const renderBody = () => {
     if (loading) {
-      return <DefaultSpinner />
+      return <AppSpinner />
+    }
+
+    if (data.length === 0) {
+      return ""
     }
 
     if (workspaceType === "manage") {
       return (
-        <Row className="workspace-list workspace-manage-list">
-          {data.map((item) => {
-            return (
-              <Col sm="3">
-                <WorkspaceItem workspaceType={workspaceType} />
-              </Col>
-            )
-          })}
-        </Row>
+        <Fragment>
+          <Row className="workspace-list workspace-manage-list">
+            {data.map((item, index) => {
+              return (
+                <Col
+                  sm="3"
+                  className="mb-1 mt-50 col"
+                  key={`workspace-item-${index}`}>
+                  <WorkspaceItem
+                    workspaceType={workspaceType}
+                    infoWorkspace={item}
+                  />
+                </Col>
+              )
+            })}
+          </Row>
+          <Row>
+            <Fragment>
+              {loading && typeof renderLoadingPaginate === "function"
+                ? renderLoadingPaginate()
+                : ""}
+            </Fragment>
+            <Fragment>{renderLoadMore()}</Fragment>
+          </Row>
+        </Fragment>
       )
     } else if (workspaceType === "joined") {
       return (
-        <Row className="workspace-list workspace-joined-list">
-          {data.map((item) => {
-            return (
-              <Col sm="6" className="mb-1">
-                <WorkspaceItem workspaceType={workspaceType} />
-              </Col>
-            )
-          })}
-        </Row>
+        <Fragment>
+          <Row className="workspace-list workspace-joined-list">
+            {data.map((item, index) => {
+              return (
+                <Col sm="6" className="mb-1" key={`workspace-item-${index}`}>
+                  <WorkspaceItem
+                    workspaceType={workspaceType}
+                    infoWorkspace={item}
+                  />
+                </Col>
+              )
+            })}
+          </Row>
+          <Row>
+            <Fragment>{renderLoadMore()}</Fragment>
+          </Row>
+        </Fragment>
       )
     }
   }
 
+  const renderSeeAllButton = () => {
+    if (showSeeAll === false) {
+      return ""
+    }
+
+    return (
+      <h6
+        className="link text-color-link"
+        onClick={() => navigate(`/workspace/${linkTo}`)}>
+        {useFormatMessage("modules.workspace.buttons.see_all")}
+      </h6>
+    )
+  }
+
+  const renderBackButton = () => {
+    if (showBack === false) {
+      return ""
+    }
+
+    return (
+      <h6
+        className="link text-color-link"
+        onClick={() => navigate(`/workspace`)}>
+        <i className="fas fa-long-arrow-left me-25" />
+        {useFormatMessage("modules.workspace.buttons.back_to_workgroup")}
+      </h6>
+    )
+  }
+
   return (
-    <Card className="mt-2 card-workspace-managed">
+    <Card className="mt-2 p-1 pt-50 pb-50 card-workspace-managed">
       <CardHeader>
         <div className="d-flex align-items-center justify-content-between w-100">
           <div>
             <h5 className="text-color-title">
               {useFormatMessage(
-                `modules.workspace.title.workspace_${workspaceType}`
+                `modules.workspace.title.workgroup_${workspaceType}`
               )}
             </h5>
             <small>
@@ -65,9 +166,8 @@ const WorkspaceManaged = (props) => {
               )}
             </small>
           </div>
-          <h6 className="link text-color-link">
-            {useFormatMessage("modules.workspace.buttons.see_all")}
-          </h6>
+          <Fragment>{renderSeeAllButton()}</Fragment>
+          <Fragment>{renderBackButton()}</Fragment>
         </div>
       </CardHeader>
       <CardBody className="">

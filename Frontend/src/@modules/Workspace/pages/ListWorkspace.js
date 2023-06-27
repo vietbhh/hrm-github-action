@@ -6,6 +6,7 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Components
 import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManaged"
 import WorkspaceFilter from "../components/detail/ListWorkSpace/WorkspaceFilter"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 
 const ListWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -27,9 +28,14 @@ const ListWorkspace = (props) => {
       .then((res) => {
         setState({
           dataManage: res.data.data_manage,
-          dataJoined: res.data.data_join,
-          loading: false
+          dataJoined: res.data.data_join
         })
+
+        setTimeout(() => {
+          setState({
+            loading: false
+          })
+        }, 500)
       })
       .catch((err) => {
         setState({
@@ -51,7 +57,7 @@ const ListWorkspace = (props) => {
       <div className="d-flex align-items-center justify-content-between header">
         <div>
           <h1 className="title text-color-title">
-            {useFormatMessage("modules.workspace.title.workspace")}
+            {useFormatMessage("modules.workspace.title.workgroup")}
             <span className="text-danger">.</span>
           </h1>
         </div>
@@ -63,15 +69,19 @@ const ListWorkspace = (props) => {
         <div>
           <WorkspaceManaged
             workspaceType="manage"
+            linkTo="managed"
             loading={state.loading}
             data={state.dataManage}
+            showLoadMore={false}
           />
         </div>
         <div>
           <WorkspaceManaged
             workspaceType="joined"
+            linkTo="joined"
             loading={state.loading}
             data={state.dataJoined}
+            showLoadMore={false}
           />
         </div>
       </div>
