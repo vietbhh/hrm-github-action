@@ -21,7 +21,7 @@ import {
   Row,
   Spinner
 } from "reactstrap"
-import { updateStateModule } from "redux/app/app"
+import { updateStateModule } from "@store/app/app"
 
 const SettingTableModal = (props) => {
   const {

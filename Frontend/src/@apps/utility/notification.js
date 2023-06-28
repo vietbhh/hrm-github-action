@@ -11,7 +11,7 @@ import { useFormatMessage } from "./common"
 import { Link } from "react-router-dom"
 import {
   checkHTMLTag
-} from "@src/layouts/components/vertical/common/common"
+} from "layouts/_components/vertical/common/common"
 
 const ToastContent = ({ type, title, icon, text, meta, closeToast, link }) => {
   const Wrap = _.isUndefined(link) ? "div" : Link

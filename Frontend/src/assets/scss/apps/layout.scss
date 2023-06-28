@@ -1,3 +1,11 @@
+.misc-wrapper {
+  .brand-logo {
+    img {
+      width: 150px;
+    }
+  }
+}
+
 body.modal-open {
   overflow: auto;
   padding-right: 0 !important;

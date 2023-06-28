@@ -1,6 +1,6 @@
-const { useMergedState, useFormatMessage } = require("@apps/utility/common")
-const { defaultModuleApi } = require("@apps/utility/moduleApi")
 import AppSpinner from "@apps/components/spinner/AppSpinner"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { Fragment, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"

@@ -31,12 +31,17 @@ const notificationSlice = createSlice({
       state.numberNotification = newNumberNotification
     },
     toggleOpenDropdown: (state, action) => {
-      state.openDropdown = action.payload !== undefined ? action.payload : !state.openDropdown
+      state.openDropdown =
+        action.payload !== undefined ? action.payload : !state.openDropdown
     }
   }
 })
 
-export const { handleNotification, handleSeenNotification, handleAppendNotification, toggleOpenDropdown } =
-  notificationSlice.actions
+export const {
+  handleNotification,
+  handleSeenNotification,
+  handleAppendNotification,
+  toggleOpenDropdown
+} = notificationSlice.actions
 
 export default notificationSlice.reducer

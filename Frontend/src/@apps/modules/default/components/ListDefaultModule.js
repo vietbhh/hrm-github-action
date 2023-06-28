@@ -1,5 +1,7 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import { ErpInput } from "@apps/components/common/ErpField"
+import SwAlert from "@apps/utility/SwAlert"
+import { cellHandle, defaultCellHandle } from "@apps/utility/TableHandler"
 import {
   functionUnderContruction,
   getBool,
@@ -10,8 +12,6 @@ import { isArray, isUndefined } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
 import { canDeleteData, canUpdateData } from "@apps/utility/permissions"
-import SwAlert from "@apps/utility/SwAlert"
-import { cellHandle, defaultCellHandle } from "@apps/utility/TableHandler"
 import {
   debounce,
   filter,
@@ -21,6 +21,7 @@ import {
   isString,
   map
 } from "lodash"
+import { Fragment, useContext, useEffect, useRef } from "react"
 import {
   Bookmark,
   Download,
@@ -57,7 +58,6 @@ import FormModalDefaultModule from "./modals/FormModalDefaultModule"
 import SettingTableModal from "./modals/SettingTableModal"
 import FilterModalDefaultModule from "./table/FilterModalDefaultModule"
 import TableDefaultModule from "./table/TableDefaultModule"
-const { Fragment, useEffect, useContext, useRef } = require("react")
 const { Cell } = Table
 
 const checkModuleConfig = (optionsData, configName, defaultValue = "") => {
@@ -232,7 +232,9 @@ export const ActionCellComp = ({
               className="w-100"
               onClick={() =>
                 coppyLink(
-                  `${process.env.REACT_APP_URL}${defaultUrl}detail/${rowData?.id}`
+                  `${import.meta.env.VITE_APP_URL}${defaultUrl}detail/${
+                    rowData?.id
+                  }`
                 )
               }>
               <Link2 size={14} className="me-50" />
@@ -300,7 +302,7 @@ const ListDefaultModule = (props) => {
         setTable({
           searchValue: nextValue
         }),
-      process.env.REACT_APP_DEBOUNCE_INPUT_DELAY
+      import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY
     )
   ).current
 

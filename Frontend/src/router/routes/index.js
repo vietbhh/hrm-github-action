@@ -6,7 +6,7 @@ import CoreRoutes from "./Core"
 import DriveRoutes from "./Drive"
 
 // ** Layouts
-import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
+import LayoutWrapper from "@core/layouts/components/layout-wrapper"
 
 // ** Route Components
 import PrivateRoute from "@components/routes/PrivateRoute"
@@ -123,7 +123,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
   const AllRoutes = []
   const listRoutes = []
   const DefaultComp = lazy(() =>
-    import(`@apps/modules/default/pages/DefaultModule`)
+    import(`../../@apps/modules/default/pages/DefaultModule.js`)
   )
 
   customRoutes.forEach((item) => {
@@ -133,7 +133,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
       !isEmpty(item.componentPath) &&
       item.componentPath !== "default_route"
     ) {
-      Comp = lazy(() => import(`@modules/${item.componentPath}`))
+      Comp = lazy(() => import(`../../@modules/${item.componentPath}.js`))
       moduleProps = {}
     }
     const routeOption = isUndefined(item.options?.routes?.meta)
@@ -153,7 +153,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
 
     if (!isEmpty(defaultDashboardComponent)) {
       const DashboardComp = lazy(() =>
-        import(`@modules/${defaultDashboardComponent}`)
+        import(`../../@modules/${defaultDashboardComponent}.js`)
       )
       listRoutes.push({
         path: "/dashboard",

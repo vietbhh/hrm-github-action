@@ -1,9 +1,11 @@
 // ** React Imports
+import { Suspense, useContext } from "react"
 import { Navigate } from "react-router-dom"
-import { useContext, Suspense } from "react"
 
 // ** Context Imports
 import { AbilityContext } from "@src/utility/context/Can"
+
+// ** Spinner Import
 
 const PrivateRoute = ({ children, route }) => {
   // ** Hooks & Vars
@@ -29,11 +31,15 @@ const PrivateRoute = ({ children, route }) => {
       return <Navigate to="/access-control" />
     }
     if (user && !ability.can(action || "read", resource)) {
-      return <Navigate to="/not-authorized" replace />
+      return <Navigate to="/misc/not-authorized" replace />
     }
   }
 
-  return <Suspense fallback={null}>{children}</Suspense>
+  return (
+    <Suspense fallback={null}>
+      {children}
+    </Suspense>
+  )
 }
 
 export default PrivateRoute

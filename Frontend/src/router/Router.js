@@ -1,5 +1,4 @@
 // ** Router imports
-import { lazy } from "react"
 // ** Router imports
 import { Navigate, useRoutes } from "react-router-dom"
 
@@ -10,74 +9,30 @@ import BlankLayout from "@layouts/BlankLayout"
 import { useLayout } from "@hooks/useLayout"
 
 // ** Utils
-import { getHomeRouteForLoggedInUser, getUserData } from "../utility/Utils"
+import { getHomeRouteForLoggedInUser } from "../utility/Utils"
 
 // ** GetRoutes
-import Error from "@apps/modules/misc/Error"
 import NotAuthorized from "@apps/modules/misc/NotAuthorized"
+import NotFoundAuth from "@apps/modules/misc/NotFoundAuth"
 import { getRoutes } from "./routes"
 
 // ** Components
-import {
-  defaultLayout as defaultLayoutConfig
-} from "@src/layouts/config"
 
 const Router = (props) => {
   // ** Hooks
-  const {
-    customRoutes,
-    defaultIndexPath,
-    defaultIndexComponent,
-    defaultIndexLayout,
-    defaultDashboardComponent
-  } = props
+  const { customRoutes, defaultIndexPath, defaultDashboardComponent } = props
   const { layout } = useLayout()
 
   const allRoutes = getRoutes(layout, customRoutes, defaultDashboardComponent)
-  const user = getUserData()
   let homeRoute = "/login"
 
-  /* let indexItem = {
-    path: "/",
-    index: true,
-    element: <Navigate replace to={homeRoute} />
-  } */
-
-  if (user) {
-    //CustomIndexUnderContructor
-    if (
-      !_.isUndefined(defaultIndexComponent) &&
-      !_.isNull(defaultIndexComponent) &&
-      !_.isEmpty(defaultIndexComponent)
-    ) {
-      let indexLayout = defaultLayoutConfig
-      if (
-        !_.isUndefined(defaultIndexLayout) &&
-        !_.isNull(defaultIndexLayout) &&
-        !_.isEmpty(defaultIndexLayout)
-      ) {
-        indexLayout = defaultIndexLayout
-      }
-      /* const CustomIndexComponent = lazy(() =>
-        import(`@src/${defaultIndexComponent}`)
-      ) */
-      const Test = lazy(() => import("@apps/modules/misc/TestUploadService"))
-      /* indexItem = {
-        path: "/",
-        element: layoutConfig[indexLayout],
-        children: [{ path: "/", element: <Test /> }]
-      } */
-    }
-    //CustomIndexENDUnderContructor
-
-    homeRoute = getHomeRouteForLoggedInUser(user.role)
-    if (
-      !_.isUndefined(defaultIndexPath) &&
-      !_.isNull(defaultIndexPath) &&
-      !_.isEmpty(defaultIndexPath)
-    ) {
-      homeRoute = defaultIndexPath
-    }
+  homeRoute = getHomeRouteForLoggedInUser()
+  if (
+    !_.isUndefined(defaultIndexPath) &&
+    !_.isNull(defaultIndexPath) &&
+    !_.isEmpty(defaultIndexPath)
+  ) {
+    homeRoute = defaultIndexPath
   }
   const indexItem = {
     path: "/",
@@ -87,6 +42,7 @@ const Router = (props) => {
 
   const routes = useRoutes([
     indexItem,
+    ...allRoutes,
     {
       path: "/auth/not-auth",
       element: <BlankLayout />,
@@ -95,9 +51,8 @@ const Router = (props) => {
     {
       path: "*",
       element: <BlankLayout />,
-      children: [{ path: "*", element: <Error /> }]
-    },
-    ...allRoutes
+      children: [{ path: "*", element: <NotFoundAuth /> }]
+    }
   ])
 
   return routes

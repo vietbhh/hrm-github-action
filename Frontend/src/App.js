@@ -7,22 +7,16 @@ import { useSelector } from "react-redux"
 import { requestPermission } from "./firebase"
 // ** Router Import
 import Router from "./router/Router"
+
 const App = () => {
   const appLoading = useSelector((state) => state.app.loading)
   const routes = useSelector((state) => state.app.routes)
   const appName = useSelector((state) => state.layout.app_name)
   const userData = useSelector((state) => state.auth.userData)
-  const defaultIndexPath = useSelector(
-    (state) => state.auth.settings.indexCustomPath
-  )
-  //CustomIndexUnderContructor
-  const defaultIndexComponent = useSelector(
-    (state) => state.auth.settings.indexCustomComponent
-  )
-  const defaultIndexLayout = useSelector(
-    (state) => state.auth.settings.indexCustomLayout
-  )
-  //CustomIndexENDUnderContructor
+
+  const customIndex = JSON.parse(localStorage.getItem("indexCustom"))
+  const defaultIndexPath = customIndex?.indexCustomPath || ""
+
   const defaultDashboardComponent = useSelector(
     (state) => state.auth.settings.dashboardComponent
   )
@@ -47,8 +41,6 @@ const App = () => {
       <Router
         customRoutes={routes}
         defaultIndexPath={defaultIndexPath}
-        defaultIndexComponent={defaultIndexComponent}
-        defaultIndexLayout={defaultIndexLayout}
         defaultDashboardComponent={defaultDashboardComponent}
       />
     </Suspense>

@@ -28,8 +28,8 @@ const Start = (props) => {
             </CardTitle>
             <p>
               {useFormatMessage("auth.welcomeAppUrl")} <br />
-              <a href={process.env.REACT_APP_URL}>
-                {process.env.REACT_APP_URL}
+              <a href={import.meta.env.VITE_APP_URL}>
+                {import.meta.env.VITE_APP_URL}
               </a>
             </p>
             <CardText className="mb-2">

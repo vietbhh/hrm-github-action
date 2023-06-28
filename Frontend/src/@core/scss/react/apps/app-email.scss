@@ -10,6 +10,22 @@
   }
 }
 
+// Dark Layout
+.dark-layout {
+  .email-application {
+    .email-app-menu {
+      .list-group-item {
+        &.list-group-item-action:not(.active):not(:active) {
+          border-color: transparent;
+        }
+        &:not(.active):not(:active):focus {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
 html[dir='rtl'] {
   .email-application {
     .email-app-details .email-detail-header {

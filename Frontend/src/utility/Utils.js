@@ -1,4 +1,4 @@
-import jwt from "auth/jwt/useJwt"
+import jwt from "@/auth/jwt/useJwt"
 import { DefaultRoute } from "../router/routes"
 
 // ** Checks if an object is empty (returns boolean)
@@ -68,11 +68,10 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"))
  * ? NOTE: If you have different pages to navigate based on user ability then this function can be useful. However, you need to update it.
  * @param {String} userRole Role of user
  */
-export const getHomeRouteForLoggedInUser = (userRole) => {
-  return DefaultRoute
-  if (userRole === "admin") return DefaultRoute
-  if (userRole === "client") return "/access-control"
-  return "/login"
+export const getHomeRouteForLoggedInUser = () => {
+  const customIndex = JSON.parse(localStorage.getItem("indexCustom"))
+  const defaultIndexPath = customIndex?.indexCustomPath || ""
+  return _.isEmpty(defaultIndexPath) ? DefaultRoute : defaultIndexPath
 }
 
 // ** React Select Theme Colors

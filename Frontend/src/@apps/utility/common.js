@@ -316,16 +316,16 @@ export const getOptionValue = (options, optionName, nameOptionKey) => {
 
 export const getDefaultFridayLogo = (type = "icon") => {
   const logoName = type === "text" ? "friday_text.png" : "friday.png"
-  return process.env.REACT_APP_URL + "/assets/images/" + logoName
+  return import.meta.env.VITE_APP_URL + "/assets/images/" + logoName
 }
 
 export const getAvatarUrl = (userOrPath) => {
   const type = _.isNumber(userOrPath) ? "user" : "name"
   return (
-    process.env.REACT_APP_API_URL + `/download/avatar?${type}=` + userOrPath
+    import.meta.env.VITE_APP_API_URL + `/download/avatar?${type}=` + userOrPath
   )
 }
 
 export const getPublicDownloadUrl = (path, type = "image") => {
-  return process.env.REACT_APP_API_URL + `/download/public/${type}?name=` + path
+  return import.meta.env.VITE_APP_API_URL + `/download/public/${type}?name=` + path
 }

@@ -2,7 +2,7 @@
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 // ** React Hot Toast Styles
 import "@styles/react/libs/react-hot-toasts/react-hot-toasts.scss"
-import { authSetting, fetchProfile, isUserLoggedIn } from "auth/utils"
+import { authSetting, fetchProfile, isUserLoggedIn } from "@/auth/utils"
 // ** PrismJS
 import "prismjs"
 import "prismjs/components/prism-jsx.min"
@@ -15,8 +15,7 @@ import { Toaster } from "react-hot-toast"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Provider } from "react-redux"
 import { BrowserRouter } from "react-router-dom"
-import { handleAppLoading } from "redux/app/app"
-import "./assets/scss/antd.less"
+import { handleAppLoading } from "@store/app/app"
 import "./assets/scss/rsuite.less"
 // ** Core styles
 import "./@core/assets/fonts/feather/iconfont.css"
@@ -24,8 +23,6 @@ import "./@core/assets/fonts/feather/iconfont.css"
 import "./@core/components/ripple-button"
 import "./@core/scss/core.scss"
 import "./assets/plugins/fontawesome/css/all.min.css"
-// ** Fake Database
-import "./@fake-db"
 import "./assets/scss/style.scss"
 // ** Intl, CASL & ThemeColors Context
 import ability from "./configs/acl/ability"
@@ -40,6 +37,9 @@ import * as serviceWorker from "./serviceWorker"
 import { AbilityContext } from "./utility/context/Can"
 import { ThemeContext } from "./utility/context/ThemeColors"
 import { SocketContextWrap } from "utility/context/Socket"
+
+import lodash from "lodash"
+global._ = lodash
 
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"))

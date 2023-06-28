@@ -34,6 +34,13 @@ body,
       font-weight: 400;
       border-radius: 4px;
     }
+
+    li.nav-item {
+      .menu-item {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
   }
 }
 
@@ -108,7 +115,7 @@ body #root .wrapper .ps__rail-y {
       .nav-item:not(.dropdown):not(.dropdown-submenu) {
         a.nav-link.active {
           background: linear-gradient(118deg, rgba($primary, 1), rgba($primary, 0.7));
-          box-shadow:0 0 6px 1px  rgba($primary, 0.6);
+          box-shadow: 0 0 6px 1px rgba($primary, 0.6);
           color: $white;
           border-radius: 4px;
         }
@@ -237,9 +244,8 @@ body #root .wrapper .ps__rail-y {
 }
 
 // Media Query to fix navbar dropdown on sm screen
-@media (max-width: 768px) {
+@media (max-width: 576px) {
   .header-navbar .navbar-container .dropdown.show .dropdown-menu {
-    right: -2px;
     width: auto;
     left: 0 !important;
   }

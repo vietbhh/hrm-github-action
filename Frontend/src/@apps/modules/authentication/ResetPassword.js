@@ -59,7 +59,7 @@ const ResetPassword = () => {
     })
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}/auth/reset/validate`,
+        `${import.meta.env.VITE_APP_API_URL}/auth/reset/validate`,
         serialize(
           cloneDeep({
             token: token
@@ -124,7 +124,7 @@ const ResetPassword = () => {
     })
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}/auth/reset`,
+        `${import.meta.env.VITE_APP_API_URL}/auth/reset`,
         serialize(
           cloneDeep({
             token: token,

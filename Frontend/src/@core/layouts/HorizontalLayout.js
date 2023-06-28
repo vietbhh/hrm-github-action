@@ -156,7 +156,7 @@ const HorizontalLayout = props => {
               'floating-nav': (!navbarClasses[navbarType] && navbarType !== 'static') || navbarType === 'floating'
             })}
           >
-            {menu ? menu({ menuData }) : <MenuComponent menuData={menuData} />}
+            {menu ? menu({ menuData, routerProps, currentActiveItem }) : <MenuComponent menuData={menuData} />}
           </Navbar>
         </div>
       ) : null}

@@ -2,17 +2,17 @@
 import { Fragment, useContext, useEffect } from "react"
 import {
   handleFormatMessageStr
-} from "@src/layouts/components/vertical/common/common"
+} from "layouts/_components/vertical/common/common"
 // ** redux
 import { useDispatch } from "react-redux"
-import { handleAppendNotification } from "redux/notification"
+import { handleAppendNotification } from "@store/notification"
 // ** Styles
 // ** Components
 import { currentDateTime, useFormatMessage } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import ChatSound from "@src/assets/sounds/chat_sound.mp3"
 import NotificationSound from "@src/assets/sounds/notification_sound.mp3"
-import SocketContext from "utility/context/Socket"
+import SocketContext from "@/utility/context/Socket"
 
 const Notification = (props) => {
   const dispatch = useDispatch()

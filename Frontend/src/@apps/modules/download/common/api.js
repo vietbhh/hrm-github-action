@@ -53,7 +53,7 @@ export const downloadApi = {
   },
   getFile(file, downloadFromStorage) {
     return new Promise((resolve, reject) => {
-      const src = "/download/file?name=" + file
+      let src = "/download/file?name=" + file
       if (downloadFromStorage === true) {
         src += "&type=cloud_storage"
       }
