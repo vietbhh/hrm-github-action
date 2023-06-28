@@ -184,7 +184,6 @@ export const FieldHandleBase = (props) => {
   const commonProps = {
     name: field,
     id: field + "_" + Math.floor(100000 + Math.random() * 900000),
-    placeholder: "",
     label: fieldLabel(module, field),
     placeholder: fieldLabel(module, field),
     required: field_form_require,
