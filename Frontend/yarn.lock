@@ -596,10 +596,10 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@draft-js-plugins/editor@^4.1.3":
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/@draft-js-plugins/editor/-/editor-4.1.3.tgz#460d70d3b639d17f4e1f15b7d180b8c8698b1ec1"
-  integrity sha512-Mxr1GUFzN0VcVVP6XClvWS2o33Rh8ZG3l41h9l27hJoLRYVywpuzI6TXD0UFYDIHX50fz6n70sQCdoHmkBsfKQ==
+"@draft-js-plugins/editor@4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@draft-js-plugins/editor/-/editor-4.1.1.tgz#886cd9605da37f45f0272f39df18464f166198e5"
+  integrity sha512-zqxBUyX7cPEMT5Z7/DdhC4kga+uPSg/SvsRbndKbYXoT6sIXWXo+DI/TuAwaybOPjVFLLwxBco6CBkQr3d1ejg==
   dependencies:
     immutable "~3.7.4"
     prop-types "^15.8.1"

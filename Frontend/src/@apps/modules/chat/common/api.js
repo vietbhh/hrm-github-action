@@ -1,4 +1,4 @@
-import { axiosApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 import {
   erpSelectToValues,
   object2QueryString,
@@ -56,5 +56,11 @@ export const ChatApi = {
         }
       }
     )
+  }
+}
+
+export const testApi = {
+  async postCreateGroup(data) {
+    return await axiosNodeApi.post("/chat/create-group", data)
   }
 }
