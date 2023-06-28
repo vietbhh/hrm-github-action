@@ -3,12 +3,13 @@ import fs from "fs"
 import path, { dirname } from "path"
 import { fileURLToPath } from "url"
 import { walk } from "file"
-import coreRouter from "./core.router.js"
+import coreRouter from "./_core.router.js"
 const appRouter = express.Router()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const basename = path.basename(__filename)
 
+const coreRouterFolder = path.join(__dirname)
 const codeFolder = path.join(__dirname, "..", "..", "code")
 const sourcePath = path.join("src", "code")
 
@@ -29,6 +30,25 @@ walk(codeFolder, (err, dir) => {
 
 //Core Routers
 appRouter.use("/", coreRouter)
+
+walk(coreRouterFolder, (err, dir) => {
+  fs.readdirSync(dir)
+    .filter((file) => {
+      return (
+        file.indexOf(".") !== 0 &&
+        file !== "_core.router.js" &&
+        file !== basename &&
+        file.slice(-10) === ".router.js" &&
+        file !== "routerCoreOverride.js"
+      )
+    })
+    .forEach(async (file) => {
+      const routerBase = file.split(".router.js")[0]
+      let routerPath = "./" + file
+      const { default: router } = await import(routerPath)
+      appRouter.use("/" + routerBase, router)
+    })
+})
 
 //Modules Routers
 walk(codeFolder, (err, dir) => {
