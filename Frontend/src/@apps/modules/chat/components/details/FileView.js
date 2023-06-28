@@ -15,7 +15,6 @@ import {
 import React, { Fragment, useEffect } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
-import { ReactTinyLink } from "react-tiny-link"
 import { Button, Spinner } from "reactstrap"
 import DownloadFileComponent from "./DownloadFile"
 import Photo from "./Photo"
