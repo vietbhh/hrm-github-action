@@ -331,6 +331,139 @@
 }
 
 .list-workspace-page {
+  .cursor-pointer {
+    cursor: pointer !important;
+  }
+
+  .common-border {
+    border-radius: 12px !important;
+  }
+
+  .text-color-title {
+    color: #32434f;
+    font-weight: 600;
+  }
+
+  .text-color-link {
+    color: #0062ff !important;
+  }
+
+  .custom-secondary {
+    width: 100%;
+    background-color: #f1f1f5 !important;
+    border: none !important;
+    font-size: 12px;
+    color: #32434f !important;
+  }
+
+  .header {
+    .title {
+      font-size: 2.1rem;
+    }
+  }
+
+  .body {
+    .card-workspace-managed {
+      border-radius: 12px;
+      transition: all 100ms linear;
+
+      .card-header {
+        .link {
+          font-weight: 500;
+          font-size: 12px;
+          text-transform: uppercase;
+          cursor: pointer;
+        }
+      }
+
+      .card-body {
+        .col {
+          padding-right: calc(var(--bs-gutter-x) * 0.25) !important;
+          padding-left: calc(var(--bs-gutter-x) * 0.25) !important;
+        }
+
+        .btn-load-more {
+          border: none !important
+        }
+
+        .workspace-manage-list {
+          
+          .workspace-item {
+            border: 1px solid #f1f1f5;
+
+            .image-container {
+              height: 110px;
+
+              .ant-image {
+                height: 110px;
+                width: 100%;
+
+                img {
+                  object-fit: cover;
+                  object-position: center;
+                }
+              }
+
+              img {
+                cursor: pointer;
+                max-width: 100%;
+                object-fit: cover;
+                height: 100%;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+              }
+            }
+          }
+        }
+
+        .workspace-joined-list {
+          .workspace-item {
+            height: 90px;
+
+            .image-container {
+              width: 20% !important;
+              height: 100%;
+              border: 1px solid #f1f1f5;
+
+              .ant-image {
+                height: 88px;
+                width: 100%;
+              }
+
+              img {
+                max-width: 100%;
+                object-fit: cover;
+                height: 100%;
+                border-radius: 12px;
+              }
+            }
+
+            .content-container {
+              width: 80% !important;
+              border: 1px solid #f1f1f5;
+              height: 100%;
+
+              .member-container {
+                .rest-number {
+                  border: 1px solid #f1f1f5;
+                  border-radius: 50%;
+                  height: 18px;
+                  line-height: 18px;
+                  font-size: 8px;
+                  font-weight: 400;
+                }
+
+                .joined-time {
+                  font-size: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   .workspace-container {
     .loading-component {
       height: 200px;

@@ -15,11 +15,13 @@ import {
   addMemberByDepartment,
   loadPinned,
   loadGCSObjectLink,
-  removeCoverImage
+  removeCoverImage,
+  getListWorkspaceSeparateType
 } from "../controllers/workspace.js"
 const router = express.Router()
 
 router.get("/list", getListWorkspace)
+router.get("/get-list-workspace-separate-type", getListWorkspaceSeparateType)
 router.get("/overview", getWorkspaceOverview)
 router.get("/pending-posts", getPostWorkspace)
 router.get("/load-feed", loadFeed)

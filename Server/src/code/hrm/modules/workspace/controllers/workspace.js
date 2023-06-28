@@ -1,6 +1,6 @@
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import feedMongoModel from "../../feed/models/feed.mongo.js"
-import { isEmpty, forEach, map } from "lodash-es"
+import { isEmpty, forEach, map, isArray, isObject } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
 import fs from "fs"
@@ -194,8 +194,10 @@ const getListWorkspace = async (req, res, next) => {
       })
     }
 
+    const returnData = await _handleWorkspaceData(result)
+
     return res.respond({
-      results: result,
+      results: returnData,
       total_data: totalWorkspace.length,
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
@@ -744,6 +746,7 @@ const _getCurrentPageRequestJoin = async (requestData, workspace) => {
 
   return page
 }
+
 const approvePost = async (req, res) => {
   try {
     const idWorkspace = req.body.idWorkspace
@@ -785,6 +788,7 @@ const approvePost = async (req, res) => {
     return res.fail(err.message)
   }
 }
+
 const loadFeed = async (req, res) => {
   const request = req.query
   const page = request.page
@@ -894,6 +898,123 @@ const getWorkspaceOverview = async (req, res) => {
   return res.respond(result)
 }
 
+const getListWorkspaceSeparateType = async (req, res) => {
+  const page = 1
+  const limitManage = 4
+  const limitJoin = 6
+  const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
+  const text = req.query.text === undefined ? "" : req.query.text
+
+  try {
+    let condition = {}
+    if (text.trim().length > 0) {
+      condition = {
+        name: { $regex: ".*" + text + ".*" }
+      }
+    }
+
+    const workspaceManage = await workspaceMongoModel
+      .find({ administrators: parseInt(userId), ...condition })
+      .sort({
+        _id: "desc"
+      })
+
+    const workspaceJoin = await workspaceMongoModel
+      .find({ members: parseInt(userId), ...condition })
+      .sort({
+        _id: "desc"
+      })
+
+    const dataWorkspaceManage = await _handleWorkspaceData(
+      workspaceManage.slice(0, limitManage)
+    )
+    const dataWorkspaceJoin = await _handleWorkspaceData(
+      workspaceJoin.slice(0, limitJoin),
+      userId
+    )
+
+    return res.respond({
+      data_manage: dataWorkspaceManage,
+      data_join: dataWorkspaceJoin
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
+  const promises = []
+  listWorkspace.map((item) => {
+    promises.push(
+      new Promise(async (resolve, reject) => {
+        let limitMember = isArray(item.members) ? item.members : []
+        let currentMember = {}
+        limitMember = limitMember
+          .map((itemLimit) => {
+            if (isObject(itemLimit)) {
+              currentMember =
+                parseInt(itemLimit?.id) === userId ? itemLimit : {}
+
+              return itemLimit?.id
+            }
+
+            return itemLimit
+          })
+          .filter((itemFilter) => {
+            return itemFilter !== undefined
+          })
+
+        if (limitMember.length > 3) {
+          limitMember = limitMember.slice(0, 3)
+        }
+
+        try {
+          const listMember = await getUsers(limitMember)
+          const dataMember = listMember.map((itemMember) => {
+            return {
+              id: itemMember.id,
+              username: itemMember.username,
+              avatar: itemMember.avatar,
+              full_name: itemMember.full_name,
+              email: itemMember.email
+            }
+          })
+          resolve({
+            id: item.id,
+            name: item.name,
+            type: item.type,
+            cover_image: item.cover_image,
+            member_number: isArray(item.members) ? item.members.length : 0,
+            members: dataMember,
+            current_member_join: currentMember
+          })
+        } catch (err) {
+          resolve({
+            id: item.id,
+            name: item.name,
+            type: item.type,
+            cover_image: item.cover_image,
+            member_number: isArray(item.members) ? item.members.length : 0,
+            members: [],
+            current_member_join: {}
+          })
+        }
+      })
+    )
+  })
+
+  const data = []
+  await Promise.allSettled(promises).then((res) => {
+    forEach(res, (item) => {
+      if (item.status === "fulfilled") {
+        data.push(item.value)
+      }
+    })
+  })
+
+  return data
+}
+
 export {
   getWorkspace,
   getWorkspaceOverview,
@@ -910,5 +1031,6 @@ export {
   addMemberByDepartment,
   loadPinned,
   loadGCSObjectLink,
-  removeCoverImage
+  removeCoverImage,
+  getListWorkspaceSeparateType
 }

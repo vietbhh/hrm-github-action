@@ -137,7 +137,7 @@ const menuConfig = [
         </svg>
       </div>
     ),
-    navLink: "/workspace"
+    navLink: "/workspace/list"
   }
   /* {
     id: "setting-member",

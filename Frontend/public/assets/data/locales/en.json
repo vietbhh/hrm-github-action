@@ -4664,8 +4664,9 @@
         "work_space": "Work Space",
         "workspaces": "Workspaces",
         "workspace": "Workspace",
-        "workspace_you_have_joined": "Workspace you have joined",
-        "workspace_that_you_managed": "Workspace that you managed",
+        "workgroup": "Workgroup",
+        "workgroup_joined": "Workgroup you've joined",
+        "workgroup_manage": "Workgroup you manage",
         "remove_cover_image": "Do you want to remove the photo cover ?",
         "manage_workspace": "Manage Workspaces",
         "workspace_overview": "Workspace overview",
@@ -4675,6 +4676,8 @@
       "buttons": {
         "create": "Create Workspace",
         "view_all": "View All",
+        "see_all": "See All",
+        "back_to_workgroup": "Back to workgroup",
         "load_more": "Load More",
         "add_description": "Add description",
         "edit": "Edit",
@@ -4702,7 +4705,9 @@
         "become_admin_workspace": "Become Admin of the workspace",
         "view_detail": "View details",
         "leave_admin_workspace": "Leave Admin of the workspace",
-        "export_excel_file": "Export excel file"
+        "export_excel_file": "Export excel file",
+        "view_group": "View Group",
+        "create_group": "Create Group"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4713,6 +4718,7 @@
         "introduction": "Introduction",
         "group_rules": "Group rules",
         "member": "Member",
+        "members": "Members",
         "media": "Media",
         "request_to_join": "Request to join",
         "tab_media": {
@@ -4824,7 +4830,13 @@
         "posts": "post",
         "public": "Public",
         "joined": "Joined",
-        "excel": "Excel"
+        "excel": "Excel",
+        "description_workspace_card": {
+          "manage": "Manage content, member & settings",
+          "joined": "Collaborate with your team"
+        },
+        "no_member": "No member",
+        "joined_date": "You joined in"
       },
       "app_options": {
         "workspace_type": {

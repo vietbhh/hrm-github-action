@@ -1,10 +1,17 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { workspaceApi } from "@modules/Workspace/common/api"
-import { Link } from "react-router-dom"
+import { useFormatMessage } from "@apps/utility/common"
+import { Fragment } from "react"
+import { useNavigate } from "react-router-dom"
 // ** Styles
-import { Row, Col, Button, Spinner, Card, CardBody } from "reactstrap"
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Button,
+  Spinner
+} from "reactstrap"
 // ** Components
 import WorkspaceItem from "./WorkspaceItem"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
@@ -12,113 +19,53 @@ import AppSpinner from "@apps/components/spinner/AppSpinner"
 const WorkspaceManaged = (props) => {
   const {
     // ** props
-    title,
     workspaceType,
-    customLimit,
-    customUserId
+    linkTo,
+    loading,
+    loadingPaginate,
+    data,
+    showSeeAll = true,
+    showBack = false,
+    showLoadMore,
+    disableLoadMore,
     // ** methods
+    handleCLickLoadMore,
+    renderLoadingPaginate
   } = props
 
-  const [state, setState] = useMergedState({
-    loading: true,
-    data: [],
-    totalPage: 0,
-    showLoadMore: true,
-    filter: {
-      page: 1,
-      limit: 4,
-      workspace_type: workspaceType
-    }
-  })
-
-  const loadData = () => {
-    setState({
-      loading: true
-    })
-
-    const params = {
-      ...state.filter
-    }
-
-    if (customLimit !== undefined) {
-      params["limit"] = customLimit
-    }
-
-    if (customUserId !== undefined) {
-      params['user_id'] = customUserId
-    }
-
-    workspaceApi
-      .getList(params)
-      .then((res) => {
-        setTimeout(() => {
-          setState({
-            data: [...state.data, ...res.data.results],
-            totalPage: res.data.total_page,
-            loading: false
-          })
-        }, 300)
-      })
-      .catch((err) => {
-        setState({
-          data: [],
-          totalPage: 0,
-          loading: false
-        })
-      })
-  }
-
-  const handleCLickLoadMore = () => {
-    setState({
-      filter: {
-        ...state.filter,
-        page: state.filter.page + 1
-      }
-    })
-  }
-
-  // ** effect
-  useEffect(() => {
-    loadData()
-  }, [state.filter])
-
-  useEffect(() => {
-    if (state.loading === false) {
-      setState({
-        showLoadMore: state.filter.page < state.totalPage
-      })
-    }
-  }, [state.loading, state.filter])
+  const navigate = useNavigate()
 
   // ** render
-  const renderLoading = () => {
-    if (!state.loading) {
-      return ""
-    }
-
-    return (
-      <div className="d-flex align-items-center justify-content-center loading-component">
-        <AppSpinner />
-      </div>
-    )
-  }
-
   const renderLoadMore = () => {
-    if (!state.showLoadMore) {
+    if (showLoadMore === false) {
       return ""
     }
 
+    if (disableLoadMore && loadingPaginate === false) {
+      return (
+        <Row className="mt-1">
+          <Col sm={2} xs={2} className="w-100 d-flex justify-content-center">
+            <Button.Ripple
+              color="flat-secondary"
+              className="btn-load-more"
+              disabled={true}>
+              <i className="fas fa-angle-down me-50" />
+              {useFormatMessage("common.nodata")}
+            </Button.Ripple>
+          </Col>
+        </Row>
+      )
+    }
+
     return (
-      <Row>
-        <Col
-          sm={12}
-          xs={12}
-          className="w-100 d-flex align-items-end justify-content-end">
+      <Row className="mt-1">
+        <Col sm={2} xs={2} className="w-100 d-flex justify-content-center">
           <Button.Ripple
-            color="flat-info"
-            disabled={state.loading}
+            color="flat"
+            className="text-color-link btn-load-more"
+            disabled={loadingPaginate || disableLoadMore}
             onClick={() => handleCLickLoadMore()}>
-            {state.loading ? (
+            {loadingPaginate ? (
               <Spinner size="sm" className="me-50" />
             ) : (
               <i className="fas fa-angle-down me-50" />
@@ -130,58 +77,119 @@ const WorkspaceManaged = (props) => {
     )
   }
 
-  const renderContent = () => {
-    if (state.data.length === 0 && state.loading === false) {
-      return (
-        <Card>
-          <CardBody>
-            {useFormatMessage("modules.workspace.text.empty_workspace")}{" "}
-            <Link to="/workspace/create">
-              {useFormatMessage("modules.workspace.text.create_new_workspace")}
-            </Link>
-          </CardBody>
-        </Card>
-      )
+  const renderBody = () => {
+    if (loading) {
+      return <AppSpinner />
     }
 
-    return (
-      <Row>
-        {state.data.map((item) => {
-          return (
-            <Col
-              sm="3"
-              xs="12"
-              className=""
-              key={`work-space-item-${item._id}`}>
-              <WorkspaceItem workspace={item} />
-            </Col>
-          )
-        })}
-      </Row>
-    )
-  }
-
-  const renderTitle = () => {
-    if (title === undefined) {
+    if (data.length === 0) {
       return ""
     }
 
-    return <h3 className="mb-2 work-space-title">{title}</h3>
+    if (workspaceType === "manage") {
+      return (
+        <Fragment>
+          <Row className="workspace-list workspace-manage-list">
+            {data.map((item, index) => {
+              return (
+                <Col
+                  sm="3"
+                  className="mb-1 mt-50 col"
+                  key={`workspace-item-${index}`}>
+                  <WorkspaceItem
+                    workspaceType={workspaceType}
+                    infoWorkspace={item}
+                  />
+                </Col>
+              )
+            })}
+          </Row>
+          <Row>
+            <Fragment>
+              {loading && typeof renderLoadingPaginate === "function"
+                ? renderLoadingPaginate()
+                : ""}
+            </Fragment>
+            <Fragment>{renderLoadMore()}</Fragment>
+          </Row>
+        </Fragment>
+      )
+    } else if (workspaceType === "joined") {
+      return (
+        <Fragment>
+          <Row className="workspace-list workspace-joined-list">
+            {data.map((item, index) => {
+              return (
+                <Col sm="6" className="mb-1" key={`workspace-item-${index}`}>
+                  <WorkspaceItem
+                    workspaceType={workspaceType}
+                    infoWorkspace={item}
+                  />
+                </Col>
+              )
+            })}
+          </Row>
+          <Row>
+            <Fragment>{renderLoadMore()}</Fragment>
+          </Row>
+        </Fragment>
+      )
+    }
+  }
+
+  const renderSeeAllButton = () => {
+    if (showSeeAll === false) {
+      return ""
+    }
+
+    return (
+      <h6
+        className="link text-color-link"
+        onClick={() => navigate(`/workspace/${linkTo}`)}>
+        {useFormatMessage("modules.workspace.buttons.see_all")}
+      </h6>
+    )
+  }
+
+  const renderBackButton = () => {
+    if (showBack === false) {
+      return ""
+    }
+
+    return (
+      <h6
+        className="link text-color-link"
+        onClick={() => navigate(`/workspace/list`)}>
+        <i className="fas fa-long-arrow-left me-25" />
+        {useFormatMessage("modules.workspace.buttons.back_to_workgroup")}
+      </h6>
+    )
   }
 
   return (
-    <div className="p-1 workspace-container">
-      <div>
-        <div>
-          <Fragment>{renderTitle()}</Fragment>
+    <Card className="mt-2 p-1 pt-50 pb-50 card-workspace-managed">
+      <CardHeader>
+        <div className="d-flex align-items-center justify-content-between w-100">
+          <div>
+            <h5 className="text-color-title">
+              {useFormatMessage(
+                `modules.workspace.title.workgroup_${workspaceType}`
+              )}
+            </h5>
+            <small>
+              {useFormatMessage(
+                `modules.workspace.text.description_workspace_card.${workspaceType}`
+              )}
+            </small>
+          </div>
+          <Fragment>{renderSeeAllButton()}</Fragment>
+          <Fragment>{renderBackButton()}</Fragment>
         </div>
-        <div>
-          <Fragment>{renderContent()}</Fragment>
-        </div>
-        <Fragment>{renderLoading()}</Fragment>
-        <Fragment>{renderLoadMore()}</Fragment>
-      </div>
-    </div>
+      </CardHeader>
+      <CardBody className="">
+        <Fragment>{renderBody()}</Fragment>
+      </CardBody>
+    </Card>
   )
 }
 
