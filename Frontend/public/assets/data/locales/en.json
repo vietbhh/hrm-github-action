@@ -4505,7 +4505,23 @@
           "cancel_edit": "Cancel edit",
           "with": "with",
           "people": "People",
-          "btn_send_noti_unseen": "Send notifications to those who haven't seen it yet"
+          "send_notification": "Send notification",
+          "send_notification_des": "To those who haven't seen it",
+          "save_post": "Save post",
+          "saved": "Saved",
+          "save_post_des": "Add this to your saved items",
+          "saved_des": "Remove this from your saved items",
+          "turn_off_notification": "Turn off notification",
+          "turn_on_notification": "Turn on notification",
+          "copy_link": "Copy Link",
+          "turn_off_commenting": "Turn off commenting",
+          "turn_on_commenting": "Turn on commenting",
+          "view_edit_history": "View edit history",
+          "history": "Edit History",
+          "edited_at": "Edited at",
+          "send_in_messenger": "Send in messenger",
+          "share_to_a_group": "Share to a group",
+          "this_post_has_been_edited": "This post has been edited"
         },
         "react": {
           "like": "Like",
@@ -4530,6 +4546,13 @@
         },
         "announcement": {
           "announcement": "Announcement"
+        },
+        "modal_send_in_messenger": {
+          "say_something": "Say something...",
+          "send_to": "Send to",
+          "enter_name_or_username": "Enter name or username",
+          "recent": "Recent",
+          "sent": "Sent"
         }
       },
       "manage_post": {

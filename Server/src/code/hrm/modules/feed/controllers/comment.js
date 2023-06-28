@@ -45,24 +45,17 @@ const submitComment = async (req, res, next) => {
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
-        const receivers = created_by
+        const receivers = [created_by]
         const body_noti =
           data_user.full_name +
           " {{modules.network.notification.commented_on_your_post}}"
         const link = `/posts/${id_post}`
-        sendNotification(
+        await handleSendNotification(
           userId,
           receivers,
-          {
-            title: "",
-            body: body_noti,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
+          body_noti,
+          link,
+          id_post
         )
       }
     } else {
@@ -90,11 +83,18 @@ const submitComment = async (req, res, next) => {
       if (dataFeed.ref) {
         link_notification = `/posts/${dataFeed.ref}/${id_post}`
       }
+      const userId = body.data_user.id
+      const full_name = body.data_user.full_name
+      const body_noti =
+        "<strong>" +
+        full_name +
+        "</strong> {{modules.network.notification.tag_comment}}"
       await handleSendNotification(
-        "comment",
+        userId,
         body.tag_user,
-        body.data_user,
-        link_notification
+        body_noti,
+        link_notification,
+        id_post
       )
     }
 
@@ -136,24 +136,17 @@ const submitCommentReply = async (req, res, next) => {
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
-        const receivers = created_by
+        const receivers = [created_by]
         const body_noti =
           data_user.full_name +
           " {{modules.network.notification.replied_on_your_comment}}"
         const link = `/posts/${id_post}`
-        sendNotification(
+        await handleSendNotification(
           userId,
           receivers,
-          {
-            title: "",
-            body: body_noti,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
+          body_noti,
+          link,
+          id_post
         )
       }
     } else {
@@ -185,11 +178,18 @@ const submitCommentReply = async (req, res, next) => {
       if (dataFeed.ref) {
         link_notification = `/posts/${dataFeed.ref}/${id_post}`
       }
+      const userId = body.data_user.id
+      const full_name = body.data_user.full_name
+      const body_noti =
+        "<strong>" +
+        full_name +
+        "</strong> {{modules.network.notification.tag_comment}}"
       await handleSendNotification(
-        "comment",
+        userId,
         body.tag_user,
-        body.data_user,
-        link_notification
+        body_noti,
+        link_notification,
+        dataFeed.ref ? dataFeed.ref : id_post
       )
     }
 
@@ -233,23 +233,16 @@ const updateCommentReaction = async (req, res, next) => {
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
-        const receivers = created_by
-        const body =
+        const receivers = [created_by]
+        const body_noti =
           full_name + " {{modules.network.notification.liked_your_comment}}"
         const link = `/posts/${_id_post}`
-        sendNotification(
+        await handleSendNotification(
           userId,
           receivers,
-          {
-            title: "",
-            body: body,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
+          body_noti,
+          link,
+          _id_post
         )
       }
     }

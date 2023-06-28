@@ -7,7 +7,13 @@ import ReactHtmlParser from "react-html-parser"
 import { Spinner } from "reactstrap"
 
 const RenderContentPost = (props) => {
-  const { data, edit_description, setEditDescription, setData } = props
+  const {
+    data,
+    edit_description,
+    setEditDescription,
+    setData,
+    isViewEditHistory = false // only view edit history
+  } = props
   const [state, setState] = useMergedState({
     showSeeMore: false,
     seeMore: false,
@@ -41,22 +47,25 @@ const RenderContentPost = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    if (document.getElementById(`post-body-content-${data?._id}`)) {
-      const height = document.getElementById(
-        `post-body-content-${data?._id}`
-      ).offsetHeight
-      if (height >= 90 && !edit_description) {
-        setState({ showSeeMore: true })
+    if (!isViewEditHistory) {
+      if (document.getElementById(`post-body-content-${data?._id}`)) {
+        const height = document.getElementById(
+          `post-body-content-${data?._id}`
+        ).offsetHeight
+        if (height >= 90 && !edit_description) {
+          setState({ showSeeMore: true })
+        }
       }
-    }
 
-    setState({ description: data?.content })
-  }, [data, edit_description])
+      setState({ description: data?.content })
+    }
+  }, [data, edit_description, isViewEditHistory])
 
   // ** render
   const renderContent = () => {
     if (data.content) {
-      const content = renderContentHashtag(data.content, data.hashtag)
+      const hashtag = data.hashtag ? data.hashtag : []
+      const content = renderContentHashtag(data.content, hashtag)
       return content
     }
     return ""

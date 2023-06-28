@@ -27,7 +27,8 @@ const Comment = (props) => {
     dataShowFormReply,
     apiReaction,
     setDataReactionAndModal,
-    setDataEditComment
+    setDataEditComment,
+    data
   } = props
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
@@ -341,7 +342,7 @@ const Comment = (props) => {
               updateReaction={updateReaction}
             />
 
-            {id_sub_comment === "" && (
+            {id_sub_comment === "" && !data.turn_off_commenting && (
               <a
                 className="reaction reaction__reply"
                 onClick={(e) => {

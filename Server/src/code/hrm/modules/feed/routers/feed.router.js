@@ -21,6 +21,7 @@ import {
 } from "../controllers/event.js"
 import {
   deletePost,
+  getDataEditHistory,
   getFeedById,
   getFeedByIdAndViewAllComment,
   getFeedChild,
@@ -28,17 +29,20 @@ import {
   loadFeedProfile,
   sendNotificationUnseen,
   submitPostController,
+  turnOffCommenting,
+  turnOffNotification,
   updateContentMedia,
   updatePostReaction,
   updateSeenPost,
   uploadTempAttachmentController
 } from "../controllers/feed.js"
+import { getDataHashtag, loadFeedHashtag } from "../controllers/hashtag.js"
 import { getPostInteractiveMember } from "../controllers/management.js"
 import {
   updatePostPollVote,
   updatePostPollVoteAddMoreOption
 } from "../controllers/poll_vote.js"
-import { getDataHashtag, loadFeedHashtag } from "../controllers/hashtag.js"
+import { saveSaved } from "../controllers/saved.js"
 
 const router = express.Router()
 
@@ -64,6 +68,9 @@ router.post("/delete-comment", deleteComment)
 router.get("/load-feed-profile", loadFeedProfile)
 router.get("/update-seen-post/:post_id", updateSeenPost)
 router.get("/send-noti-unseen/:post_id", sendNotificationUnseen)
+router.post("/turn-off-notification", turnOffNotification)
+router.post("/turn-off-commenting", turnOffCommenting)
+router.get("/get-data-edit-history/:post_id", getDataEditHistory)
 
 router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 
@@ -79,5 +86,7 @@ router.get("/get-endorsement-by-id/:id", getEndorsementById)
 
 router.get("/get-data-hashtag/:hashtag", getDataHashtag)
 router.get("/get-load-feed-hashtag", loadFeedHashtag)
+
+router.post("/save-saved", saveSaved)
 
 export default router

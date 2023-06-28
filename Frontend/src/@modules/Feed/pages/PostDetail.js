@@ -28,12 +28,15 @@ const PostDetail = (props) => {
     optionsMeetingRoom: []
   })
   const { idPost, idMedia } = useParams()
-
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const cover = userData?.cover || ""
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = `/posts/${idPost}`
+
+  const screenWidth = screen.width
+  const marginLeft = screenWidth <= 1920 ? "340px" : "330px"
+  const minWidth = screenWidth <= 1920 ? "1020px" : "1150px"
 
   // ** useEffect
   useEffect(() => {
@@ -136,11 +139,11 @@ const PostDetail = (props) => {
         "none"
     }
     if (document.getElementsByClassName(`app-content content`)[0]) {
+      document.getElementsByClassName(`app-content content`)[0].style.cssText =
+        "margin-left: 0px !important"
       document.getElementsByClassName(
         `app-content content`
-      )[0].style.marginLeft = 0
-      document.getElementsByClassName(`app-content content`)[0].style.minWidth =
-        "calc(1150px + 330px)"
+      )[0].style.minWidth = `calc(${minWidth} + ${marginLeft})`
     }
 
     return () => {
@@ -153,10 +156,10 @@ const PostDetail = (props) => {
       if (document.getElementsByClassName(`app-content content`)[0]) {
         document.getElementsByClassName(
           `app-content content`
-        )[0].style.marginLeft = "330px"
+        )[0].style.marginLeft = marginLeft
         document.getElementsByClassName(
           `app-content content`
-        )[0].style.minWidth = "1150px"
+        )[0].style.minWidth = minWidth
       }
     }
   }, [])

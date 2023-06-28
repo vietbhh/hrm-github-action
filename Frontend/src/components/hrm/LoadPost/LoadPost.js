@@ -36,7 +36,10 @@ const LoadPost = (props) => {
 
     // create event / announcement
     options_employee_department = [],
-    optionsMeetingRoom = []
+    optionsMeetingRoom = [],
+
+    // only view edit history
+    isViewEditHistory = false
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -101,6 +104,7 @@ const LoadPost = (props) => {
           setData={setData}
           setCommentMoreCountOriginal={setCommentMoreCountOriginal}
           customAction={customAction}
+          isViewEditHistory={isViewEditHistory}
         />
       )
     }
@@ -150,6 +154,7 @@ const LoadPost = (props) => {
           toggleModalAnnouncement={toggleModalAnnouncement}
           toggleModalWith={toggleModalWith}
           setDataUserOtherWith={setDataUserOtherWith}
+          isViewEditHistory={isViewEditHistory}
         />
         <div
           className={classNames("post-body", {
@@ -161,7 +166,10 @@ const LoadPost = (props) => {
           <div
             id={`post-body-content-${data._id}`}
             className="post-body-content">
-            <RenderContentPost data={data} />
+            <RenderContentPost
+              data={data}
+              isViewEditHistory={isViewEditHistory}
+            />
           </div>
 
           {renderBody()}
@@ -173,10 +181,11 @@ const LoadPost = (props) => {
               comment_more_count_original={state.comment_more_count_original}
               toggleModalWith={toggleModalWith}
               setDataUserOtherWith={setDataUserOtherWith}
+              isViewEditHistory={isViewEditHistory}
             />
           )}
         </div>
-        {!offReactionAndComment && (
+        {!offReactionAndComment && !isViewEditHistory && (
           <>
             <div className="post-footer">
               <PostShowReaction
@@ -210,51 +219,55 @@ const LoadPost = (props) => {
       </div>
 
       {/* render modal */}
-      <ModalCreatePost
-        modal={state.modalCreatePost}
-        toggleModal={toggleModalCreatePost}
-        setModal={(value) => setState({ modalCreatePost: value })}
-        dataMention={dataMention}
-        workspace={[]}
-        avatar={data?.created_by?.avatar}
-        fullName={data?.created_by?.full_name}
-        userId={data?.created_by?.id}
-        approveStatus={data?.approve_status}
-        dataPost={data}
-        setData={setData}
-        setDataLink={setDataLink}
-      />
+      {!isViewEditHistory && (
+        <Fragment>
+          <ModalCreatePost
+            modal={state.modalCreatePost}
+            toggleModal={toggleModalCreatePost}
+            setModal={(value) => setState({ modalCreatePost: value })}
+            dataMention={dataMention}
+            workspace={[]}
+            avatar={data?.created_by?.avatar}
+            fullName={data?.created_by?.full_name}
+            userId={data?.created_by?.id}
+            approveStatus={data?.approve_status}
+            dataPost={data}
+            setData={setData}
+            setDataLink={setDataLink}
+          />
 
-      <MemberVoteModal
-        modal={state.modalWith}
-        toggleModal={toggleModalWith}
-        dataUserVote={state.dataUserOtherWith}
-        title={useFormatMessage("modules.feed.post.text.people")}
-      />
+          <MemberVoteModal
+            modal={state.modalWith}
+            toggleModal={toggleModalWith}
+            dataUserVote={state.dataUserOtherWith}
+            title={useFormatMessage("modules.feed.post.text.people")}
+          />
 
-      {data?.type === "event" && (
-        <ModalCreateEvent
-          modal={state.modalCreateEvent}
-          toggleModal={toggleModalCreateEvent}
-          idEvent={data?.link_id}
-          setData={setData}
-          setDataLink={setDataLink}
-          idPost={data?._id}
-          options_employee_department={options_employee_department}
-          optionsMeetingRoom={optionsMeetingRoom}
-        />
-      )}
+          {data?.type === "event" && (
+            <ModalCreateEvent
+              modal={state.modalCreateEvent}
+              toggleModal={toggleModalCreateEvent}
+              idEvent={data?.link_id}
+              setData={setData}
+              setDataLink={setDataLink}
+              idPost={data?._id}
+              options_employee_department={options_employee_department}
+              optionsMeetingRoom={optionsMeetingRoom}
+            />
+          )}
 
-      {data?.type === "announcement" && (
-        <ModalAnnouncement
-          modal={state.modalAnnouncement}
-          toggleModal={toggleModalAnnouncement}
-          options_employee_department={options_employee_department}
-          idAnnouncement={data?.link_id}
-          setData={setData}
-          setDataLink={setDataLink}
-          idPost={data?._id}
-        />
+          {data?.type === "announcement" && (
+            <ModalAnnouncement
+              modal={state.modalAnnouncement}
+              toggleModal={toggleModalAnnouncement}
+              options_employee_department={options_employee_department}
+              idAnnouncement={data?.link_id}
+              setData={setData}
+              setDataLink={setDataLink}
+              idPost={data?._id}
+            />
+          )}
+        </Fragment>
       )}
     </Fragment>
   )

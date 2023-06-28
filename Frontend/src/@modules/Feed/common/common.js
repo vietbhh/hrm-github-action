@@ -90,7 +90,7 @@ export const handleLoadAttachmentMedias = (value) => {
   return Promise.all(promises)
 }
 
-export const handleLoadAttachmentThumb = async (data, cover) => {
+export const handleLoadAttachmentThumb = async (data, cover = "") => {
   const out = {
     url_thumb: "",
     url_cover: "",
