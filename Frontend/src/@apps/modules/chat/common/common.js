@@ -3,7 +3,7 @@ import moment from "moment"
 import Avatar from "@apps/modules/download/pages/Avatar"
 
 export const imageGroup =
-  process.env.REACT_APP_URL + "/assets/images/default_chat_group.webp"
+  import.meta.env.VITE_APP_URL + "/assets/images/default_chat_group.webp"
 
 export const formatTime = (time, date_time = false) => {
   const today = moment().format("YYYY-MM-DD")

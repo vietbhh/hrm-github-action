@@ -4,13 +4,7 @@ import { useStyle } from '../../style'
 import { styles } from './spinnerStyles'
 import SpinnerIcon from '../../assets/SpinnerIcon'
 
-type Props = {
-  show: boolean,
-  message: string,
-  image: ?string,
-}
-
-const Spinner = ({ show, message, image }: Props) => {
+const Spinner = ({ show, message, image }) => {
   useStyle('Spinner', styles)
 
   return (
