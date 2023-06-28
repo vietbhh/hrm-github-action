@@ -727,6 +727,7 @@ const AppChat = (props) => {
               admin: data.admin,
               background: data.background,
               avatar: data.avatar,
+              is_system: data.is_system,
               personalInfo: {
                 email: employee.email ? employee.email : "",
                 phone: employee.phone ? employee.phone : "",
@@ -766,6 +767,7 @@ const AppChat = (props) => {
               admin: data.admin,
               background: data.background,
               avatar: data.avatar,
+              is_system: data.is_system,
               personalInfo: {
                 email: "",
                 phone: "",

@@ -82,17 +82,18 @@ const ProfileSidebarMoreOption = (props) => {
         </div>
       </div>
       <div className="file-view-body more-option-body">
-        {selectedGroup?.type === "group" && (
-          <div className="more-option-body-div-child more-option-body-div-bg">
-            <div
-              className="more-option-body-div-content"
-              onClick={() => handleLeaveChat()}>
-              <span className="text-left text-color-red">
-                {useFormatMessage("modules.chat.text.leave_chat")}
-              </span>
+        {selectedGroup?.type === "group" &&
+          selectedGroup?.is_system !== true && (
+            <div className="more-option-body-div-child more-option-body-div-bg">
+              <div
+                className="more-option-body-div-content"
+                onClick={() => handleLeaveChat()}>
+                <span className="text-left text-color-red">
+                  {useFormatMessage("modules.chat.text.leave_chat")}
+                </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </Fragment>
   )

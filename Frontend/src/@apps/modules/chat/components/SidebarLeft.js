@@ -18,14 +18,12 @@ import { Dropdown, Tooltip } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 import {
   Badge,
-  Button,
   CardText,
   Input,
   InputGroup,
   InputGroupText,
   Label
 } from "reactstrap"
-import { testApi } from "../common/api"
 
 const SidebarLeft = (props) => {
   // ** Props & Store
@@ -497,21 +495,6 @@ const SidebarLeft = (props) => {
                   </button>
                 </Tooltip>
               </div>
-            </div>
-
-            {/* test */}
-            <div>
-              <Button
-                color="primary"
-                onClick={() => {
-                  const params = { group_name: "g3", member: [8, 10] }
-                  testApi
-                    .postCreateGroup(params)
-                    .then((res) => {})
-                    .catch((err) => {})
-                }}>
-                test
-              </Button>
             </div>
 
             <PerfectScrollbar
