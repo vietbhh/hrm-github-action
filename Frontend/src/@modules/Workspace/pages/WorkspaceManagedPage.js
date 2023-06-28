@@ -19,7 +19,7 @@ const WorkspaceManagedPage = (props) => {
     disableLoadMore: false,
     filter: {
       page: 1,
-      limit: 2
+      limit: 12
     }
   })
 
@@ -80,7 +80,7 @@ const WorkspaceManagedPage = (props) => {
       <div className="d-flex align-items-center justify-content-between header">
         <div>
           <h1 className="title text-color-title">
-            {useFormatMessage("modules.workspace.title.workspace")}
+            {useFormatMessage("modules.workspace.title.workgroup")}
             <span className="text-danger">.</span>
           </h1>
         </div>

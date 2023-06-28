@@ -41,6 +41,22 @@ const WorkspaceManaged = (props) => {
       return ""
     }
 
+    if (disableLoadMore && loadingPaginate === false) {
+      return (
+        <Row className="mt-1">
+          <Col sm={2} xs={2} className="w-100 d-flex justify-content-center">
+            <Button.Ripple
+              color="flat-secondary"
+              className="btn-load-more"
+              disabled={true}>
+              <i className="fas fa-angle-down me-50" />
+              {useFormatMessage("common.nodata")}
+            </Button.Ripple>
+          </Col>
+        </Row>
+      )
+    }
+
     return (
       <Row className="mt-1">
         <Col sm={2} xs={2} className="w-100 d-flex justify-content-center">
@@ -143,7 +159,7 @@ const WorkspaceManaged = (props) => {
     return (
       <h6
         className="link text-color-link"
-        onClick={() => navigate(`/workspace`)}>
+        onClick={() => navigate(`/workspace/list`)}>
         <i className="fas fa-long-arrow-left me-25" />
         {useFormatMessage("modules.workspace.buttons.back_to_workgroup")}
       </h6>

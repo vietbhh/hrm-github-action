@@ -18,6 +18,15 @@ const ListWorkspace = (props) => {
     }
   })
 
+  const setFilter = (obj) => {
+    setState({
+      filter: {
+        ...state.filter,
+        ...obj
+      }
+    })
+  }
+
   const loadData = () => {
     setState({
       loading: true
@@ -62,7 +71,7 @@ const ListWorkspace = (props) => {
           </h1>
         </div>
         <div>
-          <WorkspaceFilter />
+          <WorkspaceFilter filter={state.filter} setFilter={setFilter}/>
         </div>
       </div>
       <div className="body">

@@ -1,6 +1,6 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { Fragment } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 // ** Styles
 import { Button } from "reactstrap"
@@ -10,7 +10,9 @@ import { ErpInput } from "@apps/components/common/ErpField"
 const WorkspaceFilter = (props) => {
   const {
     // ** props
+    filter,
     // ** methods
+    setFilter
   } = props
 
   const [state, setState] = useMergedState({
@@ -27,6 +29,26 @@ const WorkspaceFilter = (props) => {
     setState({
       showInput: !state.showInput
     })
+  }
+
+  const handleClickCancelSearch = () => {
+    setFilter({
+      text: ""
+    })
+    handleClickSearchButton()
+  }
+
+  const debounceSearch = useRef(
+    _.debounce((nextValue) => {
+      setFilter({
+        text: nextValue
+      })
+    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+  ).current
+
+  const handleSearchVal = (e) => {
+    const value = e.target.value
+    debounceSearch(value.toLowerCase())
   }
 
   // ** render
@@ -65,16 +87,18 @@ const WorkspaceFilter = (props) => {
     return (
       <div className="animate__animated animate__fadeInUp">
         <ErpInput
+          name="search"
           nolabel={true}
           formGroupClass="mb-0"
           append={
             <i
               className="fas fa-times-circle cursor-pointer"
-              onClick={() => handleClickSearchButton()}
+              onClick={() => handleClickCancelSearch()}
             />
           }
           autoFocus
           placeholder="Search..."
+          onChange={(e) => handleSearchVal(e)}
         />
       </div>
     )

@@ -3,11 +3,8 @@ import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Styles
-import { Button, Col, Spinner } from "reactstrap"
-import { Row } from "antd"
 // ** Components
 import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManaged"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 
 const WorkspaceJoinedPage = (props) => {
   const [state, setState] = useMergedState({
@@ -80,7 +77,7 @@ const WorkspaceJoinedPage = (props) => {
       <div className="d-flex align-items-center justify-content-between header">
         <div>
           <h1 className="title text-color-title">
-            {useFormatMessage("modules.workspace.title.workspace")}
+            {useFormatMessage("modules.workspace.title.workgroup")}
             <span className="text-danger">.</span>
           </h1>
         </div>

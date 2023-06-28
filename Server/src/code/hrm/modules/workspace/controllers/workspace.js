@@ -903,16 +903,24 @@ const getListWorkspaceSeparateType = async (req, res) => {
   const limitManage = 4
   const limitJoin = 6
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
+  const text = req.query.text === undefined ? "" : req.query.text
 
   try {
+    let condition = {}
+    if (text.trim().length > 0) {
+      condition = {
+        name: { $regex: ".*" + text + ".*" }
+      }
+    }
+
     const workspaceManage = await workspaceMongoModel
-      .find({ administrators: parseInt(userId) })
+      .find({ administrators: parseInt(userId), ...condition })
       .sort({
         _id: "desc"
       })
 
     const workspaceJoin = await workspaceMongoModel
-      .find({ members: parseInt(userId) })
+      .find({ members: parseInt(userId), ...condition })
       .sort({
         _id: "desc"
       })
