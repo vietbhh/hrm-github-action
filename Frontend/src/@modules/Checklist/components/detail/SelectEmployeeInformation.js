@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux"
-import { Card, CardBody, Button, CardFooter } from "reactstrap"
-import { forEach } from "lodash"
-import { useFormatMessage } from "@apps/utility/common"
-const { Fragment, useEffect, useContext, useState } = require("react")
-import { getTaskTypeContent } from "@modules/Checklist/common/common"
 import { ErpCheckbox, ErpInput } from "@apps/components/common/ErpField"
+import { useFormatMessage } from "@apps/utility/common"
+import { getTaskTypeContent } from "@modules/Checklist/common/common"
 import { Space } from "antd"
+import { forEach } from "lodash"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { Button, Card, CardBody, CardFooter } from "reactstrap"
 
 const SelectEmployeeInformation = (props) => {
   const {

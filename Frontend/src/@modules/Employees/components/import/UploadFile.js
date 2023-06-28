@@ -2,15 +2,18 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { employeesApi } from "@modules/Employees/common/api"
 import "@styles/react/libs/file-uploader/file-uploader.scss"
-import Uppy from "@uppy/core"
-import "@uppy/core/dist/style.css"
-import "@uppy/dashboard/dist/style.css"
-import { DragDrop } from "@uppy/react"
-import "@uppy/status-bar/dist/style.css"
+//import Uppy from "@uppy/core"
+//import "@uppy/core/dist/style.css"
+//import "@uppy/dashboard/dist/style.css"
+//import { DragDrop } from "@uppy/react"
+//import "@uppy/status-bar/dist/style.css"
 import { Fragment, useEffect } from "react"
 import { Button, Card, CardBody, Col, Row } from "reactstrap"
-import "uppy/dist/uppy.css"
+//import "uppy/dist/uppy.css"
 import * as XLSX from "xlsx"
+import { useDropzone } from "react-dropzone"
+import "@styles/react/libs/file-uploader/file-uploader.scss"
+import { toast } from "react-hot-toast"
 
 const UploadFile = (props) => {
   const { fileName, setFileName, setData, setDisabledMap, setDataTab } = props
@@ -41,12 +44,12 @@ const UploadFile = (props) => {
       })
   }
 
-  const uppy = new Uppy({
+  /* const uppy = new Uppy({
     restrictions: { maxNumberOfFiles: 1 },
     autoProceed: true
   })
 
-  uppy.on("complete", (result) => {
+ uppy.on("complete", (result) => {
     const reader = new FileReader()
     setDisabledMap(false)
     setFileName(result.successful[0].data.name)
@@ -94,6 +97,40 @@ const UploadFile = (props) => {
     }
     reader.onloadend = () => {
       //setState({ loading: false });
+    }
+  }) */
+
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDrop: (result) => {
+      const reader = new FileReader()
+      reader.onload = function () {
+        const fileData = reader.result
+        const wb = read(fileData, { type: "binary" })
+
+        wb.SheetNames.forEach(function (sheetName) {
+          const rowObj = utils.sheet_to_row_object_array(wb.Sheets[sheetName])
+          getTableData(rowObj, result[0].name)
+        })
+      }
+      if (result.length && result[0].name.endsWith("xlsx")) {
+        reader.readAsBinaryString(result[0])
+      } else {
+        toast.error(
+          () => (
+            <p className="mb-0">
+              You can only upload <span className="fw-bolder">.xlsx</span>,{" "}
+              <span className="fw-bolder">.xls</span> &{" "}
+              <span className="fw-bolder">.csv</span> Files!.
+            </p>
+          ),
+          {
+            style: {
+              minWidth: "380px"
+            }
+          }
+        )
+      }
     }
   })
 
@@ -174,18 +211,29 @@ const UploadFile = (props) => {
           <Row style={{ margin: "0" }}>
             <Col
               sm="6"
-              className="uppy_edit"
-              style={{ border: "1px dashed #d9d9d9", padding: "0" }}>
-              <DragDrop uppy={uppy} note={fileName} />
+              style={{padding: "0" }}
+              >
+              <div {...getRootProps({ className: "dropzone" })}>
+                <input {...getInputProps()} />
+                <div className="d-flex align-items-center justify-content-center flex-column">
+                  <h5>Drop Files here or click to upload</h5>
+                  <p className="text-secondary">
+                    Drop files here or click{" "}
+                    <a href="/" onClick={(e) => e.preventDefault()}>
+                      browse
+                    </a>{" "}
+                    through your machine
+                  </p>
+                </div>
+              </div>
+              {/* <DragDrop uppy={uppy} note={fileName} /> */}
             </Col>
           </Row>
           <div className="d-flex flex-wrap w-100">
             <div className="d-flex align-items-center">
               <span className="text_file_format">
                 {useFormatMessage("modules.employees.import.file_format")}:
-                xlsx.&nbsp;
-                {useFormatMessage("modules.employees.import.max_file_size")}:
-                2MB
+                .xlsx
               </span>
             </div>
           </div>

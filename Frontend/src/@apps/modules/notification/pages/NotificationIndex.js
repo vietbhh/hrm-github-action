@@ -104,7 +104,7 @@ const NotificationIndex = (props) => {
             <CardHeader>
               <h3 className="ms-2">
                 <span className="title-icon">
-                  <i class="far fa-bells" />
+                  <i className="far fa-bells" />
                 </span>
                 {useFormatMessage("modules.notification.title")}
               </h3>

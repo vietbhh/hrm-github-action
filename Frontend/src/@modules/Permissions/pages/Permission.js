@@ -88,7 +88,7 @@ const Permission = (props) => {
         setState({
           searchVal: nextValue
         }),
-      process.env.REACT_APP_DEBOUNCE_INPUT_DELAY
+      import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY
     )
   ).current
 

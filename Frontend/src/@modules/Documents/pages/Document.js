@@ -93,7 +93,7 @@ const Document = (props) => {
   const debounceSearch = useRef(
     debounce((nextValue) => {
       setFilters({ folder_name: nextValue })
-    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
 
   const setSearchText = (text) => {

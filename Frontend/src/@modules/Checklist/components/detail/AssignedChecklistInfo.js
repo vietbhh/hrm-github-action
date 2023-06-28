@@ -108,7 +108,7 @@ const AssignedChecklistInfo = (props) => {
               percent={parseInt(
                 (checklist.complete_task / checklist.task_number) * 100
               )}
-              width={25}
+              size={25}
               strokeWidth={17}
             />
             <div>

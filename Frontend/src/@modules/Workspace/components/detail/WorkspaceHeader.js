@@ -303,7 +303,7 @@ const WorkspaceHeader = (props) => {
             <h2 className="workspaceName">{data?.name}</h2>
             <p>
               {data?.type === "private" && (
-                <i class="fa-solid fa-lock-keyhole me-50"></i>
+                <i className="fa-solid fa-lock-keyhole me-50"></i>
               )}
               {data?.type !== "private" && (
                 <i className="fa-regular fa-earth-asia me-50"></i>
@@ -416,7 +416,7 @@ const WorkspaceHeader = (props) => {
                 trigger={["click"]}>
                 <Button className="me-50 btn-sm" color="secondary" outline>
                   {useFormatMessage("modules.workspace.text.joined")}{" "}
-                  <i class="fa-regular fa-chevron-down"></i>
+                  <i className="fa-regular fa-chevron-down"></i>
                 </Button>
               </Dropdown>
 

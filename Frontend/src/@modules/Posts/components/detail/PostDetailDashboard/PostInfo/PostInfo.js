@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
-import LoadPost from "components/hrm/LoadPost/LoadPost"
+import LoadPost from "@/components/hrm/LoadPost/LoadPost"
 import { Space } from "antd"
 
 const PostInfo = (props) => {

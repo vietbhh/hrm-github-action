@@ -21,7 +21,7 @@ const HeaderSection = (props) => {
       } else {
         setFilter({})
       }
-    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
 
   const handleSearchMember = (e) => {

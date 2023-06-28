@@ -10,7 +10,7 @@ import { useSelector } from "react-redux"
 import ReactHtmlParser from "react-html-parser"
 import { useContext, useEffect, useRef } from "react"
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
-import { db } from "firebase"
+import { db } from "@/firebase"
 import { renderAvatar } from "@apps/modules/chat/common/common"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
@@ -30,7 +30,7 @@ const ModalSendInMessenger = (props) => {
     textSaySomething: ""
   })
 
-  const firestoreDb = process.env.REACT_APP_FIRESTORE_DB
+  const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const avatar = userData.avatar
@@ -197,7 +197,7 @@ const ModalSendInMessenger = (props) => {
             onClick={() => {
               setLoading(id, true)
               setTimeout(async () => {
-                const link_post = `${process.env.REACT_APP_URL}/posts/${
+                const link_post = `${import.meta.env.VITE_APP_URL}/posts/${
                   data.ref ? data.ref : data._id
                 }`
                 const msg = state.textSaySomething + " <br />" + link_post

@@ -295,7 +295,7 @@ const PostHeaderAction = (props) => {
     copy_link: {
       onClick: () => {
         navigator.clipboard.writeText(
-          `${process.env.REACT_APP_URL}/posts/${data.ref ? data.ref : data._id}`
+          `${import.meta.env.VITE_APP_URL}/posts/${data.ref ? data.ref : data._id}`
         )
       },
       label: (

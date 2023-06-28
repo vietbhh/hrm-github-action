@@ -44,7 +44,7 @@ const TabChecklistItem = (props) => {
         <Progress
           type="circle"
           status="exception"
-          width={23}
+          size={23}
           strokeWidth={17}
           className="mb-25"
           percent={parseInt(

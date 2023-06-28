@@ -1,11 +1,10 @@
 // ** React Imports
 import { Fragment, useState } from "react"
 // ** Styles
-import { Pagination, Spin } from "antd"
+import { Spin } from "antd"
 import { Button } from "reactstrap"
 // ** Components
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack"
-import PerfectScrollbar from "react-perfect-scrollbar"
+import { Document, Page } from "react-pdf"
 
 const PreviewPDF = (props) => {
   const {

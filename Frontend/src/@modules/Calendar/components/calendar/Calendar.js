@@ -103,11 +103,11 @@ const Calendar = (props) => {
     events: listCalendar,
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     initialView: "dayGridMonth",
-    customButtons: {
+    /* customButtons: {
       calendarLogo: {
         text: <img src={calendarImg} alt="" />
       }
-    },
+    }, */
     customButtons: {
       customPrev: {
         text: <span className="fc-icon fc-icon-chevron-left"></span>,

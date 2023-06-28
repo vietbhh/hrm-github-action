@@ -33,7 +33,7 @@ const DirectoryEmployees = (props) => {
           loading: true,
           page: 1
         }),
-      process.env.REACT_APP_DEBOUNCE_INPUT_DELAY
+      import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY
     )
   ).current;
 

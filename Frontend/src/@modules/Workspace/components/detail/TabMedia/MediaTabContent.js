@@ -21,7 +21,7 @@ import MediaFileItem from "./MediaFileItem"
 import MediaPhotoItem from "./MediaPhotoItem"
 import MediaVideoItem from "./MediaVideoItem"
 import MediaLinkItem from "./MediaLinkItem"
-import ModalCreatePost from "components/hrm/CreatePost/CreatePostDetails/modals/ModalCreatePost"
+import ModalCreatePost from "@/components/hrm/CreatePost/CreatePostDetails/modals/ModalCreatePost"
 import PreviewMediaContentModal from "../../modals/PreviewMediaContentModal/PreviewMediaContentModal"
 
 const MediaTabContent = (props) => {

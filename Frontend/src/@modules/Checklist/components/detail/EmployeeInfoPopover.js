@@ -1,14 +1,13 @@
-const { Fragment, useEffect } = require("react")
-import { Button, CardBody } from "reactstrap"
-import { Link } from "react-router-dom"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import {
-  useFormatMessage,
-  useMergedState,
   formatDate,
-  getOptionValue
+  getOptionValue,
+  useFormatMessage
 } from "@apps/utility/common"
 import { Popover } from "antd"
+import { Fragment } from "react"
+import { Link } from "react-router-dom"
+import { Button, CardBody } from "reactstrap"
 
 const EmployeeInfoPopover = (props) => {
   const {

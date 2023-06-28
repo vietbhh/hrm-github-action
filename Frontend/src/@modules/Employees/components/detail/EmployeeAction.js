@@ -1,19 +1,18 @@
+import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { canDeleteData } from "@apps/utility/permissions"
-import SwAlert from "@apps/utility/SwAlert"
 import { employeesApi } from "@modules/Employees/common/api"
 import { showOffboardingModal } from "@modules/Employees/common/offboardingReducer"
 import { showOnboardingModal } from "@modules/Employees/common/onboardingReducer"
 import { showRehireModal } from "@modules/Employees/common/rehireReducer"
 import { Dropdown } from "antd"
 import { filter, isEmpty, isFunction, isUndefined, map } from "lodash-es"
-import { useContext } from "react"
+import { Fragment, useContext } from "react"
 import { MoreVertical } from "react-feather"
 import { useDispatch, useSelector } from "react-redux"
 import { Button } from "reactstrap"
 import { AbilityContext } from "utility/context/Can"
-const { Fragment } = require("react")
 
 const EmployeeAction = (props) => {
   const {

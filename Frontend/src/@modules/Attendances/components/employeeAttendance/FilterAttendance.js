@@ -72,7 +72,7 @@ const FilterAttendance = (props) => {
   const debounceSearch = useRef(
     debounce((nextValue) => {
       setSearchVal(nextValue)
-    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
 
   const handleSearchVal = (e) => {

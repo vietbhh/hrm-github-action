@@ -5,7 +5,7 @@ import {
   useMergedState
 } from "@apps/utility/common"
 import { handleDataMention } from "@modules/Feed/common/common"
-import birthdayImg from "@src/layouts/components/vertical/images/birthday.svg"
+import birthdayImg from "@src/layouts/_components/vertical/images/birthday.svg"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"

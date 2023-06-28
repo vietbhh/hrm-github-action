@@ -1,5 +1,5 @@
 import { useMergedState } from "@apps/utility/common"
-import SidebarWidget from "layouts/components/custom/SidebarWidget"
+import SidebarWidget from "layouts/_components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
 import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
 

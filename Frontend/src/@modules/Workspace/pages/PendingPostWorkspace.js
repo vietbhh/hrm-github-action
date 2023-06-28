@@ -1,7 +1,7 @@
 import { ErpSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import LoadPost from "components/hrm/LoadPost/LoadPost"
+import LoadPost from "@/components/hrm/LoadPost/LoadPost"
 import { Fragment, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"

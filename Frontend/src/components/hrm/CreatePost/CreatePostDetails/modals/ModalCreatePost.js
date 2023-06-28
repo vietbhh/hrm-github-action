@@ -497,7 +497,7 @@ const ModalCreatePost = (props) => {
             maxLine={2}
             minLine={2}
             showGraphic={true}
-            defaultImage={`${process.env.REACT_APP_URL}/assets/images/link.png`}
+            defaultImage={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
           />
         )}
 

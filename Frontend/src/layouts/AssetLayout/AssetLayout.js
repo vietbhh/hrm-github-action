@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom"
 
 // ** Core Layout Import
 // !Do not remove the Layout import
-import Layout from "../components/vertical/Layout"
+import Layout from "layouts/_components/vertical/Layout"
 
 // ** Menu Items Array
 import navigation from "./menuAssets"

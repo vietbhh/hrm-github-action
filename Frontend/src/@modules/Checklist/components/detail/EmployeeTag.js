@@ -1,8 +1,8 @@
-import { Button, Card, CardBody, CardHeader } from "reactstrap";
-const { Fragment, useEffect, useContext, useState } = require("react");
-import { Space } from "antd";
-import AssignChecklistModal from "../modals/AssignChecklistModal";
 import { useFormatMessage } from "@apps/utility/common";
+import { Space } from "antd";
+import { Fragment, useState } from "react";
+import { Button, Card, CardBody, CardHeader } from "reactstrap";
+import AssignChecklistModal from "../modals/AssignChecklistModal";
 import EmployeeInfoPopover from "./EmployeeInfoPopover";
 
 const EmployeeTag = (props) => {

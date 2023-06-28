@@ -1,29 +1,30 @@
 // ** React Imports
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { debounce } from "lodash-es"
 import { Fragment, useContext, useEffect, useRef } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import { AbilityContext } from "utility/context/Can"
 import { DocumentApi } from "../common/api"
-import notification from "@apps/utility/notification"
 import { getDocumentShareContent } from "../common/common"
-import { useParams, useNavigate } from "react-router-dom"
-import { debounce } from "lodash-es"
 // ** redux
 import { useSelector } from "react-redux"
 // ** Styles
-import { Card, CardHeader, CardBody, Button } from "reactstrap"
-import { Share2, Download } from "react-feather"
 import { Space, Tooltip } from "antd"
+import { Download, Share2 } from "react-feather"
+import { Button, Card, CardBody, CardHeader } from "reactstrap"
 // ** Components
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import { ErpInput } from "@apps/components/common/ErpField"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
+import FileSaver from "file-saver"
+import ListDocumentDetail from "../components/detail/ListDocumentDetail"
+import ModifyDocumentAction from "../components/detail/ModifyDocumentAction"
 import UploadDocumentFile from "../components/detail/UploadDocumentFile"
 import AddFolderModal from "../components/modals/AddFolderModal"
 import ShareModal from "../components/modals/ShareModal"
-import ModifyDocumentAction from "../components/detail/ModifyDocumentAction"
 import ViewFileModal from "../components/modals/ViewFileModal"
-import { ErpInput } from "@apps/components/common/ErpField"
-import AppSpinner from "@apps/components/spinner/AppSpinner"
-import ListDocumentDetail from "../components/detail/ListDocumentDetail"
 
 const DocumentDetail = (props) => {
   const [state, setState] = useMergedState({
@@ -136,7 +137,6 @@ const DocumentDetail = (props) => {
     setState({ loading: true })
     DocumentApi.postDownloadDocument(state.data.id)
       .then((response) => {
-        const FileSaver = require("file-saver")
         const blob = new Blob([response.data], { type: "application/zip" })
         FileSaver.saveAs(blob, state.data.name + ".zip")
         setState({ loading: false })
@@ -152,7 +152,7 @@ const DocumentDetail = (props) => {
   const debounceSearch = useRef(
     debounce((nextValue) => {
       setFilters({ file_name: nextValue })
-    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
 
   const setSearchText = (text) => {

@@ -5,7 +5,7 @@ import ChatLayout from "./ChatLayout/ChatLayout"
 import DriveLayout from "./DriveLayout/DriveLayout"
 import SeparateSidebar from "./SeparateSidebarLayout/SeparateSidebarLayout"
 import EmptyLayout from "./EmptyLayout/EmptyLayout"
-import AssetLayout from "@src/layouts/asset/AssetLayout"
+import AssetLayout from "./AssetLayout/AssetLayout"
 
 const defaultLayout = "vertical"
 

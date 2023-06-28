@@ -1,5 +1,5 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import EmployeesSelect from "components/hrm/Employees/EmployeesSelect"
+import EmployeesSelect from "@/components/hrm/Employees/EmployeesSelect"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"

@@ -4,7 +4,7 @@ import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import {
   getCoverEndorsementByKey,
   listCoverEndorsement
-} from "components/hrm/common/common"
+} from "@/components/hrm/common/common"
 import React, { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"

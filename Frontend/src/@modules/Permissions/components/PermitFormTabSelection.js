@@ -8,19 +8,18 @@ import { Checkbox, Table } from "antd"
 import classNames from "classnames"
 import { map } from "lodash"
 import { isUndefined } from "lodash-es"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import unLockImg from "../assets/images/unlock.svg"
 import "../assets/scss/permissions.scss"
-const { Fragment } = require("react")
 
 import {
   employee_data_radio,
+  employees_manage_options,
   features_list,
   other_list,
-  employees_manage_options,
-  time_off_settings_options,
-  recruitment_manage_options
+  recruitment_manage_options,
+  time_off_settings_options
 } from "./DataList"
 
 const PermitFormTabSelection = (props) => {

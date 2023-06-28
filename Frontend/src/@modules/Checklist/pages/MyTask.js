@@ -1,18 +1,17 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
+import { ErpInput } from "@apps/components/common/ErpField"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { FieldHandle } from "@apps/utility/FieldHandler"
-import { useSelector } from "react-redux"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { ChecklistApi } from "../common/api"
-import { Col, Row, Card, CardBody, Button } from "reactstrap"
-import CompleteTaskModal from "../components/modals/CompleteTaskModal"
-import { debounce } from "lodash-es"
-import { ErpInput } from "@apps/components/common/ErpField"
-import TableMyTask from "../components/detail/my-task/TableMyTask"
 import SwAlert from "@apps/utility/SwAlert"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-
-const { Fragment, useEffect, useRef } = require("react")
+import { debounce } from "lodash-es"
+import { useSelector } from "react-redux"
+import { Button, Card, CardBody, Col, Row } from "reactstrap"
+import { ChecklistApi } from "../common/api"
+import TableMyTask from "../components/detail/my-task/TableMyTask"
+import CompleteTaskModal from "../components/modals/CompleteTaskModal"
+import { Fragment, useEffect, useRef } from "react"
 
 const MyTask = (props) => {
   const [state, setState] = useMergedState({
@@ -120,7 +119,7 @@ const MyTask = (props) => {
         page: 1
       })
       setFilters({ task_name: nextValue })
-    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
 
   const handleSearchVal = (e) => {

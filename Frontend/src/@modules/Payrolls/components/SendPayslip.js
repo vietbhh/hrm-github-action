@@ -35,7 +35,7 @@ const SendPayslip = (props) => {
 
   useEffect(() => {
     if (modal) {
-      const urlPayroll = `${process.env.REACT_APP_URL}/profile/payroll`
+      const urlPayroll = `${import.meta.env.VITE_APP_URL}/profile/payroll`
       const subject = "Time to review payroll"
       const data = _.cloneDeep(data_table)
       const newData = {}

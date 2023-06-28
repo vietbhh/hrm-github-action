@@ -5,10 +5,9 @@ import { employeesApi } from "@modules/Employees/common/api"
 import { Dropdown } from "antd"
 import classnames from "classnames"
 import { isUndefined } from "lodash-es"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Button } from "reactstrap"
-const { Fragment } = require("react")
 
 const EmployeeStatus = (props) => {
   const {

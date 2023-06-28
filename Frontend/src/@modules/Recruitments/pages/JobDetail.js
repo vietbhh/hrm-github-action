@@ -93,7 +93,7 @@ const JobDetail = () => {
         setState({
           textSearch: nextValue
         }),
-      process.env.REACT_APP_DEBOUNCE_INPUT_DELAY
+      import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY
     )
   ).current
 

@@ -13,9 +13,7 @@ import "./assets/scss/layout.scss"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Fragment, useEffect } from "react"
 
-
 const SeparateSidebarLayout = (props) => {
-
   const [state, setState] = useMergedState({
     loading: false,
     menuYourWorkspace: [
@@ -45,9 +43,9 @@ const SeparateSidebarLayout = (props) => {
         workspace_type: "both"
       })
       .then((res) => {
-        const temp = res.data.results.map((item) => {
+        const temp = res.data.results.map((item, index) => {
           return {
-            id: `workspace-sidebar-${item._id}`,
+            id: `workspace-sidebar-${index}`,
             title: renderWorkspaceTitle(item),
             type: "dropdown",
             action: "login",

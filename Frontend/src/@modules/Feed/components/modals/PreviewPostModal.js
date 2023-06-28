@@ -4,7 +4,7 @@ import { feedApi } from "@modules/Feed/common/api"
 // ** Styles
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
 // ** Components
-import LoadPost from "components/hrm/LoadPost/LoadPost"
+import LoadPost from "@/components/hrm/LoadPost/LoadPost"
 import SwAlert from "@apps/utility/SwAlert"
 
 const PreviewPostModal = (props) => {

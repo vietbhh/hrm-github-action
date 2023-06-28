@@ -4,7 +4,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 // ** Components
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
-import CoverEditor from "components/hrm/CoverEditor/CoverEditor"
+import CoverEditor from "@/components/hrm/CoverEditor/CoverEditor"
 import Photo from "@apps/modules/download/pages/Photo"
 import SwAlert from "@apps/utility/SwAlert"
 import { workspaceApi } from "@modules/Workspace/common/api"

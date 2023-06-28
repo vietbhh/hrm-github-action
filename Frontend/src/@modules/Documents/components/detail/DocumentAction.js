@@ -11,7 +11,7 @@ import { Space } from "antd"
 import { Download, Share2 } from "react-feather"
 // ** Components
 import ModifyDocumentAction from "./ModifyDocumentAction"
-
+import FileSaver from "file-saver"
 const DocumentAction = (props) => {
   const {
     // ** props
@@ -42,7 +42,6 @@ const DocumentAction = (props) => {
     setState({ loading: true })
     DocumentApi.postDownloadDocument(folderData.id)
       .then((response) => {
-        const FileSaver = require("file-saver")
         const blob = new Blob([response.data], { type: "application/zip" })
         FileSaver.saveAs(blob, folderData.name + ".zip")
         setState({ loading: false })

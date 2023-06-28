@@ -1,9 +1,13 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
-import { getOptionValue, useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { Collapse, Space } from "antd"
+import { useContext, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { Button } from "reactstrap"
@@ -12,7 +16,6 @@ import { ChecklistApi } from "../common/api"
 import TaskDetail from "../components/detail/TaskDetail"
 import AddTaskModal from "../components/modals/AddTaskModal"
 import CheckListLayout from "./CheckListTemplateLayout"
-const { useEffect, useContext, useState } = require("react")
 
 const { Panel } = Collapse
 
@@ -129,14 +132,10 @@ const DetailChecklistTemplate = (props) => {
       <Breadcrumbs
         list={[
           {
-            title: useFormatMessage(
-              "modules.checklist.title.checklist"
-            )
+            title: useFormatMessage("modules.checklist.title.checklist")
           },
           {
-            title: useFormatMessage(
-              "modules.checklist_template.title.setting"
-            )
+            title: useFormatMessage("modules.checklist_template.title.setting")
           }
         ]}
         custom={addBtn}

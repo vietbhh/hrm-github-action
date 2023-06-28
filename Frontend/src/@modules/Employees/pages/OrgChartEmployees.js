@@ -1,31 +1,28 @@
 // ** React Imports
 // ** Styles
 // ** Components
-import DepartmentSetting from "@apps/modules/settings/pages/DepartmentsSetting"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { usersApi } from "@apps/modules/settings/common/api"
 import { FieldHandle } from "@apps/utility/FieldHandler"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import SwAlert from "@apps/utility/SwAlert"
 import styled from "@emotion/styled"
 import AddEmployeeModal from "@modules/Employees/components/modals/AddEmployeeModal"
-import { Dropdown, Menu } from "antd"
+import { Dropdown } from "antd"
 import _, { isEmpty } from "lodash"
-import React, { useEffect, useState, Fragment } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { DndProvider, useDrag, useDrop } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { MoreVertical } from "react-feather"
 import { Tree, TreeNode } from "react-organizational-chart"
+import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
-import { Navigate, useParams, useNavigate } from "react-router-dom"
+import { Navigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import "../assets/scss/departmentsSetting.scss"
-import { departmentApi, userApi } from "../common/api"
-import NewDepartmentModal from "../components/modals/NewDepartmentModal"
-import PerfectScrollbar from "react-perfect-scrollbar"
+import { departmentApi } from "../common/api"
 import DeleteDepartmentModal from "../components/modals/DeleteDepartmentModal"
-import { usersApi } from "@apps/modules/settings/common/api"
+import NewDepartmentModal from "../components/modals/NewDepartmentModal"
 const OrgChartEmployees = (props) => {
   const params = useParams()
   const action = params.action
@@ -156,6 +153,7 @@ const OrgChartEmployees = (props) => {
   const renderEmployee = (arr = []) => {
     return _.map(arr, (item) => {
       const [{ isDragging }, drag] = useDrag({
+        type: "employee",
         item: {
           name: item.full_name,
           type: "employee",
@@ -203,6 +201,7 @@ const OrgChartEmployees = (props) => {
 
   const Organization = ({ org, onCollapse, collapsed }) => {
     const [{ isDragging }, drag] = useDrag({
+      type: "department",
       item: {
         name: org.name,
         type: "department",

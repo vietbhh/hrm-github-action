@@ -1,30 +1,30 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
+import { EmptyContent } from "@apps/components/common/EmptyContent"
+import { ErpInput } from "@apps/components/common/ErpField"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { FieldHandle } from "@apps/utility/FieldHandler"
-import { useSelector } from "react-redux"
-import { AbilityContext } from "utility/context/Can"
 import {
   getOptionValue,
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
-import { ChecklistApi } from "../common/api"
-import { useLocation } from "react-router-dom"
-import { Col, Row, Card, CardBody } from "reactstrap"
-import { Space } from "antd"
-import EmployeeTag from "../components/detail/EmployeeTag"
-import AssignedChecklistInfo from "../components/detail/AssignedChecklistInfo"
-import CompleteTaskModal from "../components/modals/CompleteTaskModal"
-import RevertTaskModal from "../components/modals/RevertTaskModal"
-import AddTaskModal from "../components/modals/AddTaskModal"
-import ConfirmCompleteAllTaskModal from "../components/modals/ConfirmCompleteAllTaskModal"
 import notification from "@apps/utility/notification"
-import AssignChecklistModal from "../components/modals/AssignChecklistModal"
+import { Space } from "antd"
 import { debounce } from "lodash-es"
-import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { ErpInput } from "@apps/components/common/ErpField"
+import { useSelector } from "react-redux"
+import { useLocation } from "react-router-dom"
+import { Card, CardBody, Col, Row } from "reactstrap"
+import { AbilityContext } from "utility/context/Can"
+import { ChecklistApi } from "../common/api"
+import AssignedChecklistInfo from "../components/detail/AssignedChecklistInfo"
+import EmployeeTag from "../components/detail/EmployeeTag"
+import AddTaskModal from "../components/modals/AddTaskModal"
+import AssignChecklistModal from "../components/modals/AssignChecklistModal"
+import CompleteTaskModal from "../components/modals/CompleteTaskModal"
+import ConfirmCompleteAllTaskModal from "../components/modals/ConfirmCompleteAllTaskModal"
+import RevertTaskModal from "../components/modals/RevertTaskModal"
 
-const { Fragment, useEffect, useContext, useRef } = require("react")
+import { Fragment, useContext, useEffect, useRef } from "react"
 
 const Checklist = (props) => {
   const [state, setState] = useMergedState({
@@ -257,7 +257,7 @@ const Checklist = (props) => {
         page: 1
       })
       setFilters({ search_text: nextValue })
-    }, process.env.REACT_APP_DEBOUNCE_INPUT_DELAY)
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
 
   const handleSearchVal = (e) => {

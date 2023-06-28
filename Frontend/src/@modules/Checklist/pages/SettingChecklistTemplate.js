@@ -1,24 +1,23 @@
 import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
-import { useSelector } from "react-redux"
-import { AbilityContext } from "utility/context/Can"
 import {
   getOptionValue,
   useFormatMessage,
   useMergedState
 } from "@apps/utility/common"
+import { useSelector } from "react-redux"
+import { AbilityContext } from "utility/context/Can"
 
-import CheckListLayout from "./CheckListTemplateLayout"
-import AddChecklistTemplateModal from "../components/modals/AddChecklistTemplateModal"
-import { ChecklistApi } from "../common/api"
-import { NavLink as RRNavLink, useParams } from "react-router-dom"
-import { Button, Row, Col } from "reactstrap"
-import ChecklistItem from "../components/detail/CheckListItem"
-import notification from "@apps/utility/notification"
-import DuplicateChecklistTemplateModal from "../components/modals/DuplicateChecklistTemplateModal"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-
-const { Fragment, useEffect, useContext, useState } = require("react")
+import notification from "@apps/utility/notification"
+import { useParams } from "react-router-dom"
+import { Button, Col, Row } from "reactstrap"
+import { ChecklistApi } from "../common/api"
+import ChecklistItem from "../components/detail/CheckListItem"
+import AddChecklistTemplateModal from "../components/modals/AddChecklistTemplateModal"
+import DuplicateChecklistTemplateModal from "../components/modals/DuplicateChecklistTemplateModal"
+import CheckListLayout from "./CheckListTemplateLayout"
+import { Fragment, useContext, useEffect, useState } from "react"
 
 const SettingChecklistTemplate = (props) => {
   const [state, setState] = useMergedState({
@@ -220,14 +219,10 @@ const SettingChecklistTemplate = (props) => {
       <Breadcrumbs
         list={[
           {
-            title: useFormatMessage(
-              "modules.checklist.title.checklist"
-            )
+            title: useFormatMessage("modules.checklist.title.checklist")
           },
           {
-            title: useFormatMessage(
-              "modules.checklist_template.title.setting"
-            )
+            title: useFormatMessage("modules.checklist_template.title.setting")
           }
         ]}
         custom={addBtn}

@@ -1,20 +1,21 @@
-import Breadcrumbs from "@apps/components/common/Breadcrumbs"
 import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
 import ExportModalDefaultModule from "@apps/modules/default/components/modals/ExportModalDefaultModule"
 import FilterModalDefaultModule from "@apps/modules/default/components/table/FilterModalDefaultModule"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import { getBool, useFormatMessage, useMergedState } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
+import SwAlert from "@apps/utility/SwAlert"
+import { cellHandle, defaultCellHandle } from "@apps/utility/TableHandler"
+import { getBool, useFormatMessage, useMergedState } from "@apps/utility/common"
 import { isArray, isUndefined } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import notification from "@apps/utility/notification"
-import SwAlert from "@apps/utility/SwAlert"
-import { cellHandle, defaultCellHandle } from "@apps/utility/TableHandler"
 import AssignChecklistModal from "@modules/Checklist/components/modals/AssignChecklistModal"
+import { updateStateModule } from "@store/app/app"
+import { handleFetchProfile } from "@store/authentication"
 import { TreeSelect } from "antd"
 import { filter, isEmpty, isObject, map } from "lodash"
 import { debounce } from "lodash-es"
-import { useRef } from "react"
+import { Fragment, useContext, useEffect, useRef } from "react"
 import {
   Download,
   MoreVertical,
@@ -38,21 +39,18 @@ import {
   Row,
   UncontrolledButtonDropdown
 } from "reactstrap"
-import { updateStateModule } from "redux/app/app"
-import { handleFetchProfile } from "redux/authentication"
 import { Table } from "rsuite"
 import { AbilityContext } from "utility/context/Can"
 import { departmentApi, employeesApi } from "../common/api"
 import EmployeeAction from "../components/detail/EmployeeAction"
 import EmployeeStatus from "../components/detail/EmployeeStatus"
 import EmployeeView from "../components/employee-view/EmployeeView"
+import OverViewTemplate from "../components/listEmployee/EmployeeOverView/OverViewTemplate"
 import AddEmployeeModal from "../components/modals/AddEmployeeModal"
 import OffboardingModal from "../components/modals/OffboardingModal"
 import RehireModal from "../components/modals/RehireModal"
 import TableList from "../components/table/TableList"
-import OverViewTemplate from "../components/listEmployee/EmployeeOverView/OverViewTemplate"
 import SettingTableModalEmployee from "./SettingTableModalEmployee"
-const { Fragment, useEffect, useContext } = require("react")
 const { Cell } = Table
 const { SHOW_PARENT } = TreeSelect
 
@@ -185,7 +183,6 @@ const ListEmployees = (props) => {
   const metas = moduleData.metas
   const options = moduleData.options
   const ability = useContext(AbilityContext)
-  console.log(options)
   const moduleDataChecklist = useSelector(
     (state) => state.app.modules.checklist
   )
@@ -229,7 +226,7 @@ const ListEmployees = (props) => {
         setState({
           searchVal: nextValue
         }),
-      process.env.REACT_APP_DEBOUNCE_INPUT_DELAY
+      import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY
     )
   ).current
 

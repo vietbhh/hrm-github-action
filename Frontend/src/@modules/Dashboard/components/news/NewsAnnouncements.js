@@ -6,7 +6,7 @@ import moment from "moment"
 import { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper"
-import { Swiper, SwiperSlide } from "swiper/react/swiper-react"
+import { Swiper, SwiperSlide } from "swiper/react"
 import { Link } from "react-router-dom"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 // ** Hooks

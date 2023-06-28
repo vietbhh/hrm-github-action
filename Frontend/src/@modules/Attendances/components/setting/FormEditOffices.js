@@ -267,7 +267,7 @@ const FormEditOffices = (props) => {
                     placeholder="BackEnd api"
                     label="API URL"
                     defaultValue={
-                      process.env.REACT_APP_API_URL +
+                      import.meta.env.VITE_APP_API_URL +
                       "/attendances-time-machine"
                     }
                     readOnly
