@@ -13,7 +13,7 @@ const notificationSlice = createSlice({
     handleNotification: (state, action) => {
       const { listNotification, numberNotification } = action.payload
       state.listNotification = listNotification
-      state.numberNotification = numberNotification
+      state.numberNotification = numberNotification !== undefined ? numberNotification : state.numberNotification
     },
     handleAppendNotification: (state, action) => {
       state.numberNotification = state.numberNotification + 1
