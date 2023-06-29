@@ -7,6 +7,12 @@ import {
   handleFormatMessageStr,
   handleFormatUrl
 } from "layouts/_components/vertical/common/common"
+// ** redux
+import { useSelector, useDispatch } from "react-redux"
+import {
+  handleNotification,
+  toggleOpenDropdown
+} from "../../../../redux/notification"
 // ** Styles
 import { Space } from "antd"
 import { Button } from "reactstrap"
@@ -26,6 +32,48 @@ const NotificationAction = (props) => {
 
   const navigate = useNavigate()
 
+  const notificationState = useSelector((state) => state.notification)
+  const { listNotification } = notificationState
+
+  const dispatch = useDispatch()
+
+  const _handleSetNewNotificationState = (res, index) => {
+    if (res?.data?.notification_info === undefined) {
+      return false
+    }
+
+    const newListNotification = [...listNotification].map((item) => {
+      if (parseInt(item.id) === parseInt(notificationInfo.id)) {
+        const newAction = [...JSON.parse(item.actions)].map(
+          (itemAction, indexAction) => {
+            if (parseInt(indexAction) === parseInt(index)) {
+              return {
+                ...itemAction,
+                ...res.data.notification_info
+              }
+            }
+
+            return itemAction
+          }
+        )
+
+        return {
+          ...item,
+          actions: JSON.stringify(newAction)
+        }
+      }
+
+      return item
+    })
+
+    dispatch(
+      handleNotification({
+        listNotification: newListNotification,
+        numberNotification: undefined
+      })
+    )
+  }
+
   const handleClickApiButton = (e, itemContent, index) => {
     e.preventDefault()
     if (itemContent.api_methods === "post") {
@@ -41,9 +89,11 @@ const NotificationAction = (props) => {
           itemContent.api_option
         )
         .then((res) => {
-          console.log(res)
+          _handleSetNewNotificationState(res, index)
         })
-        .catch((err) => {})
+        .catch((err) => {
+          console.log(err)
+        })
     } else if (itemContent.api_methods === "get") {
       defaultModuleApi
         .get(
@@ -51,23 +101,38 @@ const NotificationAction = (props) => {
           itemContent.api_option
         )
         .then((res) => {
-          console.log(res)
+          _handleSetNewNotificationState(res, index)
         })
         .catch((err) => {})
     }
   }
 
-  const handleClickLinkButton = (itemContent) => {
+  const handleClickLinkButton = (e, itemContent) => {
+    e.preventDefault()
+    dispatch(toggleOpenDropdown())
     navigate(itemContent.url)
   }
 
   // ** render
+
   const renderContent = (item, index) => {
     const status = item.status
+    const message = item.message
     const contents = item.contents
 
+    if (status.trim().length > 0 && status !== "link_button") {
+      const newStr = handleFormatMessageStr(message)
+      return checkHTMLTag(newStr) ? (
+        <p
+          dangerouslySetInnerHTML={{ __html: newStr }}
+          className="notification-message"></p>
+      ) : (
+        <p className="notification-message">{newStr}</p>
+      )
+    }
+
     return (
-      <div className="notification-buttons-actions">
+      <div className="mt-75 notification-buttons-actions">
         <Space>
           {_.map(contents, (itemContent, indexContent) => {
             if (itemContent.type === "api_button") {
@@ -86,7 +151,7 @@ const NotificationAction = (props) => {
                   className={`color-${itemContent.color}`}
                   size="sm"
                   key={`notification-buttons-${indexContent}`}
-                  onClick={(e) => handleClickLinkButton(itemContent)}>
+                  onClick={(e) => handleClickLinkButton(e, itemContent)}>
                   {itemContent.text}
                 </Button>
               )
@@ -98,8 +163,12 @@ const NotificationAction = (props) => {
   }
 
   const renderComponent = () => {
+    if (action.length === 0) {
+      return ""
+    }
+
     return (
-      <div className="d-flex align-items-center mt-75 notification-actions">
+      <div className="d-flex align-items-center notification-actions">
         {action.map((item, index) => {
           return (
             <Fragment key={`api-button-action-${index}`}>

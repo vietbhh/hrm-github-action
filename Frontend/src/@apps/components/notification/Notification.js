@@ -16,7 +16,7 @@ const Notification = (props) => {
   const dispatch = useDispatch()
   const socket = useContext(SocketContext)
 
-  const testNoti = () => {
+  /*const testNoti = () => {
     socket.emit("app_notification", {
       receivers: [1],
       save_notification: true,
@@ -55,7 +55,7 @@ const Notification = (props) => {
         icon: ""
       }
     })
-  }
+  }*/
 
   const addNotificationToStore = (notificationData) => {
     const { id, title, body, link, type, icon, sender_id } = notificationData

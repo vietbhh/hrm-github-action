@@ -58,6 +58,14 @@ const NotificationItem = (props) => {
     }
   }
 
+  const renderTitle = (item) => {
+    if (item?.title === undefined || item.title.trim().length === 0) {
+      return ""
+    }
+
+    return <Fragment>{renderContent(item.title, "title")}</Fragment>
+  }
+
   return (
     <div
       className={classnames(" div-noti app-notifications", {
@@ -80,8 +88,8 @@ const NotificationItem = (props) => {
             "has-content": item.body
           })}>
           <div>
-            {renderContent(item.title, "title")}
-            {renderContent(item.body, "content")}
+            <Fragment>{renderTitle(item)}</Fragment>
+            <Fragment>{renderContent(item.body, "content")}</Fragment>
             {item.created_at && (
               <p className="div-time">{timeDifference(item.created_at)}</p>
             )}

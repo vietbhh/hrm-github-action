@@ -55,7 +55,7 @@ class Notification extends ErpController
 		]);
 	}
 
-	public function test_post($id)
+	/*public function test_post($id)
 	{
 		$model = new NotificationModel();
 
@@ -84,9 +84,11 @@ class Notification extends ErpController
 				'actions' => json_encode(array_values($action))
 			]);
 
-			return $this->respond($currentAction);
+			return $this->respond([
+				'notification_info' => $currentAction
+			]);
 		} catch (\Exception $err) {
 			return $this->fail(FAILED_SAVE);
 		}
-	}
+	}*/
 }
