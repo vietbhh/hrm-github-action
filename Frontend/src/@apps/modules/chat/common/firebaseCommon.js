@@ -447,6 +447,7 @@ const handleSendMessage = async (
           userFullName
         )
       }
+
       let dataGroup = {
         last_message: handleLastMessage(docData.type, msg_not_encrypt),
         last_user: userId,

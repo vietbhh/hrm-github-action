@@ -496,6 +496,7 @@ const SidebarLeft = (props) => {
                 </Tooltip>
               </div>
             </div>
+
             <PerfectScrollbar
               className="chat-user-list-wrapper list-group"
               options={{ wheelPropagation: false }}>
