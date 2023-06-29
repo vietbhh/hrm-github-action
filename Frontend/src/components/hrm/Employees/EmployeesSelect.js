@@ -453,21 +453,69 @@ const EmployeesSelect = (props) => {
     handleSelect(state.dataSelected, state.typeAdd)
   }, [state.dataSelected])
   return (
-    <Tabs
-      className="tab-invite"
-      tabPosition={"left"}
-      items={itemTab(tabShow)}
-      onTabClick={(key) => {
-        setState({
-          typeAdd: key,
-          dataSelected: [],
-          recordsTotal: 0,
-          departments: [],
-          jobtitles: [],
-          members: []
-        })
-      }}
-    />
+    <>
+      <div className="d-flex ">
+        <div className="content-select">
+          <Row>
+            <Col>
+              <ErpInput
+                nolabel
+                placeholder="Search"
+                className="search_invite"
+                prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                onChange={(e) => handleFilterText(e.target.value)}
+              />
+            </Col>
+          </Row>
+          <PerfectScrollbar
+            onYReachEnd={endScrollLoad}
+            style={{
+              maxHeight: "400px",
+              minHeight: "400px"
+            }}>
+            <Row className="w-100">{renderMember(state.members)}</Row>
+          </PerfectScrollbar>
+        </div>
+
+        <div
+          className={`content-selected ${
+            !state.dataSelected.length && `d-flex align-items-center`
+          }`}>
+          {state.dataSelected.length === 0 && <EmptyContent />}
+          {state.dataSelected.length > 0 && (
+            <>
+              <div className="mt-1 mb-2">
+                {state.dataSelected.length}{" "}
+                {useFormatMessage("modules.workspace.text.member")}
+              </div>
+              <PerfectScrollbar
+                style={{
+                  maxHeight: "400px",
+                  minHeight: "400px"
+                }}>
+                <Row>{renderMemberSelected(state.dataSelected)}</Row>
+              </PerfectScrollbar>
+            </>
+          )}
+        </div>
+      </div>
+      <hr />
+      <Tabs
+        className="tab-invite"
+        tabPosition={"top"}
+        items={itemTab(tabShow)}
+        onTabClick={(key) => {
+          setState({
+            typeAdd: key,
+            dataSelected: [],
+            recordsTotal: 0,
+            departments: [],
+            jobtitles: [],
+            members: []
+          })
+        }}
+      />
+    </>
   )
 }
 export default EmployeesSelect

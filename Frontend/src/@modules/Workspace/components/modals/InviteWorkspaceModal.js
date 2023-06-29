@@ -49,7 +49,7 @@ const InviteWorkspaceModal = (props) => {
       style={{ top: "100px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
-      className="invite-workspace-modal"
+      className="invite-workspace-modal-off"
       size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
@@ -59,7 +59,20 @@ const InviteWorkspaceModal = (props) => {
       <FormProvider {...methods}>
         <ModalBody>
           <Row className="mt-1">
-            <Col sm={12}>
+            <Col sm={12} className="mb-1">
+              Filter members to invite by category
+            </Col>
+            <Col sm={12} className="">
+              <span className="border rounded w-100 me-1 px-1 py-50">
+                Users
+              </span>
+              <span className="border rounded w-100 me-1 px-1 py-50">
+                Derpartment
+              </span>
+              <span className="border rounded w-100 px-1 py-50">Job title</span>
+              <hr />
+            </Col>
+            <Col sm={12} className="mt-3">
               <EmployeesSelect
                 handleSelect={getDataSelect}
                 member_selected={member_selected}
@@ -74,15 +87,9 @@ const InviteWorkspaceModal = (props) => {
               onClick={() => handleAdd()}
               color="primary"
               disabled={state.loading}
-              className="ms-auto mr-2">
+              className="ms-auto mr-2 w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
               {useFormatMessage("button.done")}
-            </Button>
-            <Button
-              className="btn-cancel"
-              color="flat-danger"
-              onClick={() => handleModal(false)}>
-              {useFormatMessage("button.cancel")}
             </Button>
           </ModalFooter>
         </form>

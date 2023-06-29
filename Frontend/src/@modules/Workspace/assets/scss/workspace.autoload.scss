@@ -257,6 +257,25 @@
   }
 }
 
+.invite-workspace-modal-off {
+
+.content-select{
+  width: 60%;
+  .input-group-text{
+    background-color: #F0F2F5;
+  }
+  .search_invite{
+    background-color: #F0F2F5;
+  }
+}
+.content-selected {
+  border-radius: 12px;
+  background-color: #F0F2F5;
+  width: 40%;
+  padding-left: 10px;
+  margin-left: 10px;
+}
+}
 .invite-workspace-modal {
   .ant-tabs-tab-btn {
     width: 100%;
