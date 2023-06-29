@@ -1,4 +1,42 @@
-import { isNumber } from "lodash-es"
+import { isEmpty, isNumber } from "lodash-es"
+import i18next from "#app/services/i18n/i18next.js"
+
+export const handleFormatMessageStr = (str) => {
+  const regex = /{{(.*?)}}/g
+  const listFormatMessage = str.match(regex)
+  let newStr = str
+  if (listFormatMessage !== null) {
+    listFormatMessage.map((text) => {
+      const formatText = text.replace(/[{}]/g, "")
+      newStr = str.replace(text, useFormatMessage(formatText))
+    })
+  }
+
+  return newStr
+}
+
+export const stripHTML = (str) => {
+  return str.replace(/(<([^>]+)>)/gi, "")
+}
+
+export const useFormatMessage = (
+  messageId,
+  value = {},
+  defaultMessage = ""
+) => {
+  const splitMesId = messageId.split(":")
+  const ns = splitMesId.length === 1 ? "modules" : splitMesId[0]
+  const msgId = splitMesId.length === 1 ? messageId : splitMesId[1]
+  return i18n.t(msgId, {
+    ns,
+    defaultValue: isEmpty(defaultMessage) ? messageId : defaultMessage,
+    replace: value,
+    interpolation: {
+      prefix: "{",
+      suffix: "}"
+    }
+  })
+}
 
 export const getBool = (val) => {
   if (isUndefined(val)) return false

@@ -58,12 +58,16 @@ const VerticalNavMenuLink = ({ item, activeItem, child, saveQuickAccess }) => {
         }}>
         {child ? (
           <div className="div-menu-child">
-            <span className="menu-item text-truncate">{t(item.title)}</span>
+            <span className="menu-item text-truncate">
+              {t(item.title, { ns: "menu" })}
+            </span>
           </div>
         ) : (
           <>
             {item.icon}
-            <span className="menu-item text-truncate">{t(item.title)}</span>
+            <span className="menu-item text-truncate">
+              {t(item.title, { ns: "menu" })}
+            </span>
           </>
         )}
 

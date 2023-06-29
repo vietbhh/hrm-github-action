@@ -12,7 +12,11 @@ export const useFormatMessage = (
   value = {},
   defaultMessage = ""
 ) => {
-  return i18n.t(messageId, {
+  const splitMesId = messageId.split(":")
+  const ns = splitMesId.length === 1 ? "modules" : splitMesId[0]
+  const msgId = splitMesId.length === 1 ? messageId : splitMesId[1]
+  return i18n.t(msgId, {
+    ns,
     defaultValue: isEmpty(defaultMessage) ? messageId : defaultMessage,
     replace: value,
     interpolation: {
@@ -327,5 +331,7 @@ export const getAvatarUrl = (userOrPath) => {
 }
 
 export const getPublicDownloadUrl = (path, type = "image") => {
-  return import.meta.env.VITE_APP_API_URL + `/download/public/${type}?name=` + path
+  return (
+    import.meta.env.VITE_APP_API_URL + `/download/public/${type}?name=` + path
+  )
 }
