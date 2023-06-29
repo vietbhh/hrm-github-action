@@ -12,7 +12,8 @@ const WorkspaceFilter = (props) => {
     // ** props
     filter,
     // ** methods
-    setFilter
+    setFilter,
+    toggleModal
   } = props
 
   const [state, setState] = useMergedState({
@@ -22,7 +23,8 @@ const WorkspaceFilter = (props) => {
   const navigate = useNavigate()
 
   const handleClickCreate = () => {
-    navigate("/workspace/create")
+    toggleModal()
+    //navigate("/workspace/create")
   }
 
   const handleClickSearchButton = () => {

@@ -383,11 +383,10 @@
         }
 
         .btn-load-more {
-          border: none !important
+          border: none !important;
         }
 
         .workspace-manage-list {
-          
           .workspace-item {
             border: 1px solid #f1f1f5;
 
@@ -806,6 +805,86 @@
       border-radius: 12px !important;
       font-size: 12px;
       font-weight: 500;
+    }
+  }
+}
+
+.create-workspace-form {
+  .field-label {
+    font-size: 14px;
+    color: #32434f;
+    font-weight: 600;
+  }
+
+  .field-description {
+    font-size: 10px;
+    font-weight: 300;
+    color: #32434f;
+  }
+
+  .privacy-section {
+    .flex-wrap {
+      flex-wrap: unset !important;
+    }
+
+    .select__control {
+      padding: 0.3rem 0.2rem 0.3rem 0.2rem;
+    }
+
+    .text-label {
+      color: #32434f !important;
+      width: 70% !important;
+      p {
+        font-size: 12px;
+        margin-bottom: 0 !important;
+        font-weight: 500;
+      }
+
+      small {
+        font-size: 12px;
+        font-weight: 300;
+      }
+    }
+
+    .prefix-icon {
+      height: 36px;
+      width: 36px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+
+      i {
+        margin: 0 !important;
+        font-size: 16px !important;
+      }
+    }
+  }
+}
+
+.create-workgroup-modal {
+  .modal-content {
+    padding: 1rem 2rem 1rem 2rem !important;
+    .modal-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+
+      .btn-close {
+        transform: unset !important;
+        box-shadow: unset !important;
+      }
+    }
+
+    .image-cover img {
+      border-radius: 12px;
+    }
+
+    .text-label {
+      padding-left: 1rem;
+      p,
+      small {
+        font-size: 10px;
+      }
     }
   }
 }
