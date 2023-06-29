@@ -80,13 +80,12 @@ const NotificationDropdown = () => {
             }}>
             <ListNotification listNotification={listNotificationStore} />
           </PerfectScrollbar>
-          <li className="p-1">
+          <li className="p-1 pt-2 pb-2 d-flex justify-content-center footer-noti">
             <Button.Ripple
               color="primary"
-              block
               onClick={() => handleClickSeeAll()}>
               {useFormatMessage(
-                "layout.notification.see_all_incoming_activity"
+                "layout.notification.see_all_notification"
               )}
             </Button.Ripple>
           </li>
@@ -170,8 +169,8 @@ const NotificationDropdown = () => {
         </UncontrolledTooltip>
       </DropdownToggle>
       <DropdownMenu tag="ul" end className="dropdown-menu-media mt-0">
-        <li className="dropdown-menu-header">
-          <DropdownItem className="d-flex" tag="div" header>
+        <li className="pb-0 mb-0 dropdown-menu-header">
+          <DropdownItem className="pb-0 d-flex" tag="div" header>
             <h4 className="notification-title mb-0 me-auto">
               {useFormatMessage("layout.notification.recent_notification")}
             </h4>

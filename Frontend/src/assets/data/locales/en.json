@@ -1019,7 +1019,8 @@
     "notification": {
       "title": "Notification",
       "recent_notification": "Recent Notification",
-      "see_all_incoming_activity": "See all incoming activity"
+      "see_all_incoming_activity": "See all incoming activity",
+      "see_all_notification": "See all notification"
     },
     "message": "Message",
     "read_all_message": "Read all Message",
