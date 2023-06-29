@@ -12,7 +12,8 @@ const ProfileSidebarMoreOption = (props) => {
     userId,
     setActive,
     setActiveFullName,
-    setDataUnseenDetail
+    setDataUnseenDetail,
+    isAdminSystem
   } = props
 
   const handleUpdateLeaveChat = (props) => {
@@ -69,6 +70,25 @@ const ProfileSidebarMoreOption = (props) => {
     })
   }
 
+  // ** render
+  const renderLeaveChat = () => {
+    if (isAdminSystem) {
+      return (
+        <div className="more-option-body-div-child more-option-body-div-bg">
+          <div
+            className="more-option-body-div-content"
+            onClick={() => handleLeaveChat()}>
+            <span className="text-left text-color-red">
+              {useFormatMessage("modules.chat.text.leave_chat")}
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    return ""
+  }
+
   return (
     <Fragment>
       <div className="file-view-header">
@@ -81,19 +101,7 @@ const ProfileSidebarMoreOption = (props) => {
           {useFormatMessage("modules.chat.text.more_options")}
         </div>
       </div>
-      <div className="file-view-body more-option-body">
-        {selectedGroup?.type === "group" && (
-          <div className="more-option-body-div-child more-option-body-div-bg">
-            <div
-              className="more-option-body-div-content"
-              onClick={() => handleLeaveChat()}>
-              <span className="text-left text-color-red">
-                {useFormatMessage("modules.chat.text.leave_chat")}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
+      <div className="file-view-body more-option-body">{renderLeaveChat()}</div>
     </Fragment>
   )
 }

@@ -45,6 +45,7 @@ const UserProfileSidebar = (props) => {
     showInputDes: "",
     loadingEdit: false,
     showMoreOption: false,
+    isAdminSystem: false,
 
     // ** file view
     showFileView: false,
@@ -275,6 +276,28 @@ const UserProfileSidebar = (props) => {
     setState({ showFileView: false, tabView: "", showMoreOption: false })
   }, [active])
 
+  useEffect(() => {
+    let isAdminSystem = false
+    if (selectedGroup?.type === "group") {
+      isAdminSystem = true
+
+      if (
+        selectedGroup?.is_system === true &&
+        selectedGroup?.admin &&
+        selectedGroup?.admin.indexOf(userId) === -1
+      ) {
+        isAdminSystem = false
+      }
+    }
+
+    setState({ isAdminSystem: isAdminSystem })
+
+    handleShowHideInput("fullName", "hide")
+    handleShowHideInput("des", "hide")
+  }, [selectedGroup])
+
+  // **
+
   return (
     <Fragment>
       <div
@@ -288,7 +311,7 @@ const UserProfileSidebar = (props) => {
           <div className="header-profile-sidebar">
             <div className="header-profile-image-background">
               {renderBackground()}
-              {user.type && user.type === "group" && (
+              {state.isAdminSystem && (
                 <>
                   <input
                     type="file"
@@ -332,7 +355,7 @@ const UserProfileSidebar = (props) => {
             <div className="header-profile-avatar">
               <div className="div-avatar">
                 {renderAvatar(selectedGroup, "", "70", "70")}
-                {user.type && user.type === "group" && (
+                {state.isAdminSystem && (
                   <>
                     <input
                       type="file"
@@ -415,7 +438,7 @@ const UserProfileSidebar = (props) => {
                   <span
                     className={`${state.showInputFullName ? "d-none" : ""}`}
                     onClick={() => {
-                      if (user?.type === "group") {
+                      if (state.isAdminSystem) {
                         handleShowHideInput("fullName", "show")
                         setTimeout(() => {
                           if (refInputFullName.current) {
@@ -466,7 +489,7 @@ const UserProfileSidebar = (props) => {
                   <span
                     className={`${state.showInputDes ? "d-none" : ""}`}
                     onClick={() => {
-                      if (user?.type === "group") {
+                      if (state.isAdminSystem) {
                         handleShowHideInput("des", "show")
                         setTimeout(() => {
                           if (refInputDes.current) {
@@ -517,6 +540,7 @@ const UserProfileSidebar = (props) => {
               setDataUnseenDetail={setDataUnseenDetail}
               handleUpdateGroup={handleUpdateGroup}
               userId={userId}
+              isAdminSystem={state.isAdminSystem}
             />
           )}
         </PerfectScrollbar>
@@ -541,6 +565,7 @@ const UserProfileSidebar = (props) => {
             setActive={setActive}
             setActiveFullName={setActiveFullName}
             setDataUnseenDetail={setDataUnseenDetail}
+            isAdminSystem={state.isAdminSystem}
           />
         </div>
       </div>

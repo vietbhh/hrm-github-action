@@ -4,31 +4,27 @@ import Backend from "i18next-http-backend"
 import { initReactI18next } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 
-// ** Languages Imports
-const en = new URL("../../assets/data/locales/en.json", import.meta.url).href
-const vi = new URL("../../assets/data/locales/vi.json", import.meta.url).href
-
-const languages = {
-  en,
-  vi
-}
+const listNamespaces = ["core", "menu", "modules"]
 
 i18n
-
-  // Enables the i18next backend
   .use(Backend)
-
-  // Enable automatic language detection
   .use(LanguageDetector)
-
-  // Enables the hook initialization module
   .use(initReactI18next)
   .init({
     lng: "en",
     backend: {
       /* translation file path */
-      loadPath: (lng) => languages[lng]
+      loadPath: (lng, ns) => {
+        const langUrl = new URL(
+          `../../assets/data/locales/${lng}/${ns}.json`,
+          import.meta.url
+        ).href
+        return langUrl.endsWith("/undefined") ? null : langUrl
+      }
     },
+    ns: listNamespaces,
+    defaultNS: "core",
+    fallbackNS: "core",
     fallbackLng: "en",
     debug: false,
     keySeparator: ".",

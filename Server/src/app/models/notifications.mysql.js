@@ -24,6 +24,10 @@ const notificationsModelMysql = appModelMysql("notifications", {
   icon: {
     type: DataTypes.TEXT("long")
   },
+  actions: {
+    type: DataTypes.TEXT("long"),
+    defaultValue: "[]"
+  },
   read_by: {
     type: DataTypes.TEXT("long"),
     defaultValue: "[]"

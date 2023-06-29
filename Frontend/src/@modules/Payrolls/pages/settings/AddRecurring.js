@@ -67,18 +67,18 @@ const AddPaycles = (props) => {
     { value: 4, label: "4" }
   ]
   const approvalOptions = [
-    { value: "1", label: useFormatMessage("month.1") },
-    { value: "2", label: useFormatMessage("month.2") },
-    { value: "3", label: useFormatMessage("month.3") },
-    { value: "4", label: useFormatMessage("month.4") },
-    { value: "5", label: useFormatMessage("month.5") },
-    { value: "6", label: useFormatMessage("month.6") },
-    { value: "7", label: useFormatMessage("month.7") },
-    { value: "8", label: useFormatMessage("month.8") },
-    { value: "9", label: useFormatMessage("month.9") },
-    { value: "10", label: useFormatMessage("month.10") },
-    { value: "11", label: useFormatMessage("month.11") },
-    { value: "12", label: useFormatMessage("month.12") }
+    { value: "1", label: useFormatMessage("common.month.1") },
+    { value: "2", label: useFormatMessage("common.month.2") },
+    { value: "3", label: useFormatMessage("common.month.3") },
+    { value: "4", label: useFormatMessage("common.month.4") },
+    { value: "5", label: useFormatMessage("common.month.5") },
+    { value: "6", label: useFormatMessage("common.month.6") },
+    { value: "7", label: useFormatMessage("common.month.7") },
+    { value: "8", label: useFormatMessage("common.month.8") },
+    { value: "9", label: useFormatMessage("common.month.9") },
+    { value: "10", label: useFormatMessage("common.month.10") },
+    { value: "11", label: useFormatMessage("common.month.11") },
+    { value: "12", label: useFormatMessage("common.month.12") }
   ]
   const EligibilityOptions = [
     {

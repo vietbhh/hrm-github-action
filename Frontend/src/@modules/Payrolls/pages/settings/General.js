@@ -35,14 +35,38 @@ const Paycles = (props) => {
     { value: "VNĐ", label: "VNĐ" }
   ]
   const optionsCalculateMonthly = [
-    { value: 1, label: useFormatMessage("calculate_monthly.1") },
-    { value: 2, label: useFormatMessage("calculate_monthly.2") },
-    { value: 21, label: useFormatMessage("calculate_monthly.21") },
-    { value: 22, label: useFormatMessage("calculate_monthly.22") },
-    { value: 23, label: useFormatMessage("calculate_monthly.23") },
-    { value: 24, label: useFormatMessage("calculate_monthly.24") },
-    { value: 25, label: useFormatMessage("calculate_monthly.25") },
-    { value: 26, label: useFormatMessage("calculate_monthly.26") }
+    {
+      value: 1,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.1")
+    },
+    {
+      value: 2,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.2")
+    },
+    {
+      value: 21,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.21")
+    },
+    {
+      value: 22,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.22")
+    },
+    {
+      value: 23,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.23")
+    },
+    {
+      value: 24,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.24")
+    },
+    {
+      value: 25,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.25")
+    },
+    {
+      value: 26,
+      label: useFormatMessage("modules.pay_cycles.calculate_monthly.26")
+    }
   ]
   const onSave = () => {
     setState({ isSave: !state.isSave })
@@ -128,7 +152,7 @@ const Paycles = (props) => {
           <Col sm={12}>
             <div className="d-flex align-items-center d-none">
               <div className="w-25">
-                {useFormatMessage("calculate_monthly.text")} *
+                {useFormatMessage("modules.pay_cycles.calculate_monthly.text")} *
               </div>
               <div className="w-25">
                 <ErpSelect

@@ -17,7 +17,7 @@ const TotalPayment = (props) => {
   // ** render
   const renderTotalText = () => {
     const month = `${useFormatMessage(
-      `month_full.${currentMonth}`
+      `common.month_full.${currentMonth}`
     )}, ${currentYear}`
 
     return useFormatMessage(
