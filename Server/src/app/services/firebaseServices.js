@@ -1,5 +1,10 @@
 import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
-import { getDefaultFridayLogo } from "#app/utility/common.js"
+import {
+  getDefaultFridayLogo,
+  handleFormatMessageStr,
+  stripHTML,
+  useFormatMessage
+} from "#app/utility/common.js"
 import { cert, initializeApp } from "firebase-admin/app"
 import { getMessaging } from "firebase-admin/messaging"
 import { forEach, isArray, isEmpty, map } from "lodash-es"
@@ -18,8 +23,8 @@ export const sendFirebaseNotification = async (
   data = {},
   overRideFirebaseConfig = {}
 ) => {
-  const title = payload?.title
-  const body = payload?.body
+  let title = payload?.title
+  let body = payload?.body
   const link = payload?.link ?? ""
   const icon = payload?.icon ?? getDefaultFridayLogo()
   const image = payload?.image
@@ -30,7 +35,8 @@ export const sendFirebaseNotification = async (
   const { webpush, ...restOverRideFirebaseConfig } = overRideFirebaseConfig
   let receiversTokens = [],
     receiversUserId = {}
-
+  title = stripHTML(handleFormatMessageStr(title))
+  body = stripHTML(handleFormatMessageStr(body))
   //Get user devive's token
   if (isArray(receivers)) {
     const users = await getUsers(receivers)

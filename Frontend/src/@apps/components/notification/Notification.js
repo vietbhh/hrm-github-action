@@ -1,8 +1,6 @@
 // ** React Imports
 import { Fragment, useContext, useEffect } from "react"
-import {
-  handleFormatMessageStr
-} from "layouts/_components/vertical/common/common"
+import { handleFormatMessageStr } from "layouts/_components/vertical/common/common"
 // ** redux
 import { useDispatch } from "react-redux"
 import { handleAppendNotification } from "@store/notification"
@@ -17,6 +15,47 @@ import SocketContext from "@/utility/context/Socket"
 const Notification = (props) => {
   const dispatch = useDispatch()
   const socket = useContext(SocketContext)
+
+  /*const testNoti = () => {
+    socket.emit("app_notification", {
+      receivers: [1],
+      save_notification: true,
+      payload: {
+        title: "Review",
+        body: "<b>Sarah Saunders</b> invited you to <b>Weekly Meeting</b>",
+        link: "",
+        actions: JSON.stringify([
+          {
+            status: "",
+            message: "",
+            contents: [
+              {
+                key: "accept",
+                type: "link_button",
+                text: "Accept",
+                color: "primary",
+                url: "/dashboard"
+              },
+              {
+                key: "decline",
+                type: "api_button",
+                text: "Decline",
+                color: "default",
+                api_url: "notification/test/{id}",
+                api_methods: "post",
+                api_post_data: {},
+                api_option: {
+                  disableLoading: true
+                }
+              }
+              
+            ]
+          }
+        ]),
+        icon: ""
+      }
+    })
+  }*/
 
   const addNotificationToStore = (notificationData) => {
     const { id, title, body, link, type, icon, sender_id } = notificationData
@@ -35,7 +74,7 @@ const Notification = (props) => {
       })
     )
   }
-  
+
   const showNotificationPopup = (payload, emitKey = "app_notification") => {
     const newTitle = handleFormatMessageStr(payload.title)
     const newText = handleFormatMessageStr(payload.body)
@@ -51,7 +90,7 @@ const Notification = (props) => {
     if (emitKey === "chat_notification") {
       data = {
         ...data,
-        icon:  (
+        icon: (
           <img
             className="rounded-circle me-1"
             src={payload.icon}
@@ -64,7 +103,7 @@ const Notification = (props) => {
         }
       }
     }
-    
+
     notification.show(data)
   }
 
@@ -123,6 +162,11 @@ const Notification = (props) => {
       }
     })
   }, [socket])
+
+  // ** effect
+  useEffect(() => {
+    //testNoti()
+  }, [])
 
   return <Fragment></Fragment>
 }

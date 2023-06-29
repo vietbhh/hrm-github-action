@@ -143,7 +143,7 @@
                 }
 
                 .div-time {
-                  color: #32434f !important;
+                  color: #3F8CFF !important;
                 }
               }
 
@@ -152,7 +152,7 @@
               }
 
               .div-noti {
-                height: 80px;
+                height: auto;
                 width: 100%;
                 border-radius: $border-radius;
                 padding: 16px;
@@ -160,9 +160,39 @@
                 &:hover {
                   background: rgba(228, 228, 228, 0.25);
                 }
+
+                .notification-actions {
+                  .notification-buttons-actions {
+                    button {
+                      border-radius: 10px !important;
+                      border: none;
+                      padding: 10px 14px;
+                      font-size: 10px;
+                    }
+
+                    .color-primary {
+                      background-color: #377DFF !important;
+                      color: #FFFFFF !important;
+                    }
+
+                    .color-secondary {
+                      background-color: #ECEFF3 !important;
+                      color: #32434F !important;
+                    }
+                  }
+                }
               }
             }
+
+            .footer-noti {
+              button {
+                border-radius: 10px;
+                padding: 14px 32px !important;
+              }
+            }
+
           }
+          
         }
 
         .dropdown-setting {

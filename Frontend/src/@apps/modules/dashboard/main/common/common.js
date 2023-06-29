@@ -9,7 +9,7 @@ const convertDateGetDay = (date) => {
 const convertDateGetMonth = (date) => {
   if (date === "" || date === undefined || date === "0000-00-00") return "";
   const d = date.split("-");
-  return `${useFormatMessage("month." + d[1] * 1)}`;
+  return `${useFormatMessage("common.month." + d[1] * 1)}`;
 };
 
 const convertTime = (time) => {

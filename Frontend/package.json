@@ -123,7 +123,7 @@
     "react-sortablejs": "6.0.0",
     "react-to-print": "^2.14.13",
     "react-top-loading-bar": "^2.3.1",
-    "reactstrap": "^9.1.5",
+    "reactstrap": "^9.2.0",
     "recharts": "^2.1.9",
     "redux": "^4.2.0",
     "redux-debounced": "0.5.0",

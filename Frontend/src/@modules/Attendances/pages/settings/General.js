@@ -294,7 +294,7 @@ const General = (props) => {
             num_order: useFormatMessage(
               `modules.attendance_setting.text.num_order.${numOrder}`
             ),
-            day_in_week: useFormatMessage(`day_in_week.${dayInWeek}`)
+            day_in_week: useFormatMessage(`common.day_in_week.${dayInWeek}`)
           }
         )
       }
