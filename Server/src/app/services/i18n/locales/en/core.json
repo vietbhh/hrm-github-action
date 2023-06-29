@@ -91,6 +91,189 @@
     "menuHidden": "Menu Hidden",
     "language": "Language"
   },
+  "layout": {
+    "home": "Home",
+    "overview": "Overview",
+    "quick_access": "Quick access",
+    "navigation": "Navigation",
+    "nav": "Nav",
+    "quick": "Quick",
+    "notification": {
+      "title": "Notification",
+      "recent_notification": "Recent Notification",
+      "see_all_incoming_activity": "See all incoming activity",
+      "see_all_notification": "See all notification"
+    },
+    "message": "Message",
+    "read_all_message": "Read all Message",
+    "chat": "Chat",
+    "calendar": "Calendar",
+    "setting": "Setting",
+    "collaboration": "Collaboration",
+    "drive": "Drive",
+    "workgroup": "Workgroup",
+    "your_projects": "Your Projects",
+    "your_workgroup": "Your Workgroup",
+    "header": {
+      "welcome": {
+        "morning": {
+          "title": "Good morning",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“Have a happy and lucky new day”",
+          "content_3": "“Opportunities don't happen, you create them”",
+          "content_4": "“The leaves are green, my heart is red. Have a nice morning”",
+          "content_5": "“Absolutely focus to have a productive day”",
+          "content_6": "“Wishing you a new day full of energy for a productive day”",
+          "content_7": "“Your spirit is good today. Have a great working day”",
+          "content_8": "“Learn as if you will live forever, live like you will die tomorrow”",
+          "content_9": "“I have not failed. I've just found 10,000 ways that won't work”",
+          "content_10": "“Worry is a misuse of imagination”",
+          "content_11": "“I never look back, darling. It distracts from the now”",
+          "content_12": "“Ideation without execution is delusion”",
+          "content_13": "“Good luck to you today”",
+          "content_14": "“Wishing you a brilliant and happy morning”",
+          "content_15": "“A year from now you will wish you had started today”",
+          "content_16": "“Hope this message will bring you happiness and luck from my place”",
+          "content_17": "“Don't let someone else's opinion of you become your reality”",
+          "content_18": "“Hustle beats talent when talent doesn’t hustle”",
+          "content_19": "“Set your goals high, and don’t stop till you get there”",
+          "content_20": "“I have stood on a mountain of no’s for one yes”",
+          "content_21": "“Inspiration does exist, but it must find you working”",
+          "content_22": "“Don’t let yesterday take up too much of today”",
+          "content_23": "“It is better to fail in originality than to succeed in imitation”",
+          "content_24": "“Try to take advantage of every opportunity that comes you way”",
+          "content_25": "“Don't wait. The time will never be just right”",
+          "content_26": "“Never setter to be better”",
+          "content_27": "“Change your thoughts and you change your world”",
+          "content_28": "“Every strike brings me closer to the next home run”",
+          "content_29": "“Talent wins games, but teamwork and intelligence win championships”",
+          "content_30": "“The beginning is the most important part of the work”",
+          "content_31": "“When you like your work every day is a holiday”",
+          "content_32": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_33": "“As a cure for worrying, work is better than whiskey”",
+          "content_34": "“If you don’t risk anything, you risk even more”",
+          "content_35": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_36": "“Success is getting what you want, happiness is wanting what you get”",
+          "content_37": "“No challenge shall never know all its capabilities”",
+          "content_38": "“Success is a journey not a destination”"
+        },
+        "afternoon": {
+          "title": "Good afternoon",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“This afternoon, I hope everything will be all right”",
+          "content_3": "“Absolutely focus to have a productive day”",
+          "content_4": "“Hope this message will bring you happiness and luck from my place”",
+          "content_5": "“Setting goals is the first step in turning the invisible into the visible”",
+          "content_6": "“Good luck to you today”",
+          "content_7": "“Your spirit is good today. Have a great working day”",
+          "content_8": "“It is never too late to be what you might have been”",
+          "content_9": "“Try to take advantage of every opportunity that comes you way”",
+          "content_10": "“If you’re not positive energy, you’re negative energy.”",
+          "content_11": "“Never setter to be better”",
+          "content_12": "“Change your thoughts and you change your world”",
+          "content_13": "“Alone we can do so little, together we can do so much”",
+          "content_14": "“Talent wins games, but teamwork and intelligence win championships”",
+          "content_15": "“The beginning is the most important part of the work”",
+          "content_16": "“When you like your work every day is a holiday”",
+          "content_17": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_18": "“As a cure for worrying, work is better than whiskey”",
+          "content_19": "“You don’t have to see the whole staircase, just take the first step”",
+          "content_20": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_21": "“Work until your bank account looks like a phone number”",
+          "content_22": "“No challenge shall never know all its capabilities”",
+          "content_23": "“Success is a journey not a destination”"
+        },
+        "evening": {
+          "title": "Good evening",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“It is never too late to be what you might have been”",
+          "content_3": "“Try to take advantage of every opportunity that comes you way”",
+          "content_4": "“People rarely succeed unless they have fun in what they are doing”",
+          "content_5": "“Never setter to be better”",
+          "content_6": "“Change your thoughts and you change your world”",
+          "content_7": "“They always say time changes things, but you actually have to change them yourself”",
+          "content_8": "“Talent wins games, but teamwork and intelligence win championships”",
+          "content_9": "“The beginning is the most important part of the work”",
+          "content_10": "“When you like your work every day is a holiday”",
+          "content_11": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_12": "“As a cure for worrying, work is better than whiskey”",
+          "content_13": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
+          "content_14": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_15": "“Work until your bank account looks like a phone number”",
+          "content_16": "“No challenge shall never know all its capabilities”",
+          "content_17": "“Success is a journey not a destination”"
+        }
+      },
+      "birthday": {
+        "title": "Happy Birthday",
+        "content_1": "“Hope all your birthday wishes come true!”",
+        "content_2": "“It’s your special day — get out there and celebrate!”",
+        "content_3": "“The day is all yours — have fun!”",
+        "content_4": "“Wishing you the biggest slice of happy today.”",
+        "content_5": "“I hope your celebration gives you many happy memories!”",
+        "content_6": "“Enjoy your special day.”",
+        "content_7": "“You’re older today than yesterday but younger than tomorrow, HPBD!”",
+        "content_8": "“Have the best birthday ever!”",
+        "content_9": "“oday is about you. I can’t wait to celebrate you all day long!”",
+        "content_10": "“Wherever the year ahead takes you, I hope it’s happy.”",
+        "content_11": "“Thinking of you on your birthday and wishing you everything happy”",
+        "content_12": "“Best wishes on your birthday – may you have many, many more”",
+        "content_13": "“Cheers to you for another trip around the sun!”",
+        "content_14": "“Congratulations on another year of skillful death evasion!”"
+      },
+      "weather": {
+        "thunderstorm": {
+          "title": "Thunderstorm",
+          "content_1": "“It's thundering today, you'd better not go out”",
+          "content_2": "“The weather is bad, let's stay in the room”"
+        },
+        "drizzle": {
+          "title": "Drizzle",
+          "content_1": "“It's drizzling, don't forget to bring an umbrella when you go out”"
+        },
+        "rain": {
+          "title": "Rain",
+          "content_1": "“It's raining, don't forget to bring a raincoat”",
+          "content_2": "“It's raining, don't forget to bring an umbrella”"
+        },
+        "snow": {
+          "title": "Snow",
+          "content_1": "“It's snowing, don't forget to wear warm clothes”"
+        },
+        "atmosphere": {
+          "title": "Atmosphere",
+          "content_1": "“The air outside is not so good, you'd better stay in your room”"
+        },
+        "clear": {
+          "title": "Clear",
+          "content_1": "“It's sunny and not cloudy, wear sunscreen when going out”"
+        },
+        "clouds": {
+          "title": "Clouds",
+          "content_1": "“Today is a beautiful day, let's go out and enjoy”",
+          "content_2": "“When you like your work every day is a holiday”",
+          "content_3": "“Success is a journey not a destination”",
+          "content_4": "“Wherever the year ahead takes you, I hope it’s happy.”",
+          "content_5": "“Doing what you like is freedom. Liking what you do is happiness”"
+        }
+      },
+      "header_assistant": {
+        "title": "Header assistant",
+        "sure_to_delete": "Sure to delete?",
+        "add": "Add header assistant",
+        "fields": {
+          "title": "Title",
+          "content": "Content",
+          "image": "Image",
+          "image_position": "Image position",
+          "date_from": "Date from",
+          "date_to": "Date to",
+          "date": "Date",
+          "to": "To"
+        }
+      }
+    }
+  },
   "manage": {
     "module": {
       "name": "Module name",
@@ -287,6 +470,20 @@
       "10": "Oct",
       "11": "Nov",
       "12": "Dec"
+    },
+    "month_full": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
     },
     "day_in_week": {
       "0": "Sunday",
@@ -578,9 +775,6 @@
         }
       }
     }
-  },
-  "about": {
-    "title": "Company Info"
   },
   "modules": {
     "users": {
@@ -965,188 +1159,6 @@
     "link_preview": {
       "text": {
         "page_not_found": "Page not found"
-      }
-    }
-  },
-  "layout": {
-    "overview": "Overview",
-    "quick_access": "Quick access",
-    "navigation": "Navigation",
-    "nav": "Nav",
-    "quick": "Quick",
-    "notification": {
-      "title": "Notification",
-      "recent_notification": "Recent Notification",
-      "see_all_incoming_activity": "See all incoming activity",
-      "see_all_notification": "See all notification"
-    },
-    "message": "Message",
-    "read_all_message": "Read all Message",
-    "chat": "Chat",
-    "calendar": "Calendar",
-    "setting": "Setting",
-    "collaboration": "Collaboration",
-    "drive": "Drive",
-    "workgroup": "Workgroup",
-    "your_projects": "Your Projects",
-    "your_workgroup": "Your Workgroup",
-    "header": {
-      "welcome": {
-        "morning": {
-          "title": "Good morning",
-          "content_1": "“Either you run the day or the day runs you”",
-          "content_2": "“Have a happy and lucky new day”",
-          "content_3": "“Opportunities don't happen, you create them”",
-          "content_4": "“The leaves are green, my heart is red. Have a nice morning”",
-          "content_5": "“Absolutely focus to have a productive day”",
-          "content_6": "“Wishing you a new day full of energy for a productive day”",
-          "content_7": "“Your spirit is good today. Have a great working day”",
-          "content_8": "“Learn as if you will live forever, live like you will die tomorrow”",
-          "content_9": "“I have not failed. I've just found 10,000 ways that won't work”",
-          "content_10": "“Worry is a misuse of imagination”",
-          "content_11": "“I never look back, darling. It distracts from the now”",
-          "content_12": "“Ideation without execution is delusion”",
-          "content_13": "“Good luck to you today”",
-          "content_14": "“Wishing you a brilliant and happy morning”",
-          "content_15": "“A year from now you will wish you had started today”",
-          "content_16": "“Hope this message will bring you happiness and luck from my place”",
-          "content_17": "“Don't let someone else's opinion of you become your reality”",
-          "content_18": "“Hustle beats talent when talent doesn’t hustle”",
-          "content_19": "“Set your goals high, and don’t stop till you get there”",
-          "content_20": "“I have stood on a mountain of no’s for one yes”",
-          "content_21": "“Inspiration does exist, but it must find you working”",
-          "content_22": "“Don’t let yesterday take up too much of today”",
-          "content_23": "“It is better to fail in originality than to succeed in imitation”",
-          "content_24": "“Try to take advantage of every opportunity that comes you way”",
-          "content_25": "“Don't wait. The time will never be just right”",
-          "content_26": "“Never setter to be better”",
-          "content_27": "“Change your thoughts and you change your world”",
-          "content_28": "“Every strike brings me closer to the next home run”",
-          "content_29": "“Talent wins games, but teamwork and intelligence win championships”",
-          "content_30": "“The beginning is the most important part of the work”",
-          "content_31": "“When you like your work every day is a holiday”",
-          "content_32": "“Doing what you like is freedom. Liking what you do is happiness”",
-          "content_33": "“As a cure for worrying, work is better than whiskey”",
-          "content_34": "“If you don’t risk anything, you risk even more”",
-          "content_35": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
-          "content_36": "“Success is getting what you want, happiness is wanting what you get”",
-          "content_37": "“No challenge shall never know all its capabilities”",
-          "content_38": "“Success is a journey not a destination”"
-        },
-        "afternoon": {
-          "title": "Good afternoon",
-          "content_1": "“Either you run the day or the day runs you”",
-          "content_2": "“This afternoon, I hope everything will be all right”",
-          "content_3": "“Absolutely focus to have a productive day”",
-          "content_4": "“Hope this message will bring you happiness and luck from my place”",
-          "content_5": "“Setting goals is the first step in turning the invisible into the visible”",
-          "content_6": "“Good luck to you today”",
-          "content_7": "“Your spirit is good today. Have a great working day”",
-          "content_8": "“It is never too late to be what you might have been”",
-          "content_9": "“Try to take advantage of every opportunity that comes you way”",
-          "content_10": "“If you’re not positive energy, you’re negative energy.”",
-          "content_11": "“Never setter to be better”",
-          "content_12": "“Change your thoughts and you change your world”",
-          "content_13": "“Alone we can do so little, together we can do so much”",
-          "content_14": "“Talent wins games, but teamwork and intelligence win championships”",
-          "content_15": "“The beginning is the most important part of the work”",
-          "content_16": "“When you like your work every day is a holiday”",
-          "content_17": "“Doing what you like is freedom. Liking what you do is happiness”",
-          "content_18": "“As a cure for worrying, work is better than whiskey”",
-          "content_19": "“You don’t have to see the whole staircase, just take the first step”",
-          "content_20": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
-          "content_21": "“Work until your bank account looks like a phone number”",
-          "content_22": "“No challenge shall never know all its capabilities”",
-          "content_23": "“Success is a journey not a destination”"
-        },
-        "evening": {
-          "title": "Good evening",
-          "content_1": "“Either you run the day or the day runs you”",
-          "content_2": "“It is never too late to be what you might have been”",
-          "content_3": "“Try to take advantage of every opportunity that comes you way”",
-          "content_4": "“People rarely succeed unless they have fun in what they are doing”",
-          "content_5": "“Never setter to be better”",
-          "content_6": "“Change your thoughts and you change your world”",
-          "content_7": "“They always say time changes things, but you actually have to change them yourself”",
-          "content_8": "“Talent wins games, but teamwork and intelligence win championships”",
-          "content_9": "“The beginning is the most important part of the work”",
-          "content_10": "“When you like your work every day is a holiday”",
-          "content_11": "“Doing what you like is freedom. Liking what you do is happiness”",
-          "content_12": "“As a cure for worrying, work is better than whiskey”",
-          "content_13": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
-          "content_14": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
-          "content_15": "“Work until your bank account looks like a phone number”",
-          "content_16": "“No challenge shall never know all its capabilities”",
-          "content_17": "“Success is a journey not a destination”"
-        }
-      },
-      "birthday": {
-        "title": "Happy Birthday",
-        "content_1": "“Hope all your birthday wishes come true!”",
-        "content_2": "“It’s your special day — get out there and celebrate!”",
-        "content_3": "“The day is all yours — have fun!”",
-        "content_4": "“Wishing you the biggest slice of happy today.”",
-        "content_5": "“I hope your celebration gives you many happy memories!”",
-        "content_6": "“Enjoy your special day.”",
-        "content_7": "“You’re older today than yesterday but younger than tomorrow, HPBD!”",
-        "content_8": "“Have the best birthday ever!”",
-        "content_9": "“oday is about you. I can’t wait to celebrate you all day long!”",
-        "content_10": "“Wherever the year ahead takes you, I hope it’s happy.”",
-        "content_11": "“Thinking of you on your birthday and wishing you everything happy”",
-        "content_12": "“Best wishes on your birthday – may you have many, many more”",
-        "content_13": "“Cheers to you for another trip around the sun!”",
-        "content_14": "“Congratulations on another year of skillful death evasion!”"
-      },
-      "weather": {
-        "thunderstorm": {
-          "title": "Thunderstorm",
-          "content_1": "“It's thundering today, you'd better not go out”",
-          "content_2": "“The weather is bad, let's stay in the room”"
-        },
-        "drizzle": {
-          "title": "Drizzle",
-          "content_1": "“It's drizzling, don't forget to bring an umbrella when you go out”"
-        },
-        "rain": {
-          "title": "Rain",
-          "content_1": "“It's raining, don't forget to bring a raincoat”",
-          "content_2": "“It's raining, don't forget to bring an umbrella”"
-        },
-        "snow": {
-          "title": "Snow",
-          "content_1": "“It's snowing, don't forget to wear warm clothes”"
-        },
-        "atmosphere": {
-          "title": "Atmosphere",
-          "content_1": "“The air outside is not so good, you'd better stay in your room”"
-        },
-        "clear": {
-          "title": "Clear",
-          "content_1": "“It's sunny and not cloudy, wear sunscreen when going out”"
-        },
-        "clouds": {
-          "title": "Clouds",
-          "content_1": "“Today is a beautiful day, let's go out and enjoy”",
-          "content_2": "“When you like your work every day is a holiday”",
-          "content_3": "“Success is a journey not a destination”",
-          "content_4": "“Wherever the year ahead takes you, I hope it’s happy.”",
-          "content_5": "“Doing what you like is freedom. Liking what you do is happiness”"
-        }
-      },
-      "header_assistant": {
-        "title": "Header assistant",
-        "sure_to_delete": "Sure to delete?",
-        "add": "Add header assistant",
-        "fields": {
-          "title": "Title",
-          "content": "Content",
-          "image": "Image",
-          "image_position": "Image position",
-          "date_from": "Date from",
-          "date_to": "Date to",
-          "date": "Date",
-          "to": "To"
-        }
       }
     }
   }
