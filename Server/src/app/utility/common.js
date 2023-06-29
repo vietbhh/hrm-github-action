@@ -1,4 +1,5 @@
-import { isEmpty, isNumber } from "lodash-es"
+import { getUser } from "#app/models/users.mysql.js"
+import { forEach, isEmpty, isNumber } from "lodash-es"
 import i18next from "#app/services/i18n/i18next.js"
 
 export const handleFormatMessageStr = (str) => {
@@ -27,7 +28,7 @@ export const useFormatMessage = (
   const splitMesId = messageId.split(":")
   const ns = splitMesId.length === 1 ? "modules" : splitMesId[0]
   const msgId = splitMesId.length === 1 ? messageId : splitMesId[1]
-  return i18n.t(msgId, {
+  return i18next.t(msgId, {
     ns,
     defaultValue: isEmpty(defaultMessage) ? messageId : defaultMessage,
     replace: value,
@@ -165,4 +166,89 @@ export const getAvatarUrl = (userOrPath) => {
 
 export const getPublicDownloadUrl = (path, type = "image") => {
   return process.env.BASEURL + `/download/public/${type}?name=` + path
+}
+
+export const handleDataBeforeReturn = async (data, multiData = false) => {
+  const handleDataItemUser = (data_user, user_id) => {
+    let data = {
+      id: user_id,
+      username: "",
+      avatar: "",
+      full_name: "",
+      email: ""
+    }
+    if (data_user) {
+      data = {
+        id: data_user.id,
+        username: data_user.username,
+        avatar: data_user.avatar,
+        full_name: data_user.full_name,
+        email: data_user.email
+      }
+    }
+    return data
+  }
+
+  const arrData = multiData ? data : [data]
+  const promises = []
+  forEach(arrData, (dataItem, index) => {
+    const promise = new Promise(async (resolve, reject) => {
+      const _dataItem = { ...dataItem }
+
+      if (dataItem["owner"] && isNumber(dataItem["owner"])) {
+        const data_user = await getUser(dataItem["owner"])
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["owner"] = handleDataItemUser(
+            data_user,
+            dataItem["owner"]
+          )
+        } else {
+          _dataItem["owner"] = handleDataItemUser(data_user, dataItem["owner"])
+        }
+      }
+
+      if (dataItem["created_by"] && isNumber(dataItem["created_by"])) {
+        const data_user = await getUser(dataItem["created_by"])
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["created_by"] = handleDataItemUser(
+            data_user,
+            dataItem["created_by"]
+          )
+        } else {
+          _dataItem["created_by"] = handleDataItemUser(
+            data_user,
+            dataItem["created_by"]
+          )
+        }
+      }
+
+      if (dataItem["updated_by"] && isNumber(dataItem["updated_by"])) {
+        const data_user = await getUser(dataItem["updated_by"])
+        if (_dataItem["_doc"]) {
+          _dataItem["_doc"]["updated_by"] = handleDataItemUser(
+            data_user,
+            dataItem["updated_by"]
+          )
+        } else {
+          _dataItem["updated_by"] = handleDataItemUser(
+            data_user,
+            dataItem["updated_by"]
+          )
+        }
+      }
+
+      if (_dataItem["_doc"]) {
+        resolve(_dataItem["_doc"])
+      } else {
+        resolve(_dataItem)
+      }
+    })
+    promises.push(promise)
+  })
+
+  const result = await Promise.all(promises).then((res_promise) => {
+    return res_promise
+  })
+
+  return multiData ? result : result[0]
 }
