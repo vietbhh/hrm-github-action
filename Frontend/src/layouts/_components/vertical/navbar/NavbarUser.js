@@ -97,14 +97,12 @@ const NavbarUser = (props) => {
           className="dropdown-notification nav-item dropdown-setting">
           <DropdownToggle
             tag="a"
+            data-toggle="dropdown"
             className="nav-link"
             href="/"
             onClick={(e) => e.preventDefault()}
             id="setting">
             <i className="fa-regular fa-gear bell"></i>
-            <UncontrolledTooltip target="setting">
-              {useFormatMessage("layout.setting")}
-            </UncontrolledTooltip>
           </DropdownToggle>
           <DropdownMenu tag="ul" end className="dropdown-menu-media mt-0">
             {_.map(settingPermits, (item, index) => (

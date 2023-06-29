@@ -20,6 +20,7 @@ const Test = (props) => {
   }, [])
   console.log('okkk');
   useEffect(() => {
+    testNoti()
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
     //socket.on("notification", handleData)
@@ -71,7 +72,6 @@ const Test = (props) => {
         title: "<i>bold</i>",
         body: "{{app.save}}",
         link: "/dashboard",
-        icon: getPublicDownloadUrl("modules/feed/matthias_helvar_by_noukette_dbys4l7-fullview--1-.jpg")
       }
     })
     /*axiosNodeApi

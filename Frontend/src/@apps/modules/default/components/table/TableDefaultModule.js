@@ -51,7 +51,8 @@ function DraggableHeaderCell({ children, onDrag, id, ...rest }) {
   })
 
   const [{ isDragging }, drag] = useDrag({
-    item: { id, type: "COLUMN" },
+    item: { id },
+    type: "COLUMN",
     collect: (monitor) => ({
       isDragging: monitor.isDragging()
     })

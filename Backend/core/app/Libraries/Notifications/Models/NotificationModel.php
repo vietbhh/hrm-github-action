@@ -8,7 +8,7 @@ class NotificationModel extends Model
 	protected $primaryKey = 'id';
 	protected $returnType = 'array';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['sender_id', 'recipient_id', 'type', 'title', 'body', 'link', 'icon', 'read_by', 'created_at', 'created_by'];
+	protected $allowedFields = ['sender_id', 'recipient_id', 'type', 'title', 'body', 'link', 'icon', 'read_by', 'actions', 'created_at', 'created_by'];
 	protected $useTimestamps = true;
 	protected $createdField = 'created_at';
 	protected $updatedField = '';

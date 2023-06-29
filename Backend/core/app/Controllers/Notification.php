@@ -7,6 +7,7 @@ use App\Libraries\Calendars\Config\Calendars;
 use App\Libraries\Calendars\Models\CalendarModel;
 use App\Libraries\Notifications\Notifications;
 use App\Models\UserModel;
+use App\Libraries\Notifications\Models\NotificationModel;
 
 class Notification extends ErpController
 {
@@ -53,4 +54,41 @@ class Notification extends ErpController
 			'number_notification_seen' => count($arrId)
 		]);
 	}
+
+	/*public function test_post($id)
+	{
+		$model = new NotificationModel();
+
+		$postData = $this->request->getPost();
+		$index = isset($postData['index']) ? $postData['index'] : null;
+		$status = isset($postData['status']) ? $postData['status'] : null;
+
+		if ($index == null || $status == null) {
+			return $this->fail(MISSING_REQUIRED);
+		}
+
+		$info = $model->asArray()->where('id', $id)->first();
+		$action = $info['actions'] != null ? json_decode($info['actions'], true) : [];
+		$currentAction = $action[$index];
+		$currentAction['status'] = $status;
+		$currentAction['message'] = '<b className="text-danger">test bold</b> {{auth.authentication}}';
+		$action[$index] = $currentAction;
+
+		try {
+			$model->setAllowedFields([
+				'id',
+				'actions'
+			]);
+			$model->save([
+				'id' => $id,
+				'actions' => json_encode(array_values($action))
+			]);
+
+			return $this->respond([
+				'notification_info' => $currentAction
+			]);
+		} catch (\Exception $err) {
+			return $this->fail(FAILED_SAVE);
+		}
+	}*/
 }
