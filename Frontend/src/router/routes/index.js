@@ -133,7 +133,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
       !isEmpty(item.componentPath) &&
       item.componentPath !== "default_route"
     ) {
-      Comp = lazy(() => import(`../../@modules/${item.componentPath}.js`))
+      Comp = lazy(() => import(/* @vite-ignore */"../../@modules/" + item.componentPath + ".js"))
       moduleProps = {}
     }
     const routeOption = isUndefined(item.options?.routes?.meta)
@@ -153,7 +153,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
 
     if (!isEmpty(defaultDashboardComponent)) {
       const DashboardComp = lazy(() =>
-        import(`../../@modules/${defaultDashboardComponent}.js`)
+        import(/* @vite-ignore */"../../@modules/" + defaultDashboardComponent + ".js")
       )
       listRoutes.push({
         path: "/dashboard",

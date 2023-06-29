@@ -401,48 +401,6 @@
     "decline": "Decline has been success",
     "no_notification": "No notification found!"
   },
-  "menu": {
-    "dashboard": "Dashboard",
-    "organizationalStructure": "Organizational",
-    "directory": "Directory",
-    "organizationalChart": "Org Chart",
-    "about": "Informations",
-    "departments": "Departments",
-    "positions": "Positions",
-    "groups": "Groups",
-    "hrm": "Employees",
-    "hrlist": "Employees",
-    "contracts": "Contracts",
-    "insurances": "Insurrances",
-    "absents": "Time Off",
-    "timekeeping": "Attendance",
-    "recruitments": "Recruitment",
-    "recruitmentsList": "Jobs",
-    "candidates": "Candidates",
-    "recruitmentProposal": "Recruitment",
-    "recruitmentsRequest": "Requests",
-    "interview": "Interview / Evaluation",
-    "interviewSchedule": "Interview schedule",
-    "disc": "DISC",
-    "askform": "ASK Form",
-    "questionlib": "Question Library",
-    "integration": "Integration",
-    "kpis": "KPIs",
-    "training": "Training",
-    "data": "Data",
-    "employees": "Manage employees",
-    "request": "Request",
-    "jobs": "Jobs",
-    "setting": "Setting",
-    "approve": "Approve",
-    "drive": {
-      "my_file": "My Files",
-      "one_drive": "One Drive",
-      "google_drive": "Google Drive",
-      "share_with_me": "Share with me",
-      "trash": "Trash"
-    }
-  },
   "settings": {
     "apps": {
       "tabs": {
@@ -1013,8 +971,8 @@
   "layout": {
     "overview": "Overview",
     "quick_access": "Quick access",
-    "admin_tools": "Navigation",
-    "tools": "Tools",
+    "navigation": "Navigation",
+    "nav": "Nav",
     "quick": "Quick",
     "notification": {
       "title": "Notification",
