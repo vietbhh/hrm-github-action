@@ -6,7 +6,7 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Components
 import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManaged"
 import WorkspaceFilter from "../components/detail/ListWorkSpace/WorkspaceFilter"
-import AppSpinner from "@apps/components/spinner/AppSpinner"
+import CreateWorkgroupModal from "../components/modals/CreateWorkgroupModal/CreateWorkgroupModal"
 
 const ListWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -58,7 +58,11 @@ const ListWorkspace = (props) => {
   // ** effect
   useEffect(() => {
     loadData()
-  }, [state.filter])
+  }, [])
+
+  useEffect(() => {
+    loadData()
+  }, [state.filter.text.length])
 
   // ** render
   return (

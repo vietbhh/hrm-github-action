@@ -4746,7 +4746,8 @@
         "workspace_activities": "Workspace activities",
         "all_member_workspaces": "All-members workspaces",
         "private_workspaces": "Private workspaces",
-        "post_created": "Post crated"
+        "post_created": "Post crated",
+        "create_workgroup": "Create workgroup"
       },
       "fields": {
         "workspace_name": "Workspace name",
