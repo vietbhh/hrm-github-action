@@ -993,7 +993,8 @@
         "delete_chat": "Delete chat",
         "delete": "Delete",
         "unsent": "Unsent",
-        "unsent_message": "Unsent message"
+        "unsent_message": "Unsent message",
+        "is_system": "Is system"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",
