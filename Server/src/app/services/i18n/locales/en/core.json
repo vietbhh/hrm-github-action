@@ -1,183 +1,1153 @@
 {
-  "name": "fridayos",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "@casl/ability": "^6.3.2",
-    "@casl/react": "^3.1.0",
-    "@draft-js-plugins/editor": "4.1.1",
-    "@draft-js-plugins/mention": "^5.2.1",
-    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-    "@fullcalendar/core": "^5.11.0",
-    "@fullcalendar/daygrid": "^5.11.0",
-    "@fullcalendar/interaction": "^5.11.0",
-    "@fullcalendar/list": "^5.11.0",
-    "@fullcalendar/react": "^5.11.1",
-    "@fullcalendar/timegrid": "^5.11.0",
-    "@fullcalendar/timeline": "^5.11.0",
-    "@hookform/resolvers": "^2.8.10",
-    "@popperjs/core": "^2.11.3",
-    "@reduxjs/toolkit": "^1.2.5",
-    "@uppy/core": "^3.2.0",
-    "animate.css": "4.1.1",
-    "antd": "^5.6.1",
-    "apexcharts": "^3.35.2",
-    "apexcharts-clevision": "^3.28.5",
-    "axios": "^1.1.3",
-    "axios-mock-adapter": "^1.20.0",
-    "bootstrap": "^5.2.2",
-    "bs-stepper": "1.7.0",
-    "buffer": "^6.0.3",
-    "chart.js": "^4.0.1",
-    "classnames": "^2.3.2",
-    "cleave.js": "1.6.0",
-    "crypto-browserify": "^3.12.0",
-    "crypto-js": "^4.1.1",
-    "draft-js": "0.11.7",
-    "draftjs-to-html": "0.9.1",
-    "emoji-picker-react": "^4.4.9",
-    "events": "^3.3.0",
-    "expr-eval": "^2.0.2",
-    "file-saver": "^2.0.5",
-    "firebase": "^9.23.0",
-    "firebase-tools": "^12.4.0",
-    "flatpickr": "^4.6.13",
-    "history": "^5.3.0",
-    "html-to-draftjs": "1.5.0",
-    "i18next": "^22.0.5",
-    "i18next-browser-languagedetector": "^7.0.1",
-    "i18next-http-backend": "^2.0.1",
-    "jquery": "^3.6.0",
-    "jsonwebtoken": "8.5.1",
-    "less": "^4.1.3",
-    "moment": "^2.29.3",
-    "nouislider": "^15.5.0",
-    "nouislider-react": "^3.4.1",
-    "postcss": "7.0.33",
-    "postcss-custom-properties": "^12.1.10",
-    "postcss-import": "12.0.0",
-    "postcss-rtl": "^1.5.0",
-    "prismjs": "^1.28.0",
-    "process": "^0.11.10",
-    "rc-input-number": "^7.3.11",
-    "react": "^18.2.0",
-    "react-apexcharts": "^1.4.0",
-    "react-avatar-editor": "^13.0.0",
-    "react-chartjs-2": "^5.0.1",
-    "react-content-loader": "^6.2.1",
-    "react-copy-to-clipboard": "^5.1.0",
-    "react-country-flag": "^3.0.2",
-    "react-data-table-component": "^7.5.2",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "^18.2.0",
-    "react-draft-wysiwyg": "^1.14.7",
-    "react-dropzone": "^14.2.1",
-    "react-ellipsis-text": "^1.2.1",
-    "react-feather": "~2.0.3",
-    "react-flatpickr": "^3.10.12",
-    "react-giphy-searchbox": "^1.5.4",
-    "react-grid-layout": "^1.3.4",
-    "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.39.4",
-    "react-hot-toast": "^2.4.0",
-    "react-html-parser": "^2.0.2",
-    "react-i18next": "^12.0.0",
-    "react-idle-timer": "^5.7.2",
-    "react-json-view": "^1.21.3",
-    "react-paginate": "^8.1.3",
-    "react-perfect-scrollbar": "^1.5.8",
-    "react-rating": "2.0.5",
-    "react-redux": "^8.0.1",
-    "react-router-dom": "^6.3.0",
-    "react-select": "^5.6.1",
-    "react-select-async-paginate": "^0.7.2",
-    "react-shepherd": "^4.1.0",
-    "react-slidedown": "^2.4.7",
-    "react-sortablejs": "6.0.0",
-    "react-top-loading-bar": "^2.3.1",
-    "reactstrap": "^9.1.5",
-    "recharts": "^2.1.9",
-    "redux": "^4.2.0",
-    "redux-debounced": "0.5.0",
-    "redux-thunk": "^2.4.1",
-    "rollup-plugin-node-polyfills": "^0.2.1",
-    "rsuite": "^5.35.1",
-    "sass": "^1.51.0",
-    "screenfull": "^6.0.2",
-    "socket.io-client": "^4.6.2",
-    "sortablejs": "^1.12.0",
-    "stream-browserify": "^3.0.0",
-    "styled-components": "^5.3.5",
-    "sweetalert2": "^11.4.14",
-    "sweetalert2-react-content": "^5.0.0",
-    "swiper": "^8.1.5",
-    "wnumb": "1.2.0",
-    "xlsx": "^0.18.5",
-    "yup": "^0.32.11"
+  "undefined": "Undefined",
+  "auth": {
+    "authentication": "Authentication",
+    "login": "Enter credentials to access system",
+    "loginPlaceholder": "Your username or email",
+    "loginLabel": "Username or email",
+    "passwordPlaceholder": "Password",
+    "passwordLabel": "Password",
+    "passwordLabelConfirm": "Confirm Password",
+    "forgotPassword": "Forgot your password?",
+    "reset_it": "Reset it",
+    "forgotPasswordIntructions": "Enter your email and we'll send you instructions to reset your password",
+    "remember": "Remember Me",
+    "loginBtn": "Sign In",
+    "loginBtn2": "Login",
+    "loginFailed": "Unable to login,please check your login information!",
+    "logout": "Logout",
+    "welcomeMessage": "Wish you joy and happiness,have a productive day with Life.",
+    "sendResetLink": "Send reset link",
+    "backToLogin": "Back to login",
+    "email": "Email",
+    "emailPlaceholder": "Enter your account email",
+    "resetPassword": "Reset Password",
+    "resetPasswordText": "Please create your new password 👌",
+    "newPasswordLabel": "New Password",
+    "confirmPasswordLabel": "Confirm New Password",
+    "setNewPasswordBtn": "Create New Password",
+    "activeAccount": "Active your account",
+    "activeAccountText": "Setup your password to finish activation.",
+    "activeBtn": "Complete",
+    "usernameLabel": "Your username",
+    "emailLabel": "Your email",
+    "user_not_found": "We unable to find this account,contact administrator if you need more detail.",
+    "forgot_password_disabled": "Reset password is now disabled, contact administrator to reset your password !",
+    "sendResetPasswordSuccess": "Yay!! please check your email and follow the instructions",
+    "resetPasswordSuccess": "Your password has been reset successfully, you can login with new password right now !",
+    "reset_password_disabled": "Reset password is now disabled, contact administrator to reset your password !",
+    "something_wrong": "Oops...Something went wrong, please contact administrator !",
+    "reset_token_expired": "Oops...Your reset token is expired !",
+    "active_token_expired": "Oops...Link is not available !",
+    "active_token_expired_text": "Maybe this link is expired, please check for a more recent link or request a new one.",
+    "activation_is_disabled": "Activation is now disabled, contact administrator to active your account.",
+    "welcomeStart": "Welcome to {name} !",
+    "welcomeAppUrl": "You can access app using Company URL",
+    "welcomeText": "👋🏻 Hope you will have a great journey with us !",
+    "updateProfileBtn": "Update your profile",
+    "dashboardBtn": "Go to Dashboard",
+    "undefined": "Oops...Something went wrong, please contact administrator !",
+    "changePasswordModal": "Change Password",
+    "currentPassword": "Current Password",
+    "changePasswordSuccess": "Your password has been changed successfully!",
+    "welcome_to": "Welcome to",
+    "have_a_nice_day": "have a nice day",
+    "password_must_contain": "Password must contain",
+    "at_least_characters": "At least {number_character_password} characters",
+    "at_least_1_upper": "At least 1 upper case letter (A-Z)",
+    "at_least_1_upper_validate": "Password at least 1 upper case letter",
+    "at_least_1_number": "At least 1 number (0-9)",
+    "at_least_1_number_validate": "Password at least 1 number",
+    "congratulations": "Congratulations",
+    "congratulationsText": "Your password has been updated successfully!",
+    "password_required": "Password is a required field"
   },
-  "scripts": {
-    "build-css": "sh ./style.sh&&echo 'Compile style completed!'",
-    "start": "yarn run build-css&&vite",
-    "build": "yarn run build-css&&vite build",
-    "preview": "yarn run build-css&&vite preview",
-    "format": "prettier --write \"src/**/*.js\"",
-    "lint": "eslint src/**/*.js src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "resolutions": {
-    "sass-loader/webpack": "^5.0.0",
-    "recharts/prop-types": "^15.6.0",
-    "styled-components/react-is": "^16.8.0",
-    "react-hot-toast/goober/csstype": "^3.0.10",
-    "html-to-draftjs/immutable": "^4.0.0",
-    "postcss-custom-properties/postcss": "^8.2",
-    "@esbuild-plugins/node-globals-polyfill/esbuild": "^0.15.15"
-  },
-  "overrides": {
-    "sass-loader": {
-      "webpack": "^5.0.0"
+  "themeCustomizer": {
+    "title": "Theme Customizer",
+    "subtitle": "Customizer your appearance",
+    "menuColor": "Menu Colors",
+    "menuLayout": {
+      "title": "Menu Layout",
+      "vertical": "Vertical",
+      "horizontal": "Horizontal"
     },
-    "recharts": {
-      "prop-types": "^15.6.0"
+    "themeMode": {
+      "title": "Skin",
+      "light": "Light",
+      "dark": "Dark",
+      "semidark": "Semi-Dark",
+      "bordered": "Bordered"
     },
-    "styled-components": {
-      "react-is": "^16.8.0"
+    "collapseSiderbar": "Collapse Sidebar",
+    "navbar": {
+      "color": "Color",
+      "type": "Type"
     },
-    "react-hot-toast": {
-      "goober": {
-        "csstype": "^3.0.10"
+    "hideScrollToTop": "Hide Scroll To Top",
+    "footer": "Footer",
+    "rlt": "RTL",
+    "contentWidth": "Content Width",
+    "transition": "Transition",
+    "menuHidden": "Menu Hidden",
+    "language": "Language"
+  },
+  "manage": {
+    "module": {
+      "name": "Module name",
+      "tableName": "Table name(db)",
+      "type": "Type",
+      "layout": "Layout",
+      "icon": "Icon",
+      "moduleIcon": "Small Icon",
+      "add_mode": "Add mode",
+      "update_mode": "Update mode",
+      "view_mode": "View mode",
+      "sidebar_menu": "Sidebar (if layout is withSidebar)",
+      "fullWidth": "Is full width",
+      "options": "Options",
+      "form": {
+        "add": "Add Module",
+        "update": "Update Module",
+        "configuration": "Configuration",
+        "fields_management": "Fields",
+        "routes_management": "Routes",
+        "permits_management": "Permits",
+        "groups_permits_management": "Groups Permits",
+        "inputting_alert": "It's look like you are creating a field but not save it to field list yet!"
+      },
+      "field": {
+        "field_type": "Field type",
+        "field": "Field code",
+        "field_default_value": "Default value",
+        "field_form_require": "Required",
+        "field_option_modal_title": "Field option",
+        "field_select_module": "Module select data",
+        "field_select_field_show": "Field select display",
+        "field_enable": "Enable",
+        "field_icon_type": "Icon type",
+        "field_icon": "Icon",
+        "field_table_width": "Table width",
+        "field_table_sortable": "Table sortable",
+        "field_form_col_size": "Form column size",
+        "field_readonly": "Readonly",
+        "field_form_unique": "Unique (text field)",
+        "field_table_show": "Show on table",
+        "field_form_show": "Show on form",
+        "field_quick_form_show": "Show on quick form",
+        "field_quick_view_show": "Show on quick view",
+        "field_detail_show": "Show on detail",
+        "field_filter_show": "Show on filter",
+        "field_options": "Options",
+        "field_options_values": "Option values",
+        "field_options_values_add_button": "Add value",
+        "field_options_values_update_button": "Update value",
+        "field_options_values_clear_default": "Clear default",
+        "field_validate_rules": "Validate rules"
       }
     },
-    "html-to-draftjs": {
-      "immutable": "^4.0.0"
+    "route": {
+      "default": "Default route",
+      "custom": "Custom route",
+      "routePath": "Route Path",
+      "componentPath": "Component Path (for FrontEnd)",
+      "customPath": "Custom Path",
+      "isPublic": "Public",
+      "redirectPath": "Redirect Path",
+      "permitAction": "Permit Action",
+      "permitResource": "Permit Resource",
+      "meta": "Meta"
     },
-    "postcss-custom-properties": {
-      "postcss": "^8.2"
-    },
-    "@esbuild-plugins/node-globals-polyfill": {
-      "esbuild": "^0.15.15"
+    "permit": {
+      "name": "Name",
+      "description": "Description",
+      "route": "Route"
     }
   },
-  "devDependencies": {
-    "@babel/core": "^7.18.6",
-    "@babel/eslint-parser": "^7.18.2",
-    "@babel/preset-react": "^7.18.6",
-    "@types/sortablejs": "^1.10.6",
-    "@vitejs/plugin-react": "^4.0.1",
-    "eslint": "^8.19.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-react": "^7.29.4",
-    "prettier": "^2.6.2",
-    "sass-loader": "^13.1.0",
-    "vite": "^3.2.4"
+  "validate": {
+    "required": "This field is required",
+    "min": "Minimum {num} characters",
+    "max": "Maximum {num} characters",
+    "text": "This field is allowed only characters",
+    "num": "This field is allowed only numbers",
+    "textNum": "This field can not contain spaces and special characters",
+    "email": "Please input a valid email",
+    "exists": "{name} already exists",
+    "notValid": "{name} is not valid",
+    "notValidOrExists": "{name} is not valid or already exists",
+    "passwordNotMatch": "Password do not match",
+    "currentPwdIncorrect": "Your current password is incorrect"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+  "breadcumbs": {
+    "add": "Create",
+    "update": "Update {name}"
+  },
+  "app": {
+    "add": "Add",
+    "create": "Create",
+    "update": "Update",
+    "save": "Save",
+    "delete": "Delete",
+    "list": "List",
+    "filter": "Filter",
+    "search": "Search",
+    "action": "Action",
+    "print": "Print",
+    "export": "Export",
+    "import": "Import",
+    "all": "All",
+    "refresh": "Refresh",
+    "open": "Open",
+    "setting": "Setting",
+    "close": "Close",
+    "status": "Status",
+    "roles": "Roles",
+    "permissions": "Permissions",
+    "groups": "Groups",
+    "users": "Users",
+    "profiles": "Profiles",
+    "profile": "Profile",
+    "task": "Tasks",
+    "changePassword": "Change Password",
+    "back": "Back",
+    "cancel": "Cancel",
+    "view": "View",
+    "detail": "Detail",
+    "role": "Role",
+    "members": "Members",
+    "descriptions": "Descriptions",
+    "appearance": "Appearance"
+  },
+  "file": {
+    "upload": "Upload",
+    "select": "Select",
+    "fileSelect": "Select file",
+    "fileAllowed": "Allowed {fileType}"
+  },
+  "common": {
+    "orgName": "Company name",
+    "name": "Name",
+    "title": "Title",
+    "keyword": "Keyword",
+    "tag": "Tag",
+    "website": "Website",
+    "address": "Address",
+    "phone": "Phone number",
+    "email": "Email",
+    "description": "Description",
+    "information": "Information",
+    "comInfo": "Company Info",
+    "comLogo": "Company logo",
+    "introduce": "Overeview",
+    "employee": "Employee",
+    "hidden": "Hidden",
+    "static": "Static",
+    "sticky": "Sticky",
+    "floating": "Floating",
+    "launch": "Launch",
+    "initial": "Initial",
+    "nodata": "No data available",
+    "other": "Other",
+    "value": "Value",
+    "values": "Values",
+    "default": "Default",
+    "owner": "Owner",
+    "view_permissions": "View Permissions",
+    "update_permissions": "Update Permissions",
+    "more": "more",
+    "files": "Files",
+    "ago": "ago",
+    "few_seconds_ago": "few seconds ago",
+    "time": "time",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "days": "days",
+    "months": "months",
+    "years": "years",
+    "owner_by": "Owner by",
+    "created_by": "Created by",
+    "created_at": "Created at",
+    "updated_by": "Updated by",
+    "updated_at": "Updated at",
+    "at": "at",
+    "and": "and",
+    "others": "others",
+    "can_update": "can update",
+    "can_view": "can view",
+    "month": {
+      "1": "Jan",
+      "2": "Feb",
+      "3": "Mar",
+      "4": "Apr",
+      "5": "May",
+      "6": "Jun",
+      "7": "Jul",
+      "8": "Aug",
+      "9": "Sep",
+      "10": "Oct",
+      "11": "Nov",
+      "12": "Dec"
+    },
+    "day_in_week": {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    }
+  },
+  "button": {
+    "confirm": "Confirm",
+    "add": "Add",
+    "create": "Create",
+    "update": "Update",
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "oops": "Oops",
+    "accept": "Accept",
+    "skip": "Skip",
+    "continue": "Continue",
+    "advanced": "Advanced",
+    "goAdvMode": "Go to advanced",
+    "viewMore": "View more",
+    "previous": "Previous",
+    "next": "Next",
+    "close": "Close",
+    "download": "Download",
+    "advFilter": "Adv filters",
+    "back": "Back",
+    "createnew": "Create New",
+    "approve": "Approve",
+    "decline": "Decline",
+    "finish": "Finish",
+    "start": "Start",
+    "quit": "Quit",
+    "notNow": "Not Now",
+    "cancel_approve": "Cancel approve",
+    "cancel_decline": "Cancel decline",
+    "view": "View",
+    "edit": "Edit"
+  },
+  "errors": {
+    "common": {
+      "function_contruction": "This function is under construction,sorry about this inconvenience."
+    }
+  },
+  "notification": {
+    "alert": "Alert!",
+    "success": "Success!",
+    "error": "Error!",
+    "warning": "Warning!",
+    "info": "Info!",
+    "no_files": "This data has no attachment files.",
+    "wrong_avatar_file_type": "File type is not allow",
+    "something_went_wrong": "Oops!...something went wrong.",
+    "upload": {
+      "file": {
+        "success": "Files uploaded.",
+        "common": "Some errors have occurred",
+        "error_file_type": "{filename} type is not allow",
+        "error_file_size": "Files size is not allow,maximum size allow is {max} MB"
+      },
+      "image": {
+        "error_file_type": "{filename} type is not allow,(just {allowType})",
+        "error_file_size": "Files size is not allow,maximum size allow for image is {max} MB"
+      }
+    },
+    "import": {
+      "errorFileType": "You can only upload .xlsx/.xls/.csv file."
+    },
+    "default": {
+      "success": "Your action has been success",
+      "error": "Something went wrong!"
+    },
+    "confirm": {
+      "title": "Are you sure ?",
+      "text": "You won't be able to revert this!"
+    },
+    "create": {
+      "success": "Create success",
+      "error": "Cannot create data",
+      "confirm": "Are you sure to create new ?"
+    },
+    "update": {
+      "success": "All changes have been updated",
+      "error": "Cannot save data",
+      "confirm": "Are you sure to update your changes ?"
+    },
+    "save": {
+      "success": "All changes have been saved",
+      "error": "Cannot update data",
+      "confirm": "Are you sure to save your changes ?"
+    },
+    "delete": {
+      "success": "Delete success",
+      "error": "Cannot delete data",
+      "confirm": "Are you sure to delete ?",
+      "warning": "All deleted data cannot be recovered"
+    },
+    "empty_content": {
+      "title": "Oops!...no data yet.",
+      "text": "This section is empty, keep it up to date by creating new data."
+    },
+    "under_contruction": {
+      "title": "Oops!...",
+      "text": "This section is under contuction,please comback later."
+    },
+    "approve": "Approve has been success",
+    "decline": "Decline has been success",
+    "no_notification": "No notification found!"
+  },
+  "settings": {
+    "apps": {
+      "tabs": {
+        "general": "General",
+        "theme": "Appearance",
+        "mail": "Mail",
+        "other": "Other"
+      },
+      "fields": {
+        "perPage": "Data Per Page",
+        "timezone": "Timezone",
+        "menuTheme": "Theme Color",
+        "language": "Language",
+        "layout": "Layout Default",
+        "skin": "Skin Default",
+        "sidebarCollapsed": "Collapsed Sidebar (For vertial layout)",
+        "navbarColor": "Navbar Color (For vertial layout)",
+        "navbarType": "Navbar Type",
+        "footerType": "Footer Type",
+        "hideMenu": "Hide Menu",
+        "developer": "Allow Developer Mode",
+        "transition": "Transition",
+        "dateFormat": "Default Date Format",
+        "timeFormat": "Default Time Format",
+        "datetimeFormat": "Default Date Time Format",
+        "SMTPUser": "SMTP User",
+        "SMTPPass": "SMTP Password",
+        "SMTPHost": "SMTP Host",
+        "SMTPPort": "SMTP Port",
+        "SMTPCrypto": "SMTP Secure",
+        "Frommail": "Mail From",
+        "fromName": "Send Name",
+        "uploadFileTypeAllow": "File Type Allow",
+        "maxFileSize": "Max File Size Allow",
+        "imageFileTypeAllow": "Image Type Allow",
+        "maxImageSize": "Max Image Size Allow"
+      }
+    }
+  },
+  "search": {
+    "pages": "Pages",
+    "users": "Users"
+  },
+  "module": {
+    "default": {
+      "linkedModule": {
+        "title": "Linked module",
+        "description": "This module relate to some modules below,if format this module,what you want to do with the module link to this module ?",
+        "options": {
+          "format": "Format (all data of this module will be lost)",
+          "nothing": "Do nothing"
+        }
+      },
+      "filters": {
+        "filter": "Filter",
+        "operator": "Operator",
+        "value": "Value"
+      },
+      "table": {
+        "details": "Details",
+        "bookmark": "Bookmark",
+        "permission": "Permission",
+        "coppylink": "Coppy Link"
+      },
+      "form": {
+        "tabs": {
+          "data": "Data",
+          "files": "Files"
+        }
+      },
+      "fields": {
+        "owner": "Owner",
+        "created_at": "Created at",
+        "created_by": "Created by",
+        "updated_at": "Updated at",
+        "updated_by": "Updated by",
+        "view_permissions": "View permissions",
+        "update_permissions": "Update permissions"
+      },
+      "modal": {
+        "addTitle": "Add data",
+        "updateTitle": "Update data",
+        "addFilterTitle": "Add filter",
+        "updateFilterTitle": "Update filter",
+        "settingModalTitle": "Settings"
+      },
+      "settings": {
+        "moduleFieldsDisplay": "Module fields display",
+        "systemFieldsDisplay": "System fields display",
+        "dragColumn": "Reorder column",
+        "resizeColumnWidth": "Resize column"
+      },
+      "export": {
+        "currentPage": "Current page",
+        "allPage": "All page"
+      },
+      "import": {
+        "template": "Download import template",
+        "description": "Fill your import data to template file start from third row, please keep exact our column order,value in first and second row.",
+        "error": "There are some error with your import data,check it below and update your file and upload again.",
+        "formatLabel": "Format this module before import",
+        "notice": "This module will be format,all data will be erase before import.",
+        "relateModuleFormat": " The following relate modules will also be formatted",
+        "importSuccess": "Successfully imported {num} records",
+        "title": {
+          "index": "Import Asset",
+          "download_asset_template": "Download Asset Template",
+          "upload_file_step": {
+            "select_data": "Select data to import",
+            "upload": "Upload your completed spreadsheet"
+          },
+          "map_fields_step": {
+            "default_fields_mapping": "Default Fields Mapping"
+          }
+        },
+        "text": {
+          "step_1": "UPLOAD FILE",
+          "step_2": "MAP FIELDS",
+          "step_3": "PREVIEW & IMPORT",
+          "warning_import": {
+            "title": "Instructions to import successfully",
+            "text": "Download the template and fill it in with your asset data."
+          },
+          "download_template_description": "Download a template file and input your data into the template to ensure you have the perfect file for the import.",
+          "upload_file_step": {
+            "message": "This template spreadsheet has been configured to help you fill out information easily and works best with Excel",
+            "upload_file": "Upload File",
+            "file_format": "File format: xlsx. Max file size: 2MB."
+          },
+          "map_fields_step": {
+            "field": "Field",
+            "mapping": "Mapping",
+            "upload_file_header": "Upload File Headers",
+            "mapping_fields_header": "Mapping your uploaded file headers"
+          },
+          "preview_and_import": {
+            "record": "Record",
+            "records": "Records",
+            "ready_to_create": "ready to created",
+            "duplicated": "duplicated",
+            "duplicate": "Duplicat",
+            "skipped": "skipped",
+            "unmapped": "Unmapped",
+            "fields": "fields",
+            "descriptions": {
+              "duplicated": "Duplicate record has been found. Select the records that you want to import.",
+              "skipped": "The record does not allow for import. The following is a list of errors, details for the error that help you check the data.",
+              "unmapped": "These fields in your uploaded file have not been mapped to any field. The data in these fields will be ignored during the import."
+            },
+            "row": "Row",
+            "error": "errors",
+            "field": "Field",
+            "upload_file_header": "Upload File Header",
+            "value": "Value",
+            "not_exist": "This value is not exist",
+            "required_field": "Missing value in required fields.",
+            "duplicate_data_for": "Duplicate data for",
+            "chosen": "Chosen",
+            "import_success": "Import Success",
+            "import_fail": "Import Fail"
+          }
+        },
+        "warning_format_module_import": {
+          "title": "Confirm Import",
+          "description": "\"Format and import\" will format all table data and related table data.",
+          "normal_description": ""
+        },
+        "buttons": {
+          "format_and_import": "Format and Import",
+          "import": "Import",
+          "asset_template": "Asset Template.xlsx",
+          "mapping_fields": "Mapping fields",
+          "back": "Back",
+          "preview": "Preview"
+        }
+      }
+    }
+  },
+  "about": {
+    "title": "Company Info"
+  },
+  "modules": {
+    "users": {
+      "buttons": {
+        "add": "New User"
+      },
+      "tabs": {
+        "general": {
+          "title": "General"
+        }
+      },
+      "fields": {
+        "username": "Username",
+        "full_name": "Full name",
+        "gender": "Gender",
+        "dob": "Date Of Birth",
+        "phone": "Phone",
+        "email": "Email",
+        "office": "Office Location",
+        "department_id": "Department",
+        "group_id": "Group",
+        "job_title_id": "Job title",
+        "account_status": "Status"
+      },
+      "display": {
+        "name": "Name",
+        "updateUser": "Update User",
+        "profilePicture": "Profile picture",
+        "invite": "Send an email invitation to the user to activate her/his account",
+        "inviteBtn": "Invite",
+        "reinvite": "Re-invite",
+        "changePwd": "Change password",
+        "changePwdModalTitle": "Change {name}'s password",
+        "deactivate": "Deactivate",
+        "activate": "Activate",
+        "deactivateTitle": "Deactivate {name} ?",
+        "activateTitle": "Activate {name} ?",
+        "deactivateText": "{name} will no longer able access to system.",
+        "activateText": "{name} will able access to system. <br/><h4 class='fw-bold'>After active,you need using change password button to set new password for {name}.</h4>",
+        "informations": "Informations",
+        "other": "Other",
+        "sendInviteSuccess": "The invitation has been sent"
+      },
+      "app_options": {
+        "gender": {
+          "none": "None",
+          "male": "Male",
+          "female": "Female"
+        }
+      }
+    },
+    "permissions": {
+      "buttons": {
+        "add": "New Role"
+      },
+      "fields": {
+        "name": "Role name",
+        "description": "Description"
+      },
+      "display": {
+        "addModalTitle": "New role",
+        "updateModalTitle": "Update role",
+        "features": "Features",
+        "custom": "Other",
+        "modules": "Modules"
+      }
+    },
+    "departments": {
+      "title": "Departments",
+      "buttons": {
+        "add": "New Dept"
+      },
+      "fields": {
+        "name": "Department name",
+        "description": "Description",
+        "is_active": "Active",
+        "parent": "Parent",
+        "line_manager": "Manager"
+      }
+    },
+    "offices": {
+      "title": "Offices",
+      "buttons": {
+        "add": "New Office"
+      },
+      "display": {
+        "num_of_employees": "Number of Employees",
+        "employees": "employees"
+      },
+      "fields": {
+        "name": "Office name",
+        "address": "Address",
+        "email": "Contact email",
+        "phone": "Contact number",
+        "is_active": "Active",
+        "is_headquarter": "Headquarter"
+      }
+    },
+    "tasks": {
+      "title": "Tasks",
+      "buttons": {
+        "addtask": "Add Task",
+        "add": "Add",
+        "update": "Update",
+        "cancel": "Cancel"
+      },
+      "tabs": {
+        "mytasks": "My Tasks",
+        "important": "Important",
+        "completed": "Completed",
+        "added": "Added",
+        "deleted": "Deleted"
+      },
+      "fields": {
+        "title": "Title",
+        "assignee": "Assignee",
+        "date": "Due Date",
+        "tags": "Tags",
+        "description": "Description",
+        "files": "Files",
+        "search": "Search task",
+        "no_item": "No Items Found"
+      }
+    },
+    "gender": {
+      "formatLabel": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      }
+    },
+    "tasks_tags": {
+      "fields": {
+        "value": "Value",
+        "color": "Color"
+      }
+    },
+    "tags": {
+      "fields": {
+        "title": "Tags",
+        "newtag": "New Tag"
+      },
+      "button": {
+        "add": "Add",
+        "cancel": "Cancel"
+      }
+    },
+    "calendar": {
+      "title": {
+        "calendar": "Calendar",
+        "add_event": "Add Event",
+        "birthday": "Birthday",
+        "holiday": "Holiday",
+        "time_off": "Time Off",
+        "all_day_event": "All day events"
+      },
+      "fields": {
+        "title": "Title",
+        "calendar_tag": "Label",
+        "start": "Start Date",
+        "end": "End Date",
+        "allday": "All Day",
+        "is_public": "Public",
+        "event_url": "Event Url",
+        "view_permissions": "Guest",
+        "location": "Location",
+        "description": "Description",
+        "attachments": "Attachments",
+        "office": "Offices",
+        "department": "Department",
+        "specific_employee": "Employee"
+      },
+      "field_options": {
+        "view_permissions": {
+          "everyone": "Everyone",
+          "department": "Department",
+          "office": "Office",
+          "specific_employee": "Specific Employe"
+        }
+      },
+      "text": {
+        "filter": "Filter",
+        "people": "people",
+        "peoples": "peoples",
+        "to": "To",
+        "note": "Note",
+        "type": "Type",
+        "event_sync": "Synced with Google Calendar",
+        "upcoming_events": "Upcoming Events",
+        "view_all": "View All"
+      },
+      "buttons": {
+        "add_event": "Add Event",
+        "add": "Add",
+        "update": "Update",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "modals": {
+        "title": {
+          "create_event": "Create Event",
+          "update_event": "Update Event"
+        },
+        "buttons": {
+          "add_attachment": "Add Attachments"
+        }
+      }
+    },
+    "calendar_tags": {
+      "title": {
+        "calendar": "Calendar"
+      },
+      "buttons": {
+        "add_event": "Add Event"
+      },
+      "fields": {
+        "value": {
+          "all": "All Events",
+          "personal": "Personal",
+          "business": "Business",
+          "family": "Family",
+          "holiday": "Holiday",
+          "etc": "ETC",
+          "birthday": "Birthday",
+          "time_off": "Time Off"
+        }
+      }
+    },
+    "positions": {
+      "title": "Job titles",
+      "buttons": {
+        "add": "New Title"
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "is_active": "Active"
+      }
+    },
+    "job_titles": {
+      "title": "Job titles",
+      "buttons": {
+        "add": "New Title"
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "is_active": "Active"
+      }
+    },
+    "groups": {
+      "title": "Groups",
+      "buttons": {
+        "add": "New Group"
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "is_active": "Active"
+      }
+    },
+    "test": {
+      "app_options": {
+        "checkbox": {
+          "checkval1": "Check box 1",
+          "checkval2": "Check box 2"
+        },
+        "radio": {
+          "radiooption1": "Radio option 1"
+        }
+      }
+    },
+    "dashboard": {
+      "upcoming_events": "Upcoming Events",
+      "title": "Dashboard",
+      "empty": "Drag and drop widgets here. Open the Customize pane to get started",
+      "widget": "Widget",
+      "add_widget": "Add Widget",
+      "remove_widget": "Remove widget",
+      "no_widget": "No widget",
+      "lock_homepage_layout": "Lock homepage layout",
+      "announcement": {
+        "title": "Announcement",
+        "empty": "No announcements yet",
+        "empty_text": "Follow to stay up to date with all company news",
+        "view_all": "View All"
+      },
+      "notepad": {
+        "title": "Notepad",
+        "add": "Add notepad",
+        "placeholder_input": "Notepad Title",
+        "pin": "Pin",
+        "un_pin": "Un pin",
+        "my_notes": "My notes"
+      }
+    },
+    "notification": {
+      "title": "Notification"
+    },
+    "drive": {
+      "title": {
+        "index": "drive",
+        "folders": "Folders",
+        "recent": "Recent",
+        "my_files": "My Files"
+      },
+      "buttons": {
+        "new_file": "New File",
+        "upload_file": "Upload Files",
+        "upload_folder": "Upload Folder",
+        "new_folder": "New Folder",
+        "upgrade": "Upgrade",
+        "share": "Share",
+        "get_link": "Get Link",
+        "download": "Download",
+        "rename": "Rename",
+        "copy": "Copy",
+        "delete": "Delete",
+        "star": "Star",
+        "favorite": "Favorite",
+        "view_detail": "View Detail",
+        "upload": "Upload",
+        "save": "Save",
+        "cancel": "Cancel",
+        "hide": "Hide",
+        "add_more_file": "Add more file"
+      },
+      "field_options": {
+        "share_type": {
+          "share_private": "Private",
+          "share_to_everyone": "Share to everyone",
+          "share_to_user": "Share to users"
+        }
+      },
+      "text": {
+        "link_your_account": "Link your account",
+        "view_all": "View all",
+        "files": "files",
+        "folder": "Folder",
+        "file": "File",
+        "used": "Used",
+        "available_store": "Available store",
+        "browse_files_to_upload": "Browse files to upload",
+        "browse_folder_to_upload": "Browse folder to upload",
+        "sort_by": "Sort by",
+        "filter_drive": {
+          "due_date": "Due Date",
+          "name": "Name",
+          "type": "Type",
+          "size": "Size"
+        },
+        "upload_progress": "Upload Progress",
+        "warning_close_upload": {
+          "title": "Cancel upload?",
+          "content": "Your upload is not complete. Do you want to cancel the upload?"
+        },
+        "upload_successful_many": "Upload Successful, {file_number} files has been uploaded!",
+        "upload_successful": "Upload Successful!",
+        "share_file_and_folder": "Share {name}",
+        "find_user": "Find User",
+        "chosen_users": "Chosen Users",
+        "view_only": "View Only",
+        "editable": "Editable",
+        "share_file_and_folder_warning": "Editors can change permissions and share",
+        "share_type_text": {
+          "private": "Only owner can open using this content!",
+          "share_editable": "Shared users can change permissions and share!",
+          "share_view_only": "Shared users can only view the content!"
+        },
+        "confirm_delete": {
+          "title": "Remove {name}",
+          "content": "File or Folder will be moved to Trash"
+        }
+      }
+    },
+    "drive_folders": {
+      "fields": {
+        "name": "Folder name",
+        "description": "Description"
+      }
+    },
+    "link_preview": {
+      "text": {
+        "page_not_found": "Page not found"
+      }
+    }
+  },
+  "layout": {
+    "overview": "Overview",
+    "quick_access": "Quick access",
+    "navigation": "Navigation",
+    "nav": "Nav",
+    "quick": "Quick",
+    "notification": {
+      "title": "Notification",
+      "recent_notification": "Recent Notification",
+      "see_all_incoming_activity": "See all incoming activity",
+      "see_all_notification": "See all notification"
+    },
+    "message": "Message",
+    "read_all_message": "Read all Message",
+    "chat": "Chat",
+    "calendar": "Calendar",
+    "setting": "Setting",
+    "collaboration": "Collaboration",
+    "drive": "Drive",
+    "workgroup": "Workgroup",
+    "your_projects": "Your Projects",
+    "your_workgroup": "Your Workgroup",
+    "header": {
+      "welcome": {
+        "morning": {
+          "title": "Good morning",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“Have a happy and lucky new day”",
+          "content_3": "“Opportunities don't happen, you create them”",
+          "content_4": "“The leaves are green, my heart is red. Have a nice morning”",
+          "content_5": "“Absolutely focus to have a productive day”",
+          "content_6": "“Wishing you a new day full of energy for a productive day”",
+          "content_7": "“Your spirit is good today. Have a great working day”",
+          "content_8": "“Learn as if you will live forever, live like you will die tomorrow”",
+          "content_9": "“I have not failed. I've just found 10,000 ways that won't work”",
+          "content_10": "“Worry is a misuse of imagination”",
+          "content_11": "“I never look back, darling. It distracts from the now”",
+          "content_12": "“Ideation without execution is delusion”",
+          "content_13": "“Good luck to you today”",
+          "content_14": "“Wishing you a brilliant and happy morning”",
+          "content_15": "“A year from now you will wish you had started today”",
+          "content_16": "“Hope this message will bring you happiness and luck from my place”",
+          "content_17": "“Don't let someone else's opinion of you become your reality”",
+          "content_18": "“Hustle beats talent when talent doesn’t hustle”",
+          "content_19": "“Set your goals high, and don’t stop till you get there”",
+          "content_20": "“I have stood on a mountain of no’s for one yes”",
+          "content_21": "“Inspiration does exist, but it must find you working”",
+          "content_22": "“Don’t let yesterday take up too much of today”",
+          "content_23": "“It is better to fail in originality than to succeed in imitation”",
+          "content_24": "“Try to take advantage of every opportunity that comes you way”",
+          "content_25": "“Don't wait. The time will never be just right”",
+          "content_26": "“Never setter to be better”",
+          "content_27": "“Change your thoughts and you change your world”",
+          "content_28": "“Every strike brings me closer to the next home run”",
+          "content_29": "“Talent wins games, but teamwork and intelligence win championships”",
+          "content_30": "“The beginning is the most important part of the work”",
+          "content_31": "“When you like your work every day is a holiday”",
+          "content_32": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_33": "“As a cure for worrying, work is better than whiskey”",
+          "content_34": "“If you don’t risk anything, you risk even more”",
+          "content_35": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_36": "“Success is getting what you want, happiness is wanting what you get”",
+          "content_37": "“No challenge shall never know all its capabilities”",
+          "content_38": "“Success is a journey not a destination”"
+        },
+        "afternoon": {
+          "title": "Good afternoon",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“This afternoon, I hope everything will be all right”",
+          "content_3": "“Absolutely focus to have a productive day”",
+          "content_4": "“Hope this message will bring you happiness and luck from my place”",
+          "content_5": "“Setting goals is the first step in turning the invisible into the visible”",
+          "content_6": "“Good luck to you today”",
+          "content_7": "“Your spirit is good today. Have a great working day”",
+          "content_8": "“It is never too late to be what you might have been”",
+          "content_9": "“Try to take advantage of every opportunity that comes you way”",
+          "content_10": "“If you’re not positive energy, you’re negative energy.”",
+          "content_11": "“Never setter to be better”",
+          "content_12": "“Change your thoughts and you change your world”",
+          "content_13": "“Alone we can do so little, together we can do so much”",
+          "content_14": "“Talent wins games, but teamwork and intelligence win championships”",
+          "content_15": "“The beginning is the most important part of the work”",
+          "content_16": "“When you like your work every day is a holiday”",
+          "content_17": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_18": "“As a cure for worrying, work is better than whiskey”",
+          "content_19": "“You don’t have to see the whole staircase, just take the first step”",
+          "content_20": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_21": "“Work until your bank account looks like a phone number”",
+          "content_22": "“No challenge shall never know all its capabilities”",
+          "content_23": "“Success is a journey not a destination”"
+        },
+        "evening": {
+          "title": "Good evening",
+          "content_1": "“Either you run the day or the day runs you”",
+          "content_2": "“It is never too late to be what you might have been”",
+          "content_3": "“Try to take advantage of every opportunity that comes you way”",
+          "content_4": "“People rarely succeed unless they have fun in what they are doing”",
+          "content_5": "“Never setter to be better”",
+          "content_6": "“Change your thoughts and you change your world”",
+          "content_7": "“They always say time changes things, but you actually have to change them yourself”",
+          "content_8": "“Talent wins games, but teamwork and intelligence win championships”",
+          "content_9": "“The beginning is the most important part of the work”",
+          "content_10": "“When you like your work every day is a holiday”",
+          "content_11": "“Doing what you like is freedom. Liking what you do is happiness”",
+          "content_12": "“As a cure for worrying, work is better than whiskey”",
+          "content_13": "“I can accept failure, everyone fails at something. But I can’t accept not trying”",
+          "content_14": "“Can anything be sadder than work left unfinished? Yes, work never begun”",
+          "content_15": "“Work until your bank account looks like a phone number”",
+          "content_16": "“No challenge shall never know all its capabilities”",
+          "content_17": "“Success is a journey not a destination”"
+        }
+      },
+      "birthday": {
+        "title": "Happy Birthday",
+        "content_1": "“Hope all your birthday wishes come true!”",
+        "content_2": "“It’s your special day — get out there and celebrate!”",
+        "content_3": "“The day is all yours — have fun!”",
+        "content_4": "“Wishing you the biggest slice of happy today.”",
+        "content_5": "“I hope your celebration gives you many happy memories!”",
+        "content_6": "“Enjoy your special day.”",
+        "content_7": "“You’re older today than yesterday but younger than tomorrow, HPBD!”",
+        "content_8": "“Have the best birthday ever!”",
+        "content_9": "“oday is about you. I can’t wait to celebrate you all day long!”",
+        "content_10": "“Wherever the year ahead takes you, I hope it’s happy.”",
+        "content_11": "“Thinking of you on your birthday and wishing you everything happy”",
+        "content_12": "“Best wishes on your birthday – may you have many, many more”",
+        "content_13": "“Cheers to you for another trip around the sun!”",
+        "content_14": "“Congratulations on another year of skillful death evasion!”"
+      },
+      "weather": {
+        "thunderstorm": {
+          "title": "Thunderstorm",
+          "content_1": "“It's thundering today, you'd better not go out”",
+          "content_2": "“The weather is bad, let's stay in the room”"
+        },
+        "drizzle": {
+          "title": "Drizzle",
+          "content_1": "“It's drizzling, don't forget to bring an umbrella when you go out”"
+        },
+        "rain": {
+          "title": "Rain",
+          "content_1": "“It's raining, don't forget to bring a raincoat”",
+          "content_2": "“It's raining, don't forget to bring an umbrella”"
+        },
+        "snow": {
+          "title": "Snow",
+          "content_1": "“It's snowing, don't forget to wear warm clothes”"
+        },
+        "atmosphere": {
+          "title": "Atmosphere",
+          "content_1": "“The air outside is not so good, you'd better stay in your room”"
+        },
+        "clear": {
+          "title": "Clear",
+          "content_1": "“It's sunny and not cloudy, wear sunscreen when going out”"
+        },
+        "clouds": {
+          "title": "Clouds",
+          "content_1": "“Today is a beautiful day, let's go out and enjoy”",
+          "content_2": "“When you like your work every day is a holiday”",
+          "content_3": "“Success is a journey not a destination”",
+          "content_4": "“Wherever the year ahead takes you, I hope it’s happy.”",
+          "content_5": "“Doing what you like is freedom. Liking what you do is happiness”"
+        }
+      },
+      "header_assistant": {
+        "title": "Header assistant",
+        "sure_to_delete": "Sure to delete?",
+        "add": "Add header assistant",
+        "fields": {
+          "title": "Title",
+          "content": "Content",
+          "image": "Image",
+          "image_position": "Image position",
+          "date_from": "Date from",
+          "date_to": "Date to",
+          "date": "Date",
+          "to": "To"
+        }
+      }
+    }
+  }
 }
