@@ -91,9 +91,7 @@ const NotificationAction = (props) => {
         .then((res) => {
           _handleSetNewNotificationState(res, index)
         })
-        .catch((err) => {
-          console.log(err)
-        })
+        .catch((err) => {})
     } else if (itemContent.api_methods === "get") {
       defaultModuleApi
         .get(
