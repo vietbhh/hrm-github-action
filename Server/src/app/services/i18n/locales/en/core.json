@@ -92,6 +92,7 @@
     "language": "Language"
   },
   "layout": {
+    "home": "Home",
     "overview": "Overview",
     "quick_access": "Quick access",
     "navigation": "Navigation",
