@@ -28,6 +28,7 @@ const CoverImage = (props) => {
   })
   const saveCoverImage = (image) => {
     const dataPost = { ...dataSave, image: image }
+    console.log(image)
     saveCoverImageApi(dataPost).then((res) => {
       setState({ defaultWorkspaceCover: image })
     })

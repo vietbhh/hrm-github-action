@@ -11,8 +11,10 @@ import { Storage } from "@google-cloud/storage"
 import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { handleDataLoadFeed } from "../../feed/controllers/feed.js"
+import { handleAddNewGroupToFireStore } from "#app/libraries/chat/Chat.js"
+
 const saveWorkspace = async (req, res, next) => {
-  const workspace = new workspaceMongoModel({
+  const dataSave = {
     name: req.body.workspace_name,
     type: req.body.workspace_type,
     mode: req.body.workspace_mode,
@@ -21,11 +23,32 @@ const saveWorkspace = async (req, res, next) => {
     administrators: [req.__user],
     __user: req.__user,
     request_joins: []
-  })
+  }
 
   try {
-    const saveData = await workspace.save()
-    return res.respond(saveData)
+    if (
+      req.body.workspace_crate_group_chat === "true" ||
+      req.body.workspace_crate_group_chat === true
+    ) {
+      const groupChatId = await handleAddNewGroupToFireStore(
+        req.__user,
+        req.body.workspace_name,
+        [req.__user],
+        true
+      )
+      dataSave["group_chat_id"] = groupChatId
+    }
+
+    const workspace = new workspaceMongoModel(dataSave)
+
+    const saveData = await workspace.save(async (err, saved) => {
+      if (req.body?.image !== undefined && req.body.image !== "") {
+        await _handleUploadImage(req.body.image, saved._id)
+      }
+      
+      return res.respond(saved)
+    })
+
   } catch (err) {
     return res.fail(err.message)
   }
@@ -47,21 +70,27 @@ const getWorkspace = async (req, res, next) => {
 
 const saveCoverImage = async (req, res) => {
   const image = req.body.image
-  const imageFile = {}
-  imageFile.content = image
-  imageFile.name = req.body._id + "_cover.png"
-  const pathUpload = "modules/workspace/" + req.body._id
-  const upp = await _uploadServices(pathUpload, [imageFile], true)
-
   try {
-    const update = await workspaceMongoModel.findOneAndUpdate(
-      { _id: req.body._id },
-      { $set: { cover_image: upp.uploadSuccess[0]?.path } }
-    )
+    const update = _handleUploadImage(image, id)
+
     return res.respond(update)
   } catch (err) {
     return res.fail(err.message)
   }
+}
+
+const _handleUploadImage = async (image, id) => {
+  const imageFile = {}
+  imageFile.content = image
+  imageFile.name = id + "_cover.png"
+  const pathUpload = "modules/workspace/" + id
+  const upp = await _uploadServices(pathUpload, [imageFile], true)
+  const update = await workspaceMongoModel.findOneAndUpdate(
+    { _id: id },
+    { $set: { cover_image: upp.uploadSuccess[0]?.path } }
+  )
+
+  return update
 }
 
 const removeCoverImage = async (req, res) => {

@@ -3884,7 +3884,8 @@
         "leave_admin_workspace": "Leave Admin of the workspace",
         "export_excel_file": "Export excel file",
         "view_group": "View Group",
-        "create_group": "Create Group"
+        "create_group": "Create Group",
+        "add_cover": "Add Cover"
       },
       "display": {
         "create_workspace_title": "Create Workspace",

@@ -63,7 +63,10 @@ const workspaceSchema = baseSchema("m_workspace", {
     required: true,
     default: "active"
   },
-  all_member: Boolean
+  all_member: Boolean,
+  group_chat_id: {
+    type: String
+  }
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

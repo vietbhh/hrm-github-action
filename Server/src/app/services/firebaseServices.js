@@ -10,7 +10,7 @@ import { getMessaging } from "firebase-admin/messaging"
 import { forEach, isArray, isEmpty, map } from "lodash-es"
 import path from "path"
 
-initializeApp({
+export const appInitial = initializeApp({
   credential: cert(path.join(global.__basedir, "service_account_file.json"))
 })
 /**

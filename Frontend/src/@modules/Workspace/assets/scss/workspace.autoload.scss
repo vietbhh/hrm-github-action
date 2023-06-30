@@ -356,6 +356,10 @@
     color: #32434f !important;
   }
 
+  .app-loader {
+    height: auto !important;
+  }
+
   .header {
     .title {
       font-size: 2.1rem;
@@ -865,9 +869,14 @@
 
 .create-workgroup-modal {
   .modal-content {
-    padding: 1rem 2rem 1rem 2rem !important;
+    padding: 1rem 1.5rem 1rem 1.5rem !important;
     .modal-header {
       border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+
+      .modal-title {
+        width: 100% !important;
+        text-align: center;
+      }
 
       .btn-close {
         transform: unset !important;
@@ -875,8 +884,30 @@
       }
     }
 
-    .image-cover img {
-      border-radius: 12px;
+    .image-cover {
+      position: relative;
+
+      img {
+        border-radius: 12px;
+        height: 160px;
+        object-fit: cover;
+      }
+
+      .action-section {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+
+        button {
+          background-color: rgba(0, 0, 0, 0.4) !important;
+          color: #ece9e9 !important;
+          font-size: 12px;
+          font-weight: 400;
+          border-radius: 6px !important;
+          padding-bottom: 9px;
+          border: none !important;
+        }
+      }
     }
 
     .text-label {
@@ -884,6 +915,13 @@
       p,
       small {
         font-size: 10px;
+      }
+    }
+
+    .modal-footer {
+      button {
+        padding-top: 13px;
+        padding-bottom: 13px;
       }
     }
   }

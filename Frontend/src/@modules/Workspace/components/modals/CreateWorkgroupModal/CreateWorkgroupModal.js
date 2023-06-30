@@ -1,6 +1,8 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { useForm, FormProvider } from "react-hook-form"
+import { workspaceApi } from "../../../common/api"
+import { useNavigate } from "react-router-dom"
 // ** Styles
 import {
   Button,
@@ -12,11 +14,10 @@ import {
   Row,
   Spinner
 } from "reactstrap"
-import { Space } from "antd"
 // ** Components
 import WorkspaceForm from "../../detail/CreateWorkspace/WorkspaceForm"
 import WorkspaceCover from "../../detail/CreateWorkspace/WorkspaceCover"
-import CoverImage from "../../detail/CoverImage"
+import notification from "@apps/utility/notification"
 
 const CreateWorkgroupModal = (props) => {
   const {
@@ -26,10 +27,52 @@ const CreateWorkgroupModal = (props) => {
     handleModal
   } = props
 
+  const [state, setState] = useMergedState({
+    submitting: false,
+    image: ""
+  })
+
+  const navigate = useNavigate()
+
   const methods = useForm()
   const { handleSubmit } = methods
 
-  const onSubmit = (values) => {}
+  const setImage = (data) => {
+    setState({
+      image: data
+    })
+  }
+
+  const onSubmit = (values) => {
+    setState({
+      submitting: true
+    })
+
+    workspaceApi
+      .save({
+        ...values,
+        image: state.image
+      })
+      .then((res) => {
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+        methods.reset({})
+        handleModal()
+
+        setTimeout(() => {
+          navigate(`/workspace/${res.data._id}`)
+        }, 500)
+      })
+      .catch((err) => {
+        setState({
+          submitting: false
+        })
+        notification.showError({
+          text: useFormatMessage("notification.save.success")
+        })
+      })
+  }
 
   // ** render
   return (
@@ -46,12 +89,13 @@ const CreateWorkgroupModal = (props) => {
       </ModalHeader>
       <ModalBody>
         <FormProvider {...methods}>
-          <div className="mb-1 mt-75">
+          <div className="mb-25 mt-75">
             <WorkspaceCover
               src=""
               dataSave={{}}
               isEditable={false}
               saveCoverImageApi=""
+              setImage={setImage}
             />
           </div>
           <div className="p-1">
@@ -59,9 +103,14 @@ const CreateWorkgroupModal = (props) => {
           </div>
         </FormProvider>
       </ModalBody>
-      <ModalFooter className="pb-2">
-        <form onSubmit={handleSubmit(onSubmit)} className="w-100">
-          <Button.Ripple type="submit" color="primary" block>
+      <ModalFooter className="p-1 pb-50 pt-0">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-100 m-0">
+          <Button.Ripple
+            type="submit"
+            color="primary"
+            block
+            disabled={state.submitting}>
+            {state.submitting && <Spinner size="sm" className="me-50" />}
             {useFormatMessage("app.create")}
           </Button.Ripple>
         </form>

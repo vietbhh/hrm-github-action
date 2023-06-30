@@ -107,7 +107,7 @@ const WorkspaceForm = (props) => {
   // ** render
   return (
     <div className="create-workspace-form">
-      <div className="mb-2">
+      <div className="mb-1">
         <p className="mb-25 field-label">
           {useFormatMessage("modules.workspace.fields.worksgroup_name")}
         </p>
@@ -120,7 +120,7 @@ const WorkspaceForm = (props) => {
           placeholder={useFormatMessage("modules.workspace.text.enter_group_name")}
         />
       </div>
-      <div className="d-flex align-items-center justify-content-between mb-2 mt-75">
+      <div className="d-flex align-items-center justify-content-between mb-1 pt-25">
         <div>
           <p className="mb-0 field-label">
             {useFormatMessage("modules.workspace.display.group_chat")}
@@ -134,12 +134,13 @@ const WorkspaceForm = (props) => {
         <div>
           <ErpSwitch
             name="workspace_crate_group_chat"
+            defaultValue={false}
             useForm={methods}
             formGroupClass="mb-0"
           />
         </div>
       </div>
-      <div className="mt-75">
+      <div className="pt-25">
         <p className="mb-25 field-label">
           {useFormatMessage("modules.workspace.display.workgroup_privacy")}
         </p>
@@ -153,6 +154,7 @@ const WorkspaceForm = (props) => {
             defaultValue={workspace_type[0]}
             isClearable={false}
             isSearchable={false}
+            formGroupClass="mb-75"
           />
           <ErpSelect
             name="workspace_mode"
@@ -163,6 +165,7 @@ const WorkspaceForm = (props) => {
             defaultValue={workspace_mode[0]}
             isClearable={false}
             isSearchable={false}
+            formGroupClass="mb-50"
           />
         </div>
       </div>
