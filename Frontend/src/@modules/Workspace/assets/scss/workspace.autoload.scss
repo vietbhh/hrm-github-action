@@ -356,6 +356,10 @@
     color: #32434f !important;
   }
 
+  .app-loader {
+    height: auto !important;
+  }
+
   .header {
     .title {
       font-size: 2.1rem;
@@ -383,11 +387,10 @@
         }
 
         .btn-load-more {
-          border: none !important
+          border: none !important;
         }
 
         .workspace-manage-list {
-          
           .workspace-item {
             border: 1px solid #f1f1f5;
 
@@ -421,7 +424,7 @@
             height: 90px;
 
             .image-container {
-              width: 20% !important;
+              width: 23% !important;
               height: 100%;
               border: 1px solid #f1f1f5;
 
@@ -806,6 +809,120 @@
       border-radius: 12px !important;
       font-size: 12px;
       font-weight: 500;
+    }
+  }
+}
+
+.create-workspace-form {
+  .field-label {
+    font-size: 14px;
+    color: #32434f;
+    font-weight: 600;
+  }
+
+  .field-description {
+    font-size: 10px;
+    font-weight: 300;
+    color: #32434f;
+  }
+
+  .privacy-section {
+    .flex-wrap {
+      flex-wrap: unset !important;
+    }
+
+    .select__control {
+      padding: 0.3rem 0.2rem 0.3rem 0.2rem;
+    }
+
+    .text-label {
+      color: #32434f !important;
+      width: 70% !important;
+      p {
+        font-size: 12px;
+        margin-bottom: 0 !important;
+        font-weight: 500;
+      }
+
+      small {
+        font-size: 12px;
+        font-weight: 300;
+      }
+    }
+
+    .prefix-icon {
+      height: 36px;
+      width: 36px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+
+      i {
+        margin: 0 !important;
+        font-size: 16px !important;
+      }
+    }
+  }
+}
+
+.create-workgroup-modal {
+  .modal-content {
+    padding: 1rem 1.5rem 1rem 1.5rem !important;
+    .modal-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+
+      .modal-title {
+        width: 100% !important;
+        text-align: center;
+      }
+
+      .btn-close {
+        transform: unset !important;
+        box-shadow: unset !important;
+      }
+    }
+
+    .image-cover {
+      position: relative;
+
+      img {
+        border-radius: 12px;
+        height: 160px;
+        object-fit: cover;
+      }
+
+      .action-section {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+
+        button {
+          background-color: rgba(0, 0, 0, 0.4) !important;
+          color: #ece9e9 !important;
+          font-size: 12px;
+          font-weight: 400;
+          border-radius: 6px !important;
+          padding-bottom: 9px;
+          border: none !important;
+        }
+      }
+    }
+
+    .text-label {
+      padding-left: 1rem;
+      p,
+      small {
+        font-size: 10px;
+      }
+    }
+
+    .modal-footer {
+      button {
+        padding-top: 13px;
+        padding-bottom: 13px;
+      }
     }
   }
 }

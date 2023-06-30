@@ -3884,7 +3884,8 @@
         "leave_admin_workspace": "Leave Admin of the workspace",
         "export_excel_file": "Export excel file",
         "view_group": "View Group",
-        "create_group": "Create Group"
+        "create_group": "Create Group",
+        "add_cover": "Add Cover"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -3923,10 +3924,15 @@
         "workspace_activities": "Workspace activities",
         "all_member_workspaces": "All-members workspaces",
         "private_workspaces": "Private workspaces",
-        "post_created": "Post crated"
+        "post_created": "Post crated",
+        "create_workgroup": "Create workgroup",
+        "group_chat": "Group chat",
+        "group_chat_description": "Automatically create a linked group chat via message",
+        "workgroup_privacy": "Workgroup privacy"
       },
       "fields": {
         "workspace_name": "Workspace name",
+        "worksgroup_name": "Workgroup name",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
         "membership_approval": "Membership approval",
@@ -4013,7 +4019,8 @@
           "joined": "Collaborate with your team"
         },
         "no_member": "No member",
-        "joined_date": "You joined in"
+        "joined_date": "You joined in",
+        "enter_group_name": "Enter group name"
       },
       "app_options": {
         "workspace_type": {
