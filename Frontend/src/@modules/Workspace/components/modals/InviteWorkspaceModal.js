@@ -58,21 +58,11 @@ const InviteWorkspaceModal = (props) => {
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
-          <Row className="mt-1">
+          <Row className="mt-50">
             <Col sm={12} className="mb-1">
               Filter members to invite by category
             </Col>
-            <Col sm={12} className="">
-              <span className="border rounded w-100 me-1 px-1 py-50">
-                Users
-              </span>
-              <span className="border rounded w-100 me-1 px-1 py-50">
-                Derpartment
-              </span>
-              <span className="border rounded w-100 px-1 py-50">Job title</span>
-              <hr />
-            </Col>
-            <Col sm={12} className="mt-3">
+            <Col sm={12}>
               <EmployeesSelect
                 handleSelect={getDataSelect}
                 member_selected={member_selected}
@@ -87,9 +77,9 @@ const InviteWorkspaceModal = (props) => {
               onClick={() => handleAdd()}
               color="primary"
               disabled={state.loading}
-              className="ms-auto mr-2 w-100">
+              className="ms-auto mr-2 w-100 py-1">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              {useFormatMessage("button.done")}
+              Send invites
             </Button>
           </ModalFooter>
         </form>

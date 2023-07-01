@@ -57,6 +57,9 @@ const EmployeesSelect = (props) => {
             onClick={() => handleSelected(key)}>
             <Avatar src={item.avatar} className="me-50" />
             <div className="title">{item.full_name}</div>
+            <div className="ms-auto me-1">
+              <i class="fa-regular fa-xmark"></i>
+            </div>
           </div>
         </Col>
       )
@@ -454,6 +457,35 @@ const EmployeesSelect = (props) => {
   }, [state.dataSelected])
   return (
     <>
+      <Row>
+        <Col sm={12} className="mb-2">
+          <span
+            onClick={() => setState({ typeAdd: "members", recordsTotal: 0 })}
+            className={`border rounded w-100 me-1 px-1 py-50  ${
+              state.typeAdd === "members" ? "border-primary bg-primary " : ""
+            }`}>
+            Users
+          </span>
+          <span
+            onClick={() =>
+              setState({ typeAdd: "departments", recordsTotal: 0 })
+            }
+            className={`border rounded w-100 me-1 px-1 py-50  ${
+              state.typeAdd === "departments"
+                ? "border-primary bg-primary "
+                : ""
+            }`}>
+            Derpartment
+          </span>
+          <span
+            onClick={() => setState({ typeAdd: "jobtitles", recordsTotal: 0 })}
+            className={`border rounded w-100 px-1 py-50 ${
+              state.typeAdd === "jobtitles" ? "border-primary bg-primary " : ""
+            }`}>
+            Job title
+          </span>
+        </Col>
+      </Row>
       <div className="d-flex ">
         <div className="content-select">
           <Row>
@@ -467,14 +499,36 @@ const EmployeesSelect = (props) => {
               />
             </Col>
           </Row>
-          <PerfectScrollbar
-            onYReachEnd={endScrollLoad}
-            style={{
-              maxHeight: "400px",
-              minHeight: "400px"
-            }}>
-            <Row className="w-100">{renderMember(state.members)}</Row>
-          </PerfectScrollbar>
+          {state.typeAdd === "members" && (
+            <PerfectScrollbar
+              onYReachEnd={endScrollLoad}
+              style={{
+                maxHeight: "400px",
+                minHeight: "400px"
+              }}>
+              <Row className="w-100">{renderMember(state.members)}</Row>
+            </PerfectScrollbar>
+          )}
+          {state.typeAdd === "departments" && (
+            <PerfectScrollbar
+              onYReachEnd={() => endScrollDepartment()}
+              style={{
+                height: "400px",
+                minHeight: "400px"
+              }}>
+              <Row className="w-100">{renderDepartment(state.departments)}</Row>
+            </PerfectScrollbar>
+          )}
+          {state.typeAdd === "jobtitles" && (
+            <PerfectScrollbar
+              onYReachEnd={() => endScrollJobtitle()}
+              style={{
+                maxHeight: "400px",
+                minHeight: "400px"
+              }}>
+              <Row className="w-100">{renderDepartment(state.jobtitles)}</Row>
+            </PerfectScrollbar>
+          )}
         </div>
 
         <div
@@ -486,7 +540,7 @@ const EmployeesSelect = (props) => {
             <>
               <div className="mt-1 mb-2">
                 {state.dataSelected.length}{" "}
-                {useFormatMessage("modules.workspace.text.member")}
+                {useFormatMessage("modules.workspace.text.member")} selected
               </div>
               <PerfectScrollbar
                 style={{
@@ -500,21 +554,6 @@ const EmployeesSelect = (props) => {
         </div>
       </div>
       <hr />
-      <Tabs
-        className="tab-invite"
-        tabPosition={"top"}
-        items={itemTab(tabShow)}
-        onTabClick={(key) => {
-          setState({
-            typeAdd: key,
-            dataSelected: [],
-            recordsTotal: 0,
-            departments: [],
-            jobtitles: [],
-            members: []
-          })
-        }}
-      />
     </>
   )
 }

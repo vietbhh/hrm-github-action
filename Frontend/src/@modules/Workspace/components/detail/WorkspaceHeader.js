@@ -316,9 +316,7 @@ const WorkspaceHeader = (props) => {
           </div>
           <div className="workspaceAction">
             {state.joined && (
-              <Button
-                className="btn btn-success"
-                onClick={() => onClickInvite()}>
+              <Button color="primary" onClick={() => onClickInvite()}>
                 <i className="fa-regular fa-plus me-50"></i>
                 {useFormatMessage("modules.workspace.buttons.invite")}
               </Button>
