@@ -303,6 +303,7 @@ const updateWorkspace = async (req, res, next) => {
   const requestData = req.body
   try {
     const workspaceInfo = await workspaceMongoModel.findById(workspaceId)
+    console.log("workspaceInfo", workspaceInfo)
     if (workspaceInfo === null) {
       res.failNotFound("work_space_not_found")
     }
@@ -378,13 +379,13 @@ const updateWorkspace = async (req, res, next) => {
       if (requestData?.members) {
         updateData.members = JSON.parse(requestData.members)
       }
-      if (requestData?.administrators) {
+      if (requestData?.administrators2) {
         updateData.administrators = JSON.parse(requestData.administrators)
       }
-      if (requestData?.pinPosts) {
+      if (requestData?.pinPosts2) {
         updateData.pinPosts = JSON.parse(requestData.pinPosts)
       }
-      if (requestData?.request_joins) {
+      if (requestData?.request_joins2) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
         const memberInfo = await getUser(
           updateData.request_joins[updateData.request_joins.length - 1]
@@ -416,6 +417,7 @@ const updateWorkspace = async (req, res, next) => {
           )
         }
       }
+
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId

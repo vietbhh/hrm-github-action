@@ -37,7 +37,7 @@ const InviteWorkspaceModal = (props) => {
   const handleAdd = () => {
     const dataSelected = state.dataSelected
     console.log("dataSelected", dataSelected)
-    handleDone(dataSelected, state.typeAdd)
+    handleDone(dataSelected, "members")
   }
 
   const getDataSelect = (data = [], typeAdd) => {
@@ -55,7 +55,7 @@ const InviteWorkspaceModal = (props) => {
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => handleModal()}>
-        {useFormatMessage("modules.workspace.display.add_member_to_ws")}
+        Invite members to this group
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
@@ -78,7 +78,7 @@ const InviteWorkspaceModal = (props) => {
               onClick={() => handleAdd()}
               color="primary"
               disabled={state.loading}
-              className="ms-auto mr-2 w-100 py-1">
+              className="ms-4 me-4 w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
               Send invites
             </Button>

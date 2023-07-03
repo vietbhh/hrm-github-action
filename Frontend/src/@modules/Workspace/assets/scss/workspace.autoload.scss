@@ -17,8 +17,8 @@
     }
     .cameraBtn {
       position: absolute;
-      top: 4%;
-      left: 1%;
+      top: 5%;
+      left: 90%;
       color: #292121;
       text-align: center;
       font-size: 12px;
@@ -281,6 +281,20 @@
   width: 40%;
   padding-left: 10px;
   margin-left: 10px;
+}
+.filter{
+  span{
+    color: #32434F;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+.modal-content .modal-header .modal-title {
+  margin-left: auto;
+  color: #32434F;
+  font-size: 16px;
+  font-weight: 600;
 }
 }
 .invite-workspace-modal {
