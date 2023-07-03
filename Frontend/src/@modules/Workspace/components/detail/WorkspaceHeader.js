@@ -37,7 +37,10 @@ const WorkspaceHeader = (props) => {
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
+  console.log("WorkspaceHeader data", data)
   const handleDoneInvite = (dataUpdate, type) => {
+    console.log("dataUpdate", dataUpdate)
+    console.log("type", type)
     const infoWorkspace = { ...data }
     if (type === "members") {
       const arrID = infoWorkspace.members.concat(
@@ -49,9 +52,9 @@ const WorkspaceHeader = (props) => {
           dataUpdate.map((x) => x["id"] * 1)
         )
       } else if (data?.membership_approval === "auto") {
-        infoWorkspace.members = JSON.stringify(arrID)
+        infoWorkspace.members = arrID
       }
-
+      console.log("infoWorkspace", infoWorkspace)
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({

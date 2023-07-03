@@ -36,6 +36,7 @@ const InviteWorkspaceModal = (props) => {
 
   const handleAdd = () => {
     const dataSelected = state.dataSelected
+    console.log("dataSelected", dataSelected)
     handleDone(dataSelected, state.typeAdd)
   }
 
