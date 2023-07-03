@@ -1,9 +1,9 @@
 // ** React Imports
-import { useMergedState } from "@apps/utility/common"
 import { Fragment } from "react"
+import { useFormatMessage } from "@apps/utility/common"
+import classnames from "classnames"
 // ** Styles
-import { Card, CardBody, Col, Row } from "reactstrap"
-import { Pagination } from "antd"
+import { Col, Row, Button, Spinner } from "reactstrap"
 // ** Components
 import MemberItem from "./MemberItem"
 
@@ -13,47 +13,55 @@ const ListMember = (props) => {
     id,
     userState,
     isAdmin,
+    loadingWorkgroup,
     totalListData,
     listData,
     isAdminGroup,
     currentPage,
     perPage,
+    disableLoadMore,
     // ** methods
     setPagination,
+    handleClickLoadMore,
     loadData
   } = props
 
-  const handleChange = (page) => {
-    setPagination({
-      page: page
-    })
-  }
-
   // ** render
   const renderPagination = () => {
-    if (totalListData === 0) {
-      return ""
+    if (disableLoadMore) {
+      return (
+        <Button.Ripple
+          className="custom-button custom-secondary"
+          disabled={true}>
+          {useFormatMessage("common.nodata")}
+        </Button.Ripple>
+      )
     }
 
     return (
-      <Pagination
-        className="mt-1"
-        defaultCurrent={1}
-        current={currentPage}
-        total={totalListData}
-        pageSize={perPage}
-        onChange={handleChange}
-      />
+      <Button.Ripple
+        className="custom-button custom-secondary"
+        onClick={() => handleClickLoadMore()}
+        disabled={loadingWorkgroup}>
+        {loadingWorkgroup && <Spinner className="me-50" size="sm" />}
+        {useFormatMessage("modules.workspace.buttons.see_more")}
+      </Button.Ripple>
     )
   }
 
   const renderComponent = () => {
     return (
-      <div className="w-100">
+      <div className="w-100 list-member">
         <Row>
           {listData.map((item, index) => {
             return (
-              <Col sm={12} className="mb-2" key={`list-member-item-${index}`}>
+              <Col
+                sm={12}
+                className={classnames({
+                  "mb-2": !isAdmin,
+                  "mb-75": isAdmin
+                })}
+                key={`list-member-item-${index}`}>
                 <MemberItem
                   id={id}
                   member={item}
@@ -70,7 +78,13 @@ const ListMember = (props) => {
           })}
         </Row>
         <div>
-          <Fragment>{renderPagination()}</Fragment>
+          <div
+            className={classnames({
+              "mt-2": !isAdmin,
+              "mt-1": isAdmin
+            })}>
+            {renderPagination()}
+          </div>
         </div>
       </div>
     )

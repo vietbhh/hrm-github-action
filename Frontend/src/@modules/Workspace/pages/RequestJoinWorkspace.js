@@ -1,14 +1,13 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useEffect } from "react"
+import { useMergedState } from "@apps/utility/common"
 import { useParams } from "react-router-dom"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useSelector } from "react-redux"
 // ** Styles
 // ** Components
-import RequestToJoin from "../components/detail/TabMember/RequestToJoin"
-import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { Card, CardBody } from "reactstrap"
+import RequestToJoinHeader from "../components/detail/RequestToJoin/RequestToJoinHeader"
+import RequestToJoinBody from "../components/detail/RequestToJoin/RequestToJoinBody"
 
 const RequestJoinWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -17,8 +16,8 @@ const RequestJoinWorkspace = (props) => {
     requestJoins: [],
     totalRequestJoin: 0,
     filter: {
-      page: 1,
-      limit: 30
+      order: "desc",
+      text: ""
     }
   })
 
@@ -69,44 +68,22 @@ const RequestJoinWorkspace = (props) => {
   }, [state.filter])
 
   // ** render
-  const renderContent = () => {
-    if (state.loading) {
-      return ""
-    }
-
-    if (state.requestJoins.length === 0) {
-      return (
-        <Card>
-          <CardBody>
-            <h6 className="mb-2">
-              {useFormatMessage("modules.workspace.display.request_to_join")}
-            </h6>
-            <EmptyContent />
-          </CardBody>
-        </Card>
-      )
-    }
-
-    return (
-      <RequestToJoin
+  return (
+    <div className="workspace request-to-join-container">
+      <RequestToJoinHeader
         id={id}
-        isFullPage={true}
-        currentPage={state.filter.page}
-        perPage={state.filter.limit}
-        totalRecord={state.totalRequestJoin}
-        isAdminGroup={state.isAdminGroup}
-        requestJoins={state.requestJoins}
-        userState={userState}
+        loading={state.loading}
+        totalRequestJoin={state.totalRequestJoin}
         setFilter={setFilter}
         setRequestJoins={setRequestJoins}
-        loadData={loadData}
       />
-    )
-  }
 
-  return (
-    <div className="workspace">
-      <Fragment>{renderContent()}</Fragment>
+      <RequestToJoinBody
+        id={id}
+        loadingPage={state.loading}
+        requestJoins={state.requestJoins}
+        setRequestJoins={setRequestJoins}
+      />
     </div>
   )
 }

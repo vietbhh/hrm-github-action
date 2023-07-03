@@ -163,7 +163,7 @@ const TabFeed = (props) => {
           onClick: () => handlePinTop(item?._id)
         }
       ]
-      console.log(item)
+
       return (
         <Col sm={12} key={key}>
           <div className="post-pinned">

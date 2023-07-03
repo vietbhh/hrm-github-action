@@ -9,17 +9,16 @@ const HeaderSection = (props) => {
   const {
     // ** props
     totalMember,
-    filter,
     // ** methods
-    setFilter
+    setSearchText
   } = props
 
   const debounceSearch = useRef(
     _.debounce((nextValue) => {
       if (nextValue.trim().length > 0) {
-        setFilter({ ...filter, text: nextValue })
+        setSearchText(nextValue)
       } else {
-        setFilter({})
+        setSearchText("")
       }
     }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
   ).current
@@ -31,17 +30,19 @@ const HeaderSection = (props) => {
 
   // ** render
   return (
-    <div>
-      <h4>{`${totalMember} ${
+    <div className="pb-50">
+      <h6 className="title mb-1">{`${totalMember} ${
         totalMember === 1
           ? useFormatMessage("modules.workspace.text.member")
           : useFormatMessage("modules.workspace.text.members")
-      }`}</h4>
-      <div className="w-50">
+      }`}</h6>
+      <div className="w-100">
         <ErpInput
+          nolabel={true}
           prepend={<i className="fas fa-search" />}
           placeholder={useFormatMessage("modules.workspace.text.search_member")}
           onChange={(e) => handleSearchMember(e)}
+          formGroupClass="mb-0"
         />
       </div>
     </div>

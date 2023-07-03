@@ -98,7 +98,7 @@ const EditGroupRuleModal = (props) => {
       <ModalFooter>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Button.Ripple type="submit" color="primary" disabled={state.loading}>
-            {useFormatMessage("modules.workspace.buttons.add_new_rule")}
+            {useFormatMessage("modules.workspace.buttons.add_new_rule")}a
           </Button.Ripple>
         </form>
       </ModalFooter>

@@ -45,10 +45,9 @@ const saveWorkspace = async (req, res, next) => {
       if (req.body?.image !== undefined && req.body.image !== "") {
         await _handleUploadImage(req.body.image, saved._id)
       }
-      
+
       return res.respond(saved)
     })
-
   } catch (err) {
     return res.fail(err.message)
   }
@@ -323,6 +322,25 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
   }
 }
 
+const handleDeclineJoinRequest = (workspace, requestData) => {
+  if (requestData.is_all === true) {
+    return {
+      ...workspace._doc,
+      request_joins: []
+    }
+  } else {
+    return {
+      ...workspace._doc,
+      request_joins:
+        workspace?.request_joins === undefined
+          ? []
+          : workspace.request_joins.filter((item) => {
+              return parseInt(item) !== parseInt(requestData.data.id)
+            })
+    }
+  }
+}
+
 const updateWorkspace = async (req, res, next) => {
   const workspaceId = req.params.id
   if (!workspaceId.match(/^[0-9a-fA-F]{24}$/)) {
@@ -351,6 +369,10 @@ const updateWorkspace = async (req, res, next) => {
       returnCurrentPageForPagination = "members"
     } else if (requestData.hasOwnProperty("approve_join_request")) {
       workSpaceUpdate = _handleApproveJoinRequest(workspaceInfo, requestData)
+      returnCurrentPageForPagination =
+        requestData.is_all === false ? "request_join" : ""
+    } else if (requestData.hasOwnProperty("decline_join_request")) {
+      workSpaceUpdate = handleDeclineJoinRequest(workspaceInfo, requestData)
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("add_new_group")) {
@@ -557,7 +579,62 @@ const loadDataMember = async (req, res, next) => {
         request_joins: requestJoin,
         is_admin_group: isAdmin
       })
+    } else if (req.query.load_list === "member") {
+      const page = req.query?.page === undefined ? 1 : req.query.page
+      const limit = req.query?.limit === undefined ? 30 : req.query.limit
+      const workspaceAdministrator =
+        workspace?.administrators === undefined
+          ? []
+          : workspace.administrators.reverse()
+      const listMember =
+        workspace?.members === undefined
+          ? []
+          : workspace.members.reverse().filter((item) => {
+              return !workspaceAdministrator.includes(item)
+            })
+
+      const allMember =
+        listMember.length === 0 ? [] : await getUsers(listMember)
+      const members =
+        listMember.length === 0
+          ? []
+          : await getUsers(
+              listMember.slice((page - 1) * limit, page * limit),
+              condition
+            )
+      return res.respond({
+        total_member: allMember.length,
+        members: members,
+        total_list_member: allMember.length
+      })
+    } else if (req.query.load_list === "admin") {
+      const pageAdmin = req.query?.page === undefined ? 1 : req.query.page
+      const limitAdmin = req.query?.limit === undefined ? 30 : req.query.limit
+      const workspaceAdministrator =
+        workspace?.administrators === undefined
+          ? []
+          : workspace.administrators.reverse()
+      const allAdmin =
+        workspaceAdministrator.length === 0
+          ? []
+          : await getUsers(workspace.administrators)
+      const administrators =
+        workspaceAdministrator.length === 0
+          ? []
+          : await getUsers(
+              workspaceAdministrator.slice(
+                (pageAdmin - 1) * limitAdmin,
+                pageAdmin * limitAdmin
+              ),
+              condition
+            )
+
+      return res.respond({
+        administrators: administrators,
+        total_list_admin: allAdmin.length
+      })
     } else if (req.query.load_list === "request_join") {
+      const order = req.query.order === undefined ? "desc" : req.query.order
       const page = req.query?.page === undefined ? 1 : req.query.page
       const limit = req.query?.limit === undefined ? 4 : req.query.limit
       const allRequestJoin =
@@ -565,18 +642,18 @@ const loadDataMember = async (req, res, next) => {
           ? []
           : await getUsers(workspace.request_joins)
 
+      const workspaceSlice = workspace.request_joins.slice(
+        (page - 1) * limit,
+        page * limit
+      )
       const requestJoin =
         workspace?.request_joins === undefined
           ? []
-          : await getUsers(
-              workspace.request_joins
-                .reverse()
-                .slice((page - 1) * limit, page * limit)
-            )
+          : await getUsers(workspaceSlice, condition)
 
       return res.respond({
         total_request_join: allRequestJoin.length,
-        request_joins: requestJoin,
+        request_joins: order === "desc" ? requestJoin.reverse() : requestJoin,
         is_admin_group: isAdmin
       })
     }
