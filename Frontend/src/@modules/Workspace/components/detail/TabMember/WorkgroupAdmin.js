@@ -76,10 +76,14 @@ const WorkgroupAdmin = (props) => {
 
   // ** effect
   useEffect(() => {
-    if (loadingTabMember === false) {
+    if (loadingTabMember === false && state.administrators.length === 0) {
       loadData()
     }
-  }, [state.filter, loadingTabMember])
+  }, [loadingTabMember])
+
+  useEffect(() => {
+    loadData()
+  }, [state.filter])
 
   useEffect(() => {
     if (loadingTabMember === false && state.loading === false) {

@@ -47,16 +47,44 @@
     border-radius: 8px !important;
   }
 
+  .btn-action-empty {
+    background-color: unset !important;
+    border: none !important;
+    color: #95999f !important;
+    box-shadow: none !important;
+  }
+
   .small-description {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: rgb(179, 179, 179);
+    font-size: 14px;
+    font-weight: 400;
+    color: #32434F;
   }
 
   .tab-content {
     .tab-introduction {
+      .w-10 {
+        width: 10%;
+      }
+
+      .col {
+        padding-right: calc(var(--bs-gutter-x) * 0.3);
+        padding-left: calc(var(--bs-gutter-x) * 0.3);
+      }
+      
       .card {
         border-radius: 14px;
+      }
+
+      .common-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #32434f;
+      }
+
+      .introduction-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: #32434F;
       }
 
       .group-rule-container {
@@ -79,22 +107,35 @@
         .custom-button {
           font-size: 12px !important;
           font-weight: 500 !important;
-          color: #32434F !important;
+          color: #32434f !important;
+        }
+
+        .edit-group-rule-button {
+          color: #0062FF !important;
+          background-color: unset !important;
+          border: none !important;
+          box-shadow: none;
         }
 
         .list-group-rule {
           .group-rule-item {
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             .index {
-              display: inline-block;
-              height: 24px;
-              width: 24px;
               text-align: center;
-              line-height: 24px;
-              color: $primary-text-color;
-              border-radius: 8px;
-              background-color: $primary;
+              color: #32434F;
               font-weight: 600;
+            }
+
+            .title {
+              font-weight: 14px;
+              font-weight: 600;
+              color: #32434F;
+            }
+
+            .description {
+              font-size: 14px;
+              font-weight: 400;
+              color: #32434F;
             }
 
             .sort {
@@ -105,13 +146,40 @@
       }
 
       .workspace-info-container {
+        .info-title {
+          font-size: 14px;
+          font-weight: 500;
+          .text {
+            color: #32434f;
+          }
+        }
         .workspace-info-item {
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-          padding: 12px 0;
+          padding: 7px 0;
 
-          .description {
-            font-size: 12px;
-            color: rgb(179, 179, 179);
+          .icon-section {
+            width: 8%;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+          }
+
+          .text-section {
+            padding-left: 3%;
+            width: 89% !important;
+            .title {
+              font-size: 12px;
+              font-weight: 500;
+              color: #32434f;
+              //line-height: 1.5rem;
+              margin-bottom: 0 !important;
+            }
+
+            .description {
+              font-size: 10px;
+              font-weight: 400;
+              color: #ababac;
+              color: rgb(179, 179, 179);
+            }
           }
         }
       }
@@ -642,7 +710,7 @@
   }
 }
 
-.dropdown-workspace-group-rule {
+.dropdown-workspace-group-rule, .dropdown-workspace-about-group {
   .ant-dropdown-menu {
     padding: 0 !important;
     border-radius: 10px;
@@ -663,6 +731,12 @@
         background-color: unset !important;
       }
     }
+  }
+}
+
+.dropdown-workspace-about-group {
+  button {
+    padding: 15px !important;
   }
 }
 

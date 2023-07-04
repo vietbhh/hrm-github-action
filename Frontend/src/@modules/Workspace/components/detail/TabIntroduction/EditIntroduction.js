@@ -5,6 +5,7 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 import { FormProvider, useForm } from "react-hook-form"
 // ** Styles
 import { Row, Col, Button } from "reactstrap"
+import { Space } from "antd"
 // ** Components
 import { ErpInput } from "@apps/components/common/ErpField"
 import notification from "@apps/utility/notification"
@@ -40,6 +41,10 @@ const EditIntroduction = (props) => {
       })
   }
 
+  const handleClickCancel = () => {
+    handleCancelEdit()
+  }
+
   // ** effect
   useEffect(() => {
     reset({
@@ -57,13 +62,23 @@ const EditIntroduction = (props) => {
       </Col>
       <Col sm="12" xs="12">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Button.Ripple
-            type="submit"
-            size="md"
-            color="primary"
-            disabled={loading}>
-            {useFormatMessage("modules.workspace.buttons.save")}
-          </Button.Ripple>
+          <Space>
+            <Button.Ripple
+              type="submit"
+              size="md"
+              color="primary"
+              disabled={loading}>
+              {useFormatMessage("modules.workspace.buttons.save")}
+            </Button.Ripple>
+            <Button.Ripple
+              type="button"
+              size="md"
+              color="danger"
+              disabled={loading}
+              onClick={() => handleClickCancel()}>
+              {useFormatMessage("button.cancel")}
+            </Button.Ripple>
+          </Space>
         </form>
       </Col>
     </Row>

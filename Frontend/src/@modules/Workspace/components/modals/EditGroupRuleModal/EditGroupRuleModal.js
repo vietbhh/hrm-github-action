@@ -86,7 +86,6 @@ const EditGroupRuleModal = (props) => {
         {useFormatMessage("modules.workspace.display.group_rules")}
       </ModalHeader>
       <ModalBody>
-        <Fragment>{renderListGroupRule()}</Fragment>
         <div className="form-container">
           <FormEditGroupRule
             methods={methods}
@@ -98,7 +97,7 @@ const EditGroupRuleModal = (props) => {
       <ModalFooter>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Button.Ripple type="submit" color="primary" disabled={state.loading}>
-            {useFormatMessage("modules.workspace.buttons.add_new_rule")}a
+            {useFormatMessage("modules.workspace.buttons.add_new_rule")}
           </Button.Ripple>
         </form>
       </ModalFooter>

@@ -3900,6 +3900,7 @@
         "feed": "Feed",
         "pinned": "Pinned",
         "introduction": "Introduction",
+        "about_group": "About Group",
         "group_rules": "Group rules",
         "member": "Member",
         "members": "Members",
@@ -3979,7 +3980,7 @@
           "type": {
             "public": {
               "title": "Pulbic Workspace",
-              "description": "Anyone can see post and activites in workspace"
+              "description": "Anyone can see who's in the group and what they post"
             },
             "private": {
               "title": "Private Workspace",
@@ -3989,7 +3990,7 @@
           "mode": {
             "visible": {
               "title": "Visible Workspace",
-              "description": "Anyone can see your workspace and request to join"
+              "description": "Anyone can see find this group"
             },
             "hidden": {
               "title": "Hidden",

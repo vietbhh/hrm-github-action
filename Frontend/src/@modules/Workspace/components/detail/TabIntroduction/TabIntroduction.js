@@ -81,7 +81,7 @@ const TabIntroduction = (props) => {
   return (
     <div className="tab-introduction">
       <Row>
-        <Col sm={8}>
+        <Col sm={8} className="col">
           <div>
             <Introduction
               id={id}
@@ -97,10 +97,11 @@ const TabIntroduction = (props) => {
               workspaceInfo={state.workspaceInfo}
               groupRule={state.groupRule}
               toggleModalEditGroupRule={toggleModalEditGroupRule}
+              setGroupRule={setGroupRule}
             />
           </div>
         </Col>
-        <Col sm={4}>
+        <Col sm={4} className="col">
           <WorkspaceInfo workspaceInfo={state.workspaceInfo} />
         </Col>
       </Row>

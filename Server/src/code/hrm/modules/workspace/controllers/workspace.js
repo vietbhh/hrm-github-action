@@ -514,7 +514,7 @@ const loadDataMember = async (req, res, next) => {
     let condition = {}
     if (text.trim().length > 0) {
       condition = {
-        username: {
+        full_name: {
           [Op.like]: `${text}%`
         }
       }

@@ -1,6 +1,6 @@
 // ** React Imports
 import { useMergedState } from "@apps/utility/common"
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useMemo } from "react"
 import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
@@ -98,7 +98,7 @@ const WorkgroupMember = (props) => {
 
   // ** effect
   useEffect(() => {
-    if (loadingTabMember === false) {
+    if (loadingTabMember === false && state.members.length === 0) {
       loadData(true)
     }
   }, [loadingTabMember])

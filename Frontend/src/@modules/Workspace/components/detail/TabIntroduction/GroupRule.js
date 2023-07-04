@@ -8,6 +8,7 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import ListGroupRule from "./ListGroupRule"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import DragAndDrop from "@apps/utility/DragAndDrop"
 
 const GroupRule = (props) => {
   const {
@@ -16,7 +17,8 @@ const GroupRule = (props) => {
     workspaceInfo,
     groupRule,
     // ** methods
-    toggleModalEditGroupRule
+    toggleModalEditGroupRule,
+    setGroupRule
   } = props
 
   const handleClickEdit = () => {
@@ -71,7 +73,10 @@ const GroupRule = (props) => {
             />
           </div>
           <div>
-            <Button.Ripple color="primary" className="custom-button" onClick={() => toggleModalEditGroupRule()}>
+            <Button.Ripple
+              color="primary"
+              className="custom-button"
+              onClick={() => toggleModalEditGroupRule()}>
               {useFormatMessage("modules.workspace.buttons.get_started")}
             </Button.Ripple>
           </div>
@@ -80,14 +85,16 @@ const GroupRule = (props) => {
     }
 
     return (
-      <PerfectScrollbar
-        style={{
-          maxHeight: "300px",
-          minHeight: "50px"
-        }}
-        options={{ wheelPropagation: false }}>
-        <ListGroupRule groupRule={groupRule} />
-      </PerfectScrollbar>
+      <DragAndDrop>
+        <PerfectScrollbar
+          style={{
+            maxHeight: "300px",
+            minHeight: "50px"
+          }}
+          options={{ wheelPropagation: false }}>
+          <ListGroupRule groupRule={groupRule} setGroupRule={setGroupRule}/>
+        </PerfectScrollbar>
+      </DragAndDrop>
     )
   }
 
@@ -100,10 +107,9 @@ const GroupRule = (props) => {
       return (
         <Button.Ripple
           size="sm"
-          color="flat-primary"
-          className=""
+          className="edit-group-rule-button"
           onClick={() => handleClickEdit()}>
-          {useFormatMessage("modules.workspace.buttons.edit")}
+          {useFormatMessage("button.create")}
         </Button.Ripple>
       )
     }
@@ -116,7 +122,9 @@ const GroupRule = (props) => {
       <CardBody>
         <div className="d-flex align-items-center justify-content-between mb-50">
           <div>
-            <h5>{useFormatMessage("modules.workspace.display.group_rules")}</h5>
+            <h5 className="mb-0 common-card-title">
+              {useFormatMessage("modules.workspace.display.group_rules")}
+            </h5>
           </div>
           <div>
             <Fragment>{renderEditButton()}</Fragment>
