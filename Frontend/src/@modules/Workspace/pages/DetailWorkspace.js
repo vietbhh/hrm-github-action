@@ -162,7 +162,9 @@ const DetailWorkspace = () => {
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {(state.isJoined || state.workspacePublic) && <TabIntroduction />}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabIntroduction detailWorkspace={state.detailWorkspace} />
+            )}
           </TabPane>
           <TabPane tabId={4}>
             {!state.isJoined && !state.workspacePublic && (
@@ -171,7 +173,11 @@ const DetailWorkspace = () => {
               </div>
             )}
             {(state.isJoined || state.workspacePublic) && (
-              <TabMember tabActive={state.tabActive} tabId={4} />
+              <TabMember
+                tabActive={state.tabActive}
+                tabId={4}
+                detailWorkspace={state.detailWorkspace}
+              />
             )}
           </TabPane>
           <TabPane tabId={5}>

@@ -16,19 +16,17 @@ const MemberItem = (props) => {
     // ** props
     id,
     member,
-    isFullPage,
-    isLoadingApprovedAll,
     currentPage,
     perPage,
     isAdmin,
-    isRequest,
     userState,
     isAdminGroup,
     avatarWidth,
     avatarHeight,
     // ** methods
     setFilter,
-    loadData
+    loadData,
+    setIsReloadAdmin
   } = props
 
   const [loading, setLoading] = useState(false)
@@ -49,17 +47,12 @@ const MemberItem = (props) => {
           type: type,
           update_administrator: true
         }
-        console.log("values", values)
+
         workspaceApi
           .update(id, values)
           .then((res) => {
-            if (type === "add") {
-              setFilter({
-                page: res.data.current_page
-              })
-            } else {
-              loadData()
-            }
+            loadData(true)
+            setIsReloadAdmin(true)
           })
           .catch((err) => {})
       }

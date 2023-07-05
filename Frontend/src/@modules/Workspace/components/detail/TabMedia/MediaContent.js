@@ -16,17 +16,8 @@ const MediaContent = (props) => {
 
   // ** render
   return (
-    <div className="p-1 ps-2">
+    <div className="pt-1 media-container">
       <Nav tabs className="mb-0">
-        <NavItem>
-          <NavLink
-            active={mediaTabActive === 1}
-            onClick={() => {
-              setMediaTabActive(1)
-            }}>
-            {useFormatMessage("modules.workspace.display.tab_media.files")}
-          </NavLink>
-        </NavItem>
         <NavItem>
           <NavLink
             active={mediaTabActive === 2}
@@ -47,6 +38,16 @@ const MediaContent = (props) => {
         </NavItem>
         <NavItem>
           <NavLink
+            active={mediaTabActive === 1}
+            onClick={() => {
+              setMediaTabActive(1)
+            }}>
+            {useFormatMessage("modules.workspace.display.tab_media.files")}
+          </NavLink>
+        </NavItem>
+        {/*
+        <NavItem>
+          <NavLink
             active={mediaTabActive === 4}
             onClick={() => {
               setMediaTabActive(4)
@@ -54,6 +55,7 @@ const MediaContent = (props) => {
             {useFormatMessage("modules.workspace.display.tab_media.links")}
           </NavLink>
         </NavItem>
+        */}
       </Nav>
       <div className="mt-1">
         <TabContent className="py-50" activeTab={mediaTabActive}>

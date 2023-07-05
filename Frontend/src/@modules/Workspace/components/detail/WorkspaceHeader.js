@@ -288,7 +288,7 @@ const WorkspaceHeader = (props) => {
   }, [data])
 
   return (
-    <Card className="pb-0">
+    <Card className="work-space-header pb-0 mb-75">
       <CoverImage
         src={data.cover_image}
         dataSave={{ ...data, id: data?._id }}
@@ -301,23 +301,18 @@ const WorkspaceHeader = (props) => {
         <div className="d-flex justify-content-between align-content-center">
           <div className="workspaceInformation">
             <h2 className="workspaceName">{data?.name}</h2>
-            <p>
-              {data?.type === "private" && (
-                <i className="fa-solid fa-lock-keyhole me-50"></i>
-              )}
-              {data?.type !== "private" && (
-                <i className="fa-regular fa-earth-asia me-50"></i>
-              )}
+            <p className="workspaceOverviewInfo">
               {data?.type} · {data?.members && data?.members.length}{" "}
-              {useFormatMessage("modules.workspace.text.members")} ·{" "}
-              {data?.pinPosts && data?.pinPosts.length}{" "}
-              {useFormatMessage("modules.workspace.text.posts")}
+              {useFormatMessage("app_options.members_capitalize")} ·{" "}
+              {/*{data?.pinPosts && data?.pinPosts.length}{" "}
+              {useFormatMessage("modules.workspace.text.posts")}*/}
             </p>
           </div>
           <div className="workspaceAction">
             {state.joined && (
               <Button
-                className="btn btn-success"
+              color="primary"
+                className="btn btn-primary"
                 onClick={() => onClickInvite()}>
                 <i className="fa-regular fa-plus me-50"></i>
                 {useFormatMessage("modules.workspace.buttons.invite")}
@@ -368,15 +363,6 @@ const WorkspaceHeader = (props) => {
           </NavItem>
           <NavItem>
             <NavLink
-              active={tabActive === 3}
-              onClick={() => {
-                tabToggle(3)
-              }}>
-              {useFormatMessage("modules.workspace.display.introduction")}
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
               active={tabActive === 4}
               onClick={() => {
                 tabToggle(4)
@@ -393,6 +379,17 @@ const WorkspaceHeader = (props) => {
               {useFormatMessage("modules.workspace.display.media")}
             </NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink
+              active={tabActive === 3}
+              onClick={() => {
+                tabToggle(3)
+              }}>
+              {useFormatMessage("modules.workspace.display.information")}
+            </NavLink>
+          </NavItem>
+          
+          
           {state.joined && (
             <div className="ms-auto">
               <Dropdown

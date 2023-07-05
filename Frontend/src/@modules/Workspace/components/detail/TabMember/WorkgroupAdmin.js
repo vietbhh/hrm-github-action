@@ -13,9 +13,10 @@ const WorkgroupAdmin = (props) => {
     // ** props
     id,
     userState,
-    loadingTabMember,
-    isAdminGroup
+    isReloadAdmin,
+    isAdminGroup,
     // ** methods
+    setIsReloadAdmin
   } = props
 
   const [state, setState] = useMergedState({
@@ -45,7 +46,7 @@ const WorkgroupAdmin = (props) => {
     load_list: "admin"
   }
 
-  const loadData = () => {
+  const loadData = (reset = false) => {
     setState({
       loading: true
     })
@@ -55,9 +56,12 @@ const WorkgroupAdmin = (props) => {
       .then((res) => {
         setState({
           totalListAdmin: res.data.total_list_admin,
-          administrators: [...state.administrators, ...res.data.administrators],
+          administrators: reset
+            ? [...res.data.administrators]
+            : [...state.administrators, ...res.data.administrators],
           loading: false
         })
+        setIsReloadAdmin(false)
       })
       .catch((err) => {
         setState({
@@ -65,6 +69,7 @@ const WorkgroupAdmin = (props) => {
           administrators: [],
           loading: false
         })
+        setIsReloadAdmin(false)
       })
   }
 
@@ -76,69 +81,61 @@ const WorkgroupAdmin = (props) => {
 
   // ** effect
   useEffect(() => {
-    if (loadingTabMember === false && state.administrators.length === 0) {
-      loadData()
-    }
-  }, [loadingTabMember])
-
-  useEffect(() => {
     loadData()
   }, [state.filter])
 
   useEffect(() => {
-    if (loadingTabMember === false && state.loading === false) {
+    if (isReloadAdmin === true) {
+      loadData(true)
+    }
+  }, [isReloadAdmin])
+
+  useEffect(() => {
+    if (state.loading === false) {
       setState({
         disableLoadMore:
           state.filter.page >= state.totalListAdmin / state.filter.limit
       })
     }
-  }, [loadingTabMember, state.loading, state.filter])
+  }, [state.loading, state.filter])
 
   // ** render
   const renderComponent = () => {
-    if (loadingTabMember === true) {
-      return (
-        <div className="d-flex align-items-center justify-content-center loading-component">
-          <AppSpinner />
-        </div>
-      )
-    }
-
     return (
-      <Card>
-        <CardBody className="pb-75 pt-75">
-          <div className="section">
-            <div className="w-100 admin-section">
-              <h6 className="title mb-1">
-                {useFormatMessage(
-                  "modules.workspace.text.admin_and_moderators"
-                )}
-              </h6>
-              <div className="w-100 d-flex align-items-center justify-content-start pt-25">
-                <ListMember
-                  id={id}
-                  userState={userState}
-                  isAdmin={true}
-                  isAdminGroup={isAdminGroup}
-                  loadingWorkgroup={state.loading}
-                  listData={state.administrators}
-                  totalListData={state.totalListAdmin}
-                  currentPage={state.filter.page}
-                  perPage={state.filter.limit}
-                  disableLoadMore={state.disableLoadMore}
-                  setPagination={setFilter}
-                  handleClickLoadMore={handleClickLoadMore}
-                  loadData={loadData}
-                />
-              </div>
-            </div>
+      <div className="section">
+        <div className="w-100 admin-section">
+          <h6 className="title mb-1">
+            {useFormatMessage("modules.workspace.text.admin_and_moderators")}
+          </h6>
+          <div className="w-100 d-flex align-items-center justify-content-start pt-25">
+            <ListMember
+              id={id}
+              userState={userState}
+              isAdmin={true}
+              isAdminGroup={isAdminGroup}
+              loadingWorkgroup={state.loading}
+              listData={state.administrators}
+              totalListData={state.totalListAdmin}
+              currentPage={state.filter.page}
+              perPage={state.filter.limit}
+              disableLoadMore={state.disableLoadMore}
+              setPagination={setFilter}
+              handleClickLoadMore={handleClickLoadMore}
+              loadData={loadData}
+            />
           </div>
-        </CardBody>
-      </Card>
+        </div>
+      </div>
     )
   }
 
-  return <Fragment>{renderComponent()}</Fragment>
+  return (
+    <Card>
+      <CardBody className="pb-75 pt-75">
+        <Fragment>{renderComponent()}</Fragment>
+      </CardBody>
+    </Card>
+  )
 }
 
 export default WorkgroupAdmin

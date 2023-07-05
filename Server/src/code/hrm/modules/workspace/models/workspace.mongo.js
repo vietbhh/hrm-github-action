@@ -31,7 +31,10 @@ const workspaceSchema = baseSchema("m_workspace", {
     enum: ["visible", "hidden"],
     required: true
   },
-  members: [Number],
+  members: [{
+    id_user: String,
+    joined_at: String
+  }],
   administrators: [Number],
   pinPosts: {
     type: [

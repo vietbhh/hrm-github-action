@@ -2,6 +2,27 @@
 .workspace {
   max-width: 1148px;
   margin: auto;
+
+  .work-space-header {
+    border-radius: 14px !important;
+  }
+
+  .custom-empty-content {
+    width: 470px;
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #32434f;
+    }
+
+    .empty-text {
+      font-size: 12px;
+      font-weight: 400;
+      color: #32434f;
+    }
+  }
+
   .image-cover {
     position: relative;
     .coverPhoto {
@@ -29,8 +50,15 @@
   }
   .workspaceInformation {
     .workspaceName {
-      color: black;
-      font-weight: bold;
+      color: #32434f;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .workspaceOverviewInfo {
+      font-size: 12px;
+      font-weight: 400;
+      color: #9b9b9f;
     }
   }
   .no-border-bottom {
@@ -57,20 +85,23 @@
   .small-description {
     font-size: 14px;
     font-weight: 400;
-    color: #32434F;
+    color: #32434f;
   }
 
   .tab-content {
     .tab-introduction {
       .w-10 {
-        width: 10%;
+        width: 5%;
+      }
+
+      .w-90 {
+        width: 95%;
       }
 
       .col {
-        padding-right: calc(var(--bs-gutter-x) * 0.3);
-        padding-left: calc(var(--bs-gutter-x) * 0.3);
+        
       }
-      
+
       .card {
         border-radius: 14px;
       }
@@ -84,26 +115,10 @@
       .introduction-text {
         font-size: 14px;
         font-weight: 400;
-        color: #32434F;
+        color: #32434f;
       }
 
       .group-rule-container {
-        .empty-content {
-          width: 470px;
-
-          .empty-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #32434f;
-          }
-
-          .empty-text {
-            font-size: 12px;
-            font-weight: 400;
-            color: #32434f;
-          }
-        }
-
         .custom-button {
           font-size: 12px !important;
           font-weight: 500 !important;
@@ -111,7 +126,7 @@
         }
 
         .edit-group-rule-button {
-          color: #0062FF !important;
+          color: #0062ff !important;
           background-color: unset !important;
           border: none !important;
           box-shadow: none;
@@ -122,20 +137,20 @@
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             .index {
               text-align: center;
-              color: #32434F;
+              color: #32434f;
               font-weight: 600;
             }
 
             .title {
               font-weight: 14px;
               font-weight: 600;
-              color: #32434F;
+              color: #32434f;
             }
 
             .description {
               font-size: 14px;
               font-weight: 400;
-              color: #32434F;
+              color: #32434f;
             }
 
             .sort {
@@ -192,6 +207,10 @@
 
       .custom-button {
         border-radius: 12px;
+      }
+
+      .app-loader {
+        height: auto !important;
       }
 
       .custom-secondary {
@@ -260,12 +279,31 @@
     }
 
     .tab-media {
+      .custom-secondary {
+        color: #32434f !important;
+        font-size: 12px !important;
+        font-weight: 400 !important;
+        background: #f1f1f5 !important;
+        border: none;
+      }
+
+      .media-header {
+        .title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #32434f;
+        }
+      }
       .infinite-scroll-component {
         overflow: unset !important;
       }
 
       .time-title {
         font-weight: 600;
+      }
+
+      .media-container {
+        min-height: 30vh !important;
       }
 
       .media-file-item {
@@ -340,8 +378,8 @@
 
       .loading-col-media-image {
         .ant-skeleton-image {
-          height: 175px !important;
-          width: 175px !important;
+          height: 150px !important;
+          width: 150px !important;
           border-radius: 12px;
         }
       }
@@ -350,16 +388,16 @@
         .media-image-item {
           .image-container {
             cursor: pointer;
-            height: 175px !important;
-            width: 175px !important;
+            height: 150px !important;
+            width: 150px !important;
             background-size: cover;
             background-position: center;
             border-radius: 12px;
           }
 
           .ant-skeleton-image {
-            height: 175px !important;
-            width: 175px !important;
+            height: 150px !important;
+            width: 150px !important;
             border-radius: 12px;
           }
         }
@@ -371,16 +409,16 @@
         .video-thumb {
           .image-container {
             cursor: pointer;
-            height: 175px !important;
-            width: 175px !important;
+            height: 150px !important;
+            width: 150px !important;
             background-size: cover;
             background-position: center;
             border-radius: 12px;
           }
 
           .ant-skeleton-image {
-            height: 175px !important;
-            width: 175px !important;
+            height: 150px !important;
+            width: 150px !important;
             border-radius: 12px;
           }
         }
@@ -710,7 +748,8 @@
   }
 }
 
-.dropdown-workspace-group-rule, .dropdown-workspace-about-group {
+.dropdown-workspace-group-rule,
+.dropdown-workspace-about-group {
   .ant-dropdown-menu {
     padding: 0 !important;
     border-radius: 10px;

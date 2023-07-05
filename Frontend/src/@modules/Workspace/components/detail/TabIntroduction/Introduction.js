@@ -76,7 +76,7 @@ const Introduction = (props) => {
   }
 
   const renderIntroductionAction = () => {
-    if (loading === false && !workspaceInfo.is_admin_group) {
+    if (!workspaceInfo.is_admin_group) {
       return ""
     }
 

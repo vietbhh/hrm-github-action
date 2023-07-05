@@ -150,7 +150,11 @@ const getListWorkspace = async (req, res, next) => {
     } else if (workspaceType === "both") {
       filter = {
         $or: [
-          { members: parseInt(userId) },
+          {
+            members: {
+              id_user: parseInt(userId)
+            }
+          },
           { administrators: parseInt(userId) }
         ]
       }
@@ -255,7 +259,7 @@ const _handleUpdateGroupRule = (workspace, requestData) => {
     return {
       ...workspace._doc,
       group_rules: groupRule.filter((item) => {
-        return item._id !== requestData.group_rule_id
+        return item._id.toString() !== requestData.group_rule_id
       })
     }
   }
@@ -291,11 +295,12 @@ const _handleRemoveMember = (workspace, requestData) => {
     workspace?.members === undefined
       ? []
       : workspace.members.filter((item) => {
-          return item !== requestData.data.id
+          return item.id_user !== requestData.data.id
         })
 
   return { ...workspace._doc, administrators: administrators, members: members }
 }
+
 const _handleApproveJoinRequest = (workspace, requestData) => {
   if (requestData.is_all === true) {
     const requestJoins =
@@ -483,12 +488,9 @@ const updateWorkspace = async (req, res, next) => {
 
 const sortGroupRule = async (req, res, next) => {
   const workspaceId = req.params.id
-  const index = req.body.index
-  const sortType = req.body.sort_type
+  const data = req.body.data
   try {
-    const workspace = await workspaceMongoModel.findById(workspaceId)
-    const nextIndex = sortType === "down" ? index + 1 : index - 1
-    const groupRule = arrayMove([...workspace["group_rules"]], index, nextIndex)
+    const groupRule = data
 
     await workspaceMongoModel.findOneAndUpdate(
       {
@@ -586,12 +588,18 @@ const loadDataMember = async (req, res, next) => {
         workspace?.administrators === undefined
           ? []
           : workspace.administrators.reverse()
-      const listMember =
-        workspace?.members === undefined
+      const workspaceMember =
+        workspace?.members === undefined || workspace?.members === null
           ? []
-          : workspace.members.reverse().filter((item) => {
-              return !workspaceAdministrator.includes(item)
-            })
+          : workspace?.members
+      const listMember = workspaceMember
+        .reverse()
+        .map((item) => {
+          return item.id_user
+        })
+        .filter((item) => {
+          return !workspaceAdministrator.includes(item)
+        })
 
       const allMember =
         listMember.length === 0 ? [] : await getUsers(listMember)
@@ -602,9 +610,10 @@ const loadDataMember = async (req, res, next) => {
               listMember.slice((page - 1) * limit, page * limit),
               condition
             )
+      const handledData = handleMemberData(members, workspaceMember)
       return res.respond({
         total_member: allMember.length,
-        members: members,
+        members: handledData,
         total_list_member: allMember.length
       })
     } else if (req.query.load_list === "admin") {
@@ -660,6 +669,24 @@ const loadDataMember = async (req, res, next) => {
   } catch (err) {
     return res.fail(err.message)
   }
+}
+
+const handleMemberData = (listMember, workspaceMember) => {
+  const newData = listMember.map((item) => {
+    const newItem = item.dataValues
+    const [workspaceDataUser] = workspaceMember.filter((itemFilter) => {
+      return parseInt(itemFilter.id_user) === parseInt(newItem.id)
+    })
+
+    return {
+      ...newItem,
+      joined_at: workspaceDataUser?.joined_at
+        ? workspaceDataUser?.joined_at
+        : ""
+    }
+  })
+
+  return newData
 }
 
 const loadDataMedia = async (req, res, next) => {
@@ -1026,7 +1053,12 @@ const getListWorkspaceSeparateType = async (req, res) => {
       })
 
     const workspaceJoin = await workspaceMongoModel
-      .find({ members: parseInt(userId), ...condition })
+      .find({
+        members: {
+          id_user: parseInt(userId),
+          ...condition
+        }
+      })
       .sort({
         _id: "desc"
       })
@@ -1086,7 +1118,7 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
             }
           })
           resolve({
-            id: item.id,
+            id: item._id,
             name: item.name,
             type: item.type,
             cover_image: item.cover_image,
@@ -1096,7 +1128,7 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
           })
         } catch (err) {
           resolve({
-            id: item.id,
+            id: item._id,
             name: item.name,
             type: item.type,
             cover_image: item.cover_image,

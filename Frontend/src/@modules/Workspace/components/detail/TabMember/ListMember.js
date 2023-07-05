@@ -23,7 +23,8 @@ const ListMember = (props) => {
     // ** methods
     setPagination,
     handleClickLoadMore,
-    loadData
+    loadData,
+    setIsReloadAdmin
   } = props
 
   // ** render
@@ -72,6 +73,7 @@ const ListMember = (props) => {
                   perPage={perPage}
                   setFilter={setPagination}
                   loadData={loadData}
+                  setIsReloadAdmin={setIsReloadAdmin}
                 />
               </Col>
             )

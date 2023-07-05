@@ -3900,11 +3900,12 @@
         "feed": "Feed",
         "pinned": "Pinned",
         "introduction": "Introduction",
+        "information": "Information",
         "about_group": "About Group",
         "group_rules": "Group rules",
         "member": "Member",
         "members": "Members",
-        "media": "Media",
+        "media": "Media & Files",
         "request_to_join": "Request to join",
         "member_request_to_join": "{number} Member request to join",
         "tab_media": {
@@ -3946,6 +3947,10 @@
         "empty_group_rule": {
           "title": "No Rules Set Up",
           "description": "Use rules to help set the tone for your group and help prevent member conflict. Write up to 10 rules about your group"
+        },
+        "empty_pinned": {
+          "title": "Create a pinned for your group",
+          "description": "Pinned a post. anyone who joins will be able to see it and comment"
         }
       },
       "fields": {

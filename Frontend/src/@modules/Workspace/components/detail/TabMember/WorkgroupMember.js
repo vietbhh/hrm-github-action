@@ -14,9 +14,9 @@ const WorkgroupMember = (props) => {
     // ** props
     id,
     userState,
-    loadingTabMember,
-    isAdminGroup
+    isAdminGroup,
     // ** methods
+    setIsReloadAdmin
   } = props
 
   const [state, setState] = useMergedState({
@@ -98,12 +98,6 @@ const WorkgroupMember = (props) => {
 
   // ** effect
   useEffect(() => {
-    if (loadingTabMember === false && state.members.length === 0) {
-      loadData(true)
-    }
-  }, [loadingTabMember])
-
-  useEffect(() => {
     loadData()
   }, [state.filter])
 
@@ -112,61 +106,58 @@ const WorkgroupMember = (props) => {
   }, [state.searchText])
 
   useEffect(() => {
-    if (loadingTabMember === false && state.loading === false) {
+    if (state.loading === false) {
       setState({
         disableLoadMore:
           state.filter.page >= state.totalListMember / state.filter.limit
       })
     }
-  }, [loadingTabMember, state.loading, state.filter])
+  }, [state.loading, state.filter])
 
   // ** render
   const renderComponent = () => {
-    if (loadingTabMember === true) {
-      return (
-        <div className="d-flex align-items-center justify-content-center loading-component">
-          <AppSpinner />
-        </div>
-      )
-    }
-
     return (
-      <Card>
-        <CardBody>
-          <div className="section border-bot">
-            <HeaderSection
-              totalMember={state.totalMember}
-              filter={state.filter}
-              setSearchText={setSearchText}
-            />
-          </div>
-          <div className="section mt-50">
-            <div className="w-100 member-section">
-              <div className="w-100 d-flex align-items-center justify-content-start">
-                <ListMember
-                  id={id}
-                  userState={userState}
-                  isAdmin={false}
-                  isAdminGroup={isAdminGroup}
-                  loadingWorkgroup={state.loading}
-                  listData={state.members}
-                  totalListData={state.totalListMember}
-                  currentPage={state.filter.page}
-                  perPage={state.filter.limit}
-                  disableLoadMore={state.disableLoadMore}
-                  setPagination={setFilter}
-                  handleClickLoadMore={handleClickLoadMore}
-                  loadData={loadData}
-                />
-              </div>
+      <Fragment>
+        <div className="section border-bot">
+          <HeaderSection
+            totalMember={state.totalMember}
+            filter={state.filter}
+            setSearchText={setSearchText}
+          />
+        </div>
+        <div className="section mt-50">
+          <div className="w-100 member-section">
+            <div className="w-100 d-flex align-items-center justify-content-start">
+              <ListMember
+                id={id}
+                userState={userState}
+                isAdmin={false}
+                isAdminGroup={isAdminGroup}
+                loadingWorkgroup={state.loading}
+                listData={state.members}
+                totalListData={state.totalListMember}
+                currentPage={state.filter.page}
+                perPage={state.filter.limit}
+                disableLoadMore={state.disableLoadMore}
+                setPagination={setFilter}
+                handleClickLoadMore={handleClickLoadMore}
+                loadData={loadData}
+                setIsReloadAdmin={setIsReloadAdmin}
+              />
             </div>
           </div>
-        </CardBody>
-      </Card>
+        </div>
+      </Fragment>
     )
   }
 
-  return <Fragment>{renderComponent()}</Fragment>
+  return (
+    <Card>
+      <CardBody>
+        <Fragment>{renderComponent()}</Fragment>
+      </CardBody>
+    </Card>
+  )
 }
 
 export default WorkgroupMember

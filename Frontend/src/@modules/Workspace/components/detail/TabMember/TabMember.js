@@ -14,43 +14,25 @@ const TabMember = (props) => {
   const {
     // ** props
     tabActive,
-    tabId
+    tabId,
+    detailWorkspace
     // ** methods
   } = props
 
   const [state, setState] = useMergedState({
-    loading: true,
-    isAdminGroup: false
+    isReloadAdmin: false
   })
 
   const { id } = useParams()
   const userState = useSelector((state) => state.auth.userData)
-  const navigate = useNavigate()
 
-  const loadData = () => {
+  const setIsReloadAdmin = (status) => {
     setState({
-      loading: true
+      isReloadAdmin: status
     })
-
-    workspaceApi
-      .getDetailWorkspace(id)
-      .then((res) => {
-        setState({
-          isAdminGroup: res.data.is_admin_group,
-          loading: false
-        })
-      })
-      .catch((err) => {
-        navigate("/not-found")
-      })
   }
 
   // ** effect
-  useEffect(() => {
-    if (tabActive === tabId) {
-      loadData()
-    }
-  }, [tabActive])
 
   // ** render
   return (
@@ -60,8 +42,8 @@ const TabMember = (props) => {
           <WorkgroupMember
             id={id}
             userState={userState}
-            loadingTabMember={state.loading}
-            isAdminGroup={state.isAdminGroup}
+            isAdminGroup={detailWorkspace.is_admin_group}
+            setIsReloadAdmin={setIsReloadAdmin}
           />
         </Col>
         <Col sm={4}>
@@ -69,7 +51,9 @@ const TabMember = (props) => {
             id={id}
             userState={userState}
             loadingTabMember={state.loading}
-            isAdminGroup={state.isAdminGroup}
+            isReloadAdmin={state.isReloadAdmin}
+            isAdminGroup={detailWorkspace.is_admin_group}
+            setIsReloadAdmin={setIsReloadAdmin}
           />
         </Col>
       </Row>
