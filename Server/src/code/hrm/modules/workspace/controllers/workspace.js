@@ -113,6 +113,7 @@ const getListWorkspace = async (req, res, next) => {
   const text = req.query.text === undefined ? "" : req.query.text
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
   const queryType = req.query.query_type
+
   try {
     let filter = {}
     if (workspaceType === "joined") {
@@ -139,6 +140,8 @@ const getListWorkspace = async (req, res, next) => {
     }
 
     let workspace = []
+    console.log("workspace userId2", userId)
+
     if (limit === 0) {
       workspace = await workspaceMongoModel
         .find(filter)
@@ -156,7 +159,7 @@ const getListWorkspace = async (req, res, next) => {
           _id: "desc"
         })
     }
-
+    console.log("workspace", workspace)
     const totalWorkspace = await workspaceMongoModel.find(filter)
     const result = await handleDataBeforeReturn(workspace, true)
 
@@ -376,14 +379,34 @@ const updateWorkspace = async (req, res, next) => {
     } else {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
+      console.log("updateData.members", updateData.members)
       if (requestData?.members) {
-        updateData.members = JSON.parse(requestData.members)
+        const requestDataMember = Array.isArray(requestData.members)
+          ? requestData.members
+          : JSON.parse(requestData.members)
+        const memberUpdate = []
+        forEach(requestDataMember, (value) => {
+          memberUpdate.push({
+            id_user: value,
+            joined_at: moment().format("YYYY-MM-DD")
+          })
+        })
+        console.log("memberUpdate", memberUpdate)
+        updateData.members = memberUpdate
       }
+      console.log("updateDataupdateDataupdateData", updateData)
+
       if (requestData?.administrators2) {
-        updateData.administrators = JSON.parse(requestData.administrators)
+        updateData.administrators = Array.isArray(requestData.administrators)
+          ? requestData.administrators
+          : JSON.parse(requestData.administrators)
       }
-      if (requestData?.pinPosts2) {
-        updateData.pinPosts = JSON.parse(requestData.pinPosts)
+      if (requestData?.pinPosts) {
+        console.log("run pin post")
+        updateData.pinPosts = Array.isArray(requestData.pinPosts)
+          ? requestData.pinPosts
+          : JSON.parse(requestData.pinPosts)
+        console.log("updateData.pinPosts", updateData.pinPosts)
       }
       if (requestData?.request_joins2) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
@@ -417,7 +440,7 @@ const updateWorkspace = async (req, res, next) => {
           )
         }
       }
-
+      console.log("{ ...updateData }", { ...updateData })
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId

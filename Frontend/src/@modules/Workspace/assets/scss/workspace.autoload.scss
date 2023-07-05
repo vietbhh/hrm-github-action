@@ -280,7 +280,7 @@
   background-color: #F0F2F5;
   width: 40%;
   padding-left: 10px;
-  margin-left: 10px;
+  margin-left: 25px;
 }
 .filter{
   span{
@@ -333,6 +333,14 @@
   border-radius: 12px;
   &:hover {
     background-color: #f5f7f9;
+  }
+  .title{
+    color: #32434F;
+    font-size: 14px;
+    font-family: "Be Vietnam Pro";
+    font-style: normal;
+    font-weight: 500;
+    line-height: 29px;
   }
 }
 .setup-notification-workspace-modal {

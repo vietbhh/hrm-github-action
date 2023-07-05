@@ -1,5 +1,5 @@
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import EmployeesSelect from "@/components/hrm/Employees/EmployeesSelect"
+import { useMergedState } from "@apps/utility/common"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
@@ -43,7 +43,6 @@ const InviteWorkspaceModal = (props) => {
   const getDataSelect = (data = [], typeAdd) => {
     setState({ dataSelected: data, typeAdd: typeAdd })
   }
-
   return (
     <Modal
       isOpen={modal}

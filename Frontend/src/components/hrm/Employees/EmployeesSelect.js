@@ -70,7 +70,10 @@ const EmployeesSelect = (props) => {
             <Avatar src={item.avatar} className="me-50" />
             <div className="title">{item.full_name}</div>
             <div className="ms-auto">
-              <ErpCheckbox checked={checked} />
+              <ErpCheckbox
+                checked={checked}
+                onChange={() => handleSelected(key)}
+              />
             </div>
           </div>
         </Col>
@@ -80,7 +83,7 @@ const EmployeesSelect = (props) => {
 
   const renderDepartment = (data = []) => {
     return data.map((item, key) => {
-      const checked = checkExistSelected(item.id) >= 0 ?? true
+      const checked = state.department_selected.includes(item.id)
       return (
         <Col sm={12} key={key}>
           <div
@@ -89,7 +92,10 @@ const EmployeesSelect = (props) => {
             <i className="fa-regular fa-building me-1 ms-50"></i>
             <div className="title">{item.name}</div>
             <div className="ms-auto">
-              <ErpCheckbox checked={checked} />
+              <ErpCheckbox
+                checked={checked}
+                onChange={() => loadUserByDepartment(item.id, key)}
+              />
             </div>
           </div>
         </Col>
@@ -105,21 +111,6 @@ const EmployeesSelect = (props) => {
             onClick={() => handleSelected(key)}>
             <i className="fa-regular fa-building me-1 ms-50"></i>
             <div className="title">{item.name}</div>
-          </div>
-        </Col>
-      )
-    })
-  }
-
-  const renderJobTitleSelected = (data = []) => {
-    return data.map((item, key) => {
-      return (
-        <Col sm={12} key={item.id}>
-          <div
-            className="box-member d-flex"
-            onClick={() => handleSelected(key)}>
-            <i className="fa-regular fa-building me-1 ms-50"></i>
-            <div className="title">{item?.full_name}</div>
           </div>
         </Col>
       )
@@ -189,25 +180,27 @@ const EmployeesSelect = (props) => {
   }
 
   const loadUserByDepartment = (idDepartment) => {
-    defaultModuleApi
-      .getUsers({ perPage: 1000, filters: { department_id: idDepartment } })
-      .then((res) => {
-        console.log("res", res.data.results)
-        const dataSelected = [...state.dataSelected]
-        const concat = dataSelected.concat(res.data.results)
-        setState({ dataSelected: concat })
-
-        return
-        const checkExist = checkExistSelected(data[key].id)
-        if (checkExist >= 0) {
-          dataSelected.splice(checkExist, 1)
-          setState({ dataSelected: dataSelected })
-        } else {
-          const concat = dataSelected.concat(data[key])
-          setState({ dataSelected: concat })
-        }
+    const department_selected = [...state.department_selected]
+    if (department_selected.includes(idDepartment)) {
+      const index = department_selected.findIndex((p) => p.id === idDepartment)
+      department_selected.splice(index, 1)
+      setState({
+        department_selected: department_selected
       })
+    } else {
+      defaultModuleApi
+        .getUsers({ perPage: 1000, filters: { department_id: idDepartment } })
+        .then((res) => {
+          const dataSelected = [...state.dataSelected]
+          const concat = dataSelected.concat(res.data.results)
+          setState({
+            dataSelected: concat,
+            department_selected: [...department_selected, idDepartment]
+          })
+        })
+    }
   }
+  console.log("ggggggggggg,", state.department_selected)
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.typeAdd === "members") {
@@ -225,14 +218,6 @@ const EmployeesSelect = (props) => {
     }
   }
 
-  const endScrollJobtitle = () => {
-    const page = state.page + 1
-    if (state.typeAdd === "jobtitles") {
-      if (state.recordsTotal > state.jobtitles.length) {
-        loadJobtitle({ page: page, search: state.search })
-      }
-    }
-  }
   const handleAdd = () => {
     const dataSelected = state.dataSelected
     handleSelect(state.dataSelected)
