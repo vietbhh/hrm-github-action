@@ -22,6 +22,7 @@ const EmployeesSelect = (props) => {
     department_selected: [],
     typeAdd: "members"
   })
+  console.log("member_selected", member_selected)
   const handleSelected = (key) => {
     let data = state.members
 
@@ -129,7 +130,7 @@ const EmployeesSelect = (props) => {
   const removeSelected = (key) => {}
 
   const loadData = (props) => {
-    props.excepts = member_selected
+    // props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
       const members = state.members
       const concat = !props.search
@@ -200,7 +201,6 @@ const EmployeesSelect = (props) => {
         })
     }
   }
-  console.log("ggggggggggg,", state.department_selected)
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.typeAdd === "members") {
@@ -248,6 +248,7 @@ const EmployeesSelect = (props) => {
   }, [state.typeAdd])
   useEffect(() => {
     handleSelect(state.dataSelected, state.typeAdd)
+    console.log("em ployyy state.dataSelected", state.dataSelected)
   }, [state.dataSelected])
   return (
     <>
@@ -291,14 +292,21 @@ const EmployeesSelect = (props) => {
             </Col>
           </Row>
           {state.typeAdd === "members" && (
-            <PerfectScrollbar
-              onYReachEnd={endScrollLoad}
-              style={{
-                maxHeight: "400px",
-                minHeight: "400px"
-              }}>
-              <Row className="w-100">{renderMember(state.members)}</Row>
-            </PerfectScrollbar>
+            <>
+              <Row className="w-100">
+                <Col sm={12} className="mb-50">
+                  Suggested
+                </Col>
+              </Row>
+              <PerfectScrollbar
+                onYReachEnd={endScrollLoad}
+                style={{
+                  maxHeight: "400px",
+                  minHeight: "400px"
+                }}>
+                <Row className="w-100">{renderMember(state.members)}</Row>
+              </PerfectScrollbar>
+            </>
           )}
           {state.typeAdd === "departments" && (
             <PerfectScrollbar

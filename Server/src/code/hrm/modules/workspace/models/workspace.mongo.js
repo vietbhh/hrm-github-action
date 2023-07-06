@@ -35,10 +35,9 @@ const workspaceSchema = baseSchema("m_workspace", {
     type: [
       {
         id_user: { type: Number },
-        joined_at: String
+        joined_at: Date
       }
-    ],
-    default: []
+    ]
   },
   administrators: [Number],
   pinPosts: {

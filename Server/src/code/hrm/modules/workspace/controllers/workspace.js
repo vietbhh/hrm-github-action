@@ -121,14 +121,14 @@ const getListWorkspace = async (req, res, next) => {
     } else if (workspaceType === "managed") {
       filter = { administrators: parseInt(userId) }
     } else if (workspaceType === "both") {
-      filter = {
+      /* filter = {
         $or: [
           { members: parseInt(userId) },
           { administrators: parseInt(userId) }
         ]
-      }
+      }*/
     }
-
+    console.log("filter", filter)
     if (status !== undefined && status !== "" && status !== "all") {
       filter["status"] = status
     }
@@ -205,6 +205,7 @@ const getListWorkspace = async (req, res, next) => {
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
   } catch (err) {
+    console.log("errerr", err)
     return res.fail(err.message)
   }
 }
@@ -386,16 +387,19 @@ const updateWorkspace = async (req, res, next) => {
           : JSON.parse(requestData.members)
         const memberUpdate = []
         forEach(requestDataMember, (value) => {
-          memberUpdate.push({
-            id_user: value,
-            joined_at: moment().format("YYYY-MM-DD")
-          })
+          if (!value?.joined_at) {
+            memberUpdate.push({
+              id_user: value.id_user,
+              joined_at: moment().format("YYYY-MM-DD")
+            })
+          } else {
+            memberUpdate.push(value)
+          }
         })
         console.log("memberUpdate", memberUpdate)
         updateData.members = memberUpdate
       }
       console.log("updateDataupdateDataupdateData", updateData)
-
       if (requestData?.administrators2) {
         updateData.administrators = Array.isArray(requestData.administrators)
           ? requestData.administrators
