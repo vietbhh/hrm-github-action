@@ -7,6 +7,7 @@ import { Col, Row } from "reactstrap"
 // ** Components
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import MediaPhotoImage from "./MediaPhotoImage"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 
 const MediaPhotoItem = (props) => {
   const {

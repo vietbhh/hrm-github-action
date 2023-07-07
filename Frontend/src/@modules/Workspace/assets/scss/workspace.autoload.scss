@@ -3,8 +3,34 @@
   max-width: 1148px;
   margin: auto;
 
+  .nav {
+    .nav-link {
+      color: #32434f !important;
+      font-weight: 500;
+      font-size: 12px;
+
+      &::after {
+        background: #ffe658 !important;
+      }
+    }
+  }
+
   .work-space-header {
     border-radius: 14px !important;
+
+    .custom-secondary {
+      height: 32px;
+      background-color: #f5f6f8 !important;
+      border-radius: 8px !important;
+      width: 40px !important;
+      padding: unset !important;
+    }
+
+    .workspaceAction {
+      .custom-secondary {
+        height: 36px;
+      }
+    }
   }
 
   .custom-empty-content {
@@ -21,6 +47,25 @@
       font-weight: 400;
       color: #32434f;
     }
+  }
+
+  .custom-empty-content.empty-post {
+    width: 350px;
+  }
+
+  .custom-secondary {
+    color: #32434f !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    background: #f1f1f5 !important;
+    border: none;
+  }
+
+  .custom-primary {
+    border-radius: 8px;
+    color: #32434f !important;
+    background: #ffe658 !important;
+    border: none;
   }
 
   .image-cover {
@@ -99,7 +144,6 @@
       }
 
       .col {
-        
       }
 
       .card {
@@ -214,21 +258,13 @@
       }
 
       .custom-secondary {
-        color: #32434f !important;
-        font-size: 14px !important;
-        font-weight: 500 !important;
-        background: #f1f1f5 !important;
-        border: none;
         width: 100%;
       }
 
       .custom-primary {
         padding: 8px;
-        border-radius: 8px;
-        color: #32434f !important;
         font-size: 12px !important;
         background: rgba(255, 230, 88, 0.6) !important;
-        border: none;
 
         i {
           font-size: 18px;
@@ -1195,6 +1231,24 @@
         .btn {
           font-size: 12px !important;
         }
+      }
+    }
+  }
+}
+
+.worspace-dropdown-common {
+  .ant-dropdown-menu {
+    border-radius: 10px !important;
+    padding: 0px;
+
+    .ant-dropdown-menu-item {
+      height: 46px !important;
+      font-size: 12px;
+      font-weight: 400;
+      color: #32434f;
+
+      &:last-child {
+        border-top: 1px solid #f1f1f5;
       }
     }
   }

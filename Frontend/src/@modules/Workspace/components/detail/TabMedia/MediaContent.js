@@ -20,11 +20,20 @@ const MediaContent = (props) => {
       <Nav tabs className="mb-0">
         <NavItem>
           <NavLink
+            active={mediaTabActive === 1}
+            onClick={() => {
+              setMediaTabActive(1)
+            }}>
+            {useFormatMessage("modules.workspace.display.tab_media.photos")}
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
             active={mediaTabActive === 2}
             onClick={() => {
               setMediaTabActive(2)
             }}>
-            {useFormatMessage("modules.workspace.display.tab_media.photos")}
+            {useFormatMessage("modules.workspace.display.tab_media.videos")}
           </NavLink>
         </NavItem>
         <NavItem>
@@ -32,15 +41,6 @@ const MediaContent = (props) => {
             active={mediaTabActive === 3}
             onClick={() => {
               setMediaTabActive(3)
-            }}>
-            {useFormatMessage("modules.workspace.display.tab_media.videos")}
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            active={mediaTabActive === 1}
-            onClick={() => {
-              setMediaTabActive(1)
             }}>
             {useFormatMessage("modules.workspace.display.tab_media.files")}
           </NavLink>

@@ -3951,7 +3951,19 @@
         "empty_pinned": {
           "title": "Create a pinned for your group",
           "description": "Pinned a post. anyone who joins will be able to see it and comment"
-        }
+        },
+        "empty_post": {
+          "title": "Create a post for your group",
+          "description": "Get the conversation started with a welcome post. Anyone who joins will be able to see it and comment."
+        },
+        "empty_member": {
+          "title": "No members",
+          "description": "Get the conversation started with a welcome post. Anyone who joins will be able to see it and comment."
+        },
+        "manage_notification": "Manage notifications",
+        "member_request": "Member request",
+        "workgroup_setting": "Workgroup setting",
+        "leave_workgroup": "Leave workgroup"
       },
       "fields": {
         "workspace_name": "Workspace name",

@@ -9,7 +9,7 @@ import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import { Dropdown } from "antd"
 import { map } from "lodash-es"
 import moment from "moment"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
@@ -165,44 +165,58 @@ const TabFeed = (props) => {
       ]
 
       return (
-        <Col sm={12} key={key}>
-          <div className="post-pinned">
-            <div className="content-post d-flex align-items-center mb-50">
-              <div>
-                {ReactHtmlParser(item?.content)}
-                <div
-                  className="post-info d-flex align-items-center mt-50"
-                  style={{ fontSize: "12px" }}>
-                  <div className="me-50 d-flex align-items-center">
-                    <Avatar src={item.created_by?.avatar} size="sm" />{" "}
-                    <div className="ms-50">{item.created_by?.full_name}</div>
-                  </div>
-                  <div className="me-50">
-                    <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
-                    {moment(item?.created_at).format("DD MMM, YYYY")}
-                  </div>
+        <Card className="mb-1">
+          <CardHeader>
+            <h2 className="card-title">
+              <i className="fa-regular fa-thumbtack me-50"></i>
+              {useFormatMessage(
+                "modules.workspace.display.workspace_pinned_post"
+              )}
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <Col sm={12} key={key}>
+              <div className="post-pinned">
+                <div className="content-post d-flex align-items-center mb-50">
                   <div>
-                    <i className="fa-regular fa-eye me-50"></i>{" "}
-                    {item.seen.length}
+                    {ReactHtmlParser(item?.content)}
+                    <div
+                      className="post-info d-flex align-items-center mt-50"
+                      style={{ fontSize: "12px" }}>
+                      <div className="me-50 d-flex align-items-center">
+                        <Avatar src={item.created_by?.avatar} size="sm" />{" "}
+                        <div className="ms-50">
+                          {item.created_by?.full_name}
+                        </div>
+                      </div>
+                      <div className="me-50">
+                        <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
+                        {moment(item?.created_at).format("DD MMM, YYYY")}
+                      </div>
+                      <div>
+                        <i className="fa-regular fa-eye me-50"></i>{" "}
+                        {item.seen.length}
+                      </div>
+                    </div>
                   </div>
+                  <div className="ms-auto">
+                    {item?.thumb && <Photo src={item?.thumb} width={"60px"} />}
+                  </div>
+                  <Dropdown
+                    menu={{
+                      items
+                    }}
+                    trigger={["click"]}>
+                    <Button className="ms-1" color="flat-secondary" size="sm">
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
+                    </Button>
+                  </Dropdown>
                 </div>
+                <hr className="pd-0"></hr>
               </div>
-              <div className="ms-auto">
-                {item?.thumb && <Photo src={item?.thumb} width={"60px"} />}
-              </div>
-              <Dropdown
-                menu={{
-                  items
-                }}
-                trigger={["click"]}>
-                <Button className="ms-1" color="flat-secondary" size="sm">
-                  <i className="fa-solid fa-ellipsis-vertical"></i>
-                </Button>
-              </Dropdown>
-            </div>
-            <hr className="pd-0"></hr>
-          </div>
-        </Col>
+            </Col>
+          </CardBody>
+        </Card>
       )
     })
   }
@@ -249,18 +263,7 @@ const TabFeed = (props) => {
             approveStatus={state.approveStatus}
           />
         )}
-
-        <Card className="mb-1">
-          <CardHeader>
-            <h2 className="card-title">
-              <i className="fa-regular fa-thumbtack me-50"></i>
-              {useFormatMessage(
-                "modules.workspace.display.workspace_pinned_post"
-              )}
-            </h2>
-          </CardHeader>
-          <CardBody>{renderPinned(state.dataPinned)}</CardBody>
-        </Card>
+        <Fragment>{renderPinned(state.dataPinned)}</Fragment>
         <LoadFeed
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}
