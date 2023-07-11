@@ -18,6 +18,7 @@ const saveWorkspace = async (req, res, next) => {
     name: req.body.workspace_name,
     type: req.body.workspace_type,
     mode: req.body.workspace_mode,
+    description: req.body?.description,
     cover_image: "",
     members: [req.__user],
     administrators: [req.__user],
@@ -45,7 +46,7 @@ const saveWorkspace = async (req, res, next) => {
       if (req.body?.image !== undefined && req.body.image !== "") {
         await _handleUploadImage(req.body.image, saved._id)
       }
-
+      console.log(err)
       return res.respond(saved)
     })
   } catch (err) {
@@ -926,12 +927,18 @@ const loadFeed = async (req, res) => {
   const request = req.query
   const page = request.page
   const pageLength = request.pageLength
+  const textFilter = request?.text === undefined ? "" : request.text
   const filter = {
     permission_ids: req.query.workspace,
     permission: "workspace",
     approve_status: "approved",
     ref: null
   }
+
+  if (textFilter.trim().length > 0) {
+    filter["content"] = { $regex: textFilter, $options: "i" }
+  }
+
   const feed = await feedMongoModel
     .find(filter)
     .skip(page * pageLength)
@@ -947,6 +954,7 @@ const loadFeed = async (req, res) => {
 const loadPinned = async (req, res) => {
   const request = req.query
   const workspaceId = request.id
+  const textFilter = request?.text === undefined ? "" : request.text
   const workspace = await workspaceMongoModel.findById(workspaceId)
   const arrID = workspace.pinPosts // .map((x) => x.post)
 
@@ -958,6 +966,7 @@ const loadPinned = async (req, res) => {
       dataPost.push({ ...infoPost._doc, stt: item.stt })
     })
   )
+  
   const feed = await feedMongoModel.find({
     _id: { $in: arrID }
   })
