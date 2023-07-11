@@ -12,9 +12,11 @@ import {
   loadUrlDataLink
 } from "../common/common"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import { useLocation } from "react-router-dom"
 
 const LoadFeed = (props) => {
   const {
+    searchTextFeed,
     dataCreateNew, // data sau khi tạo mới post
     setDataCreateNew, // set data new
     workspace, // arr workspace: []
@@ -47,16 +49,23 @@ const LoadFeed = (props) => {
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
 
+  const location = useLocation()
+
   // ** function
-  const loadData = () => {
+  const loadData = (isSearch = false) => {
     setState({ loadingPost: true, hasMore: false, hasMoreLazy: false })
     const params = {
-      page: state.page,
+      page: isSearch ? 0 : state.page,
       pageLength: state.pageLength,
       workspace: workspace,
       idPostCreateNew: state.idPostCreateNew, // select where id <= idPostCreateNew
       ...paramsLoadFeed
     }
+
+    if (searchTextFeed !== undefined) {
+      params["text"] = searchTextFeed
+    }
+
     const api = apiLoadFeed ? apiLoadFeed(params) : feedApi.getLoadFeed(params)
     api
       .then((res) => {
@@ -66,13 +75,23 @@ const LoadFeed = (props) => {
           arrPostIdSeen.push({ id: item._id, seen: seen })
         })
 
-        setState({
-          dataPost: [...state.dataPost, ...res.data.dataPost],
-          totalPost: res.data.totalPost,
-          page: res.data.page,
-          hasMore: res.data.hasMore,
-          arrPostIdSeen: arrPostIdSeen
-        })
+        if (isSearch) {
+          setState({
+            dataPost: [...res.data.dataPost],
+            totalPost: res.data.totalPost,
+            page: res.data.page,
+            hasMore: res.data.hasMore,
+            arrPostIdSeen: arrPostIdSeen
+          })
+        } else {
+          setState({
+            dataPost: [...state.dataPost, ...res.data.dataPost],
+            totalPost: res.data.totalPost,
+            page: res.data.page,
+            hasMore: res.data.hasMore,
+            arrPostIdSeen: arrPostIdSeen
+          })
+        }
 
         setTimeout(() => {
           setState({ loadingPost: false })
@@ -164,6 +183,10 @@ const LoadFeed = (props) => {
   useEffect(() => {
     loadData()
   }, [])
+
+  useEffect(() => {
+    loadData(true)
+  }, [searchTextFeed])
 
   useEffect(() => {
     // event stopped scrolling

@@ -78,7 +78,7 @@ const CreateWorkgroupModal = (props) => {
   return (
     <Modal
       isOpen={modal}
-      style={{ top: "100px" }}
+      style={{ top: "50px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
       className="create-workgroup-modal"

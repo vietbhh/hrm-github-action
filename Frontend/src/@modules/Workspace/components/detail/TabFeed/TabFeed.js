@@ -12,12 +12,12 @@ import moment from "moment"
 import { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams, useLocation } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
 import Introduction from "../TabIntroduction/Introduction"
 
 const TabFeed = (props) => {
-  const { detailWorkspace, handleUnPinPost } = props
+  const { searchTextFeed, detailWorkspace, handleUnPinPost } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -30,11 +30,13 @@ const TabFeed = (props) => {
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const params = useParams()
   const workspaceID = params?.id
+
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = () => {}
 
   const loadData = (paramsX = {}) => {
     paramsX.id = workspaceID
+    paramsX.text = searchTextFeed
     workspaceApi.loadPinned(paramsX).then((res) => {
       setState({ dataPinned: res.data.dataPost })
     })
@@ -165,7 +167,7 @@ const TabFeed = (props) => {
       ]
 
       return (
-        <Card className="mb-1">
+        <Card className="mb-1" key={`item-pinned-${key}`}>
           <CardHeader>
             <h2 className="card-title">
               <i className="fa-regular fa-thumbtack me-50"></i>
@@ -253,8 +255,23 @@ const TabFeed = (props) => {
     detailWorkspace.introduction = data
     setState({ loading: false })
   }
+
+  const renderSearchText = () => {
+    if (searchTextFeed.trim().length > 0) {
+      return (
+        <h5 className="ms-50 search-text">
+          {useFormatMessage("modules.workspace.display.result_search", {
+            text: searchTextFeed
+          })}
+        </h5>
+      )
+    }
+
+    return ""
+  }
+
   return (
-    <div className="div-content ">
+    <div className="div-content tab-feed">
       <div className="div-left feed">
         {state.joined && (
           <CreatePost
@@ -264,7 +281,9 @@ const TabFeed = (props) => {
           />
         )}
         <Fragment>{renderPinned(state.dataPinned)}</Fragment>
+        <Fragment>{renderSearchText()}</Fragment>
         <LoadFeed
+          searchTextFeed={searchTextFeed}
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}
           workspace={[workspaceID]}

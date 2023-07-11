@@ -3963,11 +3963,14 @@
         "manage_notification": "Manage notifications",
         "member_request": "Member request",
         "workgroup_setting": "Workgroup setting",
-        "leave_workgroup": "Leave workgroup"
+        "leave_workgroup": "Leave workgroup",
+        "search_post": "Search post",
+        "result_search": "Results search for \"{text}\""
       },
       "fields": {
         "workspace_name": "Workspace name",
-        "worksgroup_name": "Workgroup name",
+        "workgroup_name": "Workgroup name",
+        "description": "Description",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
         "membership_approval": "Membership approval",
@@ -4020,6 +4023,7 @@
           }
         },
         "search_member": "Search member",
+        "search_post": "Search post...",
         "admin": "Admin",
         "member_list": "Member List",
         "admin_and_moderators": "Admin & moderators",
@@ -4060,7 +4064,8 @@
         "enter_group_name": "Enter group name",
         "find_a_member": "Find a member",
         "handled_approve_join_request": "Approved",
-        "handled_decline_join_request": "Declined"
+        "handled_decline_join_request": "Declined",
+        "write_something_about_your_group": "Write something about your group"
       },
       "app_options": {
         "workspace_type": {

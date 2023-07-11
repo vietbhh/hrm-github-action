@@ -1,4 +1,21 @@
 @import "@scss/friday";
+
+.custom-empty-content {
+  width: 470px;
+
+  .empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #32434f;
+  }
+
+  .empty-text {
+    font-size: 12px;
+    font-weight: 400;
+    color: #32434f;
+  }
+}
+
 .workspace {
   max-width: 1148px;
   margin: auto;
@@ -31,21 +48,18 @@
         height: 36px;
       }
     }
-  }
 
-  .custom-empty-content {
-    width: 470px;
-
-    .empty-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #32434f;
+    .nav-tab-custom {
+      .nav-link {
+        height: 45px;
+      }
+      border-top: 1px solid #f1f1f5;
     }
 
-    .empty-text {
-      font-size: 12px;
-      font-weight: 400;
-      color: #32434f;
+    .action-nav {
+      height: 45px;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -134,6 +148,13 @@
   }
 
   .tab-content {
+    .tab-feed {
+      .search-text {
+        font-weight: 500;
+        color: #32434f;
+      }
+    }
+
     .tab-introduction {
       .w-10 {
         width: 5%;
@@ -750,7 +771,9 @@
           border-radius: 50%;
           right: 12px;
           top: 165px;
-          box-shadow: rgb(0 0 0 / 5%) 0px 4px 8px, rgb(0 0 0 / 5%) 0px 0px 1px;
+          box-shadow:
+            rgb(0 0 0 / 5%) 0px 4px 8px,
+            rgb(0 0 0 / 5%) 0px 0px 1px;
         }
       }
     }
@@ -1096,12 +1119,26 @@
       align-items: center;
       justify-content: center;
       background-color: rgba(0, 0, 0, 0.05);
-      border-radius: 12px;
+      border-radius: 14px;
 
       i {
         margin: 0 !important;
         font-size: 16px !important;
       }
+    }
+
+    .prefix-icon.prefix-mode {
+      color: #ffffff;
+      background-color: rgba(105, 220, 161, 0.5);
+
+      i {
+        font-size: 19px !important;
+      }
+    }
+
+    .prefix-icon.prefix-type {
+      color: #ffffff;
+      background-color: rgba(255, 117, 76, 0.5);
     }
   }
 }
@@ -1250,6 +1287,14 @@
       &:last-child {
         border-top: 1px solid #f1f1f5;
       }
+    }
+  }
+}
+
+.create-workgroup-modal {
+  .create-workspace-form {
+    .input-group-text-custom {
+      background-color: #f0f3f6 !important;
     }
   }
 }

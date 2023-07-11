@@ -2,7 +2,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Badge, Dropdown, Space } from "antd"
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
@@ -11,7 +11,8 @@ import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
 import SelectAdminModal from "../modals/SelectAdminModal"
 import SetupNotificationModal from "../modals/SetupNotificationModal"
 import CoverImage from "./CoverImage"
-import { ErpInput } from "@apps/components/common/ErpField"
+import SearchPostModal from "../modals/SearchPostModal"
+import { getTabByNameOrId } from "../../common/common"
 
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
@@ -22,7 +23,14 @@ const arrSplice = (arr = [], IDrm) => {
   return arr
 }
 const WorkspaceHeader = (props) => {
-  const { tabActive, tabToggle, data, loadData } = props
+  const {
+    tabActive,
+    tabToggle,
+    data,
+    searchTextFeed,
+    loadData,
+    setSearchTextFeed
+  } = props
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const [state, setState] = useMergedState({
@@ -33,8 +41,11 @@ const WorkspaceHeader = (props) => {
     defaultWorkspaceCover: "",
     selectAdmin: false,
     joined: false,
-    waitJoined: false
+    waitJoined: false,
+    showInput: false,
+    modal: false
   })
+
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
   }
@@ -194,6 +205,32 @@ const WorkspaceHeader = (props) => {
     }
 
     window.open(`/chat/${data.group_chat_id}`)
+  }
+
+  const handleClickSearchButton = () => {
+    if (parseInt(tabActive) === 1) {
+      toggleModal()
+    }
+  }
+
+  const toggleModal = () => {
+    setState({
+      modal: !state.modal
+    })
+  }
+
+  const handleClickTabName = (id) => {
+    const tabText = getTabByNameOrId({
+      value: parseInt(id),
+      type: "value"
+    })
+    let searchString = `?tab=${tabText}`
+    if (id === 1 && searchTextFeed.trim().length > 0) {
+      searchString += `&search=${searchTextFeed}`
+    }
+
+    window.history.replaceState(null, "", searchString)
+    tabToggle(id)
   }
 
   const items = [
@@ -415,156 +452,140 @@ const WorkspaceHeader = (props) => {
   }, [data])
 
   return (
-    <Card className="work-space-header pb-0 mb-50">
-      <CoverImage
-        src={data.cover_image}
-        dataSave={{ ...data, id: data?._id }}
-        isEditable={data.is_admin_group}
-        saveCoverImageApi={workspaceApi.saveCoverImage}
-        loadData={loadData}
-      />
-
-      <CardBody className="pb-0">
-        <div className="d-flex justify-content-between align-content-center">
-          <div className="workspaceInformation">
-            <h2 className="workspaceName">{data?.name}</h2>
-            <p className="workspaceOverviewInfo mb-75">
-              {data?.type} · {data?.members ? data?.members.length : 0}{" "}
-              {useFormatMessage("modules.workspace.display.members")}
-              {/*{data?.pinPosts && data?.pinPosts.length}{" "}
-              {useFormatMessage("modules.workspace.text.posts")}*/}
-            </p>
-          </div>
-          <div className="pe-1 workspaceAction">
-            {state.joined && (
-              <Fragment>
-                {!_.isEmpty(data.group_chat_id) && (
-                  <Button
-                    className="btn btn-primary me-50 custom-secondary"
-                    onClick={() => handleClickChat()}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                      version="1.1"
-                      id="Layer_1"
-                      x="0px"
-                      y="0px"
-                      width="22px"
-                      height="22px"
-                      viewBox="0 0 22 22"
-                      enableBackground="new 0 0 22 22"
-                      xmlSpace="preserve">
-                      {" "}
-                      <image
-                        id="image0"
-                        width="22"
-                        height="22"
-                        x="0"
-                        y="0"
-                        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQEwyQk4xQ08x Q08yQk8xQ08yQ08zQ04zQU4yQk4xQk8wRFAyQ08zQ0wwQFAyQlAwQk4yQ04wRFAzQ1AxQU4xQU4z RE8yQ08wQlAwQk0wQFAwRVAxQ04yQk80QEwyQk0xQ04wSFAyQ08wQ0wyQk0wQFAwQk40RFAyQk4w QEowQk0wQEwxQ08yQ081RVAyQk4yQ0////8LlwR4AAAAMXRSTlMAQJDP35+/77CgwN9/31AQYH+Q QFCgsM/gcGAgMKDfQGCwIJ9QcDCPQIAwcFDvrzDQU6dMlAAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYLMg5WQ5TBAAAAz0lEQVQY032P2wKCIBBEEUVSM8xIzTTN LO1itf//cwFmiQ/uAyyHZZhBaLYMbFqWSQwd2kAXjuNS8EYXS/BXTHWBD+s/xew3Eg7cADwWDKHX 8XztH+bbcttAoJvianxLJ14ZlaKmO80QxWJJiFQSXnYp2pNMHPLDgCMoEMSoVKYUNo9iqVYIZWKS ywC2lMWUTbTpSRmsdZoKQeEHzjru412Aa7SBtk9ZjLM0cFVNCcatvqc9fHhfKrKCrM4m5NmB2w7v Ks5frM3dJHnjFs3WB8bQDz/Gz+U2AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTA3LTA2VDA5OjUw OjE0KzAyOjAwSGVjsQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wNy0wNlQwOTo1MDoxNCswMjow MDk42w0AAAAASUVORK5CYII="
-                      />
-                    </svg>
-                  </Button>
-                )}
-                <Button
-                  className="btn btn-primary custom-primary"
-                  onClick={() => onClickInvite()}>
-                  <i className="fa-regular fa-plus me-50"></i>
-                  {useFormatMessage("modules.workspace.buttons.invite")}
-                </Button>
-              </Fragment>
-            )}
-
-            {!state.joined && !state.waitJoined && (
-              <>
-                <Button
-                  className="btn btn-success"
-                  onClick={() => handleJoin()}>
-                  {useFormatMessage("modules.workspace.buttons.join_workspace")}
-                </Button>
-              </>
-            )}
-            {!state.joined && state.waitJoined && (
-              <Button
-                className="btn btn-secondary"
-                onClick={() => handleCancelJoin()}>
-                {useFormatMessage("button.cancel")}
-              </Button>
-            )}
-          </div>
-        </div>
-        <hr
-          style={{
-            margin: "0.5rem 0 0.3rem 0",
-            color: "#F1F1F5"
-          }}
+    <Fragment>
+      <Card className="work-space-header pb-0 mb-50">
+        <CoverImage
+          src={data.cover_image}
+          dataSave={{ ...data, id: data?._id }}
+          isEditable={data.is_admin_group}
+          saveCoverImageApi={workspaceApi.saveCoverImage}
+          loadData={loadData}
         />
-        <Nav tabs className="mb-0">
-          <NavItem>
-            <NavLink
-              active={tabActive === 1}
-              onClick={() => {
-                tabToggle(1)
-              }}>
-              {useFormatMessage("modules.workspace.display.feed")}
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              active={tabActive === 2}
-              onClick={() => {
-                tabToggle(2)
-              }}>
-              {useFormatMessage("modules.workspace.display.pinned")}
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              active={tabActive === 4}
-              onClick={() => {
-                tabToggle(4)
-              }}>
-              {useFormatMessage("modules.workspace.display.member")}
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              active={tabActive === 5}
-              onClick={() => {
-                tabToggle(5)
-              }}>
-              {useFormatMessage("modules.workspace.display.media")}
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              active={tabActive === 3}
-              onClick={() => {
-                tabToggle(3)
-              }}>
-              {useFormatMessage("modules.workspace.display.information")}
-            </NavLink>
-          </NavItem>
 
-          {state.joined && (
-            <div className="ms-auto">
-              <Space className="pe-1">
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        label: (
-                          <Fragment>
-                            <ErpInput />
-                          </Fragment>
-                        )
-                      }
-                    ]
-                  }}
-                  placement="bottomRight"
-                  trigger={["click"]}
-                  overlayClassName="worspace-dropdown-common">
-                  <Button className="btn-sm custom-secondary">
+        <CardBody className="pb-0">
+          <div className="d-flex justify-content-between align-content-center">
+            <div className="workspaceInformation">
+              <h2 className="workspaceName">{data?.name}</h2>
+              <p className="workspaceOverviewInfo mb-75">
+                {data?.type} · {data?.members ? data?.members.length : 0}{" "}
+                {useFormatMessage("modules.workspace.display.members")}
+                {/*{data?.pinPosts && data?.pinPosts.length}{" "}
+              {useFormatMessage("modules.workspace.text.posts")}*/}
+              </p>
+            </div>
+            <div className="pe-1 workspaceAction">
+              {state.joined && (
+                <Fragment>
+                  {!_.isEmpty(data.group_chat_id) && (
+                    <Button
+                      className="btn btn-primary me-50 custom-secondary"
+                      onClick={() => handleClickChat()}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                        version="1.1"
+                        id="Layer_1"
+                        x="0px"
+                        y="0px"
+                        width="22px"
+                        height="22px"
+                        viewBox="0 0 22 22"
+                        enableBackground="new 0 0 22 22"
+                        xmlSpace="preserve">
+                        {" "}
+                        <image
+                          id="image0"
+                          width="22"
+                          height="22"
+                          x="0"
+                          y="0"
+                          href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQEwyQk4xQ08x Q08yQk8xQ08yQ08zQ04zQU4yQk4xQk8wRFAyQ08zQ0wwQFAyQlAwQk4yQ04wRFAzQ1AxQU4xQU4z RE8yQ08wQlAwQk0wQFAwRVAxQ04yQk80QEwyQk0xQ04wSFAyQ08wQ0wyQk0wQFAwQk40RFAyQk4w QEowQk0wQEwxQ08yQ081RVAyQk4yQ0////8LlwR4AAAAMXRSTlMAQJDP35+/77CgwN9/31AQYH+Q QFCgsM/gcGAgMKDfQGCwIJ9QcDCPQIAwcFDvrzDQU6dMlAAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYLMg5WQ5TBAAAAz0lEQVQY032P2wKCIBBEEUVSM8xIzTTN LO1itf//cwFmiQ/uAyyHZZhBaLYMbFqWSQwd2kAXjuNS8EYXS/BXTHWBD+s/xew3Eg7cADwWDKHX 8XztH+bbcttAoJvianxLJ14ZlaKmO80QxWJJiFQSXnYp2pNMHPLDgCMoEMSoVKYUNo9iqVYIZWKS ywC2lMWUTbTpSRmsdZoKQeEHzjru412Aa7SBtk9ZjLM0cFVNCcatvqc9fHhfKrKCrM4m5NmB2w7v Ks5frM3dJHnjFs3WB8bQDz/Gz+U2AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTA3LTA2VDA5OjUw OjE0KzAyOjAwSGVjsQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wNy0wNlQwOTo1MDoxNCswMjow MDk42w0AAAAASUVORK5CYII="
+                        />
+                      </svg>
+                    </Button>
+                  )}
+                  <Button
+                    className="btn btn-primary custom-primary"
+                    onClick={() => onClickInvite()}>
+                    <i className="fa-regular fa-plus me-50"></i>
+                    {useFormatMessage("modules.workspace.buttons.invite")}
+                  </Button>
+                </Fragment>
+              )}
+
+              {!state.joined && !state.waitJoined && (
+                <>
+                  <Button
+                    className="btn btn-success"
+                    onClick={() => handleJoin()}>
+                    {useFormatMessage(
+                      "modules.workspace.buttons.join_workspace"
+                    )}
+                  </Button>
+                </>
+              )}
+              {!state.joined && state.waitJoined && (
+                <Button
+                  className="btn btn-secondary"
+                  onClick={() => handleCancelJoin()}>
+                  {useFormatMessage("button.cancel")}
+                </Button>
+              )}
+            </div>
+          </div>
+          <Nav tabs className="mb-0 nav-tab-custom">
+            <NavItem>
+              <NavLink
+                active={tabActive === 1}
+                onClick={() => {
+                  handleClickTabName(1)
+                }}>
+                {useFormatMessage("modules.workspace.display.feed")}
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                active={tabActive === 2}
+                onClick={() => {
+                  handleClickTabName(2)
+                }}>
+                {useFormatMessage("modules.workspace.display.pinned")}
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                active={tabActive === 4}
+                onClick={() => {
+                  handleClickTabName(4)
+                }}>
+                {useFormatMessage("modules.workspace.display.member")}
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                active={tabActive === 5}
+                onClick={() => {
+                  handleClickTabName(5)
+                }}>
+                {useFormatMessage("modules.workspace.display.media")}
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                active={tabActive === 3}
+                onClick={() => {
+                  handleClickTabName(3)
+                }}>
+                {useFormatMessage("modules.workspace.display.information")}
+              </NavLink>
+            </NavItem>
+
+            {state.joined && (
+              <div className="action-nav ms-auto">
+                <Space className="pe-1">
+                  <Button
+                    className="btn-sm custom-secondary animate__animated animate__zoomIn"
+                    onClick={() => handleClickSearchButton()}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -588,41 +609,49 @@ const WorkspaceHeader = (props) => {
                       />
                     </svg>
                   </Button>
-                </Dropdown>
-                <Dropdown
-                  menu={{
-                    items
-                  }}
-                  placement="bottomRight"
-                  trigger={["click"]}
-                  overlayClassName="worspace-dropdown-common">
-                  <Button className="btn-sm custom-secondary">
-                    <i className="fas fa-ellipsis"></i>
-                  </Button>
-                </Dropdown>
-              </Space>
-            </div>
-          )}
-        </Nav>
-        <InviteWorkspaceModal
-          modal={state.inviteModal}
-          handleModal={onClickInvite}
-          handleDone={handleDoneInvite}
-          member_selected={data?.members}
-        />
-        <SetupNotificationModal
-          modal={state.setupNotifiModal}
-          dataWorkspace={data}
-          handleModal={handleSetupNotification}
-        />
-        <SelectAdminModal
-          modal={state.selectAdmin}
-          members={data.members}
-          handleDone={handleDoneAddAD}
-          handleModal={handleSelectAD}
-        />
-      </CardBody>
-    </Card>
+
+                  <Dropdown
+                    menu={{
+                      items
+                    }}
+                    placement="bottomRight"
+                    trigger={["click"]}
+                    overlayClassName="worspace-dropdown-common">
+                    <Button className="btn-sm custom-secondary">
+                      <i className="fas fa-ellipsis"></i>
+                    </Button>
+                  </Dropdown>
+                </Space>
+              </div>
+            )}
+          </Nav>
+          <InviteWorkspaceModal
+            modal={state.inviteModal}
+            handleModal={onClickInvite}
+            handleDone={handleDoneInvite}
+            member_selected={data?.members}
+          />
+          <SetupNotificationModal
+            modal={state.setupNotifiModal}
+            dataWorkspace={data}
+            handleModal={handleSetupNotification}
+          />
+          <SelectAdminModal
+            modal={state.selectAdmin}
+            members={data.members}
+            handleDone={handleDoneAddAD}
+            handleModal={handleSelectAD}
+          />
+        </CardBody>
+      </Card>
+
+      <SearchPostModal
+        modal={state.modal}
+        searchTextProp={searchTextFeed}
+        handleModal={toggleModal}
+        setSearchTextFeed={setSearchTextFeed}
+      />
+    </Fragment>
   )
 }
 

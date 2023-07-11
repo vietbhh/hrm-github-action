@@ -116,7 +116,7 @@ const GroupRuleItem = memo((props) => {
               viewBox="0 0 9 16"
               enableBackground="new 0 0 9 16"
               xmlSpace="preserve"
-              className="">
+              className="dragIcon">
               {" "}
               <image
                 id="image0"
