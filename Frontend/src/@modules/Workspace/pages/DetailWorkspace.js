@@ -161,6 +161,7 @@ const DetailWorkspace = () => {
                 searchTextFeed={state.searchTextFeed}
                 detailWorkspace={state.detailWorkspace}
                 handleUnPinPost={handleUnPinPost}
+                setSearchTextFeed={setSearchTextFeed}
               />
             )}
           </TabPane>

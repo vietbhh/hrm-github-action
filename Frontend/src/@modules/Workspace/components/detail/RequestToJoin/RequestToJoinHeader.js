@@ -79,7 +79,7 @@ const RequestToJoinHeader = (props) => {
 
   // ** render
   return (
-    <Card className="header mb-1">
+    <Card className="header mb-2">
       <CardBody>
         <div className="w-100 d-flex align-items-center justify-content-between mb-1">
           <h6 className="mb-0 title">
@@ -109,7 +109,7 @@ const RequestToJoinHeader = (props) => {
         </div>
         <div className="filter-section">
           <Row>
-            <Col sm="2" className="pe-75 me-0">
+            <Col sm="4" className="pe-75 me-0">
               <ErpSelect
                 className="select-filter"
                 options={options}
@@ -118,7 +118,7 @@ const RequestToJoinHeader = (props) => {
                 onChange={(values) => handleChangeSelect(values)}
               />
             </Col>
-            <Col sm="10" className="ps-0 ms-0">
+            <Col sm="8" className="ps-0 ms-0">
               <ErpInput
                 placeholder={useFormatMessage(
                   "modules.workspace.text.find_a_member"

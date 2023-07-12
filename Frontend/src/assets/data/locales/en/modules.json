@@ -3965,7 +3965,14 @@
         "workgroup_setting": "Workgroup setting",
         "leave_workgroup": "Leave workgroup",
         "search_post": "Search post",
-        "result_search": "Results search for \"{text}\""
+        "result_search": "Results search for \"{text}\"",
+        "group_setting": "Group setting",
+        "nav_menu_setting_layout": {
+          "feed": "Group feed",
+          "setting": "Group setting",
+          "approvals": "Pending approvals",
+          "request": "Member requests"
+        }
       },
       "fields": {
         "workspace_name": "Workspace name",

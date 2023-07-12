@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 // ** Components
 import RequestToJoinHeader from "../components/detail/RequestToJoin/RequestToJoinHeader"
 import RequestToJoinBody from "../components/detail/RequestToJoin/RequestToJoinBody"
+import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
 
 const RequestJoinWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -69,22 +70,24 @@ const RequestJoinWorkspace = (props) => {
 
   // ** render
   return (
-    <div className="workspace request-to-join-container">
-      <RequestToJoinHeader
-        id={id}
-        loading={state.loading}
-        totalRequestJoin={state.totalRequestJoin}
-        setFilter={setFilter}
-        setRequestJoins={setRequestJoins}
-      />
+    <WorkspaceSettingLayout>
+      <div className="workspace request-to-join-container">
+        <RequestToJoinHeader
+          id={id}
+          loading={state.loading}
+          totalRequestJoin={state.totalRequestJoin}
+          setFilter={setFilter}
+          setRequestJoins={setRequestJoins}
+        />
 
-      <RequestToJoinBody
-        id={id}
-        loadingPage={state.loading}
-        requestJoins={state.requestJoins}
-        setRequestJoins={setRequestJoins}
-      />
-    </div>
+        <RequestToJoinBody
+          id={id}
+          loadingPage={state.loading}
+          requestJoins={state.requestJoins}
+          setRequestJoins={setRequestJoins}
+        />
+      </div>
+    </WorkspaceSettingLayout>
   )
 }
 

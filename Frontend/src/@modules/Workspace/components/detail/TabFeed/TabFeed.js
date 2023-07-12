@@ -17,7 +17,12 @@ import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
 import Introduction from "../TabIntroduction/Introduction"
 
 const TabFeed = (props) => {
-  const { searchTextFeed, detailWorkspace, handleUnPinPost } = props
+  const {
+    searchTextFeed,
+    detailWorkspace,
+    handleUnPinPost,
+    setSearchTextFeed
+  } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -134,6 +139,12 @@ const TabFeed = (props) => {
       loadData()
     })
   }
+
+  const handleClickRemoveSearch = () => {
+    window.history.replaceState(null, "", "?tab=feed")
+    setSearchTextFeed("")
+  }
+
   const renderPinned = (data = []) => {
     let count = 0
     return data.map((item, key) => {
@@ -259,11 +270,20 @@ const TabFeed = (props) => {
   const renderSearchText = () => {
     if (searchTextFeed.trim().length > 0) {
       return (
-        <h5 className="ms-50 search-text">
-          {useFormatMessage("modules.workspace.display.result_search", {
-            text: searchTextFeed
-          })}
-        </h5>
+        <div className="d-flex align-items-center mb-1 mt-1">
+          <h5 className="ms-50 me-1 mb-0 search-text">
+            {useFormatMessage("modules.workspace.display.result_search", {
+              text: searchTextFeed
+            })}
+          </h5>
+          <Button.Ripple
+            size="sm"
+            color="danger"
+            onClick={() => handleClickRemoveSearch()}>
+            <i className="fas fa-times me-50"></i>
+            {useFormatMessage("modules.workspace.buttons.cancel")}
+          </Button.Ripple>
+        </div>
       )
     }
 

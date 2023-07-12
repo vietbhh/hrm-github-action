@@ -18,6 +18,8 @@ import {
   Spinner
 } from "reactstrap"
 import { workspaceApi } from "../common/api"
+import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
+
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -113,9 +115,9 @@ const SettingWorkspace = () => {
   }, [])
 
   return (
-    <Fragment>
+    <WorkspaceSettingLayout>
       <div className="workspace-setting row">
-        <div className="col-md-5 offset-md-3">
+        <div className="">
           <Card>
             <CardHeader>
               <CardTitle>
@@ -255,7 +257,7 @@ const SettingWorkspace = () => {
           </Card>
         </div>
       </div>
-    </Fragment>
+    </WorkspaceSettingLayout>
   )
 }
 

@@ -114,7 +114,7 @@ const RequestToJoinBody = (props) => {
           return (
             <Card
               key={`request-to-join-item-${index}`}
-              className="request-to-join-item mb-50">
+              className="request-to-join-item mb-75">
               <CardBody>
                 <div className="w-100 d-flex align-items-center justify-content-between">
                   <div className="d-flex align-items-center">
@@ -141,7 +141,7 @@ const RequestToJoinBody = (props) => {
   }
 
   return (
-    <div className="request-to-join-body">
+    <div className="pt-50 request-to-join-body">
       <Fragment>{renderComponent()}</Fragment>
     </div>
   )
