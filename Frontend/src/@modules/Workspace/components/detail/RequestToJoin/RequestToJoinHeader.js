@@ -45,7 +45,6 @@ const RequestToJoinHeader = (props) => {
   }
 
   const handleChangeSelect = (values) => {
-    console.log(values)
     setFilter({
       order: values.value
     })

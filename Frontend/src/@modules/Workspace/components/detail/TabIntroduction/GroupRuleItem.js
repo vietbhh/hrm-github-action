@@ -60,7 +60,6 @@ const GroupRuleItem = memo((props) => {
         setGroupRule(res.data.group_rules)
       })
       .catch((err) => {
-        console.log(err)
         notification.showError()
       })
   }

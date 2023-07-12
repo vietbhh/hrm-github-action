@@ -15,7 +15,6 @@ const WorkspaceSettingLayout = (props) => {
   const params = useParams()
   const { pathname } = useLocation()
   const currentPage = pathname.split("/").slice(-1).pop()
-  console.log(currentPage)
 
   // ** render
   return (

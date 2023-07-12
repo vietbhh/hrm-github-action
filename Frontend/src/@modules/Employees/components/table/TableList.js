@@ -128,7 +128,6 @@ const TableList = (props) => {
   const handleDragColumn = (sourceId = null, targetId = null) => {
     const targetPosition = parseInt(metas[targetId]?.field_table_order) || null
     const sourcePosition = parseInt(metas[sourceId]?.field_table_order) || null
-    console.log("bbb")
     const newMetas = orderBy(
       map(
         filter(metas, (field) => field.field_table_show && field.field_enable),

@@ -48,7 +48,6 @@ const SearchPostModal = (props) => {
       paramsObj["tab"] = "feed"
     }
     paramsObj["search"] = state.searchText
-    console.log(object2QueryString(paramsObj))
     window.history.replaceState(null, "", object2QueryString(paramsObj).replace("&", "?"))
     setSearchTextFeed(state.searchText)
 

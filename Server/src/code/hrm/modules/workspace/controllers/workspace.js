@@ -46,7 +46,6 @@ const saveWorkspace = async (req, res, next) => {
       if (req.body?.image !== undefined && req.body.image !== "") {
         await _handleUploadImage(req.body.image, saved._id)
       }
-      console.log(err)
       return res.respond(saved)
     })
   } catch (err) {
