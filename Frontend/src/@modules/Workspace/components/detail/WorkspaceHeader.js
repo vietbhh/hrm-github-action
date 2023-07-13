@@ -22,7 +22,6 @@ const arrSplice = (arr = [], IDrm) => {
 }
 const WorkspaceHeader = (props) => {
   const { tabActive, tabToggle, data, loadData } = props
-  console.log("data", data)
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const [state, setState] = useMergedState({
     coverImage: "",
@@ -45,7 +44,6 @@ const WorkspaceHeader = (props) => {
           id_user: x["id"] * 1
         }))
       )
-      console.log("arrID", arrID)
       if (data?.membership_approval === "approver") {
         infoWorkspace.request_joins = JSON.stringify(
           dataUpdate.map((x) => x["id"] * 1)
@@ -53,7 +51,6 @@ const WorkspaceHeader = (props) => {
       } else if (data?.membership_approval === "auto") {
         infoWorkspace.members = JSON.stringify(arrID)
       }
-      console.log("infoWorkspace", infoWorkspace)
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({

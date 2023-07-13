@@ -262,6 +262,17 @@
       }
     }
   }
+  .workspaceAction{
+    button{
+      border-radius: 8px;
+      background: #FFE658;
+      color: #32434F;
+      font-family: Inter;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+    }
+  }
 }
 
 .invite-workspace-modal-off {
@@ -366,15 +377,102 @@
   .field_switch {
     display: flex;
     .label {
-      font-weight: 600;
-      font-size: 16px;
+      font-weight: 500;
+      font-size: 14px;
       line-height: 20px;
+      color: #32434F;
     }
     .sub-label {
-      color: rgb(77, 77, 77);
-      font-size: 0.75rem;
+      color: #32434F;
+font-size: 10px;
+font-style: normal;
+font-weight: 300;
+line-height: 15px;
       margin-bottom: 0.75rem;
     }
+  }
+  .title-setting{
+    color: #32434F;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px;
+  }
+  .card{
+    border-radius: 10px;
+  }
+  .url_workspace{
+    font-size: 12px;
+    color: #0A090B;
+    font-style: normal;
+  }
+  .workspace_name{
+    color: #32434F;
+    font-family: "Be Vietnam Pro";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px;
+  }
+  .workspace_infomation{
+    color: #32434F;
+    font-family: "Be Vietnam Pro";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+  }
+  
+  .vector{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background-color: #F0F3F6;
+    height: 30px;
+    width: 30px;
+  }
+  .vector-green {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    width: 36px;
+    height: 36px;
+    background-color: #69DCA1;
+    text-align: center;
+  }
+
+  .vector-red {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background-color: rgba(255, 117, 76, 0.70);
+    opacity: 0.800000011920929;;
+    height: 36px;
+    width: 36px;
+  }
+  .label-field{
+    color: #32434F;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    .sub-label{
+      color: #32434F;
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 300;
+      line-height: 15px;
+    }
+  }
+  .btn-secondary {
+    background: #F0F2F5 !important;
+    border-color: #F0F2F5 !important;
+    color: #32434F !important;
+    border-radius: 10px;
   }
 }
 
@@ -855,5 +953,49 @@
       font-size: 12px;
       font-weight: 500;
     }
+  }
+}
+
+.workspace-pending-post{
+  .num_of_pending{
+    color: #32434F;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px;
+  }
+  .btn-approve{
+    border-radius: 10px !important;
+  }
+  .bg-secondary{
+    background: #F0F2F5 !important;
+    border-color: #F0F2F5 !important;
+    color: #32434F !important;
+  }
+  .card{
+    border-radius : 15px
+  }
+  .select_bg-secondary{
+    .select__control {
+      background: #F0F2F5;
+    }
+  }
+  .input-group-merge{
+    .input-group-text{
+      background: #F0F2F5;
+    }
+  .search_post_pending{
+    background: #F0F2F5;
+  }
+}
+
+}
+.edit-information-workspace{
+  .employeeAvatar {
+    width: 106px;
+    height: 106px;
+    .cameraBtn{
+      right: 0;
+    } 
   }
 }

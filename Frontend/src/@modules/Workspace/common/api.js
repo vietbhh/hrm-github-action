@@ -27,7 +27,9 @@ export const workspaceApi = {
   },
   async getListWorkspaceSeparateType(params) {
     const strParams = object2QueryString(params)
-    return await axiosNodeApi.get(`/workspace/get-list-workspace-separate-type?get${strParams}`)
+    return await axiosNodeApi.get(
+      `/workspace/get-list-workspace-separate-type?get${strParams}`
+    )
   },
   async getOverview(params) {
     const strParams = object2QueryString(params)
@@ -36,7 +38,10 @@ export const workspaceApi = {
     })
   },
   async update(id, data) {
-    return await axiosNodeApi.post(`/workspace/update/${id}`, data)
+    return await axiosNodeApi.post(
+      `/workspace/update/${id}`,
+      serialize(_.cloneDeep(data))
+    )
   },
   async getDetail(workspaceId) {
     return await axiosNodeApi.get(`/workspace/${workspaceId}`)

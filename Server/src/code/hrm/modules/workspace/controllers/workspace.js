@@ -85,6 +85,12 @@ const getPostWorkspace = async (req, res) => {
       permission: "workspace",
       approve_status: "pending"
     }
+    if (req.query?.search) {
+      filter.content = { $regex: new RegExp(req.query?.search) }
+    }
+
+    console.log("req.query filterfilter ", filter)
+
     const pageLength = req.query.pageLength
     const skip = req.query.page <= 1 ? 0 : req.query.page * pageLength
     const postList = await feedMongoModel
