@@ -1,0 +1,139 @@
+.workspace-setting-layout-page {
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    .card {
+        border-radius: 14px !important;
+    }
+
+    .text-bold {
+        font-weight: 500;
+        color: #32434F;
+    }
+
+    .nav-container {
+        width: 300px;
+        position: absolute;
+        left: 0;
+        opacity: 80%;
+
+        .title {
+            font-size: 12px;
+        }
+
+        .item-nav-menu-container {
+            padding: 0.75rem;
+            cursor: pointer;
+            border-radius: 12px;
+
+            .nav-item-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 14.7px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-item-icon.bg-icon-feed {
+                background-color: #0082ff;
+            }
+
+            .nav-item-icon.bg-icon-approvals {
+                background-color: #69dca1;
+            }
+
+            .nav-item-icon.bg-icon-request {
+                background-color: #fd3b4c;
+            }
+
+            .nav-item-icon.bg-icon-setting {
+                background-color: #ffc66f;
+            }
+
+            .text-bold {
+                font-size: 14px;
+            }
+        }
+
+        .item-nav-menu-container.active {
+            background-color: #FFF194;
+        }
+    }
+
+    .content-container {
+        width: 600px;
+        margin-left: 4rem;
+
+        .request-to-join-container {
+            .button-section {
+                .btn {
+                    font-size: 12px !important;
+                    font-weight: 500 !important;
+                    color: #32434f !important;
+                    border: unset !important;
+                    border-radius: 10px !important;
+                    width: 110px;
+                    padding: 12px 7px;
+                }
+
+                .btn-action-primary {
+                    background-color: #ffe658 !important;
+                }
+
+                .btn-action-secondary {
+                    background-color: #f0f2f5 !important;
+                }
+            }
+
+            .header {
+                .title {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #32434f;
+                }
+
+                .filter-section {
+                    .select-filter {
+                        .select__control {
+                            background-color: #f0f2f5 !important;
+                            font-size: 12px !important;
+                            font-weight: 600 !important;
+                            color: #32434f !important;
+                        }
+                    }
+
+                    .text-filter,
+                    .input-group-text {
+                        background-color: #f0f2f5 !important;
+                        font-size: 12px !important;
+                    }
+                }
+            }
+
+            .request-to-join-body {
+                .request-to-join-item {
+                    .full-name {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #32434f;
+                    }
+
+                    .requested-time {
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #32434f;
+                    }
+
+                    .button-section {
+                        .btn {
+                            font-size: 12px !important;
+                            width: 100px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

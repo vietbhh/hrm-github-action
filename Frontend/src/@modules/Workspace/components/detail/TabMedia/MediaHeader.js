@@ -36,8 +36,32 @@ const MediaHeader = (props) => {
   const renderUploadButton = () => {
     if (strDisplay !== "group_link_posted") {
       return (
-        <Button.Ripple size="sm" className="btn-icon" onClick={() => handleClickUpload()}>
-          <i className="fas fa-plus-circle me-50" />
+        <Button.Ripple
+          className="btn-icon custom-secondary d-flex align-items-center"
+          onClick={() => handleClickUpload()}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+            id="Layer_1"
+            x="0px"
+            y="0px"
+            width="16px"
+            height="16px"
+            viewBox="0 0 16 16"
+            enableBackground="new 0 0 16 16"
+            xmlSpace="preserve"
+            className="me-50">
+            {" "}
+            <image
+              id="image0"
+              width="16"
+              height="16"
+              x="0"
+              y="0"
+              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAATlBMVEUAAAAwQEwwQk0wQ1Ew Qk4yQ08xQ04yQk8wQlAyQ08xQ08wRVAzQ04wQFAwRE4yQk4yQlAyQlAxQ08yQk4wRFAwSFAzQU40 RFAyQ0////8xNEbBAAAAGHRSTlMAQGBff++gn2CfzzCwEICAcIC/kEAgoEB5Nk/7AAAAAWJLR0QZ 7G61iAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBQkvB8HCO/kAAABaSURBVBjTdc/R DoAgCAVQyoSy0tIs/v9Ly61Qt7wPjHs2HgBopOvrrpiHumtdimJEGnkSMAhIMC8CKySoU4B1GSzJ uu3C5XUDfAYTnnGwoTeeY+IYzi/Xz9s3dpoDw+hcxhcAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMt MDctMDVUMDk6NDc6MDcrMDA6MDAVtMFyAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA3LTA1VDA5 OjQ3OjA3KzAwOjAwZOl5zgAAAABJRU5ErkJggg=="
+            />
+          </svg>
           {useFormatMessage("modules.workspace.buttons.upload")}
         </Button.Ripple>
       )
@@ -48,7 +72,9 @@ const MediaHeader = (props) => {
 
   return (
     <div className="d-flex align-items-center justify-content-between">
-      <h4>{useFormatMessage(`modules.workspace.display.${strDisplay}`)}</h4>
+      <h4 className="title">
+        {useFormatMessage(`modules.workspace.display.media`)}
+      </h4>
       <Fragment>{renderUploadButton()}</Fragment>
     </div>
   )

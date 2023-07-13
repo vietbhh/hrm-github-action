@@ -3,7 +3,7 @@ import notification from "@apps/utility/notification"
 import { map } from "lodash-es"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams, useLocation } from "react-router-dom"
 import { TabContent, TabPane } from "reactstrap"
 import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
@@ -13,13 +13,25 @@ import TabMember from "../components/detail/TabMember/TabMember"
 import TabPinned from "../components/detail/TabPinned/TabPinned"
 import TabPrivate from "../components/detail/TabPrivate"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
+import { getTabByNameOrId } from "../common/common"
+
 const DetailWorkspace = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchText = searchParams.get("search")
+  const tab = searchParams.get("tab")
+  const tabId = getTabByNameOrId({
+    value: tab,
+    type: "name"
+  })
+
   const [state, setState] = useMergedState({
     prevScrollY: 0,
-    tabActive: 1,
+    tabActive: tabId === undefined ? 1 : parseInt(tabId),
     detailWorkspace: {},
+    searchTextFeed: searchText === null ? "" : searchText,
     workspacePublic: false
   })
+
   const params = useParams()
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const tabToggle = (tab) => {
@@ -38,6 +50,12 @@ const DetailWorkspace = () => {
       scrollDownwards()
     }
     setState({ prevScrollY: window.scrollY })
+  }
+
+  const setSearchTextFeed = (str) => {
+    setState({
+      searchTextFeed: str
+    })
   }
 
   const scrollUpwards = () => {
@@ -125,8 +143,10 @@ const DetailWorkspace = () => {
       <WorkspaceHeader
         tabActive={state.tabActive}
         data={state.detailWorkspace}
+        searchTextFeed={state.searchTextFeed}
         tabToggle={tabToggle}
         loadData={loadData}
+        setSearchTextFeed={setSearchTextFeed}
       />
       <div className="mt-1">
         <TabContent className="py-50" activeTab={state.tabActive}>
@@ -138,8 +158,10 @@ const DetailWorkspace = () => {
             )}
             {(state.isJoined || state.workspacePublic) && (
               <TabFeed
+                searchTextFeed={state.searchTextFeed}
                 detailWorkspace={state.detailWorkspace}
                 handleUnPinPost={handleUnPinPost}
+                setSearchTextFeed={setSearchTextFeed}
               />
             )}
           </TabPane>
@@ -162,7 +184,9 @@ const DetailWorkspace = () => {
                 <TabPrivate data={state.detailWorkspace} />
               </div>
             )}
-            {(state.isJoined || state.workspacePublic) && <TabIntroduction />}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabIntroduction detailWorkspace={state.detailWorkspace} />
+            )}
           </TabPane>
           <TabPane tabId={4}>
             {!state.isJoined && !state.workspacePublic && (
@@ -171,7 +195,11 @@ const DetailWorkspace = () => {
               </div>
             )}
             {(state.isJoined || state.workspacePublic) && (
-              <TabMember tabActive={state.tabActive} tabId={4} />
+              <TabMember
+                tabActive={state.tabActive}
+                tabId={4}
+                detailWorkspace={state.detailWorkspace}
+              />
             )}
           </TabPane>
           <TabPane tabId={5}>

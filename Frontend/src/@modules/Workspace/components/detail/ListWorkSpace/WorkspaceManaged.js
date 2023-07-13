@@ -15,6 +15,7 @@ import {
 // ** Components
 import WorkspaceItem from "./WorkspaceItem"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
+import { EmptyContent } from "@apps/components/common/EmptyContent"
 
 const WorkspaceManaged = (props) => {
   const {
@@ -83,7 +84,11 @@ const WorkspaceManaged = (props) => {
     }
 
     if (data.length === 0) {
-      return ""
+      return (
+        <div className="w-100 d-flex justify-content-center">
+          <EmptyContent className="custom-empty-content" />
+        </div>
+      )
     }
 
     if (workspaceType === "manage") {

@@ -6,6 +6,7 @@ import { Card, CardBody, Button } from "reactstrap"
 // ** Components
 import EditIntroduction from "./EditIntroduction"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
+import { Dropdown } from "antd"
 
 const Introduction = (props) => {
   const {
@@ -58,13 +59,6 @@ const Introduction = (props) => {
     if (loading === false && workspaceInfo.is_admin_group) {
       return (
         <Fragment>
-          <Button.Ripple
-            size="sm"
-            color="flat-primary"
-            className="mb-50"
-            onClick={() => handleEdit()}>
-            {useFormatMessage("modules.workspace.buttons.add_description")}
-          </Button.Ripple>
           <small className="d-block small-description">
             {useFormatMessage(
               "modules.workspace.text.add_introduction_description"
@@ -74,43 +68,61 @@ const Introduction = (props) => {
       )
     }
 
-    return <p className="introduction-text mt-75 mb-0">{useFormatMessage("modules.workspace.text.empty_introduction")}</p>
+    return (
+      <p className="introduction-text mt-75 mb-0">
+        {useFormatMessage("modules.workspace.text.empty_introduction")}
+      </p>
+    )
   }
 
   const renderIntroductionAction = () => {
-    if (loading === false && !workspaceInfo.is_admin_group) {
+    if (!workspaceInfo.is_admin_group) {
       return ""
     }
 
-    if (state.isEditIntroduction) {
-      return (
-        <div>
+    let items = [
+      {
+        key: "1",
+        label: (
           <Button.Ripple
             size="sm"
             color="flat-primary"
-            className=""
-            onClick={() => handleCancelEdit()}>
-            {useFormatMessage("modules.workspace.buttons.cancel")}
-          </Button.Ripple>
-        </div>
-      )
-    }
-
-    if (loading === false && !_.isEmpty(introduction)) {
-      return (
-        <div>
-          <Button.Ripple
-            size="sm"
-            color="flat-primary"
-            className=""
             onClick={() => handleEdit()}>
-            {useFormatMessage("modules.workspace.buttons.edit")}
+            {useFormatMessage("modules.workspace.buttons.add_description")}
           </Button.Ripple>
-        </div>
-      )
+        )
+      }
+    ]
+
+    if (!_.isEmpty(introduction)) {
+      items = [
+        {
+          key: "1",
+          label: (
+            <Button.Ripple
+              size="sm"
+              color="flat-primary"
+              onClick={() => handleEdit()}>
+              {useFormatMessage("button.edit")}
+            </Button.Ripple>
+          )
+        }
+      ]
     }
 
-    return ""
+    return (
+      <Dropdown
+        placement="bottomRight"
+        menu={{ items }}
+        trigger="click"
+        overlayClassName="dropdown-workspace-about-group">
+        <Button.Ripple
+          color="secondary"
+          className="btn-icon btn-action-empty">
+          <i className="fas fa-ellipsis-h" />
+        </Button.Ripple>
+      </Dropdown>
+    )
   }
 
   const renderContent = () => {
@@ -125,10 +137,9 @@ const Introduction = (props) => {
     return (
       <Fragment>
         <div className="d-flex align-items-center justify-content-between">
-          <div>
-            <h5>
-              <i className="fas fa-wrench me-50" />{" "}
-              {useFormatMessage("modules.workspace.display.introduction")}
+          <div className="">
+            <h5 className="common-card-title">
+              {useFormatMessage("modules.workspace.display.about_group")}
             </h5>
           </div>
           <div>
@@ -143,7 +154,7 @@ const Introduction = (props) => {
   }
 
   return (
-    <Card className="introduction-container">
+    <Card className="introduction-container mb-1">
       <CardBody>
         <Fragment>{renderContent()}</Fragment>
       </CardBody>
