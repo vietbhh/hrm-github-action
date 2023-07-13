@@ -169,7 +169,7 @@ const PendingPostWorkspace = () => {
   return (
     <WorkspaceSettingLayout>
       <div className="workspace-pending-post row">
-        <div className="col-md-8 offset-md-2">
+        <div className="col-md-12">
           <Card>
             <CardBody>
               <div className="d-flex align-items-center mb-1">

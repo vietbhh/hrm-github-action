@@ -212,7 +212,7 @@ const SettingWorkspace = () => {
   return (
     <WorkspaceSettingLayout>
       <div className="workspace-setting row">
-        <div className="col-md-7 offset-md-3">
+        <div className="col-md-12 ">
           <Card>
             <CardBody className="p-50 d-flex align-items-center w-100">
               <span className="url_workspace">{Url_workspace}</span>
