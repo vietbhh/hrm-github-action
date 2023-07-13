@@ -288,16 +288,15 @@ const _handleRemoveMember = (workspace, requestData) => {
     workspace?.administrators === undefined
       ? []
       : workspace.administrators.filter((item) => {
-          return item !== requestData.data.id
+          return parseInt(item) !== parseInt(requestData.data.id)
         })
 
   const members =
     workspace?.members === undefined
       ? []
       : workspace.members.filter((item) => {
-          return item.id_user !== requestData.data.id
+          return parseInt(item.id_user) !== parseInt(requestData.data.id)
         })
-
   return { ...workspace._doc, administrators: administrators, members: members }
 }
 
@@ -315,13 +314,24 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
       ...workspace._doc,
       members:
         workspace?.members === undefined
-          ? [requestData.data.id]
-          : [...workspace.members, requestData.data.id],
+          ? [
+              {
+                id_user: requestData.data.id,
+                joined_at: moment().toISOString()
+              }
+            ]
+          : [
+              ...workspace.members,
+              {
+                id_user: requestData.data.id,
+                joined_at: moment().toISOString()
+              }
+            ],
       request_joins:
         workspace?.request_joins === undefined
           ? []
           : workspace.request_joins.filter((item) => {
-              return parseInt(item) !== parseInt(requestData.data.id)
+              return parseInt(item.id_user) !== parseInt(requestData.data.id)
             })
     }
   }
@@ -340,7 +350,7 @@ const handleDeclineJoinRequest = (workspace, requestData) => {
         workspace?.request_joins === undefined
           ? []
           : workspace.request_joins.filter((item) => {
-              return parseInt(item) !== parseInt(requestData.data.id)
+              return parseInt(item.id_user) !== parseInt(requestData.data.id)
             })
     }
   }
@@ -432,16 +442,38 @@ const updateWorkspace = async (req, res, next) => {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
       if (requestData?.members) {
-        updateData.members = JSON.parse(requestData.members)
+        updateData.members =
+          typeof requestData.members === "string"
+            ? JSON.parse(requestData.members)
+            : requestData.members
       }
       if (requestData?.administrators) {
-        updateData.administrators = JSON.parse(requestData.administrators)
+        updateData.administrators =
+          typeof requestData.administrators === "string"
+            ? JSON.parse(requestData.administrators)
+            : requestData.administrators
       }
       if (requestData?.pinPosts) {
-        updateData.pinPosts = JSON.parse(requestData.pinPosts)
+        updateData.pinPosts =
+          typeof requestData.pinPosts === "string"
+            ? JSON.parse(requestData.pinPosts)
+            : requestData.pinPosts
       }
       if (requestData?.request_joins) {
-        updateData.request_joins = JSON.parse(requestData.request_joins)
+        const requestJoinData =
+          typeof requestData.request_joins === "string"
+            ? JSON.parse(requestData.request_joins)
+            : requestData.request_joins
+        updateData.request_joins = requestJoinData.map((item) => {
+          if (item?._id === undefined) {
+            return {
+              ...item,
+              requested_at: moment().toISOString()
+            }
+          }
+
+          return item
+        })
         const memberInfo = await getUser(
           updateData.request_joins[updateData.request_joins.length - 1]
         )
@@ -472,6 +504,7 @@ const updateWorkspace = async (req, res, next) => {
           )
         }
       }
+
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -644,25 +677,53 @@ const loadDataMember = async (req, res, next) => {
       })
     } else if (req.query.load_list === "request_join") {
       const order = req.query.order === undefined ? "desc" : req.query.order
-      const page = req.query?.page === undefined ? 1 : req.query.page
-      const limit = req.query?.limit === undefined ? 4 : req.query.limit
-      const allRequestJoin =
-        workspace?.request_joins === undefined
-          ? []
-          : await getUsers(workspace.request_joins)
+      console.log(workspace?.request_joins)
+      if (!isAdmin) {
+        return res.respond({
+          total_request_join: 0,
+          request_joins: [],
+          is_admin_group: isAdmin
+        })
+      }
 
-      const workspaceSlice = workspace.request_joins.slice(
-        (page - 1) * limit,
-        page * limit
-      )
-      const requestJoin =
-        workspace?.request_joins === undefined
+      if (
+        workspace?.request_joins === undefined ||
+        workspace.request_joins === null ||
+        (isArray(workspace.request_joins) &&
+          workspace.request_joins.length === 0)
+      ) {
+        return res.respond({
+          total_request_join: 0,
+          request_joins: [],
+          is_admin_group: isAdmin
+        })
+      }
+
+      const idUserRequestJoin = workspace.request_joins.map((item) => {
+        return item.id_user
+      })
+
+      const allRequestJoin =
+        idUserRequestJoin.length === 0
           ? []
-          : await getUsers(workspaceSlice, condition)
+          : await getUsers(idUserRequestJoin, condition)
+
+      const result = allRequestJoin.map((item) => {
+        const [infoRequestJoin] = workspace.request_joins.filter(
+          (itemFilter) => {
+            return parseInt(itemFilter.id_user) === parseInt(item.id)
+          }
+        )
+
+        return {
+          ...item.dataValues,
+          requested_at: infoRequestJoin?.requested_at
+        }
+      })
 
       return res.respond({
         total_request_join: allRequestJoin.length,
-        request_joins: order === "desc" ? requestJoin.reverse() : requestJoin,
+        request_joins: order === "desc" ? result.reverse() : result,
         is_admin_group: isAdmin
       })
     }
@@ -965,7 +1026,7 @@ const loadPinned = async (req, res) => {
       dataPost.push({ ...infoPost._doc, stt: item.stt })
     })
   )
-  
+
   const feed = await feedMongoModel.find({
     _id: { $in: arrID }
   })
