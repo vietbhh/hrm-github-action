@@ -19,7 +19,8 @@ import AvatarBox from "../../../../@apps/components/common/AvatarBox"
 const EditInformationModal = (props) => {
   const { modal, handleModal, infoWorkspace } = props
   const [state, setState] = useMergedState({
-    loading: false
+    loading: false,
+    avatar: ""
   })
 
   const onSubmit = (values) => {
@@ -30,7 +31,19 @@ const EditInformationModal = (props) => {
       })
       infoWorkspace.name = values.name
       infoWorkspace.introduction = values.introduction
+
       handleModal()
+      setState({ loading: false })
+    })
+  }
+
+  const saveAvatar = (value) => {
+    setState({ loading: true })
+    const dataSave = { _id: infoWorkspace._id, avatar: value }
+    workspaceApi.saveAvatar(dataSave).then((res) => {
+      notification.showSuccess({
+        text: useFormatMessage("notification.save.success")
+      })
       setState({ loading: false })
     })
   }
@@ -53,23 +66,18 @@ const EditInformationModal = (props) => {
       <FormProvider {...methods}>
         <ModalBody>
           <Row>
-            <Col sm={3}>
+            <Col
+              sm={4}
+              className="d-flex align-items-center justify-content-center">
               <AvatarBox
-                currentAvatar={""}
+                currentAvatar={infoWorkspace?.avatar}
                 handleSave={(img) => {
-                  console.log(img)
-                  return
-                  api.avatar(img).catch((err) => {
-                    console.log(err)
-                    notification.showError({
-                      text: useFormatMessage("notification.save.error")
-                    })
-                  })
+                  saveAvatar(img)
                 }}
               />
             </Col>
 
-            <Col sm={9}>
+            <Col sm={8}>
               <ErpInput
                 defaultValue={infoWorkspace?.name}
                 name="name"
@@ -80,7 +88,7 @@ const EditInformationModal = (props) => {
                 type="textarea"
                 nolabel
                 defaultValue={infoWorkspace?.introduction}
-                rows={6}
+                rows={8}
                 name="introduction"
                 useForm={methods}
               />

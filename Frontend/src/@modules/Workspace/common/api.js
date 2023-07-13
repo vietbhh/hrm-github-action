@@ -110,5 +110,18 @@ export const workspaceApi = {
 
   async removeCover(Id) {
     return await axiosNodeApi.post(`/workspace/remove-cover-image/` + Id)
+  },
+
+  async saveAvatar(data) {
+    return await axiosNodeApi.post(
+      "/workspace/save-avatar",
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async delete(data) {
+    return await axiosNodeApi.post(
+      "/workspace/delete",
+      serialize(_.cloneDeep(data))
+    )
   }
 }

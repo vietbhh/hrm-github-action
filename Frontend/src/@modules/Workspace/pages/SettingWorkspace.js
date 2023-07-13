@@ -1,23 +1,12 @@
-import {
-  ErpInput,
-  ErpSelect,
-  ErpSwitch
-} from "@apps/components/common/ErpField"
+import { ErpSelect, ErpSwitch } from "@apps/components/common/ErpField"
+import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { Fragment, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
-import {
-  Badge,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Spinner
-} from "reactstrap"
+import { Button, Card, CardBody } from "reactstrap"
+import AvatarBox from "../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../common/api"
 import EditInformationModal from "../components/modals/EditInformationModal"
 const findKeyByValue = (arr = [], value) => {
@@ -101,7 +90,23 @@ const workspace_mode = [
   {
     value: "hidden",
     label: "Hidden",
-    icon: "fa-regular fa-eye-slash",
+    icon: (
+      <div className="vector-green me-50">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          viewBox="0 0 22 22"
+          fill="none">
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M11 4.125C6.41663 4.125 2.50246 6.97583 0.916626 11C2.50246 15.0242 6.41663 17.875 11 17.875C15.5833 17.875 19.4975 15.0242 21.0833 11C19.4975 6.97583 15.5833 4.125 11 4.125ZM11 15.5833C8.46996 15.5833 6.41663 13.53 6.41663 11C6.41663 8.47 8.46996 6.41667 11 6.41667C13.53 6.41667 15.5833 8.47 15.5833 11C15.5833 13.53 13.53 15.5833 11 15.5833ZM8.24996 11C8.24996 9.47833 9.47829 8.25 11 8.25C12.5216 8.25 13.75 9.47833 13.75 11C13.75 12.5217 12.5216 13.75 11 13.75C9.47829 13.75 8.24996 12.5217 8.24996 11Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+    ),
     text: useFormatMessage(
       "modules.workspace.app_options.workspace_mode.hidden"
     )
@@ -154,14 +159,16 @@ const SettingWorkspace = () => {
   const methods = useForm({
     mode: "onSubmit"
   })
-  const { handleSubmit, formState, reset } = methods
+  const { handleSubmit, formState, reset, watch } = methods
+  const watchAllFields = watch()
+
   const onSubmit = (values) => {
     workspaceApi.update(params.id, values).then((res) => {
       notification.showSuccess({
         text: useFormatMessage("notification.save.success")
       })
-      reset()
-      navigate(`/workspace/${res.data._id}`)
+      //  reset()
+      //  navigate(`/workspace/${res.data._id}`)
     })
   }
 
@@ -174,20 +181,43 @@ const SettingWorkspace = () => {
   useEffect(() => {
     loadData()
   }, [])
-  console.log("state", state.detailWorkspace)
-  const hanldeEditInformation = () => {
+
+  const handleEditInformation = () => {
     setState({ editModal: !state.editModal })
   }
+
+  const handleDeleteWS = () => {
+    SwAlert.showWarning({
+      confirmButtonText: useFormatMessage("button.delete")
+    }).then((res) => {
+      if (res.value) {
+        workspaceApi.delete({ _id: state.detailWorkspace._id }).then((res) => {
+          navigate(`/workspace/list`)
+        })
+      }
+    })
+  }
+  const Url_workspace =
+    import.meta.env.VITE_APP_URL + "/workspace/" + state.detailWorkspace?._id
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(Url_workspace)
+    notification.showSuccess({
+      text: "Path has been copied"
+    })
+    // path has been copied
+  }
+
   return (
     <Fragment>
       <div className="workspace-setting row">
         <div className="col-md-7 offset-md-3">
           <Card>
             <CardBody className="p-50 d-flex align-items-center w-100">
-              <p className="url_workspace mt-1">
-                http://localhost:3000/workspace/64a4eea9cb20383c1da58562
-              </p>
-              <Button color="success" className="ms-auto btn-sm">
+              <span className="url_workspace">{Url_workspace}</span>
+              <Button
+                color="success"
+                className="ms-auto btn-sm"
+                onClick={() => handleCopyUrl()}>
                 {useFormatMessage("modules.workspace.buttons.copy")}{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -213,32 +243,40 @@ const SettingWorkspace = () => {
           </div>
           <Card>
             <CardBody>
-              <div className="d-flex">
-                <div className="workspace_name">
-                  {state.detailWorkspace?.name}
+              <div className="workspace_infomation d-flex">
+                <div className="me-2 rounded-circle">
+                  <AvatarBox
+                    currentAvatar={state.detailWorkspace?.avatar}
+                    readOnly={true}
+                  />
                 </div>
-                <div
-                  className="ms-auto vector"
-                  onClick={() => hanldeEditInformation()}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 22 22"
-                    fill="none">
-                    <path
-                      d="M12.3278 6.37223L15.6278 9.67223M4.07788 17.9222L8.08003 17.1158C8.2925 17.073 8.48758 16.9684 8.64079 16.8151L17.6 7.85098C18.0295 7.42119 18.0292 6.72454 17.5993 6.29512L15.7015 4.39938C15.2717 3.97013 14.5754 3.97043 14.146 4.40003L5.18591 13.3651C5.033 13.5181 4.92859 13.7128 4.88574 13.9248L4.07788 17.9222Z"
-                      stroke="#32434F"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
+                <div>
+                  <div className="d-flex">
+                    <div className="workspace_name">
+                      {state.detailWorkspace?.name}
+                    </div>
+                    <div
+                      className="ms-auto vector"
+                      onClick={() => handleEditInformation()}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 22 22"
+                        fill="none">
+                        <path
+                          d="M12.3278 6.37223L15.6278 9.67223M4.07788 17.9222L8.08003 17.1158C8.2925 17.073 8.48758 16.9684 8.64079 16.8151L17.6 7.85098C18.0295 7.42119 18.0292 6.72454 17.5993 6.29512L15.7015 4.39938C15.2717 3.97013 14.5754 3.97043 14.146 4.40003L5.18591 13.3651C5.033 13.5181 4.92859 13.7128 4.88574 13.9248L4.07788 17.9222Z"
+                          stroke="#32434F"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
 
-              <div className="workspace_infomation">
-                {state.detailWorkspace?.introduction}
+                  {state.detailWorkspace?.introduction}
+                </div>
               </div>
             </CardBody>
           </Card>
@@ -250,7 +288,6 @@ const SettingWorkspace = () => {
                 <h6>Setup group privacy</h6>
                 <ErpSelect
                   name="type"
-                  useForm={methods}
                   loading={state.loading}
                   nolabel
                   options={workspace_type}
@@ -266,10 +303,10 @@ const SettingWorkspace = () => {
                   }
                   isClearable={false}
                   isSearchable={false}
+                  onChange={(e) => onSubmit({ type: e })}
                 />
                 <ErpSelect
                   name="mode"
-                  useForm={methods}
                   loading={state.loading}
                   nolabel
                   options={workspace_mode}
@@ -285,6 +322,7 @@ const SettingWorkspace = () => {
                   }
                   isClearable={false}
                   isSearchable={false}
+                  onChange={(e) => onSubmit({ mode: e })}
                 />
               </FormProvider>
             </CardBody>
@@ -311,14 +349,13 @@ const SettingWorkspace = () => {
                   <ErpSwitch
                     formGroupClass="ms-auto mb-0"
                     name="review_post"
-                    useForm={methods}
                     loading={state.loading}
                     defaultValue={state.detailWorkspace?.review_post}
+                    onClick={(e) => onSubmit({ review_post: e.target.checked })}
                   />
                 </div>
                 <ErpSelect
                   name="membership_approval"
-                  useForm={methods}
                   loading={state.loading}
                   label={useFormatMessage(
                     "modules.workspace.fields.membership_approval"
@@ -336,6 +373,7 @@ const SettingWorkspace = () => {
                   }
                   isClearable={false}
                   isSearchable={false}
+                  onChange={(e) => onSubmit({ membership_approval: e })}
                 />
               </FormProvider>
             </CardBody>
@@ -379,50 +417,20 @@ const SettingWorkspace = () => {
                   this group: post, photos, videos,...
                 </div>
               </div>
-              <Button color="secondary" className="btn-secondary">
+              <Button
+                color="secondary"
+                className="btn-secondary ms-auto"
+                onClick={() => handleDeleteWS()}>
                 Delete
               </Button>
             </CardBody>
-          </Card>
-
-          <Card>
-            <CardBody>
-              <FormProvider {...methods}>
-                <ErpInput
-                  name="name"
-                  useForm={methods}
-                  label={useFormatMessage(
-                    "modules.workspace.fields.workspace_name"
-                  )}
-                  defaultValue={state.detailWorkspace?.name}
-                  loading={state.loading}
-                  required
-                />
-              </FormProvider>
-            </CardBody>
-            <CardFooter className="text-end">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Button
-                  type="submit"
-                  color="success"
-                  className="ms-auto"
-                  disabled={
-                    state.loading ||
-                    formState.isSubmitting ||
-                    formState.isValidating
-                  }>
-                  {state.loading && <Spinner size="sm" className="me-50" />}
-                  {useFormatMessage("button.save")}
-                </Button>
-              </form>
-            </CardFooter>
           </Card>
         </div>
       </div>
       <EditInformationModal
         modal={state.editModal}
         infoWorkspace={state.detailWorkspace}
-        handleModal={hanldeEditInformation}
+        handleModal={handleEditInformation}
       />
     </Fragment>
   )

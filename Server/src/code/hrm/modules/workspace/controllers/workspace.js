@@ -3,7 +3,6 @@ import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { isEmpty, forEach, map, isArray, isObject } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
-import fs from "fs"
 import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
@@ -88,8 +87,6 @@ const getPostWorkspace = async (req, res) => {
     if (req.query?.search) {
       filter.content = { $regex: new RegExp(req.query?.search) }
     }
-
-    console.log("req.query filterfilter ", filter)
 
     const pageLength = req.query.pageLength
     const skip = req.query.page <= 1 ? 0 : req.query.page * pageLength
@@ -313,7 +310,6 @@ const updateWorkspace = async (req, res, next) => {
   const requestData = req.body
   try {
     const workspaceInfo = await workspaceMongoModel.findById(workspaceId)
-    console.log("workspaceInfo", workspaceInfo)
     if (workspaceInfo === null) {
       res.failNotFound("work_space_not_found")
     }
@@ -386,7 +382,6 @@ const updateWorkspace = async (req, res, next) => {
     } else {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
-      console.log("updateData.members", updateData.members)
       if (requestData?.members) {
         const requestDataMember = Array.isArray(requestData.members)
           ? requestData.members
@@ -402,21 +397,17 @@ const updateWorkspace = async (req, res, next) => {
             memberUpdate.push(value)
           }
         })
-        console.log("memberUpdate", memberUpdate)
         updateData.members = memberUpdate
       }
-      console.log("updateDataupdateDataupdateData", updateData)
       if (requestData?.administrators2) {
         updateData.administrators = Array.isArray(requestData.administrators)
           ? requestData.administrators
           : JSON.parse(requestData.administrators)
       }
       if (requestData?.pinPosts) {
-        console.log("run pin post")
         updateData.pinPosts = Array.isArray(requestData.pinPosts)
           ? requestData.pinPosts
           : JSON.parse(requestData.pinPosts)
-        console.log("updateData.pinPosts", updateData.pinPosts)
       }
       if (requestData?.request_joins2) {
         updateData.request_joins = JSON.parse(requestData.request_joins)
@@ -450,7 +441,6 @@ const updateWorkspace = async (req, res, next) => {
           )
         }
       }
-      console.log("{ ...updateData }", { ...updateData })
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -1050,6 +1040,35 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
   return data
 }
 
+const saveAvatar = async (req, res) => {
+  const image = req.body.avatar
+  const imageFile = {}
+  imageFile.content = image
+  imageFile.name = req.body._id + "_avatar.png"
+  const pathUpload = "modules/workspace/" + req.body._id
+  const upp = await _uploadServices(pathUpload, [imageFile], true)
+
+  try {
+    const update = await workspaceMongoModel.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: { avatar: upp.uploadSuccess[0]?.path } }
+    )
+    return res.respond(update)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+const deleteWorkspace = async (req, res) => {
+  try {
+    const update = await workspaceMongoModel.deleteOne({
+      _id: req.body._id
+    })
+    return res.respond(update)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 export {
   getWorkspace,
   getWorkspaceOverview,
@@ -1067,5 +1086,7 @@ export {
   loadPinned,
   loadGCSObjectLink,
   removeCoverImage,
-  getListWorkspaceSeparateType
+  getListWorkspaceSeparateType,
+  saveAvatar,
+  deleteWorkspace
 }
