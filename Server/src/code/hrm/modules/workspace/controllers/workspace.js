@@ -3,7 +3,6 @@ import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { isEmpty, forEach, map, isArray, isObject } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
-import fs from "fs"
 import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
@@ -113,6 +112,10 @@ const getPostWorkspace = async (req, res) => {
       permission: "workspace",
       approve_status: "pending"
     }
+    if (req.query?.search) {
+      filter.content = { $regex: new RegExp(req.query?.search) }
+    }
+
     const pageLength = req.query.pageLength
     const skip = req.query.page <= 1 ? 0 : req.query.page * pageLength
     const postList = await feedMongoModel
@@ -141,6 +144,7 @@ const getListWorkspace = async (req, res, next) => {
   const text = req.query.text === undefined ? "" : req.query.text
   const userId = isEmpty(req.query.user_id) ? req.__user : req.query.user_id
   const queryType = req.query.query_type
+
   try {
     let filter = {}
     if (workspaceType === "joined") {
@@ -148,7 +152,7 @@ const getListWorkspace = async (req, res, next) => {
     } else if (workspaceType === "managed") {
       filter = { administrators: parseInt(userId) }
     } else if (workspaceType === "both") {
-      filter = {
+      /* filter = {
         $or: [
           {
             members: {
@@ -157,9 +161,9 @@ const getListWorkspace = async (req, res, next) => {
           },
           { administrators: parseInt(userId) }
         ]
-      }
+      }*/
     }
-
+    console.log("filter", filter)
     if (status !== undefined && status !== "" && status !== "all") {
       filter["status"] = status
     }
@@ -171,6 +175,8 @@ const getListWorkspace = async (req, res, next) => {
     }
 
     let workspace = []
+    console.log("workspace userId2", userId)
+
     if (limit === 0) {
       workspace = await workspaceMongoModel
         .find(filter)
@@ -188,7 +194,7 @@ const getListWorkspace = async (req, res, next) => {
           _id: "desc"
         })
     }
-
+    console.log("workspace", workspace)
     const totalWorkspace = await workspaceMongoModel.find(filter)
     const result = await handleDataBeforeReturn(workspace, true)
 
@@ -234,6 +240,7 @@ const getListWorkspace = async (req, res, next) => {
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
   } catch (err) {
+    console.log("errerr", err)
     return res.fail(err.message)
   }
 }
@@ -677,7 +684,7 @@ const loadDataMember = async (req, res, next) => {
       })
     } else if (req.query.load_list === "request_join") {
       const order = req.query.order === undefined ? "desc" : req.query.order
-  
+
       if (!isAdmin) {
         return res.respond({
           total_request_join: 0,
@@ -1222,6 +1229,35 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
   return data
 }
 
+const saveAvatar = async (req, res) => {
+  const image = req.body.avatar
+  const imageFile = {}
+  imageFile.content = image
+  imageFile.name = req.body._id + "_avatar.png"
+  const pathUpload = "modules/workspace/" + req.body._id
+  const upp = await _uploadServices(pathUpload, [imageFile], true)
+
+  try {
+    const update = await workspaceMongoModel.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: { avatar: upp.uploadSuccess[0]?.path } }
+    )
+    return res.respond(update)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
+const deleteWorkspace = async (req, res) => {
+  try {
+    const update = await workspaceMongoModel.deleteOne({
+      _id: req.body._id
+    })
+    return res.respond(update)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 export {
   getWorkspace,
   getWorkspaceOverview,
@@ -1239,5 +1275,7 @@ export {
   loadPinned,
   loadGCSObjectLink,
   removeCoverImage,
-  getListWorkspaceSeparateType
+  getListWorkspaceSeparateType,
+  saveAvatar,
+  deleteWorkspace
 }

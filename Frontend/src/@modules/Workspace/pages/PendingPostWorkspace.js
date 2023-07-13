@@ -1,13 +1,12 @@
-import { ErpSelect } from "@apps/components/common/ErpField"
+import { ErpSelect, ErpInput } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import LoadPost from "@/components/hrm/LoadPost/LoadPost"
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardBody, Spinner } from "reactstrap"
+import { Button, Card, CardBody, Row, Spinner, Col } from "reactstrap"
 import { workspaceApi } from "../common/api"
-
 import PerfectScrollbar from "react-perfect-scrollbar"
 import SwAlert from "@apps/utility/SwAlert"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
@@ -70,6 +69,17 @@ const PendingPostWorkspace = () => {
     loadData()
   }, [])
 
+  const typingTimeoutRef = useRef(null)
+  const handleFilterText = (e) => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current)
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      loadData({ search: e, page: 1 })
+    }, 500)
+  }
+
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.recordsTotal > state.listPost.length) {
@@ -125,21 +135,8 @@ const PendingPostWorkspace = () => {
             <div className="p-1 text-end d-flex">
               <Button
                 type="submit"
-                color="outline-secondary"
-                className="me-1 w-100"
-                onClick={() => handleApprove(item._id, "rejected")}
-                disabled={
-                  state.loading ||
-                  formState.isSubmitting ||
-                  formState.isValidating
-                }>
-                {state.loading && <Spinner size="sm" className="me-50" />}
-                {useFormatMessage("button.reject")}
-              </Button>
-              <Button
-                type="submit"
                 color="primary"
-                className="ms-auto w-100"
+                className="btn-approve w-100"
                 onClick={() => handleApprove(item._id, "approved")}
                 disabled={
                   state.loading ||
@@ -148,6 +145,19 @@ const PendingPostWorkspace = () => {
                 }>
                 {state.loading && <Spinner size="sm" className="me-50" />}
                 {useFormatMessage("button.approve")}
+              </Button>
+              <Button
+                type="submit"
+                color="secondary"
+                className="btn-approve bg-secondary ms-1 w-100"
+                onClick={() => handleApprove(item._id, "rejected")}
+                disabled={
+                  state.loading ||
+                  formState.isSubmitting ||
+                  formState.isValidating
+                }>
+                {state.loading && <Spinner size="sm" className="me-50" />}
+                {useFormatMessage("modules.workspace.buttons.decline")}
               </Button>
             </div>
           </CardBody>
@@ -158,61 +168,77 @@ const PendingPostWorkspace = () => {
 
   return (
     <WorkspaceSettingLayout>
-      <div className="workspace-setting row">
-        <div className="">
+      <div className="workspace-pending-post row">
+        <div className="col-md-12">
           <Card>
             <CardBody>
-              <div className="d-flex align-items-center">
-                <h4 className="w-100 ">
+              <div className="d-flex align-items-center mb-1">
+                <h4 className="w-100 num_of_pending">
                   <span className="me-50">{state.listPost.length}</span>
                   {useFormatMessage("modules.workspace.text.pending_posts")}
                 </h4>
-                <ErpSelect
-                  name="sort"
-                  nolabel
-                  loading={state.loading}
-                  label={useFormatMessage(
-                    "modules.workspace.fields.workspace_type"
-                  )}
-                  formGroupClass="w-100 mb-0"
-                  options={workspace_type}
-                  defaultValue={workspace_type[0]}
-                  isClearable={false}
-                  isSearchable={false}
-                  onChange={(e) => loadData({ sort: e?.value })}
-                />
+                <div className="w-100 text-end d-flex">
+                  <Button
+                    type="submit"
+                    color="primary"
+                    className="btn-approve w-100 me-1 rounded-pill"
+                    onClick={() => handleApproveAll(params.id, "approved")}
+                    disabled={
+                      state.loading ||
+                      formState.isSubmitting ||
+                      formState.isValidating
+                    }>
+                    {state.loading && <Spinner size="sm" className="me-50" />}
+                    {useFormatMessage(
+                      "modules.workspace.buttons.approve_all_posts"
+                    )}
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="secondary"
+                    className="btn-approve bg-secondary ms-auto w-100"
+                    onClick={() => handleApproveAll(params.id, "rejected")}
+                    disabled={
+                      state.loading ||
+                      formState.isSubmitting ||
+                      formState.isValidating
+                    }>
+                    {state.loading && <Spinner size="sm" className="me-50" />}
+                    {useFormatMessage(
+                      "modules.workspace.buttons.decline_all_posts"
+                    )}
+                  </Button>
+                </div>
               </div>
+              <Row>
+                <Col md="4">
+                  <ErpSelect
+                    name="sort"
+                    nolabel
+                    loading={state.loading}
+                    label={useFormatMessage(
+                      "modules.workspace.fields.workspace_type"
+                    )}
+                    className="select_bg-secondary"
+                    formGroupClass="mb-0"
+                    options={workspace_type}
+                    defaultValue={workspace_type[0]}
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(e) => loadData({ sort: e?.value })}
+                  />
+                </Col>
+                <Col md="8">
+                  <ErpInput
+                    nolabel
+                    placeholder="Search"
+                    className="search_post_pending "
+                    prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                    onChange={(e) => handleFilterText(e.target.value)}
+                  />
+                </Col>
+              </Row>
             </CardBody>
-            <div className="p-1 text-end d-flex">
-              <Button
-                type="submit"
-                color="outline-secondary"
-                className="me-1 w-100"
-                onClick={() => handleApproveAll(params.id, "rejected")}
-                disabled={
-                  state.loading ||
-                  formState.isSubmitting ||
-                  formState.isValidating
-                }>
-                {state.loading && <Spinner size="sm" className="me-50" />}
-                {useFormatMessage("modules.workspace.buttons.reject_all_posts")}
-              </Button>
-              <Button
-                type="submit"
-                color="primary"
-                className="ms-auto w-100"
-                onClick={() => handleApproveAll(params.id, "approved")}
-                disabled={
-                  state.loading ||
-                  formState.isSubmitting ||
-                  formState.isValidating
-                }>
-                {state.loading && <Spinner size="sm" className="me-50" />}
-                {useFormatMessage(
-                  "modules.workspace.buttons.approve_all_posts"
-                )}
-              </Button>
-            </div>
           </Card>
           {state.listPost.length <= 0 && (
             <div className="text-center mt-2 ">

@@ -3877,7 +3877,7 @@
         "download": "Download",
         "view_post": "View post",
         "approve_all_posts": "Approve all",
-        "reject_all_posts": "Reject all",
+        "decline_all_posts": "Decline all",
         "invite": "Invite",
         "join_workspace": "Join workspace",
         "upload": "Upload",
@@ -3889,6 +3889,8 @@
         "export_excel_file": "Export excel file",
         "view_group": "View Group",
         "create_group": "Create Group",
+        "decline" : "Decline",
+        "copy" : "Copy",
         "add_cover": "Add Cover",
         "messenge": "Messenge",
         "get_started": "Get started"

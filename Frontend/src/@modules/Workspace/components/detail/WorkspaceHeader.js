@@ -55,9 +55,10 @@ const WorkspaceHeader = (props) => {
     const infoWorkspace = { ...data }
     if (type === "members") {
       const arrID = infoWorkspace.members.concat(
-        dataUpdate.map((x) => x["id"] * 1)
+        dataUpdate.map((x) => ({
+          id_user: x["id"] * 1
+        }))
       )
-
       if (data?.membership_approval === "approver") {
         infoWorkspace.request_joins = JSON.stringify(
           dataUpdate.map((x) => x["id"] * 1)
@@ -65,7 +66,6 @@ const WorkspaceHeader = (props) => {
       } else if (data?.membership_approval === "auto") {
         infoWorkspace.members = JSON.stringify(arrID)
       }
-
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({
