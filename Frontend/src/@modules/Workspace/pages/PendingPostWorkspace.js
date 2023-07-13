@@ -10,6 +10,8 @@ import { workspaceApi } from "../common/api"
 
 import PerfectScrollbar from "react-perfect-scrollbar"
 import SwAlert from "@apps/utility/SwAlert"
+import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
+
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -155,9 +157,9 @@ const PendingPostWorkspace = () => {
   }
 
   return (
-    <Fragment>
+    <WorkspaceSettingLayout>
       <div className="workspace-setting row">
-        <div className="col-md-5 offset-md-3">
+        <div className="">
           <Card>
             <CardBody>
               <div className="d-flex align-items-center">
@@ -238,7 +240,7 @@ const PendingPostWorkspace = () => {
           )}
         </div>
       </div>
-    </Fragment>
+    </WorkspaceSettingLayout>
   )
 }
 

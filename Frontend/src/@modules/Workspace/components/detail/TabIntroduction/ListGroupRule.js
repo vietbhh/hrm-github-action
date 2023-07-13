@@ -1,5 +1,7 @@
 // ** React Imports
-import { Fragment } from "react"
+import { Fragment, useCallback, useEffect, useState } from "react"
+import { ReactSortable } from "react-sortablejs"
+import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Styles
 // ** Components
 import GroupRuleItem from "./GroupRuleItem"
@@ -8,11 +10,22 @@ const ListGroupRule = (props) => {
   const {
     // ** props
     id,
-    isEditable,
     groupRule,
+    isAdminGroup,
     // ** methods
-    setGroupRule
+    setGroupRule,
+    toggleModalEditGroupRule,
+    setEditGroupRuleData
   } = props
+
+  const handleSetAndUpdateGroupRule = (data) => {
+    setGroupRule(data)
+
+    workspaceApi
+      .sortGroupRule(id, data)
+      .then((res) => {})
+      .catch((err) => {})
+  }
 
   // ** render
   const renderComponent = () => {
@@ -22,19 +35,29 @@ const ListGroupRule = (props) => {
 
     return (
       <div className="list-group-rule">
-        {groupRule.map((item, key, array) => {
-          return (
-            <GroupRuleItem
-              key={`group-rule-tem-${key}`}
-              id={id}
-              item={item}
-              index={key}
-              isEditable={isEditable}
-              arrayLength={array.length}
-              setGroupRule={setGroupRule}
-            />
-          )
-        })}
+        <ReactSortable
+          handle=".dragIcon"
+          className="list-group"
+          list={groupRule}
+          setList={handleSetAndUpdateGroupRule}
+          animation={200}
+          delayOnTouchStart={true}
+          delay={2}>
+          {groupRule.map((item, key, array) => {
+            return (
+              <GroupRuleItem
+                id={id}
+                key={`group-rule-tem-${key}`}
+                itemGroupRule={item}
+                index={key}
+                isAdminGroup={isAdminGroup}
+                toggleModalEditGroupRule={toggleModalEditGroupRule}
+                setEditGroupRuleData={setEditGroupRuleData}
+                setGroupRule={setGroupRule}
+              />
+            )
+          })}
+        </ReactSortable>
       </div>
     )
   }

@@ -56,4 +56,25 @@ const getTabIdFromFeedType = (type) => {
   return ""
 }
 
-export { getFileTypeFromMime, formatByte, getTabIdFromFeedType }
+const getTabByNameOrId = (param) => {
+  const value = param.value
+  const type = param.type
+
+  const listTabName = {
+    1: "feed",
+    2: "pinned",
+    3: "information",
+    4: "member",
+    5: "media"
+  }
+
+  if (type === "name") {
+    return Object.keys(listTabName).find(key => listTabName[key] === value)
+  } else if (type === "value") {
+    return listTabName[value]
+  }
+
+  return undefined
+}
+
+export { getFileTypeFromMime, formatByte, getTabIdFromFeedType, getTabByNameOrId }

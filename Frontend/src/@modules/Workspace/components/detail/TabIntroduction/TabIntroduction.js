@@ -1,6 +1,6 @@
 // ** React Imports
 import { useEffect } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useParams } from "react-router-dom"
 // ** Styles
@@ -17,7 +17,8 @@ const TabIntroduction = (props) => {
     workspaceInfo: {},
     introduction: "",
     groupRule: [],
-    modalEditGroupRule: false
+    modalEditGroupRule: false,
+    editGroupRuleData: {}
   })
 
   const { id } = useParams()
@@ -28,21 +29,27 @@ const TabIntroduction = (props) => {
     })
   }
 
-  const setGroupRule = (data, reset = false) => {
-    if (reset) {
-      setState({
-        groupRule: data
-      })
-    } else {
-      setState({
-        groupRule: [...state.groupRule, data]
-      })
-    }
+  const setGroupRule = (data) => {
+    setState({
+      groupRule: data
+    })
+  }
+
+  const appendGroupRule = (data) => {
+    setState({
+      groupRule: [...state.groupRule, data]
+    })
   }
 
   const toggleModalEditGroupRule = () => {
     setState({
       modalEditGroupRule: !state.modalEditGroupRule
+    })
+  }
+
+  const setEditGroupRuleData = (data) => {
+    setState({
+      editGroupRuleData: data
     })
   }
 
@@ -81,7 +88,7 @@ const TabIntroduction = (props) => {
   return (
     <div className="tab-introduction">
       <Row>
-        <Col sm={8}>
+        <Col sm={8} className="col pe-0">
           <div>
             <Introduction
               id={id}
@@ -93,14 +100,17 @@ const TabIntroduction = (props) => {
           </div>
           <div>
             <GroupRule
+              id={id}
               loading={state.loading}
               workspaceInfo={state.workspaceInfo}
               groupRule={state.groupRule}
               toggleModalEditGroupRule={toggleModalEditGroupRule}
+              setGroupRule={setGroupRule}
+              setEditGroupRuleData={setEditGroupRuleData}
             />
           </div>
         </Col>
-        <Col sm={4}>
+        <Col sm={4} className="col">
           <WorkspaceInfo workspaceInfo={state.workspaceInfo} />
         </Col>
       </Row>
@@ -108,9 +118,11 @@ const TabIntroduction = (props) => {
       <EditGroupRuleModal
         id={id}
         modal={state.modalEditGroupRule}
+        editGroupRuleData={state.editGroupRuleData}
         groupRule={state.groupRule}
         handleModal={toggleModalEditGroupRule}
         setGroupRule={setGroupRule}
+        appendGroupRule={appendGroupRule}
       />
     </div>
   )

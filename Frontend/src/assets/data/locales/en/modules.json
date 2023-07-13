@@ -3851,6 +3851,7 @@
         "workspace_in_the_organization": "{number} workspace in the organization"
       },
       "buttons": {
+        "see_more": "See more",
         "create": "Create Workspace",
         "view_all": "View All",
         "see_all": "See All",
@@ -3865,11 +3866,14 @@
         "edit_rule": "Edit rule",
         "remove_rule": "Remove rule",
         "set_as_administrator": "Set as administrator",
+        "invite_as_admin": "Invite as admin",
+        "remove_member": "Remove member",
         "remove_this_member_from_this_workspace": "Remove this member from this workspace",
         "view_profile": "View profile",
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
-        "approve_all": "Approve all request",
+        "approve_all": "Approve all",
+        "decline_all": "Decline all",
         "download": "Download",
         "view_post": "View post",
         "approve_all_posts": "Approve all",
@@ -3884,7 +3888,10 @@
         "leave_admin_workspace": "Leave Admin of the workspace",
         "export_excel_file": "Export excel file",
         "view_group": "View Group",
-        "create_group": "Create Group"
+        "create_group": "Create Group",
+        "add_cover": "Add Cover",
+        "messenge": "Messenge",
+        "get_started": "Get started"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -3893,11 +3900,14 @@
         "feed": "Feed",
         "pinned": "Pinned",
         "introduction": "Introduction",
+        "information": "Information",
+        "about_group": "About Group",
         "group_rules": "Group rules",
         "member": "Member",
         "members": "Members",
-        "media": "Media",
+        "media": "Media & Files",
         "request_to_join": "Request to join",
+        "member_request_to_join": "{number} Member request to join",
         "tab_media": {
           "files": "Files",
           "photos": "Photos",
@@ -3923,10 +3933,51 @@
         "workspace_activities": "Workspace activities",
         "all_member_workspaces": "All-members workspaces",
         "private_workspaces": "Private workspaces",
-        "post_created": "Post crated"
+        "post_created": "Post crated",
+        "create_workgroup": "Create workgroup",
+        "group_chat": "Group chat",
+        "group_chat_description": "Automatically create a linked group chat via message",
+        "workgroup_privacy": "Workgroup privacy",
+        "filter_request_join": {
+          "select": {
+            "newest_first": "Newest first",
+            "oldest_first": "Oldest first"
+          }
+        },
+        "empty_group_rule": {
+          "title": "No Rules Set Up",
+          "description": "Use rules to help set the tone for your group and help prevent member conflict. Write up to 10 rules about your group"
+        },
+        "empty_pinned": {
+          "title": "Create a pinned for your group",
+          "description": "Pinned a post. anyone who joins will be able to see it and comment"
+        },
+        "empty_post": {
+          "title": "Create a post for your group",
+          "description": "Get the conversation started with a welcome post. Anyone who joins will be able to see it and comment."
+        },
+        "empty_member": {
+          "title": "No members",
+          "description": "Get the conversation started with a welcome post. Anyone who joins will be able to see it and comment."
+        },
+        "manage_notification": "Manage notifications",
+        "member_request": "Member request",
+        "workgroup_setting": "Workgroup setting",
+        "leave_workgroup": "Leave workgroup",
+        "search_post": "Search post",
+        "result_search": "Results search for \"{text}\"",
+        "group_setting": "Group setting",
+        "nav_menu_setting_layout": {
+          "feed": "Group feed",
+          "setting": "Group setting",
+          "approvals": "Pending approvals",
+          "request": "Member requests"
+        }
       },
       "fields": {
         "workspace_name": "Workspace name",
+        "workgroup_name": "Workgroup name",
+        "description": "Description",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
         "membership_approval": "Membership approval",
@@ -3956,7 +4007,7 @@
           "type": {
             "public": {
               "title": "Pulbic Workspace",
-              "description": "Anyone can see post and activites in workspace"
+              "description": "Anyone can see who's in the group and what they post"
             },
             "private": {
               "title": "Private Workspace",
@@ -3966,7 +4017,7 @@
           "mode": {
             "visible": {
               "title": "Visible Workspace",
-              "description": "Anyone can see your workspace and request to join"
+              "description": "Anyone can see find this group"
             },
             "hidden": {
               "title": "Hidden",
@@ -3979,8 +4030,10 @@
           }
         },
         "search_member": "Search member",
+        "search_post": "Search post...",
         "admin": "Admin",
         "member_list": "Member List",
+        "admin_and_moderators": "Admin & moderators",
         "confirm_set_as_administrator": {
           "title": "Are you sure?",
           "content_add": "{name} will be the administrator of the workspace.",
@@ -4013,7 +4066,14 @@
           "joined": "Collaborate with your team"
         },
         "no_member": "No member",
-        "joined_date": "You joined in"
+        "joined_date": "You joined in",
+        "joined_on": "Joined on {date}",
+        "enter_group_name": "Enter group name",
+        "find_a_member": "Find a member",
+        "handled_approve_join_request": "Approved",
+        "handled_decline_join_request": "Declined",
+        "write_something_about_your_group": "Write something about your group",
+        "requested_on": "Requested on {date}"
       },
       "app_options": {
         "workspace_type": {

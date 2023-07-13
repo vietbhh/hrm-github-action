@@ -11,21 +11,43 @@ import { Storage } from "@google-cloud/storage"
 import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { handleDataLoadFeed } from "../../feed/controllers/feed.js"
+import { handleAddNewGroupToFireStore } from "#app/libraries/chat/Chat.js"
+
 const saveWorkspace = async (req, res, next) => {
-  const workspace = new workspaceMongoModel({
+  const dataSave = {
     name: req.body.workspace_name,
     type: req.body.workspace_type,
     mode: req.body.workspace_mode,
+    description: req.body?.description,
     cover_image: "",
     members: [req.__user],
     administrators: [req.__user],
     __user: req.__user,
     request_joins: []
-  })
+  }
 
   try {
-    const saveData = await workspace.save()
-    return res.respond(saveData)
+    if (
+      req.body.workspace_crate_group_chat === "true" ||
+      req.body.workspace_crate_group_chat === true
+    ) {
+      const groupChatId = await handleAddNewGroupToFireStore(
+        req.__user,
+        req.body.workspace_name,
+        [req.__user],
+        true
+      )
+      dataSave["group_chat_id"] = groupChatId
+    }
+
+    const workspace = new workspaceMongoModel(dataSave)
+
+    const saveData = await workspace.save(async (err, saved) => {
+      if (req.body?.image !== undefined && req.body.image !== "") {
+        await _handleUploadImage(req.body.image, saved._id)
+      }
+      return res.respond(saved)
+    })
   } catch (err) {
     return res.fail(err.message)
   }
@@ -47,21 +69,27 @@ const getWorkspace = async (req, res, next) => {
 
 const saveCoverImage = async (req, res) => {
   const image = req.body.image
-  const imageFile = {}
-  imageFile.content = image
-  imageFile.name = req.body._id + "_cover.png"
-  const pathUpload = "modules/workspace/" + req.body._id
-  const upp = await _uploadServices(pathUpload, [imageFile], true)
-
   try {
-    const update = await workspaceMongoModel.findOneAndUpdate(
-      { _id: req.body._id },
-      { $set: { cover_image: upp.uploadSuccess[0]?.path } }
-    )
+    const update = _handleUploadImage(image, id)
+
     return res.respond(update)
   } catch (err) {
     return res.fail(err.message)
   }
+}
+
+const _handleUploadImage = async (image, id) => {
+  const imageFile = {}
+  imageFile.content = image
+  imageFile.name = id + "_cover.png"
+  const pathUpload = "modules/workspace/" + id
+  const upp = await _uploadServices(pathUpload, [imageFile], true)
+  const update = await workspaceMongoModel.findOneAndUpdate(
+    { _id: id },
+    { $set: { cover_image: upp.uploadSuccess[0]?.path } }
+  )
+
+  return update
 }
 
 const removeCoverImage = async (req, res) => {
@@ -122,7 +150,11 @@ const getListWorkspace = async (req, res, next) => {
     } else if (workspaceType === "both") {
       filter = {
         $or: [
-          { members: parseInt(userId) },
+          {
+            members: {
+              id_user: parseInt(userId)
+            }
+          },
           { administrators: parseInt(userId) }
         ]
       }
@@ -227,7 +259,7 @@ const _handleUpdateGroupRule = (workspace, requestData) => {
     return {
       ...workspace._doc,
       group_rules: groupRule.filter((item) => {
-        return item._id !== requestData.group_rule_id
+        return item._id.toString() !== requestData.group_rule_id
       })
     }
   }
@@ -256,18 +288,18 @@ const _handleRemoveMember = (workspace, requestData) => {
     workspace?.administrators === undefined
       ? []
       : workspace.administrators.filter((item) => {
-          return item !== requestData.data.id
+          return parseInt(item) !== parseInt(requestData.data.id)
         })
 
   const members =
     workspace?.members === undefined
       ? []
       : workspace.members.filter((item) => {
-          return item !== requestData.data.id
+          return parseInt(item.id_user) !== parseInt(requestData.data.id)
         })
-
   return { ...workspace._doc, administrators: administrators, members: members }
 }
+
 const _handleApproveJoinRequest = (workspace, requestData) => {
   if (requestData.is_all === true) {
     const requestJoins =
@@ -282,13 +314,43 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
       ...workspace._doc,
       members:
         workspace?.members === undefined
-          ? [requestData.data.id]
-          : [...workspace.members, requestData.data.id],
+          ? [
+              {
+                id_user: requestData.data.id,
+                joined_at: moment().toISOString()
+              }
+            ]
+          : [
+              ...workspace.members,
+              {
+                id_user: requestData.data.id,
+                joined_at: moment().toISOString()
+              }
+            ],
       request_joins:
         workspace?.request_joins === undefined
           ? []
           : workspace.request_joins.filter((item) => {
-              return parseInt(item) !== parseInt(requestData.data.id)
+              return parseInt(item.id_user) !== parseInt(requestData.data.id)
+            })
+    }
+  }
+}
+
+const handleDeclineJoinRequest = (workspace, requestData) => {
+  if (requestData.is_all === true) {
+    return {
+      ...workspace._doc,
+      request_joins: []
+    }
+  } else {
+    return {
+      ...workspace._doc,
+      request_joins:
+        workspace?.request_joins === undefined
+          ? []
+          : workspace.request_joins.filter((item) => {
+              return parseInt(item.id_user) !== parseInt(requestData.data.id)
             })
     }
   }
@@ -322,6 +384,10 @@ const updateWorkspace = async (req, res, next) => {
       returnCurrentPageForPagination = "members"
     } else if (requestData.hasOwnProperty("approve_join_request")) {
       workSpaceUpdate = _handleApproveJoinRequest(workspaceInfo, requestData)
+      returnCurrentPageForPagination =
+        requestData.is_all === false ? "request_join" : ""
+    } else if (requestData.hasOwnProperty("decline_join_request")) {
+      workSpaceUpdate = handleDeclineJoinRequest(workspaceInfo, requestData)
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("add_new_group")) {
@@ -376,16 +442,38 @@ const updateWorkspace = async (req, res, next) => {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
       if (requestData?.members) {
-        updateData.members = JSON.parse(requestData.members)
+        updateData.members =
+          typeof requestData.members === "string"
+            ? JSON.parse(requestData.members)
+            : requestData.members
       }
       if (requestData?.administrators) {
-        updateData.administrators = JSON.parse(requestData.administrators)
+        updateData.administrators =
+          typeof requestData.administrators === "string"
+            ? JSON.parse(requestData.administrators)
+            : requestData.administrators
       }
       if (requestData?.pinPosts) {
-        updateData.pinPosts = JSON.parse(requestData.pinPosts)
+        updateData.pinPosts =
+          typeof requestData.pinPosts === "string"
+            ? JSON.parse(requestData.pinPosts)
+            : requestData.pinPosts
       }
       if (requestData?.request_joins) {
-        updateData.request_joins = JSON.parse(requestData.request_joins)
+        const requestJoinData =
+          typeof requestData.request_joins === "string"
+            ? JSON.parse(requestData.request_joins)
+            : requestData.request_joins
+        updateData.request_joins = requestJoinData.map((item) => {
+          if (item?._id === undefined) {
+            return {
+              ...item,
+              requested_at: moment().toISOString()
+            }
+          }
+
+          return item
+        })
         const memberInfo = await getUser(
           updateData.request_joins[updateData.request_joins.length - 1]
         )
@@ -416,6 +504,7 @@ const updateWorkspace = async (req, res, next) => {
           )
         }
       }
+
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -432,12 +521,9 @@ const updateWorkspace = async (req, res, next) => {
 
 const sortGroupRule = async (req, res, next) => {
   const workspaceId = req.params.id
-  const index = req.body.index
-  const sortType = req.body.sort_type
+  const data = req.body.data
   try {
-    const workspace = await workspaceMongoModel.findById(workspaceId)
-    const nextIndex = sortType === "down" ? index + 1 : index - 1
-    const groupRule = arrayMove([...workspace["group_rules"]], index, nextIndex)
+    const groupRule = data
 
     await workspaceMongoModel.findOneAndUpdate(
       {
@@ -463,7 +549,7 @@ const loadDataMember = async (req, res, next) => {
     let condition = {}
     if (text.trim().length > 0) {
       condition = {
-        username: {
+        full_name: {
           [Op.like]: `${text}%`
         }
       }
@@ -528,32 +614,140 @@ const loadDataMember = async (req, res, next) => {
         request_joins: requestJoin,
         is_admin_group: isAdmin
       })
-    } else if (req.query.load_list === "request_join") {
+    } else if (req.query.load_list === "member") {
       const page = req.query?.page === undefined ? 1 : req.query.page
-      const limit = req.query?.limit === undefined ? 4 : req.query.limit
-      const allRequestJoin =
-        workspace?.request_joins === undefined
+      const limit = req.query?.limit === undefined ? 30 : req.query.limit
+      const workspaceAdministrator =
+        workspace?.administrators === undefined
           ? []
-          : await getUsers(workspace.request_joins)
+          : workspace.administrators.reverse()
+      const workspaceMember =
+        workspace?.members === undefined || workspace?.members === null
+          ? []
+          : workspace?.members
+      const listMember = workspaceMember
+        .reverse()
+        .map((item) => {
+          return item.id_user
+        })
+        .filter((item) => {
+          return !workspaceAdministrator.includes(item)
+        })
 
-      const requestJoin =
-        workspace?.request_joins === undefined
+      const allMember =
+        listMember.length === 0 ? [] : await getUsers(listMember)
+      const members =
+        listMember.length === 0
           ? []
           : await getUsers(
-              workspace.request_joins
-                .reverse()
-                .slice((page - 1) * limit, page * limit)
+              listMember.slice((page - 1) * limit, page * limit),
+              condition
+            )
+      const handledData = handleMemberData(members, workspaceMember)
+      return res.respond({
+        total_member: allMember.length,
+        members: handledData,
+        total_list_member: allMember.length
+      })
+    } else if (req.query.load_list === "admin") {
+      const pageAdmin = req.query?.page === undefined ? 1 : req.query.page
+      const limitAdmin = req.query?.limit === undefined ? 30 : req.query.limit
+      const workspaceAdministrator =
+        workspace?.administrators === undefined
+          ? []
+          : workspace.administrators.reverse()
+      const allAdmin =
+        workspaceAdministrator.length === 0
+          ? []
+          : await getUsers(workspace.administrators)
+      const administrators =
+        workspaceAdministrator.length === 0
+          ? []
+          : await getUsers(
+              workspaceAdministrator.slice(
+                (pageAdmin - 1) * limitAdmin,
+                pageAdmin * limitAdmin
+              ),
+              condition
             )
 
       return res.respond({
+        administrators: administrators,
+        total_list_admin: allAdmin.length
+      })
+    } else if (req.query.load_list === "request_join") {
+      const order = req.query.order === undefined ? "desc" : req.query.order
+  
+      if (!isAdmin) {
+        return res.respond({
+          total_request_join: 0,
+          request_joins: [],
+          is_admin_group: isAdmin
+        })
+      }
+
+      if (
+        workspace?.request_joins === undefined ||
+        workspace.request_joins === null ||
+        (isArray(workspace.request_joins) &&
+          workspace.request_joins.length === 0)
+      ) {
+        return res.respond({
+          total_request_join: 0,
+          request_joins: [],
+          is_admin_group: isAdmin
+        })
+      }
+
+      const idUserRequestJoin = workspace.request_joins.map((item) => {
+        return item.id_user
+      })
+
+      const allRequestJoin =
+        idUserRequestJoin.length === 0
+          ? []
+          : await getUsers(idUserRequestJoin, condition)
+
+      const result = allRequestJoin.map((item) => {
+        const [infoRequestJoin] = workspace.request_joins.filter(
+          (itemFilter) => {
+            return parseInt(itemFilter.id_user) === parseInt(item.id)
+          }
+        )
+
+        return {
+          ...item.dataValues,
+          requested_at: infoRequestJoin?.requested_at
+        }
+      })
+
+      return res.respond({
         total_request_join: allRequestJoin.length,
-        request_joins: requestJoin,
+        request_joins: order === "desc" ? result.reverse() : result,
         is_admin_group: isAdmin
       })
     }
   } catch (err) {
     return res.fail(err.message)
   }
+}
+
+const handleMemberData = (listMember, workspaceMember) => {
+  const newData = listMember.map((item) => {
+    const newItem = item.dataValues
+    const [workspaceDataUser] = workspaceMember.filter((itemFilter) => {
+      return parseInt(itemFilter.id_user) === parseInt(newItem.id)
+    })
+
+    return {
+      ...newItem,
+      joined_at: workspaceDataUser?.joined_at
+        ? workspaceDataUser?.joined_at
+        : ""
+    }
+  })
+
+  return newData
 }
 
 const loadDataMedia = async (req, res, next) => {
@@ -793,12 +987,18 @@ const loadFeed = async (req, res) => {
   const request = req.query
   const page = request.page
   const pageLength = request.pageLength
+  const textFilter = request?.text === undefined ? "" : request.text
   const filter = {
     permission_ids: req.query.workspace,
     permission: "workspace",
     approve_status: "approved",
     ref: null
   }
+
+  if (textFilter.trim().length > 0) {
+    filter["content"] = { $regex: textFilter, $options: "i" }
+  }
+
   const feed = await feedMongoModel
     .find(filter)
     .skip(page * pageLength)
@@ -814,6 +1014,7 @@ const loadFeed = async (req, res) => {
 const loadPinned = async (req, res) => {
   const request = req.query
   const workspaceId = request.id
+  const textFilter = request?.text === undefined ? "" : request.text
   const workspace = await workspaceMongoModel.findById(workspaceId)
   const arrID = workspace.pinPosts // .map((x) => x.post)
 
@@ -825,6 +1026,7 @@ const loadPinned = async (req, res) => {
       dataPost.push({ ...infoPost._doc, stt: item.stt })
     })
   )
+
   const feed = await feedMongoModel.find({
     _id: { $in: arrID }
   })
@@ -920,7 +1122,12 @@ const getListWorkspaceSeparateType = async (req, res) => {
       })
 
     const workspaceJoin = await workspaceMongoModel
-      .find({ members: parseInt(userId), ...condition })
+      .find({
+        members: {
+          id_user: parseInt(userId),
+          ...condition
+        }
+      })
       .sort({
         _id: "desc"
       })
@@ -980,7 +1187,7 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
             }
           })
           resolve({
-            id: item.id,
+            id: item._id,
             name: item.name,
             type: item.type,
             cover_image: item.cover_image,
@@ -990,7 +1197,7 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
           })
         } catch (err) {
           resolve({
-            id: item.id,
+            id: item._id,
             name: item.name,
             type: item.type,
             cover_image: item.cover_image,

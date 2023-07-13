@@ -69,7 +69,7 @@ const SeparateSidebarLayout = (props) => {
                 </svg>
               </div>
             ),
-            navLink: `/workspace/${item._id}`
+            navLink: `/workspace/${item.id}`
           }
         })
 

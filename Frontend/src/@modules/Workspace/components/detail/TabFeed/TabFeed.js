@@ -9,15 +9,20 @@ import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import { Dropdown } from "antd"
 import { map } from "lodash-es"
 import moment from "moment"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams, useLocation } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
 import Introduction from "../TabIntroduction/Introduction"
 
 const TabFeed = (props) => {
-  const { detailWorkspace, handleUnPinPost } = props
+  const {
+    searchTextFeed,
+    detailWorkspace,
+    handleUnPinPost,
+    setSearchTextFeed
+  } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -30,11 +35,13 @@ const TabFeed = (props) => {
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const params = useParams()
   const workspaceID = params?.id
+
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = () => {}
 
   const loadData = (paramsX = {}) => {
     paramsX.id = workspaceID
+    paramsX.text = searchTextFeed
     workspaceApi.loadPinned(paramsX).then((res) => {
       setState({ dataPinned: res.data.dataPost })
     })
@@ -132,6 +139,12 @@ const TabFeed = (props) => {
       loadData()
     })
   }
+
+  const handleClickRemoveSearch = () => {
+    window.history.replaceState(null, "", "?tab=feed")
+    setSearchTextFeed("")
+  }
+
   const renderPinned = (data = []) => {
     let count = 0
     return data.map((item, key) => {
@@ -163,46 +176,60 @@ const TabFeed = (props) => {
           onClick: () => handlePinTop(item?._id)
         }
       ]
-      console.log(item)
+
       return (
-        <Col sm={12} key={key}>
-          <div className="post-pinned">
-            <div className="content-post d-flex align-items-center mb-50">
-              <div>
-                {ReactHtmlParser(item?.content)}
-                <div
-                  className="post-info d-flex align-items-center mt-50"
-                  style={{ fontSize: "12px" }}>
-                  <div className="me-50 d-flex align-items-center">
-                    <Avatar src={item.created_by?.avatar} size="sm" />{" "}
-                    <div className="ms-50">{item.created_by?.full_name}</div>
-                  </div>
-                  <div className="me-50">
-                    <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
-                    {moment(item?.created_at).format("DD MMM, YYYY")}
-                  </div>
+        <Card className="mb-1" key={`item-pinned-${key}`}>
+          <CardHeader>
+            <h2 className="card-title">
+              <i className="fa-regular fa-thumbtack me-50"></i>
+              {useFormatMessage(
+                "modules.workspace.display.workspace_pinned_post"
+              )}
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <Col sm={12} key={key}>
+              <div className="post-pinned">
+                <div className="content-post d-flex align-items-center mb-50">
                   <div>
-                    <i className="fa-regular fa-eye me-50"></i>{" "}
-                    {item.seen.length}
+                    {ReactHtmlParser(item?.content)}
+                    <div
+                      className="post-info d-flex align-items-center mt-50"
+                      style={{ fontSize: "12px" }}>
+                      <div className="me-50 d-flex align-items-center">
+                        <Avatar src={item.created_by?.avatar} size="sm" />{" "}
+                        <div className="ms-50">
+                          {item.created_by?.full_name}
+                        </div>
+                      </div>
+                      <div className="me-50">
+                        <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
+                        {moment(item?.created_at).format("DD MMM, YYYY")}
+                      </div>
+                      <div>
+                        <i className="fa-regular fa-eye me-50"></i>{" "}
+                        {item.seen.length}
+                      </div>
+                    </div>
                   </div>
+                  <div className="ms-auto">
+                    {item?.thumb && <Photo src={item?.thumb} width={"60px"} />}
+                  </div>
+                  <Dropdown
+                    menu={{
+                      items
+                    }}
+                    trigger={["click"]}>
+                    <Button className="ms-1" color="flat-secondary" size="sm">
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
+                    </Button>
+                  </Dropdown>
                 </div>
+                <hr className="pd-0"></hr>
               </div>
-              <div className="ms-auto">
-                {item?.thumb && <Photo src={item?.thumb} width={"60px"} />}
-              </div>
-              <Dropdown
-                menu={{
-                  items
-                }}
-                trigger={["click"]}>
-                <Button className="ms-1" color="flat-secondary" size="sm">
-                  <i className="fa-solid fa-ellipsis-vertical"></i>
-                </Button>
-              </Dropdown>
-            </div>
-            <hr className="pd-0"></hr>
-          </div>
-        </Col>
+            </Col>
+          </CardBody>
+        </Card>
       )
     })
   }
@@ -239,8 +266,32 @@ const TabFeed = (props) => {
     detailWorkspace.introduction = data
     setState({ loading: false })
   }
+
+  const renderSearchText = () => {
+    if (searchTextFeed.trim().length > 0) {
+      return (
+        <div className="d-flex align-items-center mb-1 mt-1">
+          <h5 className="ms-50 me-1 mb-0 search-text">
+            {useFormatMessage("modules.workspace.display.result_search", {
+              text: searchTextFeed
+            })}
+          </h5>
+          <Button.Ripple
+            size="sm"
+            color="danger"
+            onClick={() => handleClickRemoveSearch()}>
+            <i className="fas fa-times me-50"></i>
+            {useFormatMessage("modules.workspace.buttons.cancel")}
+          </Button.Ripple>
+        </div>
+      )
+    }
+
+    return ""
+  }
+
   return (
-    <div className="div-content ">
+    <div className="div-content tab-feed">
       <div className="div-left feed">
         {state.joined && (
           <CreatePost
@@ -249,19 +300,10 @@ const TabFeed = (props) => {
             approveStatus={state.approveStatus}
           />
         )}
-
-        <Card className="mb-1">
-          <CardHeader>
-            <h2 className="card-title">
-              <i className="fa-regular fa-thumbtack me-50"></i>
-              {useFormatMessage(
-                "modules.workspace.display.workspace_pinned_post"
-              )}
-            </h2>
-          </CardHeader>
-          <CardBody>{renderPinned(state.dataPinned)}</CardBody>
-        </Card>
+        <Fragment>{renderPinned(state.dataPinned)}</Fragment>
+        <Fragment>{renderSearchText()}</Fragment>
         <LoadFeed
+          searchTextFeed={searchTextFeed}
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}
           workspace={[workspaceID]}
