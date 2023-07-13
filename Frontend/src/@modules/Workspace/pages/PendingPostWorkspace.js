@@ -9,6 +9,8 @@ import { Button, Card, CardBody, Row, Spinner, Col } from "reactstrap"
 import { workspaceApi } from "../common/api"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import SwAlert from "@apps/utility/SwAlert"
+import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
+
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -165,7 +167,7 @@ const PendingPostWorkspace = () => {
   }
 
   return (
-    <Fragment>
+    <WorkspaceSettingLayout>
       <div className="workspace-pending-post row">
         <div className="col-md-8 offset-md-2">
           <Card>
@@ -264,7 +266,7 @@ const PendingPostWorkspace = () => {
           )}
         </div>
       </div>
-    </Fragment>
+    </WorkspaceSettingLayout>
   )
 }
 

@@ -9,6 +9,8 @@ import { Button, Card, CardBody } from "reactstrap"
 import AvatarBox from "../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../common/api"
 import EditInformationModal from "../components/modals/EditInformationModal"
+import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
+
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -208,7 +210,7 @@ const SettingWorkspace = () => {
   }
 
   return (
-    <Fragment>
+    <WorkspaceSettingLayout>
       <div className="workspace-setting row">
         <div className="col-md-7 offset-md-3">
           <Card>
@@ -282,149 +284,153 @@ const SettingWorkspace = () => {
           </Card>
 
           <div className="title-setting">Group privacy</div>
-          <Card>
-            <CardBody>
-              <FormProvider {...methods}>
-                <h6>Setup group privacy</h6>
-                <ErpSelect
-                  name="type"
-                  loading={state.loading}
-                  nolabel
-                  options={workspace_type}
-                  defaultValue={
-                    state.detailWorkspace?.type
-                      ? workspace_type[
-                          findKeyByValue(
-                            workspace_type,
-                            state.detailWorkspace?.type
-                          )
-                        ]
-                      : workspace_type[0]
-                  }
-                  isClearable={false}
-                  isSearchable={false}
-                  onChange={(e) => onSubmit({ type: e })}
-                />
-                <ErpSelect
-                  name="mode"
-                  loading={state.loading}
-                  nolabel
-                  options={workspace_mode}
-                  defaultValue={
-                    state.detailWorkspace?.mode
-                      ? workspace_mode[
-                          findKeyByValue(
-                            workspace_mode,
-                            state.detailWorkspace?.mode
-                          )
-                        ]
-                      : workspace_mode[0]
-                  }
-                  isClearable={false}
-                  isSearchable={false}
-                  onChange={(e) => onSubmit({ mode: e })}
-                />
-              </FormProvider>
-            </CardBody>
-          </Card>
-
-          <div className="title-setting">Manage membership</div>
-          <Card>
-            <CardBody>
-              <FormProvider {...methods}>
-                <div className="mt-2 field_switch">
-                  <div>
-                    <div className="label">
-                      {" "}
-                      {useFormatMessage(
-                        "modules.workspace.display.review_post"
-                      )}
-                    </div>
-                    <div className="sub-label">
-                      {useFormatMessage(
-                        "modules.workspace.text.sub_review_post"
-                      )}
-                    </div>
-                  </div>
-                  <ErpSwitch
-                    formGroupClass="ms-auto mb-0"
-                    name="review_post"
+          <div className="">
+            <Card>
+              <CardBody>
+                <FormProvider {...methods}>
+                  <h6>Setup group privacy</h6>
+                  <ErpSelect
+                    name="type"
                     loading={state.loading}
-                    defaultValue={state.detailWorkspace?.review_post}
-                    onClick={(e) => onSubmit({ review_post: e.target.checked })}
+                    nolabel
+                    options={workspace_type}
+                    defaultValue={
+                      state.detailWorkspace?.type
+                        ? workspace_type[
+                            findKeyByValue(
+                              workspace_type,
+                              state.detailWorkspace?.type
+                            )
+                          ]
+                        : workspace_type[0]
+                    }
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(e) => onSubmit({ type: e })}
                   />
-                </div>
-                <ErpSelect
-                  name="membership_approval"
-                  loading={state.loading}
-                  label={useFormatMessage(
-                    "modules.workspace.fields.membership_approval"
-                  )}
-                  options={membership_approval}
-                  defaultValue={
-                    state.detailWorkspace?.membership_approval
-                      ? membership_approval[
-                          findKeyByValue(
-                            membership_approval,
-                            state.detailWorkspace?.membership_approval
-                          )
-                        ]
-                      : membership_approval[0]
-                  }
-                  isClearable={false}
-                  isSearchable={false}
-                  onChange={(e) => onSubmit({ membership_approval: e })}
-                />
-              </FormProvider>
-            </CardBody>
-          </Card>
+                  <ErpSelect
+                    name="mode"
+                    loading={state.loading}
+                    nolabel
+                    options={workspace_mode}
+                    defaultValue={
+                      state.detailWorkspace?.mode
+                        ? workspace_mode[
+                            findKeyByValue(
+                              workspace_mode,
+                              state.detailWorkspace?.mode
+                            )
+                          ]
+                        : workspace_mode[0]
+                    }
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(e) => onSubmit({ mode: e })}
+                  />
+                </FormProvider>
+              </CardBody>
+            </Card>
 
-          <div className="title-setting">Group management</div>
-          <Card>
-            <CardBody className="d-flex align-items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M7.83997 20.0201L9.42997 21.2101C10.84 22.2701 13.16 22.2701 14.57 21.2101L18.87 18.0001C19.82 17.2901 20.6 15.7401 20.6 14.5601V7.12012"
-                  stroke="#32434F"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M18.98 4.34006C18.83 4.25006 18.67 4.17006 18.51 4.10006L13.52 2.23006C12.69 1.92006 11.33 1.92006 10.5 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L5.34003 18.1401"
-                  stroke="#32434F"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M22 2L2 22"
-                  stroke="#32434F"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <div className="label-field ms-1">
-                Deleting the group
-                <div className="sub-label">
-                  By deleting your group, you will delete all information in
-                  this group: post, photos, videos,...
+            <div className="title-setting">Manage membership</div>
+            <Card>
+              <CardBody>
+                <FormProvider {...methods}>
+                  <div className="mt-2 field_switch">
+                    <div>
+                      <div className="label">
+                        {" "}
+                        {useFormatMessage(
+                          "modules.workspace.display.review_post"
+                        )}
+                      </div>
+                      <div className="sub-label">
+                        {useFormatMessage(
+                          "modules.workspace.text.sub_review_post"
+                        )}
+                      </div>
+                    </div>
+                    <ErpSwitch
+                      formGroupClass="ms-auto mb-0"
+                      name="review_post"
+                      loading={state.loading}
+                      defaultValue={state.detailWorkspace?.review_post}
+                      onClick={(e) =>
+                        onSubmit({ review_post: e.target.checked })
+                      }
+                    />
+                  </div>
+                  <ErpSelect
+                    name="membership_approval"
+                    loading={state.loading}
+                    label={useFormatMessage(
+                      "modules.workspace.fields.membership_approval"
+                    )}
+                    options={membership_approval}
+                    defaultValue={
+                      state.detailWorkspace?.membership_approval
+                        ? membership_approval[
+                            findKeyByValue(
+                              membership_approval,
+                              state.detailWorkspace?.membership_approval
+                            )
+                          ]
+                        : membership_approval[0]
+                    }
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(e) => onSubmit({ membership_approval: e })}
+                  />
+                </FormProvider>
+              </CardBody>
+            </Card>
+
+            <div className="title-setting">Group management</div>
+            <Card>
+              <CardBody className="d-flex align-items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path
+                    d="M7.83997 20.0201L9.42997 21.2101C10.84 22.2701 13.16 22.2701 14.57 21.2101L18.87 18.0001C19.82 17.2901 20.6 15.7401 20.6 14.5601V7.12012"
+                    stroke="#32434F"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M18.98 4.34006C18.83 4.25006 18.67 4.17006 18.51 4.10006L13.52 2.23006C12.69 1.92006 11.33 1.92006 10.5 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L5.34003 18.1401"
+                    stroke="#32434F"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M22 2L2 22"
+                    stroke="#32434F"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <div className="label-field ms-1">
+                  Deleting the group
+                  <div className="sub-label">
+                    By deleting your group, you will delete all information in
+                    this group: post, photos, videos,...
+                  </div>
                 </div>
-              </div>
-              <Button
-                color="secondary"
-                className="btn-secondary ms-auto"
-                onClick={() => handleDeleteWS()}>
-                Delete
-              </Button>
-            </CardBody>
-          </Card>
+                <Button
+                  color="secondary"
+                  className="btn-secondary ms-auto"
+                  onClick={() => handleDeleteWS()}>
+                  Delete
+                </Button>
+              </CardBody>
+            </Card>
+          </div>
         </div>
       </div>
       <EditInformationModal
@@ -432,7 +438,7 @@ const SettingWorkspace = () => {
         infoWorkspace={state.detailWorkspace}
         handleModal={handleEditInformation}
       />
-    </Fragment>
+    </WorkspaceSettingLayout>
   )
 }
 

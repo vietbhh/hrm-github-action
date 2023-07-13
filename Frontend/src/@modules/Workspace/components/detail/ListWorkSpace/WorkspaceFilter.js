@@ -1,7 +1,6 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Fragment, useEffect, useRef } from "react"
-import { useNavigate } from "react-router-dom"
 // ** Styles
 import { Button } from "reactstrap"
 // ** Components
@@ -12,17 +11,16 @@ const WorkspaceFilter = (props) => {
     // ** props
     filter,
     // ** methods
-    setFilter
+    setFilter,
+    toggleModal
   } = props
 
   const [state, setState] = useMergedState({
     showInput: false
   })
 
-  const navigate = useNavigate()
-
   const handleClickCreate = () => {
-    navigate("/workspace/create")
+    toggleModal()
   }
 
   const handleClickSearchButton = () => {

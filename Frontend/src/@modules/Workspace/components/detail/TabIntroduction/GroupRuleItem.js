@@ -1,108 +1,46 @@
 // ** React Imports
-import { Fragment } from "react"
+import { memo } from "react"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { FormProvider, useForm } from "react-hook-form"
 // ** Styles
-import { Button, Col, Row } from "reactstrap"
-import { Dropdown, Space } from "antd"
+import { Button } from "reactstrap"
+import { Dropdown } from "antd"
 import { Edit, Trash } from "react-feather"
 // ** Components
-import FormEditGroupRule from "../../modals/EditGroupRuleModal/FormEditGroupRule"
 import notification from "@apps/utility/notification"
+import SwAlert from "@apps/utility/SwAlert"
 
-const GroupRuleItem = (props) => {
+const GroupRuleItem = memo((props) => {
   const {
     // ** props
     id,
-    item,
+    itemGroupRule,
     index,
-    isEditable,
-    arrayLength,
+    isAdminGroup,
     // ** methods
-    setGroupRule
+    setGroupRule,
+    toggleModalEditGroupRule,
+    setEditGroupRuleData
   } = props
 
   const [state, setState] = useMergedState({
     loading: false,
-    isEditing: false,
     isDeleting: false
   })
 
-  const methods = useForm({
-    mode: "onSubmit"
-  })
-  const { handleSubmit } = methods
-
-  const onSubmit = (values) => {
-    setState({
-      loading: true
-    })
-
-    const updateValues = {
-      group_rule_id: item._id,
-      type: "update",
-      data: {
-        ...values,
-        _id: item._id
-      }
-    }
-
-    workspaceApi
-      .update(id, updateValues)
-      .then((res) => {
-        setGroupRule(res.data.group_rules, true)
-        setState({
-          isEditing: false,
-          loading: false
-        })
-      })
-      .catch((err) => {
-        notification.showError()
-        setState({
-          loading: false
-        })
-      })
-  }
-
-  const handleSort = (type) => {
-    setState({
-      isEditing: false,
-      isDeleting: false
-    })
-    const data = {
-      index: index,
-      sort_type: type
-    }
-    workspaceApi
-      .sortGroupRule(id, data)
-      .then((res) => {
-        setGroupRule(res.data, true)
-      })
-      .catch((err) => {})
-  }
-
   const handleClickEdit = () => {
-    setState({
-      isEditing: true
-    })
-  }
-
-  const handleCancelEdit = () => {
-    setState({
-      isEditing: false
-    })
+    setEditGroupRuleData(itemGroupRule)
+    toggleModalEditGroupRule()
   }
 
   const handleClickDelete = () => {
-    setState({
-      isDeleting: true
-    })
-  }
-
-  const handleCancelDelete = () => {
-    setState({
-      isDeleting: false
+    SwAlert.showWarning({
+      title: useFormatMessage("notification.confirm.title"),
+      text: useFormatMessage("notification.confirm.text")
+    }).then((resSw) => {
+      if (resSw.isConfirmed === true) {
+        handleRemoveGroupRule()
+      }
     })
   }
 
@@ -112,24 +50,17 @@ const GroupRuleItem = (props) => {
     })
 
     const updateValues = {
-      group_rule_id: item._id,
+      group_rule_id: itemGroupRule._id,
       type: "remove"
     }
 
     workspaceApi
       .update(id, updateValues)
       .then((res) => {
-        setGroupRule(res.data, true)
-        setState({
-          isDeleting: false,
-          loading: false
-        })
+        setGroupRule(res.data.group_rules)
       })
       .catch((err) => {
         notification.showError()
-        setState({
-          loading: false
-        })
       })
   }
 
@@ -138,7 +69,7 @@ const GroupRuleItem = (props) => {
       key: "1",
       label: (
         <Button.Ripple
-          color="flat-primary"
+          color="flat-secondary"
           size="sm"
           onClick={() => handleClickEdit()}
           className="w-100">
@@ -153,7 +84,7 @@ const GroupRuleItem = (props) => {
       key: "2",
       label: (
         <Button.Ripple
-          color="flat-danger"
+          color="flat-secondary"
           size="sm"
           onClick={() => handleClickDelete()}
           className="w-100">
@@ -167,132 +98,66 @@ const GroupRuleItem = (props) => {
   ]
 
   // ** render
-  const renderSort = () => {
-    if (!isEditable) {
-      return ""
-    }
-
-    return (
-      <div className="me-75 d-flex flex-column sort">
-        {index > 0 ? (
-          <i className="fas fa-caret-up" onClick={() => handleSort("up")} />
-        ) : (
-          ""
-        )}
-        {index < arrayLength - 1 ? (
-          <i className="fas fa-caret-down" onClick={() => handleSort("down")} />
-        ) : (
-          ""
-        )}
-      </div>
-    )
-  }
-
-  const renderAction = () => {
-    if (!isEditable) {
-      return ""
-    }
-
-    return (
-      <Dropdown
-        placement="bottomRight"
-        menu={{ items }}
-        trigger="click"
-        overlayClassName="dropdown-workspace-group-rule">
-        <Button.Ripple color="flat-primary" className="btn-icon">
-          <i className="fas fa-ellipsis-h" />
-        </Button.Ripple>
-      </Dropdown>
-    )
-  }
-
-  const renderRemove = () => {
-    if (!state.isDeleting) {
-      return ""
-    }
-
-    return (
-      <Space className="mt-1">
-        <Button.Ripple
-          size="sm"
-          color="danger"
-          disabled={state.loading}
-          onClick={() => handleRemoveGroupRule()}>
-          {useFormatMessage("modules.workspace.buttons.remove")}
-        </Button.Ripple>
-        <Button.Ripple
-          size="sm"
-          color="success"
-          disabled={state.loading}
-          onClick={() => handleCancelDelete()}>
-          {useFormatMessage("modules.workspace.buttons.cancel")}
-        </Button.Ripple>
-      </Space>
-    )
-  }
-
-  const renderComponent = () => {
-    if (state.isEditing) {
-      return (
-        <div className="d-flex align-items-start justify-content-start p-0 pt-1 group-rule-item">
-          <div className="me-75">
-            <span className="index">{index + 1}</span>
-          </div>
-          <div className="w-100">
-            <FormEditGroupRule
-              methods={methods}
-              showInputLabel={false}
-              formEditData={item}
-            />
-            <Row className="m-0 mb-50">
-              <Col sm={12} xs={12} className="p-0">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <Space>
-                    <Button.Ripple
-                      size="sm"
-                      type="submit"
-                      color="primary"
-                      disabled={state.loading}>
-                      {useFormatMessage("modules.workspace.buttons.save")}
-                    </Button.Ripple>
-                    <Button.Ripple
-                      size="sm"
-                      type="button"
-                      color="danger"
-                      disabled={state.loading}
-                      onClick={() => handleCancelEdit()}>
-                      {useFormatMessage("modules.workspace.buttons.cancel")}
-                    </Button.Ripple>
-                  </Space>
-                </form>
-              </Col>
-            </Row>
+  return (
+    <div className="d-flex align-items-center p-1 ps-0 group-rule-item">
+      {isAdminGroup && (
+        <div className="w-10">
+          <div className="me-75 sort">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              id="Layer_1"
+              x="0px"
+              y="0px"
+              width="9px"
+              height="16px"
+              viewBox="0 0 9 16"
+              enableBackground="new 0 0 9 16"
+              xmlSpace="preserve"
+              className="dragIcon">
+              {" "}
+              <image
+                id="image0"
+                width="9"
+                height="16"
+                x="0"
+                y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQCAMAAADzlqVxAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAV1BMVEUAAACvtsKwuMKwt8Kv tcWvt7+wuMOvtcKwt8OwtsOwt8Swt8SvtsKvt8evtsKvt8KvusWvt8OwtsOvtsKvt8KvtsKvur+w tsOwt8KvtsGvtsSwt8P///823RHSAAAAG3RSTlMAcO/fMCDvsL/v35+gIMCwMEDPUNDgMK+foHB6 4D8vAAAAAWJLR0QcnARBBwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBAwBB3Syl1sA AABhSURBVAjXbc05AsMgEANAwZo1rIH4PqL//zOQ2qrUjATnZUAQ76DKEZGaYOSETBpKzQUlf2a8 ZZEYEOK6QbodyQTlv3nDttdm67G82vO6m53agPS3hxRoYu02wakVzKbfH3LtBOtIUSznAAAAJXRF WHRkYXRlOmNyZWF0ZQAyMDIzLTA3LTA0VDEwOjAxOjA3KzAyOjAwtohwMwAAACV0RVh0ZGF0ZTpt b2RpZnkAMjAyMy0wNy0wNFQxMDowMTowNyswMjowMMfVyI8AAAAASUVORK5CYII="
+              />
+            </svg>
           </div>
         </div>
-      )
-    }
+      )}
 
-    return (
-      <div className="d-flex align-items-start justify-content-start p-1 group-rule-item">
-        <Fragment>{renderSort()}</Fragment>
+      <div className="d-flex align-items-start justify-content-start w-90">
         <div className="me-75">
-          <span className="index">{index + 1}</span>
+          <h6 className="index">{index + 1}</h6>
         </div>
         <div className="w-100">
           <div className="w-100 d-flex align-items-start justify-content-between">
             <div>
-              <h6>{item.title}</h6>
-              <p className="mb-0">{item.description}</p>
+              <h6 className="title">{itemGroupRule.title}</h6>
+              <p className="mb-0 description">{itemGroupRule.description}</p>
             </div>
-            <Fragment>{renderAction()}</Fragment>
+            <div>
+              {isAdminGroup && (
+                <Dropdown
+                  placement="bottomRight"
+                  menu={{ items }}
+                  trigger="click"
+                  overlayClassName="dropdown-workspace-group-rule">
+                  <Button.Ripple className="btn-icon btn-action-empty">
+                    <i className="fas fa-ellipsis-h" />
+                  </Button.Ripple>
+                </Dropdown>
+              )}
+            </div>
           </div>
-          <Fragment>{renderRemove()}</Fragment>
         </div>
       </div>
-    )
-  }
-
-  return <Fragment>{renderComponent()}</Fragment>
-}
+    </div>
+  )
+})
 
 export default GroupRuleItem
