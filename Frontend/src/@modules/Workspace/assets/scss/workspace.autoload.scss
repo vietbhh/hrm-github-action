@@ -39,8 +39,6 @@
       height: 32px;
       background-color: #f5f6f8 !important;
       border-radius: 8px !important;
-      width: 40px !important;
-      padding: unset !important;
     }
 
     .workspaceAction {
@@ -48,6 +46,7 @@
         height: 36px;
       }
     }
+    
 
     .nav-tab-custom {
       .nav-link {
@@ -60,6 +59,12 @@
       height: 45px;
       display: flex;
       align-items: center;
+
+      .custom-secondary {
+        width: 40px !important;
+        padding: unset !important;
+
+      }
     }
   }
 

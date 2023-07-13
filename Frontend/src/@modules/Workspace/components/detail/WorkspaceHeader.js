@@ -4,7 +4,7 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 import { Badge, Dropdown, Space } from "antd"
 import { Fragment, useEffect, useRef } from "react"
 import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
@@ -45,6 +45,8 @@ const WorkspaceHeader = (props) => {
     showInput: false,
     modal: false
   })
+
+  const navigate = useNavigate()
 
   const onClickInvite = () => {
     setState({ inviteModal: !state.inviteModal })
@@ -121,17 +123,18 @@ const WorkspaceHeader = (props) => {
     adminArr.splice(indexOfAdmin, 1)
     infoWorkspace.administrators = JSON.stringify(adminArr)
 
-    const memberArr = [...infoWorkspace.members]
-    const indexOf = memberArr.indexOf(userId)
-    memberArr.splice(indexOf, 1)
+    const memberArr = [...infoWorkspace.members].filter((itemFilter) => {
+      return parseInt(itemFilter.id_user) !== parseInt(userId)
+    })
     infoWorkspace.members = JSON.stringify(memberArr)
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
         })
-        loadData()
-        setState({ loading: false })
+        navigate("/workspace/list")
+        /*loadData()
+        setState({ loading: false })*/
       }
     })
   }
@@ -169,7 +172,9 @@ const WorkspaceHeader = (props) => {
       infoWorkspace.members = JSON.stringify(unique(members))
     } else {
       const request_joins = [...infoWorkspace.request_joins]
-      request_joins.push(userId)
+      request_joins.push({
+        id_user: userId
+      })
       infoWorkspace.request_joins = JSON.stringify(unique(request_joins))
     }
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
@@ -185,9 +190,11 @@ const WorkspaceHeader = (props) => {
 
   const handleCancelJoin = () => {
     const infoWorkspace = { ...data }
-    const request_joinsArr = [...infoWorkspace.request_joins]
-    const indexOf = request_joinsArr.indexOf(userId)
-    request_joinsArr.splice(indexOf, 1)
+    const request_joinsArr = [...infoWorkspace.request_joins].filter(
+      (itemFilter) => {
+        return parseInt(itemFilter.id_user) !== parseInt(userId)
+      }
+    )
     infoWorkspace.request_joins = JSON.stringify(request_joinsArr)
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
@@ -425,14 +432,20 @@ const WorkspaceHeader = (props) => {
     const arrRequest_joins = data?.request_joins ? data?.request_joins : []
 
     const isAdmin = arrAdmin.includes(userId)
-    const isMember = arrMember.includes(userId)
+    const isMember = arrMember.some(
+      (itemSome) => parseInt(itemSome.id_user) === parseInt(userId)
+    )
     let isJoined = false
     if (isAdmin || isMember) {
       isJoined = true
     }
 
     let waitJoined = false
-    if (arrRequest_joins.includes(userId)) {
+    if (
+      arrRequest_joins.some(
+        (itemSome) => parseInt(itemSome.id_user) === parseInt(userId)
+      )
+    ) {
       waitJoined = true
     }
     if (data.cover_image) {
@@ -526,7 +539,7 @@ const WorkspaceHeader = (props) => {
               )}
               {!state.joined && state.waitJoined && (
                 <Button
-                  className="btn btn-secondary"
+                  className="btn btn-secondary custom-secondary"
                   onClick={() => handleCancelJoin()}>
                   {useFormatMessage("button.cancel")}
                 </Button>

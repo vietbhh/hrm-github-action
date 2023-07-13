@@ -4072,7 +4072,8 @@
         "find_a_member": "Find a member",
         "handled_approve_join_request": "Approved",
         "handled_decline_join_request": "Declined",
-        "write_something_about_your_group": "Write something about your group"
+        "write_something_about_your_group": "Write something about your group",
+        "requested_on": "Requested on {date}"
       },
       "app_options": {
         "workspace_type": {

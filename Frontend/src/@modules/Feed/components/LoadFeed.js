@@ -12,7 +12,7 @@ import {
   loadUrlDataLink
 } from "../common/common"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 
 const LoadFeed = (props) => {
   const {
@@ -40,7 +40,8 @@ const LoadFeed = (props) => {
     idPostCreateNew: "",
     dataCreateNewTemp: [],
     dataMention: [],
-    arrPostIdSeen: []
+    arrPostIdSeen: [],
+    currentWorkspace: workspace
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -187,6 +188,10 @@ const LoadFeed = (props) => {
   useEffect(() => {
     loadData(true)
   }, [searchTextFeed])
+
+  useEffect(() => {
+    loadData(true)
+  }, [location])
 
   useEffect(() => {
     // event stopped scrolling

@@ -2,6 +2,7 @@
 import { Fragment, useState } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "../../../common/api"
+import moment from "moment"
 // ** Styles
 import { Button, Card, CardBody } from "reactstrap"
 // ** Components
@@ -124,7 +125,9 @@ const RequestToJoinBody = (props) => {
                     <div>
                       <p className="mb-0 full-name">{item.full_name}</p>
                       <small className="requested-time">
-                        Requested 1 week ago
+                        {useFormatMessage("modules.workspace.text.requested_on", {
+                          date: moment(item.requested_at).format("dddd, DD MMM Y")
+                        })}
                       </small>
                     </div>
                   </div>
@@ -141,7 +144,7 @@ const RequestToJoinBody = (props) => {
   }
 
   return (
-    <div className="pt-50 request-to-join-body">
+    <div className="pt-25 request-to-join-body">
       <Fragment>{renderComponent()}</Fragment>
     </div>
   )
