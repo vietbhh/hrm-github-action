@@ -49,6 +49,7 @@ const Introduction = (props) => {
       return (
         <EditIntroduction
           id={id}
+          api={workspaceApi.update}
           introduction={introduction}
           handleCancelEdit={handleCancelEdit}
           setIntroduction={setIntroduction}
@@ -116,9 +117,7 @@ const Introduction = (props) => {
         menu={{ items }}
         trigger="click"
         overlayClassName="dropdown-workspace-about-group">
-        <Button.Ripple
-          color="secondary"
-          className="btn-icon btn-action-empty">
+        <Button.Ripple color="secondary" className="btn-icon btn-action-empty">
           <i className="fas fa-ellipsis-h" />
         </Button.Ripple>
       </Dropdown>

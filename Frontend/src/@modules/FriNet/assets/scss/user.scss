@@ -10,74 +10,169 @@
 }
 
 .user-profile-page {
-  .cover-image-container {
-    position: relative;
+  .custom-button {
+    border-radius: 8px;
+  }
 
-    .image-cover {
+  .custom-primary {
+    color: #32434f !important;
+    background: #ffe658 !important;
+    border: none;
+  }
+
+  .custom-secondary {
+    color: #32434f !important;
+    background: #f1f1f5 !important;
+    border: none;
+  }
+
+  .btn-action-empty {
+    background-color: unset !important;
+    border: none !important;
+    color: #95999f !important;
+    box-shadow: none !important;
+  }
+
+  .common-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #32434f;
+  }
+
+  .page-header {
+    border-radius: 14px;
+
+    .cover-image-container {
       position: relative;
-      .coverPhoto {
-        position: absolute;
-        width: 100%;
-        min-height: 200px;
-        top: 0%;
-        left: 0%;
-        canvas {
-          border-top-left-radius: 12px;
-          border-top-right-radius: 12px;
-        }
-      }
-      .cameraBtn {
-        position: absolute;
-        top: 4%;
-        left: 1%;
-      }
-    }
-    .workspaceCover {
-      object-fit: cover;
-      max-height: 336px;
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
 
-    .avatar-container {
-      position: absolute;
-      left: calc(50% - 90px);
-      bottom: -20px;
-      padding: 3px;
-      border-radius: 50%;
-      background-color: #ffffff;
-
-      .employeeAvatar {
-        @include media-breakpoint-up(lg) {
-          height: 180px;
-          width: 180px;
-        }
-
+      .image-cover {
         position: relative;
-
-        cursor: pointer;
-
-        img {
-          border-radius: 50% !important;
-          height: 100%;
+        .coverPhoto {
+          position: absolute;
           width: 100%;
-          object-fit: cover;
-          object-position: center center;
+          min-height: 200px;
+          top: 0%;
+          left: 0%;
+          canvas {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+          }
         }
-
         .cameraBtn {
           position: absolute;
-          bottom: 0;
-          right: 20px;
+          top: 4%;
+          left: 1%;
+        }
+      }
+      .workspaceCover {
+        object-fit: cover;
+        max-height: 336px;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+      }
+
+      .avatar-container {
+        position: absolute;
+        left: 2rem;
+        bottom: -30%;
+        padding: 5px;
+        border-radius: 50%;
+        background-color: #ffffff;
+
+        .employeeAvatar {
+          @include media-breakpoint-up(lg) {
+            height: 140px;
+            width: 140px;
+          }
+
+          position: relative;
+
+          cursor: pointer;
+
+          img {
+            border-radius: 50% !important;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center center;
+          }
+
+          .cameraBtn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: -3px;
+            right: 15px;
+            height: 30px;
+            width: 30px;
+            background-color: #d9d9d9;
+            border-radius: 50%;
+            svg {
+              padding-left: 1px;
+              padding-bottom: 1px;
+            }
+          }
+        }
+      }
+    }
+
+    .user-info-container {
+      padding-left: calc(140px + 2rem);
+
+      .button-action {
+        padding: 0px 20px;
+        height: fit-content;
+        .custom-button {
+          height: 36px !important;
+        }
+
+        .custom-primary {
+          width: 110px;
+          font-size: 12px;
+          padding: 14px;
+        }
+      }
+
+      .user-info-content {
+        padding-left: 1.75rem;
+        .username {
+          color: #32434f !important;
+          font-weight: 600;
+          font-size: 20px;
+        }
+
+        .job-title {
+          font-weight: 400;
+          font-size: 14px;
+          color: #32434f;
+        }
+
+        .employment-type {
+          color: #7f7d83;
+          font-size: 14px;
+          font-weight: 400;
         }
       }
     }
   }
 
-  .user-info-container {
-    h3 {
-      color: #000000 !important;
-      font-weight: 600;
+  .page-body {
+    .div-content {
+      gap: 20px !important;
+    }
+
+    .about-me-section {
+    }
+
+    .skill-section {
+      .skill-list {
+        .skill-item {
+          padding: 5px;
+          border: 1px solid #ececed;
+          border-radius: 9px;
+        }
+      }
     }
   }
 
@@ -117,5 +212,15 @@
   #div-sticky-2 {
     border-radius: 14px;
     position: sticky;
+  }
+}
+
+@media (max-width: 1920px) {
+  .separate-sidebar-layout .app-content .content-wrapper .page-body .div-content {
+    gap: 15px !important;
+
+    .div-left {
+      max-width: unset !important;
+    }
   }
 }

@@ -11,6 +11,7 @@ import { userApi } from "../common/api"
 import Endorsement from "../components/User/Endorsement/Endorsement"
 import Introduction from "../components/User/Introduction/Introduction"
 import PageHeader from "../components/User/PageHeader/PageHeader"
+import PageBody from "../components/User/PageBody/PageBody"
 import Photo from "../components/User/Photo/Photo"
 import TimeLine from "../components/User/Timeline/Timeline"
 import WorkSpace from "../components/User/Workspace/Workspace"
@@ -35,7 +36,6 @@ const User = () => {
   })
 
   const userAuth = useSelector((state) => state.auth.userData)
-
   const navigate = useNavigate()
   const identity = params.identity === "profile" ? userAuth.id : params.identity
 
@@ -92,6 +92,38 @@ const User = () => {
   }, [params])
 
   // ** render
+  const renderNav = () => {
+    return (
+      <TabContent className="py-50" activeTab={state.tabActive}>
+        <TabPane tabId={1}>
+          <TimeLine employeeData={state.employeeData} />
+        </TabPane>
+        <TabPane tabId={2}>
+          <Introduction
+            employeeData={state.employeeData}
+            loadData={loadData}
+            isProfile={state.employeeData.is_profile}
+          />
+        </TabPane>
+        <TabPane tabId={3}>
+          {/*<WorkSpace
+                identity={identity}
+                employeeData={state.employeeData}
+    />*/}
+        </TabPane>
+        <TabPane tabId={4}>
+          <Photo identity={identity} />
+        </TabPane>
+        <TabPane tabId={5}>
+          <Endorsement
+            identity={identity}
+            employeeId={state.employeeData?.id}
+          />
+        </TabPane>
+      </TabContent>
+    )
+  }
+
   const renderComponent = () => {
     if (state.loading) {
       return (
@@ -107,42 +139,12 @@ const User = () => {
 
     return (
       <div className="user-profile-page">
-        <PageHeader
+        <PageHeader identity={identity} employeeData={state.employeeData} />
+        <PageBody
           identity={identity}
           employeeData={state.employeeData}
-          tabActive={state.tabActive}
-          setTabActive={setTabActive}
+          userAuth={userAuth}
         />
-
-        <div className="mt-1">
-          <TabContent className="py-50" activeTab={state.tabActive}>
-            <TabPane tabId={1}>
-              <TimeLine employeeData={state.employeeData} />
-            </TabPane>
-            <TabPane tabId={2}>
-              <Introduction
-                employeeData={state.employeeData}
-                loadData={loadData}
-                isProfile={state.employeeData.is_profile}
-              />
-            </TabPane>
-            <TabPane tabId={3}>
-              <WorkSpace
-                identity={identity}
-                employeeData={state.employeeData}
-              />
-            </TabPane>
-            <TabPane tabId={4}>
-              <Photo identity={identity} />
-            </TabPane>
-            <TabPane tabId={5}>
-              <Endorsement
-                identity={identity}
-                employeeId={state.employeeData?.id}
-              />
-            </TabPane>
-          </TabContent>
-        </div>
       </div>
     )
   }
