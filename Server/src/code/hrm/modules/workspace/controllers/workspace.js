@@ -677,7 +677,7 @@ const loadDataMember = async (req, res, next) => {
       })
     } else if (req.query.load_list === "request_join") {
       const order = req.query.order === undefined ? "desc" : req.query.order
-      console.log(workspace?.request_joins)
+  
       if (!isAdmin) {
         return res.respond({
           total_request_join: 0,
