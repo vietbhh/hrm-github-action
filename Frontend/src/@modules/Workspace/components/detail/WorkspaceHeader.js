@@ -53,6 +53,7 @@ const WorkspaceHeader = (props) => {
   }
   const handleDoneInvite = (dataUpdate, type) => {
     const infoWorkspace = { ...data }
+    console.log("infoWorkspace", infoWorkspace)
     if (type === "members") {
       const arrID = infoWorkspace.members.concat(
         dataUpdate.map((x) => ({

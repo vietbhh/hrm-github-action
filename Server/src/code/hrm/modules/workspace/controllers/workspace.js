@@ -19,7 +19,7 @@ const saveWorkspace = async (req, res, next) => {
     mode: req.body.workspace_mode,
     description: req.body?.description,
     cover_image: "",
-    members: [req.__user],
+    members: [],
     administrators: [req.__user],
     __user: req.__user,
     request_joins: []
@@ -38,7 +38,6 @@ const saveWorkspace = async (req, res, next) => {
       )
       dataSave["group_chat_id"] = groupChatId
     }
-
     const workspace = new workspaceMongoModel(dataSave)
 
     const saveData = await workspace.save(async (err, saved) => {
@@ -47,6 +46,7 @@ const saveWorkspace = async (req, res, next) => {
       }
       return res.respond(saved)
     })
+    return res.respond(saveData)
   } catch (err) {
     return res.fail(err.message)
   }
