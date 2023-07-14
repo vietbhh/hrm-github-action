@@ -1,13 +1,12 @@
+import SocketContext from "@/utility/context/Socket"
 import { ErpFileUpload, ErpInput } from "@apps/components/common/ErpField"
 import { axiosNodeApi } from "@apps/utility/api"
-import { getPublicDownloadUrl, useFormatMessage } from "@apps/utility/common"
+import { useFormatMessage } from "@apps/utility/common"
 import { serialize } from "@apps/utility/handleData"
 import { socketConnect } from "@apps/utility/socketHandler"
 import { Fragment, useCallback, useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Button } from "reactstrap"
-import SocketContext from "@/utility/context/Socket"
-import Photo from "../download/pages/Photo"
 const Test = (props) => {
   const socketDoc = socketConnect({
     path: "/document"
@@ -20,7 +19,7 @@ const Test = (props) => {
   }, [])
   console.log('okkk');
   useEffect(() => {
-    testNoti()
+    //testNoti()
     //socketDoc.connect()
     //socketDoc.emit("identity", 99999)
     //socket.on("notification", handleData)
@@ -129,16 +128,19 @@ const Test = (props) => {
       </FormProvider>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Button type="submit" color="primary">
-          {useFormatMessage("app.save")}
-        </Button>
+          {useFormatMessage("app.save")} a
+        </Button>2
       </form>
-      <button onClick={testNoti}>noti</button>
+      alo bloâs sad sđ sađá  sadsad  sđasad  sađâsd ádsad  sadá ? sdá ? ? sda sdá  sadsa
+      <button onClick={testNoti}>alo- blog 2 23ssadsd adsdsa sdsddsd  sađs42s</button>
     </Fragment>
   )
 }
 
-const Test2 = () => {
-  return "okkkkkk"
-}
 
+/*
+import Router from "./router/Router"
+import Test from "./@apps/Test" 
+<Test />
+*/
 export default Test
