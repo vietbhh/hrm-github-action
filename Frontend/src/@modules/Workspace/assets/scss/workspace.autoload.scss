@@ -91,10 +91,13 @@
     position: relative;
     .coverPhoto {
       position: absolute;
+      overflow: hidden;
       width: 100%;
       min-height: 200px;
       top: 0%;
       left: 0%;
+      border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
       canvas {
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
@@ -522,7 +525,6 @@
       border-radius: 8px;
       background: #FFE658;
       color: #32434F;
-      font-family: Inter;
       font-size: 12px;
       font-style: normal;
       font-weight: 600;

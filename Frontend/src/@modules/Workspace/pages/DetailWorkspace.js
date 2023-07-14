@@ -107,7 +107,7 @@ const DetailWorkspace = () => {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [params])
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)

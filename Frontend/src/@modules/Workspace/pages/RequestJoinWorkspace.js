@@ -1,7 +1,7 @@
 // ** React Imports
 import { useEffect } from "react"
 import { useMergedState } from "@apps/utility/common"
-import { useParams } from "react-router-dom"
+import { Navigate, useParams } from "react-router-dom"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useSelector } from "react-redux"
 // ** Styles
@@ -68,9 +68,12 @@ const RequestJoinWorkspace = (props) => {
     loadData()
   }, [state.filter])
 
+  if (!state.isAdminGroup && !state.loading) {
+    return <Navigate to="/not-found" replace />
+  }
   // ** render
   return (
-    <WorkspaceSettingLayout>
+    <WorkspaceSettingLayout isAdmin={state.isAdminGroup}>
       <div className="workspace request-to-join-container">
         <RequestToJoinHeader
           id={id}

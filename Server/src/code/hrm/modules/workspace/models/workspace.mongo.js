@@ -65,12 +65,15 @@ const workspaceSchema = baseSchema("m_workspace", {
       description: String
     }
   ],
-  request_joins: [
-    {
-      id_user: String,
-      requested_at: String
-    }
-  ],
+  request_joins: {
+    type: [
+      {
+        id_user: String,
+        requested_at: String
+      }
+    ],
+    default: []
+  },
   notification: { type: Boolean, default: true },
   review_post: { type: Boolean, default: false },
   membership_approval: { type: String, enum: ["approver", "auto"] },

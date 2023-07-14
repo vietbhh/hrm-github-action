@@ -69,7 +69,7 @@ const getWorkspace = async (req, res, next) => {
 const saveCoverImage = async (req, res) => {
   const image = req.body.image
   try {
-    const update = _handleUploadImage(image, id)
+    const update = _handleUploadImage(image, req.body._id)
 
     return res.respond(update)
   } catch (err) {
@@ -163,7 +163,6 @@ const getListWorkspace = async (req, res, next) => {
         ]
       }*/
     }
-    console.log("filter", filter)
     if (status !== undefined && status !== "" && status !== "all") {
       filter["status"] = status
     }
@@ -175,7 +174,6 @@ const getListWorkspace = async (req, res, next) => {
     }
 
     let workspace = []
-    console.log("workspace userId2", userId)
 
     if (limit === 0) {
       workspace = await workspaceMongoModel
@@ -194,7 +192,6 @@ const getListWorkspace = async (req, res, next) => {
           _id: "desc"
         })
     }
-    console.log("workspace", workspace)
     const totalWorkspace = await workspaceMongoModel.find(filter)
     const result = await handleDataBeforeReturn(workspace, true)
 
@@ -449,10 +446,21 @@ const updateWorkspace = async (req, res, next) => {
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
       if (requestData?.members) {
-        updateData.members =
+        const arrMember =
           typeof requestData.members === "string"
             ? JSON.parse(requestData.members)
             : requestData.members
+
+        updateData.members = arrMember.map((item) => {
+          if (item?._id === undefined) {
+            return {
+              ...item,
+              joined_at: moment().toISOString()
+            }
+          }
+
+          return item
+        })
       }
       if (requestData?.administrators) {
         updateData.administrators =
