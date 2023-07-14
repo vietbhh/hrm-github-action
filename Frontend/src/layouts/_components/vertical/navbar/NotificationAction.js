@@ -9,10 +9,7 @@ import {
 } from "layouts/_components/vertical/common/common"
 // ** redux
 import { useSelector, useDispatch } from "react-redux"
-import {
-  handleNotification,
-  toggleOpenDropdown
-} from "../../../../redux/notification"
+import { handleNotification, toggleOpenDropdown } from "@store/notification"
 // ** Styles
 import { Space } from "antd"
 import { Button } from "reactstrap"
@@ -26,9 +23,12 @@ const NotificationAction = (props) => {
   } = props
 
   const action =
-    notificationInfo.actions === null
-      ? []
-      : JSON.parse(notificationInfo.actions)
+    !notificationInfo &&
+    notificationInfo.actions !== null &&
+    notificationInfo.actions !== "" &&
+    notificationInfo.actions !== undefined
+      ? JSON.parse(notificationInfo.actions)
+      : []
 
   const navigate = useNavigate()
 
