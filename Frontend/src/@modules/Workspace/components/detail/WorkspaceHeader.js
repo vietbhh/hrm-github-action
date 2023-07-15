@@ -23,6 +23,7 @@ const arrSplice = (arr = [], IDrm) => {
 }
 
 const WorkspaceHeader = (props) => {
+  //  disabled: data?.administrators ? !data?.administrators.includes(userId)  : true
   const {
     tabActive,
     tabToggle,
@@ -104,10 +105,7 @@ const WorkspaceHeader = (props) => {
           </div>
         </Link>
       ),
-      key: "0",
-      disabled: data?.administrators
-        ? !data?.administrators.includes(userId)
-        : true
+      key: "0"
     },
     {
       label: (
@@ -145,10 +143,7 @@ const WorkspaceHeader = (props) => {
           </div>
         </Link>
       ),
-      key: "3",
-      disabled: data?.administrators
-        ? !data?.administrators.includes(userId)
-        : true
+      key: "3"
     },
     {
       label: (
@@ -300,7 +295,6 @@ const WorkspaceHeader = (props) => {
         })
     }
   }
-
   const handleLeaveWorkspace = () => {
     const infoWorkspace = { ...data }
     const adminArr = [...infoWorkspace.administrators]

@@ -1265,7 +1265,31 @@ line-height: 15px;
     background: #F0F2F5;
   }
 }
+.sub-no-post{
+  color: #32434F;
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 40px; /* 250% */
+}
+.btn {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #32434f !important;
+  border: unset !important;
+  border-radius: 10px !important;
+  width: 110px;
+  padding: 12px 7px;
+}
 
+.btn-action-primary {
+  background-color: #ffe658 !important;
+}
+
+.btn-action-secondary {
+  background-color: #f0f2f5 !important;
+}
 }
 .edit-information-workspace{
   .employeeAvatar {
