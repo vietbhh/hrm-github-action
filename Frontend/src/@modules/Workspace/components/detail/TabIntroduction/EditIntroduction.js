@@ -14,7 +14,9 @@ const EditIntroduction = (props) => {
   const {
     // ** props
     id,
+    api,
     introduction,
+    customInputName = "introduction",
     // ** methods
     handleCancelEdit,
     setIntroduction
@@ -29,12 +31,11 @@ const EditIntroduction = (props) => {
 
   const onSubmit = (values) => {
     setLoading(true)
-    workspaceApi
-      .update(id, values)
+    api(id, values)
       .then((res) => {
         notification.showSuccess()
         handleCancelEdit()
-        setIntroduction(values.introduction)
+        setIntroduction(values[customInputName])
       })
       .catch((err) => {
         notification.showError()
@@ -48,7 +49,7 @@ const EditIntroduction = (props) => {
   // ** effect
   useEffect(() => {
     reset({
-      introduction: introduction
+      [customInputName]: introduction
     })
   }, [])
 
@@ -57,7 +58,7 @@ const EditIntroduction = (props) => {
     <Row className="edit-introduction">
       <Col sm="12" xs="12">
         <FormProvider {...methods}>
-          <ErpInput name="introduction" type="textarea" useForm={methods} />
+          <ErpInput name={customInputName} type="textarea" useForm={methods} />
         </FormProvider>
       </Col>
       <Col sm="12" xs="12">

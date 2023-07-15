@@ -32,11 +32,9 @@ const RequestTimeOff = () => {
           error: res.data.error,
           fail: res.data.fail
         })
-        console.log(res.data)
       })
       .catch((err) => {
         setState({ loading: false, error: "error", fail: true })
-        console.log(err)
       })
   }
 

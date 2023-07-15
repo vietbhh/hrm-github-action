@@ -80,5 +80,11 @@ export const userApi = {
         })
       )
     )
+  },
+  updateUser(id, data) {
+    return axiosApi.post(
+      `/user/update-user/${id}`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

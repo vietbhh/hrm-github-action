@@ -112,7 +112,28 @@ const AvatarBox = (props) => {
             className={`img-fluid w-100`}
           />
           <div className={`cameraBtn`}>
-            <img src={cameraBtn} />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              id="Layer_1"
+              x="0px"
+              y="0px"
+              width="17px"
+              height="15px"
+              viewBox="0 0 17 15"
+              enableBackground="new 0 0 17 15"
+              xmlSpace="preserve">
+              {" "}
+              <image
+                id="image0"
+                width="17"
+                height="15"
+                x="0"
+                y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAPCAMAAAA1b9QjAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAVFBMVEUAAAAwQFAxQ08xQk8w QFAxQU4yQk4xQ08yQ080RFAzQ1AwQk4xQ08yQk4wQk4wRFAyQ08wQEwyRFAyQk4wQ0wyQ04zRE8w SFAyQk4yQk4yQ0////8/Pqr4AAAAGnRSTlMAIM/fEKCAv99AUH/vj49A70CAkFCQzyDQwMqZIVkA AAABYktHRBsCYNSkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5wcNCxcnKwNbSwAAAGxJ REFUGNNVzUkSwyAMRNEGdQKeEjw7uv9BbUNVhP9CiLcA4Mp5vRLi30tz73JzQau8A7w+CkA+Y0O0 Ma9FIru+HxhN2k9++GuCdM9EExaByTjdc15MhGtKE8VEZQFHqX6vA8ITNmA/avjtOAHotBLMA0pp UAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0xM1QwOToyMzozOSswMjowMFRkvdkAAAAldEVY dGRhdGU6bW9kaWZ5ADIwMjMtMDctMTNUMDk6MjM6MzkrMDI6MDAlOQVlAAAAAElFTkSuQmCC"
+              />
+            </svg>
           </div>
           <input
             type="file"

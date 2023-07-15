@@ -26,7 +26,8 @@ const LoadFeed = (props) => {
 
     // create event / announcement
     options_employee_department = [],
-    optionsMeetingRoom = []
+    optionsMeetingRoom = [],
+    setSearchTextFeed
   } = props
   const [state, setState] = useMergedState({
     dataPost: [],
@@ -49,8 +50,6 @@ const LoadFeed = (props) => {
   const cover = userData?.cover || ""
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
-
-  const location = useLocation()
 
   // ** function
   const loadData = (isSearch = false) => {
@@ -78,12 +77,13 @@ const LoadFeed = (props) => {
 
         if (isSearch) {
           setState({
-            dataPost: [...res.data.dataPost],
+            dataPost: res.data.dataPost,
             totalPost: res.data.totalPost,
             page: res.data.page,
             hasMore: res.data.hasMore,
             arrPostIdSeen: arrPostIdSeen
           })
+
         } else {
           setState({
             dataPost: [...state.dataPost, ...res.data.dataPost],
@@ -105,7 +105,8 @@ const LoadFeed = (props) => {
 
   const handleAfterLoadLazyLoadComponent = async (value, index) => {
     setState({ loadingPost: false })
-    if (state.hasMore) {
+
+    if (state.hasMore === true) {
       setState({ hasMoreLazy: true })
     }
 
@@ -135,7 +136,6 @@ const LoadFeed = (props) => {
     const dataUrl = await loadUrlDataLink(dataPost[index])
     dataPost[index].dataLink.cover_url = dataUrl.cover_url
     dataPost[index].dataLink.badge_url = dataUrl.badge_url
-
     setState({ dataPost: dataPost })
   }
 
@@ -190,8 +190,13 @@ const LoadFeed = (props) => {
   }, [searchTextFeed])
 
   useEffect(() => {
-    loadData(true)
-  }, [location])
+    if (!_.isEqual(state.currentWorkspace, workspace)) {
+      loadData(true)
+      setState({
+        currentWorkspace: workspace
+      })
+    }
+  }, [workspace])
 
   useEffect(() => {
     // event stopped scrolling

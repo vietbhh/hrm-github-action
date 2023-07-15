@@ -19,7 +19,12 @@ const saveWorkspace = async (req, res, next) => {
     mode: req.body.workspace_mode,
     description: req.body?.description,
     cover_image: "",
-    members: [req.__user],
+    members: [
+      {
+        id_user: req.__user,
+        joined_at: moment().toISOString()
+      }
+    ],
     administrators: [req.__user],
     __user: req.__user,
     request_joins: []
@@ -155,9 +160,7 @@ const getListWorkspace = async (req, res, next) => {
       /* filter = {
         $or: [
           {
-            members: {
-              id_user: parseInt(userId)
-            }
+            "members.id_user": parseInt(userId)
           },
           { administrators: parseInt(userId) }
         ]
@@ -624,22 +627,13 @@ const loadDataMember = async (req, res, next) => {
     } else if (req.query.load_list === "member") {
       const page = req.query?.page === undefined ? 1 : req.query.page
       const limit = req.query?.limit === undefined ? 30 : req.query.limit
-      const workspaceAdministrator =
-        workspace?.administrators === undefined
-          ? []
-          : workspace.administrators.reverse()
       const workspaceMember =
         workspace?.members === undefined || workspace?.members === null
           ? []
           : workspace?.members
-      const listMember = workspaceMember
-        .reverse()
-        .map((item) => {
-          return item.id_user
-        })
-        .filter((item) => {
-          return !workspaceAdministrator.includes(item)
-        })
+      const listMember = workspaceMember.reverse().map((item) => {
+        return item.id_user
+      })
 
       const allMember =
         listMember.length === 0 ? [] : await getUsers(listMember)
@@ -1130,10 +1124,8 @@ const getListWorkspaceSeparateType = async (req, res) => {
 
     const workspaceJoin = await workspaceMongoModel
       .find({
-        members: {
-          id_user: parseInt(userId),
-          ...condition
-        }
+        "members.id_user": parseInt(userId),
+        ...condition
       })
       .sort({
         _id: "desc"

@@ -12,6 +12,12 @@ import WorkspaceInfo from "./WorkspaceInfo"
 import EditGroupRuleModal from "../../modals/EditGroupRuleModal/EditGroupRuleModal"
 
 const TabIntroduction = (props) => {
+  const {
+    // ** props
+    detailWorkspace
+    // ** methods
+  } = props
+
   const [state, setState] = useMergedState({
     loading: true,
     workspaceInfo: {},
@@ -82,7 +88,7 @@ const TabIntroduction = (props) => {
   // ** effect
   useEffect(() => {
     loadData()
-  }, [])
+  }, [detailWorkspace])
 
   // ** render
   return (

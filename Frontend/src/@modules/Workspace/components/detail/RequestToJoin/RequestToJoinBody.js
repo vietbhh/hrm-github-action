@@ -35,7 +35,6 @@ const RequestToJoinBody = (props) => {
         const currentRequestJoin = [...requestJoins][index]
         currentRequestJoin["handled_request"] = `handled_${type}`
         requestJoins[index] = currentRequestJoin
-        console.log(requestJoins)
         setRequestJoins(requestJoins)
         setLoading(false)
       })

@@ -323,7 +323,6 @@ const TableOnboarding = (props) => {
         })
         .catch((err) => {
           setState({ loading_export: false })
-          console.log(err)
           notification.showError({
             text: useFormatMessage("notification.error")
           })
@@ -346,7 +345,6 @@ const TableOnboarding = (props) => {
         })
         .catch((err) => {
           setState({ loading_export: false })
-          console.log(err)
           notification.showError({
             text: useFormatMessage("notification.error")
           })
@@ -369,7 +367,6 @@ const TableOnboarding = (props) => {
         })
         .catch((err) => {
           setState({ loading_export: false })
-          console.log(err)
           notification.showError({
             text: useFormatMessage("notification.error")
           })

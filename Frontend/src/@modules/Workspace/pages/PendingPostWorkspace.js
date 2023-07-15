@@ -107,8 +107,6 @@ const PendingPostWorkspace = () => {
       confirmButtonText: useFormatMessage(textBtn)
     }).then((res) => {
       if (res.value) {
-        console.log("status", status)
-        return
         workspaceApi
           .approvePost({ id: id, approve_status: status })
           .then((res) => {
