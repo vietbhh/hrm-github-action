@@ -16,7 +16,9 @@ import {
   loadPinned,
   loadGCSObjectLink,
   removeCoverImage,
-  getListWorkspaceSeparateType
+  getListWorkspaceSeparateType,
+  saveAvatar,
+  deleteWorkspace
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -37,5 +39,7 @@ router.post("/update/:id", updateWorkspace)
 router.post("/approvePost", approvePost)
 router.post("/add-member", addMemberByDepartment)
 router.post("/remove-cover-image/:id", removeCoverImage)
+router.post("/save-avatar", saveAvatar)
+router.post("/delete", deleteWorkspace)
 
 export default router

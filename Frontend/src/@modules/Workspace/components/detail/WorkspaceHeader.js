@@ -4,7 +4,7 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 import { Badge, Dropdown, Space } from "antd"
 import { Fragment, useEffect, useRef } from "react"
 import { useSelector } from "react-redux"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap"
 import defaultWorkspaceCover from "../../assets/images/default_workspace_cover.webp"
 import InviteWorkspaceModal from "../modals/InviteWorkspaceModal"
@@ -13,7 +13,6 @@ import SetupNotificationModal from "../modals/SetupNotificationModal"
 import CoverImage from "./CoverImage"
 import SearchPostModal from "../modals/SearchPostModal"
 import { getTabByNameOrId } from "../../common/common"
-
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
@@ -22,7 +21,9 @@ const arrSplice = (arr = [], IDrm) => {
   arr.splice(index, 1)
   return arr
 }
+
 const WorkspaceHeader = (props) => {
+  //  disabled: data?.administrators ? !data?.administrators.includes(userId)  : true
   const {
     tabActive,
     tabToggle,
@@ -31,8 +32,188 @@ const WorkspaceHeader = (props) => {
     loadData,
     setSearchTextFeed
   } = props
-
+  const params = useParams()
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
+  const isAdmin = data?.administrators
+    ? data?.administrators.includes(userId)
+    : false
+  const items = [
+    {
+      label: (
+        <div className="d-flex align-items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+            id="Layer_1"
+            x="0px"
+            y="0px"
+            width="22px"
+            height="22px"
+            viewBox="0 0 22 22"
+            enableBackground="new 0 0 22 22"
+            xmlSpace="preserve"
+            className="me-50">
+            {" "}
+            <image
+              id="image0"
+              width="22"
+              height="22"
+              x="0"
+              y="0"
+              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAhFBMVEUAAAAwQEwyQk8xQ08x Q08wQk0wQ0wxQ08wQFAyQ08zQ04zQU4wRVAwQk0yQk4yQ08yRFAxQk8zQ08wQFAyQlAyQk0xQ04y Qk8xQU4yQlAyQ08yRFA4QFAwQ04wSFAxQ04yQk0zRE8zQ1AyQ08wRFAwQlAxQ08yQ08yQk40RFAy Q0//////aiRPAAAAKnRSTlMAQJ/P33BQvyDvsKAwYMDfcN/PEGBwoN+gcOCAIG8gsGDPUJ9AcO+v 0EBakqoBAAAAAWJLR0QrJLnkCAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMLCL+3 7fYAAAC5SURBVBjTjZHrEoIgEIVXUJEUvJWVlZmV2b7/AwaEDjbldH6cZT7YXRYAfssj1DcKIGQ+ iwyMGPJVbJQIlHGKnsaUZ1NeXgCUnKlViOuJlrhRXm2V7VKnCyc6Reoa0sF7JIKZ9Jq4lzqk+G41 xwBHSE5fsG25gCM74wduzIzZn0UgGjVhetYPMKpVhF30HlfWtValHv6q7IbBvLTATgfGhUvvfWFi QzFnxOrRo2zsga4aaqshfi787gu9fg4uXSkkyQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0w NlQwMzoxMTowOCswMDowMIwiv0oAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTE6 MDgrMDA6MDD9fwf2AAAAAElFTkSuQmCC"
+            />
+          </svg>
+          <span>
+            {useFormatMessage("modules.workspace.display.manage_notification")}
+          </span>
+        </div>
+      ),
+      key: "1",
+      onClick: () => handleSetupNotification()
+    },
+    {
+      label: (
+        <Link to={`/workspace/${params.id}/pending-posts`}>
+          <div className="d-flex align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              id="Layer_1"
+              x="0px"
+              y="0px"
+              width="22px"
+              height="23px"
+              viewBox="0 0 22 23"
+              enableBackground="new 0 0 22 23"
+              xmlSpace="preserve"
+              className="me-50">
+              {" "}
+              <image
+                id="image0"
+                width="22"
+                height="23"
+                x="0"
+                y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAkFBMVEUAAAAwQFAwQ0wwQk0w QEwxQ08xQ08wQlAyQ08yQlA1RVA4QFA0RFAyQlAwQk0yQ08wQFAyQ08wSFAyQk4yQk4xQ04yQ08w Q08zQ1AxQ04yQk8yQk8xQ08wQlAyQk0wQ1EwRVAyQk4zQ08yQk4wRFAxQU4zRE8yRFAyQk0xQk8w QEoyRFAwQ1AyQk4yQ0////8IfIaBAAAALnRSTlMAIFBgQL/PcN9wMCBAYHCvEO8ggMCw4J9QoN+f 72BgXzCQz49AsM+AcN8wcFDQnlu1HAAAAAFiS0dELyPUIBEAAAAJcEhZcwAACxMAAAsTAQCanBgA AAAHdElNRQfnBwYDDCzM9Z/gAAAAvElEQVQoz52R2w6CMAxAN2BcBGFcVLyhqKh46f9/ni1bZIsJ D56HJj1Nu61jbALuuBqHf6UnwMB3lA0gjGaxJpmHkA4DIJPWRJFTHkFhH1RAScVqSNKxxV9gWGKQ bAU14wRW1xvSW6zvsNFRFzH0nsbJhkgMbfO3PsDxVwctnCTPBHI2tEDLLhXRMtaR7q54t9Jcy/Du G3D7RA53jDIXlpWZ2l0EvetxzSPt4anqr7f5O1UyrrhuNHU89ecfWr0URvyo3IIAAAAldEVYdGRh dGU6Y3JlYXRlADIwMjMtMDctMDZUMDM6MTI6NDQrMDA6MDAk/2DHAAAAJXRFWHRkYXRlOm1vZGlm eQAyMDIzLTA3LTA2VDAzOjEyOjQ0KzAwOjAwVaLYewAAAABJRU5ErkJggg=="
+              />
+            </svg>
+            <span>
+              {useFormatMessage("modules.workspace.display.review_post")}
+            </span>
+          </div>
+        </Link>
+      ),
+      key: "0"
+    },
+    {
+      label: (
+        <Link to={`/workspace/${params.id}/request-join`}>
+          <div className="d-flex align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              id="Layer_1"
+              x="0px"
+              y="0px"
+              width="22px"
+              height="23px"
+              viewBox="0 0 22 23"
+              enableBackground="new 0 0 22 23"
+              xmlSpace="preserve"
+              className="me-50">
+              {" "}
+              <image
+                id="image0"
+                width="22"
+                height="23"
+                x="0"
+                y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQFAwQ0wwQk0w QFAwQEwxQ08zQ08yRFA1RVA4QFA0RFAyQlAyQ08xQk8yQ08yRFAyQlAwSFAyQk4wQk4wRVAwRFAw Qk4wRFAyQ08yQk4yQ04xQU4yQ08xQ04yQk0zRE8yQk4xQ08xQ04yQk8yQk8xQ08zQ04wQFAyQk4w Q1EyQk0xQU4wQk0wQlAwQEozQ1AyQ0////+y0vlVAAAAMXRSTlMAEFBgIEC/z4AwIEBw39/vcGAg gI8wf39An5CQsOCwcM/Az6Dfn++wMI9fYKBwcDBQvIqwRgAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYDDg4ro7yGAAAA90lEQVQoz32RbVeDMAyFWygdjrV1xYki bpa9KqK7///P2YSBO/uwfAjpc9KbSyrE/ZBJmibqBmYaHDq9gkpjlj/M58XCQE83lHWPY7109sKl NZ50yjKLH2+sZPyEVczPJF3F4gUlS+A15hS1lDmo/81JBiTRGGp5X8e0wiZm/UGg4awD5XY9doic BijUVG93hPdsx7h9fWBL11j4rXNHpqLZTapkafy/liYscIoalR5WomjCklTdp/g6INRdVwbYRHyz 42iiwqwY7vsW/WAnmoCR09r/D964fsQ/F5PMNWyfKfVbtQgTpTWH4XVCcfNs/tx1Zynuxx9fxBWu ChBtawAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0wNlQwMzoxNDoxNCswMDowMGEBHuQAAAAl dEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTQ6MTQrMDA6MDAQXKZYAAAAAElFTkSuQmCC"
+              />
+            </svg>
+            <span>
+              {useFormatMessage("modules.workspace.display.member_request")}
+            </span>
+            <div className="ms-auto">
+              <Badge count={data?.request_joins?.length}></Badge>
+            </div>
+          </div>
+        </Link>
+      ),
+      key: "3"
+    },
+    {
+      label: (
+        <Link to={`/workspace/${params.id}/setting`}>
+          <div className="d-flex align-items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              id="Layer_1"
+              x="0px"
+              y="0px"
+              width="22px"
+              height="22px"
+              viewBox="0 0 22 22"
+              enableBackground="new 0 0 22 22"
+              xmlSpace="preserve"
+              className="me-50">
+              {" "}
+              <image
+                id="image0"
+                width="22"
+                height="22"
+                x="0"
+                y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAaVBMVEUAAAAwQFAwQk4xQ08x Q08wQ04wQk0xQ08yQk4xQk8wQEw0RFAwSFAyQ08wQFAxQU4yQlAyQk8wRVAyQ08yRFAyQk4wQk0w RFAxQ04yQlAyQk0wRFAyQ08wQ08zQ08zRE8yQk4yQ0////8FKOj4AAAAIXRSTlMAEH/Pv29g78Df QEAg3yCgYJ8w74CAcH+gcHBAn5/Pz9CRnKBHAAAAAWJLR0QiXWVcrAAAAAlwSFlzAAALEwAACxMB AJqcGAAAAAd0SU1FB+cHBgMPDNy27OsAAACwSURBVBjTfVHtDoMgEANkCgrOKTrZ3Eff/yUnQhQh Wf9wKen1rkfIf1BW8AtN2bKCEJDliaw5REOI0pDtob9Cd77sNG7ho5eD2ZtSA9lvVaFV3FDpYnsx +v7T5OUjIvqOFSylW8xUzagT2mI1oHhkNHWSlH5iaenLSc6WxlmO2SREWdvEA76jHNxM8uOX12DH 8qzSfVh33hMtJZYj9JBoyDfCmijnGLrsaFZ8TXa0BD9/TQz6DmhQmwAAACV0RVh0ZGF0ZTpjcmVh dGUAMjAyMy0wNy0wNlQwMzoxNToxMiswMDowMO0TQOAAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMt MDctMDZUMDM6MTU6MTIrMDA6MDCcTvhcAAAAAElFTkSuQmCC"
+              />
+            </svg>
+            <span>
+              {useFormatMessage("modules.workspace.display.workgroup_setting")}
+            </span>
+          </div>
+        </Link>
+      ),
+      key: "2"
+    },
+    {
+      label: (
+        <div className="leave-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+            id="Layer_1"
+            x="0px"
+            y="0px"
+            width="22px"
+            height="22px"
+            viewBox="0 0 22 22"
+            enableBackground="new 0 0 22 22"
+            xmlSpace="preserve"
+            className="me-50">
+            {" "}
+            <image
+              id="image0"
+              width="22"
+              height="22"
+              x="0"
+              y="0"
+              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAclBMVEUAAAAwQEowQk0yQk4w QEwxQk8wQ0wzQ08yQk04QFAzQ1AxQ08wQk0yQ08wQFAyQ08yQ08wQFAyQlAwRFAwRVAyQk4yRE4w Q1ExQ08yQk40QFAyQlAwQlAyQk4wQFAxQU4wSFAwQ1AyRFA0RFAyQ0////9RoEO5AAAAJHRSTlMA MGCAQN9Qz2AgUL9w3xCv7zBgQDCQgF/PwEBwcNAgoCBQcEBQNPwxAAAAAWJLR0QlwwHJDwAAAAlw SFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMaEYgFZiYAAAChSURBVBjThZHbEoIwEEMXWqBQ KVelioJK/v8bdYReBjuap8x5yE42RD8UxYzFfAd5go+S2KcpMpET5YXEwcNJqTZX1crSBq2xHYSX 0VtfH61lcHmnQlXDNyZSGkMAW77iVBppgFvcn40y4BIMaQPZG6URrtq1V7etnMAUqtO4xt4fiEpt UmbcHe7ej46IJi7B/OOPcp2hfu72WQRj46Lon15KVwxFLklQ8AAAACV0RVh0ZGF0ZTpjcmVhdGUA MjAyMy0wNy0wNlQwMzoyNjoxNyswMDowMM3+skUAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDct MDZUMDM6MjY6MTcrMDA6MDC8owr5AAAAAElFTkSuQmCC"
+            />
+          </svg>
+          {useFormatMessage("modules.workspace.display.leave_workspace")}
+        </div>
+      ),
+      key: "5",
+      onClick: () => handleLeaveWorkspace()
+    }
+  ]
+
   const [state, setState] = useMergedState({
     coverImage: "",
     inviteModal: false,
@@ -43,7 +224,8 @@ const WorkspaceHeader = (props) => {
     joined: false,
     waitJoined: false,
     showInput: false,
-    modal: false
+    modal: false,
+    items: items
   })
 
   const navigate = useNavigate()
@@ -55,17 +237,21 @@ const WorkspaceHeader = (props) => {
     const infoWorkspace = { ...data }
     if (type === "members") {
       const arrID = infoWorkspace.members.concat(
-        dataUpdate.map((x) => x["id"] * 1)
+        dataUpdate.map((x) => ({
+          id_user: x["id"] * 1
+        }))
       )
-
-      if (data?.membership_approval === "approver") {
-        infoWorkspace.request_joins = JSON.stringify(
-          dataUpdate.map((x) => x["id"] * 1)
-        )
-      } else if (data?.membership_approval === "auto") {
+      if (data?.membership_approval === "auto" || isAdmin) {
         infoWorkspace.members = JSON.stringify(arrID)
+      } else {
+        infoWorkspace.request_joins = JSON.stringify(
+          infoWorkspace.request_joins.concat(
+            dataUpdate.map((x) => ({
+              id_user: x["id"] * 1
+            }))
+          )
+        )
       }
-
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({
@@ -109,7 +295,6 @@ const WorkspaceHeader = (props) => {
         })
     }
   }
-
   const handleLeaveWorkspace = () => {
     const infoWorkspace = { ...data }
     const adminArr = [...infoWorkspace.administrators]
@@ -242,192 +427,6 @@ const WorkspaceHeader = (props) => {
     tabToggle(id)
   }
 
-  const items = [
-    {
-      label: (
-        <div className="d-flex align-items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="Layer_1"
-            x="0px"
-            y="0px"
-            width="22px"
-            height="22px"
-            viewBox="0 0 22 22"
-            enableBackground="new 0 0 22 22"
-            xmlSpace="preserve"
-            className="me-50">
-            {" "}
-            <image
-              id="image0"
-              width="22"
-              height="22"
-              x="0"
-              y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAhFBMVEUAAAAwQEwyQk8xQ08x Q08wQk0wQ0wxQ08wQFAyQ08zQ04zQU4wRVAwQk0yQk4yQ08yRFAxQk8zQ08wQFAyQlAyQk0xQ04y Qk8xQU4yQlAyQ08yRFA4QFAwQ04wSFAxQ04yQk0zRE8zQ1AyQ08wRFAwQlAxQ08yQ08yQk40RFAy Q0//////aiRPAAAAKnRSTlMAQJ/P33BQvyDvsKAwYMDfcN/PEGBwoN+gcOCAIG8gsGDPUJ9AcO+v 0EBakqoBAAAAAWJLR0QrJLnkCAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMLCL+3 7fYAAAC5SURBVBjTjZHrEoIgEIVXUJEUvJWVlZmV2b7/AwaEDjbldH6cZT7YXRYAfssj1DcKIGQ+ iwyMGPJVbJQIlHGKnsaUZ1NeXgCUnKlViOuJlrhRXm2V7VKnCyc6Reoa0sF7JIKZ9Jq4lzqk+G41 xwBHSE5fsG25gCM74wduzIzZn0UgGjVhetYPMKpVhF30HlfWtValHv6q7IbBvLTATgfGhUvvfWFi QzFnxOrRo2zsga4aaqshfi787gu9fg4uXSkkyQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0w NlQwMzoxMTowOCswMDowMIwiv0oAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTE6 MDgrMDA6MDD9fwf2AAAAAElFTkSuQmCC"
-            />
-          </svg>
-          <span>
-            {useFormatMessage("modules.workspace.display.manage_notification")}
-          </span>
-        </div>
-      ),
-      key: "1",
-      onClick: () => handleSetupNotification()
-    },
-    {
-      label: (
-        <Link to={`/workspace/${data._id}/pending-posts`}>
-          <div className="d-flex align-items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              id="Layer_1"
-              x="0px"
-              y="0px"
-              width="22px"
-              height="23px"
-              viewBox="0 0 22 23"
-              enableBackground="new 0 0 22 23"
-              xmlSpace="preserve"
-              className="me-50">
-              {" "}
-              <image
-                id="image0"
-                width="22"
-                height="23"
-                x="0"
-                y="0"
-                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAkFBMVEUAAAAwQFAwQ0wwQk0w QEwxQ08xQ08wQlAyQ08yQlA1RVA4QFA0RFAyQlAwQk0yQ08wQFAyQ08wSFAyQk4yQk4xQ04yQ08w Q08zQ1AxQ04yQk8yQk8xQ08wQlAyQk0wQ1EwRVAyQk4zQ08yQk4wRFAxQU4zRE8yRFAyQk0xQk8w QEoyRFAwQ1AyQk4yQ0////8IfIaBAAAALnRSTlMAIFBgQL/PcN9wMCBAYHCvEO8ggMCw4J9QoN+f 72BgXzCQz49AsM+AcN8wcFDQnlu1HAAAAAFiS0dELyPUIBEAAAAJcEhZcwAACxMAAAsTAQCanBgA AAAHdElNRQfnBwYDDCzM9Z/gAAAAvElEQVQoz52R2w6CMAxAN2BcBGFcVLyhqKh46f9/ni1bZIsJ D56HJj1Nu61jbALuuBqHf6UnwMB3lA0gjGaxJpmHkA4DIJPWRJFTHkFhH1RAScVqSNKxxV9gWGKQ bAU14wRW1xvSW6zvsNFRFzH0nsbJhkgMbfO3PsDxVwctnCTPBHI2tEDLLhXRMtaR7q54t9Jcy/Du G3D7RA53jDIXlpWZ2l0EvetxzSPt4anqr7f5O1UyrrhuNHU89ecfWr0URvyo3IIAAAAldEVYdGRh dGU6Y3JlYXRlADIwMjMtMDctMDZUMDM6MTI6NDQrMDA6MDAk/2DHAAAAJXRFWHRkYXRlOm1vZGlm eQAyMDIzLTA3LTA2VDAzOjEyOjQ0KzAwOjAwVaLYewAAAABJRU5ErkJggg=="
-              />
-            </svg>
-            <span>
-              {useFormatMessage("modules.workspace.display.review_post")}
-            </span>
-          </div>
-        </Link>
-      ),
-      key: "0",
-      disabled: data?.administrators
-        ? !data?.administrators.includes(userId)
-        : true
-    },
-    {
-      label: (
-        <Link to={`/workspace/${data._id}/request-join`}>
-          <div className="d-flex align-items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              id="Layer_1"
-              x="0px"
-              y="0px"
-              width="22px"
-              height="23px"
-              viewBox="0 0 22 23"
-              enableBackground="new 0 0 22 23"
-              xmlSpace="preserve"
-              className="me-50">
-              {" "}
-              <image
-                id="image0"
-                width="22"
-                height="23"
-                x="0"
-                y="0"
-                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQFAwQ0wwQk0w QFAwQEwxQ08zQ08yRFA1RVA4QFA0RFAyQlAyQ08xQk8yQ08yRFAyQlAwSFAyQk4wQk4wRVAwRFAw Qk4wRFAyQ08yQk4yQ04xQU4yQ08xQ04yQk0zRE8yQk4xQ08xQ04yQk8yQk8xQ08zQ04wQFAyQk4w Q1EyQk0xQU4wQk0wQlAwQEozQ1AyQ0////+y0vlVAAAAMXRSTlMAEFBgIEC/z4AwIEBw39/vcGAg gI8wf39An5CQsOCwcM/Az6Dfn++wMI9fYKBwcDBQvIqwRgAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYDDg4ro7yGAAAA90lEQVQoz32RbVeDMAyFWygdjrV1xYki bpa9KqK7///P2YSBO/uwfAjpc9KbSyrE/ZBJmibqBmYaHDq9gkpjlj/M58XCQE83lHWPY7109sKl NZ50yjKLH2+sZPyEVczPJF3F4gUlS+A15hS1lDmo/81JBiTRGGp5X8e0wiZm/UGg4awD5XY9doic BijUVG93hPdsx7h9fWBL11j4rXNHpqLZTapkafy/liYscIoalR5WomjCklTdp/g6INRdVwbYRHyz 42iiwqwY7vsW/WAnmoCR09r/D964fsQ/F5PMNWyfKfVbtQgTpTWH4XVCcfNs/tx1Zynuxx9fxBWu ChBtawAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0wNlQwMzoxNDoxNCswMDowMGEBHuQAAAAl dEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTQ6MTQrMDA6MDAQXKZYAAAAAElFTkSuQmCC"
-              />
-            </svg>
-            <span>
-              {useFormatMessage("modules.workspace.display.member_request")}
-            </span>
-            <div className="ms-auto">
-              <Badge count={data?.request_joins?.length}></Badge>
-            </div>
-          </div>
-        </Link>
-      ),
-      key: "3",
-      disabled: data?.administrators
-        ? !data?.administrators.includes(userId)
-        : true
-    },
-    {
-      label: (
-        <Link to={`/workspace/${data._id}/setting`}>
-          <div className="d-flex align-items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              id="Layer_1"
-              x="0px"
-              y="0px"
-              width="22px"
-              height="22px"
-              viewBox="0 0 22 22"
-              enableBackground="new 0 0 22 22"
-              xmlSpace="preserve"
-              className="me-50">
-              {" "}
-              <image
-                id="image0"
-                width="22"
-                height="22"
-                x="0"
-                y="0"
-                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAaVBMVEUAAAAwQFAwQk4xQ08x Q08wQ04wQk0xQ08yQk4xQk8wQEw0RFAwSFAyQ08wQFAxQU4yQlAyQk8wRVAyQ08yRFAyQk4wQk0w RFAxQ04yQlAyQk0wRFAyQ08wQ08zQ08zRE8yQk4yQ0////8FKOj4AAAAIXRSTlMAEH/Pv29g78Df QEAg3yCgYJ8w74CAcH+gcHBAn5/Pz9CRnKBHAAAAAWJLR0QiXWVcrAAAAAlwSFlzAAALEwAACxMB AJqcGAAAAAd0SU1FB+cHBgMPDNy27OsAAACwSURBVBjTfVHtDoMgEANkCgrOKTrZ3Eff/yUnQhQh Wf9wKen1rkfIf1BW8AtN2bKCEJDliaw5REOI0pDtob9Cd77sNG7ho5eD2ZtSA9lvVaFV3FDpYnsx +v7T5OUjIvqOFSylW8xUzagT2mI1oHhkNHWSlH5iaenLSc6WxlmO2SREWdvEA76jHNxM8uOX12DH 8qzSfVh33hMtJZYj9JBoyDfCmijnGLrsaFZ8TXa0BD9/TQz6DmhQmwAAACV0RVh0ZGF0ZTpjcmVh dGUAMjAyMy0wNy0wNlQwMzoxNToxMiswMDowMO0TQOAAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMt MDctMDZUMDM6MTU6MTIrMDA6MDCcTvhcAAAAAElFTkSuQmCC"
-              />
-            </svg>
-            <span>
-              {useFormatMessage("modules.workspace.display.workgroup_setting")}
-            </span>
-          </div>
-        </Link>
-      ),
-      key: "2",
-      disabled: data?.administrators
-        ? !data?.administrators.includes(userId)
-        : true
-    },
-    {
-      label: (
-        <div className="leave-item">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="Layer_1"
-            x="0px"
-            y="0px"
-            width="22px"
-            height="22px"
-            viewBox="0 0 22 22"
-            enableBackground="new 0 0 22 22"
-            xmlSpace="preserve"
-            className="me-50">
-            {" "}
-            <image
-              id="image0"
-              width="22"
-              height="22"
-              x="0"
-              y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAclBMVEUAAAAwQEowQk0yQk4w QEwxQk8wQ0wzQ08yQk04QFAzQ1AxQ08wQk0yQ08wQFAyQ08yQ08wQFAyQlAwRFAwRVAyQk4yRE4w Q1ExQ08yQk40QFAyQlAwQlAyQk4wQFAxQU4wSFAwQ1AyRFA0RFAyQ0////9RoEO5AAAAJHRSTlMA MGCAQN9Qz2AgUL9w3xCv7zBgQDCQgF/PwEBwcNAgoCBQcEBQNPwxAAAAAWJLR0QlwwHJDwAAAAlw SFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMaEYgFZiYAAAChSURBVBjThZHbEoIwEEMXWqBQ KVelioJK/v8bdYReBjuap8x5yE42RD8UxYzFfAd5go+S2KcpMpET5YXEwcNJqTZX1crSBq2xHYSX 0VtfH61lcHmnQlXDNyZSGkMAW77iVBppgFvcn40y4BIMaQPZG6URrtq1V7etnMAUqtO4xt4fiEpt UmbcHe7ej46IJi7B/OOPcp2hfu72WQRj46Lon15KVwxFLklQ8AAAACV0RVh0ZGF0ZTpjcmVhdGUA MjAyMy0wNy0wNlQwMzoyNjoxNyswMDowMM3+skUAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDct MDZUMDM6MjY6MTcrMDA6MDC8owr5AAAAAElFTkSuQmCC"
-            />
-          </svg>
-          {useFormatMessage("modules.workspace.display.leave_workspace")}
-        </div>
-      ),
-      key: "5",
-      onClick: () => handleLeaveWorkspace()
-    }
-  ]
-
   useEffect(() => {
     const arrAdmin = data?.administrators ? data?.administrators : []
     const arrMember = data?.members ? data?.members : []
@@ -463,6 +462,11 @@ const WorkspaceHeader = (props) => {
         joined: isJoined,
         waitJoined: waitJoined
       })
+    }
+    if (data?.administrators && !data?.administrators.includes(userId)) {
+      const arr = [...items]
+      arr.splice(1, 3)
+      setState({ items: arr })
     }
   }, [data])
 
@@ -626,9 +630,7 @@ const WorkspaceHeader = (props) => {
                   </Button>
 
                   <Dropdown
-                    menu={{
-                      items
-                    }}
+                    menu={{ items: state.items }}
                     placement="bottomRight"
                     trigger={["click"]}
                     overlayClassName="worspace-dropdown-common">

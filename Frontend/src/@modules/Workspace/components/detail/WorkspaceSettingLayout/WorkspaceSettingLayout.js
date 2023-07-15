@@ -1,6 +1,6 @@
 // ** React Imports
 import { useFormatMessage } from "@apps/utility/common"
-import { NavLink, useParams, useLocation, Outlet } from "react-router-dom"
+import { NavLink, useLocation, useParams } from "react-router-dom"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
@@ -15,8 +15,8 @@ const WorkspaceSettingLayout = (props) => {
   const params = useParams()
   const { pathname } = useLocation()
   const currentPage = pathname.split("/").slice(-1).pop()
-
   // ** render
+
   return (
     <div className="workspace-setting-layout-page">
       <div className="nav-container">
@@ -53,9 +53,7 @@ const WorkspaceSettingLayout = (props) => {
           </CardBody>
         </Card>
       </div>
-      <div className="content-container">
-        {props.children}
-      </div>
+      <div className="content-container">{props.children}</div>
     </div>
   )
 }

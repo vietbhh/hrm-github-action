@@ -14,6 +14,10 @@ const workspaceSchema = baseSchema("m_workspace", {
   description: {
     type: String
   },
+  avatar: {
+    type: String,
+    required: false
+  },
   cover_image: {
     type: String,
     required: false
@@ -31,10 +35,15 @@ const workspaceSchema = baseSchema("m_workspace", {
     enum: ["visible", "hidden"],
     required: true
   },
-  members: [{
-    id_user: String,
-    joined_at: String
-  }],
+  members: {
+    type: [
+      {
+        id_user: String,
+        joined_at: String
+      }
+    ],
+    default: []
+  },
   administrators: [Number],
   pinPosts: {
     type: [
@@ -56,10 +65,15 @@ const workspaceSchema = baseSchema("m_workspace", {
       description: String
     }
   ],
-  request_joins: [{
-    id_user: String,
-    requested_at: String
-  }],
+  request_joins: {
+    type: [
+      {
+        id_user: String,
+        requested_at: String
+      }
+    ],
+    default: []
+  },
   notification: { type: Boolean, default: true },
   review_post: { type: Boolean, default: false },
   membership_approval: { type: String, enum: ["approver", "auto"] },

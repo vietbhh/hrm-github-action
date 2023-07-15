@@ -1,5 +1,5 @@
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import EmployeesSelect from "@/components/hrm/Employees/EmployeesSelect"
+import { useMergedState } from "@apps/utility/common"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
@@ -36,29 +36,32 @@ const InviteWorkspaceModal = (props) => {
 
   const handleAdd = () => {
     const dataSelected = state.dataSelected
-    handleDone(dataSelected, state.typeAdd)
+    console.log("dataSelected", dataSelected)
+    handleDone(dataSelected, "members")
   }
 
   const getDataSelect = (data = [], typeAdd) => {
     setState({ dataSelected: data, typeAdd: typeAdd })
   }
-
   return (
     <Modal
       isOpen={modal}
       style={{ top: "100px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
-      className="invite-workspace-modal"
+      className="invite-workspace-modal-off"
       size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => handleModal()}>
-        {useFormatMessage("modules.workspace.display.add_member_to_ws")}
+        Invite members to this group
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
-          <Row className="mt-1">
+          <Row className="mt-50">
+            <Col sm={12} className="mb-1">
+              Filter members to invite by category
+            </Col>
             <Col sm={12}>
               <EmployeesSelect
                 handleSelect={getDataSelect}
@@ -74,15 +77,9 @@ const InviteWorkspaceModal = (props) => {
               onClick={() => handleAdd()}
               color="primary"
               disabled={state.loading}
-              className="ms-auto mr-2">
+              className="ms-4 me-4 w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              {useFormatMessage("button.done")}
-            </Button>
-            <Button
-              className="btn-cancel"
-              color="flat-danger"
-              onClick={() => handleModal(false)}>
-              {useFormatMessage("button.cancel")}
+              Send invites
             </Button>
           </ModalFooter>
         </form>
