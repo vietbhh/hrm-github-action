@@ -793,7 +793,9 @@
         "probationary_salary_percent": "Probationary salary percent",
         "salary_paid_for_social_insurance": "Salary paid for social insurance",
         "level": "Level",
-        "id_time_machine": "ID attendance"
+        "id_time_machine": "ID attendance",
+        "about": "About me",
+        "skill": "Skill"
       },
       "app_options": {
         "account_status": {
@@ -911,7 +913,9 @@
         }
       },
       "text": {
-        "additional_information": "Additional Information"
+        "additional_information": "Additional Information",
+        "about_me_description": "Write something about you!",
+        "empty_about_me": "No about content!"
       },
       "list_employee": {
         "overview": {
@@ -4033,6 +4037,9 @@
         },
         "search_member": "Search member",
         "search_post": "Search post...",
+        "search_post_error": {
+          "empty": "Please type something to search box!"
+        },
         "admin": "Admin",
         "member_list": "Member List",
         "admin_and_moderators": "Admin & moderators",

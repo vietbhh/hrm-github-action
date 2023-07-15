@@ -1,6 +1,6 @@
 // ** React Imports
 import { useFormatMessage } from "@apps/utility/common"
-import { useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { object2QueryString } from "@apps/utility/handleData"
 // ** Styles
@@ -19,10 +19,9 @@ const SearchPostModal = (props) => {
   } = props
 
   const [state, setState] = useState({
-    searchText: ""
+    searchText: searchTextProp,
+    isError: false
   })
-
-  const location = useLocation()
 
   const debounceSearch = useRef(
     _.debounce((nextValue) => {
@@ -37,24 +36,52 @@ const SearchPostModal = (props) => {
     debounceSearch(value.toLowerCase())
   }
 
-  const handleClickAccept = () => {
-    const params = new URLSearchParams(window.location.search)
+  const handleSearchPost = (e) => {
+    if (e.key === "Enter") {
+      if (state.searchText.trim().length === 0) {
+        setState({
+          isError: true 
+        })
 
-    const paramsObj = Array.from(params.keys()).reduce(
-      (acc, val) => ({ ...acc, [val]: params.get(val) }),
-      {}
-    )
-    if (paramsObj["tab"] === undefined) {
-      paramsObj["tab"] = "feed"
+        return false
+      } 
+
+      setState({
+        isError: false 
+      })
+
+      const params = new URLSearchParams(window.location.search)
+
+      const paramsObj = Array.from(params.keys()).reduce(
+        (acc, val) => ({ ...acc, [val]: params.get(val) }),
+        {}
+      )
+
+      paramsObj["search"] = state.searchText
+      window.history.replaceState(
+        null,
+        "",
+        object2QueryString(paramsObj).replace("&", "?")
+      )
+      setSearchTextFeed(state.searchText)
+
+      handleModal()
     }
-    paramsObj["search"] = state.searchText
-    window.history.replaceState(null, "", object2QueryString(paramsObj).replace("&", "?"))
-    setSearchTextFeed(state.searchText)
-
-    handleModal()
   }
 
   // ** render
+  const renderError = (error = "empty") => {
+    if (state.isError === false || state.isError === undefined) {
+      return ""
+    }
+
+    return (
+      <small className="m-1 ms-25 text-danger">
+        {useFormatMessage(`modules.workspace.text.search_post_error.${error}`)}
+      </small>
+    )
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -78,14 +105,15 @@ const SearchPostModal = (props) => {
             placeholder={useFormatMessage("modules.workspace.text.search_post")}
             defaultValue={searchTextProp}
             onChange={(e) => handleSearchVal(e)}
+            onKeyDown={(e) => handleSearchPost(e)}
             append={
               <i
-                className="far fa-check-circle text-success"
+                className="far fa-search text-success"
                 style={{ cursor: "pointer" }}
-                onClick={() => handleClickAccept()}
               />
             }
           />
+          <Fragment>{renderError()}</Fragment>
         </div>
       </ModalBody>
       <ModalFooter></ModalFooter>

@@ -416,12 +416,14 @@ const WorkspaceHeader = (props) => {
       value: parseInt(id),
       type: "value"
     })
-    let searchString = `?tab=${tabText}`
+    const tab = `${tabText}`
+    let searchString = ""
     if (id === 1 && searchTextFeed.trim().length > 0) {
       searchString += `&search=${searchTextFeed}`
     }
 
-    window.history.replaceState(null, "", searchString)
+    //window.history.replaceState(null, "", searchString)
+    window.history.replaceState('Object', 'Title', `/workspace/${data._id}/${tab}${searchString}`);
     tabToggle(id)
   }
 

@@ -15,6 +15,7 @@ const WorkgroupAdmin = (props) => {
     userState,
     isReloadAdmin,
     isAdminGroup,
+    detailWorkspace,
     // ** methods
     setIsReloadAdmin
   } = props
@@ -89,6 +90,10 @@ const WorkgroupAdmin = (props) => {
       loadData(true)
     }
   }, [isReloadAdmin])
+
+  useEffect(() => {
+    loadData(true)
+  }, [detailWorkspace])
 
   useEffect(() => {
     if (state.loading === false) {

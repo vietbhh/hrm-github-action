@@ -95,7 +95,6 @@ const TeamTimeOff = (props) => {
       })
       .catch((err) => {
         setState({ loading: false })
-        console.log(err)
       })
   }
 

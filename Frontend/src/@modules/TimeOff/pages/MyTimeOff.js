@@ -60,7 +60,6 @@ const MyTimeOff = (props) => {
         setState({ data_type: res.data, loading_data_type: false })
       })
       .catch((err) => {
-        console.log(err)
         setState({ loading_data_type: false })
       })
   }
@@ -84,7 +83,6 @@ const MyTimeOff = (props) => {
         setState({
           loadPage: false
         })
-        console.log(err)
       })
 
     loadDataBalance()
@@ -122,7 +120,6 @@ const MyTimeOff = (props) => {
       })
       .catch((err) => {
         setState({ loading_balance: false })
-        console.log(err)
       })
   }
 

@@ -13,11 +13,14 @@ import WorkgroupAdmin from "./WorkgroupAdmin"
 const TabMember = (props) => {
   const {
     // ** props
+    loadingDetailWorkspace,
     tabActive,
     tabId,
     detailWorkspace
     // ** methods
   } = props
+
+  const isLoadable = parseInt(tabActive) === parseInt(tabId)
 
   const [state, setState] = useMergedState({
     isReloadAdmin: false
@@ -32,8 +35,6 @@ const TabMember = (props) => {
     })
   }
 
-  // ** effect
-
   // ** render
   return (
     <div className="tab-member">
@@ -42,7 +43,10 @@ const TabMember = (props) => {
           <WorkgroupMember
             id={id}
             userState={userState}
+            detailWorkspace={detailWorkspace}
             isAdminGroup={detailWorkspace.is_admin_group}
+            loadingDetailWorkspace={loadingDetailWorkspace}
+            isLoadable={isLoadable}
             setIsReloadAdmin={setIsReloadAdmin}
           />
         </Col>
@@ -50,9 +54,12 @@ const TabMember = (props) => {
           <WorkgroupAdmin
             id={id}
             userState={userState}
+            detailWorkspace={detailWorkspace}
             loadingTabMember={state.loading}
             isReloadAdmin={state.isReloadAdmin}
             isAdminGroup={detailWorkspace.is_admin_group}
+            loadingDetailWorkspace={loadingDetailWorkspace}
+            isLoadable={isLoadable}
             setIsReloadAdmin={setIsReloadAdmin}
           />
         </Col>

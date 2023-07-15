@@ -36,6 +36,8 @@ const TabFeed = (props) => {
   const params = useParams()
   const workspaceID = params?.id
 
+  const location = useLocation()
+
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = () => {}
 
@@ -142,7 +144,6 @@ const TabFeed = (props) => {
 
   const handleClickRemoveSearch = () => {
     window.history.replaceState(null, "", "?tab=feed")
-    setSearchTextFeed("")
   }
 
   const renderPinned = (data = []) => {
@@ -309,6 +310,7 @@ const TabFeed = (props) => {
           workspace={[workspaceID]}
           apiLoadFeed={apiLoadFeed}
           customAction={customActionPost}
+          setSearchTextFeed={setSearchTextFeed}
         />
       </div>
       <div className="div-right">
