@@ -13,6 +13,7 @@ const CommonCardHeader = (props) => {
     userAuth,
     employeeData,
     isEmptyContent,
+    showButtonAction = true,
     /// ** methods
     handleEdit
   } = props
@@ -20,6 +21,10 @@ const CommonCardHeader = (props) => {
   // ** render
   const renderAction = () => {
     if (parseInt(userAuth.id) !== parseInt(employeeData.id)) {
+      return ""
+    }
+
+    if (showButtonAction === false) {
       return ""
     }
 

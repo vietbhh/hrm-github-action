@@ -4035,6 +4035,9 @@
         },
         "search_member": "Search member",
         "search_post": "Search post...",
+        "search_post_error": {
+          "empty": "Please type something to search box!"
+        },
         "admin": "Admin",
         "member_list": "Member List",
         "admin_and_moderators": "Admin & moderators",

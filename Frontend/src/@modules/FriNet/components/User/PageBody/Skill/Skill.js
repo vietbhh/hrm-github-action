@@ -62,23 +62,18 @@ const Skill = (props) => {
   const renderContent = () => {
     return (
       <Fragment>
-        {state.skill.map((item) => {
-          return <div className="mb-75 me-50 skill-item">{item.label}</div>
+        {state.skill.map((item, index) => {
+          return <div className="mb-75 me-50 skill-item" key={`skill-item-${index}`}>{item.label}</div>
         })}
       </Fragment>
     )
   }
 
   return (
-    <Card className="skill-section">
+    <Card className="mb-1 skill-section">
       <CardBody>
         <CommonCardHeader
-          title={
-            <Fragment>
-              {useFormatMessage("modules.employees.fields.skill")}
-              <span className="text-danger">.</span>
-            </Fragment>
-          }
+          title={useFormatMessage("modules.employees.fields.skill")}
           userAuth={userAuth}
           employeeData={employeeData}
           isEmptyContent={!_.isEmpty(state.skill)}

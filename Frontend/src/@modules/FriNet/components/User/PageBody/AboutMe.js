@@ -41,7 +41,6 @@ const AboutMe = (props) => {
 
   // ** render
   const renderContent = () => {
-    console.log(state.about, state.isEdit)
     if (!_.isEmpty(state.about) && state.isEdit === false) {
       return <p className="about-text mt-75">{state.about}</p>
     }

@@ -31,7 +31,6 @@ const EditIntroduction = (props) => {
 
   const onSubmit = (values) => {
     setLoading(true)
-    console.log(values)
     api(id, values)
       .then((res) => {
         notification.showSuccess()

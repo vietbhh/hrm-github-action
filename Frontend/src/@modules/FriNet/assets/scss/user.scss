@@ -10,6 +10,7 @@
 }
 
 .user-profile-page {
+  max-width: 1010px;
   .custom-button {
     border-radius: 8px;
   }
@@ -217,10 +218,18 @@
 
 @media (max-width: 1920px) {
   .separate-sidebar-layout .app-content .content-wrapper .page-body .div-content {
-    gap: 15px !important;
+    gap: 0px !important;
+    justify-content: unset !important;
 
     .div-left {
-      max-width: unset !important;
+      width: 680px !important;
+      margin-right: 15px !important;
+    }
+
+    .div-right {
+      .timeline__endorsement {
+        width: 315px !important;
+      }
     }
   }
 }

@@ -16,12 +16,16 @@ const WorkgroupMember = (props) => {
     id,
     userState,
     isAdminGroup,
+    detailWorkspace,
+    loadingDetailWorkspace,
+    isLoadable,
     // ** methods
     setIsReloadAdmin
   } = props
 
   const [state, setState] = useMergedState({
     loading: true,
+    loadingAll: false,
     totalMember: 0,
     totalListMember: 0,
     members: [],
@@ -99,12 +103,16 @@ const WorkgroupMember = (props) => {
 
   // ** effect
   useEffect(() => {
-    loadData()
+    if (isLoadable === true) {
+      loadData()
+    }
   }, [state.filter])
 
   useEffect(() => {
-    loadData(true)
-  }, [state.searchText])
+    if (isLoadable === true) {
+      loadData(true)
+    }
+  }, [isLoadable, detailWorkspace, state.searchText])
 
   useEffect(() => {
     if (state.loading === false) {
@@ -117,6 +125,10 @@ const WorkgroupMember = (props) => {
 
   // ** render
   const renderListMember = () => {
+    if (state.loading) {
+      return "asf"
+    }
+
     if (state.members.length === 0) {
       return (
         <div className="empty-member pt-1 w-100">

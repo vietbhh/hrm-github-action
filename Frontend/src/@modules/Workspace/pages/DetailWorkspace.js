@@ -1,7 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { map } from "lodash-es"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useParams, useSearchParams, useLocation } from "react-router-dom"
 import { TabContent, TabPane } from "reactstrap"
@@ -14,17 +14,22 @@ import TabPinned from "../components/detail/TabPinned/TabPinned"
 import TabPrivate from "../components/detail/TabPrivate"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 import { getTabByNameOrId } from "../common/common"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 
 const DetailWorkspace = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchText = searchParams.get("search")
-  const tab = searchParams.get("tab")
+
+  const params = useParams()
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
+  const tab = params.tab === undefined ? "feed" : params.tab
   const tabId = getTabByNameOrId({
     value: tab,
     type: "name"
   })
 
   const [state, setState] = useMergedState({
+    loading: true,
     prevScrollY: 0,
     tabActive: tabId === undefined ? 1 : parseInt(tabId),
     detailWorkspace: {},
@@ -32,8 +37,6 @@ const DetailWorkspace = () => {
     workspacePublic: false
   })
 
-  const params = useParams()
-  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const tabToggle = (tab) => {
     if (state.tabActive !== tab) {
       setState({
@@ -78,9 +81,26 @@ const DetailWorkspace = () => {
     }
   }
   const loadData = () => {
-    workspaceApi.getDetailWorkspace(params.id).then((res) => {
-      setState({ detailWorkspace: res.data })
+    setState({
+      loading: true
     })
+    workspaceApi
+      .getDetailWorkspace(params.id)
+      .then((res) => {
+        setState({ detailWorkspace: res.data })
+
+        setTimeout(() => {
+          setState({
+            loading: false
+          })
+        }, 1000)
+      })
+      .catch((err) => {
+        setState({
+          detailWorkspace: [],
+          loading: false
+        })
+      })
   }
 
   const handleUnPinPost = (idPost) => {
@@ -138,6 +158,12 @@ const DetailWorkspace = () => {
 
     setState({ isJoined: isJoined, workspacePublic: workspacePublic })
   }, [state.detailWorkspace])
+
+  useEffect(() => {
+    loadData()
+    setSearchTextFeed("")
+  }, [params.id])
+
   return (
     <div className="workspace">
       <WorkspaceHeader
@@ -196,6 +222,7 @@ const DetailWorkspace = () => {
             )}
             {(state.isJoined || state.workspacePublic) && (
               <TabMember
+                loadingDetailWorkspace={state.loading}
                 tabActive={state.tabActive}
                 tabId={4}
                 detailWorkspace={state.detailWorkspace}
