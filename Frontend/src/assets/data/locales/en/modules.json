@@ -4053,7 +4053,7 @@
           "content": "{name} will be removed form this workspace."
         },
         "approved": "Approved",
-        "no_pending_posts": "The workspace has no pending posts",
+        "no_pending_posts": "No posts to review",
         "view_other_posts": "View other posts",
         "pending_posts": "Pending posts",
         "sub_review_post": "All member posts must be approved by administrator",

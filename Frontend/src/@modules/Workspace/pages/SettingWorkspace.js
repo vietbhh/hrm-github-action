@@ -4,12 +4,13 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { Fragment, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, Navigate } from "react-router-dom"
 import { Button, Card, CardBody } from "reactstrap"
 import AvatarBox from "../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../common/api"
 import EditInformationModal from "../components/modals/EditInformationModal"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
+import { useSelector } from "react-redux"
 
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
@@ -153,7 +154,7 @@ const SettingWorkspace = () => {
     prevScrollY: 0,
     tabActive: 1,
     detailWorkspace: {},
-    loading: false,
+    loading: true,
     editModal: false
   })
   const params = useParams()
@@ -162,8 +163,7 @@ const SettingWorkspace = () => {
     mode: "onSubmit"
   })
   const { handleSubmit, formState, reset, watch } = methods
-  const watchAllFields = watch()
-
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const onSubmit = (values) => {
     workspaceApi.update(params.id, values).then((res) => {
       notification.showSuccess({
@@ -183,7 +183,6 @@ const SettingWorkspace = () => {
   useEffect(() => {
     loadData()
   }, [])
-
   const handleEditInformation = () => {
     setState({ editModal: !state.editModal })
   }
@@ -209,6 +208,13 @@ const SettingWorkspace = () => {
     // path has been copied
   }
 
+  const isAdmin = state.detailWorkspace?.administrators
+    ? state.detailWorkspace?.administrators.includes(userId)
+    : false
+
+  if (!isAdmin && !state.loading) {
+    return <Navigate to="/not-found" replace />
+  }
   return (
     <WorkspaceSettingLayout>
       <div className="workspace-setting row">
@@ -246,38 +252,37 @@ const SettingWorkspace = () => {
           <Card>
             <CardBody>
               <div className="workspace_infomation d-flex">
-                <div className="me-2 rounded-circle">
+                <div className="me-2 rounded-circle" style={{ width: "100px" }}>
                   <AvatarBox
                     currentAvatar={state.detailWorkspace?.avatar}
                     readOnly={true}
                   />
                 </div>
-                <div>
-                  <div className="d-flex">
+                <div className="d-flex w-100">
+                  <div>
                     <div className="workspace_name">
                       {state.detailWorkspace?.name}
                     </div>
-                    <div
-                      className="ms-auto vector"
-                      onClick={() => handleEditInformation()}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none">
-                        <path
-                          d="M12.3278 6.37223L15.6278 9.67223M4.07788 17.9222L8.08003 17.1158C8.2925 17.073 8.48758 16.9684 8.64079 16.8151L17.6 7.85098C18.0295 7.42119 18.0292 6.72454 17.5993 6.29512L15.7015 4.39938C15.2717 3.97013 14.5754 3.97043 14.146 4.40003L5.18591 13.3651C5.033 13.5181 4.92859 13.7128 4.88574 13.9248L4.07788 17.9222Z"
-                          stroke="#32434F"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <div>{state.detailWorkspace?.introduction}</div>
                   </div>
-
-                  {state.detailWorkspace?.introduction}
+                  <div
+                    className="ms-auto vector"
+                    onClick={() => handleEditInformation()}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none">
+                      <path
+                        d="M12.3278 6.37223L15.6278 9.67223M4.07788 17.9222L8.08003 17.1158C8.2925 17.073 8.48758 16.9684 8.64079 16.8151L17.6 7.85098C18.0295 7.42119 18.0292 6.72454 17.5993 6.29512L15.7015 4.39938C15.2717 3.97013 14.5754 3.97043 14.146 4.40003L5.18591 13.3651C5.033 13.5181 4.92859 13.7128 4.88574 13.9248L4.07788 17.9222Z"
+                        stroke="#32434F"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </CardBody>
