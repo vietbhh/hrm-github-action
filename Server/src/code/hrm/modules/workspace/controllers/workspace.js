@@ -955,6 +955,18 @@ const approvePost = async (req, res) => {
     const idWorkspace = req.body.idWorkspace
     delete req.body.idWorkspace
     const infoWorkSpace = await workspaceMongoModel.findById(idWorkspace)
+
+    if (req.body?.all) {
+      delete req.body.all
+      const feedUpdate = await feedMongoModel.updateMany(
+        { permission_ids: { $in: req.body?.id }, approve_status: "pending" },
+        {
+          ...req.body
+        }
+      )
+      return res.respond(feedUpdate)
+    }
+
     const feedUpdate = await feedMongoModel.findOneAndUpdate(
       { _id: req.body?.id },
       {
@@ -962,6 +974,7 @@ const approvePost = async (req, res) => {
       },
       { new: true }
     )
+
     const data = await handleDataBeforeReturn(feedUpdate)
     if (data) {
       const status =

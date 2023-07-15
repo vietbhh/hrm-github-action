@@ -99,16 +99,18 @@ const PendingPostWorkspace = () => {
   }
 
   const handleApproveAll = (id, status) => {
-    const textBtn = "modules.workspace.buttons.approve_all_posts"
+    let textBtn = "modules.workspace.buttons.approve_all_posts"
     if (status === "rejected") {
-      textBtn = "modules.workspace.buttons.reject_all_posts"
+      textBtn = "modules.workspace.buttons.decline_all"
     }
+
+    console.log("textBtn", textBtn)
     SwAlert.showWarning({
       confirmButtonText: useFormatMessage(textBtn)
     }).then((res) => {
       if (res.value) {
         workspaceApi
-          .approvePost({ id: id, approve_status: status })
+          .approvePost({ id: id, approve_status: status, all: true })
           .then((res) => {
             loadData()
             notification.showSuccess({

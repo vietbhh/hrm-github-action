@@ -32,11 +32,13 @@ const WorkspaceHeader = (props) => {
     loadData,
     setSearchTextFeed
   } = props
+
   const params = useParams()
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const isAdmin = data?.administrators
     ? data?.administrators.includes(userId)
     : false
+
   const items = [
     {
       label: (
@@ -295,9 +297,17 @@ const WorkspaceHeader = (props) => {
         })
     }
   }
+  console.log("error handleLeaveWorkspace", data)
+  console.log("prop22222s", props)
   const handleLeaveWorkspace = () => {
     const infoWorkspace = { ...data }
-    const adminArr = [...infoWorkspace.administrators]
+    console.log("props", props)
+    console.log("infoWorkspace ", infoWorkspace)
+
+    return
+    const adminArr = infoWorkspace?.administrators
+      ? [...infoWorkspace.administrators]
+      : []
     // check admin
     const indexOfAdmin = adminArr.indexOf(userId)
     if (indexOfAdmin >= 0 && adminArr.length <= 1) {
@@ -423,7 +433,11 @@ const WorkspaceHeader = (props) => {
     }
 
     //window.history.replaceState(null, "", searchString)
-    window.history.replaceState('Object', 'Title', `/workspace/${data._id}/${tab}${searchString}`);
+    window.history.replaceState(
+      "Object",
+      "Title",
+      `/workspace/${data._id}/${tab}${searchString}`
+    )
     tabToggle(id)
   }
 

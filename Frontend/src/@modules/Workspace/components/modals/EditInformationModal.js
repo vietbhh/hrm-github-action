@@ -17,7 +17,7 @@ import {
 import { workspaceApi } from "../../common/api"
 import AvatarBox from "../../../../@apps/components/common/AvatarBox"
 const EditInformationModal = (props) => {
-  const { modal, handleModal, infoWorkspace } = props
+  const { modal, handleModal, infoWorkspace, loadData } = props
   const [state, setState] = useMergedState({
     loading: false,
     avatar: ""
@@ -31,20 +31,20 @@ const EditInformationModal = (props) => {
       })
       infoWorkspace.name = values.name
       infoWorkspace.introduction = values.introduction
-
+      loadData()
       handleModal()
       setState({ loading: false })
     })
+    if (state.avatar) {
+      saveAvatar()
+    }
   }
 
   const saveAvatar = (value) => {
     setState({ loading: true })
-    const dataSave = { _id: infoWorkspace._id, avatar: value }
+    const dataSave = { _id: infoWorkspace._id, avatar: state.avatar }
     workspaceApi.saveAvatar(dataSave).then((res) => {
-      notification.showSuccess({
-        text: useFormatMessage("notification.save.success")
-      })
-      setState({ loading: false })
+      setState({ avatar: "", loading: false })
     })
   }
   const methods = useForm({
@@ -72,7 +72,8 @@ const EditInformationModal = (props) => {
               <AvatarBox
                 currentAvatar={infoWorkspace?.avatar}
                 handleSave={(img) => {
-                  saveAvatar(img)
+                  setState({ avatar: img })
+                  //saveAvatar(img)
                 }}
               />
             </Col>
@@ -101,9 +102,9 @@ const EditInformationModal = (props) => {
           <ModalFooter>
             <Button
               type="submit"
-              color="primary"
+              color="success"
               disabled={state.loading}
-              className="ms-auto mr-2">
+              className="btn-blue ms-auto mr-2">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
               {useFormatMessage("button.save")}
             </Button>

@@ -611,10 +611,11 @@
   .title{
     color: #32434F;
     font-size: 14px;
-    font-family: "Be Vietnam Pro";
     font-style: normal;
     font-weight: 500;
-    line-height: 29px;
+  }
+  .sub-email{
+    font-size: 10px;
   }
 }
 .setup-notification-workspace-modal {
@@ -671,7 +672,6 @@ line-height: 15px;
   }
   .workspace_name{
     color: #32434F;
-    font-family: "Be Vietnam Pro";
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -679,12 +679,12 @@ line-height: 15px;
   }
   .workspace_infomation{
     color: #32434F;
-    font-family: "Be Vietnam Pro";
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
     letter-spacing: 0.1px;
+    align-items: center;
     .employeeAvatar {
       img{
         border-radius: 50%;
@@ -742,6 +742,7 @@ line-height: 15px;
     color: #32434F !important;
     border-radius: 10px;
   }
+  
 }
 
 .list-workspace-page {
@@ -1458,4 +1459,15 @@ line-height: 40px; /* 250% */
       }
     }
   }
+}
+.btn-blue{
+  border-radius: 7px;
+  background: #3F8CFF !important;
+  border-color: #3F8CFF !important;
+  &:hover:not(.disabled):not(:disabled) {
+    box-shadow: 0 8px 25px -8px #3F8CFF !important;
+  }
+  &:active{
+    background-color: #3F8CFF !important;
+}
 }

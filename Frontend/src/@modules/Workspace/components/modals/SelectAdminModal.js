@@ -51,7 +51,7 @@ const SelectAdminModal = (props) => {
       style={{ top: "100px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
-      className="invite-workspace-modal"
+      className="invite-workspace-"
       size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>

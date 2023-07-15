@@ -12,6 +12,7 @@ import EditInformationModal from "../components/modals/EditInformationModal"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
 import { useSelector } from "react-redux"
 
+import Photo from "@apps/modules/download/pages/Photo"
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -224,7 +225,7 @@ const SettingWorkspace = () => {
               <span className="url_workspace">{Url_workspace}</span>
               <Button
                 color="success"
-                className="ms-auto btn-sm"
+                className="btn-blue ms-auto btn-sm"
                 onClick={() => handleCopyUrl()}>
                 {useFormatMessage("modules.workspace.buttons.copy")}{" "}
                 <svg
@@ -255,6 +256,7 @@ const SettingWorkspace = () => {
                 <div className="me-2 rounded-circle" style={{ width: "100px" }}>
                   <AvatarBox
                     currentAvatar={state.detailWorkspace?.avatar}
+                    loading={state.loading}
                     readOnly={true}
                   />
                 </div>
@@ -442,6 +444,7 @@ const SettingWorkspace = () => {
         modal={state.editModal}
         infoWorkspace={state.detailWorkspace}
         handleModal={handleEditInformation}
+        loadData={loadData}
       />
     </WorkspaceSettingLayout>
   )

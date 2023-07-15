@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
+
 const EmployeesSelect = (props) => {
   const { handleSelect, dataDetail, member_selected, multipleSelect } = props
   const [state, setState] = useMergedState({
@@ -22,7 +23,7 @@ const EmployeesSelect = (props) => {
     department_selected: [],
     typeAdd: "members"
   })
-  console.log("member_selected", member_selected)
+
   const handleSelected = (key) => {
     let data = state.members
 
@@ -42,16 +43,23 @@ const EmployeesSelect = (props) => {
       setState({ dataSelected: concat })
     }
   }
-
+  const handleUnSelected = (key) => {
+    const dataSelected = [...state.dataSelected]
+    dataSelected.splice(key, 1)
+    setState({ dataSelected: dataSelected })
+  }
   const renderMemberSelected = (data = []) => {
     return data.map((item, key) => {
       return (
         <Col sm={12} key={item.id}>
           <div
             className="box-member d-flex"
-            onClick={() => handleSelected(key)}>
+            onClick={() => handleUnSelected(key)}>
             <Avatar src={item.avatar} className="me-50" />
-            <div className="title">{item.full_name}</div>
+            <div>
+              <div className="title">{item.full_name}</div>
+              <span className="sub-email">{item?.email}</span>
+            </div>
             <div className="ms-auto me-1">
               <i class="fa-regular fa-xmark"></i>
             </div>
@@ -69,7 +77,10 @@ const EmployeesSelect = (props) => {
             className="box-member d-flex"
             onClick={() => handleSelected(key)}>
             <Avatar src={item.avatar} className="me-50" />
-            <div className="title">{item.full_name}</div>
+            <div>
+              <div className="title">{item.full_name}</div>
+              <span className="sub-email">{item?.email}</span>
+            </div>
             <div className="ms-auto">
               <ErpCheckbox
                 checked={checked}
@@ -248,7 +259,6 @@ const EmployeesSelect = (props) => {
   }, [state.typeAdd])
   useEffect(() => {
     handleSelect(state.dataSelected, state.typeAdd)
-    console.log("em ployyy state.dataSelected", state.dataSelected)
   }, [state.dataSelected])
   return (
     <>
