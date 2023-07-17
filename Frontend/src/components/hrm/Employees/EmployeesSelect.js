@@ -8,8 +8,13 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
 
+const findKeyByID = (arr = [], id) => {
+  const index = arr.findIndex((p) => p.id === id)
+  return index
+}
+
 const EmployeesSelect = (props) => {
-  const { handleSelect, dataDetail, member_selected, multipleSelect } = props
+  const { handleSelect, dataDetail, member_selected, select_department } = props
   const [state, setState] = useMergedState({
     loading: false,
     page: 1,
@@ -23,7 +28,7 @@ const EmployeesSelect = (props) => {
     department_selected: [],
     typeAdd: "members"
   })
-
+  console.log("state", state)
   const handleSelected = (key) => {
     let data = state.members
 
@@ -95,18 +100,19 @@ const EmployeesSelect = (props) => {
 
   const renderDepartment = (data = []) => {
     return data.map((item, key) => {
-      const checked = state.department_selected.includes(item.id)
+      const department_selected = [...state.department_selected]
+      const checked = department_selected.some((x) => x["id"] === item.id)
       return (
         <Col sm={12} key={key}>
           <div
             className="box-member d-flex"
-            onClick={() => loadUserByDepartment(item.id, key)}>
+            onClick={() => loadUserByDepartment(item, key)}>
             <i className="fa-regular fa-building me-1 ms-50"></i>
             <div className="title">{item.name}</div>
             <div className="ms-auto">
               <ErpCheckbox
                 checked={checked}
-                onChange={() => loadUserByDepartment(item.id, key)}
+                onChange={() => loadUserByDepartment(item, key)}
               />
             </div>
           </div>
@@ -129,42 +135,27 @@ const EmployeesSelect = (props) => {
     })
   }
 
-  const findKeyByID = (arr = [], id) => {
-    const index = arr.findIndex((p) => p.id === id)
-    return index
-  }
-
   const checkExistSelected = (id) => {
     const indexID = findKeyByID(state.dataSelected, id)
     return indexID
   }
-  const removeSelected = (key) => {}
+
+  console.log("member_selected", member_selected)
 
   const loadData = (props) => {
-    // props.excepts = member_selected
+    //  props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
       const members = state.members
-      const concat = !props.search
-        ? members.concat(res.data.results)
-        : res.data.results
+
+      const selected = member_selected.map((e) => e["id_user"])
+      const results = res.data.results
+      const test = results.filter((x) => selected.includes(x.id))
+
+      console.log("test", test)
+      const concat = !props.search ? members.concat(test) : test
+
       setState({
         members: concat,
-        page: res.data.page,
-        recordsTotal: res.data.recordsTotal,
-        perPage: res.data.recordsFiltered,
-        ...props
-      })
-    })
-  }
-
-  const loadJobtitle = (props) => {
-    defaultModuleApi.getList("job_titles", props).then((res) => {
-      const job_titles = state.jobtitles
-      const concat = !props.search
-        ? job_titles.concat(res.data.results)
-        : res.data.results
-      setState({
-        jobtitles: concat,
         page: res.data.page,
         recordsTotal: res.data.recordsTotal,
         perPage: res.data.recordsFiltered,
@@ -191,31 +182,63 @@ const EmployeesSelect = (props) => {
     })
   }
 
-  const loadUserByDepartment = (idDepartment) => {
+  const loadUserByDepartment = (item) => {
+    const idDepartment = item?.id
     const department_selected = [...state.department_selected]
-    if (department_selected.includes(idDepartment)) {
-      const index = department_selected.findIndex((p) => p.id === idDepartment)
-      department_selected.splice(index, 1)
+    if (!select_department) {
+      if (department_selected.includes(idDepartment)) {
+        const index = department_selected.findIndex(
+          (p) => p.id === idDepartment
+        )
+        department_selected.splice(index, 1)
+      } else {
+        department_selected.push(item)
+      }
+      console.log("department_selected 1", department_selected)
       setState({
         department_selected: department_selected
       })
     } else {
-      defaultModuleApi
-        .getUsers({ perPage: 1000, filters: { department_id: idDepartment } })
-        .then((res) => {
-          const dataSelected = [...state.dataSelected]
-          const concat = dataSelected.concat(res.data.results)
-          setState({
-            dataSelected: concat,
-            department_selected: [...department_selected, idDepartment]
-          })
+      const checkExist = department_selected.some(
+        (x) => x["id"] === idDepartment
+      )
+      if (checkExist) {
+        const index = department_selected.findIndex(
+          (p) => p.id === idDepartment
+        )
+
+        const arrUser = department_selected[index].users
+        const dataSelected = [...state.dataSelected]
+        arrUser.map((item, key) => {
+          dataSelected.splice(findKeyByID(dataSelected, item.id), 1)
         })
+
+        department_selected.splice(index, 1)
+        setState({
+          department_selected: department_selected,
+          dataSelected: dataSelected
+        })
+      } else {
+        defaultModuleApi
+          .getUsers({ perPage: 1000, filters: { department_id: idDepartment } })
+          .then((res) => {
+            const dataSelected = [...state.dataSelected]
+            const concat = dataSelected.concat(res.data.results)
+            setState({
+              dataSelected: concat,
+              department_selected: [
+                ...department_selected,
+                { id: idDepartment, users: res.data.results }
+              ]
+            })
+          })
+      }
     }
   }
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.typeAdd === "members") {
-      if (state.recordsTotal > state.members.length) {
+      if (state.recordsTotal > state.members.length && !state.loading) {
         loadData({ page: page, search: state.search })
       }
     }
@@ -229,10 +252,6 @@ const EmployeesSelect = (props) => {
     }
   }
 
-  const handleAdd = () => {
-    const dataSelected = state.dataSelected
-    handleSelect(state.dataSelected)
-  }
   const typingTimeoutRef = useRef(null)
 
   const handleFilterText = (e) => {
@@ -250,28 +269,29 @@ const EmployeesSelect = (props) => {
       loadData({ page: 1, search: state.search })
     }
 
-    if (state.typeAdd === "jobtitles") {
-      loadJobtitle({ page: 1 })
-    }
     if (state.typeAdd === "departments") {
       loadDepartment({ page: 1 })
     }
   }, [state.typeAdd])
+
   useEffect(() => {
     handleSelect(state.dataSelected, state.typeAdd)
   }, [state.dataSelected])
+
   return (
     <>
       <Row>
         <Col sm={12} className="mb-2 filter">
           <span
+            style={{ cursor: "pointer" }}
             onClick={() => setState({ typeAdd: "members", recordsTotal: 0 })}
             className={`border rounded w-100 me-1 px-1 py-50  ${
               state.typeAdd === "members" ? "border-primary bg-primary " : ""
             }`}>
-            Users
+            {useFormatMessage("modules.workspace.text.users")}
           </span>
           <span
+            style={{ cursor: "pointer" }}
             onClick={() =>
               setState({
                 typeAdd: "departments",
@@ -284,7 +304,7 @@ const EmployeesSelect = (props) => {
                 ? "border-primary bg-primary "
                 : ""
             }`}>
-            Derpartment
+            {useFormatMessage("modules.workspace.text.derpartment")}
           </span>
         </Col>
       </Row>
@@ -305,7 +325,7 @@ const EmployeesSelect = (props) => {
             <>
               <Row className="w-100">
                 <Col sm={12} className="mb-50">
-                  Suggested
+                  {useFormatMessage("modules.workspace.text.suggested")}
                 </Col>
               </Row>
               <PerfectScrollbar
@@ -338,15 +358,27 @@ const EmployeesSelect = (props) => {
           {state.dataSelected.length > 0 && (
             <>
               <div className="mt-1 mb-2">
-                {state.dataSelected.length}{" "}
-                {useFormatMessage("modules.workspace.text.member")} selected
+                {useFormatMessage("modules.workspace.display.member_selected", {
+                  number: state.dataSelected.length
+                })}
               </div>
               <PerfectScrollbar
                 style={{
                   maxHeight: "400px",
                   minHeight: "400px"
                 }}>
-                <Row>{renderMemberSelected(state.dataSelected)}</Row>
+                <Row>
+                  {renderMemberSelected(state.dataSelected)}
+                  <div className="mt-1 mb-2">
+                    {useFormatMessage(
+                      "modules.workspace.display.derpartment_selected",
+                      {
+                        number: state.department_selected.length
+                      }
+                    )}
+                  </div>
+                  {renderDepartmentSelected(state.department_selected)}
+                </Row>
               </PerfectScrollbar>
             </>
           )}

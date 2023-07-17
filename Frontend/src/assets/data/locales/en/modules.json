@@ -3978,7 +3978,9 @@
           "setting": "Group setting",
           "approvals": "Pending approvals",
           "request": "Member requests"
-        }
+        },
+        "member_selected" : "{number} member selected",
+        "derpartment_selected" : "{number} derpartment selected"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4082,7 +4084,10 @@
         "handled_approve_join_request": "Approved",
         "handled_decline_join_request": "Declined",
         "write_something_about_your_group": "Write something about your group",
-        "requested_on": "Requested on {date}"
+        "requested_on": "Requested on {date}",
+        "suggested" : "Suggested",
+        "derpartment" : "Derpartment",
+        "users" : "Users"
       },
       "app_options": {
         "workspace_type": {
