@@ -3978,6 +3978,10 @@
           "setting": "Group setting",
           "approvals": "Pending approvals",
           "request": "Member requests"
+        },
+        "waring_create_groupchat": {
+          "title": "Create Group chat?",
+          "text": "Create a linked group chat via message"
         }
       },
       "fields": {
@@ -4082,7 +4086,8 @@
         "handled_approve_join_request": "Approved",
         "handled_decline_join_request": "Declined",
         "write_something_about_your_group": "Write something about your group",
-        "requested_on": "Requested on {date}"
+        "requested_on": "Requested on {date}",
+        "new_today": "new today"
       },
       "app_options": {
         "workspace_type": {

@@ -9,6 +9,8 @@ const MediaContent = (props) => {
   const {
     // ** props
     id,
+    isLoadable,
+    detailWorkspace,
     mediaTabActive,
     // ** methods
     setMediaTabActive
@@ -65,6 +67,9 @@ const MediaContent = (props) => {
               mediaTabActive={mediaTabActive}
               tabId={1}
               pageLength={12}
+              isLoadable={isLoadable}
+              detailWorkspace={detailWorkspace}
+              setMediaTabActive={setMediaTabActive}
             />
           </TabPane>
           <TabPane tabId={2}>
@@ -73,6 +78,9 @@ const MediaContent = (props) => {
               mediaTabActive={mediaTabActive}
               tabId={2}
               pageLength={24}
+              isLoadable={isLoadable}
+              detailWorkspace={detailWorkspace}
+              setMediaTabActive={setMediaTabActive}
             />
           </TabPane>
           <TabPane tabId={3}>
@@ -82,6 +90,9 @@ const MediaContent = (props) => {
                 mediaTabActive={mediaTabActive}
                 tabId={3}
                 pageLength={24}
+                isLoadable={isLoadable}
+                detailWorkspace={detailWorkspace}
+                setMediaTabActive={setMediaTabActive}
               />
             </Row>
           </TabPane>
@@ -91,6 +102,9 @@ const MediaContent = (props) => {
               mediaTabActive={mediaTabActive}
               tabId={4}
               pageLength={12}
+              isLoadable={isLoadable}
+              detailWorkspace={detailWorkspace}
+              setMediaTabActive={setMediaTabActive}
             />
           </TabPane>
         </TabContent>

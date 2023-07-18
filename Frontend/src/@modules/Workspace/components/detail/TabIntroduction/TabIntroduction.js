@@ -71,9 +71,14 @@ const TabIntroduction = (props) => {
           workspaceInfo: res.data,
           introduction: res.data?.introduction,
           groupRule:
-            res.data?.group_rules === undefined ? [] : res.data?.group_rules,
-          loading: false
+            res.data?.group_rules === undefined ? [] : res.data?.group_rules
         })
+
+        setTimeout(() => {
+          setState({
+            loading: false
+          })
+        }, 600)
       })
       .catch((err) => {
         setState({

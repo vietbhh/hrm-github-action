@@ -27,12 +27,16 @@ const MediaTabContent = (props) => {
     customFilter,
     tabId,
     mediaTabActive,
-    pageLength
+    pageLength,
+    isLoadable,
+    detailWorkspace,
     // ** methods
+    setMediaTabActive
   } = props
 
   const [state, setState] = useMergedState({
     loading: true,
+    loadingAll: false,
     page: 0,
     hasMore: false,
     hasMoreLazy: false,
@@ -72,22 +76,30 @@ const MediaTabContent = (props) => {
     })
   }
 
-  const loadData = () => {
+  const loadData = (reset = false, resetPage = false) => {
+    const loadingState = reset === true ? "loadingAll" : "loading"
+    if (reset) {
+      setMediaTabActive(1)
+    }
+
     setState({
-      loading: true,
+      [loadingState]: true,
       hasMore: false,
       hasMoreLazy: false
     })
+
     workspaceApi
       .loadMedia(id, {
-        media_type: mediaTabActive,
-        page: state.page,
+        media_type: reset ? 1 : mediaTabActive,
+        page: reset || resetPage ? 0 : state.page,
         page_length: pageLength,
         ...customFilter
       })
       .then((res) => {
         setState({
-          data: [...state.data, ...res.data.result],
+          data: reset
+            ? [...res.data.result]
+            : [...state.data, ...res.data.result],
           postData: res.data.post_data,
           totalData: res.data.total_feed,
           page: res.data.page,
@@ -95,13 +107,13 @@ const MediaTabContent = (props) => {
         })
 
         setTimeout(() => {
-          setState({ loading: false })
-        }, 1000)
+          setState({ [loadingState]: false })
+        }, 600)
       })
       .catch((err) => {
         setState({
           data: {},
-          loading: false
+          [loadingState]: false
         })
       })
   }
@@ -155,11 +167,17 @@ const MediaTabContent = (props) => {
   // ** effect
   useEffect(() => {
     resetData()
-
-    if (tabId === mediaTabActive) {
-      loadData()
+    if (tabId === mediaTabActive && isLoadable) {
+      loadData(false, true)
     }
-  }, [mediaTabActive])
+  }, [isLoadable, mediaTabActive])
+
+  useEffect(() => {
+    if (isLoadable) {
+      //console.log("test")
+      loadData(true)
+    }
+  }, [detailWorkspace])
 
   useEffect(() => {
     if (state.modalPreview) {

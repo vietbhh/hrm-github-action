@@ -174,7 +174,7 @@ const TabPinned = (props) => {
   }, [detailWorkspace])
 
   return (
-    <div className="div-content">
+    <div className="tab-pinned div-content">
       <div className="div-left">
         <Row>{renderPostPinned(state.dataPin)}</Row>
       </div>

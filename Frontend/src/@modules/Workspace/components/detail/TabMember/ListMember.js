@@ -81,10 +81,7 @@ const ListMember = (props) => {
         </Row>
         <div>
           <div
-            className={classnames({
-              "mt-2": !isAdmin,
-              "mt-1": isAdmin
-            })}>
+            className="mt-1">
             {renderPagination()}
           </div>
         </div>

@@ -51,7 +51,6 @@ const saveWorkspace = async (req, res, next) => {
       }
       return res.respond(saved)
     })
-    return res.respond(saveData)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -65,7 +64,19 @@ const getWorkspace = async (req, res, next) => {
       (item) => parseInt(item) === parseInt(req.__user)
     )
 
-    return res.respond({ ...workspace._doc, is_admin_group: isAdmin })
+    const postList = await feedMongoModel
+      .find({
+        permission_ids: workspaceId,
+        permission: "workspace",
+        approve_status: "pending"
+      })
+      .count()
+
+    return res.respond({
+      ...workspace._doc,
+      is_admin_group: isAdmin,
+      pending_post: postList
+    })
   } catch (err) {
     return res.fail(err.message)
   }
@@ -157,14 +168,14 @@ const getListWorkspace = async (req, res, next) => {
     } else if (workspaceType === "managed") {
       filter = { administrators: parseInt(userId) }
     } else if (workspaceType === "both") {
-      /* filter = {
+      filter = {
         $or: [
           {
             "members.id_user": parseInt(userId)
           },
           { administrators: parseInt(userId) }
         ]
-      }*/
+      }
     }
     if (status !== undefined && status !== "" && status !== "all") {
       filter["status"] = status
@@ -874,11 +885,11 @@ const _handleUpdateWorkspace = (condition, dataUpdate) => {
 
 const _getMediaType = (mediaTypeNumber) => {
   if (mediaTypeNumber === 1) {
-    return "file"
-  } else if (mediaTypeNumber === 2) {
     return "image"
-  } else if (mediaTypeNumber === 3) {
+  } else if (mediaTypeNumber === 2) {
     return "video"
+  } else if (mediaTypeNumber === 3) {
+    return "file"
   } else if (mediaTypeNumber === 4) {
     return "link"
   }
@@ -1258,6 +1269,34 @@ const deleteWorkspace = async (req, res) => {
     return res.fail(err.message)
   }
 }
+
+const createGroupChat = async (req, res) => {
+  const workspaceId = req.params.id
+  const workspaceName = req.body.workspace_name
+
+  try {
+    const groupChatId = await handleAddNewGroupToFireStore(
+      req.__user,
+      workspaceName,
+      [req.__user],
+      true
+    )
+
+    await workspaceMongoModel.updateOne(
+      {
+        _id: workspaceId
+      },
+      {
+        group_chat_id: groupChatId
+      }
+    )
+
+    return res.respond(groupChatId)
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
 export {
   getWorkspace,
   getWorkspaceOverview,
@@ -1277,5 +1316,6 @@ export {
   removeCoverImage,
   getListWorkspaceSeparateType,
   saveAvatar,
-  deleteWorkspace
+  deleteWorkspace,
+  createGroupChat
 }
