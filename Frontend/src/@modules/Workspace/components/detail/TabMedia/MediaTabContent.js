@@ -174,7 +174,6 @@ const MediaTabContent = (props) => {
 
   useEffect(() => {
     if (isLoadable) {
-      //console.log("test")
       loadData(true)
     }
   }, [detailWorkspace])

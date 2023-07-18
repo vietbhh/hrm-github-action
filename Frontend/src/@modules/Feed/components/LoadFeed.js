@@ -279,7 +279,6 @@ const LoadFeed = (props) => {
         )}
 
         {_.map(state.dataCreateNewTemp, (value, index) => {
-          console.log(value)
           return (
             <LoadPost
               key={index}
