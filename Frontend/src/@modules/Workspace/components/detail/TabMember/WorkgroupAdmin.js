@@ -16,12 +16,14 @@ const WorkgroupAdmin = (props) => {
     isReloadAdmin,
     isAdminGroup,
     detailWorkspace,
+    isLoadable,
     // ** methods
     setIsReloadAdmin
   } = props
 
   const [state, setState] = useMergedState({
-    loading: true,
+    loading: false,
+    loadingAll: false,
     administrators: [],
     totalListAdmin: 0,
     disableLoadMore: false,
@@ -48,8 +50,10 @@ const WorkgroupAdmin = (props) => {
   }
 
   const loadData = (reset = false) => {
+    const loadingState = reset === true ? "loadingAll" : "loading"
+
     setState({
-      loading: true
+      [loadingState]: true
     })
 
     workspaceApi
@@ -59,17 +63,25 @@ const WorkgroupAdmin = (props) => {
           totalListAdmin: res.data.total_list_admin,
           administrators: reset
             ? [...res.data.administrators]
-            : [...state.administrators, ...res.data.administrators],
-          loading: false
+            : [...state.administrators, ...res.data.administrators]
         })
+        setTimeout(() => {
+          setState({
+            [loadingState]: false
+          })
+        }, 600)
         setIsReloadAdmin(false)
       })
       .catch((err) => {
         setState({
           totalListAdmin: 0,
-          administrators: [],
-          loading: false
+          administrators: []
         })
+        setTimeout(() => {
+          setState({
+            [loadingState]: false
+          })
+        }, 600)
         setIsReloadAdmin(false)
       })
   }
@@ -82,7 +94,9 @@ const WorkgroupAdmin = (props) => {
 
   // ** effect
   useEffect(() => {
-    loadData()
+    if (isLoadable === true) {
+      loadData()
+    }
   }, [state.filter])
 
   useEffect(() => {
@@ -92,8 +106,10 @@ const WorkgroupAdmin = (props) => {
   }, [isReloadAdmin])
 
   useEffect(() => {
-    loadData(true)
-  }, [detailWorkspace])
+    if (isLoadable === true) {
+      loadData(true)
+    }
+  }, [isLoadable, detailWorkspace])
 
   useEffect(() => {
     if (state.loading === false) {
@@ -105,31 +121,40 @@ const WorkgroupAdmin = (props) => {
   }, [state.loading, state.filter])
 
   // ** render
-  const renderComponent = () => {
+  const renderLoadingComponent = () => {
     return (
-      <div className="section">
-        <div className="w-100 admin-section">
-          <h6 className="title mb-1">
-            {useFormatMessage("modules.workspace.text.admin_and_moderators")}
-          </h6>
-          <div className="w-100 d-flex align-items-center justify-content-start pt-25">
-            <ListMember
-              id={id}
-              userState={userState}
-              isAdmin={true}
-              isAdminGroup={isAdminGroup}
-              loadingWorkgroup={state.loading}
-              listData={state.administrators}
-              totalListData={state.totalListAdmin}
-              currentPage={state.filter.page}
-              perPage={state.filter.limit}
-              disableLoadMore={state.disableLoadMore}
-              setPagination={setFilter}
-              handleClickLoadMore={handleClickLoadMore}
-              loadData={loadData}
-            />
-          </div>
+      <div className="w-100 loading-member-component">
+        <AppSpinner />
+      </div>
+    )
+  }
+
+  const renderBody = () => {
+    if (state.loadingAll === true) {
+      return (
+        <div className="w-100 loading-member-component">
+          <AppSpinner />
         </div>
+      )
+    }
+
+    return (
+      <div className="w-100 d-flex align-items-center justify-content-start pt-25">
+        <ListMember
+          id={id}
+          userState={userState}
+          isAdmin={true}
+          isAdminGroup={isAdminGroup}
+          loadingWorkgroup={state.loading}
+          listData={state.administrators}
+          totalListData={state.totalListAdmin}
+          currentPage={state.filter.page}
+          perPage={state.filter.limit}
+          disableLoadMore={state.disableLoadMore}
+          setPagination={setFilter}
+          handleClickLoadMore={handleClickLoadMore}
+          loadData={loadData}
+        />
       </div>
     )
   }
@@ -137,7 +162,16 @@ const WorkgroupAdmin = (props) => {
   return (
     <Card>
       <CardBody className="pb-75 pt-75">
-        <Fragment>{renderComponent()}</Fragment>
+        <div className="section">
+          <div className="w-100 admin-section">
+            <h6 className="title mb-1">
+              {useFormatMessage("modules.workspace.text.admin_and_moderators")}
+            </h6>
+            <div>
+              <Fragment>{renderBody()}</Fragment>
+            </div>
+          </div>
+        </div>
       </CardBody>
     </Card>
   )

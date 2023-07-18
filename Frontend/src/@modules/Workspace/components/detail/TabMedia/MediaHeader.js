@@ -11,6 +11,7 @@ import { Button } from "reactstrap"
 const MediaHeader = (props) => {
   const {
     // ** props
+    isMember,
     mediaTabActive
     // ** methods
   } = props
@@ -34,6 +35,10 @@ const MediaHeader = (props) => {
 
   // ** render
   const renderUploadButton = () => {
+    if (isMember === false) {
+      return ""
+    }
+    
     if (strDisplay !== "group_link_posted") {
       return (
         <Button.Ripple

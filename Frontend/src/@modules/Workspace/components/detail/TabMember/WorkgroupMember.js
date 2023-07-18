@@ -1,6 +1,6 @@
 // ** React Imports
 import { useMergedState, useFormatMessage } from "@apps/utility/common"
-import { Fragment, useEffect, useMemo } from "react"
+import { Fragment, useEffect } from "react"
 import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
@@ -17,14 +17,13 @@ const WorkgroupMember = (props) => {
     userState,
     isAdminGroup,
     detailWorkspace,
-    loadingDetailWorkspace,
     isLoadable,
     // ** methods
     setIsReloadAdmin
   } = props
 
   const [state, setState] = useMergedState({
-    loading: true,
+    loading: false,
     loadingAll: false,
     totalMember: 0,
     totalListMember: 0,
@@ -59,8 +58,9 @@ const WorkgroupMember = (props) => {
   }
 
   const loadData = (reset = false) => {
+    const loadingState = reset === true ? "loadingAll" : "loading"
     setState({
-      loading: true
+      [loadingState]: true
     })
 
     workspaceApi
@@ -76,7 +76,7 @@ const WorkgroupMember = (props) => {
 
         setTimeout(() => {
           setState({
-            loading: false
+            [loadingState]: false
           })
         }, 600)
       })
@@ -89,7 +89,7 @@ const WorkgroupMember = (props) => {
 
         setTimeout(() => {
           setState({
-            loading: false
+            [loadingState]: false
           })
         }, 600)
       })
@@ -125,10 +125,6 @@ const WorkgroupMember = (props) => {
 
   // ** render
   const renderListMember = () => {
-    if (state.loading) {
-      return "asf"
-    }
-
     if (state.members.length === 0) {
       return (
         <div className="empty-member pt-1 w-100">
@@ -189,9 +185,27 @@ const WorkgroupMember = (props) => {
     )
   }
 
-  const renderComponent = () => {
+  const renderBody = () => {
+    if (state.loadingAll === true) {
+      return (
+        <div className="w-100 loading-member-component">
+          <AppSpinner />
+        </div>
+      )
+    }
+
     return (
-      <Fragment>
+      <div className="w-100 member-section">
+        <div className="w-100 d-flex align-items-center justify-content-start">
+          <Fragment>{renderListMember()}</Fragment>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <Card>
+      <CardBody>
         <div className="section border-bot">
           <HeaderSection
             totalMember={state.totalMember}
@@ -200,20 +214,8 @@ const WorkgroupMember = (props) => {
           />
         </div>
         <div className="section mt-50">
-          <div className="w-100 member-section">
-            <div className="w-100 d-flex align-items-center justify-content-start">
-              <Fragment>{renderListMember()}</Fragment>
-            </div>
-          </div>
+          <Fragment>{renderBody()}</Fragment>
         </div>
-      </Fragment>
-    )
-  }
-
-  return (
-    <Card>
-      <CardBody>
-        <Fragment>{renderComponent()}</Fragment>
       </CardBody>
     </Card>
   )

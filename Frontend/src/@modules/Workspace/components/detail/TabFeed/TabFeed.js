@@ -39,7 +39,11 @@ const TabFeed = (props) => {
   const location = useLocation()
 
   const apiLoadFeed = workspaceApi.loadFeed
-  const setDataCreateNew = () => {}
+  const setDataCreateNew = (data) => {
+    setState({
+      dataCreateNew: data
+    })
+  }
 
   const loadData = (paramsX = {}) => {
     paramsX.id = workspaceID

@@ -18,7 +18,8 @@ import {
   removeCoverImage,
   getListWorkspaceSeparateType,
   saveAvatar,
-  deleteWorkspace
+  deleteWorkspace,
+  createGroupChat
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -41,5 +42,6 @@ router.post("/add-member", addMemberByDepartment)
 router.post("/remove-cover-image/:id", removeCoverImage)
 router.post("/save-avatar", saveAvatar)
 router.post("/delete", deleteWorkspace)
+router.post("/create-group-chat/:id", createGroupChat)
 
 export default router

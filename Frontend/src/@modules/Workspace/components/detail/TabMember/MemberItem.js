@@ -249,7 +249,7 @@ const MemberItem = (props) => {
   }
 
   const renderMesseneButton = () => {
-    if (isAdmin) {
+    if (parseInt(member.id) === parseInt(userState.id)) {
       return ""
     }
 
