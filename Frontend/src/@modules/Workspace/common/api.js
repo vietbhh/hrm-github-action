@@ -123,5 +123,11 @@ export const workspaceApi = {
       "/workspace/delete",
       serialize(_.cloneDeep(data))
     )
+  },
+  async createGroupChat(id, data) {
+    return await axiosNodeApi.post(
+      `/workspace/create-group-chat/${id}`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

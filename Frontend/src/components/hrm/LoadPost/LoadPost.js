@@ -39,7 +39,8 @@ const LoadPost = (props) => {
     optionsMeetingRoom = [],
 
     // only view edit history
-    isViewEditHistory = false
+    isViewEditHistory = false,
+    setDataCreateNew
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -234,6 +235,7 @@ const LoadPost = (props) => {
             dataPost={data}
             setData={setData}
             setDataLink={setDataLink}
+            setDataCreateNew={setDataCreateNew}
           />
 
           <MemberVoteModal

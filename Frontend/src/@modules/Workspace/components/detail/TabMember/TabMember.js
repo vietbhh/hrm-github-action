@@ -1,8 +1,6 @@
 // ** React Imports
 import { useMergedState } from "@apps/utility/common"
-import { useEffect } from "react"
-import { workspaceApi } from "@modules/Workspace/common/api"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 // ** Styles
 import { Col, Row } from "reactstrap"

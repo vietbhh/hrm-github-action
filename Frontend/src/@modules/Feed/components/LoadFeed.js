@@ -76,14 +76,26 @@ const LoadFeed = (props) => {
         })
 
         if (isSearch) {
-          setState({
-            dataPost: res.data.dataPost,
-            totalPost: res.data.totalPost,
-            page: res.data.page,
-            hasMore: res.data.hasMore,
-            arrPostIdSeen: arrPostIdSeen
-          })
+          if (res.data.dataPost.length === 0) {
+            setState({
+              dataPost: [],
+              totalPost: 0,
+              page: res.data.page,
+              hasMore: res.data.hasMore,
+              arrPostIdSeen: arrPostIdSeen
+            })
+          } else {
+            setState({
+              totalPost: res.data.totalPost,
+              page: res.data.page,
+              hasMore: res.data.hasMore,
+              arrPostIdSeen: arrPostIdSeen
+            })
 
+            res.data.dataPost.map((item, index) => {
+              handleAfterLoadLazyLoadComponent(item, index, res.data.dataPost)
+            })
+          }
         } else {
           setState({
             dataPost: [...state.dataPost, ...res.data.dataPost],
@@ -103,7 +115,11 @@ const LoadFeed = (props) => {
       })
   }
 
-  const handleAfterLoadLazyLoadComponent = async (value, index) => {
+  const handleAfterLoadLazyLoadComponent = async (
+    value,
+    index,
+    dataPostParam = undefined
+  ) => {
     setState({ loadingPost: false })
 
     if (state.hasMore === true) {
@@ -127,15 +143,18 @@ const LoadFeed = (props) => {
 
     // load media
     const data_attachment = await handleLoadAttachmentThumb(value, cover)
-    const dataPost = [...state.dataPost]
-    dataPost[index]["url_thumb"] = data_attachment["url_thumb"]
-    dataPost[index]["url_cover"] = data_attachment["url_cover"]
-    dataPost[index]["medias"] = data_attachment["medias"]
+    const dataPost =
+      dataPostParam === undefined ? [...state.dataPost] : dataPostParam
+    if (dataPost[index] !== undefined) {
+      dataPost[index]["url_thumb"] = data_attachment["url_thumb"]
+      dataPost[index]["url_cover"] = data_attachment["url_cover"]
+      dataPost[index]["medias"] = data_attachment["medias"]
 
-    // check data link
-    const dataUrl = await loadUrlDataLink(dataPost[index])
-    dataPost[index].dataLink.cover_url = dataUrl.cover_url
-    dataPost[index].dataLink.badge_url = dataUrl.badge_url
+      // check data link
+      const dataUrl = await loadUrlDataLink(dataPost[index])
+      dataPost[index].dataLink.cover_url = dataUrl.cover_url
+      dataPost[index].dataLink.badge_url = dataUrl.badge_url
+    }
     setState({ dataPost: dataPost })
   }
 
@@ -298,6 +317,7 @@ const LoadFeed = (props) => {
               customAction={customAction}
               options_employee_department={options_employee_department}
               optionsMeetingRoom={optionsMeetingRoom}
+              setDataCreateNew={setDataCreateNew}
             />
           )
         })}

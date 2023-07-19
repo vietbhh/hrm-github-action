@@ -31,8 +31,7 @@ const User = () => {
 
   const [state, setState] = useMergedState({
     loading: true,
-    employeeData: {},
-    tabActive: tab
+    employeeData: {}
   })
 
   const userAuth = useSelector((state) => state.auth.userData)
@@ -45,17 +44,6 @@ const User = () => {
         <Navigate to="/not-found" replace={true} />
         <AppSpinner />
       </>
-    )
-  }
-
-  const setTabActive = (tabId) => {
-    setState({
-      tabActive: getTabId(tabId)
-    })
-    window.history.replaceState(
-      null,
-      "",
-      `/u/${identity === "profile" ? "profile" : params.identity}/${tabId}`
     )
   }
 
@@ -92,38 +80,6 @@ const User = () => {
   }, [params])
 
   // ** render
-  const renderNav = () => {
-    return (
-      <TabContent className="py-50" activeTab={state.tabActive}>
-        <TabPane tabId={1}>
-          <TimeLine employeeData={state.employeeData} />
-        </TabPane>
-        <TabPane tabId={2}>
-          <Introduction
-            employeeData={state.employeeData}
-            loadData={loadData}
-            isProfile={state.employeeData.is_profile}
-          />
-        </TabPane>
-        <TabPane tabId={3}>
-          {/*<WorkSpace
-                identity={identity}
-                employeeData={state.employeeData}
-    />*/}
-        </TabPane>
-        <TabPane tabId={4}>
-          <Photo identity={identity} />
-        </TabPane>
-        <TabPane tabId={5}>
-          <Endorsement
-            identity={identity}
-            employeeId={state.employeeData?.id}
-          />
-        </TabPane>
-      </TabContent>
-    )
-  }
-
   const renderComponent = () => {
     if (state.loading) {
       return (

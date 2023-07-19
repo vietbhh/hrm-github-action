@@ -1,9 +1,9 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { map } from "lodash-es"
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { useParams, useSearchParams, useLocation } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 import { TabContent, TabPane } from "reactstrap"
 import { workspaceApi } from "../common/api"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
@@ -14,7 +14,6 @@ import TabPinned from "../components/detail/TabPinned/TabPinned"
 import TabPrivate from "../components/detail/TabPrivate"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
 import { getTabByNameOrId } from "../common/common"
-import AppSpinner from "@apps/components/spinner/AppSpinner"
 
 const DetailWorkspace = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -142,7 +141,9 @@ const DetailWorkspace = () => {
       : []
 
     const isAdmin = arrAdmin.includes(userId)
-    const isMember = arrMember.includes(userId)
+    const isMember = arrMember.some(
+      (itemSome) => parseInt(itemSome.id_user) === parseInt(userId)
+    )
     let isJoined = false
     if (isAdmin || isMember) {
       isJoined = true
@@ -236,7 +237,12 @@ const DetailWorkspace = () => {
               </div>
             )}
             {(state.isJoined || state.workspacePublic) && (
-              <TabMedia tabActive={state.tabActive} tabId={5} />
+              <TabMedia
+                tabActive={state.tabActive}
+                tabId={5}
+                userId={userId}
+                detailWorkspace={state.detailWorkspace}
+              />
             )}
           </TabPane>
         </TabContent>

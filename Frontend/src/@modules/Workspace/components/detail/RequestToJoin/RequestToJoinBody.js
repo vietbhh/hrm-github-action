@@ -24,7 +24,7 @@ const RequestToJoinBody = (props) => {
   const handleClickApprove = (index, member, type) => {
     setLoading(true)
     const values = {
-      data: member,
+      member_id: member.id,
       [type]: true,
       is_all: false
     }

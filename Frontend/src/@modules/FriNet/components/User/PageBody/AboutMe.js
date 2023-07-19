@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
@@ -18,7 +18,9 @@ const AboutMe = (props) => {
 
   const [state, setState] = useMergedState({
     isEdit: false,
-    about: employeeData.about
+    about: employeeData.about,
+    showSeeMore: false,
+    seeMore: false
   })
 
   const setAbout = (str) => {
@@ -39,10 +41,47 @@ const AboutMe = (props) => {
     })
   }
 
+  // ** effect
+  useEffect(() => {
+    if (document.getElementById(`about-me-section`)) {
+      const height = document.getElementById(`about-me-section`).offsetHeight
+      if (height > 200) {
+        setState({ showSeeMore: true })
+      }
+    }
+  }, [])
+
   // ** render
   const renderContent = () => {
     if (!_.isEmpty(state.about) && state.isEdit === false) {
-      return <p className="about-text mt-75">{state.about}</p>
+      return (
+        <Fragment>
+          <div>
+            <p>
+              <span
+                className={`about-text mt-75 ${
+                  state.showSeeMore && state.seeMore === false ? "hide" : ""
+                }`}>
+                {state.about}
+              </span>{" "}
+              {state.showSeeMore && (
+                <a
+                  className="btn-see-more"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setState({ seeMore: !state.seeMore })
+                  }}>
+                  <span className="mb-0 blue-text">
+                    {state.seeMore === false
+                      ? useFormatMessage("modules.feed.post.text.see_more")
+                      : useFormatMessage("modules.feed.post.text.hide")}
+                  </span>
+                </a>
+              )}
+            </p>
+          </div>
+        </Fragment>
+      )
     }
 
     if (state.isEdit) {
@@ -60,11 +99,9 @@ const AboutMe = (props) => {
 
     if (parseInt(userAuth.id) === parseInt(employeeData.id)) {
       return (
-        <Fragment>
-          <small className="d-block small-description">
-            {useFormatMessage("modules.employees.text.about_me_description")}
-          </small>
-        </Fragment>
+        <small className="d-block small-description">
+          {useFormatMessage("modules.employees.text.about_me_description")}
+        </small>
       )
     }
 
@@ -76,7 +113,7 @@ const AboutMe = (props) => {
   }
 
   return (
-    <Card className="mb-1 about-me-section">
+    <Card className="mb-1 about-me-section" id="about-me-section">
       <CardBody>
         <CommonCardHeader
           title={

@@ -135,7 +135,15 @@ const Introduction = (props) => {
     }
 
     return (
-      <Fragment>
+      <div className="introduction-content">
+          <Fragment>{renderIntroductionContent()}</Fragment>
+        </div>
+    )
+  }
+
+  return (
+    <Card className="introduction-container mb-1">
+      <CardBody>
         <div className="d-flex align-items-center justify-content-between">
           <div className="">
             <h5 className="common-card-title">
@@ -146,16 +154,6 @@ const Introduction = (props) => {
             <Fragment>{renderIntroductionAction()}</Fragment>
           </div>
         </div>
-        <div className="introduction-content">
-          <Fragment>{renderIntroductionContent()}</Fragment>
-        </div>
-      </Fragment>
-    )
-  }
-
-  return (
-    <Card className="introduction-container mb-1">
-      <CardBody>
         <Fragment>{renderContent()}</Fragment>
       </CardBody>
     </Card>

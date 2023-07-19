@@ -5,6 +5,7 @@ import TimelineEndorsement from "../Timeline/TimelineEndorsement"
 import AboutMe from "./AboutMe"
 import Skill from "./Skill/Skill"
 import WorkspaceSlide from "./WorkspaceSlide"
+import EmploymentHistory from "./EmploymentHistory/EmploymentHistory"
 
 const PageBody = (props) => {
   const {
@@ -23,6 +24,7 @@ const PageBody = (props) => {
           <AboutMe employeeData={employeeData} userAuth={userAuth} />
           <Skill employeeData={employeeData} userAuth={userAuth} />
           <WorkspaceSlide employeeData={employeeData} userAuth={userAuth} />
+          <EmploymentHistory employeeData={employeeData} />
         </div>
         <div className="div-right">
           <div id="div-sticky-height"></div>

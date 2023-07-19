@@ -915,7 +915,8 @@
       "text": {
         "additional_information": "Additional Information",
         "about_me_description": "Write something about you!",
-        "empty_about_me": "No about content!"
+        "empty_about_me": "No about content!",
+        "employment_history": "Employment history"
       },
       "list_employee": {
         "overview": {
@@ -3980,7 +3981,11 @@
           "request": "Member requests"
         },
         "member_selected" : "{number} member selected",
-        "derpartment_selected" : "{number} derpartment selected"
+        "derpartment_selected" : "{number} derpartment selected",
+        "waring_create_groupchat": {
+          "title": "Create Group chat?",
+          "text": "Create a linked group chat via message"
+        }
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4087,7 +4092,8 @@
         "requested_on": "Requested on {date}",
         "suggested" : "Suggested",
         "derpartment" : "Derpartment",
-        "users" : "Users"
+        "users" : "Users",
+        "new_today": "new today"
       },
       "app_options": {
         "workspace_type": {

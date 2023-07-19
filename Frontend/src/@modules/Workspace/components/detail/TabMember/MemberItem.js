@@ -71,7 +71,7 @@ const MemberItem = (props) => {
     }).then((res) => {
       if (res.isConfirmed === true) {
         const values = {
-          data: member,
+          member_id: member.id,
           remove_member: true,
           page: currentPage,
           limit: perPage
@@ -249,7 +249,7 @@ const MemberItem = (props) => {
   }
 
   const renderMesseneButton = () => {
-    if (isAdmin) {
+    if (parseInt(member.id) === parseInt(userState.id)) {
       return ""
     }
 
