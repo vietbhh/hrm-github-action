@@ -915,7 +915,8 @@
       "text": {
         "additional_information": "Additional Information",
         "about_me_description": "Write something about you!",
-        "empty_about_me": "No about content!"
+        "empty_about_me": "No about content!",
+        "employment_history": "Employment history"
       },
       "list_employee": {
         "overview": {

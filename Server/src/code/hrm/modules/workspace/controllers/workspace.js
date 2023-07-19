@@ -306,25 +306,32 @@ const _handleRemoveMember = (workspace, requestData) => {
     workspace?.administrators === undefined
       ? []
       : workspace.administrators.filter((item) => {
-          return parseInt(item) !== parseInt(requestData.data.id)
+          return parseInt(item) !== parseInt(requestData.member_id)
         })
 
   const members =
     workspace?.members === undefined
       ? []
       : workspace.members.filter((item) => {
-          return parseInt(item.id_user) !== parseInt(requestData.data.id)
+          return parseInt(item.id_user) !== parseInt(requestData.member_id)
         })
   return { ...workspace._doc, administrators: administrators, members: members }
 }
 
 const _handleApproveJoinRequest = (workspace, requestData) => {
-  if (requestData.is_all === true) {
+  if (requestData.is_all === "true" || requestData.is_all === true) {
     const requestJoins =
       workspace?.request_joins === undefined ? [] : workspace.request_joins
+    const arrMemberJoin = requestJoins.map((item) => {
+      return {
+        id_user: item.id_user,
+        joined_at: moment().toISOString()
+      }
+    })
+
     return {
       ...workspace._doc,
-      members: [...workspace.members, ...requestJoins],
+      members: [...workspace.members, ...arrMemberJoin],
       request_joins: []
     }
   } else {
@@ -334,14 +341,14 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
         workspace?.members === undefined
           ? [
               {
-                id_user: requestData.data.id,
+                id_user: requestData.member_id,
                 joined_at: moment().toISOString()
               }
             ]
           : [
               ...workspace.members,
               {
-                id_user: requestData.data.id,
+                id_user: requestData.member_id,
                 joined_at: moment().toISOString()
               }
             ],
@@ -349,7 +356,7 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
         workspace?.request_joins === undefined
           ? []
           : workspace.request_joins.filter((item) => {
-              return parseInt(item.id_user) !== parseInt(requestData.data.id)
+              return parseInt(item.id_user) !== parseInt(requestData.member_id)
             })
     }
   }
@@ -368,7 +375,7 @@ const handleDeclineJoinRequest = (workspace, requestData) => {
         workspace?.request_joins === undefined
           ? []
           : workspace.request_joins.filter((item) => {
-              return parseInt(item.id_user) !== parseInt(requestData.data.id)
+              return parseInt(item.id_user) !== parseInt(requestData.member_id)
             })
     }
   }

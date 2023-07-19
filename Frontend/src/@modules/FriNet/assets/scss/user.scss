@@ -40,6 +40,10 @@
     color: #32434f;
   }
 
+  .blue-text {
+    color: #0483ff;
+  }
+
   .page-header {
     border-radius: 14px;
 
@@ -164,6 +168,15 @@
     }
 
     .about-me-section {
+      .about-content {
+        .hide {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 5;
+          -webkit-box-orient: vertical;
+        }
+      }
     }
 
     .skill-section {
@@ -172,6 +185,70 @@
           padding: 5px;
           border: 1px solid #ececed;
           border-radius: 9px;
+        }
+      }
+    }
+
+    .workspace-slide-section {
+      .custom-secondary {
+        width: 100% !important;
+        border-radius: 10px;
+      }
+
+      &:hover {
+        .swiper-button-next,
+        .swiper-button-prev {
+          display: flex;
+        }
+      }
+
+      .workspace-manage-list {
+        .workspace-item {
+          background-color: #ffffff !important;
+          border-radius: 14px;
+        }
+      }
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        height: 26px;
+        width: 26px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.3);
+        display: none;
+      }
+
+      .swiper-button-next {
+        right: 2px !important;
+
+        &:after {
+          background-image: url(str-replace(str-replace($chevron-right, "currentColor", "#FFFFFF"), "#", "%23"));
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 22px;
+          padding-left: 20px;
+          color: $body-color;
+          width: 15.6px;
+          height: 15.6px;
+          content: "";
+          margin-left: 2px;
+        }
+      }
+
+      .swiper-button-prev {
+        left: 0px !important;
+
+        &:after {
+          background-image: url(str-replace(str-replace($chevron-left, "currentColor", "#FFFFFF"), "#", "%23"));
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 22px;
+          padding-left: 20px;
+          color: $body-color;
+          width: 15.6px;
+          height: 15.6px;
+          content: "";
+          margin-right: 2px;
         }
       }
     }

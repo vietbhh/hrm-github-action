@@ -20,11 +20,11 @@ const CommonCardHeader = (props) => {
 
   // ** render
   const renderAction = () => {
-    if (parseInt(userAuth.id) !== parseInt(employeeData.id)) {
+    if (showButtonAction === false) {
       return ""
     }
 
-    if (showButtonAction === false) {
+    if (parseInt(userAuth.id) !== parseInt(employeeData.id)) {
       return ""
     }
 
