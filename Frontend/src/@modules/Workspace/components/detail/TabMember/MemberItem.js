@@ -71,7 +71,7 @@ const MemberItem = (props) => {
     }).then((res) => {
       if (res.isConfirmed === true) {
         const values = {
-          data: member,
+          member_id: member.id,
           remove_member: true,
           page: currentPage,
           limit: perPage

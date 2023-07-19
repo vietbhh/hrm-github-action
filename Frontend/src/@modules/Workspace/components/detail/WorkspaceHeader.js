@@ -524,7 +524,7 @@ const WorkspaceHeader = (props) => {
     if (data?.administrators && !data?.administrators.includes(userId)) {
       const arr = [...items]
       arr.splice(1, 3)
-      //setState({ items: arr })
+      setState({ items: arr })
     }
   }, [data])
 
