@@ -370,12 +370,12 @@ const updateWorkspace = async (req, res, next) => {
   }
 
   const requestData = req.body
+
   try {
     const workspaceInfo = await workspaceMongoModel.findById(workspaceId)
     if (workspaceInfo === null) {
       res.failNotFound("work_space_not_found")
     }
-
     let workSpaceUpdate = {}
     let returnCurrentPageForPagination = ""
     let returnNewWorkspaceAfterUpdate = false
@@ -493,10 +493,10 @@ const updateWorkspace = async (req, res, next) => {
           return item
         })
         const memberInfo = await getUser(
-          updateData.request_joins[updateData.request_joins.length - 1]
+          updateData.request_joins[updateData.request_joins.length - 1].id_user
         )
         // sent a request to join the workspace
-        if (updateData?.membership_approval === "approver") {
+        if (updateData?.membership_approval !== "auto") {
           let body =
             "<strong>" + memberInfo?.dataValues?.full_name + "</strong>"
           if (updateData.request_joins.length >= 2) {
@@ -507,7 +507,7 @@ const updateWorkspace = async (req, res, next) => {
             updateData?.name +
             "</strong>"
 
-          const link = "workspace/" + workspaceId + "/pending-posts"
+          const link = "workspace/" + workspaceId + "/request-join"
           await sendNotification(
             1,
             updateData?.administrators,
