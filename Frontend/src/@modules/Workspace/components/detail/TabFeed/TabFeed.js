@@ -40,6 +40,7 @@ const TabFeed = (props) => {
 
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = (data) => {
+    console.log("data", data)
     setState({
       dataCreateNew: data
     })

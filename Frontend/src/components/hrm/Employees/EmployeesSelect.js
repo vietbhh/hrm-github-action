@@ -144,15 +144,18 @@ const EmployeesSelect = (props) => {
     setState({
       loading: true
     })
+    const members = state.members
+    const selected = member_selected.map((e) => e["id_user"])
+    // props.filters = {"id NOT IN (1,2,3)"}
     //  props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
-      const members = state.members
-
-      const selected = member_selected.map((e) => e["id_user"])
       const results = res.data.results
-      const test = results.filter((x) => selected.includes(x.id))
-
+      const test =
+        selected.length > 0
+          ? results.filter((x) => !selected.includes(x.id))
+          : results
       const concat = !props.search ? members.concat(test) : test
+
       setState({
         members: concat,
         page: res.data.page,
@@ -237,12 +240,11 @@ const EmployeesSelect = (props) => {
     }
   }
   const endScrollLoad = () => {
-    console.log("endScrollLoad", state)
     const page = state.page + 1
     if (state.typeAdd === "members") {
       if (
         state.recordsTotal > state.members.length &&
-        state.members.length < state.page * state.perPage &&
+        state.members.length <= state.page * state.perPage &&
         !state.loading
       ) {
         loadData({ page: page, search: state.search })
@@ -290,16 +292,16 @@ const EmployeesSelect = (props) => {
       handleSelect(state.dataSelected, state.typeAdd)
     }
   }, [state.dataSelected, state.department_selected])
-  useEffect(() => {
-    //  setState({ loading: false })
-  }, [state.members])
+
   return (
     <>
       <Row>
         <Col sm={12} className="mb-2 filter">
           <span
             style={{ cursor: "pointer" }}
-            onClick={() => setState({ typeAdd: "members", recordsTotal: 0 })}
+            onClick={() =>
+              setState({ typeAdd: "members", recordsTotal: 0, members: [] })
+            }
             className={`border rounded w-100 me-1 px-1 py-50  ${
               state.typeAdd === "members" ? "border-primary bg-primary " : ""
             }`}>

@@ -47,7 +47,7 @@
     height: 450px !important;
 
     .custom-secondary {
-      height: 32px;
+      height: 36px;
       background-color: #f5f6f8 !important;
       border-radius: 8px !important;
     }
@@ -80,9 +80,9 @@
           font-weight: 600;
         }
 
-        .custom-secondary {
+        .btn-chat {
           height: 36px;
-          width: 36px !important;
+          width: 36px!important;
         }
       }
     }
@@ -1528,4 +1528,8 @@
       }
     }
   }
+}
+
+.create-workspace-form .text-label {
+  padding-left: 1rem ;
 }

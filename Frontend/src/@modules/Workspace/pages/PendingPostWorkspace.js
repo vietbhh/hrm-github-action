@@ -1,20 +1,16 @@
-import { ErpSelect, ErpInput } from "@apps/components/common/ErpField"
+import LoadPost from "@/components/hrm/LoadPost/LoadPost"
+import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
+import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import LoadPost from "@/components/hrm/LoadPost/LoadPost"
-import { Fragment, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardBody, Row, Spinner, Col } from "reactstrap"
-import { workspaceApi } from "../common/api"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import SwAlert from "@apps/utility/SwAlert"
+import { useNavigate, useParams } from "react-router-dom"
+import { Button, Card, CardBody, Col, Row, Spinner } from "reactstrap"
+import { workspaceApi } from "../common/api"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
 
-const findKeyByValue = (arr = [], value) => {
-  const index = arr.findIndex((p) => p.value === value)
-  return index
-}
 const workspace_type = [
   {
     value: "desc",
@@ -150,7 +146,7 @@ const PendingPostWorkspace = () => {
                 type="submit"
                 color="secondary"
                 className="btn-approve bg-secondary ms-1 w-100"
-                onClick={() => handleApprove(item._id, "rejected")}
+                onClick={() => handleApprove(item._id, "declined")}
                 disabled={
                   state.loading ||
                   formState.isSubmitting ||

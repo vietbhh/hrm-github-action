@@ -11,7 +11,11 @@ import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { handleDataLoadFeed } from "../../feed/controllers/feed.js"
 import { handleAddNewGroupToFireStore } from "#app/libraries/chat/Chat.js"
-
+import {
+  sendNotificationRequestJoin,
+  sendNotificationApproveJoin,
+  sendNotificationApprovePost
+} from "./notification.js"
 const saveWorkspace = async (req, res, next) => {
   const dataSave = {
     name: req.body.workspace_name,
@@ -409,10 +413,23 @@ const updateWorkspace = async (req, res, next) => {
       returnCurrentPageForPagination = "members"
     } else if (requestData.hasOwnProperty("approve_join_request")) {
       workSpaceUpdate = _handleApproveJoinRequest(workspaceInfo, requestData)
+      let receivers = requestData.member_id
+      if (requestData.is_all === true || requestData.is_all === "true") {
+        const request_joins = workspaceInfo.request_joins
+        receivers = request_joins.map((x) => x["id_user"])
+      }
+      sendNotificationApproveJoin(workspaceInfo, "Approved", receivers)
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("decline_join_request")) {
       workSpaceUpdate = handleDeclineJoinRequest(workspaceInfo, requestData)
+      let receivers = requestData.member_id
+      if (requestData.is_all === true || requestData.is_all === "true") {
+        const request_joins = workspaceInfo.request_joins
+        receivers = request_joins.map((x) => x["id_user"])
+      }
+      sendNotificationApproveJoin(workspaceInfo, "Declined", receivers)
+
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("add_new_group")) {
@@ -515,29 +532,7 @@ const updateWorkspace = async (req, res, next) => {
         )
         // sent a request to join the workspace
         if (updateData?.membership_approval !== "auto") {
-          let body =
-            "<strong>" + memberInfo?.dataValues?.full_name + "</strong>"
-          if (updateData.request_joins.length >= 2) {
-            body += " and " + (updateData.request_joins.length - 1) + " others"
-          }
-          body +=
-            " sent a request to join workspace <strong>" +
-            updateData?.name +
-            "</strong>"
-
-          const link = "workspace/" + workspaceId + "/request-join"
-          await sendNotification(
-            1,
-            updateData?.administrators,
-            {
-              title: "",
-              body: body,
-              link: link
-            },
-            {
-              skipUrls: ""
-            }
-          )
+          sendNotificationRequestJoin(updateData)
         }
       }
 
@@ -995,26 +990,10 @@ const approvePost = async (req, res) => {
 
     const data = await handleDataBeforeReturn(feedUpdate)
     if (data) {
-      const status =
-        data?.approve_status === "approved"
-          ? "has been approved"
-          : "has been rejected"
-      const full_name = data?.created_by?.full_name
-      const workspaceName = infoWorkSpace?.name
-      const body = "Post in <strong>" + workspaceName + "</strong> " + status
-      const link =
-        data?.approve_status === "approved" ? "workspace/" + idWorkspace : ""
-      await sendNotification(
-        1,
-        [data?.created_by?.id],
-        {
-          title: "",
-          body: body,
-          link: link
-        },
-        {
-          skipUrls: ""
-        }
+      sendNotificationApprovePost(
+        infoWorkSpace,
+        data?.approve_status,
+        data?.created_by?.id
       )
     }
     return res.respond(feedUpdate)

@@ -167,13 +167,7 @@ if (!function_exists('loadData')) {
 		if (!empty($data['filters'])) $data['filters'] = array_filter($data['filters']);
 
 		if (isset($data['filters']) && !empty($data['filters'])) {
-			foreach ($data['filters'] as $key => $val):
-				if (is_array($val)) {
-					$builder->whereIn($key, $val);
-				} else {
-					$builder->where($key, $val);
-				}
-			endforeach;
+			$builder->where($data['filters']);
 		}
 		$result['recordsTotal'] = $query->countAllResults(false);
 

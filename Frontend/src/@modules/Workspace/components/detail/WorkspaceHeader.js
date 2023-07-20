@@ -1,7 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
-import { Dropdown, Space } from "antd"
+import { Badge, Dropdown, Space } from "antd"
 import { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -44,7 +44,7 @@ const WorkspaceHeader = (props) => {
     const items = [
       {
         label: (
-          <div className="d-flex align-items-center">
+          <div className="d-flex justify-content-center align-items-center">
             <div className="w-85">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@ const WorkspaceHeader = (props) => {
       {
         label: (
           <Link to={`/workspace/${params.id}/pending-posts`}>
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center justify-content-center">
               <div className="w-85 d-flex align-items-center">
                 <div className="me-1">
                   <svg
@@ -97,8 +97,7 @@ const WorkspaceHeader = (props) => {
                     height="23px"
                     viewBox="0 0 22 23"
                     enableBackground="new 0 0 22 23"
-                    xmlSpace="preserve"
-                    className="me-50">
+                    xmlSpace="preserve">
                     {" "}
                     <image
                       id="image0"
@@ -118,7 +117,9 @@ const WorkspaceHeader = (props) => {
                   </span>
                   <br />
                   <small>
-                    {data?.pending_post === undefined ? 0 : data.pending_post}{" "}
+                    {dataWorkspace?.pending_post === undefined
+                      ? 0
+                      : dataWorkspace.pending_post}{" "}
                     {useFormatMessage("modules.workspace.text.new_today")}
                   </small>
                 </div>
@@ -131,35 +132,46 @@ const WorkspaceHeader = (props) => {
       {
         label: (
           <Link to={`/workspace/${params.id}/request-join`}>
-            <div className="d-flex align-items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                id="Layer_1"
-                x="0px"
-                y="0px"
-                width="22px"
-                height="23px"
-                viewBox="0 0 22 23"
-                enableBackground="new 0 0 22 23"
-                xmlSpace="preserve"
-                className="me-50">
-                {" "}
-                <image
-                  id="image0"
-                  width="22"
-                  height="23"
-                  x="0"
-                  y="0"
-                  href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQFAwQ0wwQk0w QFAwQEwxQ08zQ08yRFA1RVA4QFA0RFAyQlAyQ08xQk8yQ08yRFAyQlAwSFAyQk4wQk4wRVAwRFAw Qk4wRFAyQ08yQk4yQ04xQU4yQ08xQ04yQk0zRE8yQk4xQ08xQ04yQk8yQk8xQ08zQ04wQFAyQk4w Q1EyQk0xQU4wQk0wQlAwQEozQ1AyQ0////+y0vlVAAAAMXRSTlMAEFBgIEC/z4AwIEBw39/vcGAg gI8wf39An5CQsOCwcM/Az6Dfn++wMI9fYKBwcDBQvIqwRgAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYDDg4ro7yGAAAA90lEQVQoz32RbVeDMAyFWygdjrV1xYki bpa9KqK7///P2YSBO/uwfAjpc9KbSyrE/ZBJmibqBmYaHDq9gkpjlj/M58XCQE83lHWPY7109sKl NZ50yjKLH2+sZPyEVczPJF3F4gUlS+A15hS1lDmo/81JBiTRGGp5X8e0wiZm/UGg4awD5XY9doic BijUVG93hPdsx7h9fWBL11j4rXNHpqLZTapkafy/liYscIoalR5WomjCklTdp/g6INRdVwbYRHyz 42iiwqwY7vsW/WAnmoCR09r/D964fsQ/F5PMNWyfKfVbtQgTpTWH4XVCcfNs/tx1Zynuxx9fxBWu ChBtawAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0wNlQwMzoxNDoxNCswMDowMGEBHuQAAAAl dEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTQ6MTQrMDA6MDAQXKZYAAAAAElFTkSuQmCC"
-                />
-              </svg>
-              <span>
-                {useFormatMessage("modules.workspace.display.member_request")}
-              </span>
-              <div className="ms-auto">
-                <Badge count={dataWorkspace?.request_joins?.length}></Badge>
+            <div className="d-flex align-items-center justify-content-center">
+              <div className="w-85 d-flex align-items-center">
+                <div className="me-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    version="1.1"
+                    id="Layer_1"
+                    x="0px"
+                    y="0px"
+                    width="22px"
+                    height="23px"
+                    viewBox="0 0 22 23"
+                    enableBackground="new 0 0 22 23"
+                    xmlSpace="preserve">
+                    {" "}
+                    <image
+                      id="image0"
+                      width="22"
+                      height="23"
+                      x="0"
+                      y="0"
+                      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQFAwQ0wwQk0w QFAwQEwxQ08zQ08yRFA1RVA4QFA0RFAyQlAyQ08xQk8yQ08yRFAyQlAwSFAyQk4wQk4wRVAwRFAw Qk4wRFAyQ08yQk4yQ04xQU4yQ08xQ04yQk0zRE8yQk4xQ08xQ04yQk8yQk8xQ08zQ04wQFAyQk4w Q1EyQk0xQU4wQk0wQlAwQEozQ1AyQ0////+y0vlVAAAAMXRSTlMAEFBgIEC/z4AwIEBw39/vcGAg gI8wf39An5CQsOCwcM/Az6Dfn++wMI9fYKBwcDBQvIqwRgAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYDDg4ro7yGAAAA90lEQVQoz32RbVeDMAyFWygdjrV1xYki bpa9KqK7///P2YSBO/uwfAjpc9KbSyrE/ZBJmibqBmYaHDq9gkpjlj/M58XCQE83lHWPY7109sKl NZ50yjKLH2+sZPyEVczPJF3F4gUlS+A15hS1lDmo/81JBiTRGGp5X8e0wiZm/UGg4awD5XY9doic BijUVG93hPdsx7h9fWBL11j4rXNHpqLZTapkafy/liYscIoalR5WomjCklTdp/g6INRdVwbYRHyz 42iiwqwY7vsW/WAnmoCR09r/D964fsQ/F5PMNWyfKfVbtQgTpTWH4XVCcfNs/tx1Zynuxx9fxBWu ChBtawAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0wNlQwMzoxNDoxNCswMDowMGEBHuQAAAAl dEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTQ6MTQrMDA6MDAQXKZYAAAAAElFTkSuQmCC"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <span>
+                    {useFormatMessage(
+                      "modules.workspace.display.member_request"
+                    )}
+                  </span>
+                  <br />
+                  <small>
+                    {dataWorkspace?.request_joins?.length === undefined
+                      ? 0
+                      : dataWorkspace?.request_joins?.length}{" "}
+                    {useFormatMessage("modules.workspace.text.new_today")}
+                  </small>
+                </div>
               </div>
             </div>
           </Link>
@@ -169,7 +181,7 @@ const WorkspaceHeader = (props) => {
       {
         label: (
           <Link to={`/workspace/${params.id}/setting`}>
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center justify-content-center">
               <div className="w-85">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -536,7 +548,7 @@ const WorkspaceHeader = (props) => {
     ) {
       return (
         <div
-          className="me-50 d-flex justify-content-center align-items-center pointer custom-secondary"
+          className="me-50 d-flex justify-content-center align-items-center pointer custom-secondary btn-chat"
           onClick={() => handleClickChat()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -705,7 +717,7 @@ const WorkspaceHeader = (props) => {
                     </Button>
 
                     <Dropdown
-                      menu={{ items: state.items }}
+                      menu={{ items: renderDropMenu(data) }}
                       placement="bottomRight"
                       trigger={["click"]}
                       overlayClassName="worspace-dropdown-common">
