@@ -17,7 +17,7 @@ const sendNotification = async (
   const link = payload?.link
   const icon = payload?.icon
   const type = payload?.type || "other"
-  const actions = payload?.actions || []
+  const actions = payload?.actions || ""
 
   if (isUndefined(receivers) || isUndefined(title) || isUndefined(body))
     return false
@@ -38,7 +38,7 @@ const sendNotification = async (
           title: title,
           body: body,
           link: link,
-          actions: actions,
+          actions: JSON.stringify(actions),
           icon: notificationIcon
         },
         {
@@ -48,6 +48,7 @@ const sendNotification = async (
       )
       notificationId = saveNotification.id
     } catch (error) {
+      console.log(error)
       return false
     }
   }
