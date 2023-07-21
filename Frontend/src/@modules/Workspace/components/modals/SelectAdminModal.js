@@ -43,12 +43,14 @@ const SelectAdminModal = (props) => {
       loading: true
     })
     const arrIdUser = members ? members.map((e) => e["id_user"]) : []
-    defaultModuleApi.getUsers({ filters: { id: arrIdUser } }).then((res) => {
-      setState({
-        members: res.data.results,
-        loading: false
+    defaultModuleApi
+      .getUsers({ perPage: 1000, filters: { ["whereIN"]: { id: arrIdUser } } })
+      .then((res) => {
+        setState({
+          members: res.data.results,
+          loading: false
+        })
       })
-    })
   }
 
   const handleSelected = (itemSelect) => {

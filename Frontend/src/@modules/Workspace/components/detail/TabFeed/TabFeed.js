@@ -40,7 +40,6 @@ const TabFeed = (props) => {
 
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = (data) => {
-    console.log("data", data)
     setState({
       dataCreateNew: data
     })
@@ -58,9 +57,10 @@ const TabFeed = (props) => {
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
       : []
-    const arrMember = detailWorkspace?.members ? detailWorkspace?.members : []
+    const arrMember = detailWorkspace?.members
+      ? detailWorkspace?.members.map((x) => parseInt(x["id_user"]))
+      : []
     const isAdmin = arrAdmin.includes(userId)
-
     const isMember = arrMember.includes(userId)
     let isJoined = false
     if (isAdmin || isMember) {

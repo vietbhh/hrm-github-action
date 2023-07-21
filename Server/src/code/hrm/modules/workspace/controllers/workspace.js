@@ -392,7 +392,6 @@ const updateWorkspace = async (req, res, next) => {
   }
 
   const requestData = req.body
-
   try {
     const workspaceInfo = await workspaceMongoModel.findById(workspaceId)
     if (workspaceInfo === null) {
@@ -418,7 +417,12 @@ const updateWorkspace = async (req, res, next) => {
         const request_joins = workspaceInfo.request_joins
         receivers = request_joins.map((x) => x["id_user"])
       }
-      sendNotificationApproveJoin(workspaceInfo, "Approved", receivers)
+      sendNotificationApproveJoin(
+        workspaceInfo,
+        "Approved",
+        receivers,
+        req.__user
+      )
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("decline_join_request")) {
@@ -428,7 +432,12 @@ const updateWorkspace = async (req, res, next) => {
         const request_joins = workspaceInfo.request_joins
         receivers = request_joins.map((x) => x["id_user"])
       }
-      sendNotificationApproveJoin(workspaceInfo, "Declined", receivers)
+      sendNotificationApproveJoin(
+        workspaceInfo,
+        "Declined",
+        receivers,
+        req.__user
+      )
 
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
@@ -527,15 +536,21 @@ const updateWorkspace = async (req, res, next) => {
 
           return item
         })
-        const memberInfo = await getUser(
-          updateData.request_joins[updateData.request_joins.length - 1].id_user
-        )
+
         // sent a request to join the workspace
         if (updateData?.membership_approval !== "auto") {
+          updateData.id = workspaceId
           sendNotificationRequestJoin(updateData)
+          delete updateData.id
         }
       }
-
+      if (requestData?.notification) {
+        updateData.notification =
+          typeof requestData.notification === "string"
+            ? JSON.parse(requestData.notification)
+            : requestData.notification
+      }
+      console.log("updateData", updateData)
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -993,7 +1008,8 @@ const approvePost = async (req, res) => {
       sendNotificationApprovePost(
         infoWorkSpace,
         data?.approve_status,
-        data?.created_by?.id
+        data?.created_by?.id,
+        req.__user
       )
     }
     return res.respond(feedUpdate)

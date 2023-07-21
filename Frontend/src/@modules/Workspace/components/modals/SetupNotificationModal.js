@@ -5,6 +5,7 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
+import { useSelector } from "react-redux"
 import {
   Button,
   Col,
@@ -15,15 +16,24 @@ import {
   Row,
   Spinner
 } from "reactstrap"
+const findNotifi = (arr, iduser) => {
+  const index = arr.findIndex((p) => p.id_user === iduser)
+  if (arr[index]) return arr[index].status
+  return true
+}
 const SetupNotificationModal = (props) => {
   const { modal, handleModal, dataWorkspace } = props
+  const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const [state, setState] = useMergedState({
     loading: false
   })
   const onSubmit = (values) => {
     setState({ loading: true })
     const dataSave = { _id: dataWorkspace._id }
-    dataSave.notification = values.notification
+    const arrNotifi = dataWorkspace.notification
+
+    arrNotifi.push({ id_user: userId, status: values.notification })
+    dataSave.notification = JSON.stringify(arrNotifi)
 
     workspaceApi.update(dataWorkspace._id, dataSave).then((res) => {
       if (res.statusText) {
@@ -64,7 +74,10 @@ const SetupNotificationModal = (props) => {
                   className="ms-auto"
                   useForm={methods}
                   value={true}
-                  defaultChecked={dataWorkspace?.notification === true}
+                  defaultChecked={findNotifi(
+                    dataWorkspace?.notification,
+                    userId
+                  )}
                   name="notification"
                 />
               </div>
@@ -82,7 +95,9 @@ const SetupNotificationModal = (props) => {
                   className="ms-auto"
                   useForm={methods}
                   value={false}
-                  defaultChecked={dataWorkspace?.notification === false}
+                  defaultChecked={
+                    !findNotifi(dataWorkspace?.notification, userId)
+                  }
                   name="notification"
                 />
               </div>

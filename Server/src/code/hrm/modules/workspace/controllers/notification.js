@@ -1,9 +1,11 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
-import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
+import { getUser } from "#app/models/users.mysql.js"
+import workspaceMongoModel from "../models/workspace.mongo.js"
 const sendNotificationApproveJoin = async (
   infoWorkspace,
   hanlde,
-  receivers
+  receivers,
+  sender
 ) => {
   const body =
     "Request join Workgroup " +
@@ -14,10 +16,19 @@ const sendNotificationApproveJoin = async (
     hanlde
 
   const link = "workspace/" + infoWorkspace?.id
-  await sendNotification(1, receivers, { title: "", body: body, link: link })
+  await sendNotification(sender, receivers, {
+    title: "",
+    body: body,
+    link: link
+  })
 }
 
 const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
+  const link = "workspace/" + infoWorkspace?.id + "/request-join"
+
+  if (infoWorkspace.request_joins[infoWorkspace.request_joins.length - 1]._id) {
+    return
+  }
   const memberInfo = await getUser(
     infoWorkspace.request_joins[infoWorkspace.request_joins.length - 1].id_user
   )
@@ -30,18 +41,24 @@ const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
     " sent a request to join workgroup <strong>" +
     infoWorkspace?.name +
     "</strong>"
-  const link = "workspace/" + infoWorkspace?.id + "/request-join"
-  await sendNotification(1, infoWorkspace?.administrators, {
-    title: "",
-    body: body,
-    link: link
-  })
+
+  await sendNotification(
+    memberInfo?.dataValues?.id,
+    infoWorkspace?.administrators,
+    {
+      title: "",
+      body: body,
+      link: link,
+      icon: memberInfo?.dataValues?.id
+    }
+  )
 }
 
 const sendNotificationApprovePost = async (
   infoWorkspace,
   hanlde,
-  receivers
+  receivers,
+  sender
 ) => {
   const body =
     "Post in workgroup <strong>" +
@@ -51,24 +68,50 @@ const sendNotificationApprovePost = async (
 
   const link =
     hanlde === "approved" ? "workspace/" + infoWorkspace?.id + "?tab=feed" : ""
-  await sendNotification(1, receivers, { title: "", body: body, link: link })
+  await sendNotification(sender, receivers, {
+    title: "",
+    body: body,
+    link: link
+  })
 }
 
-const sendNotificationPostPending = async (
-  infoWorkspace,
-  hanlde,
-  receivers
-) => {
+const sendNotificationPostPending = async (feed, sender) => {
+  const workspaceInfo = await workspaceMongoModel.findById(feed.permission_ids)
   const body =
-    "Post in <strong>" + workspaceName + "</strong> has been " + hanlde
-  hanlde
+    "<strong>" +
+    sender?.full_name +
+    "</strong> has posted in workgroup <strong>" +
+    workspaceInfo?.name +
+    "</strong>"
 
-  const link = "workspace/" + infoWorkspace?.id + "?tab=feed"
-  await sendNotification(1, receivers, { title: "", body: body, link: link })
+  const link = "workspace/" + workspaceInfo?._id + "/pending-posts"
+
+  await sendNotification(sender.id, workspaceInfo?.administrators, {
+    title: "",
+    body: body,
+    link: link,
+    icon: parseInt(sender.id)
+  })
+}
+
+const sendNotificationUnseenPost = async (sender, receivers, link) => {
+  await sendNotification(
+    sender,
+    receivers,
+    {
+      title: "",
+      body: "{{modules.network.notification.notification_unseen}}",
+      link: link
+    },
+    {
+      skipUrls: ""
+    }
+  )
 }
 export {
   sendNotificationApproveJoin,
-  sendNotificationRequestJoin,
   sendNotificationApprovePost,
-  sendNotificationPostPending
+  sendNotificationPostPending,
+  sendNotificationRequestJoin,
+  sendNotificationUnseenPost
 }
