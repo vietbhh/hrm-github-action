@@ -14,7 +14,8 @@ import { handleAddNewGroupToFireStore } from "#app/libraries/chat/Chat.js"
 import {
   sendNotificationRequestJoin,
   sendNotificationApproveJoin,
-  sendNotificationApprovePost
+  sendNotificationApprovePost,
+  sendNotificationNewPost
 } from "./notification.js"
 const saveWorkspace = async (req, res, next) => {
   const dataSave = {
@@ -119,7 +120,7 @@ const addMemberByDepartment = async (req, res) => {
   const dataSave = { ...req.body }
   // const infoWS = await workspaceMongoModel.findById(dataSave._id)
   if (dataSave.departments) {
-    console.log("data", JSON.parse(dataSave.departments))
+    //console.log("data", JSON.parse(dataSave.departments))
   }
 
   return 1
@@ -255,7 +256,6 @@ const getListWorkspace = async (req, res, next) => {
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
   } catch (err) {
-    console.log("errerr", err)
     return res.fail(err.message)
   }
 }
@@ -550,7 +550,6 @@ const updateWorkspace = async (req, res, next) => {
             ? JSON.parse(requestData.notification)
             : requestData.notification
       }
-      console.log("updateData", updateData)
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -983,7 +982,6 @@ const approvePost = async (req, res) => {
     const idWorkspace = req.body.idWorkspace
     delete req.body.idWorkspace
     const infoWorkSpace = await workspaceMongoModel.findById(idWorkspace)
-
     if (req.body?.all) {
       delete req.body.all
       const feedUpdate = await feedMongoModel.updateMany(
@@ -994,15 +992,11 @@ const approvePost = async (req, res) => {
       )
       return res.respond(feedUpdate)
     }
-
     const feedUpdate = await feedMongoModel.findOneAndUpdate(
       { _id: req.body?.id },
-      {
-        ...req.body
-      },
+      { ...req.body },
       { new: true }
     )
-
     const data = await handleDataBeforeReturn(feedUpdate)
     if (data) {
       sendNotificationApprovePost(
@@ -1011,9 +1005,27 @@ const approvePost = async (req, res) => {
         data?.created_by?.id,
         req.__user
       )
+
+      if (data?.approve_status === "approved") {
+        const NOT_notification = infoWorkSpace.notification.map((i) => {
+          if (i.status === false) {
+            return parseInt(i.id_user)
+          }
+        })
+        // add created_by
+        NOT_notification.push(parseInt(data?.created_by?.id))
+        // add id approval
+        NOT_notification.push(parseInt(req.__user))
+
+        const members = infoWorkSpace.members.map((i) => parseInt(i.id_user))
+        const idSendNotification = members.filter(
+          (i) => !NOT_notification.includes(i)
+        )
+        sendNotificationNewPost(infoWorkSpace, data, idSendNotification)
+      }
     }
     return res.respond(feedUpdate)
-  } catch {
+  } catch (err) {
     return res.fail(err.message)
   }
 }

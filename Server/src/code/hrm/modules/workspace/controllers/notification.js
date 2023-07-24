@@ -108,10 +108,36 @@ const sendNotificationUnseenPost = async (sender, receivers, link) => {
     }
   )
 }
+
+const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
+  const body =
+    "<strong>" +
+    feed?.created_by?.full_name +
+    "</strong> posted a new post in workgroup <strong>" +
+    infoWorkspace?.name +
+    "</strong>"
+
+  const link = "workspace/" + infoWorkspace?.id + "?tab=feed"
+
+  await sendNotification(
+    feed?.created_by?.id,
+    receivers,
+    {
+      title: "",
+      body: body,
+      link: link
+    },
+    {
+      skipUrls: ""
+    }
+  )
+}
+
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
   sendNotificationPostPending,
   sendNotificationRequestJoin,
-  sendNotificationUnseenPost
+  sendNotificationUnseenPost,
+  sendNotificationNewPost
 }

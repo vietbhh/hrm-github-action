@@ -355,8 +355,10 @@ const WorkspaceHeader = (props) => {
       setState({ selectAdmin: true })
       return
     }
+    if (adminArr.includes(userId)) {
+      adminArr.splice(indexOfAdmin, 1)
+    }
 
-    adminArr.splice(indexOfAdmin, 1)
     infoWorkspace.administrators = JSON.stringify(adminArr)
 
     const memberArr = [...infoWorkspace.members].filter((itemFilter) => {

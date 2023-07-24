@@ -17,7 +17,7 @@ import {
   Spinner
 } from "reactstrap"
 const findNotifi = (arr, iduser) => {
-  const index = arr.findIndex((p) => p.id_user === iduser)
+  const index = arr.findIndex((p) => parseInt(p.id_user) === parseInt(iduser))
   if (arr[index]) return arr[index].status
   return true
 }
@@ -30,9 +30,16 @@ const SetupNotificationModal = (props) => {
   const onSubmit = (values) => {
     setState({ loading: true })
     const dataSave = { _id: dataWorkspace._id }
-    const arrNotifi = dataWorkspace.notification
+    const arrNotifi = [...dataWorkspace.notification]
+    const arrId = arrNotifi.map((i) => parseInt(i.id_user))
 
-    arrNotifi.push({ id_user: userId, status: values.notification })
+    if (arrId.includes(userId)) {
+      const index = arrNotifi.findIndex((i) => parseInt(i.id_user) === userId)
+      arrNotifi[index] = { id_user: userId, status: values.notification }
+      dataWorkspace.notification[index].status = values.notification
+    } else {
+      arrNotifi.push({ id_user: userId, status: values.notification })
+    }
     dataSave.notification = JSON.stringify(arrNotifi)
 
     workspaceApi.update(dataWorkspace._id, dataSave).then((res) => {
