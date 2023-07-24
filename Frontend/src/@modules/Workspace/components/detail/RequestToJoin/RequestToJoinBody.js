@@ -28,6 +28,7 @@ const RequestToJoinBody = (props) => {
       [type]: true,
       is_all: false
     }
+    console.log("values", values)
 
     workspaceApi
       .update(id, values)
@@ -124,9 +125,14 @@ const RequestToJoinBody = (props) => {
                     <div>
                       <p className="mb-0 full-name">{item.full_name}</p>
                       <small className="requested-time">
-                        {useFormatMessage("modules.workspace.text.requested_on", {
-                          date: moment(item.requested_at).format("dddd, DD MMM Y")
-                        })}
+                        {useFormatMessage(
+                          "modules.workspace.text.requested_on",
+                          {
+                            date: moment(item.requested_at).format(
+                              "dddd, DD MMM Y"
+                            )
+                          }
+                        )}
                       </small>
                     </div>
                   </div>

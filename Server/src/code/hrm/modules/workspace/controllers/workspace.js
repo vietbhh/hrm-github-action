@@ -11,7 +11,12 @@ import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { handleDataLoadFeed } from "../../feed/controllers/feed.js"
 import { handleAddNewGroupToFireStore } from "#app/libraries/chat/Chat.js"
-
+import {
+  sendNotificationRequestJoin,
+  sendNotificationApproveJoin,
+  sendNotificationApprovePost,
+  sendNotificationNewPost
+} from "./notification.js"
 const saveWorkspace = async (req, res, next) => {
   const dataSave = {
     name: req.body.workspace_name,
@@ -115,7 +120,7 @@ const addMemberByDepartment = async (req, res) => {
   const dataSave = { ...req.body }
   // const infoWS = await workspaceMongoModel.findById(dataSave._id)
   if (dataSave.departments) {
-    console.log("data", JSON.parse(dataSave.departments))
+    //console.log("data", JSON.parse(dataSave.departments))
   }
 
   return 1
@@ -251,7 +256,6 @@ const getListWorkspace = async (req, res, next) => {
       total_page: Math.ceil(totalWorkspace.length / limit)
     })
   } catch (err) {
-    console.log("errerr", err)
     return res.fail(err.message)
   }
 }
@@ -393,7 +397,6 @@ const updateWorkspace = async (req, res, next) => {
     if (workspaceInfo === null) {
       res.failNotFound("work_space_not_found")
     }
-
     let workSpaceUpdate = {}
     let returnCurrentPageForPagination = ""
     let returnNewWorkspaceAfterUpdate = false
@@ -409,10 +412,33 @@ const updateWorkspace = async (req, res, next) => {
       returnCurrentPageForPagination = "members"
     } else if (requestData.hasOwnProperty("approve_join_request")) {
       workSpaceUpdate = _handleApproveJoinRequest(workspaceInfo, requestData)
+      let receivers = requestData.member_id
+      if (requestData.is_all === true || requestData.is_all === "true") {
+        const request_joins = workspaceInfo.request_joins
+        receivers = request_joins.map((x) => x["id_user"])
+      }
+      sendNotificationApproveJoin(
+        workspaceInfo,
+        "Approved",
+        receivers,
+        req.__user
+      )
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("decline_join_request")) {
       workSpaceUpdate = handleDeclineJoinRequest(workspaceInfo, requestData)
+      let receivers = requestData.member_id
+      if (requestData.is_all === true || requestData.is_all === "true") {
+        const request_joins = workspaceInfo.request_joins
+        receivers = request_joins.map((x) => x["id_user"])
+      }
+      sendNotificationApproveJoin(
+        workspaceInfo,
+        "Declined",
+        receivers,
+        req.__user
+      )
+
       returnCurrentPageForPagination =
         requestData.is_all === false ? "request_join" : ""
     } else if (requestData.hasOwnProperty("add_new_group")) {
@@ -510,37 +536,20 @@ const updateWorkspace = async (req, res, next) => {
 
           return item
         })
-        const memberInfo = await getUser(
-          updateData.request_joins[updateData.request_joins.length - 1]
-        )
-        // sent a request to join the workspace
-        if (updateData?.membership_approval === "approver") {
-          let body =
-            "<strong>" + memberInfo?.dataValues?.full_name + "</strong>"
-          if (updateData.request_joins.length >= 2) {
-            body += " and " + (updateData.request_joins.length - 1) + " others"
-          }
-          body +=
-            " sent a request to join workspace <strong>" +
-            updateData?.name +
-            "</strong>"
 
-          const link = "workspace/" + workspaceId + "/pending-posts"
-          await sendNotification(
-            1,
-            updateData?.administrators,
-            {
-              title: "",
-              body: body,
-              link: link
-            },
-            {
-              skipUrls: ""
-            }
-          )
+        // sent a request to join the workspace
+        if (updateData?.membership_approval !== "auto") {
+          updateData.id = workspaceId
+          sendNotificationRequestJoin(updateData)
+          delete updateData.id
         }
       }
-
+      if (requestData?.notification) {
+        updateData.notification =
+          typeof requestData.notification === "string"
+            ? JSON.parse(requestData.notification)
+            : requestData.notification
+      }
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceId
@@ -973,39 +982,50 @@ const approvePost = async (req, res) => {
     const idWorkspace = req.body.idWorkspace
     delete req.body.idWorkspace
     const infoWorkSpace = await workspaceMongoModel.findById(idWorkspace)
+    if (req.body?.all) {
+      delete req.body.all
+      const feedUpdate = await feedMongoModel.updateMany(
+        { permission_ids: { $in: req.body?.id }, approve_status: "pending" },
+        {
+          ...req.body
+        }
+      )
+      return res.respond(feedUpdate)
+    }
     const feedUpdate = await feedMongoModel.findOneAndUpdate(
       { _id: req.body?.id },
-      {
-        ...req.body
-      },
+      { ...req.body },
       { new: true }
     )
     const data = await handleDataBeforeReturn(feedUpdate)
     if (data) {
-      const status =
-        data?.approve_status === "approved"
-          ? "has been approved"
-          : "has been rejected"
-      const full_name = data?.created_by?.full_name
-      const workspaceName = infoWorkSpace?.name
-      const body = "Post in <strong>" + workspaceName + "</strong> " + status
-      const link =
-        data?.approve_status === "approved" ? "workspace/" + idWorkspace : ""
-      await sendNotification(
-        1,
-        [data?.created_by?.id],
-        {
-          title: "",
-          body: body,
-          link: link
-        },
-        {
-          skipUrls: ""
-        }
+      sendNotificationApprovePost(
+        infoWorkSpace,
+        data?.approve_status,
+        data?.created_by?.id,
+        req.__user
       )
+
+      if (data?.approve_status === "approved") {
+        const NOT_notification = infoWorkSpace.notification.map((i) => {
+          if (i.status === false) {
+            return parseInt(i.id_user)
+          }
+        })
+        // add created_by
+        NOT_notification.push(parseInt(data?.created_by?.id))
+        // add id approval
+        NOT_notification.push(parseInt(req.__user))
+
+        const members = infoWorkSpace.members.map((i) => parseInt(i.id_user))
+        const idSendNotification = members.filter(
+          (i) => !NOT_notification.includes(i)
+        )
+        sendNotificationNewPost(infoWorkSpace, data, idSendNotification)
+      }
     }
     return res.respond(feedUpdate)
-  } catch {
+  } catch (err) {
     return res.fail(err.message)
   }
 }

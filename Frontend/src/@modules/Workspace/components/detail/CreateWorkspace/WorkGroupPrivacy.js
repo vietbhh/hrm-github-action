@@ -1,16 +1,23 @@
 // ** React Imports
-import { Fragment } from "react"
-import { useFormatMessage } from "@apps/utility/common"
-// ** Styles
-// ** Components
 import { ErpSelect } from "@apps/components/common/ErpField"
-
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { isFunction } from "lodash"
+import { Fragment, useEffect } from "react"
+const findKey = (arr = [], name) => {
+  if (!name) return 0
+  const index = arr.findIndex((p) => p.value === name)
+  return index
+}
 const WorkgroupPrivacy = (props) => {
   const {
     // ** props
-    methods
+    methods,
     // ** methods
+    onChange,
+    typdeDefault,
+    modeDefault
   } = props
+  const { setValue } = methods
 
   const workspace_type = [
     {
@@ -100,7 +107,32 @@ const WorkgroupPrivacy = (props) => {
     }
   ]
 
-  // ** render
+  const [state, setState] = useMergedState({
+    loading: false,
+    workspace_type: "",
+    workspace_mode: ""
+  })
+  useEffect(() => {
+    const data = {}
+    if (state.workspace_type) data.type = state.workspace_type
+    if (state.workspace_mode) data.mode = state.workspace_mode
+    if (isFunction(onChange)) onChange(data)
+  }, [state.workspace_type, state.workspace_mode])
+
+  useEffect(() => {
+    if (typdeDefault) {
+      setValue(
+        "workspace_type",
+        workspace_type[findKey(workspace_type, typdeDefault)]
+      )
+    }
+    if (modeDefault) {
+      setValue(
+        "workspace_mode",
+        workspace_mode[findKey(workspace_mode, modeDefault)]
+      )
+    }
+  }, [typdeDefault, modeDefault])
   return (
     <Fragment>
       <p className="mb-25 field-label">
@@ -113,9 +145,16 @@ const WorkgroupPrivacy = (props) => {
           useForm={methods}
           label={useFormatMessage("modules.workspace.fields.workspace_type")}
           options={workspace_type}
-          defaultValue={workspace_type[0]}
+          defaultValue={workspace_type[findKey(workspace_type, typdeDefault)]}
+          loading={state.loading}
           isClearable={false}
           isSearchable={false}
+          onChange={(e) => {
+            setValue("workspace_type", e)
+            setState({
+              workspace_type: e
+            })
+          }}
           formGroupClass="mb-75"
         />
         <ErpSelect
@@ -124,9 +163,15 @@ const WorkgroupPrivacy = (props) => {
           nolabel={true}
           label={useFormatMessage("modules.workspace.fields.workspace_mode")}
           options={workspace_mode}
-          defaultValue={workspace_mode[0]}
+          defaultValue={workspace_mode[findKey(workspace_mode, modeDefault)]}
           isClearable={false}
           isSearchable={false}
+          onChange={(e) => {
+            setValue("workspace_mode", e)
+            setState({
+              workspace_mode: e
+            })
+          }}
           formGroupClass="mb-50"
         />
       </div>

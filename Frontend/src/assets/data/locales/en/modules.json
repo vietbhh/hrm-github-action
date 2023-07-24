@@ -3980,6 +3980,8 @@
           "approvals": "Pending approvals",
           "request": "Member requests"
         },
+        "member_selected" : "{number} member selected",
+        "derpartment_selected" : "{number} derpartment selected",
         "waring_create_groupchat": {
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
@@ -4088,6 +4090,9 @@
         "handled_decline_join_request": "Declined",
         "write_something_about_your_group": "Write something about your group",
         "requested_on": "Requested on {date}",
+        "suggested" : "Suggested",
+        "derpartment" : "Derpartment",
+        "users" : "Users",
         "new_today": "new today"
       },
       "app_options": {

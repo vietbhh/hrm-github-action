@@ -2,16 +2,17 @@ import { ErpSelect, ErpSwitch } from "@apps/components/common/ErpField"
 import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useNavigate, useParams, Navigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody } from "reactstrap"
 import AvatarBox from "../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../common/api"
-import EditInformationModal from "../components/modals/EditInformationModal"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
-import { useSelector } from "react-redux"
-
+import EditInformationModal from "../components/modals/EditInformationModal"
+import WorkgroupPrivacy from "../components/detail/CreateWorkspace/WorkGroupPrivacy"
+import { isEmpty } from "lodash"
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -164,6 +165,7 @@ const SettingWorkspace = () => {
   })
   const { handleSubmit, formState, reset, watch } = methods
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
+
   const onSubmit = (values) => {
     workspaceApi.update(params.id, values).then((res) => {
       notification.showSuccess({
@@ -207,7 +209,11 @@ const SettingWorkspace = () => {
     })
     // path has been copied
   }
-
+  const changeTypeMode = (e) => {
+    if (!isEmpty(e)) {
+      onSubmit(e)
+    }
+  }
   const isAdmin = state.detailWorkspace?.administrators
     ? state.detailWorkspace?.administrators.includes(userId)
     : false
@@ -215,6 +221,7 @@ const SettingWorkspace = () => {
   if (!isAdmin && !state.loading) {
     return <Navigate to="/not-found" replace />
   }
+
   return (
     <WorkspaceSettingLayout>
       <div className="workspace-setting row">
@@ -224,7 +231,7 @@ const SettingWorkspace = () => {
               <span className="url_workspace">{Url_workspace}</span>
               <Button
                 color="success"
-                className="ms-auto btn-sm"
+                className="btn-blue ms-auto btn-sm"
                 onClick={() => handleCopyUrl()}>
                 {useFormatMessage("modules.workspace.buttons.copy")}{" "}
                 <svg
@@ -255,6 +262,7 @@ const SettingWorkspace = () => {
                 <div className="me-2 rounded-circle" style={{ width: "100px" }}>
                   <AvatarBox
                     currentAvatar={state.detailWorkspace?.avatar}
+                    loading={state.loading}
                     readOnly={true}
                   />
                 </div>
@@ -289,50 +297,17 @@ const SettingWorkspace = () => {
           </Card>
 
           <div className="title-setting">Group privacy</div>
-          <div className="">
+          <div className="create-workspace-form">
             <Card>
               <CardBody>
-                <FormProvider {...methods}>
-                  <h6>Setup group privacy</h6>
-                  <ErpSelect
-                    name="type"
-                    loading={state.loading}
-                    nolabel
-                    options={workspace_type}
-                    defaultValue={
-                      state.detailWorkspace?.type
-                        ? workspace_type[
-                            findKeyByValue(
-                              workspace_type,
-                              state.detailWorkspace?.type
-                            )
-                          ]
-                        : workspace_type[0]
-                    }
-                    isClearable={false}
-                    isSearchable={false}
-                    onChange={(e) => onSubmit({ type: e })}
+                <div className="pt-25 mb-1">
+                  <WorkgroupPrivacy
+                    methods={methods}
+                    onChange={changeTypeMode}
+                    typdeDefault={state.detailWorkspace?.type}
+                    modeDefault={state.detailWorkspace?.mode}
                   />
-                  <ErpSelect
-                    name="mode"
-                    loading={state.loading}
-                    nolabel
-                    options={workspace_mode}
-                    defaultValue={
-                      state.detailWorkspace?.mode
-                        ? workspace_mode[
-                            findKeyByValue(
-                              workspace_mode,
-                              state.detailWorkspace?.mode
-                            )
-                          ]
-                        : workspace_mode[0]
-                    }
-                    isClearable={false}
-                    isSearchable={false}
-                    onChange={(e) => onSubmit({ mode: e })}
-                  />
-                </FormProvider>
+                </div>
               </CardBody>
             </Card>
 
@@ -442,6 +417,7 @@ const SettingWorkspace = () => {
         modal={state.editModal}
         infoWorkspace={state.detailWorkspace}
         handleModal={handleEditInformation}
+        loadData={loadData}
       />
     </WorkspaceSettingLayout>
   )
