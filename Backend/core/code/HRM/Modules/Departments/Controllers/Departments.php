@@ -212,13 +212,14 @@ class Departments extends ErpController
 
 	public function update_employee_post()
 	{
-
+		helper('app_select_option');
 		$post = $this->request->getPost();
 		$modules = \Config\Services::modules('departments');
 		$model = $modules->model;
 		$model->setAllowedFields(['line_manager']);
 		$departmentId = $post['department_id'];
-		$department = $model->asArray()->find($departmentId);
+		$department = handleDataBeforeReturn($modules, $model->asArray()->find($departmentId));
+
 		$departmentFrom = $model->asArray()->find($post['department_from']);
 		if ($departmentFrom['line_manager'] == $post['id']) {
 			$dataUp = [
@@ -249,9 +250,9 @@ class Departments extends ErpController
 
 		$modules->setModule('employees');
 		$model = $modules->model;
-		$employee = $model->asArray()->find($post['id']);
+		$employee = handleDataBeforeReturn($modules, $model->asArray()->find($post['id']));
 
-		if ($employee['id'] == $department['line_manager']) {
+		if ($employee['id'] == $department['line_manager']['value']) {
 			return $this->fail('error_line_manager');
 		}
 
@@ -261,6 +262,36 @@ class Departments extends ErpController
 			'id' => $post['id']
 		];
 		\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $dataUp);
+
+		// histories
+		$modules->setModule('employees');
+		$modelEmployee = $modules->model;
+		$infoEmployee = handleDataBeforeReturn($modules, $modelEmployee->asArray()->find($post['id']));
+		$employment = [
+			'department' => $infoEmployee['department_id'],
+			'job_title_id' => $infoEmployee['job_title_id'],
+			'employee_type' => $infoEmployee['employee_type'],
+		];
+
+		$arrHistories = [
+			[
+				'employee' => $post['id'],
+				'type' => getOptionValue('employee_histories', 'type', 'update'),
+				'description' => 'changed@department_id@was_changed_from@ "' . $departmentFrom['name'] . '" @to@ "' . $department['name'] . '"',
+				'employment' => json_encode($employment),
+			],
+			[
+				'employee' => $post['id'],
+				'type' => getOptionValue('employee_histories', 'type', 'update'),
+				'description' => 'changed@line_manager@was_changed_from@ "' . $employee['line_manager']['full_name'] . '" @to@ "' . $department['line_manager']['full_name'] . '"',
+				'employment' => json_encode($employment),
+			]
+		];
+
+		$modules->setModule('employee_histories');
+		$model = $modules->model;
+		$model->setAllowedFields(["employee", "description", "employment", "owner", "created_by", "type"]);
+		$model->insertBatch($arrHistories);
 		return $this->respond(ACTION_SUCCESS);
 	}
 
@@ -280,34 +311,70 @@ class Departments extends ErpController
 		if ($parent) {
 			$db = \Config\Database::connect();
 			$builder = $db->table('m_employees');
+			$arrHistories = [];
 
 			if ($department['line_manager']) {
 				$line_manage = $builder->where('id', $department['line_manager'])->get()->getRowArray();
 				$idLineManagerNew = $this->getLineManager($line_manage);
+				$oldLineManager = handleDataBeforeReturn('employees', $builder->where('id', $department['line_manager'])->get()->getRowArray());
+
 				$data = [
 					'line_manager' => $idLineManagerNew,
 				];
 				$builder->where('id', $department['line_manager']);
 				$builder->update($data);
+
+				// histories
+				$newLineManager = $builder->where('id', $idLineManagerNew)->get()->getRowArray();
+
+				$employment = [
+					'department' => ['label' => $parent['name'], 'value' => $parent['id']],
+					'job_title_id' => $oldLineManager['job_title_id'],
+					'employee_type' => $oldLineManager['employee_type'],
+				];
+				$his['employee'] = $department['line_manager'];
+				$his['type'] = getOptionValue('employee_histories', 'type', 'update');
+				$his['description'] = 'changed@line_manager@was_changed_from@ "' . $oldLineManager['line_manager']['full_name'] . '" @to@ "' . $newLineManager['full_name'] . '"';
+				$his['employment'] = json_encode($employment);
+				$arrHistories[] = $his;
 			} else {
-				$arrEmployees = $builder->where('department_id', $post['id'])->get()->getResultArray();
+				$arrEmployees = handleDataBeforeReturn('employees', $builder->where('department_id', $post['id'])->get()->getResultArray(), true);
 				if ($arrEmployees) {
 					$idLineManager = !empty($parent['line_manager']) ? $parent['line_manager'] : $this->getLineManager($arrEmployees[0]);
-					$arrUpdate = [];
+					$oldLineManage = $arrEmployees[0]['line_manager']['full_name'];
+					$newLineManager = $builder->where('id', $idLineManager)->get()->getRowArray();
 					foreach ($arrEmployees as $key => $value) {
 						$arrUpdate[] = [
 							'id' => $value['id'],
 							'line_manager' => $idLineManager
 						];
+
+						$employment = [
+							'department' => ['label' => $parent['name'], 'value' => $parent['id']],
+							'job_title_id' => $value['job_title_id'],
+							'employee_type' => $value['employee_type'],
+						];
+						$his['employee'] = $value['id'];
+						$his['type'] = getOptionValue('employee_histories', 'type', 'update');
+						$his['description'] = 'changed@line_manager@was_changed_from@ "' . $oldLineManage . '" @to@ "' . $newLineManager['full_name'] . '"';
+						$his['employment'] = json_encode($employment);
+						$arrHistories[] = $his;
 					}
 					if ($arrUpdate) {
-
 						$builder->updateBatch($arrUpdate, 'id');
 					}
-				}
 
+				}
 			}
+			if ($arrHistories) {
+				$modules->setModule("employee_histories");
+				$model = $modules->model;
+				$model->setAllowedFields(["employee", "description", "employment", "owner", "created_by", "type"]);
+				$model->insertBatch($arrHistories);
+			}
+
 			if ($parent['parent'] == $post['id'] and $parent['parent'] != 0) {
+				$modules->setModule("departments");
 				$data = [
 					'parent' => $department['parent'],
 					'id' => $parent['id'],
