@@ -698,8 +698,18 @@ const loadDataMember = async (req, res, next) => {
               condition
             )
 
+      const result = administrators.map((item) => {
+        return {
+          id: item.dataValues.id,
+          full_name: item.dataValues.full_name,
+          username: item.dataValues.username,
+          email: item.dataValues.email,
+          phone: item.dataValues.phone
+        }
+      })
+      
       return res.respond({
-        administrators: administrators,
+        administrators: result,
         total_list_admin: allAdmin.length
       })
     } else if (req.query.load_list === "request_join") {
@@ -761,7 +771,13 @@ const loadDataMember = async (req, res, next) => {
 
 const handleMemberData = (listMember, workspaceMember) => {
   const newData = listMember.map((item) => {
-    const newItem = item.dataValues
+    const newItem = {
+      id: item.dataValues.id,
+      full_name: item.dataValues.full_name,
+      username: item.dataValues.username,
+      email: item.dataValues.email,
+      phone: item.dataValues.phone
+    }
     const [workspaceDataUser] = workspaceMember.filter((itemFilter) => {
       return parseInt(itemFilter.id_user) === parseInt(newItem.id)
     })

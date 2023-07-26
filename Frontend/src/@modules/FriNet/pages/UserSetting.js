@@ -1,22 +1,23 @@
-import AppSpinner from "@apps/components/spinner/AppSpinner"
-import { useMergedState } from "@apps/utility/common"
-import { getTabId } from "@modules/FriNet/common/common"
-import { Skeleton } from "antd"
+// ** React Imports
 import { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
+import { useMergedState } from "@apps/utility/common"
+import { useSelector } from "react-redux"
+import { userApi } from "../common/api"
+// ** Styles
+import { Skeleton } from "antd"
 import "../assets/scss/user.scss"
 import "@modules/FriNet/assets/scss/timeline.scss"
-import { userApi } from "../common/api"
+// ** Components
 import PageHeader from "../components/User/PageHeader/PageHeader"
-import PageBody from "../components/User/PageBody/PageBody"
 import Introduction from "../components/User/Introduction/Introduction"
+import AppSpinner from "@apps/components/spinner/AppSpinner"
 
-const User = () => {
+const UserSetting = (props) => {
+  const {} = props
+
   const [state, setState] = useMergedState({
     loading: true,
-    isSettingProfile: false,
-    isOwner: false,
     employeeData: {}
   })
 
@@ -41,6 +42,10 @@ const User = () => {
     await userApi
       .getUser(identity)
       .then((res) => {
+        if (parseInt(res.data.id) !== parseInt(userAuth.id) && !res.data.is_admin_group) {
+          navigate("/not-found")
+        }
+
         setState({
           employeeData: res.data,
           loading: false
@@ -61,7 +66,6 @@ const User = () => {
   }, [])
 
   // ** render
-
   const renderComponent = () => {
     if (state.loading) {
       return (
@@ -79,14 +83,17 @@ const User = () => {
       <div className="user-profile-page">
         <PageHeader
           identity={identity}
+          isSettingPage={true}
           employeeData={state.employeeData}
           userAuth={userAuth}
         />
-        <PageBody
-          identity={identity}
-          employeeData={state.employeeData}
-          userAuth={userAuth}
-        />
+        <div className="mt-2 custom-introduction">
+          <Introduction
+            employeeData={state.employeeData}
+            loadData={loadData}
+            isProfile={true}
+          />
+        </div>
       </div>
     )
   }
@@ -94,4 +101,4 @@ const User = () => {
   return <Fragment>{renderComponent()}</Fragment>
 }
 
-export default User
+export default UserSetting

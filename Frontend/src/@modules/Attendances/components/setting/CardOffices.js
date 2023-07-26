@@ -100,7 +100,7 @@ const CardOffices = (props) => {
               {useFormatMessage("modules.attendance_setting.fields.radius")}
             </div>
             <div>
-              {item.radius ? useFormatMessage(item.radius?.label) : "-"}
+              {item.radius?.label !== undefined ? useFormatMessage(item.radius?.label) : "-"}
             </div>
           </div>
           <div className="info-row">

@@ -90,10 +90,10 @@ $btn-background-color: #377dff;
       margin-top: 10px;
 
       .div-item-badge {
-        border: 1px solid rgb(233, 234, 236);
+        //border: 1px solid rgb(233, 234, 236);
         border-radius: 8px;
         width: 135px;
-        min-height: 170px;
+        min-height: 130px;
         display: flex;
         align-items: center;
         padding-bottom: 5px;
@@ -107,10 +107,10 @@ $btn-background-color: #377dff;
 
           .div-img {
             position: relative;
-            box-shadow: 0px 8px 16px rgba(47, 49, 54, 0.1);
+            //box-shadow: 0px 8px 16px rgba(47, 49, 54, 0.1);
             width: 65px;
             height: 65px;
-            border-radius: 50%;
+            //border-radius: 50%;
 
             img {
               object-fit: cover;
@@ -127,16 +127,17 @@ $btn-background-color: #377dff;
             text-overflow: ellipsis;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            font-size: 14px;
-            font-weight: 400;
+            font-size: 10px;
+            font-weight: 500;
             line-height: 20px;
             margin-top: 20px;
+            color: #32434F;
           }
 
           .div-count {
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px solid rgb(233, 234, 236);
+            //border-top: 1px solid rgb(233, 234, 236);
             width: 100%;
             display: flex;
             justify-content: center;

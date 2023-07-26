@@ -1,13 +1,25 @@
-import { useMergedState } from "@apps/utility/common"
+import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import { FieldHandle } from "@apps/utility/FieldHandler"
 import classNames from "classnames"
 import React, { Fragment } from "react"
 import { useSelector } from "react-redux"
 import { Col, Row } from "reactstrap"
+import PickMap from "./PickMap"
+import { isJson } from "../../../common/common"
 
 const IntroductionForm = (props) => {
-  const { employeeData, arrField, options, methods, setValue } = props
+  const {
+    employeeData,
+    arrField,
+    options,
+    methods,
+    isEdit,
+    showMapAddress,
+    setValue,
+    setEmployeeAddress
+  } = props
   const dataUnit = useSelector((state) => state.app.unit)
+
   const [tempAddress, setTempAddress] = useMergedState({
     currentProvince: 0,
     currentDistrict: 0,
@@ -59,6 +71,42 @@ const IntroductionForm = (props) => {
     }
   }
 
+  const renderMap = (fieldProps) => {
+    if (showMapAddress === false) {
+      return ""
+    }
+
+    return (
+      <Row className="mb-1 pick-map">
+        <Col sm={3}>
+          <label className="col-form-label form-label">
+            {useFormatMessage(
+              `modules.employees.fields.${fieldProps.fieldData.field}`
+            )}
+          </label>
+        </Col>
+        <Col sm={9}>
+          <PickMap
+            fieldProps={fieldProps}
+            setEmployeeAddress={setEmployeeAddress}
+          />
+        </Col>
+      </Row>
+    )
+  }
+
+  const renderField = (fieldProps) => {
+    if (isEdit === false) {
+      return <FieldHandle {...fieldProps} />
+    }
+
+    if (showMapAddress === true) {
+      return <Fragment>{renderMap(fieldProps)}</Fragment>
+    }
+
+    return <FieldHandle {...fieldProps} />
+  }
+
   return (
     <Row>
       {_.map(arrField, (field, key) => {
@@ -71,7 +119,16 @@ const IntroductionForm = (props) => {
           updateDataId: employeeData?.id,
           labelInline: true,
           inlineClassLabel: "col-md-3",
-          inlineClassInput: "col-md-9"
+          inlineClassInput: "col-md-9",
+          readOnly: !isEdit
+        }
+
+        if (field.field === "temp_address" || field.field === "per_address") {
+          const valueAddress = isJson(employeeData?.[field.field])
+            ? JSON.parse(employeeData?.[field.field])["address"]
+            : employeeData?.[field.field]
+          fieldProps["updateData"] = valueAddress
+          fieldProps["json"] = employeeData?.[field.field]
         }
 
         if (field.field === "temp_province" || field.field === "per_province") {
@@ -159,9 +216,9 @@ const IntroductionForm = (props) => {
             <Col
               md={12}
               className={classNames(``, {
-                "height-55": field.field_type !== "textarea"
+                "height-55": false
               })}>
-              <FieldHandle {...fieldProps} />
+              <Fragment>{renderField(fieldProps)}</Fragment>
             </Col>
           </Fragment>
         )
