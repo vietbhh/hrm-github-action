@@ -33,6 +33,13 @@ class General extends ErpController
 			$model = $model->whereNotIn('id', $data['excepts']);
 		}
 
+
+		if (isset($data['filters']['whereIN']) && !empty($data['filters']['whereIN'])) {
+			foreach ($data['filters']['whereIN'] as $key => $val):
+				$model = $model->whereIn($key, $val);
+				unset($data['filters']['whereIN']);
+			endforeach;
+		}
 		$result = loadData($model, $data, ['email', 'username', 'full_name', 'phone']);
 
 		$module->setModule('users');

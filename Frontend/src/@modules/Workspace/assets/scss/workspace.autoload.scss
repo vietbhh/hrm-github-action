@@ -47,7 +47,7 @@
     height: 450px !important;
 
     .custom-secondary {
-      height: 32px;
+      height: 36px;
       background-color: #f5f6f8 !important;
       border-radius: 8px !important;
     }
@@ -80,9 +80,9 @@
           font-weight: 600;
         }
 
-        .custom-secondary {
+        .btn-chat {
           height: 36px;
-          width: 36px !important;
+          width: 36px!important;
         }
       }
     }
@@ -107,6 +107,9 @@
         width: 40px !important;
         padding: unset !important;
       }
+    }
+    .cameraBtn{
+      cursor: pointer;
     }
   }
 
@@ -640,11 +643,16 @@
   .title {
     color: #32434f;
     font-size: 14px;
-    font-family: "Be Vietnam Pro";
     font-style: normal;
     font-weight: 500;
-    line-height: 29px;
   }
+  .sub-email{
+    font-size: 10px;
+  }
+}
+.selected_member{
+  background-color: #f5f7f9;
+  border: 1px solid #FFE658 !important;
 }
 .setup-notification-workspace-modal {
   .content-notification-setup {
@@ -700,20 +708,19 @@
   }
   .workspace_name {
     color: #32434f;
-    font-family: "Be Vietnam Pro";
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 40px;
   }
-  .workspace_infomation {
-    color: #32434f;
-    font-family: "Be Vietnam Pro";
+  .workspace_infomation{
+    color: #32434F;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
     letter-spacing: 0.1px;
+    align-items: center;
     .employeeAvatar {
       img {
         border-radius: 50%;
@@ -771,6 +778,7 @@
     color: #32434f !important;
     border-radius: 10px;
   }
+  
 }
 
 .list-workspace-page {
@@ -1512,7 +1520,17 @@
     }
   }
 }
-
+.btn-blue{
+  border-radius: 7px;
+  background: #3F8CFF !important;
+  border-color: #3F8CFF !important;
+  &:hover:not(.disabled):not(:disabled) {
+    box-shadow: 0 8px 25px -8px #3F8CFF !important;
+  }
+  &:active{
+    background-color: #3F8CFF !important;
+}
+}
 @media (max-width: 1920px) {
   .separate-sidebar-layout .app-content .content-wrapper .tab-pane .div-content {
     gap: 0px !important;
@@ -1529,4 +1547,8 @@
       }
     }
   }
+}
+
+.create-workspace-form .text-label {
+  padding-left: 1rem ;
 }

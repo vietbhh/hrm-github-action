@@ -1,8 +1,7 @@
-import { ErpCheckbox, ErpRadio } from "@apps/components/common/ErpField"
-import UserDisplay from "@apps/components/users/UserDisplay"
+import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
-import EmployeesSelect from "@/components/hrm/Employees/EmployeesSelect"
+import { Alert } from "antd"
 import React, { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
@@ -16,7 +15,6 @@ import {
   Row,
   Spinner
 } from "reactstrap"
-import { Alert } from "antd"
 const SelectAdminModal = (props) => {
   const { modal, handleModal, members, handleDone } = props
   const [state, setState] = useMergedState({
@@ -37,21 +35,66 @@ const SelectAdminModal = (props) => {
 
   const handleAdd = () => {
     handleDone(state.admins)
+    handleModal()
   }
 
-  const handleSelect = (arr) => {
+  const loadData = () => {
+    setState({
+      loading: true
+    })
+    const arrIdUser = members ? members.map((e) => e["id_user"]) : []
+    defaultModuleApi
+      .getUsers({ perPage: 1000, filters: { ["whereIN"]: { id: arrIdUser } } })
+      .then((res) => {
+        setState({
+          members: res.data.results,
+          loading: false
+        })
+      })
+  }
+
+  const handleSelected = (itemSelect) => {
+    const arr = [...state.admins]
+    const index = arr.findIndex((p) => p.id === itemSelect.id)
+    if (index >= 0) {
+      arr.splice(index, 1)
+    } else {
+      arr.push(itemSelect)
+    }
     setState({ admins: arr })
   }
 
-  useEffect(() => {}, [members])
+  useEffect(() => {
+    loadData()
+  }, [])
 
+  const renderUser = (data) => {
+    const arrAD = state.admins.map((e) => e["id"])
+    return data.map((item, key) => {
+      return (
+        <Col sm={4} key={key} className="mb-1">
+          <div
+            className={`box-member d-flex ${
+              arrAD.includes(item.id) ? "selected_member" : ""
+            } `}
+            onClick={() => handleSelected(item)}>
+            <Avatar src={item.avatar} className="me-50" width={"100px"} />
+            <div>
+              <div className="title">{item.full_name}</div>
+              <span className="sub-email">{item?.email}</span>
+            </div>
+          </div>
+        </Col>
+      )
+    })
+  }
   return (
     <Modal
       isOpen={modal}
       style={{ top: "100px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
-      className="invite-workspace-modal"
+      className="invite-workspace--off"
       size="lg"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
@@ -59,7 +102,7 @@ const SelectAdminModal = (props) => {
       <FormProvider {...methods}>
         <ModalBody>
           <Row className="mt-1">
-            <Col className="text-left mb-1">
+            <Col className="text-left mb-1" sm={12}>
               <Alert
                 description={
                   <>
@@ -72,31 +115,32 @@ const SelectAdminModal = (props) => {
                 type="error"
               />
             </Col>
-            <Col sm={12}>
-              <EmployeesSelect
-                handleSelect={handleSelect}
-                tabShow={["members"]}
-              />
-            </Col>
+            {renderUser(state.members)}
           </Row>
         </ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalFooter>
-            <Button
-              type="button"
-              onClick={() => handleAdd()}
-              color="primary"
-              disabled={state.loading}
-              className="ms-auto mr-2">
-              {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              {useFormatMessage("button.done")}
-            </Button>
-            <Button
-              className="btn-cancel"
-              color="flat-danger"
-              onClick={() => handleModal(false)}>
-              {useFormatMessage("button.cancel")}
-            </Button>
+            <div className="ms-auto">
+              {state.admins.length > 0 && (
+                <Button
+                  type="button"
+                  onClick={() => handleAdd()}
+                  color="primary"
+                  disabled={state.loading}
+                  className="ms-auto mr-2">
+                  {state.loading && (
+                    <Spinner size="sm" className="mr-50 mr-1" />
+                  )}
+                  {useFormatMessage("button.save")}
+                </Button>
+              )}
+              <Button
+                className="btn-cancel ms-1"
+                color="flat-danger"
+                onClick={() => handleModal(false)}>
+                {useFormatMessage("button.cancel")}
+              </Button>
+            </div>
           </ModalFooter>
         </form>
       </FormProvider>

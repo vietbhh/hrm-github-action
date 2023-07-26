@@ -34,6 +34,10 @@ import { handleGetAnnouncementById } from "./announcement.js"
 import { handleGetEventById } from "./event.js"
 import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
+import {
+  sendNotificationPostPending,
+  sendNotificationUnseenPost
+} from "../../workspace/controllers/notification.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -152,6 +156,9 @@ const submitPostController = async (req, res, next) => {
       const saveFeedParent = await feedModelParent.save()
       _id_parent = saveFeedParent._id
       out = saveFeedParent
+      if (workspace_type === "workspace" && body.approveStatus === "pending") {
+        sendNotificationPostPending(dataInsert, body.data_user)
+      }
     } else {
       _id_parent = _id_post_edit
       data_feed_old = await feedMongoModel.findById(_id_parent)
@@ -745,7 +752,7 @@ const sendNotificationUnseen = async (req, res, next) => {
         )
         const members = []
         forEach(dataWorkspace.members, (item) => {
-          members.push(item.toString())
+          members.push(item.id_user)
         })
         receivers = members.filter((x) => !seen.includes(x))
       }
@@ -754,20 +761,7 @@ const sendNotificationUnseen = async (req, res, next) => {
     }
 
     if (!isEmpty(receivers)) {
-      sendNotification(
-        req.__user,
-        receivers,
-        {
-          title: "",
-          body: "{{modules.network.notification.notification_unseen}}",
-          link: `/posts/${post_id}`
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
-      )
+      sendNotificationUnseenPost(req.__user, receivers, `/posts/${post_id}`)
     }
 
     return res.respond("success")
