@@ -76,12 +76,28 @@ class Events
 				$metas = $modules->getMetas();
 				$model = $modules->model;
 				$employee = $model->asArray()->find($employeeId);
+				$employeeHandle = handleDataBeforeReturn($modules, $employee);
+				$employment['department'] = $employeeHandle['department_id'];
+				$employment['job_title_id'] = $employeeHandle['job_title_id'];
+				$employment['employee_type'] = $employeeHandle['employee_type'];
+
+
 				foreach ($metas as $item_meta) {
 					$field = $item_meta->field;
 					if (isset($dataEmployee[$field])) {
 						$check_date = strpos($field, 'date');
 						$old_data = $employee[$field] ?? "";
 						$new_data = $dataEmployee[$field] ?? "";
+
+						if ($field === 'department_id') {
+							$employment['department']['value'] = $new_data;
+						}
+						if ($field === 'job_title_id') {
+							$employment['job_title_id']['value'] = $new_data;
+						}
+						if ($field === 'employee_type') {
+							$employment['employee_type']['value'] = $new_data;
+						}
 						if ($check_date !== false) {
 							$old_data = $old_data == "0000-00-00" ? "" : $old_data;
 							$new_data = $new_data == "0000-00-00" ? "" : $new_data;
@@ -111,11 +127,21 @@ class Events
 								$old_data = $data_option[$old_data] ?? "";
 								$new_data = $data_option[$new_data] ?? "";
 							}
+							if ($field === 'department_id') {
+								$employment['department']['label'] = $new_data;
+							}
+							if ($field === 'job_title_id') {
+								$employment['job_title_id']['label'] = $new_data;
+							}
+							if ($field === 'employee_type') {
+								$employment['employee_type']['label'] = $new_data;
+							}
 
 							$dataInsert[] = [
 								'field' => $field,
 								'from' => $old_data,
-								'to' => $new_data
+								'to' => $new_data,
+								'employment' => json_encode($employment)
 							];
 						}
 					}
@@ -191,10 +217,18 @@ class Events
 		$model = $modules->model;
 		$model->setAllowedFields(['department_id', 'line_manager', 'id']);
 		$dataSave['line_manager'] = $idParentUpdate;
+		$params['dataEmployeeHistory'] = [
+			'employeeId' => $dataSave['id'],
+			'typeCreate' => 'changed',
+			'dataEmployee' => [
+				'line_manager' => $idParentUpdate,
+				'id' => $dataSave['id']
+			]
+		];
+		$this->onUpdateEmployeeEvent($params);
 
 		$model->save($dataSave);
 	}
-
 
 
 	private function find_parents(array $dataDepartments, $idParent)

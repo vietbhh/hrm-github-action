@@ -141,17 +141,14 @@ class Departments extends ErpController
 			$modules->setModule('employees');
 			$employeeModel = $modules->model;
 			$arrEmployees = $employeeModel->asArray()->whereIn('department_id', $idDepNoLineManager)->findAll();
-			$arrUpdate = [];
 			if ($arrEmployees) {
-				$idLineManager = !empty($dataHandle['data']['line_manager']) ? $dataHandle['data']['line_manager'] : $this->getLineManager($arrEmployees[0]);
-
 				foreach ($arrEmployees as $key => $value) {
-					$arrUpdate[] = [
+					$updateLineManage = [
 						'id' => $value['id'],
-						'line_manager' => $idLineManager
+						'department_id' => $value['department_id']
 					];
+					\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $updateLineManage);
 				}
-				$builder->updateBatch($arrUpdate, 'id');
 			}
 
 			// update line manager for line manager childs
@@ -167,17 +164,14 @@ class Departments extends ErpController
 				array_push($arrHaveLineManager, ...$merge);
 			}
 			$idEmployeesManager = array_column($arrHaveLineManager, 'line_manager');
-			$arrUpdate = [];
 			foreach ($idEmployeesManager as $value) {
-				$arrUpdate[] = [
+				$arrUpdate = [
 					'id' => $value,
-					'line_manager' => $dataHandle['data']['line_manager']
+					'department_id' => $dataHandle['data']['id']
 				];
-			}
-			if ($arrUpdate) {
-				$builder->updateBatch($arrUpdate, 'id');
-			}
+				\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $arrUpdate);
 
+			}
 
 		}
 		if (isset($dataHandle['data']['line_manager']) && $dataHandle['data']['line_manager']) {
@@ -212,13 +206,14 @@ class Departments extends ErpController
 
 	public function update_employee_post()
 	{
-
+		helper('app_select_option');
 		$post = $this->request->getPost();
 		$modules = \Config\Services::modules('departments');
 		$model = $modules->model;
 		$model->setAllowedFields(['line_manager']);
 		$departmentId = $post['department_id'];
-		$department = $model->asArray()->find($departmentId);
+		$department = handleDataBeforeReturn($modules, $model->asArray()->find($departmentId));
+
 		$departmentFrom = $model->asArray()->find($post['department_from']);
 		if ($departmentFrom['line_manager'] == $post['id']) {
 			$dataUp = [
@@ -234,33 +229,46 @@ class Departments extends ErpController
 			$modules->setModule('employees');
 			$modelEmployee = $modules->model;
 			$arrEmployees = $modelEmployee->asArray()->where('department_id', $post['department_from'])->findAll();
-			$arrUpdate = [];
 			if ($arrEmployees) {
-				$idLineManager = $this->getLineManager($arrEmployees[0]);
+				//$idLineManager = $this->getLineManager($arrEmployees[0]);
 				foreach ($arrEmployees as $key => $value) {
-					$arrUpdate[] = [
-						'id' => $value['id'],
-						'line_manager' => $idLineManager
+					$dataUpdateEmployee = [
+						'department_id' => $post['department_from'],
+						'id' => $value['id']
 					];
+					\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $dataUpdateEmployee);
+
 				}
-				$builder->updateBatch($arrUpdate, 'id');
 			}
 		}
 
 		$modules->setModule('employees');
 		$model = $modules->model;
-		$employee = $model->asArray()->find($post['id']);
+		$employee = handleDataBeforeReturn($modules, $model->asArray()->find($post['id']));
 
-		if ($employee['id'] == $department['line_manager']) {
+		if ($department['line_manager'] && $employee['id'] == $department['line_manager']['value']) {
 			return $this->fail('error_line_manager');
 		}
 
 		$model->setAllowedFields(["department_id", "line_manager"]);
-		$dataUp = [
+		$dataUpdateEmployee = [
 			'department_id' => $departmentId,
 			'id' => $post['id']
 		];
-		\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $dataUp);
+
+		//new histories
+		$params['dataSaveEmployee'] = [
+			'department_id' => $departmentId,
+			'id' => $post['id']
+		];
+		$params['dataEmployeeHistory'] = [
+			'employeeId' => $post['id'],
+			'typeCreate' => 'changed',
+			'dataEmployee' => $dataUpdateEmployee
+		];
+
+		\CodeIgniter\Events\Events::trigger('on_update_employee_event', $params);
+		\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $dataUpdateEmployee);
 		return $this->respond(ACTION_SUCCESS);
 	}
 
@@ -282,32 +290,28 @@ class Departments extends ErpController
 			$builder = $db->table('m_employees');
 
 			if ($department['line_manager']) {
-				$line_manage = $builder->where('id', $department['line_manager'])->get()->getRowArray();
-				$idLineManagerNew = $this->getLineManager($line_manage);
-				$data = [
-					'line_manager' => $idLineManagerNew,
+				// histories
+				$dataUpdateEmployee = [
+					'department_id' => $department['id'],
+					'id' => $department['line_manager']
 				];
-				$builder->where('id', $department['line_manager']);
-				$builder->update($data);
+				\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $dataUpdateEmployee);
 			} else {
-				$arrEmployees = $builder->where('department_id', $post['id'])->get()->getResultArray();
+				$arrEmployees = handleDataBeforeReturn('employees', $builder->where('department_id', $post['id'])->get()->getResultArray(), true);
 				if ($arrEmployees) {
-					$idLineManager = !empty($parent['line_manager']) ? $parent['line_manager'] : $this->getLineManager($arrEmployees[0]);
-					$arrUpdate = [];
 					foreach ($arrEmployees as $key => $value) {
-						$arrUpdate[] = [
-							'id' => $value['id'],
-							'line_manager' => $idLineManager
+						$dataUpdateEmployee = [
+							'department_id' => $department['id'],
+							'id' => $value['id']
 						];
-					}
-					if ($arrUpdate) {
+						\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $dataUpdateEmployee);
 
-						$builder->updateBatch($arrUpdate, 'id');
 					}
 				}
-
 			}
+
 			if ($parent['parent'] == $post['id'] and $parent['parent'] != 0) {
+				$modules->setModule("departments");
 				$data = [
 					'parent' => $department['parent'],
 					'id' => $parent['id'],
