@@ -14,6 +14,8 @@ import badge13 from "../assets/images/badge/badge13.png"
 import badge14 from "../assets/images/badge/badge14.png"
 import badge15 from "../assets/images/badge/badge15.png"
 import badge16 from "../assets/images/badge/badge16.png"
+import { useFormatMessage } from "@apps/utility/common"
+import { isEmpty } from "lodash"
 
 export const getTabId = (tabText) => {
   if (tabText === "timeline" || tabText === undefined) {
@@ -52,4 +54,35 @@ export const listBadge = {
 
 export const getBadgeFromKey = (key) => {
   return listBadge?.[key] || ""
+}
+
+export const convertNumberOfDays = (numDay) => {
+  if (numDay === null || numDay === undefined) {
+    return ""
+  }
+
+  if (numDay === 0) {
+    return useFormatMessage("modules.employees.text.few_while_ago")
+  }
+  
+  if (numDay < 30) {
+    return numDay + " " + useFormatMessage("common.days")
+  }
+
+  const month = numDay / 30
+  if (month < 12) {
+    return Math.floor(month) + " " + useFormatMessage("common.months")
+  }
+
+  const year = month / 12
+  return Math.floor(year) + " " + useFormatMessage("common.years")
+}
+
+export const isJson = (str) => {
+  try {
+      JSON.parse(str);
+  } catch (e) {
+      return false;
+  }
+  return true;
 }

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { Card, CardBody } from "reactstrap"
 
 const TimelineEndorsement = (props) => {
-  const { employeeId, employeeData } = props
+  const { employeeId, employeeData, showViewAll = true, showCount = true } = props
   const [state, setState] = useMergedState({
     dataEndorsement: [],
     countEndorsement: 0
@@ -54,16 +54,16 @@ const TimelineEndorsement = (props) => {
   return (
     <Fragment>
       <div className="timeline__endorsement">
-        <Card>
+        <Card className="mb-1">
           <CardBody>
             <div className="div-header">
               <div className="div-header-left">
-                <span className="title">
+                <span className="title common-card-title">
                   {useFormatMessage("modules.timeline.text.endorsement")}
                 </span>
-                <span className="count">{state.countEndorsement}</span>
+                <span className="count">{showCount && state.countEndorsement}</span>
               </div>
-              {employeeData?.username && (
+              {employeeData?.username && showViewAll ? (
                 <div className="div-header-right">
                   <Link
                     to={`/u/${employeeData?.username}/achievement`}
@@ -71,6 +71,8 @@ const TimelineEndorsement = (props) => {
                     {useFormatMessage("modules.timeline.text.view_all")}
                   </Link>
                 </div>
+              ) : (
+                ""
               )}
             </div>
             <div className="div-body">
@@ -89,11 +91,9 @@ const TimelineEndorsement = (props) => {
                           }
                         />
                       </div>
-                      <div className="div-text">{item.badge_name}</div>
-                      <div className="div-count">
-                        <div className="div-number">
-                          <span className="number">{item.count}</span>
-                        </div>
+                      <div className="div-text">
+                        {item.badge_name}{" "}
+                        <span className="number">({item.count})</span>
                       </div>
                     </div>
                   </div>

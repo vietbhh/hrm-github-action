@@ -144,6 +144,7 @@ const Introduction = (props) => {
               icon={<i className="fa-solid fa-location-dot"></i>}
               permits={permits.address}
               options={employeesModule.options}
+              showMapAddress={true}
               loadData={loadData}
             />
           )}

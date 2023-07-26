@@ -573,7 +573,8 @@
         "offboarding": "Offboarding",
         "cancel_offboarding": "Cancel Offboarding",
         "rehire": "Rehire",
-        "delete": "Delete employee"
+        "delete": "Delete employee",
+        "copy": "Copy"
       },
       "org_chart": {
         "title": "Organizational Chart"
@@ -916,7 +917,17 @@
         "additional_information": "Additional Information",
         "about_me_description": "Write something about you!",
         "empty_about_me": "No about content!",
-        "employment_history": "Employment history"
+        "employment_history": "Employment history",
+        "location": "Location",
+        "social": "Social",
+        "create_skill": "Create skill",
+        "few_while_ago": "Few while ago",
+        "profile_setting": "Profile setting",
+        "profile": "Profile",
+        "empty_skill": "No skill found!",
+        "empty_endorsement": "No endorsement found!",
+        "empty_workspace": "No workspace found!",
+        "empty_employment": "No employment found!"
       },
       "list_employee": {
         "overview": {

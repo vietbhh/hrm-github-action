@@ -722,7 +722,7 @@ const WorkspaceHeader = (props) => {
                       menu={{ items: renderDropMenu(data) }}
                       placement="bottomRight"
                       trigger={["click"]}
-                      overlayClassName="worspace-dropdown-common">
+                      overlayClassName="workspace-dropdown-common workspace-header-dropdown">
                       <Button className="btn-sm custom-secondary">
                         <i className="fas fa-ellipsis"></i>
                       </Button>

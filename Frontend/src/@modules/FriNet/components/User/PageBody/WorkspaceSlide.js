@@ -59,6 +59,10 @@ const WorkspaceSlide = (props) => {
       return ""
     }
 
+    if (state.data.length === 0) {
+      return ""
+    }
+
     return (
       <div className="mb-1 workspace-slide-section">
         <div className="workspace-list workspace-manage-list">
@@ -68,7 +72,7 @@ const WorkspaceSlide = (props) => {
             pagination={{
               clickable: true
             }}
-            loop={true}
+            //loop={true}
             navigation={true}
             breakpoints={{
               640: {
