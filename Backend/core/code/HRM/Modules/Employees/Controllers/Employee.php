@@ -283,12 +283,13 @@ class Employee extends ErpController
 				'typeCreate' => 'changed',
 				'dataEmployee' => $saveEmployee
 			];
-			if (!empty($saveEmployee['department_id'])) {
-				\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $saveEmployee);
-			}
 
 			\CodeIgniter\Events\Events::trigger('on_update_employee_event', $dataEmployee);
 			$this->model->save($saveEmployee);
+
+			if (!empty($saveEmployee['department_id'])) {
+				\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $saveEmployee);
+			}
 		} catch (\ReflectionException $e) {
 			return false;
 		}

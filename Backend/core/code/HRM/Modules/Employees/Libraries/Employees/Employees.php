@@ -42,10 +42,12 @@ class Employees
 				$field = $this->_handleCheckEmpty($item['field']);
 				$from = $this->_handleCheckEmpty($item['from']);
 				$to = $this->_handleCheckEmpty($item['to']);
+				$employment = isset($item['employment']) ? $item['employment'] : "";
 				$data[] = [
 					'employee' => $employeeId,
 					'description' => "changed@$field@was_changed_from@ \"$from\" @to@ \"$to\"",
 					'type' => isset($arrTypeValue[$field]) ? $arrTypeValue[$field] : $typeOptionUpdate,
+					'employment' => $employment,
 					'owner' => empty(user_id()) ? 1 : user_id(),
 					'created_by' => empty(user_id()) ? 1 : user_id(),
 				];
@@ -71,7 +73,7 @@ class Employees
 		if (!empty($data)) {
 			$modules = \Config\Services::modules("employee_histories");
 			$model = $modules->model;
-			$model->setAllowedFields(["employee", "description", "owner", "created_by", "type"]);
+			$model->setAllowedFields(["employee", "description", "owner", "created_by", "type", "employment"]);
 			$model->insertBatch($data);
 		}
 	}
@@ -128,7 +130,7 @@ class Employees
 			$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month'));
 			$currentDate = date('Y-m-d');
 		} else {
-			$firstDayOfCurrentMonth = date( $filterMonth . '-01');
+			$firstDayOfCurrentMonth = date($filterMonth . '-01');
 			$lastDayOfCurrentMonth = date($filterMonth . '-t');
 			$firstDayOfLastMonth = date('Y-m-01', strtotime('-1 month', strtotime(date($filterMonth . '-01'))));
 			$lastDayOfLastMonth = date('Y-m-t', strtotime('-1 month', strtotime(date($filterMonth . '-t'))));
@@ -167,7 +169,7 @@ class Employees
 			->countAllResults();
 
 		$result['total_employee_rate'] = $this->_getRate($totalEmployeeLastMonth, $totalEmployeeCurrentMonth);
-		$result['total_employee_grow'] =  $result['total_employee_rate'] >= 0;
+		$result['total_employee_grow'] = $result['total_employee_rate'] >= 0;
 
 		// ** new employee
 		$result['new_employee_number'] = $modelEmployee->whereNotIn('status', [
@@ -187,7 +189,7 @@ class Employees
 			->countAllResults();
 
 		$result['new_employee_rate'] = $this->_getRate($newEmployeeLastThirtyDate, $result['new_employee_number']);
-		$result['new_employee_grow'] =  $result['new_employee_rate'] >= 0;
+		$result['new_employee_grow'] = $result['new_employee_rate'] >= 0;
 
 
 		$modulesEmployeeHistory = \Config\Services::modules('employee_histories');
