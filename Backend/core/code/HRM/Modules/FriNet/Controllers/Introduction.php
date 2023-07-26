@@ -24,7 +24,7 @@ class Introduction extends ErpController
 			if (
 				$item->field_enable && !empty($item->field_options) &&
 				(
-					(isset($item->field_options['settingMember']) && $item->field_options['settingMember']) ||
+					(isset($item->field_options['settingMember']) && $item->field_options['settingMember'] == 1) ||
 					!isset($item->field_options['settingMember'])
 				) &&
 				isset($item->field_options['form']['tabId'])

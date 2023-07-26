@@ -62,7 +62,7 @@ const WorkspaceItem = (props) => {
             <div className="mb-1">
               <p className="mb-50 text-color-title">{infoWorkspace.name}</p>
               <small>
-                {infoWorkspace.type} - {addComma(infoWorkspace.member_number)}{" "}
+                {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
                 {infoWorkspace.member_number === 1
                   ? useFormatMessage("modules.workspace.display.member")
                   : useFormatMessage("modules.workspace.display.members")}
@@ -90,7 +90,7 @@ const WorkspaceItem = (props) => {
               <div className="mb-25">
                 <p className="mb-0 text-color-title">{infoWorkspace.name}</p>
                 <small>
-                  {infoWorkspace.type} - {addComma(infoWorkspace.member_number)}{" "}
+                  {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
                   {infoWorkspace.member_number === 1
                     ? useFormatMessage("modules.workspace.display.member")
                     : useFormatMessage("modules.workspace.display.members")}

@@ -6,6 +6,8 @@ import AboutMe from "./AboutMe"
 import Skill from "./Skill/Skill"
 import WorkspaceSlide from "./WorkspaceSlide"
 import EmploymentHistory from "./EmploymentHistory/EmploymentHistory"
+import ContactInfo from "./ContactInfo"
+import LinkInfo from "./LinkInfo"
 
 const PageBody = (props) => {
   const {
@@ -32,7 +34,11 @@ const PageBody = (props) => {
             <TimelineEndorsement
               employeeId={employeeData?.id}
               employeeData={employeeData}
+              showViewAll={false}
+              showCount={false}
             />
+            <ContactInfo employeeData={employeeData} />
+            <LinkInfo employeeData={employeeData} />
           </div>
         </div>
       </div>

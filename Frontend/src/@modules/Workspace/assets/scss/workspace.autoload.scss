@@ -1442,7 +1442,7 @@
   }
 }
 
-.worspace-dropdown-common {
+.workspace-dropdown-common {
   .w-85 {
     width: 90% !important;
   }
@@ -1450,14 +1450,21 @@
   .ant-dropdown-menu {
     border-radius: 10px !important;
     padding: 0px;
-    padding-top: 10px;
+    
 
     .ant-dropdown-menu-item {
       height: 46px !important;
       font-size: 12px;
       font-weight: 400;
       color: #32434f;
+    }
+  }
+}
 
+.workspace-header-dropdown {
+  .ant-dropdown-menu {
+    padding-top: 10px;
+    .ant-dropdown-menu-item {
       &:last-child {
         border-top: 1px solid #f1f1f5;
       }
@@ -1474,9 +1481,21 @@
 }
 
 .workspace-manage-list {
+  .text-color-title {
+    color: #32434f;
+    font-weight: 600;
+  }
+
   .workspace-item {
     border: 1px solid #f1f1f5;
 
+    .content-container {
+      small {
+        font-size: 12px;
+        font-weight: 400;
+        color: #92929d;
+      }
+    }
     .image-container {
       height: 110px;
 

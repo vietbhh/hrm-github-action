@@ -45,7 +45,7 @@ const AboutMe = (props) => {
   useEffect(() => {
     if (document.getElementById(`about-me-section`)) {
       const height = document.getElementById(`about-me-section`).offsetHeight
-      if (height > 200) {
+      if (height > 240) {
         setState({ showSeeMore: true })
       }
     }
@@ -71,11 +71,11 @@ const AboutMe = (props) => {
                     e.preventDefault()
                     setState({ seeMore: !state.seeMore })
                   }}>
-                  <span className="mb-0 blue-text">
+                  <p className="mb-0 pt-50 blue-text">
                     {state.seeMore === false
                       ? useFormatMessage("modules.feed.post.text.see_more")
                       : useFormatMessage("modules.feed.post.text.hide")}
-                  </span>
+                  </p>
                 </a>
               )}
             </p>

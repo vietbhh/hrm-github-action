@@ -1,7 +1,6 @@
 // ** React Imports
 import { useEffect, useState } from "react"
 import { useFormatMessage } from "@apps/utility/common"
-import { workspaceApi } from "@modules/Workspace/common/api"
 import { FormProvider, useForm } from "react-hook-form"
 // ** Styles
 import { Row, Col, Button } from "reactstrap"

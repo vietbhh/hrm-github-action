@@ -19,10 +19,28 @@ class User extends ErpController
 			return $this->failNotFound(NOT_FOUND);
 		}
 
+		$modulesEmployeeHistory = \Config\Services::modules('employee_histories');
+		$modelEmployeeHistory = $modulesEmployeeHistory->model;
+		$listEmployeeHistory = $modelEmployeeHistory->asArray()
+			->where('employee', $data['id'])
+			->where('employment !=', null)
+			->orderBy('created_at', 'DESC')
+			->findAll();
+		$arrEmployeeHistory = [];
+		foreach ($listEmployeeHistory as $key => $row) {
+			$arrEmployeeHistory[] = [
+				'id' => $row['id'],
+				'created_at' => $row['created_at'],
+				'employment' => json_decode($row['employment'], true)
+			];
+		}
+
 		$result = handleDataBeforeReturn($modules, $data);
 		$result['avatar'] = $data['avatar'];
 		$result['cover_image'] = $data['cover_image'];
 		$result['is_profile'] = user_id() == $result['id'];
+		$result['employee_history'] = $arrEmployeeHistory;
+		$result['is_admin_group'] = isSuperpower();
 		return $this->respond($result);
 	}
 

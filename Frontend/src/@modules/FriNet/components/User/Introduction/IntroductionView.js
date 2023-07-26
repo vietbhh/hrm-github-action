@@ -16,16 +16,27 @@ const IntroductionView = (props) => {
     icon,
     permits,
     options,
+    showMapAddress = false,
     loadData
   } = props
   const [state, setState] = useMergedState({
     edit: false,
-    loadingSubmit: false
+    loadingSubmit: false,
+    employeeAddress: {}
   })
   const methods = useForm({
     mode: "onSubmit"
   })
   const { handleSubmit, setValue } = methods
+
+  const setEmployeeAddress = (obj) => {
+    setState({
+      employeeAddress: {
+        ...state.employeeAddress,
+        ...obj
+      }
+    })
+  }
 
   // ** function
   const renderDataField = (field, type) => {
@@ -52,8 +63,17 @@ const IntroductionView = (props) => {
 
   const onSubmitFrm = (values) => {
     setState({ loadingSubmit: true })
+    const newAddress = {}
+    _.map(state.employeeAddress, (item, index) => {
+      newAddress[index] = JSON.stringify(item)
+    })
+    const submitValues = {
+      ...values,
+      ...newAddress
+    }
+
     employeesApi
-      .postUpdate(employeeData.id, values)
+      .postUpdate(employeeData.id, submitValues)
       .then(async (res) => {
         await loadData()
         notification.showSuccess({
@@ -71,7 +91,7 @@ const IntroductionView = (props) => {
 
   return (
     <div className="user-information">
-      <div className={`user__header border-left-${classColor}`}>
+      <div className={`ps-2 pt-1 user__header`}>
         <div className={`menu-icon ${classColor}`}>{icon}</div>
         <span className="title">{title}</span>
         {permits.update && (
@@ -81,8 +101,7 @@ const IntroductionView = (props) => {
                 type="button"
                 className="btn-edit"
                 onClick={() => setState({ edit: true })}>
-                <i className="fa-light fa-pencil me-50"></i>
-                {useFormatMessage("button.edit")}
+                {useFormatMessage("button.update")}
               </button>
             ) : (
               <form
@@ -110,41 +129,17 @@ const IntroductionView = (props) => {
           </div>
         )}
       </div>
-      <div className="user__body">
-        {!state.edit ? (
-          <Row>
-            {_.map(arrField, (field, index) => {
-              return (
-                <div
-                  key={index}
-                  className={classNames(`col-md-12`, {
-                    "height-55": field.field_type !== "textarea"
-                  })}>
-                  <div className="form-group row">
-                    <label className="col-form-label col-md-3 form-label">
-                      {useFormatMessage(
-                        `modules.employees.fields.${field.field}`
-                      )}
-                    </label>
-                    <div className="col-md-9">
-                      <span className="text">
-                        {renderDataField(field.field, field.field_type)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </Row>
-        ) : (
-          <IntroductionForm
-            employeeData={employeeData}
-            arrField={arrField}
-            options={options}
-            methods={methods}
-            setValue={setValue}
-          />
-        )}
+      <div className="p-4 pt-2 pb-3 w-75 user__body">
+        <IntroductionForm
+          employeeData={employeeData}
+          arrField={arrField}
+          options={options}
+          methods={methods}
+          isEdit={state.edit}
+          showMapAddress={showMapAddress}
+          setValue={setValue}
+          setEmployeeAddress={setEmployeeAddress}
+        />
       </div>
     </div>
   )
