@@ -70,8 +70,9 @@ class Events
 			$typeCreate = $dataEmployeeHistory['typeCreate'];
 			$dataEmployee = $dataEmployeeHistory['dataEmployee'];
 			$dataInsert = [];
+			$modules = \Config\Services::modules();
+
 			if ($typeCreate == 'changed') {
-				$modules = \Config\Services::modules();
 				$modules->setModule("employees");
 				$metas = $modules->getMetas();
 				$model = $modules->model;
@@ -141,7 +142,7 @@ class Events
 								'field' => $field,
 								'from' => $old_data,
 								'to' => $new_data,
-								'employment' => json_encode($employment)
+								'employment' => ($field === 'department_id' || $field === 'job_title_id' || $field === 'employee_type') ? json_encode($employment) : ""
 							];
 						}
 					}
@@ -167,10 +168,19 @@ class Events
 
 				$department = empty($dataEmployee['department_id']) ? "" : $dataEmployee['department_id'];
 				$job_title = empty($dataEmployee['job_title_id']) ? "" : $dataEmployee['job_title_id'];
+
+				$modules->setModule("employees");
+				$model = $modules->model;
+				$employee = $model->asArray()->find($employeeId);
+				$employeeHandle = handleDataBeforeReturn($modules, $employee);
+				$employment['department'] = $employeeHandle['department_id'];
+				$employment['job_title_id'] = $employeeHandle['job_title_id'];
+				$employment['employee_type'] = $employeeHandle['employee_type'];
 				$dataInsert[] = [
 					'department' => $arr_department[$department] ?? "",
 					'job_title' => $arr_job_title[$job_title] ?? "",
 					'date' => empty($dataEmployee['date']) ? date("Y-m-d") : $dataEmployee['date'],
+					'employment' => json_encode($employment),
 				];
 			}
 

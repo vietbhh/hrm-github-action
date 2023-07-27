@@ -53,6 +53,11 @@ const CoverEditor = (props) => {
     }
   }
 
+  const handleCancel = () => {
+    setState({
+      editing: false
+    })
+  }
   useEffect(() => {
     setState({
       loading: true
@@ -135,22 +140,27 @@ const CoverEditor = (props) => {
               />
             </>
           )}
-        </div>
-        {state.editing && (
-          <div className="text-end mt-50">
-            <Button className="ms-auto" size="sm" color="secondary">
-              {useFormatMessage("button.cancel")}
-            </Button>
 
-            <Button
-              className="ms-50 me-1"
-              size="sm"
-              color="primary"
-              onClick={() => handleSave()}>
-              {useFormatMessage("button.save")}
-            </Button>
-          </div>
-        )}
+          {state.editing && (
+            <div className="btn-edit-cover text-end mt-50">
+              <Button
+                className="ms-auto"
+                size="sm"
+                color="secondary"
+                onClick={() => handleCancel()}>
+                {useFormatMessage("button.cancel")}
+              </Button>
+
+              <Button
+                className="ms-50 me-1"
+                size="sm"
+                color="primary"
+                onClick={() => handleSave()}>
+                {useFormatMessage("button.save")}
+              </Button>
+            </div>
+          )}
+        </div>
       </Fragment>
     )
 }

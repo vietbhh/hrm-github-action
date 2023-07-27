@@ -176,6 +176,7 @@ class Employee extends ErpController
 		$modules = \Config\Services::modules();
 
 		$getPost = $data;
+
 		$modules->setModule('users');
 		$dataHandleUser = handleDataBeforeSave($modules, $getPost);
 		if (!empty($dataHandleUser['validate'])) {
@@ -183,9 +184,12 @@ class Employee extends ErpController
 				throw new Exception(json_encode($validation->getErrors()));
 			}
 		}
+
+
 		$modules->setModule('employees');
 		$model = $modules->model;
 		$dataHandleEmployee = handleDataBeforeSave($modules, $getPost);
+
 
 		if (!empty($dataHandleEmployee['validate'])) {
 			if (!$validation->reset()->setRules($dataHandleEmployee['validate'])->run($dataHandleEmployee['data'])) {

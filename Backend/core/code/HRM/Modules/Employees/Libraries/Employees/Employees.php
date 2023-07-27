@@ -60,10 +60,12 @@ class Employees
 				$department = $this->_handleCheckEmpty($item['department']);
 				$job_title = $this->_handleCheckEmpty($item['job_title']);
 				$date = $this->_handleCheckEmpty($item['date']);
+				$employment = isset($item['employment']) ? $item['employment'] : "";
 				$data[] = [
 					'employee' => $employeeId,
 					'description' => "joining@ \"$department\" @as_a(n)@ \"$job_title\" @at@ \"$app_name\" @on@ \"$date\"",
 					'type' => $typeOptionJoin,
+					'employment' => $employment,
 					'owner' => empty(user_id()) ? 1 : user_id(),
 					'created_by' => empty(user_id()) ? 1 : user_id(),
 				];
