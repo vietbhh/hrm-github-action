@@ -89,6 +89,12 @@
 
     .image-cover {
       height: 320px !important;
+      .ant-image{
+        height: 320px;
+      }
+      .workspaceCover {
+        height: 100%;
+      }
     }
 
     .nav-tab-custom {
