@@ -1,5 +1,5 @@
 import { forEach } from "lodash-es"
-
+import dayjs from "dayjs"
 export const isUndefined = (value) => value === undefined
 
 export const isNull = (value) => value === null
@@ -131,6 +131,17 @@ export const valuesToErpSelect = (obj, keyArray) => {
   return obj
 }
 
+const objIsDayjs = (obj) => {
+  if (dayjs.isDayjs(obj)) return true
+  if (
+    typeof obj.format === "function" &&
+    typeof obj.date === "function" &&
+    typeof obj.isAfter === "function"
+  )
+    return true
+  return false
+}
+
 export const serialize = (obj, cfg, fd, pre) => {
   cfg = cfg || {}
 
@@ -177,13 +188,16 @@ export const serialize = (obj, cfg, fd, pre) => {
     }
   } else if (isDate(obj)) {
     fd.append(pre, obj.toISOString())
+  } else if (isObject(obj) && objIsDayjs(obj)) {
+    fd.append(pre, obj.format("YYYY-MM-DD HH:mm"))
   } else if (isObject(obj) && obj.hasOwnProperty("_isAMomentObject")) {
     fd.append(pre, obj.format("YYYY-MM-DD HH:mm"))
   } else if (
     isObject(obj) &&
     !isFile(obj) &&
     !isBlob(obj) &&
-    !obj.hasOwnProperty("_isAMomentObject")
+    !obj.hasOwnProperty("_isAMomentObject") &&
+    !objIsDayjs(obj)
   ) {
     obj = cfg.erpSelectToValues ? erpSelectToValues(obj) : obj
     if (!isObject(obj)) serialize(obj, cfg, fd, pre)

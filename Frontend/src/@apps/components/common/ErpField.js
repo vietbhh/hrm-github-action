@@ -9,13 +9,13 @@ import "@core/scss/react/libs/flatpickr/flatpickr.scss"
 import { Checkbox, DatePicker, Image, Radio, Skeleton, TimePicker } from "antd"
 import classnames from "classnames"
 import Cleave from "cleave.js/react"
+import dayjs from "dayjs"
 import "flatpickr/dist/themes/light.css"
 import { isArray, isEmpty, isFunction, isObject, map } from "lodash"
 import { isUndefined } from "lodash-es"
-import moment from "moment"
 import PropTypes from "prop-types"
 import React, { Fragment, useEffect, useState } from "react"
-import { Camera, Eye, EyeOff, Paperclip, RefreshCw, X } from "react-feather"
+import { Camera, Paperclip, RefreshCw, X } from "react-feather"
 import { Controller } from "react-hook-form"
 import Select, { components } from "react-select"
 import { AsyncPaginate, withAsyncPaginate } from "react-select-async-paginate"
@@ -30,8 +30,8 @@ import {
   Label
 } from "reactstrap"
 import { Tooltip, Whisper } from "rsuite"
-import CustomInput from "./custominput/CustomInput"
 import Editor from "./Editor"
+import CustomInput from "./custominput/CustomInput"
 const commonPropsType = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string,
@@ -535,9 +535,7 @@ export const ErpDate = (props) => {
       ? {}
       : {
           defaultValue:
-            type === "time"
-              ? moment(defaultValue, "HH:mm")
-              : moment(defaultValue)
+            type === "time" ? dayjs(defaultValue, "HH:mm") : dayjs(defaultValue)
         }
   const defaultProps = {
     name,
