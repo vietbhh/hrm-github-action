@@ -508,10 +508,10 @@
     "@babel/plugin-transform-react-jsx-development" "^7.18.6"
     "@babel/plugin-transform-react-pure-annotations" "^7.18.6"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.16.7", "@babel/runtime@^7.18.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.1", "@babel/runtime@^7.20.13", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0":
-  version "7.22.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.5.tgz#8564dd588182ce0047d55d7a75e93921107b57ec"
-  integrity sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.20.1":
+  version "7.22.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.6.tgz#57d64b9ae3cff1d67eb067ae117dac087f5bd438"
+  integrity sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==
   dependencies:
     regenerator-runtime "^0.13.11"
 
@@ -521,6 +521,13 @@
   integrity sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==
   dependencies:
     regenerator-runtime "^0.13.10"
+
+"@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.16.7", "@babel/runtime@^7.18.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.13", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0":
+  version "7.22.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.5.tgz#8564dd588182ce0047d55d7a75e93921107b57ec"
+  integrity sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==
+  dependencies:
+    regenerator-runtime "^0.13.11"
 
 "@babel/template@^7.18.10":
   version "7.18.10"
@@ -2131,10 +2138,15 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.190.tgz"
   integrity sha512-5iJ3FBJBvQHQ8sFhEhJfjUP+G+LalhavTkYyrAYqz5MEJG+erSv0k9KJLb6q7++17Lafk1scaTIFXcMJlwK8Mw==
 
-"@types/lodash@^4.14.181", "@types/lodash@^4.14.184":
+"@types/lodash@^4.14.181":
   version "4.14.195"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.195.tgz#bafc975b252eb6cea78882ce8a7b6bf22a6de632"
   integrity sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==
+
+"@types/lodash@^4.14.184":
+  version "4.14.196"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.196.tgz#a7c3d6fc52d8d71328b764e28e080b4169ec7a95"
+  integrity sha512-22y3o88f4a94mKljsZcanlNWPzO0uBsBdzLAngf2tp533LzZcQzb6+eZPJ+vCTt+bqF2XnvT9gejTLsAcJAJyQ==
 
 "@types/long@^4.0.0", "@types/long@^4.0.1":
   version "4.0.2"
@@ -9936,10 +9948,10 @@ router@^1.3.1:
     setprototypeof "1.2.0"
     utils-merge "1.0.1"
 
-rsuite-table@^5.10.6:
-  version "5.10.6"
-  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-5.10.6.tgz#bfbd38f82c2ab154dd543f8e983564260704ff43"
-  integrity sha512-S/WfBO0sFwh4wCPziaZ7ksejHBtsY9BZq143nC9hNTEGGX9B1mY9xptDH/xzBemqtjlPLaNVAdV15j5oulGXbg==
+rsuite-table@^5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-5.11.0.tgz#914ef63b09fe384d2e27fd2b4c261331155254f6"
+  integrity sha512-KDNcVdz7ROrAkDob/q5aUXcinhNIRCso+QeYFwzP8vvFFo8LebQ4S5JCPfCjI+Aw45ztUfWsd0tOEdusiIuxUg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@juggle/resize-observer" "^3.3.1"
@@ -9949,10 +9961,10 @@ rsuite-table@^5.10.6:
     lodash "^4.17.21"
     react-is "^17.0.2"
 
-rsuite@^5.35.1:
-  version "5.35.1"
-  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-5.35.1.tgz#2b052bbdf392360e538c40d80ca5a8115f0e7151"
-  integrity sha512-3Noc/pxnTODyCNrDJ0UQl77lHL0FIHAN8cHrBGhe16DJ+R76z3jZ7Lzkeb6TySMCXhUdGqBlCnfFll4o/0idzQ==
+rsuite@^5.37.2:
+  version "5.37.2"
+  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-5.37.2.tgz#de36ca5b4195121e9a80ea81837a9fa7248245fb"
+  integrity sha512-Z7I5RmZ0D0Zocb7/ndndhFXNoQH+vzcv3eZ4mpcf6AbpkrBSJgo0i4iEJSvF/hE8bU+d5Ztj4oYhDbdTmjxPpQ==
   dependencies:
     "@babel/runtime" "^7.20.1"
     "@juggle/resize-observer" "^3.4.0"
@@ -9968,7 +9980,7 @@ rsuite@^5.35.1:
     prop-types "^15.8.1"
     react-use-set "^1.0.0"
     react-window "^1.8.8"
-    rsuite-table "^5.10.6"
+    rsuite-table "^5.11.0"
     schema-typed "^2.1.3"
 
 rtlcss@2.5.0:
