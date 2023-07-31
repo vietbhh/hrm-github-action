@@ -95,9 +95,17 @@ class Calendars
 	public function list($filter)
 	{
 		$calendarTag = isset($filter['calendar_tag']) ? $filter['calendar_tag'] : [];
+		$createdAtFrom = isset($filter['created_at_from']) ? $filter['created_at_from'] : "";
+		$createdAtTo = isset($filter['created_at_to']) ? $filter['created_at_to'] : "";
 		$builder = $this->model;
 		if (count($calendarTag) > 0 && !in_array('all', $calendarTag)) {
 			$builder->whereIn('calendar_tag', $calendarTag);
+		}
+		if ($createdAtFrom !== '' && $createdAtTo) {
+			$builder->groupStart()
+				->where('start >=', $createdAtFrom)
+				->where('start <=', $createdAtTo)
+				->groupEnd();
 		}
 		return $builder->findAll();
 	}

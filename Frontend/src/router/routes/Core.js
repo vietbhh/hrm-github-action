@@ -271,10 +271,11 @@ const CoreRoutes = [
     path: "/calendar",
     element: <Calendar />,
     meta: {
-      layout: "empty",
+      layout: "calendar",
       action: "login",
       resource: "app",
-      className: "erp-fullWidth"
+      className: "erp-fullWidth chat-application",
+      appLayout: true
     }
   },
   {

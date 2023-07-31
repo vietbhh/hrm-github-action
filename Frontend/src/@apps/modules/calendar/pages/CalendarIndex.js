@@ -1,6 +1,6 @@
 // ** React Imports
 import { Fragment, useEffect } from "react"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useMergedState } from "@apps/utility/common"
 import { calendarApi } from "../common/api"
 import moment from "moment"
 // ** redux
@@ -11,13 +11,12 @@ import {
 } from "../common/reducer/calendar"
 import { useDispatch } from "react-redux"
 // ** Styles
-import { Card, CardBody, Row, Col } from "reactstrap"
-// ** Components
-import Breadcrumbs from "@apps/components/common/Breadcrumbs"
+// ** Components=
 import Sidebar from "../components/sidebar/Sidebar"
-import Calendar from "../components/calendar/Calendar"
+import CalendarForIndex from "../components/calendar/CalendarForIndex"
 import AddEventModal from "../components/modal/AddEventModal"
 import SyncGoogleCalendarInfo from "../components/calendar/SyncGoogleCalendarInfo"
+import ModalCreateEvent from "../components/modal/ModalCreateEvent"
 
 const CalendarIndex = (props) => {
   const [state, setState] = useMergedState({
@@ -33,7 +32,9 @@ const CalendarIndex = (props) => {
     },
     visibleAddEvent: false,
     calendarYear: moment().year(),
-    changeYearType: ""
+    changeYearType: "",
+    modal: false,
+    dataEventCreated: {}
   })
 
   const setFilter = (filter) => {
@@ -102,6 +103,12 @@ const CalendarIndex = (props) => {
       })
   }
 
+  const setDataEventCreated = (obj) => {
+    setState({
+      dataEventCreated: obj
+    })
+  }
+
   const loadCalendar = () => {
     setState({
       loadingCalendar: true
@@ -112,9 +119,9 @@ const CalendarIndex = (props) => {
         const data = res.data.results
         const newCalendar = data.map((item) => {
           let color =
-            state.calendarsColor[item.calendar_tag?.label] === undefined
+          item.color === null
               ? "all-day-event"
-              : state.calendarsColor[item.calendar_tag?.label]
+              : item.color
           if (item["is_dob"] !== undefined) {
             color = "danger"
           }
@@ -148,6 +155,17 @@ const CalendarIndex = (props) => {
       })
   }
 
+  const toggleModal = (status = "") => {
+    setState({
+      modal: status === "" ? !state.modal : status
+    })
+  }
+
+  const handleAfterCreateEvent = (dataNew = {}) => {
+    setDataEventCreated(dataNew)
+    loadCalendar()
+  }
+
   // ** effect
   useEffect(() => {
     loadCalendarTag()
@@ -168,71 +186,61 @@ const CalendarIndex = (props) => {
   }, [state.visibleAddEvent])
 
   // ** render
-  const renderBreadcrumb = () => {
-    return (
-      <Breadcrumbs
-        list={[{ title: useFormatMessage("modules.calendar.title.calendar") }]}
-      />
-    )
-  }
-
-  const renderSidebar = () => {
-    return (
-      <Sidebar
-        listCalendarTag={state.listCalendarTag}
-        listCalendar={state.listCalendar}
-        filters={state.filters}
-        calendarYear={state.calendarYear}
-        setFilter={setFilter}
-        handleShowAddEventModal={handleShowAddEventModal}
-        setListCalendar={setListCalendar}
-        setCalendarYear={setCalendarYear}
-        setChangeYearType={setChangeYearType}
-      />
-    )
-  }
-
-  const renderCalendar = () => {
-    return (
-      <Calendar
-        listCalendar={state.listCalendar}
-        changeYearType={state.changeYearType}
-        calendarYear={state.calendarYear}
-        handleShowAddEventModal={handleShowAddEventModal}
-        setCalendarYear={setCalendarYear}
-      />
-    )
-  }
-
   const renderSyncGoogleCalendarInfo = () => {
     return <SyncGoogleCalendarInfo syncGoogleInfo={state.syncGoogleInfo} />
   }
 
-  const renderAddEventModal = () => {
-    return (
-      <AddEventModal
-        handleHideAddEventModal={handleHideAddEventModal}
-        loadCalendar={loadCalendar}
-      />
-    )
+  const renderModalCreateEvent = () => {
+    if (state.modal) {
+      return (
+        <ModalCreateEvent
+          modal={state.modal}
+          toggleModal={toggleModal}
+          options_employee_department={[]}
+          optionsMeetingRoom={[]}
+          setDataCreateNew={undefined}
+          createEventApi={calendarApi.addCalendar}
+          afterCreate={handleAfterCreateEvent}
+        />
+      )
+    }
+
+    return ""
   }
 
   const renderComponent = () => {
     return (
       <Fragment>
-        {renderBreadcrumb()}
-        <Card className="calendar">
-          <CardBody>
-            <Row>
-              <Col sm={2} className="pe-25 mt-3">
-                <Fragment>{renderSidebar()}</Fragment>
-                <Fragment>{renderSyncGoogleCalendarInfo()}</Fragment>
-              </Col>
-              <Col sm={10}>{renderCalendar()}</Col>
-            </Row>
-          </CardBody>
-        </Card>
-        {renderAddEventModal()}
+        <div className="p-1 calendar-index-page">
+          <div className="d-flex align-items-start calendar-container">
+            <div className="pe-2 sidebar-section">
+              <Sidebar
+                listCalendarTag={state.listCalendarTag}
+                listCalendar={state.listCalendar}
+                filters={state.filters}
+                calendarYear={state.calendarYear}
+                dataEventCreated={state.dataEventCreated}
+                setFilter={setFilter}
+                handleShowAddEventModal={handleShowAddEventModal}
+                setListCalendar={setListCalendar}
+                setCalendarYear={setCalendarYear}
+                setChangeYearType={setChangeYearType}
+                toggleModal={toggleModal}
+                setDataEventCreated={setDataEventCreated}
+              />
+            </div>
+            <div className="calendar-section">
+              <CalendarForIndex
+                listCalendar={state.listCalendar}
+                changeYearType={state.changeYearType}
+                calendarYear={state.calendarYear}
+                handleShowAddEventModal={handleShowAddEventModal}
+                setCalendarYear={setCalendarYear}
+              />
+            </div>
+          </div>
+        </div>
+        <Fragment>{renderModalCreateEvent()}</Fragment>
       </Fragment>
     )
   }

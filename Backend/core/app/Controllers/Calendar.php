@@ -62,13 +62,26 @@ class Calendar extends ErpController
 	{
 		$getPost = $this->request->getPost();
 		$fileUpload = $this->request->getFiles();
+		$body = json_decode($getPost['body'], true);
+		$dataSave = [
+			'title' => $body['event_name'],
+			'start' => '2023-07-14 09:00:00',
+			'end' => '2023-07-14 11:00:00',
+			'allday' => 'false',
+			'description' => $body['details'],
+			'color' => str_replace('#', '', $body['color'])
+		];
 
-		$add = $this->calendar->add($getPost, $fileUpload);
+		$add = $this->calendar->add($dataSave, $fileUpload);
 
 		if (!$add) {
 			return $this->respond('exist');
 		}
-		return $this->respond($add);
+
+		$dataSave['id'] = $add;
+		return $this->respond([
+			'result' => $dataSave
+		]);
 	}
 
 	public function update_post($id)
@@ -114,6 +127,37 @@ class Calendar extends ErpController
 
 		return $this->respond([
 			'results' => $listCalendarTag
+		]);
+	}
+
+	public function get_list_event_get()
+	{
+		$modules = \Config\Services::modules('calendars');
+		$filter = $this->request->getGet();
+		$from = isset($filter['from']) ? $filter['from'] : date('Y-m-d');
+		$to = isset($filter['to']) ? $filter['to'] : date('Y-m-d', strtotime('+ 2 days', strtotime($from)));
+
+		$data = $this->calendar->list([
+			'created_at_from' => $from,
+			'created_at_to' => $to
+		]);
+
+		$data = handleDataBeforeReturn($modules, $data, true);
+		$result = [
+			'today' => [],
+			'tomorrow' => []
+		];
+		foreach ($data as $row) {
+			$startDate = date('Y-m-d', strtotime($row['start']));
+			if (strtotime($startDate) === strtotime($from)) {
+				$result['today'][] = $row;
+			} else {
+				$result['tomorrow'][] = $row;
+			}
+		}
+
+		return $this->respond([
+			'results' => $result
 		]);
 	}
 }

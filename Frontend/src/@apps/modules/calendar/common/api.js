@@ -1,5 +1,5 @@
 import { axiosApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
+import { serialize, object2QueryString } from "@apps/utility/handleData"
 import axios from "axios"
 
 export const calendarApi = {
@@ -32,5 +32,9 @@ export const calendarApi = {
   },
   async removeCalendar(id) {
     return await axiosApi.delete(`calendar/remove-calendar/${id}`)
+  },
+  async getListEvent(params = {}) {
+    const strParams = object2QueryString(params)
+    return await axiosApi.get(`calendar/get-list-event?${strParams}`)
   }
 }

@@ -1,83 +1,116 @@
 // ** React Imports
-import { Fragment } from "react"
-import { useFormatMessage } from "@apps/utility/common"
+import { Fragment, useEffect } from "react"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { calendarApi } from "../../common/api"
 // ** Styles
-import { CardBody, Button } from "reactstrap"
+import { Button } from "reactstrap"
 // ** Components
-import FilterCalendarTag from "./FilterCalendarTag"
+import CalendarPickerFilter from "./CalendarPickerFilter"
+import ListEvent from "./ListEvent"
+import moment from "moment"
+import PerfectScrollbar from "react-perfect-scrollbar"
 
 const Sidebar = (props) => {
   const {
     // ** props
-    listCalendarTag,
-    listCalendar,
-    calendarYear,
-    filters,
+    dataEventCreated,
     // ** methods
-    setFilter,
-    handleShowAddEventModal,
-    setListCalendar,
-    setCalendarYear,
-    setChangeYearType
+    toggleModal,
+    setDataEventCreated
   } = props
 
-  const handleAddEvent = () => {
-    handleShowAddEventModal({
-      calendarInfo: {},
-      viewOnly: false
+  const [state, setState] = useMergedState({
+    loading: true,
+    filter: {
+      from: moment().format("YYYY-MM-DD")
+    },
+    data: {}
+  })
+
+  const setFilter = (obj) => {
+    setState({
+      filter: {
+        ...state.filter,
+        ...obj
+      }
     })
   }
 
-  const handleIncreaseYear = () => {
-    const newCalendarYear = calendarYear + 1
-    setCalendarYear(newCalendarYear)
-    setChangeYearType("increase")
+  const handleClickNewEvent = () => {
+    toggleModal()
   }
 
-  const handleDecreaseYear = () => {
-    const newCalendarYear = calendarYear - 1
-    setCalendarYear(newCalendarYear)
-    setChangeYearType("decrease")
+  const loadData = () => {
+    setState({
+      loading: true
+    })
+
+    calendarApi
+      .getListEvent(state.filter)
+      .then((res) => {
+        setState({
+          data: res.data.results,
+          loading: false
+        })
+      })
+      .catch((err) => {
+        setState({
+          data: {},
+          loading: false
+        })
+      })
   }
+
+  // ** effect
+  useEffect(() => {
+    loadData()
+  }, [state.filter])
+
+  useEffect(() => {
+    if (Object.keys(dataEventCreated).length > 0) {
+      setFilter({
+        from: moment(dataEventCreated.start).format("YYYY-MM-DD")
+      })
+      setDataEventCreated({})
+    }
+  }, [dataEventCreated])
 
   // ** render
-  const renderFilterCalendarTag = () => {
-    return (
-      <FilterCalendarTag
-        listCalendarTag={listCalendarTag}
-        listCalendar={listCalendar}
-        filters={filters}
-        setFilter={setFilter}
-        setListCalendar={setListCalendar}
-      />
-    )
-  }
-
   return (
-    <Fragment>
-      <div className="calendar-sidebar mt-2">
-        <CardBody className="pb-0 mb-1 sidebar-header">
-          <div className="d-flex align-items-center mt-50">
-            <div className="">
-              <h1 className="mb-0 calendar-year ">{calendarYear}</h1>
-            </div>
-            <div className="d-flex flex-column">
-              <i
-                className="fas fa-chevron-up year-icon"
-                onClick={() => handleIncreaseYear()}
-              />
-              <i
-                className="fas fa-chevron-down year-icon"
-                onClick={() => handleDecreaseYear()}
-              />
-            </div>
+    <div className="pt-4 p-50 h-100 calendar-sidebar ">
+      <div className="w-100 h-100 d-flex justify-content-center">
+        <div className="w-90 ">
+          <div className="mb-2 pb-75 ps-75 pe-75">
+            <Button.Ripple
+              className="custom-button custom-primary btn-new-event"
+              onClick={() => handleClickNewEvent()}>
+              <i className="fas fa-plus me-75" />
+              {useFormatMessage("modules.calendar.buttons.new_event")}
+            </Button.Ripple>
           </div>
-        </CardBody>
-        <CardBody className="ps-25">
-          <div>{renderFilterCalendarTag()}</div>
-        </CardBody>
+          <div className="mb-2">
+            <CalendarPickerFilter filter={state.filter} setFilter={setFilter} />
+          </div>
+
+          <div className="list-event-section">
+            <PerfectScrollbar>
+              <ListEvent
+                type="today"
+                data={state.data}
+                filter={state.filter}
+                loading={state.loading}
+              />
+              <ListEvent
+                type="tomorrow"
+                data={state.data}
+                filter={state.filter}
+                loading={state.loading}
+              />
+            </PerfectScrollbar>
+          </div>
+        </div>
       </div>
-    </Fragment>
+    </div>
   )
 }
 
