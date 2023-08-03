@@ -180,6 +180,7 @@ const submitPostController = async (req, res, next) => {
     // send notification
     if (!is_edit && body.approveStatus === "approved") {
       const receivers = union(mention, tag)
+      console.log("receivers", receivers)
       const link_notification = `/posts/${_id_parent}`
       const userId = body.data_user.id
       const full_name = body.data_user.full_name

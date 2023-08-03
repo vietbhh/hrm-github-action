@@ -83,6 +83,7 @@
         .btn-chat {
           height: 36px;
           width: 36px!important;
+          background: #F0F3F6 !important;
         }
       }
     }
@@ -164,7 +165,7 @@
       font-style: normal;
       font-weight: 600;
       line-height: 20px;
-      padding: 8px 10px;
+      padding: 8px 12px;
     }
   }
   .workspaceCover {
@@ -608,6 +609,36 @@
     font-size: 16px;
     font-weight: 600;
   }
+  .bg-primary{
+    background: #FFE658 !important;
+  }
+  .border-primary{
+    border: 1px solid #FFE658 !important;
+  }
+  .modal-header{
+    border-bottom: 0.5px solid #E4E6E8D9 !important;
+  }
+  .btn-send-invite {
+    max-width: 440px ;
+    height: 46px;
+  }
+  .custom-checkbox .form-check-input:not(:checked){
+    background: none !important
+  }
+  .form-check-input:checked{
+    background-color: #FFE658;
+    border-color: #FFE658;
+  }
+  .form-check-input{
+    border: 2px solid #959596;
+  }
+  .btn-close{
+    box-shadow : none !important;
+    transform: none !important;
+  }
+  .btn-close:hover{
+    transform : none!important;
+  }
 }
 .invite-workspace-modal {
   .ant-tabs-tab-btn {
@@ -637,6 +668,8 @@
       background-color: antiquewhite;
     }
   }
+
+ 
 }
 .box-member {
   cursor: pointer;
@@ -663,19 +696,44 @@
 .setup-notification-workspace-modal {
   .content-notification-setup {
     cursor: pointer;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     .title {
-      color: rgb(26, 26, 26);
+      color: #32434F;
       font-size: 14px;
       line-height: 20px;
       font-weight: 600;
     }
     .sub-title {
-      color: rgb(128, 128, 128);
+      color: #32434F;
       font-weight: normal;
       font-size: 12px;
-      line-height: 16px;
+      font-weight: 400;
     }
+  }
+  .modal-header {
+    border-bottom: 0.5px solid #E4E6E8D9 !important;
+    .btn-close{
+      margin : 0 !important;
+      box-shadow : none !important;
+      transform : none !important;
+    }
+    .btn-close:hover{
+      transform : 0!important;
+    }
+    .modal-title{
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  .btn-save{
+    border-radius: 10px;
+    background: #FFE658 !important;
+    border: 1px solid #FFE658 !important;
+    height: 46px;
+    width: 440px;
+  }
+  .modal-content{
+    padding: 20px 20px !important;
   }
 }
 
@@ -711,6 +769,7 @@
     font-size: 12px;
     color: #0a090b;
     font-style: normal;
+    margin-left: 10px;
   }
   .workspace_name {
     color: #32434f;
@@ -727,8 +786,16 @@
     line-height: 20px;
     letter-spacing: 0.1px;
     align-items: center;
+    .workspace_introduction{
+      max-width: 380px;
+      max-height: 80px;
+      overflow: hidden;
+    }
     .employeeAvatar {
       img {
+        border-radius: 50%;
+      }
+      .ant-image-mask{
         border-radius: 50%;
       }
     }
@@ -776,6 +843,8 @@
       font-style: normal;
       font-weight: 300;
       line-height: 15px;
+      max-width: 360px;
+
     }
   }
   .btn-secondary {
@@ -1312,13 +1381,41 @@
   }
 }
 .edit-information-workspace {
-  .employeeAvatar {
-    width: 106px;
-    height: 106px;
-    .cameraBtn {
-      right: 0;
+  .modal-content{
+    width: 560px;
+    input{
+      height: 46px;
     }
   }
+  .avatar {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    .cameraBtn{
+      right: 0px;
+      top: 0px;
+      opacity: 0;
+    }
+    &:hover{
+      .ant-image-mask{
+          opacity: 1 !important;
+      }
+    }
+    .ant-image-mask{
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 50%;
+    }
+  }
+  
 }
 .create-workspace-form {
   .field-label {
@@ -1384,6 +1481,14 @@
     .prefix-icon.prefix-type {
       color: #ffffff;
       background-color: rgba(255, 117, 76, 0.5);
+    }
+  }
+  .manage_membership{
+    .select__control {
+      padding: 0.3rem 0.2rem 0.3rem 0.2rem;
+    }
+    .form-check-input:checked {
+      background-color: #F5BB63;
     }
   }
 }

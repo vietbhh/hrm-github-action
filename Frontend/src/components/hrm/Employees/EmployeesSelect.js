@@ -407,7 +407,6 @@ const EmployeesSelect = (props) => {
           )}
         </div>
       </div>
-      <hr />
     </>
   )
 }

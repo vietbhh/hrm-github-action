@@ -3932,7 +3932,7 @@
           "videos": "Videos",
           "links": "Links"
         },
-        "workspace_infomation": "Workspace infomation",
+        "group_information": "Group infomation",
         "workspace_settings": "Workspace settings",
         "waiting_for_approval": "Waiting for approval",
         "setup_notification": "Setup notification",

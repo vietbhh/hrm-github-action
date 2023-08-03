@@ -64,23 +64,25 @@ const SetupNotificationModal = (props) => {
       toggle={() => handleModal()}
       backdrop={"static"}
       className="setup-notification-workspace-modal no-border-bottom"
-      size="sm"
+      size="md"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
-      <ModalHeader toggle={() => handleModal()}>Setup notification</ModalHeader>
+      <ModalHeader toggle={() => handleModal()}>
+        Notification settings
+      </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
-          <Row>
+          <Row className="mt-1">
             <Col sm={12}>
-              <div className="content-notification-setup d-flex">
+              <div className="content-notification-setup d-flex align-items-center">
                 <div className="title">
-                  Receive all notifications
-                  <div className="sub-title">All posts in group</div>
+                  All post
+                  <div className="sub-title">Every post in the group</div>
                 </div>
                 <ErpRadio
                   className="ms-auto"
                   useForm={methods}
-                  value={true}
+                  value={"all"}
                   defaultChecked={findNotifi(
                     dataWorkspace?.notification,
                     userId
@@ -89,19 +91,39 @@ const SetupNotificationModal = (props) => {
                 />
               </div>
             </Col>
+
             <Col sm={12}>
-              <div className="content-notification-setup d-flex">
+              <div className="content-notification-setup d-flex align-items-center">
                 <div className="title">
-                  Turn off all notifications from this group
+                  Admin’s post
+                  <div className="sub-title">Only admin’s posts</div>
+                </div>
+                <ErpRadio
+                  className="ms-auto"
+                  useForm={methods}
+                  value={"admin"}
+                  defaultChecked={findNotifi(
+                    dataWorkspace?.notification,
+                    userId
+                  )}
+                  name="notification"
+                />
+              </div>
+            </Col>
+
+            <Col sm={12}>
+              <div className="content-notification-setup d-flex align-items-center">
+                <div className="title">
+                  Off
                   <div className="sub-title">
-                    You will not receive notifications of any posts from the
-                    group
+                    Only mentions and important updates to group settings or
+                    privacy
                   </div>
                 </div>
                 <ErpRadio
                   className="ms-auto"
                   useForm={methods}
-                  value={false}
+                  value={"off"}
                   defaultChecked={
                     !findNotifi(dataWorkspace?.notification, userId)
                   }
@@ -115,17 +137,10 @@ const SetupNotificationModal = (props) => {
           <ModalFooter>
             <Button
               type="submit"
-              color="primary"
               disabled={state.loading}
-              className="ms-auto mr-2">
-              {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
+              className="btn-save btn btn-primary">
+              {state.loading && <Spinner size="sm" className="me-50" />}
               {useFormatMessage("button.save")}
-            </Button>
-            <Button
-              className="btn-cancel"
-              color="flat-danger"
-              onClick={() => handleModal(false)}>
-              {useFormatMessage("button.cancel")}
             </Button>
           </ModalFooter>
         </form>
