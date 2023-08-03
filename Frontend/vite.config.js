@@ -8,11 +8,9 @@ import NodeGlobalsPolyfillPlugin from "@esbuild-plugins/node-globals-polyfill"
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
   const startPort = process.env.VITE_PORT ?? 3000
-  return defineConfig({
+
+  const config = {
     plugins: [react()],
-    define: {
-      global: "globalThis"
-    },
     server: {
       port: startPort
     },
@@ -130,7 +128,7 @@ export default ({ mode }) => {
           }),
           {
             name: "load-js-files-as-jsx",
-            setup(build) {  
+            setup(build) {
               build.onLoad({ filter: /src\\.*\.js$/ }, async (args) => ({
                 loader: "jsx",
                 contents: fs.readFileSync(args.path, "utf8")
@@ -145,5 +143,13 @@ export default ({ mode }) => {
         plugins: [rollupNodePolyFill()]
       }
     }
-  })
+  }
+
+  if (mode === "development") {
+    config.define = {
+      global: "globalThis"
+    }
+  }
+
+  return defineConfig(config)
 }
