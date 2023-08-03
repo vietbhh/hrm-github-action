@@ -62,13 +62,10 @@ const EditInformationModal = (props) => {
       className="edit-information-workspace"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
-      <ModalHeader toggle={() => handleModal()}></ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
-          <Row>
-            <Col
-              sm={4}
-              className="d-flex align-items-center justify-content-center">
+          <div className="d-flex justify-content-center align-items-center">
+            <div className="avatar">
               <AvatarBox
                 currentAvatar={infoWorkspace?.avatar}
                 handleSave={(img) => {
@@ -76,10 +73,41 @@ const EditInformationModal = (props) => {
                   //saveAvatar(img)
                 }}
               />
-            </Col>
+              <div class="ant-image-mask">
+                <div class="ant-image-mask-info">
+                  <span role="img" aria-label="eye" class="anticon anticon-eye">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M1.66675 7.71412C1.66675 6.21515 2.8819 5 4.38086 5V5C5.28834 5 6.13577 4.54647 6.63914 3.7914L6.66675 3.75C7.18737 2.96907 8.06383 2.5 9.00239 2.5H10.9978C11.9363 2.5 12.8128 2.96907 13.3334 3.75L13.361 3.7914C13.8644 4.54647 14.7118 5 15.6193 5V5C17.1183 5 18.3334 6.21515 18.3334 7.71412V13.5C18.3334 15.7091 16.5426 17.5 14.3334 17.5H5.66675C3.45761 17.5 1.66675 15.7091 1.66675 13.5V7.71412Z"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <ellipse
+                        cx="10.0001"
+                        cy="10.8333"
+                        rx="3.33333"
+                        ry="3.33333"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
 
-            <Col sm={8}>
+            <div className="w-100 ms-1">
               <ErpInput
+                nolabel
                 defaultValue={infoWorkspace?.name}
                 name="name"
                 useForm={methods}
@@ -89,30 +117,28 @@ const EditInformationModal = (props) => {
                 type="textarea"
                 nolabel
                 defaultValue={infoWorkspace?.introduction}
-                rows={8}
+                rows={4}
                 name="introduction"
                 useForm={methods}
               />
-            </Col>
-            <Col sm={12}></Col>
-            <Col sm={12}></Col>
-          </Row>
+            </div>
+          </div>
         </ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalFooter>
             <Button
+              className="ms-auto mr-2"
+              color="flat-secondary"
+              onClick={() => handleModal(false)}>
+              {useFormatMessage("button.cancel")}
+            </Button>
+            <Button
               type="submit"
               color="success"
               disabled={state.loading}
-              className="btn-blue ms-auto mr-2">
+              className="btn-blue ">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
               {useFormatMessage("button.save")}
-            </Button>
-            <Button
-              className="btn-cancel"
-              color="flat-danger"
-              onClick={() => handleModal(false)}>
-              {useFormatMessage("button.cancel")}
             </Button>
           </ModalFooter>
         </form>

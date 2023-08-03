@@ -70,13 +70,13 @@ const InviteWorkspaceModal = (props) => {
           </Row>
         </ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalFooter>
+          <ModalFooter className="mt-2">
             <Button
               type="button"
               onClick={() => handleAdd()}
               color="primary"
               disabled={state.loading}
-              className="ms-4 me-4 w-100">
+              className="btn-send-invite ms-auto me-auto w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
               Send invites
             </Button>

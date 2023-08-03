@@ -716,7 +716,7 @@ const loadDataMember = async (req, res, next) => {
           phone: item.dataValues.phone
         }
       })
-      
+
       return res.respond({
         administrators: result,
         total_list_admin: allAdmin.length
@@ -1024,7 +1024,7 @@ const approvePost = async (req, res) => {
 
       if (data?.approve_status === "approved") {
         const NOT_notification = infoWorkSpace.notification.map((i) => {
-          if (i.status === false) {
+          if (i.status === "off") {
             return parseInt(i.id_user)
           }
         })

@@ -254,24 +254,26 @@ const SettingWorkspace = () => {
           </Card>
 
           <div className="title-setting">
-            {useFormatMessage("modules.workspace.display.workspace_infomation")}
+            {useFormatMessage("modules.workspace.display.group_information")}
           </div>
           <Card>
             <CardBody>
               <div className="workspace_infomation d-flex">
-                <div className="me-2 rounded-circle" style={{ width: "100px" }}>
+                <div className="rounded-circle" style={{ width: "100px " }}>
                   <AvatarBox
                     currentAvatar={state.detailWorkspace?.avatar}
                     loading={state.loading}
                     readOnly={true}
                   />
                 </div>
-                <div className="d-flex w-100">
+                <div className="d-flex ms-1">
                   <div>
                     <div className="workspace_name">
                       {state.detailWorkspace?.name}
                     </div>
-                    <div>{state.detailWorkspace?.introduction}</div>
+                    <div className="workspace_introduction">
+                      {state.detailWorkspace?.introduction}
+                    </div>
                   </div>
                   <div
                     className="ms-auto vector"
@@ -300,7 +302,7 @@ const SettingWorkspace = () => {
           <div className="create-workspace-form">
             <Card>
               <CardBody>
-                <div className="pt-25 mb-1">
+                <div className="pt-25 mb-1 ps-1 pe-1">
                   <WorkgroupPrivacy
                     methods={methods}
                     onChange={changeTypeMode}
@@ -312,102 +314,108 @@ const SettingWorkspace = () => {
             </Card>
 
             <div className="title-setting">Manage membership</div>
-            <Card>
+            <Card className="manage_membership">
               <CardBody>
-                <FormProvider {...methods}>
-                  <div className="mt-2 field_switch">
-                    <div>
-                      <div className="label">
-                        {" "}
-                        {useFormatMessage(
-                          "modules.workspace.display.review_post"
-                        )}
+                <div className="ps-1 pe-1">
+                  <FormProvider {...methods}>
+                    <div className="field_switch">
+                      <div>
+                        <div className="label">
+                          {" "}
+                          {useFormatMessage(
+                            "modules.workspace.display.review_post"
+                          )}
+                        </div>
+                        <div className="sub-label">
+                          {useFormatMessage(
+                            "modules.workspace.text.sub_review_post"
+                          )}
+                        </div>
                       </div>
-                      <div className="sub-label">
-                        {useFormatMessage(
-                          "modules.workspace.text.sub_review_post"
-                        )}
-                      </div>
+                      <ErpSwitch
+                        formGroupClass="ms-auto mb-0"
+                        name="review_post"
+                        loading={state.loading}
+                        defaultValue={state.detailWorkspace?.review_post}
+                        onClick={(e) =>
+                          onSubmit({ review_post: e.target.checked })
+                        }
+                      />
                     </div>
-                    <ErpSwitch
-                      formGroupClass="ms-auto mb-0"
-                      name="review_post"
+                    <ErpSelect
+                      name="membership_approval"
                       loading={state.loading}
-                      defaultValue={state.detailWorkspace?.review_post}
-                      onClick={(e) =>
-                        onSubmit({ review_post: e.target.checked })
+                      label={useFormatMessage(
+                        "modules.workspace.fields.membership_approval"
+                      )}
+                      options={membership_approval}
+                      defaultValue={
+                        state.detailWorkspace?.membership_approval
+                          ? membership_approval[
+                              findKeyByValue(
+                                membership_approval,
+                                state.detailWorkspace?.membership_approval
+                              )
+                            ]
+                          : membership_approval[0]
                       }
+                      isClearable={false}
+                      isSearchable={false}
+                      onChange={(e) => onSubmit({ membership_approval: e })}
                     />
-                  </div>
-                  <ErpSelect
-                    name="membership_approval"
-                    loading={state.loading}
-                    label={useFormatMessage(
-                      "modules.workspace.fields.membership_approval"
-                    )}
-                    options={membership_approval}
-                    defaultValue={
-                      state.detailWorkspace?.membership_approval
-                        ? membership_approval[
-                            findKeyByValue(
-                              membership_approval,
-                              state.detailWorkspace?.membership_approval
-                            )
-                          ]
-                        : membership_approval[0]
-                    }
-                    isClearable={false}
-                    isSearchable={false}
-                    onChange={(e) => onSubmit({ membership_approval: e })}
-                  />
-                </FormProvider>
+                  </FormProvider>
+                </div>
               </CardBody>
             </Card>
 
             <div className="title-setting">Group management</div>
             <Card>
-              <CardBody className="d-flex align-items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none">
-                  <path
-                    d="M7.83997 20.0201L9.42997 21.2101C10.84 22.2701 13.16 22.2701 14.57 21.2101L18.87 18.0001C19.82 17.2901 20.6 15.7401 20.6 14.5601V7.12012"
-                    stroke="#32434F"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M18.98 4.34006C18.83 4.25006 18.67 4.17006 18.51 4.10006L13.52 2.23006C12.69 1.92006 11.33 1.92006 10.5 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L5.34003 18.1401"
-                    stroke="#32434F"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M22 2L2 22"
-                    stroke="#32434F"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <div className="label-field ms-1">
-                  Deleting the group
-                  <div className="sub-label">
-                    By deleting your group, you will delete all information in
-                    this group: post, photos, videos,...
+              <CardBody>
+                <div className="ps-1 pe-1">
+                  <div className="d-flex align-items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none">
+                      <path
+                        d="M7.83997 20.0201L9.42997 21.2101C10.84 22.2701 13.16 22.2701 14.57 21.2101L18.87 18.0001C19.82 17.2901 20.6 15.7401 20.6 14.5601V7.12012"
+                        stroke="#32434F"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M18.98 4.34006C18.83 4.25006 18.67 4.17006 18.51 4.10006L13.52 2.23006C12.69 1.92006 11.33 1.92006 10.5 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L5.34003 18.1401"
+                        stroke="#32434F"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M22 2L2 22"
+                        stroke="#32434F"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <div className="label-field ms-1">
+                      Deleting the group
+                      <div className="sub-label">
+                        By deleting your group, you will delete all information
+                        in this group: post, photos, videos,...
+                      </div>
+                    </div>
+                    <Button
+                      color="secondary"
+                      className="btn-secondary ms-auto"
+                      onClick={() => handleDeleteWS()}>
+                      Delete
+                    </Button>
                   </div>
                 </div>
-                <Button
-                  color="secondary"
-                  className="btn-secondary ms-auto"
-                  onClick={() => handleDeleteWS()}>
-                  Delete
-                </Button>
               </CardBody>
             </Card>
           </div>
