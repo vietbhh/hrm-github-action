@@ -65,8 +65,8 @@ class Calendar extends ErpController
 		$body = json_decode($getPost['body'], true);
 		$dataSave = [
 			'title' => $body['event_name'],
-			'start' => '2023-07-14 09:00:00',
-			'end' => '2023-07-14 11:00:00',
+			'start' => '2023-08-03 13:00:00',
+			'end' => '2023-08-03 14:00:00',
 			'allday' => 'false',
 			'description' => $body['details'],
 			'color' => str_replace('#', '', $body['color'])
@@ -159,5 +159,38 @@ class Calendar extends ErpController
 		return $this->respond([
 			'results' => $result
 		]);
+	}
+
+	public function get_detail_event_get($id)
+	{
+		$modules = \Config\Services::modules('calendars');
+		$model = $modules->model;
+
+		try {
+			$info = $model->asArray()->where('id', $id)->first();
+			$info['color'] = isset($info['color']) ? '#' . $info['color'] : '';
+			$info['start_time_date'] = date('Y-m-d', strtotime($info['start']));
+			$info['start_time_time'] = "";
+			$info['end_time_date'] = date('Y-m-d', strtotime($info['start']));
+			$info['end_time_time'] = "";
+			$info['details'] = $info['description'];
+			$info['is_owner'] = $info['owner'] == user_id();
+			$attachment = json_decode($info['attachments'], true);
+			$storePath = getModuleUploadPath('calendar', $info['id'], false) . 'other/';
+			foreach ($attachment as $key => $row) {
+				$fileInfo = getFilesProps($storePath . $row);
+				$attachment[$key] = [
+					'type' => strpos($fileInfo['type'], 'image') !== false ? 'image' : $fileInfo['type'],
+					'name' => $fileInfo['fileName'],
+					'src' => $fileInfo['url'],
+					'size' => $fileInfo['size'],
+					'_id' => ''
+				];
+			}
+			$info['attachment'] = $attachment;
+			return $this->respond($info);
+		} catch (\Exception $e) {
+			return $this->respond([]);
+		}
 	}
 }

@@ -23,3 +23,13 @@ export const renderIconAttachment = (item) => {
   }
   return <i className="fa-solid fa-file"></i>
 }
+
+export const getArrWeekDate = (dateStr = "") => {
+  const result = Array.from(Array(7).keys()).map((idx) => {
+    const d = dateStr === "" ? new Date() : new Date(dateStr)
+    d.setDate(d.getDate() - d.getDay() + idx)
+    return d
+  })
+
+  return result
+}

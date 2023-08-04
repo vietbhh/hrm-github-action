@@ -155,6 +155,7 @@ $routes->post('calendar/update/(:alphanum)', 'Calendar::update_post/$1');
 $routes->get('calendar/load-calendar-tag', 'Calendar::load_calendar_tag_get');
 $routes->delete('calendar/remove-calendar/(:alphanum)', 'Calendar::delete_delete/$1');
 $routes->get('calendar/get-list-event', 'Calendar::get_list_event_get');
+$routes->get('calendar/get-detail-event/(:alphanum)', 'Calendar::get_detail_event_get/$1');
 $routes->get('general/users', 'General::load_users_get');
 
 $routes->get('drive/get-my-folder', 'Drive::get_my_folder_get', ['namespace' => 'App\Controllers']);

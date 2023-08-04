@@ -21,10 +21,19 @@ export const calendarApi = {
       }
     )
   },
-  async getCalendar(filter) {
-    const url = `/calendar/load?${filter.calendarTag
-      .map((item, index) => `calendar_tag[${index}]=${item}`)
-      .join("&")}`
+  async getCalendar(filter = {}) {
+    let url = `/calendar/load`
+
+    if (filter?.calendarTag !== undefined) {
+      url += `?${filter.calendarTag
+        .map((item, index) => `calendar_tag[${index}]=${item}`)
+        .join("&")}`
+    }
+
+    delete filter["calendarTag"]
+    const strParams = object2QueryString(filter)
+    const sign = filter?.calendarTag !== undefined ? "&" : "?"
+    url += `${sign}${strParams}`
     return await axiosApi.get(url)
   },
   async getCalendarTag() {
@@ -36,5 +45,8 @@ export const calendarApi = {
   async getListEvent(params = {}) {
     const strParams = object2QueryString(params)
     return await axiosApi.get(`calendar/get-list-event?${strParams}`)
+  },
+  async getDetailEvent(id) {
+    return await axiosApi.get(`calendar/get-detail-event/${id}`)
   }
 }

@@ -1,27 +1,53 @@
 // ** React Imports
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
+import moment from "moment"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../common/reducer/calendar"
 // ** Styles
 // ** Components
+import "@fullcalendar/react/dist/vdom"
 import FullCalendar from "@fullcalendar/react"
 import listPlugin from "@fullcalendar/list"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
-import calendarImg from "@apps/modules/calendar/assets/images/calendar.png"
 import { ErpSelect } from "@apps/components/common/ErpField"
+import GroupAllDayEvent from "./GroupAllDayEvent"
 
 const CalendarForIndex = (props) => {
   const {
     // ** props
     listCalendar,
-    changeYearType,
-    calendarYear,
+    filter,
+    filterCalendar,
     // ** methods
-    handleShowAddEventModal,
-    setCalendarYear
+    setFilterCalendar
   } = props
 
+  const dispatch = useDispatch()
+
+  const options = [
+    { label: "Month", value: "dayGridMonth" },
+    { label: "Week", value: "timeGridWeek" },
+    { label: "Day", value: "timeGridDay" }
+  ]
+
   const calendarRef = useRef()
+
+  const handleChangeView = (value) => {
+    calendarRef.current.getApi().changeView(value.value)
+  }
+
+  const handleClickCalendar = (calendarId) => {
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: calendarId,
+        viewOnly: false
+      })
+    )
+  }
 
   const calendarOptions = {
     ref: calendarRef,
@@ -34,7 +60,7 @@ const CalendarForIndex = (props) => {
     customButtons: {
       customPrev: {
         text: <span className="fc-icon fc-icon-chevron-left"></span>,
-        click: function () {
+        click: function (dateInfo) {
           const calendarApi = calendarRef.current.getApi()
           calendarApi.prev()
         }
@@ -57,12 +83,14 @@ const CalendarForIndex = (props) => {
       start: "title,customPrev,today,customNext",
       end: "customType"
     },
-    dayHeaderContent: ({ date }, b, c) => {
+    dayHeaderContent: ({ date, view }, b, c) => {
       const dayOfWeekName = date.toLocaleString("default", { weekday: "short" })
       return (
         <div>
           <span className="day-of-week">{dayOfWeekName}</span>
-          <span className="day-number">{date.getDate()}</span>
+          <span className="day-number">
+            {view.type === "dayGridMonth" ? "" : date.getDate()}
+          </span>
         </div>
       )
     },
@@ -98,16 +126,20 @@ const CalendarForIndex = (props) => {
       const extendedProps = calendarEvent._def.extendedProps
       const isAllDay = extendedProps.isAllDay
       if (isAllDay !== undefined) {
-        return renderGroupAllDayEvent(extendedProps, calendarEvent.startStr)
+        return (
+          <GroupAllDayEvent
+            viewInfoOnly={false}
+            date={calendarEvent.startStr}
+            extendedProps={extendedProps}
+            handleShowAddEventModal={handleClickCalendar}
+          />
+        )
       }
     },
     eventClick({ event: clickedEvent }) {
       const isAllDay = clickedEvent._def.extendedProps.isAllDay
       if (!isAllDay) {
-        handleClickCalendar(
-          clickedEvent._def.publicId,
-          clickedEvent._def.extendedProps.isEditable
-        )
+        handleClickCalendar(clickedEvent._def.publicId)
       }
     },
     dateClick(info) {},
@@ -121,19 +153,35 @@ const CalendarForIndex = (props) => {
     direction: "ltr"
   }
 
+  // ** effect
+  useEffect(() => {
+    calendarRef.current.getApi().gotoDate(filter.from)
+  }, [filter])
+
   // ** render
   return (
     <div className="pt-2 pb-1 ps-50 pe-0 calendar-for-index">
       <div className="action-right-item">
-        <ErpSelect className="change-calendar-type" nolabel={true} options={[
-          {"label": "Month", value: "month"},
-          {"label": "Week", value: "week"},
-          {"label": "Day", value: "day"},
-          {"label": "List", value: "list"}
-        ]} 
-        isClearable={false}/>
+        <ErpSelect
+          className="change-calendar-type"
+          nolabel={true}
+          defaultValue={options[1]}
+          options={options}
+          isClearable={false}
+          onChange={(value) => handleChangeView(value)}
+        />
       </div>
-      <FullCalendar {...calendarOptions} />
+      <FullCalendar
+        {...calendarOptions}
+        datesSet={(arg) => {
+          if (!moment(arg.end).isSame(filterCalendar.to)) {
+            setFilterCalendar({
+              from: moment(arg.start).format("YYYY-MM-DD"),
+              to: moment(arg.end).format("YYYY-MM-DD")
+            })
+          }
+        }}
+      />
     </div>
   )
 }

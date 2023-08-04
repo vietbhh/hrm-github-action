@@ -3,18 +3,11 @@ import { Fragment, useEffect } from "react"
 import { useMergedState } from "@apps/utility/common"
 import { calendarApi } from "../common/api"
 import moment from "moment"
-// ** redux
-import {
-  showAddEventCalendarModal,
-  hideAddEventCalendarModal,
-  removeCurrentCalendar
-} from "../common/reducer/calendar"
-import { useDispatch } from "react-redux"
+import { getArrWeekDate } from "../common/common"
 // ** Styles
 // ** Components=
-import Sidebar from "../components/sidebar/Sidebar"
+import SidebarForIndex from "../components/sidebar/SidebarForIndex"
 import CalendarForIndex from "../components/calendar/CalendarForIndex"
-import AddEventModal from "../components/modal/AddEventModal"
 import SyncGoogleCalendarInfo from "../components/calendar/SyncGoogleCalendarInfo"
 import ModalCreateEvent from "../components/modal/ModalCreateEvent"
 
@@ -23,12 +16,15 @@ const CalendarIndex = (props) => {
     loading: true,
     loadingCalendar: false,
     listCalendar: [],
-    listCalendarTag: [],
     calendarsColor: [],
     currentCalendar: {},
     syncGoogleInfo: {},
-    filters: {
-      calendarTag: "all"
+    filter: {
+      from: moment().format("YYYY-MM-DD")
+    },
+    filterCalendar: {
+      from: getArrWeekDate().shift(),
+      to: getArrWeekDate().pop()
     },
     visibleAddEvent: false,
     calendarYear: moment().year(),
@@ -37,70 +33,22 @@ const CalendarIndex = (props) => {
     dataEventCreated: {}
   })
 
-  const setFilter = (filter) => {
+  const setFilter = (obj) => {
     setState({
-      filters: {
-        ...state.filters,
-        ...filter
+      filter: {
+        ...state.filter,
+        ...obj
       }
     })
   }
 
-  const dispatch = useDispatch()
-
-  const handleShowAddEventModal = (data) => {
-    dispatch(removeCurrentCalendar())
-    dispatch(showAddEventCalendarModal(data))
-  }
-
-  const handleHideAddEventModal = () => {
-    dispatch(hideAddEventCalendarModal())
-  }
-
-  const setListCalendar = (data) => {
+  const setFilterCalendar = (obj) => {
     setState({
-      listCalendar: data
+      filterCalendar: {
+        ...state.filterCalendar,
+        ...obj
+      }
     })
-  }
-
-  const setCalendarYear = (year) => {
-    setState({
-      calendarYear: year
-    })
-  }
-
-  const setChangeYearType = (type) => {
-    setState({
-      changeYearType: type
-    })
-  }
-
-  const loadCalendarTag = () => {
-    setState({
-      loading: true
-    })
-    calendarApi
-      .getCalendarTag()
-      .then((res) => {
-        const listColor = {}
-        res.data.results.map((item) => {
-          listColor[item.value] = item.color
-        })
-        setState({
-          listCalendarTag: res.data.results,
-          syncGoogleInfo: res.data.user_sync,
-          calendarsColor: listColor,
-          loading: false
-        })
-      })
-      .catch((err) => {
-        setState({
-          listCalendarTag: [],
-          calendarsColor: {},
-          syncGoogleInfo: {},
-          loading: false
-        })
-      })
   }
 
   const setDataEventCreated = (obj) => {
@@ -113,15 +61,18 @@ const CalendarIndex = (props) => {
     setState({
       loadingCalendar: true
     })
+
+    const params = {
+      created_at_from: moment(state.filterCalendar.from).format("YYYY-MM-DD"),
+      created_at_to: moment(state.filterCalendar.to).format("YYYY-MM-DD")
+    }
+
     calendarApi
-      .getCalendar({ calendarTag: [state.filters.calendarTag] })
+      .getCalendar(params)
       .then((res) => {
         const data = res.data.results
         const newCalendar = data.map((item) => {
-          let color =
-          item.color === null
-              ? "all-day-event"
-              : item.color
+          let color = item.color === null ? "all-day-event" : item.color
           if (item["is_dob"] !== undefined) {
             color = "danger"
           }
@@ -168,14 +119,8 @@ const CalendarIndex = (props) => {
 
   // ** effect
   useEffect(() => {
-    loadCalendarTag()
-  }, [])
-
-  useEffect(() => {
-    if (state.loading === false) {
-      loadCalendar()
-    }
-  }, [state.filters, state.loading])
+    loadCalendar()
+  }, [state.filterCalendar])
 
   useEffect(() => {
     if (state.visibleAddEvent === true) {
@@ -185,67 +130,52 @@ const CalendarIndex = (props) => {
     }
   }, [state.visibleAddEvent])
 
+  useEffect(() => {
+    if (Object.keys(state.dataEventCreated).length > 0) {
+      setFilter({
+        from: moment(state.dataEventCreated.start).format("YYYY-MM-DD")
+      })
+      setDataEventCreated({})
+    }
+  }, [state.dataEventCreated])
+
   // ** render
   const renderSyncGoogleCalendarInfo = () => {
     return <SyncGoogleCalendarInfo syncGoogleInfo={state.syncGoogleInfo} />
   }
 
-  const renderModalCreateEvent = () => {
-    if (state.modal) {
-      return (
-        <ModalCreateEvent
-          modal={state.modal}
-          toggleModal={toggleModal}
-          options_employee_department={[]}
-          optionsMeetingRoom={[]}
-          setDataCreateNew={undefined}
-          createEventApi={calendarApi.addCalendar}
-          afterCreate={handleAfterCreateEvent}
-        />
-      )
-    }
-
-    return ""
-  }
-
-  const renderComponent = () => {
-    return (
-      <Fragment>
-        <div className="p-1 calendar-index-page">
-          <div className="d-flex align-items-start calendar-container">
-            <div className="pe-2 sidebar-section">
-              <Sidebar
-                listCalendarTag={state.listCalendarTag}
-                listCalendar={state.listCalendar}
-                filters={state.filters}
-                calendarYear={state.calendarYear}
-                dataEventCreated={state.dataEventCreated}
-                setFilter={setFilter}
-                handleShowAddEventModal={handleShowAddEventModal}
-                setListCalendar={setListCalendar}
-                setCalendarYear={setCalendarYear}
-                setChangeYearType={setChangeYearType}
-                toggleModal={toggleModal}
-                setDataEventCreated={setDataEventCreated}
-              />
-            </div>
-            <div className="calendar-section">
-              <CalendarForIndex
-                listCalendar={state.listCalendar}
-                changeYearType={state.changeYearType}
-                calendarYear={state.calendarYear}
-                handleShowAddEventModal={handleShowAddEventModal}
-                setCalendarYear={setCalendarYear}
-              />
-            </div>
+  return (
+    <Fragment>
+      <div className="p-1 calendar-index-page">
+        <div className="d-flex align-items-start calendar-container">
+          <div className="pe-2 sidebar-section">
+            <SidebarForIndex
+              dataEventCreated={state.dataEventCreated}
+              filter={state.filter}
+              toggleModal={toggleModal}
+              setDataEventCreated={setDataEventCreated}
+              setFilter={setFilter}
+            />
+          </div>
+          <div className="calendar-section">
+            <CalendarForIndex
+              listCalendar={state.listCalendar}
+              filter={state.filter}
+              filterCalendar={state.filterCalendar}
+              setFilterCalendar={setFilterCalendar}
+              toggleModal={toggleModal}
+            />
           </div>
         </div>
-        <Fragment>{renderModalCreateEvent()}</Fragment>
-      </Fragment>
-    )
-  }
-
-  return !state.loading && renderComponent()
+      </div>
+      <ModalCreateEvent
+        setDataCreateNew={undefined}
+        createEventApi={calendarApi.addCalendar}
+        getDetailApi={calendarApi.getDetailEvent}
+        afterCreate={handleAfterCreateEvent}
+      />
+    </Fragment>
+  )
 }
 
 export default CalendarIndex

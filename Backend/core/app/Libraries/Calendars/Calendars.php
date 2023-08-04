@@ -61,7 +61,12 @@ class Calendars
 		}
 
 		try {
-			$id = $modules->saveRecord($content, $fileUpload);
+			$arrFileAttach = [];
+			foreach ($fileUpload['file'] as $rowFile) {
+				$arrFileAttach[] = $rowFile['file'];
+			}
+			$upload['attachments'] = $arrFileAttach;
+			$id = $modules->saveRecord($content, $upload);
 		} catch (\Exception $e) {
 			throw $e;
 		}
@@ -104,7 +109,7 @@ class Calendars
 		if ($createdAtFrom !== '' && $createdAtTo) {
 			$builder->groupStart()
 				->where('start >=', $createdAtFrom)
-				->where('start <=', $createdAtTo)
+				->where('start <', $createdAtTo)
 				->groupEnd();
 		}
 		return $builder->findAll();

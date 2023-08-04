@@ -1,8 +1,11 @@
 // ** React Imports
-// ** Styles
-import { Calendar, Space } from "antd"
 import moment from "moment"
+// ** Styles
+import { Space } from "antd"
+import "react-datepicker/dist/react-datepicker.css"
 // ** Components
+import DatePicker from "react-datepicker"
+import { useState } from "react"
 
 const CalendarPickerFilter = (props) => {
   const {
@@ -12,30 +15,40 @@ const CalendarPickerFilter = (props) => {
     setFilter
   } = props
 
+  const [currentMonth, setCurrentMonth] = useState(filter.from)
+
+  const currentDate = new Date(filter.from)
+
   const handleChangeDate = (values) => {
+    setCurrentMonth(values)
     setFilter({
-      from: values.format("YYYY-MM-DD")
+      from: moment(values).format("YYYY-MM-DD")
     })
   }
 
   // ** render
   return (
     <div className="calendar-picker-filter">
-      <Calendar
-        fullscreen={false}
-        headerRender={({ value, type, onChange, onTypeChange }) => {
-          return (
-            <div className="w-100 custom-header-calendar">
-              <div className="d-flex align-items-center justify-content-between ps-1 pe-1 mb-2">
-                <p className="mb-0 time">{moment(filter.from).format("MMMM, YYYY")}</p>
+      <div className="p-50 pt-0">
+        <DatePicker
+          inline
+          showDisabledMonthNavigation
+          selected={currentDate}
+          onChange={(date) => handleChangeDate(date)}
+          renderCustomHeader={({ decreaseMonth, increaseMonth }) => {
+            return (
+              <div className="d-flex align-items-center justify-content-between pb-50 custom-header-calendar">
+                <p className="mb-0 time">
+                  {moment(currentMonth).format("MMMM, YYYY")}
+                </p>
                 <div className="action">
                   <Space>
                     <div
                       className="me-0 action-filter cursor-pointer"
                       onClick={() => {
-                        const currentMonth  = moment(filter.from).format("M") - 1
-                        const now = value.clone().month(currentMonth - 1)
-                        onChange(now)
+                        const newMonth = moment(currentMonth).subtract(1, "months")
+                        setCurrentMonth(newMonth.format("YYYY-MM-DD"))
+                        decreaseMonth()
                       }}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -63,9 +76,9 @@ const CalendarPickerFilter = (props) => {
                     <div
                       className="action-filter cursor-pointer"
                       onClick={() => {
-                        const currentMonth  = moment(filter.from).format("M") - 1
-                        const now = value.clone().month(currentMonth + 1)
-                        onChange(now)
+                        const newMonth = moment(currentMonth).add(1, "months")
+                        setCurrentMonth(newMonth.format("YYYY-MM-DD"))
+                        increaseMonth()
                       }}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -93,11 +106,10 @@ const CalendarPickerFilter = (props) => {
                   </Space>
                 </div>
               </div>
-            </div>
-          )
-        }}
-        onChange={(values) => handleChangeDate(values)}
-      />
+            )
+          }}
+        />
+      </div>
     </div>
   )
 }

@@ -688,45 +688,91 @@ $background-color-checkbox: #139ff8;
         .calendar-picker-filter {
           .ant-picker-calendar {
             .custom-header-calendar {
-              .time {
-                color: $common-text-color;
-                font-size: 16px;
-                font-weight: 700;
-              }
+              .ant-picker-panel {
+                border-top: unset !important;
+                .ant-picker-content {
+                  thead {
+                    th {
+                      color: #adacb0;
+                    }
+                  }
 
-              .action-filter {
-                padding: 5px;
-                height: 35px;
-                width: 20px;
+                  .ant-picker-cell-selected {
+                    .ant-picker-cell-inner {
+                      color: unset !important;
+                      background-color: #ffe658 !important;
+                      border-radius: 50%;
+                    }
+                  }
+
+                  .ant-picker-calendar-date-today {
+                    &:before {
+                      border: none !important;
+                      content: "\A";
+                      width: 4px;
+                      height: 4px;
+                      border-radius: 50%;
+                      background: #3398ea;
+                      top: 20px;
+                    }
+                  }
+                }
               }
             }
-            .ant-picker-panel {
-              border-top: unset !important;
-              .ant-picker-content {
-                thead {
-                  th {
-                    color: #adacb0;
-                  }
+          }
+
+          .react-datepicker {
+            width: 100%;
+            border: none;
+            font-size: 14px;
+
+            .react-datepicker__month-container {
+              width: 100%;
+
+              .react-datepicker__header {
+                border: none;
+                background-color: inherit;
+
+                .time {
+                  color: $common-text-color;
+                  font-size: 16px;
+                  font-weight: 700;
+                  padding-left: 5px;
                 }
 
-                .ant-picker-cell-selected {
-                  .ant-picker-cell-inner {
-                    color: unset !important;
-                    background-color: #ffe658 !important;
-                    border-radius: 50%;
-                  }
+                .action-filter {
+                  padding: 5px;
+                  height: 35px;
+                  width: 20px;
+                }
+              }
+            }
+
+            .react-datepicker__day-names {
+              display: flex;
+              justify-content: space-between;
+
+              .react-datepicker__day-name {
+                color: #adacb0;
+                font-weight: 400;
+              }
+            }
+
+            .react-datepicker__month {
+              margin: unset;
+              .react-datepicker__week {
+                display: flex;
+                justify-content: space-between;
+                padding-bottom: 10px;
+
+                .react-datepicker__day--outside-month {
+                  color: #c9c9cc;
                 }
 
-                .ant-picker-calendar-date-today {
-                  &:before {
-                    border: none !important;
-                    content: "\A";
-                    width: 4px;
-                    height: 4px;
-                    border-radius: 50%;
-                    background: #3398ea;
-                    top: 20px;
-                  }
+                .react-datepicker__day--selected {
+                  border-radius: 50%;
+                  color: unset !important;
+                  background-color: #ffe658;
                 }
               }
             }
@@ -792,7 +838,8 @@ $background-color-checkbox: #139ff8;
                 }
 
                 .out-date-info {
-                  .time, .title {
+                  .time,
+                  .title {
                     text-decoration: line-through;
                   }
                 }
@@ -852,6 +899,7 @@ $background-color-checkbox: #139ff8;
             }
 
             .fc-button {
+              box-shadow: none !important;
               background-color: #ffffff;
               border: none;
               margin-right: 0.2rem;
@@ -867,11 +915,6 @@ $background-color-checkbox: #139ff8;
             .fc-customPrev-button {
               border-top-left-radius: 8px;
               border-bottom-left-radius: 8px;
-
-              &:focus {
-                border: none !important;
-                outline: none !important;
-              }
             }
 
             .fc-customNext-button {
@@ -901,7 +944,13 @@ $background-color-checkbox: #139ff8;
         }
 
         .fc-view-harness {
-          .fc-timegrid {
+          .fc-timeGridWeek-view,
+          .fc-timeGridDay-view {
+            .fc-daygrid-event {
+              background-color: unset !important;
+              border: none !important;
+            }
+
             .fc-scrollgrid {
               border: unset !important;
               thead {
@@ -1057,6 +1106,148 @@ $background-color-checkbox: #139ff8;
                   }
                 }
               }
+            }
+          }
+
+          .fc-dayGridMonth-view {
+            right: 10px;
+            left: 5px;
+            background-color: #ffffff;
+            border-radius: 12px;
+
+            .fc-scrollgrid {
+              border: unset !important;
+
+              thead {
+                .fc-scrollgrid-section-header {
+                  .fc-timegrid-axis {
+                    border: none !important;
+                  }
+
+                  .fc-day-sun {
+                    border-top-left-radius: 12px;
+                  }
+                  .fc-day-sat {
+                    border-top-right-radius: 12px;
+                  }
+
+                  .fc-col-header-cell {
+                    padding: 0.75rem;
+                    height: 88px;
+                    text-align: left;
+                    background-color: #ffffff;
+                    border-color: #f0f3f6;
+                    border-width: 2.5px;
+                    border-style: solid !important;
+
+                    span {
+                      display: block;
+                    }
+
+                    .day-of-week {
+                      text-transform: uppercase;
+                      font-size: 10px;
+                      font-weight: 700;
+                      color: #71717a;
+                    }
+
+                    .day-number {
+                      font-size: 22px;
+                      font-weight: 500;
+                      color: #000000;
+                    }
+                  }
+                }
+              }
+
+              .fc-timegrid-body,
+                  .fc-daygrid-body {
+                    background-color: #ffffff;
+                    table tr {
+                      height: 72px;
+
+                      td {
+                        border-color: #f0f3f6;
+                        border-width: 2.5px;
+                        border-style: solid !important;
+
+                        &:nth-child(1) {
+                          border-left: none !important;
+                        }
+                      }
+
+                      .fc-timegrid-slot-label,
+                      .fc-timegrid-axis {
+                        vertical-align: top;
+                        background-color: #f0f3f6;
+                      }
+
+                      .fc-daygrid-day-number {
+                        color: #000000;
+                        font-weight: 600;
+                      }
+
+                      .fc-daygrid-event {
+                        padding-top: 5px;
+                        padding-bottom: 5px;
+                      }
+
+                      .bg-light-5398ff {
+                        background-color: rgba(14, 165, 233, 0.1);
+                        color: #0369a1 !important;
+                        border: none;
+
+                        .fc-event-main {
+                          color: #0369a1 !important;
+                        }
+                      }
+
+                      .bg-light-undefined {
+                        border: none;
+                        background-color: unset !important;
+                      }
+
+                      .bg-light-f066b9 {
+                        background-color: rgba(139, 92, 246, 0.1);
+                        color: #6d28d9 !important;
+                        border: none;
+
+                        .fc-event-main {
+                          color: #6d28d9 !important;
+                        }
+                      }
+      
+                      .bg-light-ffc66f {
+                        background-color: rgba(245, 158, 11, 0.1);
+                        color: #b45309 !important;
+                        border: none;
+
+                        .fc-event-main {
+                          color: #b45309 !important;
+                        }
+                      }
+      
+                      .bg-light-ff6f2c {
+                        background-color: rgba(255, 228, 230, 1);
+                        color: #be123c !important;
+                        border: none;
+
+                        .fc-event-main {
+                          color: #be123c !important;
+                        }
+                      }
+      
+                      .bg-light-44d38a {
+                        background-color: rgba(16, 185, 129, 0.1);
+                        color: #047857 !important;
+                        border: none;
+
+                        .fc-event-main {
+                          color: #047857 !important;
+                        }
+                      }
+                    }
+                  }
             }
           }
         }
@@ -1656,9 +1847,21 @@ $background-color-checkbox: #139ff8;
     }
   }
 
+  .dropdown-item {
+    cursor: unset;
+
+    &:hover {
+      background-color: unset !important;
+    }
+  }
+
   .div-change-color {
     display: flex;
     gap: 12px;
+
+    .div-btn-color {
+      margin-top:0 !important;
+    }
   }
 }
 

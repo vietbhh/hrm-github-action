@@ -6,13 +6,20 @@ import {
   ErpTime
 } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import { downloadApi } from "@apps/modules/download/common/api"
+import { useSelector } from "react-redux"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
+import { downloadApi } from "@apps/modules/download/common/api"
 //import { eventApi } from "@modules/Feed/common/api"
 import { renderIconAttachment } from "../../common/common"
 import { Dropdown } from "antd"
+import {
+  DropdownItem,
+  DropdownMenu,
+  UncontrolledDropdown,
+  DropdownToggle
+} from "reactstrap"
 import classNames from "classnames"
 import moment from "moment"
 import React, { Fragment, useEffect } from "react"
@@ -25,23 +32,22 @@ import {
   ModalHeader,
   Spinner
 } from "reactstrap"
+// ** redux
+import { useDispatch } from "react-redux"
+import { hideAddEventCalendarModal } from "../../common/reducer/calendar"
 
 const ModalCreateEvent = (props) => {
   const {
-    modal,
-    toggleModal,
-    options_employee_department,
-    optionsMeetingRoom,
     setDataCreateNew,
 
     // ** edit
-    idEvent = null,
     setData,
     setDataLink,
     idPost = null,
 
     // ** api
     createEventApi,
+    getDetailApi,
     afterCreate
   } = props
   const [state, setState] = useMergedState({
@@ -51,6 +57,7 @@ const ModalCreateEvent = (props) => {
     color: "#5398ff",
     valueRepeat: "no_repeat",
     switch_all_day: false,
+    openDropDownColor: false,
 
     // ** Attendees
     valueAttendees: [],
@@ -65,6 +72,15 @@ const ModalCreateEvent = (props) => {
     dataEdit: {}
   })
 
+  const calendarState = useSelector((state) => state.calendar)
+  const { modal, viewOnly, idEvent } = calendarState
+
+  const dispatch = useDispatch()
+
+  const toggleModal = () => {
+    dispatch(hideAddEventCalendarModal())
+  }
+
   const methods = useForm({ mode: "onSubmit" })
   const { handleSubmit, reset, setValue } = methods
   const onSubmit = (values) => {
@@ -74,7 +90,12 @@ const ModalCreateEvent = (props) => {
     values.idEvent = idEvent
     values.idPost = idPost
     values.file = state.arrAttachment
+    values.start_time_date = moment(values.start_time_date).format("YYYY-MM-DD")
+    values.start_time_time = moment(values.start_time_time).format("HH:mm:ss")
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
+
+    console.log(values)
+    return false
 
     setState({ loadingSubmit: true })
     createEventApi(params)
@@ -110,7 +131,6 @@ const ModalCreateEvent = (props) => {
 
   // ** function
   const setColor = (value) => setState({ color: value })
-  const setValueRepeat = (value) => setState({ valueRepeat: value })
 
   const resetAfterSubmit = () => {
     setState({
@@ -155,52 +175,61 @@ const ModalCreateEvent = (props) => {
     setState({ arrAttachment: arrAttachment })
   }
 
+  const handleOpenChange = (value) => {
+    console.log(value)
+    setState({
+      openDropDownColor: value
+    })
+  }
+
   // ** useEffect
   useEffect(() => {
     if (modal && idEvent) {
       setState({ loadingEdit: true })
-      /*eventApi
-          .getGetEventById(idEvent)
-          .then((res) => {
-            setState({
-              loadingEdit: false,
-              dataEdit: res.data,
-              color: res.data.color,
-              valueRepeat: res.data.repeat,
-              switch_all_day: res.data.all_day_event,
-              dataAttendees: res.data.attendees,
-              valueAttendees: []
-            })
-  
-            if (!_.isEmpty(res.data.attachment)) {
-              setState({ loadingAttachment: true })
-              const promises = []
-              _.forEach(res.data.attachment, (item) => {
-                const promise = new Promise(async (resolve, reject) => {
-                  if (item.type === "image") {
-                    const _item = { ...item }
-                    await downloadApi.getPhoto(item.src).then((response) => {
-                      _item.url = URL.createObjectURL(response.data)
-                      resolve(_item)
-                    })
-                  } else {
-                    resolve(item)
-                  }
-                })
-                promises.push(promise)
-              })
-              Promise.all(promises)
-                .then((res) => {
-                  setState({ arrAttachment: res, loadingAttachment: false })
-                })
-                .catch((err) => {
-                  setState({ loadingAttachment: false })
-                })
-            }
+      getDetailApi(idEvent)
+        .then((res) => {
+          setState({
+            loadingEdit: false,
+            dataEdit: res.data,
+            color: res.data.color,
+            valueRepeat: res.data.repeat,
+            switch_all_day: res.data.all_day_event,
+            dataAttendees: res.data.attendees,
+            valueAttendees: []
           })
-          .catch((err) => {
-            setState({ loadingEdit: false, dataEdit: {} })
-          })*/
+
+          if (!_.isEmpty(res.data.attachment)) {
+            setState({ loadingAttachment: true })
+            const promises = []
+            _.forEach(res.data.attachment, (item) => {
+              const promise = new Promise(async (resolve, reject) => {
+                if (item.type === "image") {
+                  const _item = { ...item }
+                  await downloadApi.getPhoto(item.src).then((response) => {
+                    _item.url = URL.createObjectURL(response.data)
+                    resolve(_item)
+                  })
+                } else {
+                  resolve(item)
+                }
+              })
+              promises.push(promise)
+            })
+            Promise.all(promises)
+              .then((res) => {
+                console.log(res)
+                setState({ arrAttachment: res, loadingAttachment: false })
+              })
+              .catch((err) => {
+                setState({ loadingAttachment: false })
+              })
+          }
+        })
+        .catch((err) => {
+          setState({ loadingEdit: false, dataEdit: {} })
+        })
+    } else {
+      setState({ loadingEdit: false, dataEdit: {} })
     }
   }, [modal, idEvent])
 
@@ -304,21 +333,59 @@ const ModalCreateEvent = (props) => {
               )}
               className="input"
               name="event_name"
-              defaultValue={state.dataEdit?.name || ""}
+              defaultValue={state.dataEdit?.title || ""}
               loading={state.loadingEdit}
               useForm={methods}
               required
             />
 
-            <Dropdown
-              menu={{ items: itemsColor }}
-              placement="top"
-              trigger={["click"]}
-              overlayClassName="feed dropdown-div-change-color">
-              <div
-                className="div-btn-color"
-                style={{ backgroundColor: state.color }}></div>
-            </Dropdown>
+            <UncontrolledDropdown>
+              <DropdownToggle
+                tag="a"
+                data-toggle="dropdown"
+                className=""
+                href="/"
+                onClick={(e) => e.preventDefault()}
+                id="setting">
+                <div
+                  className="div-btn-color"
+                  style={{ backgroundColor: state.color }}></div>
+              </DropdownToggle>
+              <DropdownMenu  end className="dropdown-div-change-color mt-0">
+                <DropdownItem>
+                  <div className="div-change-color">
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#5398ff" }}
+                      onClick={() => setColor("#5398ff")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#ff6f2c" }}
+                      onClick={() => setColor("#ff6f2c")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#44d38a" }}
+                      onClick={() => setColor("#44d38a")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#ffc66f" }}
+                      onClick={() => setColor("#ffc66f")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#ffe658" }}
+                      onClick={() => setColor("#ffe658")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#f066b9" }}
+                      onClick={() => setColor("#f066b9")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#66e0f0" }}
+                      onClick={() => setColor("#66e0f0")}></div>
+                  </div>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
           </div>
 
           <div className="div-event-time">
@@ -414,7 +481,6 @@ const ModalCreateEvent = (props) => {
                   )}
                 </span>
               </div>
-
             </div>
           </div>
 
@@ -540,7 +606,11 @@ const ModalCreateEvent = (props) => {
                 color="primary"
                 type="submit"
                 className="btn-post"
-                disabled={state.loadingSubmit || state.loadingEdit}>
+                disabled={
+                  state.loadingSubmit ||
+                  state.loadingEdit ||
+                  state.dataEdit?.is_owner === false
+                }>
                 {state.loadingSubmit && (
                   <Spinner size={"sm"} className="me-50" />
                 )}
