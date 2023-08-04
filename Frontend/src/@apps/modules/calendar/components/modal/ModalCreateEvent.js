@@ -35,6 +35,7 @@ import {
 // ** redux
 import { useDispatch } from "react-redux"
 import { hideAddEventCalendarModal } from "../../common/reducer/calendar"
+import dayjs from "dayjs"
 
 const ModalCreateEvent = (props) => {
   const {
@@ -90,12 +91,15 @@ const ModalCreateEvent = (props) => {
     values.idEvent = idEvent
     values.idPost = idPost
     values.file = state.arrAttachment
-    values.start_time_date = moment(values.start_time_date).format("YYYY-MM-DD")
-    values.start_time_time = moment(values.start_time_time).format("HH:mm:ss")
+    values.start =
+      values.start_time_date.format("YYYY-MM-DD") +
+      " " +
+      values.start_time_time.format("HH:mm:ss")
+    values.end =
+      values.end_time_date.format("YYYY-MM-DD") +
+      " " +
+      values.end_time_time.format("HH:mm:ss")
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
-
-    console.log(values)
-    return false
 
     setState({ loadingSubmit: true })
     createEventApi(params)
@@ -175,19 +179,17 @@ const ModalCreateEvent = (props) => {
     setState({ arrAttachment: arrAttachment })
   }
 
-  const handleOpenChange = (value) => {
-    console.log(value)
-    setState({
-      openDropDownColor: value
-    })
-  }
-
   // ** useEffect
   useEffect(() => {
     if (modal && idEvent) {
       setState({ loadingEdit: true })
       getDetailApi(idEvent)
         .then((res) => {
+          const resData = res.data
+          resData.start_time_date = dayjs(resData.start).format("YYYY-MM-DD")
+          resData.start_time_time = dayjs(resData.start).format("HH:mm:ss")
+          resData.end_time_date = dayjs(resData.end).format("YYYY-MM-DD")
+          resData.end_time_time = dayjs(resData.end).format("HH:mm:ss")
           setState({
             loadingEdit: false,
             dataEdit: res.data,
@@ -217,7 +219,6 @@ const ModalCreateEvent = (props) => {
             })
             Promise.all(promises)
               .then((res) => {
-                console.log(res)
                 setState({ arrAttachment: res, loadingAttachment: false })
               })
               .catch((err) => {
@@ -351,7 +352,7 @@ const ModalCreateEvent = (props) => {
                   className="div-btn-color"
                   style={{ backgroundColor: state.color }}></div>
               </DropdownToggle>
-              <DropdownMenu  end className="dropdown-div-change-color mt-0">
+              <DropdownMenu end className="dropdown-div-change-color mt-0">
                 <DropdownItem>
                   <div className="div-change-color">
                     <div
@@ -418,7 +419,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.start_time_time
-                        ? moment(state.dataEdit.start_time_time)
+                        ? state.dataEdit.start_time_time
                         : null
                     }
                     loading={state.loadingEdit}
@@ -452,7 +453,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.end_time_time
-                        ? moment(state.dataEdit.end_time_time)
+                        ? state.dataEdit.end_time_time
                         : null
                     }
                     loading={state.loadingEdit}

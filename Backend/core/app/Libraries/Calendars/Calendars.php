@@ -61,11 +61,15 @@ class Calendars
 		}
 
 		try {
-			$arrFileAttach = [];
-			foreach ($fileUpload['file'] as $rowFile) {
-				$arrFileAttach[] = $rowFile['file'];
+			$upload = [];
+
+			if (isset($fileUpload['file'])) {
+				$arrFileAttach = [];
+				foreach ($fileUpload['file'] as $rowFile) {
+					$arrFileAttach[] = $rowFile['file'];
+				}
+				$upload['attachments'] = $arrFileAttach;
 			}
-			$upload['attachments'] = $arrFileAttach;
 			$id = $modules->saveRecord($content, $upload);
 		} catch (\Exception $e) {
 			throw $e;
