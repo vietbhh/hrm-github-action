@@ -39,6 +39,7 @@ import { ThemeContext } from "./utility/context/ThemeColors"
 import { SocketContextWrap } from "utility/context/Socket"
 
 import lodash from "lodash"
+window.global ||= window
 global._ = lodash
 
 // ** Lazy load app
