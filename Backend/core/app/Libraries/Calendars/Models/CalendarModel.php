@@ -8,7 +8,7 @@ class CalendarModel extends Model
 	protected $primaryKey = 'id';
 	protected $returnType = 'array';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['source', 'source_id', 'user_id', 'event', 'summary', 'created_at', 'label', 'title', 'start', 'end', 'allday', 'description', 'view_permissions', 'update_permissions'];
+	protected $allowedFields = ['source', 'source_id', 'user_id', 'event', 'summary', 'created_at', 'label', 'title', 'start', 'end', 'allday', 'color', 'description', 'view_permissions', 'update_permissions'];
 
 	protected $useTimestamps = true;
 	protected $createdField = 'created_at';

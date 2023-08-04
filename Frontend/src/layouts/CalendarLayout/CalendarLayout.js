@@ -7,20 +7,20 @@ import Layout from "layouts/_components/vertical/Layout"
 import "./assets/scss/chat.scss"
 
 // ** Menu Items Array
-import navigation from "./menuChat"
+import navigation from "../ChatLayout/menuChat"
 
 // ** import component
 import Navbar2 from "layouts/_components/custom/Navbar2"
 
-const ChatLayout = (props) => {
+const CalendarLayout = (props) => {
   return (
     <Layout
       menuData={navigation}
-      navbar={(navProps) => <Navbar2 {...navProps} />}
+      navbar={(navProps) => <Navbar2 {...navProps} logoLeftTitle="Calendar" />}
       /* customMenuComponent={(customProps) => (
-        <CustomMenuComponent {...customProps} />
-      )} */
-      className="navbar-2 chat"
+            <CustomMenuComponent {...customProps} />
+          )} */
+      className="navbar-2 chat calendar-layout"
       fixedSidebarCollapsed={true}
       logoLeft={true}
       {...props}>
@@ -29,4 +29,4 @@ const ChatLayout = (props) => {
   )
 }
 
-export default ChatLayout
+export default CalendarLayout

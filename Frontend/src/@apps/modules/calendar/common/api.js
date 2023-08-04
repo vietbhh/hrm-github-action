@@ -1,5 +1,5 @@
 import { axiosApi } from "@apps/utility/api"
-import { serialize } from "@apps/utility/handleData"
+import { serialize, object2QueryString } from "@apps/utility/handleData"
 import axios from "axios"
 
 export const calendarApi = {
@@ -21,10 +21,19 @@ export const calendarApi = {
       }
     )
   },
-  async getCalendar(filter) {
-    const url = `/calendar/load?${filter.calendarTag
-      .map((item, index) => `calendar_tag[${index}]=${item}`)
-      .join("&")}`
+  async getCalendar(filter = {}) {
+    let url = `/calendar/load`
+
+    if (filter?.calendarTag !== undefined) {
+      url += `?${filter.calendarTag
+        .map((item, index) => `calendar_tag[${index}]=${item}`)
+        .join("&")}`
+    }
+
+    delete filter["calendarTag"]
+    const strParams = object2QueryString(filter)
+    const sign = filter?.calendarTag !== undefined ? "&" : "?"
+    url += `${sign}${strParams}`
     return await axiosApi.get(url)
   },
   async getCalendarTag() {
@@ -32,5 +41,12 @@ export const calendarApi = {
   },
   async removeCalendar(id) {
     return await axiosApi.delete(`calendar/remove-calendar/${id}`)
+  },
+  async getListEvent(params = {}) {
+    const strParams = object2QueryString(params)
+    return await axiosApi.get(`calendar/get-list-event?${strParams}`)
+  },
+  async getDetailEvent(id) {
+    return await axiosApi.get(`calendar/get-detail-event/${id}`)
   }
 }

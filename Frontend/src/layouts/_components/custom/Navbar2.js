@@ -20,7 +20,8 @@ const Navbar2 = (props) => {
     defaultMenuNav,
     settingPermits,
     logoLeft,
-    setMenuVisibility
+    logoLeftTitle = "Chat",
+    setMenuVisibility,
   } = props
 
   const customSettingMenu =
@@ -41,7 +42,7 @@ const Navbar2 = (props) => {
       {logoLeft === true && (
         <Link to={"/"} className=" d-none d-lg-block d-xl-block">
           <div className="div-chat-logo">
-            <span className="chat-title">Chat</span>
+            <span className="chat-title">{logoLeftTitle}</span>
             <span className="chat-title chat-dot">.</span>
           </div>
         </Link>
