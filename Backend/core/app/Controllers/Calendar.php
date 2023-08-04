@@ -187,9 +187,6 @@ class Calendar extends ErpController
 			}
 			return $this->respond($info);
 		} catch (\Exception $e) {
-			echo '<pre>';
-			print_r($e);
-			echo '</pre>';
 			return $this->respond([]);
 		}
 	}
