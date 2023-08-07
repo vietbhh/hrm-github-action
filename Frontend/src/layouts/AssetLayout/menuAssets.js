@@ -2,8 +2,8 @@ import { useFormatMessage } from "@apps/utility/common"
 import * as Icon from "react-feather"
 const assetMenu = [
   {
-    header: useFormatMessage("layout.admin_tools"),
-    header_short: useFormatMessage("layout.tools")
+    header: useFormatMessage("layout.navigation"),
+    header_short: useFormatMessage("layout.nav")
   },
   {
     id: "asset-list",
