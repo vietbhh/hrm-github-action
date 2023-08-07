@@ -16,7 +16,13 @@ const CalendarLayout = (props) => {
   return (
     <Layout
       menuData={navigation}
-      navbar={(navProps) => <Navbar2 {...navProps} logoLeftTitle="Calendar" />}
+      navbar={(navProps) => (
+        <Navbar2
+          {...navProps}
+          logoLeftTitle="Calendar"
+          logoLeftLink="/calendar"
+        />
+      )}
       /* customMenuComponent={(customProps) => (
             <CustomMenuComponent {...customProps} />
           )} */
