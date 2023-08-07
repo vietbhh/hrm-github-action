@@ -20,10 +20,10 @@ const Navbar2 = (props) => {
     defaultMenuNav,
     settingPermits,
     logoLeft,
-    logoLeftTitle = "Chat",
-    setMenuVisibility,
+    logoLeftTitle,
+    logoLeftLink,
+    setMenuVisibility
   } = props
-
   const customSettingMenu =
     useSelector((state) => state.auth.settings).top_menu_config || {}
 
@@ -40,9 +40,11 @@ const Navbar2 = (props) => {
       </ul>
 
       {logoLeft === true && (
-        <Link to={"/"} className=" d-none d-lg-block d-xl-block">
+        <Link
+          to={logoLeftLink || "/"}
+          className=" d-none d-lg-block d-xl-block">
           <div className="div-chat-logo">
-            <span className="chat-title">{logoLeftTitle}</span>
+            <span className="chat-title">{logoLeftTitle || "Friday"}</span>
             <span className="chat-title chat-dot">.</span>
           </div>
         </Link>

@@ -238,8 +238,8 @@
 
           > li > a svg,
           > li > a i {
-            height: 20px !important;
-            width: 20px !important;
+            height: 36px !important;
+            width: 36px !important;
           }
 
           .navigation-header {
@@ -288,6 +288,8 @@
 
                 svg {
                   margin: 0;
+                  height: 20px !important;
+                  width: 20px !important;
                 }
 
                 &.green {
