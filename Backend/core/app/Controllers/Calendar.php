@@ -62,13 +62,26 @@ class Calendar extends ErpController
 	{
 		$getPost = $this->request->getPost();
 		$fileUpload = $this->request->getFiles();
+		$body = json_decode($getPost['body'], true);
+		$dataSave = [
+			'title' => $body['event_name'],
+			'start' => $body['start'],
+			'end' => $body['end'],
+			'allday' => 'false',
+			'description' => $body['details'],
+			'color' => str_replace('#', '', $body['color'])
+		];
 
-		$add = $this->calendar->add($getPost, $fileUpload);
+		$add = $this->calendar->add($dataSave, $fileUpload);
 
 		if (!$add) {
 			return $this->respond('exist');
 		}
-		return $this->respond($add);
+
+		$dataSave['id'] = $add;
+		return $this->respond([
+			'result' => $dataSave
+		]);
 	}
 
 	public function update_post($id)
@@ -115,5 +128,66 @@ class Calendar extends ErpController
 		return $this->respond([
 			'results' => $listCalendarTag
 		]);
+	}
+
+	public function get_list_event_get()
+	{
+		$modules = \Config\Services::modules('calendars');
+		$filter = $this->request->getGet();
+		$from = isset($filter['from']) ? $filter['from'] : date('Y-m-d');
+		$to = isset($filter['to']) ? $filter['to'] : date('Y-m-d', strtotime('+ 2 days', strtotime($from)));
+
+		$data = $this->calendar->list([
+			'created_at_from' => $from,
+			'created_at_to' => $to
+		]);
+
+		$data = handleDataBeforeReturn($modules, $data, true);
+		$result = [
+			'today' => [],
+			'tomorrow' => []
+		];
+		foreach ($data as $row) {
+			$startDate = date('Y-m-d', strtotime($row['start']));
+			if (strtotime($startDate) === strtotime($from)) {
+				$result['today'][] = $row;
+			} else {
+				$result['tomorrow'][] = $row;
+			}
+		}
+
+		return $this->respond([
+			'results' => $result
+		]);
+	}
+
+	public function get_detail_event_get($id)
+	{
+		$modules = \Config\Services::modules('calendars');
+		$model = $modules->model;
+
+		try {
+			$info = $model->asArray()->where('id', $id)->first();
+			$info['color'] = isset($info['color']) ? '#' . $info['color'] : '';
+			$info['is_owner'] = $info['owner'] == user_id();
+			$attachment = json_decode($info['attachments'], true);
+			if (is_array($attachment)) {
+				$storePath = getModuleUploadPath('calendar', $info['id'], false) . 'other/';
+				foreach ($attachment as $key => $row) {
+					$fileInfo = getFilesProps($storePath . $row);
+					$attachment[$key] = [
+						'type' => strpos($fileInfo['type'], 'image') !== false ? 'image' : $fileInfo['type'],
+						'name' => $fileInfo['fileName'],
+						'src' => $fileInfo['url'],
+						'size' => $fileInfo['size'],
+						'_id' => ''
+					];
+				}
+				$info['attachment'] = $attachment;
+			}
+			return $this->respond($info);
+		} catch (\Exception $e) {
+			return $this->respond([]);
+		}
 	}
 }

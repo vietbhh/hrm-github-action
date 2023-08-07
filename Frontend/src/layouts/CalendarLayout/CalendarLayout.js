@@ -5,21 +5,28 @@ import { Outlet } from "react-router-dom"
 // !Do not remove the Layout import
 import Layout from "layouts/_components/vertical/Layout"
 import "./assets/scss/chat.scss"
+
 // ** Menu Items Array
-import navigation from "./menuChat"
+import navigation from "../commonMenu"
 
 // ** import component
 import Navbar2 from "layouts/_components/custom/Navbar2"
 
-const ChatLayout = (props) => {
+const CalendarLayout = (props) => {
   return (
     <Layout
       menuData={navigation}
-      navbar={(navProps) => <Navbar2 {...navProps} logoLeftLink="/chat" logoLeftTitle="Chat" />}
+      navbar={(navProps) => (
+        <Navbar2
+          {...navProps}
+          logoLeftTitle="Calendar"
+          logoLeftLink="/calendar"
+        />
+      )}
       /* customMenuComponent={(customProps) => (
-        <CustomMenuComponent {...customProps} />
-      )} */
-      className="navbar-2 chat"
+            <CustomMenuComponent {...customProps} />
+          )} */
+      className="navbar-2 chat calendar-layout"
       fixedSidebarCollapsed={true}
       logoLeft={true}
       {...props}>
@@ -28,4 +35,4 @@ const ChatLayout = (props) => {
   )
 }
 
-export default ChatLayout
+export default CalendarLayout
