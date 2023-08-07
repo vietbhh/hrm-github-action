@@ -4,8 +4,8 @@ import { useFormatMessage } from "@apps/utility/common"
 
 const menuConfig = [
   {
-    header: useFormatMessage("layout.admin_tools"),
-    header_short: useFormatMessage("layout.tools")
+    header: useFormatMessage("layout.navigation"),
+    header_short: useFormatMessage("layout.nav")
   },
   {
     id: "overview",
@@ -49,7 +49,7 @@ const menuConfig = [
         icon: <Icon.Circle size={6} />,
         navLink: "/employees/org-chart"
       },
-      {
+     /*  {
         id: "insurance",
         title: "menu.insurance",
         type: "item",
@@ -57,7 +57,7 @@ const menuConfig = [
         resource: "employees",
         icon: <Icon.Circle size={6} />,
         navLink: "/employees/insurance"
-      },
+      }, */
       {
         id: "employee-setting",
         title: "menu.employee_setting",
@@ -69,7 +69,7 @@ const menuConfig = [
       }
     ]
   },
-  {
+  /* {
     id: "checklist",
     title: "menu.checklist",
     type: "dropdown",
@@ -112,8 +112,8 @@ const menuConfig = [
         navLink: "/checklist/setting"
       }
     ]
-  },
-  {
+  }, */
+  /* {
     id: "recruitment",
     title: "menu.recruitments",
     type: "dropdown",
@@ -165,7 +165,7 @@ const menuConfig = [
         navLink: "/recruitments/settings"
       }
     ]
-  },
+  }, */
   {
     id: "time-off",
     title: "menu.timeOff",
@@ -263,7 +263,7 @@ const menuConfig = [
       }
     ]
   },
-  {
+  /* {
     id: "payrolls",
     title: "menu.payrolls",
     type: "dropdown",
@@ -288,8 +288,8 @@ const menuConfig = [
         navLink: "/payrolls/settings"
       }
     ]
-  },
-  {
+  }, */
+  /* {
     id: "overtimes",
     title: "menu.overtime",
     type: "dropdown",
@@ -314,7 +314,7 @@ const menuConfig = [
         navLink: "/overtimes/request"
       }
     ]
-  },
+  }, */
   {
     id: "reports",
     title: "menu.reports",
@@ -375,7 +375,7 @@ const menuConfig = [
         icon: <Icon.Circle size={6} />,
         navLink: "/reports/attendance"
       },
-      {
+      /* {
         id: "reports-recruitment",
         title: "menu.reportsRecruitment",
         type: "item",
@@ -383,7 +383,7 @@ const menuConfig = [
         resource: "reports",
         icon: <Icon.Circle size={6} />,
         navLink: "/reports/recruitment"
-      }
+      } */
     ]
   }
 ]
