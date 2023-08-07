@@ -4,7 +4,7 @@ import { useFormatMessage } from "@apps/utility/common"
 
 const menuConfig = [
   {
-    header: useFormatMessage("layout.collaboration")
+    header: useFormatMessage("layout.navigation")
   },
   {
     id: "home",
