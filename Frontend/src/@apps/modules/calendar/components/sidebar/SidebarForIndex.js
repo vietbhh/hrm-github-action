@@ -1,11 +1,10 @@
 // ** React Imports
 import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { calendarApi } from "../../common/api"
-import moment from "moment"
+import { calendarNodeApi } from "../../common/api"
 // ** redux
 import { showAddEventCalendarModal } from "../../common/reducer/calendar"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 // ** Styles
 import { Button } from "reactstrap"
 // ** Components
@@ -26,14 +25,16 @@ const SidebarForIndex = (props) => {
     loading: true,
     data: {}
   })
-  
+
   const dispatch = useDispatch()
 
   const handleClickNewEvent = () => {
-    dispatch(showAddEventCalendarModal({
-      idEvent: 0,
-      viewOnly: false
-    }))
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: 0,
+        viewOnly: false
+      })
+    )
   }
 
   const loadData = () => {
@@ -41,7 +42,7 @@ const SidebarForIndex = (props) => {
       loading: true
     })
 
-    calendarApi
+    calendarNodeApi
       .getListEvent(filter)
       .then((res) => {
         setState({

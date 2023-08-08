@@ -1,6 +1,5 @@
-import { axiosApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 import { serialize, object2QueryString } from "@apps/utility/handleData"
-import axios from "axios"
 
 export const calendarApi = {
   async addCalendar(data) {
@@ -48,5 +47,41 @@ export const calendarApi = {
   },
   async getDetailEvent(id) {
     return await axiosApi.get(`calendar/get-detail-event/${id}`)
+  }
+}
+
+export const calendarNodeApi = {
+  async getCalendar(filter = {}) {
+    let url = `/calendar/load`
+
+    if (filter?.calendarTag !== undefined) {
+      url += `?${filter.calendarTag
+        .map((item, index) => `calendar_tag[${index}]=${item}`)
+        .join("&")}`
+    }
+
+    delete filter["calendarTag"]
+    const strParams = object2QueryString(filter)
+    const sign = filter?.calendarTag !== undefined ? "&" : "?"
+    url += `${sign}${strParams}`
+    return await axiosNodeApi.get(url)
+  },
+  async addCalendar(data) {
+    return await axiosNodeApi.post(
+      "/calendar/add",
+      serialize(_.cloneDeep(data)),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+  async getDetailEvent(id) {
+    return await axiosNodeApi.get(`calendar/get-detail-event/${id}`)
+  },
+  async getListEvent(params = {}) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`calendar/get-list-event?${strParams}`)
   }
 }

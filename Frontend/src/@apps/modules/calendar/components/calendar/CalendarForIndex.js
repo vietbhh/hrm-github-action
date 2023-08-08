@@ -125,7 +125,7 @@ const CalendarForIndex = (props) => {
       // eslint-disable-next-line no-underscore-dangle
       const extendedProps = calendarEvent._def.extendedProps
       const isAllDay = extendedProps.isAllDay
-      if (isAllDay !== undefined) {
+      if (isAllDay === true) {
         return (
           <GroupAllDayEvent
             viewInfoOnly={false}
@@ -139,6 +139,7 @@ const CalendarForIndex = (props) => {
     eventClick({ event: clickedEvent }) {
       const isAllDay = clickedEvent._def.extendedProps.isAllDay
       if (!isAllDay) {
+        console.log(clickedEvent._def)
         handleClickCalendar(clickedEvent._def.publicId)
       }
     },
