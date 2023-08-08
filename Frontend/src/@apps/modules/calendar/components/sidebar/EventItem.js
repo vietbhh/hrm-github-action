@@ -22,7 +22,7 @@ const EventItem = (props) => {
           className={classNames("info", {
             "out-date-info": isOutOfDate === true
           })}>
-          <h6 className="mb-0 title">{item.title}</h6>
+          <h6 className="mb-0 title">{item.name}</h6>
           <span className="time">
             {moment(item.start).format("hh:mm A")} -{" "}
             {moment(item.end).format("hh:mm A")}
