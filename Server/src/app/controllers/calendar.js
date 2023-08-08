@@ -17,10 +17,10 @@ const handleAddCalendar = async (req, res) => {
   const file = req.files
   const body = JSON.parse(req.body.body)
   const idEdit = body.idEvent
-
+  
   try {
     const dataInsert = {
-      __user: req.__user,
+      __user: req.userId,
       name: body.event_name,
       color: body.color.replace("#", ""),
       start_time_date: body.start_time_date,
