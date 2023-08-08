@@ -10,7 +10,6 @@ const __dirname = dirname(__filename)
 const basename = path.basename(__filename)
 
 const coreRouterFolder = path.join(__dirname)
-console.log(coreRouterFolder)
 const codeFolder = path.join(__dirname, "..", "..", "code")
 const sourcePath = path.join("src", "code")
 

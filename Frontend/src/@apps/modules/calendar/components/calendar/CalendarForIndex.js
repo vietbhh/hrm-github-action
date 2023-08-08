@@ -139,7 +139,6 @@ const CalendarForIndex = (props) => {
     eventClick({ event: clickedEvent }) {
       const isAllDay = clickedEvent._def.extendedProps.isAllDay
       if (!isAllDay) {
-        console.log(clickedEvent._def)
         handleClickCalendar(clickedEvent._def.publicId)
       }
     },

@@ -112,7 +112,6 @@ const FullCalendarComponent = (props) => {
         })
       })
       .catch((err) => {
-        console.log(err)
         setState({
           listCalendar: [],
           loadingCalendar: false
