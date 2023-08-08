@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom"
 // !Do not remove the Layout import
 import Layout from "layouts/_components/vertical/Layout"
 import "./assets/scss/chat.scss"
-
 // ** Menu Items Array
 import navigation from "./menuChat"
 
@@ -16,7 +15,7 @@ const ChatLayout = (props) => {
   return (
     <Layout
       menuData={navigation}
-      navbar={(navProps) => <Navbar2 {...navProps} />}
+      navbar={(navProps) => <Navbar2 {...navProps} logoLeftLink="/chat" logoLeftTitle="Chat" />}
       /* customMenuComponent={(customProps) => (
         <CustomMenuComponent {...customProps} />
       )} */

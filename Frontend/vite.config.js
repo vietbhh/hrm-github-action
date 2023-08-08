@@ -139,8 +139,46 @@ export default ({ mode }) => {
       }
     },
     build: {
+      assetsDir: "",
       rollupOptions: {
-        plugins: [rollupNodePolyFill()]
+        plugins: [rollupNodePolyFill()],
+        output: {
+          chunkFileNames: (file) => {
+            const { facadeModuleId } = file
+            if (
+              facadeModuleId !== null &&
+              facadeModuleId !== "" &&
+              facadeModuleId.includes("/src/@modules/")
+            ) {
+              const isModule = facadeModuleId.split("/src/@modules/")
+              if (isModule.length === 2) {
+                const moduleData = isModule[1].split("/")
+                if (
+                  moduleData.length === 3 &&
+                  moduleData[1] === "pages" &&
+                  moduleData[2].includes(".js")
+                ) {
+                  return `@modules/${moduleData[0]}/pages/[name].js`
+                }
+              }
+            }
+            return "assets/js/[name]-[hash].js"
+          },
+          entryFileNames: "assets/js/[name]-[hash].js",
+          assetFileNames: ({ name }) => {
+            if (/\.(gif|jpe?g|png|svg)$/.test(name ?? "")) {
+              return "assets/images/[name]-[hash][extname]"
+            }
+
+            if (/\.css$/.test(name ?? "")) {
+              return "assets/css/[name]-[hash][extname]"
+            }
+
+            // default value
+            // ref: https://rollupjs.org/guide/en/#outputassetfilenames
+            return "assets/other/[name]-[hash][extname]"
+          }
+        }
       }
     }
   }
@@ -149,6 +187,11 @@ export default ({ mode }) => {
     config.define = {
       global: "globalThis"
     }
+  }
+
+  if(mode !== "development"){
+    config.build.cssCodeSplit = false
+    config.build.rollupOptions.input = ["index.html", "build_modules.js"]
   }
 
   return defineConfig(config)
