@@ -4,6 +4,16 @@ $width-sidebar: 370px;
 $btn-background-color: #377dff;
 $font-family: Helvetica;
 
+.vertical-layout.vertical-menu-modern.menu-collapsed.chat {
+  .main-menu:not(.expanded) .main-menu-content .navigation > .nav-item > a {
+    padding: 6px 6px !important;
+    svg {
+      width: 36px !important;
+      height: 36px !important;
+    }
+  }
+}
+
 .navbar-2 {
   .chat-application .content-area-wrapper {
     padding: 0 !important;

@@ -124,7 +124,7 @@ export const ListComponentConfig = (props) => {
       action: "login",
       resource: "app"
     },
-    {
+    /* {
       id: "follow_up",
       title: useFormatMessage("modules.checklist.title.follow_up"),
       component: <FollowUp {...props} />,
@@ -144,7 +144,7 @@ export const ListComponentConfig = (props) => {
       show: false,
       action: "follow_up",
       resource: "widget"
-    },
+    }, */
     {
       id: "clock_in_out",
       title: useFormatMessage("modules.attendance.title.clock_in_out"),

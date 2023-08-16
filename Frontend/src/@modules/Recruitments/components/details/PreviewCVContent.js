@@ -1,10 +1,9 @@
 // ** React Imports
 import { useState } from "react";
 // ** Styles
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import { Pagination, Spin } from "antd";
 // ** Components
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
+import { Document, Page } from "@react-pdf/renderer";
 import PreviewFileContent from "./PreviewFileContent";
 
 const PreviewCVContent = (props) => {

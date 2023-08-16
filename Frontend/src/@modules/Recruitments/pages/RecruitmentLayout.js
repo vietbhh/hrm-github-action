@@ -2,33 +2,32 @@
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 import SettingTableModal from "@apps/modules/default/components/modals/SettingTableModal"
+import notification from "@apps/utility/notification"
 import "@styles/react/apps/app-todo.scss"
-import ShortcutButtonsPlugin from "assets/plugins/shortcut-buttons-flatpickr/dist/shortcut-buttons-flatpickr"
+//import ShortcutButtonsPlugin from "assets/plugins/shortcut-buttons-flatpickr/dist/shortcut-buttons-flatpickr"
 import { isEmpty } from "lodash-es"
 import React, { useContext, useEffect, useState } from "react"
-import { Share, Settings } from "react-feather"
 import Flatpickr from "react-flatpickr"
 import { NavLink as RRNavLink } from "react-router-dom"
 import {
   Card,
   CardBody,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Nav,
   NavItem,
   NavLink,
   Row,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
   UncontrolledButtonDropdown
 } from "reactstrap"
+import { AbilityContext } from "utility/context/Can"
 import blueBg from "../assets/images/blue.svg"
 import redBg from "../assets/images/red.svg"
 import yellowBg from "../assets/images/yellow.svg"
+import { candidatesApi, recruitmentsApi } from "../common/api"
 import PreviewListCV from "../components/details/PreviewListCV"
 import UploadCVModal from "../components/modals/UploadCVModal"
-import { candidatesApi, recruitmentsApi } from "../common/api"
-import notification from "@apps/utility/notification"
-import { AbilityContext } from "utility/context/Can"
 const RecruitmentLayout = (props) => {
   const pathname = window.location.pathname
   const ability = useContext(AbilityContext)
@@ -367,7 +366,7 @@ const RecruitmentLayout = (props) => {
                       inline: true,
                       shorthandCurrentMonth: true,
                       plugins: [
-                        ShortcutButtonsPlugin({
+                        /* ShortcutButtonsPlugin({
                           button: [
                             {
                               label: "Today",
@@ -391,7 +390,7 @@ const RecruitmentLayout = (props) => {
                                 break
                             }
                           }
-                        })
+                        }) */
                       ]
                     }}
                     className="d-none"

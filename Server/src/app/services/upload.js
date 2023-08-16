@@ -1,10 +1,9 @@
 import { Storage } from "@google-cloud/storage"
 import fs from "fs"
-import fse from "fs-extra"
-import { forEach, isEmpty, toPath } from "lodash-es"
+import { forEach, isEmpty } from "lodash-es"
+import mime from "mime-types"
 import path, { dirname } from "path"
 import { getSetting } from "./settings.js"
-import mime from "mime-types"
 
 const safeFileName = (fileName) => {
   return fileName
@@ -24,7 +23,7 @@ export const localSavePath = path.join(
   dirname(global.__basedir),
   "Backend",
   "applications",
-  process.env.code,
+  process.env.CODE,
   "writable",
   "uploads"
 )
@@ -574,3 +573,4 @@ const copyFilesServices = async (pathFrom, pathTo, filename, type = null) => {
 }
 
 export { _uploadServices, copyFilesServices, moveFileFromServerToGCS }
+

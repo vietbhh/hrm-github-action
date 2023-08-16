@@ -5,7 +5,7 @@ const AppSpinner = (props) => {
     <div className="fallback-spinner app-loader">
       {/* <SquareLoader type="grow" color="primary" {...props} /> */}
       <img src={loadingWhite} style={{
-        width : "100px"
+        width : "90px"
       }} />
     </div>
   )
