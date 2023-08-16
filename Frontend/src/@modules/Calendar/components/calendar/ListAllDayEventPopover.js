@@ -1,44 +1,31 @@
 // ** React Imports
 import { Fragment } from "react"
 import { formatDate, useFormatMessage } from "@apps/utility/common"
-import { calendarApi } from "../../common/api"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../../../@apps/modules/calendar/common/reducer/calendar"
 // ** Styles
 import { Tag } from "antd"
 // ** Components
-import notification from "@apps/utility/notification"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
 const ListAllDayEventPopover = (props) => {
   const {
     // ** props
-    viewInfoOnly,
     listAllDayEvent,
-    date,
+    date
     // ** methods
-    handleShowAddEventModal
   } = props
 
-  const handleClickCalendar = (item) => {
-    calendarApi
-      .getEventDetail(item.id)
-      .then((res) => {
-        const calendarInfo = res.data.data
+  const dispatch = useDispatch()
 
-        if (viewInfoOnly) {
-          handleShowAddEventModal({
-            calendarInfo: calendarInfo,
-            viewOnly: true
-          })
-        } else {
-          handleShowAddEventModal({
-            calendarInfo: calendarInfo,
-            viewOnly: !calendarInfo.is_editable
-          })
-        }
+  const handleClickCalendar = (item) => {
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: item._id,
+        viewOnly: false
       })
-      .catch((err) => {
-        notification.showError()
-      })
+    )
   }
 
   // ** render
@@ -62,14 +49,14 @@ const ListAllDayEventPopover = (props) => {
                 <Tag
                   key={`holiday-item-${item.id}-${index}`}
                   color="gold"
-                  className={`mb-1 calendar-event-item calendar-event-${item.calendar_tag.label}`}
+                  className={`mb-1 calendar-event-item calendar-event-${item.calendar_tag?.label}`}
                   onClick={() => handleClickCalendar(item)}>
                   <div>
                     <p className="mb-0 event-title">
-                      <i className="far fa-calendar-star me-25" /> {item.title}
+                      <i className="far fa-calendar-star me-25" /> {item.name}
                     </p>
                     <small className="event-description">
-                      <span className="me-25">{item.description}</span>
+                      <span className="me-25">{item.details}</span>
                     </small>
                   </div>
                 </Tag>

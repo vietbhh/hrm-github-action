@@ -1,7 +1,6 @@
 // ** React Imports
 import { useEffect, useRef } from "react"
 import moment from "moment"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
 // ** redux
 import { useDispatch } from "react-redux"
 import { showAddEventCalendarModal } from "../../common/reducer/calendar"
@@ -14,7 +13,6 @@ import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
 import { ErpSelect } from "@apps/components/common/ErpField"
-import GroupAllDayEvent from "./GroupAllDayEvent"
 
 const CalendarForIndex = (props) => {
   const {
@@ -22,6 +20,8 @@ const CalendarForIndex = (props) => {
     listCalendar,
     filter,
     filterCalendar,
+    // ** component
+    groupAllDayEvent,
     // ** methods
     setFilterCalendar
   } = props
@@ -49,7 +49,11 @@ const CalendarForIndex = (props) => {
     )
   }
 
+  const GroupAllDayEvent = groupAllDayEvent
+
   const calendarOptions = {
+    editable: false,
+    selectable: false,
     ref: calendarRef,
     events: listCalendar,
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -57,6 +61,13 @@ const CalendarForIndex = (props) => {
     allDaySlot: true,
     firstDay: 0,
     slotDuration: "00:60:00",
+    slotLabelFormat: {
+      hour: "numeric",
+      minute: "2-digit",
+      omitZeroMinute: false,
+      meridiem: false,
+      hour12: false
+    },
     customButtons: {
       customPrev: {
         text: <span className="fc-icon fc-icon-chevron-left"></span>,
@@ -95,9 +106,6 @@ const CalendarForIndex = (props) => {
       )
     },
     titleFormat: { month: "long", year: "numeric" },
-    editable: true,
-    eventDurationEditable: false,
-    dragScroll: true,
     navLinks: true,
     dayMaxEvents: 3,
     eventClassNames({ event: calendarEvent }) {
@@ -124,8 +132,16 @@ const CalendarForIndex = (props) => {
     eventContent({ event: calendarEvent }) {
       // eslint-disable-next-line no-underscore-dangle
       const extendedProps = calendarEvent._def.extendedProps
-      const isAllDay = extendedProps.isAllDay
-      if (isAllDay !== undefined) {
+      const isAllDay = extendedProps?.isAllDay
+      const isDOB = extendedProps?.isDOB
+      const isHoliday = extendedProps?.isHoliday
+      const isTimeOff = extendedProps?.isTimeOff
+      if (
+        isAllDay === true ||
+        isDOB === true ||
+        isHoliday === true ||
+        isTimeOff === true
+      ) {
         return (
           <GroupAllDayEvent
             viewInfoOnly={false}
@@ -137,20 +153,21 @@ const CalendarForIndex = (props) => {
       }
     },
     eventClick({ event: clickedEvent }) {
+      const isDOB = clickedEvent._def.extendedProps.isDOB
+      const isHoliday = clickedEvent._def.extendedProps.isHoliday
+      const isTimeOff = clickedEvent._def.extendedProps.isTimeOff
       const isAllDay = clickedEvent._def.extendedProps.isAllDay
-      if (!isAllDay) {
+      if (!isDOB && !isHoliday && !isTimeOff && !isAllDay) {
         handleClickCalendar(clickedEvent._def.publicId)
       }
     },
-    dateClick(info) {},
-    eventDrop({ event: droppedEvent }) {
-      handleDropCalendar(
-        droppedEvent._def.publicId,
-        droppedEvent.start,
-        droppedEvent.end
-      )
+    dateClick(info) {
+      handleClickCalendar(null)
     },
-    direction: "ltr"
+    direction: "ltr",
+    eventAllow: (dropInfo, draggedEvent) => {
+      return false // resourceEditable would be more appropriate but is undefined
+    }
   }
 
   // ** effect

@@ -20,7 +20,7 @@ const AllDayEvent = (props) => {
   const renderPopoverContent = () => {
     return (
       <ListAllDayEventPopover
-      viewInfoOnly={viewInfoOnly}
+        viewInfoOnly={viewInfoOnly}
         listAllDayEvent={listAllDayEvent}
         date={date}
         handleShowAddEventModal={handleShowAddEventModal}

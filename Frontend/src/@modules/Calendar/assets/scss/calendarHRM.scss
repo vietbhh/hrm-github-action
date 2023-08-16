@@ -1,0 +1,10 @@
+.calendar-index-page {
+    padding: 0 !important;
+    .calendar-container {
+        .calendar-section {
+            .fc {
+                max-height: calc(100vh - 11rem) !important;
+            }
+        }
+    }
+}

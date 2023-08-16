@@ -24,7 +24,7 @@ const Notification = (props) => {
         title: "Review",
         body: "<b>Sarah Saunders</b> invited you to <b>Weekly Meeting</b>",
         link: "",
-        actions: JSON.stringify([
+        actions: [
           {
             status: "",
             message: "",
@@ -34,7 +34,8 @@ const Notification = (props) => {
                 type: "link_button",
                 text: "Accept",
                 color: "primary",
-                url: "/dashboard"
+                url: "/dashboard",
+                api_type: "normal"
               },
               {
                 key: "decline",
@@ -42,16 +43,16 @@ const Notification = (props) => {
                 text: "Decline",
                 color: "default",
                 api_url: "notification/test/{id}",
+                api_type: "node",
                 api_methods: "post",
                 api_post_data: {},
                 api_option: {
                   disableLoading: true
                 }
               }
-              
             ]
           }
-        ]),
+        ],
         icon: ""
       }
     })

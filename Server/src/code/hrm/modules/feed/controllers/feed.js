@@ -1,5 +1,5 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
-import calendarMongoModel from "#app/models/calendar.mongo.js"
+import calendarMongoModel from "#code/hrm/modules/calendar/models/calendar.mongo.js"
 import { getUserActivated } from "#app/models/users.mysql.js"
 import { getSetting } from "#app/services/settings.js"
 import {
@@ -180,7 +180,6 @@ const submitPostController = async (req, res, next) => {
     // send notification
     if (!is_edit && body.approveStatus === "approved") {
       const receivers = union(mention, tag)
-      console.log("receivers", receivers)
       const link_notification = `/posts/${_id_parent}`
       const userId = body.data_user.id
       const full_name = body.data_user.full_name

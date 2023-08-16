@@ -793,6 +793,21 @@ $margin-navigation-a: 22px !default;
                     font-size: 10px;
                   }
 
+                  .color-success {
+                    background-color: rgb(40, 199, 111) !important;
+                    color: #ffffff !important;
+                  }
+
+                  .color-danger {
+                    background-color: rgb(234, 84, 85) !important;
+                    color: #ffffff !important;
+                  }
+
+                  .color-warning {
+                    background-color: rgb(255, 159, 67) !important;
+                    color: #ffffff !important;
+                  }
+
                   .color-primary {
                     background-color: #377dff !important;
                     color: #ffffff !important;
