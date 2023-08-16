@@ -484,7 +484,9 @@
           "holiday": "Holiday",
           "etc": "ETC",
           "birthday": "Birthday",
-          "time_off": "Time Off"
+          "time_off": "Time Off",
+          "meetings": "Meetings",
+          "interviews": "Interviews"
         }
       }
     },
@@ -4176,6 +4178,8 @@
         "request_workspace": "sent a request to join the workspace",
         "need_approval": "needs approval",
         "you_have_a_new_event": "You have a new event",
+        "invite_to_the_event": "You have an invitation to the ",
+        "event": "event",
         "you_have_a_new_announcement": "You have a new announcement",
         "you_have_a_new_endorse": "You have a new endorse",
         "liked_your_post": "liked your post",

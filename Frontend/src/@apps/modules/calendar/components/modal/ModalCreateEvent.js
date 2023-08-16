@@ -7,13 +7,11 @@ import {
 } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useSelector } from "react-redux"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { downloadApi } from "@apps/modules/download/common/api"
 //import { eventApi } from "@modules/Feed/common/api"
 import { renderIconAttachment } from "../../common/common"
-import { Dropdown } from "antd"
 import {
   DropdownItem,
   DropdownMenu,
@@ -615,7 +613,11 @@ const ModalCreateEvent = (props) => {
                 {state.loadingSubmit && (
                   <Spinner size={"sm"} className="me-50" />
                 )}
-                {useFormatMessage("modules.calendar.create_event.title")}
+                {idEvent
+                  ? useFormatMessage(
+                      "modules.calendar.modals.title.update_event"
+                    )
+                  : useFormatMessage("modules.calendar.create_event.title")}
               </Button.Ripple>
             </form>
           </div>

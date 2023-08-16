@@ -21,9 +21,11 @@ const Calendar = (props) => {
     showCalendarDescription,
     changeYearType,
     calendarYear,
+    filters,
     // ** methods
     handleShowAddEventModal,
-    setCalendarYear
+    setCalendarYear,
+    setFilter
   } = props
 
   const currentHour = moment().hour()
@@ -67,17 +69,6 @@ const Calendar = (props) => {
   }, [calendarYear])
 
   // ** render
-  const renderGroupAllDayEvent = (extendedProps, date) => {
-    return (
-      <GroupAllDayEvent
-        viewInfoOnly={false}
-        date={date}
-        extendedProps={extendedProps}
-        handleShowAddEventModal={handleShowAddEventModal}
-      />
-    )
-  }
-
   const calendarOptions = {
     ref: calendarRef,
     events: listCalendar,
@@ -152,34 +143,47 @@ const Calendar = (props) => {
       const isAllDay = extendedProps.isAllDay
       const isChecklist = extendedProps.isChecklist
       if (
-        isDOB !== undefined ||
-        isHoliday !== undefined ||
-        isTimeOff !== undefined ||
-        isAllDay !== undefined ||
-        isChecklist !== undefined
+        isAllDay === true ||
+        isDOB === true ||
+        isHoliday === true ||
+        isTimeOff === true ||
+        isChecklist === true
       ) {
-        return renderGroupAllDayEvent(extendedProps, calendarEvent.startStr)
+        return (
+          <GroupAllDayEvent
+            viewInfoOnly={false}
+            date={calendarEvent.startStr}
+            extendedProps={extendedProps}
+            handleShowAddEventModal={handleShowAddEventModal}
+          />
+        )
       }
     }
   }
 
   const renderCalendarDescription = () => {
-    return <CalendarDescription />
-  }
+    if (showCalendarDescription === true) {
+      return <CalendarDescription />
+    }
 
-  const renderAddCalendarButton = () => {
-    return (
-      <AddCalendarButton handleShowAddEventModal={handleShowAddEventModal} />
-    )
+    return ""
   }
 
   return (
     <Fragment>
-      <FullCalendar {...calendarOptions} />
-      <Fragment>{renderAddCalendarButton()}</Fragment>
-      <Fragment>
-        {showCalendarDescription && renderCalendarDescription()}
-      </Fragment>
+      <FullCalendar
+        {...calendarOptions}
+        datesSet={(arg) => {
+          if (!moment(arg.end).isSame(filters.to)) {
+            setFilter({
+              from: moment(arg.start).format("YYYY-MM-DD"),
+              to: moment(arg.end).format("YYYY-MM-DD")
+            })
+          }
+        }}
+      />
+      <AddCalendarButton handleShowAddEventModal={handleShowAddEventModal} />
+      <Fragment>{renderCalendarDescription()}</Fragment>
     </Fragment>
   )
 }

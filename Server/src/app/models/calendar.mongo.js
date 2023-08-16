@@ -35,75 +35,6 @@ const calendarSchema = baseSchema("m_calendar", {
     type: Boolean,
     default: false
   },
-  repeat: {
-    type: String,
-    default: "no_repeat"
-  },
-  // ** employee: bao gồm employee được chọn và employee trong department được chọn
-  employee: {
-    type: [
-      {
-        id: {
-          type: String,
-          default: ""
-        },
-        status: {
-          type: String,
-          default: ""
-        },
-        dateUpdate: {
-          type: Date,
-          default: Date.now()
-        }
-      }
-    ],
-    default: []
-  },
-  // ** attendees: lưu lại dùng để edit
-  attendees: {
-    type: [
-      {
-        value: {
-          type: String,
-          default: ""
-        },
-        label: {
-          type: String,
-          default: ""
-        },
-        avatar: {
-          type: String,
-          default: ""
-        }
-      }
-    ],
-    default: []
-  },
-  meeting_room: {
-    type: {
-      value: {
-        type: String,
-        default: ""
-      },
-      label: {
-        type: String,
-        default: ""
-      }
-    },
-    default: {}
-  },
-  reminder: {
-    type: String,
-    default: ""
-  },
-  reminder_date: {
-    type: Date,
-    default: null
-  },
-  online_meeting: {
-    type: Boolean,
-    default: false
-  },
   details: {
     type: String,
     default: ""
@@ -130,12 +61,8 @@ const calendarSchema = baseSchema("m_calendar", {
       }
     ],
     default: []
-  },
-  id_post: {
-    type: String,
-    default: ""
   }
 })
 
-const calendarMongoModel = model("calendarMongoModel", calendarSchema)
+const calendarMongoModel = model("calendarMongoModelCore", calendarSchema)
 export default calendarMongoModel

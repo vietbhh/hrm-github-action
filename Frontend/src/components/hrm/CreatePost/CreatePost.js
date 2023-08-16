@@ -6,6 +6,10 @@ import { useSelector } from "react-redux"
 import ModalAnnouncement from "./CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "./CreatePostDetails/modals/ModalCreateEvent"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
+import { eventApi } from "@modules/Feed/common/api"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../../@apps/modules/calendar/common/reducer/calendar"
 
 const CreatePost = (props) => {
   const {
@@ -34,13 +38,21 @@ const CreatePost = (props) => {
   const fullName = userData.full_name
   const userId = userData.id
 
+  const dispatch = useDispatch()
+
   // ** function
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
   const setOptionCreate = (value) => setState({ optionCreate: value })
-  const toggleModalCreateEvent = () =>
-    setState({ modalCreateEvent: !state.modalCreateEvent })
+  const toggleModalCreateEvent = () => {
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: null,
+        viewOnly: false
+      })
+    )
+  }
   const toggleModalAnnouncement = () =>
     setState({ modalAnnouncement: !state.modalAnnouncement })
 
@@ -168,11 +180,11 @@ const CreatePost = (props) => {
       />
 
       <ModalCreateEvent
-        modal={state.modalCreateEvent}
-        toggleModal={toggleModalCreateEvent}
         options_employee_department={options_employee_department}
         optionsMeetingRoom={optionsMeetingRoom}
         setDataCreateNew={setDataCreateNew}
+        createEventApi={eventApi.postSubmitEvent}
+        getDetailApi={eventApi.getGetEventById}
       />
 
       <ModalAnnouncement

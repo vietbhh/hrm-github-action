@@ -10,9 +10,14 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { eventApi } from "@modules/Feed/common/api"
 import { renderIconAttachment } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
+import {
+  DropdownItem,
+  DropdownMenu,
+  UncontrolledDropdown,
+  DropdownToggle
+} from "reactstrap"
 import classNames from "classnames"
 import moment from "moment"
 import React, { Fragment, useEffect } from "react"
@@ -25,24 +30,33 @@ import {
   ModalHeader,
   Spinner
 } from "reactstrap"
+import { components } from "react-select"
+// ** redux
+import { useDispatch, useSelector } from "react-redux"
+import { hideAddEventCalendarModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
+import dayjs from "dayjs"
+import weekday from "dayjs/plugin/weekday"
+import localeData from "dayjs/plugin/localeData"
 
 const ModalCreateEvent = (props) => {
   const {
-    modal,
-    toggleModal,
     options_employee_department,
     optionsMeetingRoom,
     setDataCreateNew,
 
     // ** edit
-    idEvent = null,
     setData,
     setDataLink,
-    idPost = null
+    idPost = null,
+
+    // ** api
+    createEventApi,
+    getDetailApi,
+    afterCreate
   } = props
   const [state, setState] = useMergedState({
     loadingSubmit: false,
-
+    isEditable: true,
     //
     color: "#5398ff",
     valueRepeat: "no_repeat",
@@ -61,6 +75,18 @@ const ModalCreateEvent = (props) => {
     dataEdit: {}
   })
 
+  dayjs.extend(weekday)
+  dayjs.extend(localeData)
+
+  const calendarState = useSelector((state) => state.calendar)
+  const { modal, idEvent } = calendarState
+
+  const dispatch = useDispatch()
+
+  const toggleModal = () => {
+    dispatch(hideAddEventCalendarModal())
+  }
+
   const methods = useForm({ mode: "onSubmit" })
   const { handleSubmit, reset, setValue } = methods
   const onSubmit = (values) => {
@@ -73,8 +99,7 @@ const ModalCreateEvent = (props) => {
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
 
     setState({ loadingSubmit: true })
-    eventApi
-      .postSubmitEvent(params)
+    createEventApi(params)
       .then((res) => {
         if (_.isFunction(setDataCreateNew)) {
           setDataCreateNew(res.data.dataFeed)
@@ -92,6 +117,10 @@ const ModalCreateEvent = (props) => {
         notification.showSuccess({
           text: useFormatMessage("notification.success")
         })
+
+        if (_.isFunction(afterCreate)) {
+          afterCreate(res.data?.result)
+        }
       })
       .catch((err) => {
         setState({ loadingSubmit: false })
@@ -174,23 +203,24 @@ const ModalCreateEvent = (props) => {
   useEffect(() => {
     if (modal && idEvent) {
       setState({ loadingEdit: true })
-      eventApi
-        .getGetEventById(idEvent)
+      getDetailApi(idEvent)
         .then((res) => {
+          const restData = res.data.data
           setState({
             loadingEdit: false,
-            dataEdit: res.data,
-            color: res.data.color,
-            valueRepeat: res.data.repeat,
-            switch_all_day: res.data.all_day_event,
-            dataAttendees: res.data.attendees,
+            dataEdit: restData,
+            isEditable: restData.is_editable,
+            color: restData.color,
+            valueRepeat: restData.repeat,
+            switch_all_day: restData.all_day_event,
+            dataAttendees: restData.attendees,
             valueAttendees: []
           })
 
-          if (!_.isEmpty(res.data.attachment)) {
+          if (!_.isEmpty(restData.attachment)) {
             setState({ loadingAttachment: true })
             const promises = []
-            _.forEach(res.data.attachment, (item) => {
+            _.forEach(restData.attachment, (item) => {
               const promise = new Promise(async (resolve, reject) => {
                 if (item.type === "image") {
                   const _item = { ...item }
@@ -216,48 +246,21 @@ const ModalCreateEvent = (props) => {
         .catch((err) => {
           setState({ loadingEdit: false, dataEdit: {} })
         })
+    } else {
+      setState({ loadingEdit: false, dataEdit: {}, arrAttachment: [] })
     }
   }, [modal, idEvent])
 
-  // ** render
-  const itemsColor = [
-    {
-      key: "1",
-      label: (
-        <div className="div-change-color">
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#5398ff" }}
-            onClick={() => setColor("#5398ff")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#ff6f2c" }}
-            onClick={() => setColor("#ff6f2c")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#44d38a" }}
-            onClick={() => setColor("#44d38a")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#ffc66f" }}
-            onClick={() => setColor("#ffc66f")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#ffe658" }}
-            onClick={() => setColor("#ffe658")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#f066b9" }}
-            onClick={() => setColor("#f066b9")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#66e0f0" }}
-            onClick={() => setColor("#66e0f0")}></div>
-        </div>
-      )
+  useEffect(() => {
+    if (
+      modal === true &&
+      options_employee_department === undefined &&
+      optionsMeetingRoom === undefined
+    ) {
     }
-  ]
+  }, [modal])
 
+  // ** render
   const iconDate = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -369,6 +372,52 @@ const ModalCreateEvent = (props) => {
     }
   ]
 
+  const Option = (props) => {
+    const { data } = props
+    return (
+      <>
+        <components.Option {...props}>
+          <div className="d-flex justify-content-left align-items-start">
+            <Avatar
+              userId={data.value}
+              className="my-0 me-50 mt-25"
+              size="sm"
+              src={data.avatar}
+            />
+            <div className="d-flex flex-column">
+              <p className="user-name text-truncate mb-0">
+                <span className="d-block fw-bold">{data.label}</span>{" "}
+                <small className="text-truncate text-username mb-0">
+                  {data.tag === "department"
+                    ? `@${useFormatMessage(
+                        "modules.calendar.fields.department"
+                      )}`
+                    : data.tag}
+                </small>
+              </p>
+            </div>
+          </div>
+        </components.Option>
+      </>
+    )
+  }
+
+  const CustomMulti = ({ data, ...props }) => {
+    return (
+      <components.MultiValueLabel {...props}>
+        <div className="d-flex align-items-center">
+          <Avatar
+            src={data.avatar}
+            userId={data.value}
+            className="my-0 me-50"
+            size="sm"
+          />
+          <small>{data.label}</small>
+        </div>
+      </components.MultiValueLabel>
+    )
+  }
+
   return (
     <Fragment>
       <Modal
@@ -404,15 +453,58 @@ const ModalCreateEvent = (props) => {
               required
             />
 
-            <Dropdown
-              menu={{ items: itemsColor }}
-              placement="top"
-              trigger={["click"]}
-              overlayClassName="feed dropdown-div-change-color">
-              <div
-                className="div-btn-color"
-                style={{ backgroundColor: state.color }}></div>
-            </Dropdown>
+            <UncontrolledDropdown>
+              <DropdownToggle
+                tag="a"
+                data-toggle="dropdown"
+                className=""
+                href="/"
+                onClick={(e) => e.preventDefault()}
+                id="setting">
+                <div
+                  className="div-btn-color"
+                  style={{
+                    backgroundColor:
+                      state.color.search("#") === -1
+                        ? "#" + state.color
+                        : state.color
+                  }}></div>
+              </DropdownToggle>
+              <DropdownMenu end className="dropdown-div-change-color mt-0">
+                <DropdownItem>
+                  <div className="div-change-color">
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#5398ff" }}
+                      onClick={() => setColor("#5398ff")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#ff6f2c" }}
+                      onClick={() => setColor("#ff6f2c")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#44d38a" }}
+                      onClick={() => setColor("#44d38a")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#ffc66f" }}
+                      onClick={() => setColor("#ffc66f")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#ffe658" }}
+                      onClick={() => setColor("#ffe658")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#f066b9" }}
+                      onClick={() => setColor("#f066b9")}></div>
+                    <div
+                      className="div-btn-color"
+                      style={{ backgroundColor: "#66e0f0" }}
+                      onClick={() => setColor("#66e0f0")}></div>
+                  </div>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
           </div>
 
           <div className="div-event-time">
@@ -429,7 +521,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconDate}
                     defaultValue={
                       state.dataEdit.start_time_date
-                        ? moment(state.dataEdit.start_time_date)
+                        ? dayjs(state.dataEdit.start_time_date)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -445,7 +537,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.start_time_time
-                        ? moment(state.dataEdit.start_time_time)
+                        ? dayjs(state.dataEdit.start_time_time)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -463,7 +555,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconDate}
                     defaultValue={
                       state.dataEdit.end_time_date
-                        ? moment(state.dataEdit.end_time_date)
+                        ? dayjs(state.dataEdit.end_time_date)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -479,7 +571,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.end_time_time
-                        ? moment(state.dataEdit.end_time_time)
+                        ? dayjs(state.dataEdit.end_time_time)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -547,10 +639,11 @@ const ModalCreateEvent = (props) => {
                   placeholder={useFormatMessage(
                     "modules.feed.create_event.text.attendees_placeholder"
                   )}
-                  className="select"
+                  className="select select-attendees"
                   isMulti={true}
                   options={options_employee_department}
                   value={state.valueAttendees}
+                  components={{ Option: Option, MultiValueLabel: CustomMulti }}
                   onChange={(e) => setState({ valueAttendees: e })}
                 />
                 <button
@@ -767,11 +860,17 @@ const ModalCreateEvent = (props) => {
                 color="primary"
                 type="submit"
                 className="btn-post"
-                disabled={state.loadingSubmit || state.loadingEdit}>
+                disabled={
+                  state.loadingSubmit || state.loadingEdit || !state.isEditable
+                }>
                 {state.loadingSubmit && (
                   <Spinner size={"sm"} className="me-50" />
                 )}
-                {useFormatMessage("modules.feed.create_event.title")}
+                {idEvent
+                  ? useFormatMessage(
+                      "modules.calendar.modals.title.update_event"
+                    )
+                  : useFormatMessage("modules.calendar.create_event.title")}
               </Button.Ripple>
             </form>
           </div>
