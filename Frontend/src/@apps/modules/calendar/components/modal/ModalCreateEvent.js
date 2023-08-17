@@ -1,19 +1,15 @@
 import {
   ErpDate,
   ErpInput,
-  ErpSelect,
   ErpSwitch,
   ErpTime
 } from "@apps/components/common/ErpField"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import { useSelector } from "react-redux"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { downloadApi } from "@apps/modules/download/common/api"
-//import { eventApi } from "@modules/Feed/common/api"
 import { renderIconAttachment } from "../../common/common"
-import { Dropdown } from "antd"
 import {
   DropdownItem,
   DropdownMenu,
@@ -91,14 +87,6 @@ const ModalCreateEvent = (props) => {
     values.idEvent = idEvent
     values.idPost = idPost
     values.file = state.arrAttachment
-    values.start =
-      values.start_time_date.format("YYYY-MM-DD") +
-      " " +
-      values.start_time_time.format("HH:mm:ss")
-    values.end =
-      values.end_time_date.format("YYYY-MM-DD") +
-      " " +
-      values.end_time_time.format("HH:mm:ss")
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
 
     setState({ loadingSubmit: true })
@@ -183,18 +171,6 @@ const ModalCreateEvent = (props) => {
       getDetailApi(idEvent)
         .then((res) => {
           const resData = res.data.data
-          resData.start_time_date = dayjs(resData.start_time_date).format(
-            "YYYY-MM-DD"
-          )
-          resData.start_time_time = dayjs(resData.start_time_time).format(
-            "HH:mm:ss"
-          )
-          resData.end_time_date = dayjs(resData.end_time_date).format(
-            "YYYY-MM-DD"
-          )
-          resData.end_time_time = dayjs(resData.end_time_time).format(
-            "HH:mm:ss"
-          )
           setState({
             loadingEdit: false,
             dataEdit: resData,
@@ -370,7 +346,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconDate}
                     defaultValue={
                       state.dataEdit.start_time_date
-                        ? moment(state.dataEdit.start_time_date)
+                        ? dayjs(state.dataEdit.start_time_date)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -386,7 +362,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.start_time_time
-                        ? state.dataEdit.start_time_time
+                        ? dayjs(state.dataEdit.start_time_time)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -404,7 +380,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconDate}
                     defaultValue={
                       state.dataEdit.end_time_date
-                        ? moment(state.dataEdit.end_time_date)
+                        ? dayjs(state.dataEdit.end_time_date)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -420,7 +396,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.end_time_time
-                        ? state.dataEdit.end_time_time
+                        ? dayjs(state.dataEdit.end_time_time)
                         : null
                     }
                     loading={state.loadingEdit}

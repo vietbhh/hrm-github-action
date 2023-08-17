@@ -41,18 +41,6 @@ const Sidebar = (props) => {
   }
 
   // ** render
-  const renderFilterCalendarTag = () => {
-    return (
-      <FilterCalendarTag
-        listCalendarTag={listCalendarTag}
-        listCalendar={listCalendar}
-        filters={filters}
-        setFilter={setFilter}
-        setListCalendar={setListCalendar}
-      />
-    )
-  }
-
   return (
     <Fragment>
       <div className="calendar-sidebar mt-2">
@@ -74,7 +62,15 @@ const Sidebar = (props) => {
           </div>
         </CardBody>
         <CardBody className="ps-25">
-          <div>{renderFilterCalendarTag()}</div>
+          <div>
+            <FilterCalendarTag
+              listCalendarTag={listCalendarTag}
+              listCalendar={listCalendar}
+              filters={filters}
+              setFilter={setFilter}
+              setListCalendar={setListCalendar}
+            />
+          </div>
         </CardBody>
       </div>
     </Fragment>

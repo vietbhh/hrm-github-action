@@ -3,44 +3,42 @@ import { Fragment } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 // ** Styles
 // ** Components
-import { ErpCheckbox } from "@apps/components/common/ErpField"
 
 const FilterCalendarTag = (props) => {
   const {
     // ** props
-    listCalendarTag,
     filters,
     // ** methods
     setFilter
   } = props
 
-  const listCalendarTagFilter = [...listCalendarTag]
-  const calendarTagFilter = filters.calendarTag
-
-  /*const handleChangeFilter = (value, checked) => {
-    let newCalendarTagFilter = []
-    if (value === "all") {
-      newCalendarTagFilter = checked ? ["all"] : []
-    } else {
-      const newCalendarTag =
-        calendarTagFilter.length === 1 && calendarTagFilter[0] === "all"
-          ? listCalendarTagFilter.map((item) => item.id)
-          : calendarTagFilter
-      newCalendarTagFilter = checked
-        ? [...newCalendarTag, value]
-        : newCalendarTag.filter((item) => item !== value)
-      if (newCalendarTagFilter.length === listCalendarTagFilter.length) {
-        newCalendarTagFilter = ["all"]
-      }
+  const listCalendarTagFilter = [
+    {
+      value: "5398ff",
+      text: "meetings"
+    },
+    {
+      value: "ff6f2c",
+      text: "interviews"
+    },
+    {
+      value: "44d38a",
+      text: "family"
+    },
+    {
+      value: "ffc66f",
+      text: "time_off"
+    },
+    {
+      value: "f066b9",
+      text: "business"
     }
-    setFilter({
-      calendarTag: newCalendarTagFilter
-    })
-  }*/
+  ]
+  const calendarTagFilter = filters.calendarTag
 
   const handleChangeFilter = (value) => {
     setFilter({
-      calendarTag: value
+      color: value
     })
   }
 
@@ -63,17 +61,17 @@ const FilterCalendarTag = (props) => {
             return (
               <div
                 className={`d-flex align-items-center filter-calendar-item ${
-                  calendarTagFilter === item.id
+                  calendarTagFilter === item.value
                     ? "filter-calendar-tag-active"
                     : ""
                 } mb-50 mt-25`}
                 key={`filter_calendar_${index}`}
-                onClick={() => handleChangeFilter(item.id)}>
+                onClick={() => handleChangeFilter(item.value)}>
                 <div
                   className={`filter-calendar-tag calendar-tag-${item.value} me-50`}></div>
                 <span>
                   {useFormatMessage(
-                    `modules.calendar_tags.fields.value.${item.value}`
+                    `modules.calendar_tags.fields.value.${item.text}`
                   )}
                 </span>
               </div>

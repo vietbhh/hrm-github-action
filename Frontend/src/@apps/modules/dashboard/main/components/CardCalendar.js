@@ -1,8 +1,10 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { calendarApi } from "@apps/modules/calendar/common/api"
-import { Fragment, useEffect } from "react"
+import { calendarNodeApi } from "@apps/modules/calendar/common/api"
+import { useEffect } from "react"
 import moment from "moment"
+import dayjs from "dayjs"
+import { getArrWeekDate } from "../../../calendar/common/common"
 // ** redux
 import {
   showAddEventCalendarModal,
@@ -14,9 +16,9 @@ import { useDispatch } from "react-redux"
 import { Card, CardBody } from "reactstrap"
 // ** Components
 import Calendar from "./details/calendar/Calendar"
-import AddEventModal from "@apps/modules/calendar/components/modal/AddEventModal"
-import LayoutDashboard from "./LayoutDashboard"
+import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 import Sidebar from "@apps/modules/calendar/components/sidebar/Sidebar"
+import ModalCreateEvent from "../../../calendar/components/modal/ModalCreateEvent"
 
 const CardCalendar = (props) => {
   const {
@@ -31,7 +33,9 @@ const CardCalendar = (props) => {
     listCalendar: [],
     listCalendarTag: [],
     filters: {
-      calendarTag: "all"
+      color: "",
+      from: getArrWeekDate().shift(),
+      to: getArrWeekDate().pop()
     },
     calendarYear: moment().year(),
     changeYearType: ""
@@ -68,73 +72,54 @@ const CardCalendar = (props) => {
 
   const handleShowAddEventModal = (data) => {
     dispatch(removeCurrentCalendar())
-    dispatch(showAddEventCalendarModal(data))
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: null,
+        viewOnly: false
+      })
+    )
   }
 
   const handleHideAddEventModal = () => {
     dispatch(hideAddEventCalendarModal())
   }
-
-  const loadCalendarTag = () => {
-    setState({
-      loading: true
-    })
-    calendarApi
-      .getCalendarTag()
-      .then((res) => {
-        const listColor = {}
-        res.data.results.map((item) => {
-          listColor[item.value] = item.color
-        })
-        setState({
-          listCalendarTag: res.data.results,
-          calendarsColor: listColor,
-          loading: false
-        })
-        if (_.isFunction(props.handleLayouts)) {
-          props.handleLayouts()
-        }
-      })
-      .catch((err) => {
-        setState({
-          listCalendarTag: [],
-          calendarsColor: {},
-          loading: false
-        })
-        if (_.isFunction(props.handleLayouts)) {
-          props.handleLayouts()
-        }
-      })
-  }
-
   const loadCalendar = () => {
     setState({
       loadingCalendar: true
     })
-    calendarApi
-      .getCalendar({ calendarTag: [state.filters.calendarTag] })
+    const params = {
+      color: state.filters.color,
+      created_at_from: moment(state.filters.from).format("YYYY-MM-DD"),
+      created_at_to: moment(state.filters.to).format("YYYY-MM-DD")
+    }
+    calendarNodeApi
+      .getCalendar(params)
       .then((res) => {
         const data = res.data.results
         const newCalendar = data.map((item) => {
-          const color =
-            state.calendarsColor[item.calendar_tag?.label] === undefined
-              ? "all-day-event"
-              : state.calendarsColor[item.calendar_tag?.label]
-          const startTime = moment(item.start)
-          const endTime = moment(item.end)
-          const duration = moment.duration(endTime.diff(startTime))
+          const color = item.color === null ? "all-day-event" : item.color
+          const startTime = item.start
+            ? item.start
+            : dayjs(item.start_time_date).format("YYYY-MM-DD") +
+              " " +
+              dayjs(item.start_time_time).format("HH:mm:ss")
+          const endTime = item.end
+            ? item.end
+            : dayjs(item.end_time_date).format("YYYY-MM-DD") +
+              " " +
+              dayjs(item.end_time_time).format("HH:mm:ss")
+          const duration = moment.duration(dayjs(endTime).diff(startTime))
           const hours = duration.hours()
-
           return {
-            id: item.id,
-            start: item.start,
-            end: item.end,
-            title: item.title,
+            id: item._id,
+            start: startTime,
+            end: endTime,
+            title: item.name,
             allDay: item.allday,
             editable: false,
             calendar_tag: item.calendar_tag,
             extendedProps: {
-              isAllDay: item?.is_all_day,
+              isAllDay: item?.all_day_event,
               listAllDayEvent: item?.is_all_day ? item.list_event : [],
               calendar: color,
               isEditable: item.is_editable,
@@ -142,6 +127,7 @@ const CardCalendar = (props) => {
             }
           }
         })
+
         setState({
           listCalendar: newCalendar,
           loadingCalendar: false
@@ -155,11 +141,11 @@ const CardCalendar = (props) => {
       })
   }
 
-  // ** effect
-  useEffect(() => {
-    loadCalendarTag()
-  }, [])
+  const handleAfterCreateEvent = (dataNew = {}) => {
+    loadCalendar()
+  }
 
+  // ** effect
   useEffect(() => {
     if (state.loading === false) {
       loadCalendar()
@@ -167,44 +153,6 @@ const CardCalendar = (props) => {
   }, [state.loading, state.filters])
 
   // ** render
-  const renderSidebar = () => {
-    return (
-      <Sidebar
-        listCalendarTag={state.listCalendarTag}
-        listCalendar={state.listCalendar}
-        calendarYear={state.calendarYear}
-        filters={state.filters}
-        setFilter={setFilter}
-        handleShowAddEventModal={handleShowAddEventModal}
-        setListCalendar={setListCalendar}
-        setCalendarYear={setCalendarYear}
-        setChangeYearType={setChangeYearType}
-      />
-    )
-  }
-
-  const renderCalendar = () => {
-    return (
-      <Calendar
-        listCalendar={state.listCalendar}
-        showCalendarDescription={showCalendarDescription}
-        changeYearType={state.changeYearType}
-        calendarYear={state.calendarYear}
-        handleShowAddEventModal={handleShowAddEventModal}
-        setCalendarYear={setCalendarYear}
-      />
-    )
-  }
-
-  const renderAddEventModal = () => {
-    return (
-      <AddEventModal
-        handleHideAddEventModal={handleHideAddEventModal}
-        loadCalendar={loadCalendar}
-      />
-    )
-  }
-
   return (
     <LayoutDashboard
       headerProps={{
@@ -302,15 +250,41 @@ const CardCalendar = (props) => {
         <CardBody>
           <div className="d-flex">
             <div className="w-20 pe-1 mt-2">
-              <Fragment>{renderSidebar()}</Fragment>
+              <Sidebar
+                listCalendarTag={state.listCalendarTag}
+                listCalendar={state.listCalendar}
+                calendarYear={state.calendarYear}
+                filters={state.filters}
+                setFilter={setFilter}
+                handleShowAddEventModal={handleShowAddEventModal}
+                setListCalendar={setListCalendar}
+                setCalendarYear={setCalendarYear}
+                setChangeYearType={setChangeYearType}
+              />
             </div>
             <div className="app-calendar w-80">
-              <Fragment>{renderCalendar()}</Fragment>
+              <Calendar
+                listCalendar={state.listCalendar}
+                showCalendarDescription={showCalendarDescription}
+                changeYearType={state.changeYearType}
+                calendarYear={state.calendarYear}
+                filters={state.filters}
+                handleShowAddEventModal={handleShowAddEventModal}
+                setCalendarYear={setCalendarYear}
+                setFilter={setFilter}
+              />
             </div>
           </div>
         </CardBody>
       </Card>
-      {renderAddEventModal()}
+      <ModalCreateEvent
+        setDataCreateNew={undefined}
+        options_employee_department={state.options_employee_department}
+        optionsMeetingRoom={state.optionsMeetingRoom}
+        createEventApi={calendarNodeApi.addCalendar}
+        getDetailApi={calendarNodeApi.getDetailEvent}
+        afterCreate={handleAfterCreateEvent}
+      />
     </LayoutDashboard>
   )
 }

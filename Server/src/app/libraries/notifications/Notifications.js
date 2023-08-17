@@ -48,7 +48,6 @@ const sendNotification = async (
       )
       notificationId = saveNotification.id
     } catch (error) {
-      console.log(error)
       return false
     }
   }
@@ -71,4 +70,52 @@ const sendNotification = async (
   return true
 }
 
-export { sendNotification }
+const updateNotificationStatusAction = async (
+  idNotification,
+  indexNotification,
+  status,
+  msg = null
+) => {
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      id: idNotification
+    }
+  })
+  if (!infoNotification) {
+    return false
+  }
+
+  const actions =
+    infoNotification.actions === null
+      ? []
+      : JSON.parse(infoNotification.actions)
+
+  let actionUpdated = {}
+  const newActions = actions.map((item, index) => {
+    if (parseInt(index) === parseInt(indexNotification)) {
+      actionUpdated = {
+        ...item,
+        status: status,
+        message: msg === null ? status : msg
+      }
+      return actionUpdated
+    }
+
+    return item
+  })
+
+  await notificationsModelMysql.update(
+    {
+      actions: JSON.stringify(newActions)
+    },
+    {
+      where: {
+        id: idNotification
+      }
+    }
+  )
+
+  return actionUpdated
+}
+
+export { sendNotification, updateNotificationStatusAction }

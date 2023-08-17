@@ -34,7 +34,8 @@ const Notification = (props) => {
                 type: "link_button",
                 text: "Accept",
                 color: "primary",
-                url: "/dashboard"
+                url: "/dashboard",
+                api_type: "normal"
               },
               {
                 key: "decline",
@@ -42,6 +43,7 @@ const Notification = (props) => {
                 text: "Decline",
                 color: "default",
                 api_url: "notification/test/{id}",
+                api_type: "node",
                 api_methods: "post",
                 api_post_data: {},
                 api_option: {

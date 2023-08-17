@@ -1,6 +1,6 @@
 // ** React Imports
 import classNames from "classnames"
-import moment from "moment"
+import dayjs from "dayjs"
 // ** Styles
 // ** Components
 
@@ -11,7 +11,9 @@ const EventItem = (props) => {
     // ** methods
   } = props
 
-  const isOutOfDate = moment().diff(moment(item.end)) >= 0
+  const startDate = item.from_date ? item.from_date + " 00:00:00" :  dayjs(item.start_time_date).format("YYYY-MM-DD") + " " + " 00:00:00"
+  const endDate = item.to_date ? item.to_date + " 23:59:59" : dayjs(item.end_time_date).format("YYYY-MM-DD") + " " + " 23:59:59"
+  const isOutOfDate = dayjs().diff(dayjs(endDate)) >= 0
 
   // ** render
   return (
@@ -24,8 +26,8 @@ const EventItem = (props) => {
           })}>
           <h6 className="mb-0 title">{item.name}</h6>
           <span className="time">
-            {moment(item.start).format("hh:mm A")} -{" "}
-            {moment(item.end).format("hh:mm A")}
+            {dayjs(startDate).format("hh:mm A")} -{" "}
+            {dayjs(endDate).format("hh:mm A")}
           </span>
         </div>
       </div>
