@@ -119,6 +119,7 @@ const ModalCreateEvent = (props) => {
         })
 
         if (_.isFunction(afterCreate)) {
+          console.log(res.data)
           afterCreate(res.data?.result)
         }
       })
@@ -209,7 +210,8 @@ const ModalCreateEvent = (props) => {
           setState({
             loadingEdit: false,
             dataEdit: restData,
-            isEditable: restData.is_editable,
+            //isEditable: restData.is_editable,
+            isEditable: true,
             color: restData.color,
             valueRepeat: restData.repeat,
             switch_all_day: restData.all_day_event,
