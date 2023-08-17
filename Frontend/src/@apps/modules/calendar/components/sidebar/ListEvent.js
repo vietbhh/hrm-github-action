@@ -28,7 +28,7 @@ const ListEvent = (props) => {
     }
 
     const currentData = data[type] === undefined ? [] : data[type]
-    console.log(currentData)
+
     return (
       <Fragment>
         {currentData.map((item) => {
