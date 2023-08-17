@@ -119,7 +119,6 @@ const ModalCreateEvent = (props) => {
         })
 
         if (_.isFunction(afterCreate)) {
-          console.log(res.data)
           afterCreate(res.data?.result)
         }
       })
