@@ -2,6 +2,9 @@
 import { Fragment, useEffect, useRef } from "react"
 import { calendarApi } from "../../../../../@apps/modules/calendar/common/api"
 import moment from "moment"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
 // ** Styles
 // ** Components
 import notification from "@apps/utility/notification"
@@ -28,23 +31,18 @@ const Calendar = (props) => {
     setFilter
   } = props
 
+  const dispatch = useDispatch()
+
   const currentHour = moment().hour()
   const calendarRef = useRef()
 
   const handleClickCalendar = (id) => {
-    calendarApi
-      .getEventDetail(item.id)
-      .then((res) => {
-        const calendarInfo = res.data.data
-
-        handleShowAddEventModal({
-          calendarInfo: calendarInfo,
-          viewOnly: !calendarInfo.is_editable
-        })
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: id,
+        viewOnly: false
       })
-      .catch((err) => {
-        notification.showError()
-      })
+    )
   }
 
   const handleChangeNavigateCalendar = () => {

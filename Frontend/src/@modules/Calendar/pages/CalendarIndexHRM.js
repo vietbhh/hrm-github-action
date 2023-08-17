@@ -14,6 +14,7 @@ import "../assets/scss/calendarHRM.scss"
 import FullCalendarComponent from "../../../@apps/modules/calendar/pages/FullCalendarComponent"
 import ModalCreateEvent from "../../../components/hrm/CreatePost/CreatePostDetails/modals/ModalCreateEvent"
 import GroupAllDayEvent from "../components/calendar/GroupAllDayEvent"
+import ListEventHRM from "../components/calendar/ListEventHRM"
 
 const CalendarIndexHRM = () => {
   const [state, setState] = useMergedState({
@@ -168,6 +169,7 @@ const CalendarIndexHRM = () => {
         loadCalendar={loadCalendar}
         setFilterCalendar={setFilterCalendar}
         groupAllDayEvent={GroupAllDayEvent}
+        listEvent={ListEventHRM}
       />
       <ModalCreateEvent
         setDataCreateNew={undefined}

@@ -110,7 +110,6 @@ const CardCalendar = (props) => {
             : dayjs(item.start_time_date).format("YYYY-MM-DD") +
               " " +
               dayjs(item.start_time_time).format("HH:mm:ss")
-              console.log(item)
           const endTime = item.end
             ? item.end
             : dayjs(item.end_time_date).format("YYYY-MM-DD") +
@@ -119,7 +118,7 @@ const CardCalendar = (props) => {
           const duration = moment.duration(dayjs(endTime).diff(startTime))
           const hours = duration.hours()
           return {
-            id: item.id,
+            id: item._id,
             start: startTime,
             end: endTime,
             title: item.name,
@@ -143,14 +142,12 @@ const CardCalendar = (props) => {
             }
           }
         })
-        console.log(newCalendar)
         setState({
           listCalendar: newCalendar,
           loadingCalendar: false
         })
       })
       .catch((err) => {
-        console.log(err)
         setState({
           listCalendar: [],
           loadingCalendar: false
