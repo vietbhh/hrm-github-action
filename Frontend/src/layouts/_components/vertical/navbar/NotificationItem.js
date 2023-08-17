@@ -53,7 +53,7 @@ const NotificationItem = (props) => {
           dangerouslySetInnerHTML={{ __html: newStr }}
           className="div-content"></p>
       ) : (
-        <p>{newStr}</p>
+        <p className="div-content">{newStr}</p>
       )
     }
   }

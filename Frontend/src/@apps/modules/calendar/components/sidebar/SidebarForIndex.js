@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { calendarNodeApi } from "../../common/api"
 // ** redux
@@ -17,7 +17,6 @@ const SidebarForIndex = (props) => {
     // ** props
     filter,
     // ** methods
-    toggleModal,
     setFilter
   } = props
 

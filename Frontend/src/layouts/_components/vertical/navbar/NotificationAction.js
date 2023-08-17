@@ -1,6 +1,7 @@
 // ** React Imports
 import { Fragment } from "react"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { axiosNodeApi } from "@apps/utility/api"
 import { useNavigate } from "react-router-dom"
 import {
   checkHTMLTag,
@@ -23,7 +24,7 @@ const NotificationAction = (props) => {
   } = props
 
   const action =
-    !notificationInfo &&
+    notificationInfo &&
     notificationInfo.actions !== null &&
     notificationInfo.actions !== "" &&
     notificationInfo.actions !== undefined
@@ -56,7 +57,7 @@ const NotificationAction = (props) => {
             return itemAction
           }
         )
-
+          
         return {
           ...item,
           actions: JSON.stringify(newAction)
@@ -75,27 +76,31 @@ const NotificationAction = (props) => {
   }
 
   const handleClickApiButton = (e, itemContent, index) => {
-    e.preventDefault()
+    e.stopPropagation()
+    const api = itemContent.api_type === "node" ? axiosNodeApi : defaultModuleApi
+    const apiUrl = handleFormatUrl(itemContent.api_url, notificationInfo.id)
     if (itemContent.api_methods === "post") {
       const postData = {
         ...itemContent.api_post_data,
-        index: index,
-        status: itemContent.key
+        notification_index: index,
+        notification_id: notificationInfo.id,
+        notification_status: itemContent.key
       }
-      defaultModuleApi
+
+      api
         .post(
-          handleFormatUrl(itemContent.api_url, notificationInfo.id),
+          apiUrl,
           postData,
           itemContent.api_option
         )
         .then((res) => {
-          _handleSetNewNotificationState(res, index)
+          _handleSetNewNotificationState(res, index)                                    
         })
         .catch((err) => {})
     } else if (itemContent.api_methods === "get") {
-      defaultModuleApi
+      api
         .get(
-          handleFormatUrl(itemContent.api_url, notificationInfo.id),
+          apiUrl,
           itemContent.api_option
         )
         .then((res) => {
@@ -161,6 +166,10 @@ const NotificationAction = (props) => {
   }
 
   const renderComponent = () => {
+    if (!_.isArray(action)) {
+      return ""
+    }
+
     if (action.length === 0) {
       return ""
     }
