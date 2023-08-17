@@ -209,8 +209,7 @@ const ModalCreateEvent = (props) => {
           setState({
             loadingEdit: false,
             dataEdit: restData,
-            //isEditable: restData.is_editable,
-            isEditable: true,
+            isEditable: restData.is_editable,
             color: restData.color,
             valueRepeat: restData.repeat,
             switch_all_day: restData.all_day_event,
