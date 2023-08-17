@@ -123,7 +123,7 @@
     "build-css": "sh ./style.sh&&echo 'Compile style completed!'",
     "build-modules": "sh ./build_modules.sh",
     "start": "yarn run build-css&&vite",
-    "build": "yarn run build-css&&build-modules&&vite build",
+    "build": "yarn run build-css&&yarn run build-modules&&vite build",
     "preview": "yarn run vite preview",
     "format": "prettier --write \"src/**/*.js\"",
     "lint": "eslint src/**/*.js src/**/*.js",

@@ -15,7 +15,8 @@
 
     .navbar-container {
       padding: 0 60px;
-
+      margin: auto;
+      max-width: calc(1480px + 120px);
       .navbar-logo {
         display: flex;
         align-items: center;
@@ -102,11 +103,6 @@
             .dropdown-menu-header {
               border-bottom: unset;
               margin-bottom: 10px;
-              margin-top: 10px;
-
-              .notification-title {
-                margin-left: 15px;
-              }
             }
 
             .dropdown-menu-footer {
@@ -126,7 +122,6 @@
 
             .noti-list {
               max-height: 600px;
-              padding: 7px;
 
               .bg-active {
                 background: lighten($primary-bg, 17%) !important;
@@ -143,7 +138,7 @@
                 }
 
                 .div-time {
-                  color: #3F8CFF !important;
+                  color: #3f8cff !important;
                 }
               }
 
@@ -155,11 +150,6 @@
                 height: auto;
                 width: 100%;
                 border-radius: $border-radius;
-                padding: 16px;
-
-                &:hover {
-                  background: rgba(228, 228, 228, 0.25);
-                }
 
                 .notification-actions {
                   .notification-buttons-actions {
@@ -171,28 +161,19 @@
                     }
 
                     .color-primary {
-                      background-color: #377DFF !important;
-                      color: #FFFFFF !important;
+                      background-color: #377dff !important;
+                      color: #ffffff !important;
                     }
 
                     .color-secondary {
-                      background-color: #ECEFF3 !important;
-                      color: #32434F !important;
+                      background-color: #eceff3 !important;
+                      color: #32434f !important;
                     }
                   }
                 }
               }
             }
-
-            .footer-noti {
-              button {
-                border-radius: 10px;
-                padding: 14px 32px !important;
-              }
-            }
-
           }
-          
         }
 
         .dropdown-setting {
@@ -397,13 +378,13 @@
 
       .div-content {
         display: flex;
-        gap: 30px;
+        gap: 40px;
         position: relative;
         justify-content: center;
 
         .div-left {
           width: 100%;
-          max-width: 790px;
+          max-width: 680px;
 
           > div {
             border-radius: 14px;
@@ -412,8 +393,8 @@
         }
 
         .div-right {
-          min-width: 330px;
-          max-width: 330px;
+          min-width: 300px;
+          max-width: 300px;
           position: relative;
 
           #div-sticky {
@@ -425,13 +406,13 @@
 
       .div-content-reverse {
         display: flex;
-        gap: 30px;
+        gap: 40px;
         position: relative;
         justify-content: center;
 
         .div-left {
-          min-width: 330px;
-          max-width: 330px;
+          min-width: 300px;
+          max-width: 300px;
           position: relative;
 
           #div-sticky {
@@ -442,7 +423,7 @@
 
         .div-right {
           width: 100%;
-          max-width: 790px;
+          max-width: 680px;
 
           > div {
             border-radius: 14px;

@@ -1,8 +1,10 @@
 export const isFile = (value) =>
-  isBlob(value) &&
+  value &&
   typeof value.name === "string" &&
-  (typeof value.lastModifiedDate === "object" ||
-    typeof value.lastModified === "number")
+  typeof value.size === "number" &&
+  typeof value.mimetype === "string" &&
+  typeof value.mv === "function" &&
+  typeof value.data === "object"
 
 export const isFileList = (value) => {
   let result = true
@@ -31,7 +33,7 @@ export const erpSelectToValues = (obj) => {
         obj[index] = erpSelectToValues(value)
       })
     }
-  } else if (isObject(obj) && !isFile(obj) && !isBlob(obj)) {
+  } else if (isObject(obj) && !isFile(obj)) {
     if (
       Object.keys(obj).length === 2 &&
       obj.hasOwnProperty("value") &&
@@ -87,7 +89,7 @@ export const valuesToErpSelect = (obj, keyArray) => {
         obj[index] = valuesToErpSelect(value, keyArray)
       })
     }
-  } else if (isObject(obj) && !isFile(obj) && !isBlob(obj)) {
+  } else if (isObject(obj) && !isFile(obj)) {
     Object.keys(obj).forEach((prop) => {
       const value = obj[prop]
       if (keyArray.includes(prop) && typeof value === "string") {

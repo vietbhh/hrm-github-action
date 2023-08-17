@@ -410,7 +410,7 @@ const _uploadServices = async (
     return _localUpload(storePath, files, uploadByFileContent)
   } else if (upload_type === "cloud_storage") {
     const storePathGCS = path
-      .join(process.env.code, storePath)
+      .join(process.env.CODE, storePath)
       .replace(/\\/g, "/")
     return _googleCloudUpload(storePathGCS, files)
   }
@@ -454,7 +454,7 @@ const moveFileFromServerToGCS = async (serverPath, storagePath, filename) => {
 
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
 
-  const toPath = path.join(process.env.code, storagePath).replace(/\\/g, "/")
+  const toPath = path.join(process.env.CODE, storagePath).replace(/\\/g, "/")
 
   const promises = []
 
@@ -565,9 +565,9 @@ const copyFilesServices = async (pathFrom, pathTo, filename, type = null) => {
     return _handleCopyDirect(pathFrom, pathTo, filename)
   } else if (upload_type === "cloud_storage") {
     const pathFromGCS = path
-      .join(process.env.code, pathFrom)
+      .join(process.env.CODE, pathFrom)
       .replace(/\\/g, "/")
-    const pathToGCS = path.join(process.env.code, pathTo).replace(/\\/g, "/")
+    const pathToGCS = path.join(process.env.CODE, pathTo).replace(/\\/g, "/")
     return _handleCopyCloudStorage(pathFromGCS, pathToGCS, filename)
   }
 }

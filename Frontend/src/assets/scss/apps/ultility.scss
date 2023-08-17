@@ -1,5 +1,14 @@
+a {
+  text-decoration: none !important;
+}
 .text-bg-primary {
   color: $primary-text-color;
+}
+
+.attach-gif-icon {
+  font-size: 18px;
+  font-weight: bold;
+  color: #a4a1a1;
 }
 
 .font-weight-900 {
@@ -22,6 +31,43 @@
   border: 1px solid $color-blue;
 }
 
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: 8px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #b2aeae #b2aeae transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.38s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
 .circle {
   display: inline-block;
   position: relative;
@@ -41,6 +87,12 @@
   font-style: italic;
 }
 
+.reactGiphySearchbox-searchForm-input {
+  padding: 8px 10px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  font-size: 12px;
+}
 hr.hr-primary {
   color: $primary;
 }
@@ -129,4 +181,27 @@ hr.hr-primary {
 .mx-25 {
   margin-left: 25px;
   margin-right: 25px;
+}
+.nav-tabs .nav-link.active {
+  color: $color-blue;
+}
+.nav-tabs .nav-link:after,
+.nav-tabs .nav-link.active:after {
+  background: linear-gradient(
+    30deg,
+    $color-blue,
+    rgb(36 88 249 / 50%)
+  ) !important;
+}
+
+.card .card-title {
+  font-weight: 600;
+}
+
+.ant-dropdown {
+  ul.ant-dropdown-menu {
+    li.ant-dropdown-menu-item {
+      font-family: $font-family-sans-serif;
+    }
+  }
 }
