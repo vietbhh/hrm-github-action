@@ -73,7 +73,7 @@ const FullCalendarComponent = (props) => {
         <div className="d-flex align-items-start calendar-container">
           <div className="pe-2 sidebar-section">
             <SidebarForIndex
-              dataEventCreated={state.dataEventCreated}
+              dataEventCreated={dataEventCreated}
               filter={state.filter}
               listEvent={listEvent}
               setDataEventCreated={setDataEventCreated}

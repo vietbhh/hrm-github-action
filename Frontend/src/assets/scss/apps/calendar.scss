@@ -212,6 +212,32 @@ $background-color-checkbox: #139ff8;
         }
 
         .bg-light-ffc66f {
+          background-color: rgba(255, 198, 111, 0.5);
+          border: none !important;
+          //border-left: 3.5px solid #f59e0b !important;
+          padding: 0.5rem;
+          .fc-event-time,
+          .fc-event-title {
+            color: #00003b !important;
+            font-size: 12px;
+            font-weight: 600;
+          }
+        }
+
+        .bg-light-66e0f0 {
+          background-color: rgba(102, 224, 240, 0.5);
+          border: none !important;
+          //border-left: 3.5px solid #f59e0b !important;
+          padding: 0.5rem;
+          .fc-event-time,
+          .fc-event-title {
+            color: #00003b !important;
+            font-size: 12px;
+            font-weight: 600;
+          }
+        }
+
+        .bg-light-ffe658 {
           background-color: rgba(248, 215, 73, 0.5);
           border: none !important;
           //border-left: 3.5px solid #f59e0b !important;
@@ -1183,6 +1209,32 @@ $background-color-checkbox: #139ff8;
                 }
 
                 .bg-light-ffc66f {
+                  background-color: rgba(255, 198, 111, 0.5);
+                  border: none !important;
+                  //border-left: 3.5px solid #f59e0b !important;
+                  padding: 0.5rem;
+                  .fc-event-time,
+                  .fc-event-title {
+                    color: #00003b !important;
+                    font-size: 12px;
+                    font-weight: 600;
+                  }
+                }
+
+                .bg-light-66e0f0 {
+                  background-color: rgba(102, 224, 240, 0.5);
+                  border: none !important;
+                  //border-left: 3.5px solid #f59e0b !important;
+                  padding: 0.5rem;
+                  .fc-event-time,
+                  .fc-event-title {
+                    color: #00003b !important;
+                    font-size: 12px;
+                    font-weight: 600;
+                  }
+                }
+
+                .bg-light-ffe658 {
                   background-color: rgba(248, 215, 73, 0.5);
                   border: none !important;
                   //border-left: 3.5px solid #f59e0b !important;
@@ -1330,41 +1382,71 @@ $background-color-checkbox: #139ff8;
 
                   .bg-light-f066b9 {
                     background-color: rgba(139, 92, 246, 0.1);
-                    color: #6d28d9 !important;
+                    color: #00003b !important;
                     border: none;
 
                     .fc-event-main {
-                      color: #6d28d9 !important;
+                      color: #00003b !important;
                     }
                   }
 
                   .bg-light-ffc66f {
                     background-color: rgba(245, 158, 11, 0.1);
-                    color: #b45309 !important;
+                    color: #00003b !important;
                     border: none;
 
                     .fc-event-main {
-                      color: #b45309 !important;
+                      color: #00003b !important;
+                    }
+                  }
+
+                  .bg-light-ffc66f {
+                    background-color: rgba(255, 198, 111, 0.5);
+                    color: #00003b !important;
+                    border: none;
+
+                    .fc-event-main {
+                      color: #00003b !important;
+                    }
+                  }
+  
+                  .bg-light-66e0f0 {
+                    background-color: rgba(102, 224, 240, 0.5);
+                    color: #00003b !important;
+                    border: none !important;
+                    
+                    .fc-event-main {
+                      color: #00003b !important;
+                    }
+                  }
+  
+                  .bg-light-ffe658 {
+                    background-color: rgba(248, 215, 73, 0.5);
+                    color: #00003b !important;
+                    border: none !important;
+                    
+                    .fc-event-main {
+                      color: #00003b !important;
                     }
                   }
 
                   .bg-light-ff6f2c {
                     background-color: rgba(255, 228, 230, 1);
-                    color: #be123c !important;
+                    color: #00003b !important;
                     border: none;
 
                     .fc-event-main {
-                      color: #be123c !important;
+                      color: #00003b !important;
                     }
                   }
 
                   .bg-light-44d38a {
                     background-color: rgba(16, 185, 129, 0.1);
-                    color: #047857 !important;
+                    color: #00003b !important;
                     border: none;
 
                     .fc-event-main {
-                      color: #047857 !important;
+                      color: #00003b !important;
                     }
                   }
                 }
