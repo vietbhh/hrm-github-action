@@ -39,7 +39,7 @@ const ListAllDayEventPopover = (props) => {
                   className={`mb-1 calendar-event-item`}>
                   <div>
                     <p className="mb-0 event-title">
-                      <i className="far fa-calendar-star me-25" /> {item.title}
+                      <i className="far fa-calendar-star me-25" /> {item.name}
                     </p>
                     <small>
                       <span className="me-25">{item.description}</span>

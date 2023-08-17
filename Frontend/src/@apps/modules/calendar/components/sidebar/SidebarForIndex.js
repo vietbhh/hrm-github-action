@@ -1,24 +1,23 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { calendarApi } from "../../common/api"
-import moment from "moment"
+import { calendarNodeApi } from "../../common/api"
 // ** redux
 import { showAddEventCalendarModal } from "../../common/reducer/calendar"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 // ** Styles
 import { Button } from "reactstrap"
 // ** Components
 import CalendarPickerFilter from "./CalendarPickerFilter"
-import ListEvent from "./ListEvent"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
 const SidebarForIndex = (props) => {
   const {
     // ** props
     filter,
+    // ** component
+    listEvent,
     // ** methods
-    toggleModal,
     setFilter
   } = props
 
@@ -26,14 +25,16 @@ const SidebarForIndex = (props) => {
     loading: true,
     data: {}
   })
-  
+
   const dispatch = useDispatch()
 
   const handleClickNewEvent = () => {
-    dispatch(showAddEventCalendarModal({
-      idEvent: 0,
-      viewOnly: false
-    }))
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: 0,
+        viewOnly: false
+      })
+    )
   }
 
   const loadData = () => {
@@ -41,7 +42,7 @@ const SidebarForIndex = (props) => {
       loading: true
     })
 
-    calendarApi
+    calendarNodeApi
       .getListEvent(filter)
       .then((res) => {
         setState({
@@ -63,6 +64,8 @@ const SidebarForIndex = (props) => {
   }, [filter])
 
   // ** render
+  const ListEvent = listEvent
+  
   return (
     <div className="pt-4 p-50 h-100 calendar-sidebar ">
       <div className="w-100 h-100 d-flex justify-content-center">

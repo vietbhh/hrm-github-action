@@ -16,7 +16,10 @@ const ListEvent = (props) => {
     // ** methods
   } = props
 
-  const date = type === "today" ? moment(filter.from).format("DD/MM/YYYY") : moment(filter.from).add(1, 'days').format("DD/MM/YYYY")
+  const date =
+    type === "today"
+      ? moment(filter.from).format("DD/MM/YYYY")
+      : moment(filter.from).add(1, "days").format("DD/MM/YYYY")
 
   // ** render
   const renderList = () => {
@@ -25,12 +28,35 @@ const ListEvent = (props) => {
     }
 
     const currentData = data[type] === undefined ? [] : data[type]
+
     return (
       <Fragment>
-        {currentData.map((item) => {
-          return (
-            <EventItem key={`event-item-${item.id}`} item={item}/>
-          )
+        {currentData.map((item, index) => {
+          if (item.allday === true) {
+            const allDayData =
+              item?.all_day_event === true ? item.list_event : []
+            return (
+              <Fragment key={`event-item-all-day-${index}`}>
+                {allDayData.map((itemAllDay, indexAllDay) => {
+                  return (
+                    <EventItem
+                      isAllDay={true}
+                      key={`event-all-day-${index}-${indexAllDay}`}
+                      item={itemAllDay}
+                    />
+                  )
+                })}
+              </Fragment>
+            )
+          } else {
+            return (
+              <EventItem
+                isAllDay={false}
+                key={`event-item-${index}`}
+                item={item}
+              />
+            )
+          }
         })}
       </Fragment>
     )

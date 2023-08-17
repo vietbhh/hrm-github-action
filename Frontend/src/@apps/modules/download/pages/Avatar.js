@@ -71,7 +71,12 @@ const Avatar = (props) => {
           props.className,
           "rounded-circle avatar-component"
         )}>
-        <Skeleton.Avatar active={true} size="default" shape="circle" />
+        <Skeleton.Avatar
+          active={true}
+          size="default"
+          shape="circle"
+          className="d-flex"
+        />
       </div>
     )
   else {

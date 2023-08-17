@@ -2,15 +2,14 @@ import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
 import {
   getDefaultFridayLogo,
   handleFormatMessageStr,
-  stripHTML,
-  useFormatMessage
+  stripHTML
 } from "#app/utility/common.js"
 import { cert, initializeApp } from "firebase-admin/app"
 import { getMessaging } from "firebase-admin/messaging"
 import { forEach, isArray, isEmpty, map } from "lodash-es"
 import path from "path"
 
-initializeApp({
+export const appInitial = initializeApp({
   credential: cert(path.join(global.__basedir, "service_account_file.json"))
 })
 /**

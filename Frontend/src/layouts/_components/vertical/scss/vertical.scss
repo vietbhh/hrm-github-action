@@ -105,6 +105,9 @@ $margin-navigation-a: 22px !default;
     }
 
     .navigation {
+      li.nav-item a:hover > * {
+        transform: unset !important;
+      }
       a.active {
         box-shadow: unset !important;
         border-radius: $border-radius !important;
@@ -663,7 +666,7 @@ $margin-navigation-a: 22px !default;
 
   .nav-search {
     .nav-link-search {
-      width: 150px;
+      //width: 150px;
 
       .text-search {
         margin-left: 15px;
@@ -678,10 +681,7 @@ $margin-navigation-a: 22px !default;
       }
     }
 
-    .search-input.open .search-input-icon,
-    .search-input.open .search-input-close {
-      top: 32px;
-    }
+
 
     .suggestions-list {
       z-index: 999;
@@ -718,6 +718,10 @@ $margin-navigation-a: 22px !default;
       }
 
       .dropdown-notification {
+        .empty-notification {
+          text-align: center;
+          padding: 20px;
+        }
         .dropdown-menu-media {
           width: 360px;
           border-radius: 24px;
@@ -725,10 +729,20 @@ $margin-navigation-a: 22px !default;
           .dropdown-menu-header {
             border-bottom: unset;
             margin-bottom: 10px;
-            margin-top: 10px;
+
+            .dropdown-header {
+              padding: 23px 23px 0 23px;
+            }
 
             .notification-title {
-              margin-left: 15px;
+              font-size: 18px !important;
+              font-weight: 500;
+            }
+          }
+          .noti-list {
+            padding: 10px 10px 0 10px;
+            .div-noti {
+              padding: 10px 13px;
             }
           }
 
@@ -766,7 +780,7 @@ $margin-navigation-a: 22px !default;
               }
 
               .div-time {
-                color: #3F8CFF !important;
+                color: #3f8cff !important;
               }
             }
 
@@ -778,10 +792,9 @@ $margin-navigation-a: 22px !default;
               height: auto;
               width: 100%;
               border-radius: $border-radius;
-              padding: 16px;
 
               &:hover {
-                background: rgba(228, 228, 228, 0.25);
+                background: #fff194 !important;
               }
 
               .notification-actions {
@@ -798,7 +811,8 @@ $margin-navigation-a: 22px !default;
                     color: #ffffff !important;
                   }
 
-                  .color-default, .color-secondary {
+                  .color-default,
+                  .color-secondary {
                     background-color: #eceff3 !important;
                     color: #32434f !important;
                   }
@@ -811,6 +825,8 @@ $margin-navigation-a: 22px !default;
             button {
               border-radius: 10px;
               padding: 14px 32px !important;
+              background-color: #fff194 !important;
+              border-color: #fff194 !important;
             }
           }
         }
@@ -982,11 +998,11 @@ $margin-navigation-a: 22px !default;
 
     .navbar-header .navbar-brand .brand-logo {
       width: 120px;
-      height: 33px;
+      height: 40px;
 
       img {
         max-width: 120px;
-        max-height: 33px;
+        max-height: 40px;
       }
     }
 

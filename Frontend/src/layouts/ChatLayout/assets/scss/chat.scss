@@ -13,7 +13,13 @@ $font-family: Helvetica;
     }
   }
 }
-
+.navbar-2 > .navbar > .navbar-container > .navbar2-div-search {
+  .nav-search {
+    .nav-link-search {
+      width: 540px;
+    }
+  }
+}
 .navbar-2 {
   .chat-application .content-area-wrapper {
     padding: 0 !important;
