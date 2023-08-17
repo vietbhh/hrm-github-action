@@ -118,7 +118,7 @@ const CardCalendar = (props) => {
           const duration = moment.duration(dayjs(endTime).diff(startTime))
           const hours = duration.hours()
           return {
-            id: item.id,
+            id: item._id,
             start: startTime,
             end: endTime,
             title: item.name,

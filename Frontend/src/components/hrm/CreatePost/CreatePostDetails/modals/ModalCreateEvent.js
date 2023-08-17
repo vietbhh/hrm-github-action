@@ -247,7 +247,12 @@ const ModalCreateEvent = (props) => {
           setState({ loadingEdit: false, dataEdit: {} })
         })
     } else {
-      setState({ loadingEdit: false, dataEdit: {}, arrAttachment: [] })
+      setState({
+        loadingEdit: false,
+        dataEdit: {},
+        arrAttachment: [],
+        isEditable: true
+      })
     }
   }, [modal, idEvent])
 
