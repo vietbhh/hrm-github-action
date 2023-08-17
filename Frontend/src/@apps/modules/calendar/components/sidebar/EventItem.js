@@ -11,8 +11,8 @@ const EventItem = (props) => {
     // ** methods
   } = props
 
-  const startDate = item.from_date ? item.from_date + " 00:00:00" :  dayjs(item.start_time_date).format("YYYY-MM-DD") + " " + " 00:00:00"
-  const endDate = item.to_date ? item.to_date + " 23:59:59" : dayjs(item.end_time_date).format("YYYY-MM-DD") + " " + " 23:59:59"
+  const startDate = item.from_date ? item.from_date + " 00:00:00" :  dayjs(item.start_time_date).format("YYYY-MM-DD") + " " + dayjs(item.start_time_time).format("HH:mm:ss")
+  const endDate = item.to_date ? item.to_date + " 23:59:59" : dayjs(item.end_time_date).format("YYYY-MM-DD") + " " + dayjs(item.end_time_time).format("HH:mm:ss")
   const isOutOfDate = dayjs().diff(dayjs(endDate)) >= 0
 
   // ** render

@@ -6,12 +6,12 @@ import { getArrWeekDate } from "../common/common"
 import moment from "moment"
 import dayjs from "dayjs"
 // ** redux
-import { useSelector } from "react-redux"
 // ** Styles
 // ** Components
 import ModalCreateEvent from "../components/modal/ModalCreateEvent"
 import FullCalendarComponent from "./FullCalendarComponent"
 import GroupAllDayEvent from "../components/calendar/GroupAllDayEvent"
+import ListEvent from "../components/sidebar/ListEvent"
 
 const CalendarIndex = (props) => {
   const [state, setState] = useMergedState({
@@ -80,7 +80,7 @@ const CalendarIndex = (props) => {
             }
           }
         })
-
+        
         setState({
           listCalendar: newCalendar,
           loading: false
@@ -115,7 +115,9 @@ const CalendarIndex = (props) => {
         modalCreateEvent={ModalCreateEvent}
         loadCalendar={loadCalendar}
         setFilterCalendar={setFilterCalendar}
+        setDataEventCreated={setDataEventCreated}
         groupAllDayEvent={GroupAllDayEvent}
+        listEvent={ListEvent}
       />
       <ModalCreateEvent
         setDataCreateNew={undefined}

@@ -9,13 +9,14 @@ import { useDispatch } from "react-redux"
 import { Button } from "reactstrap"
 // ** Components
 import CalendarPickerFilter from "./CalendarPickerFilter"
-import ListEvent from "./ListEvent"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
 const SidebarForIndex = (props) => {
   const {
     // ** props
     filter,
+    // ** component
+    listEvent,
     // ** methods
     setFilter
   } = props
@@ -63,6 +64,8 @@ const SidebarForIndex = (props) => {
   }, [filter])
 
   // ** render
+  const ListEvent = listEvent
+  
   return (
     <div className="pt-4 p-50 h-100 calendar-sidebar ">
       <div className="w-100 h-100 d-flex justify-content-center">
