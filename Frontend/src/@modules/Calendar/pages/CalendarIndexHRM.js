@@ -168,6 +168,7 @@ const CalendarIndexHRM = () => {
         modalCreateEvent={ModalCreateEvent}
         loadCalendar={loadCalendar}
         setFilterCalendar={setFilterCalendar}
+        setDataEventCreated={setDataEventCreated}
         groupAllDayEvent={GroupAllDayEvent}
         listEvent={ListEventHRM}
       />

@@ -15,11 +15,13 @@ const FullCalendarComponent = (props) => {
     loading,
     listCalendar,
     filterCalendar,
+    dataEventCreated,
     // ** component
     groupAllDayEvent,
     listEvent,
     // ** methods
-    setFilterCalendar
+    setFilterCalendar,
+    setDataEventCreated
   } = props
 
   const [state, setState] = useMergedState({
@@ -28,10 +30,9 @@ const FullCalendarComponent = (props) => {
     filter: {
       from: moment().format("YYYY-MM-DD")
     },
-    
+
     visibleAddEvent: false,
-    calendarYear: moment().year(),
-    dataEventCreated: {}
+    calendarYear: moment().year()
   })
 
   const setFilter = (obj) => {
@@ -40,12 +41,6 @@ const FullCalendarComponent = (props) => {
         ...state.filter,
         ...obj
       }
-    })
-  }
-
-  const setDataEventCreated = (obj) => {
-    setState({
-      dataEventCreated: obj
     })
   }
 
@@ -59,13 +54,17 @@ const FullCalendarComponent = (props) => {
   }, [state.visibleAddEvent])
 
   useEffect(() => {
-    if (Object.keys(state.dataEventCreated).length > 0) {
+    if (Object.keys(dataEventCreated).length > 0) {
+      const dateCreated =
+        dataEventCreated.start === undefined
+          ? dataEventCreated.start_time_date
+          : dataEventCreated.start
       setFilter({
-        from: moment(state.dataEventCreated.start).format("YYYY-MM-DD")
+        from: moment(dateCreated).format("YYYY-MM-DD")
       })
       setDataEventCreated({})
     }
-  }, [state.dataEventCreated])
+  }, [dataEventCreated])
 
   // ** render
   const renderSyncGoogleCalendarInfo = () => {
@@ -78,7 +77,7 @@ const FullCalendarComponent = (props) => {
         <div className="d-flex align-items-start calendar-container">
           <div className="pe-2 sidebar-section">
             <SidebarForIndex
-              dataEventCreated={state.dataEventCreated}
+              dataEventCreated={dataEventCreated}
               filter={state.filter}
               listEvent={listEvent}
               setDataEventCreated={setDataEventCreated}

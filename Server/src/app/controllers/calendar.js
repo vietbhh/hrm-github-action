@@ -39,7 +39,7 @@ const handleGetListEvent = async (req, res) => {
 }
 
 const handleAddCalendar = async (req, res) => {
-  const resultAdd = await addCalendar(calendarMongoModel, req.__user, req)
+  const resultAdd = await addCalendar(calendarMongoModel, req.userId, req)
   if (resultAdd.success === false) {
     return res.fail(resultAdd.err)
   }
