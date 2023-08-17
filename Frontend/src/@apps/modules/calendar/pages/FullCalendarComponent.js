@@ -17,6 +17,7 @@ const FullCalendarComponent = (props) => {
     filterCalendar,
     // ** component
     groupAllDayEvent,
+    listEvent,
     // ** methods
     setFilterCalendar
   } = props
@@ -79,6 +80,7 @@ const FullCalendarComponent = (props) => {
             <SidebarForIndex
               dataEventCreated={state.dataEventCreated}
               filter={state.filter}
+              listEvent={listEvent}
               setDataEventCreated={setDataEventCreated}
               setFilter={setFilter}
             />
