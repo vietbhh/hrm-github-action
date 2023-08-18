@@ -14,7 +14,8 @@ import EditGroupRuleModal from "../../modals/EditGroupRuleModal/EditGroupRuleMod
 const TabIntroduction = (props) => {
   const {
     // ** props
-    detailWorkspace
+    detailWorkspace,
+    tabActive
     // ** methods
   } = props
 
@@ -106,6 +107,7 @@ const TabIntroduction = (props) => {
               loading={state.loading}
               workspaceInfo={state.workspaceInfo}
               introduction={state.introduction}
+              tabActive={tabActive}
               setIntroduction={setIntroduction}
             />
           </div>

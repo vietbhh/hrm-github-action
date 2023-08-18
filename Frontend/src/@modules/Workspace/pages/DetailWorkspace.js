@@ -187,8 +187,10 @@ const DetailWorkspace = () => {
               <TabFeed
                 searchTextFeed={state.searchTextFeed}
                 detailWorkspace={state.detailWorkspace}
+                tabActive={state.tabActive}
                 handleUnPinPost={handleUnPinPost}
                 setSearchTextFeed={setSearchTextFeed}
+                tabToggle={tabToggle}
               />
             )}
           </TabPane>
@@ -201,7 +203,9 @@ const DetailWorkspace = () => {
             {(state.isJoined || state.workspacePublic) && (
               <TabPinned
                 detailWorkspace={state.detailWorkspace}
+                tabActive={state.tabActive}
                 handleUnPinPost={handleUnPinPost}
+                tabToggle={tabToggle}
               />
             )}
           </TabPane>
@@ -212,7 +216,10 @@ const DetailWorkspace = () => {
               </div>
             )}
             {(state.isJoined || state.workspacePublic) && (
-              <TabIntroduction detailWorkspace={state.detailWorkspace} />
+              <TabIntroduction
+                detailWorkspace={state.detailWorkspace}
+                tabActive={state.tabActive}
+              />
             )}
           </TabPane>
           <TabPane tabId={4}>

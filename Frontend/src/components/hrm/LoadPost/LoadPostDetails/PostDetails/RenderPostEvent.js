@@ -66,9 +66,13 @@ const RenderPostEvent = (props) => {
     }
   ]
 
-  return (
-    <Fragment>
-      <div className="post-body__event">
+  const renderDataLinkInfo = () => {
+    if (dataLink === null) {
+      return ""
+    }
+
+    return (
+      <Fragment>
         <div className="event-date">
           <div className="event-date__day-of-week">
             {dataLink.start_time_date
@@ -100,6 +104,14 @@ const RenderPostEvent = (props) => {
             ""
           )}
         </div>
+      </Fragment>
+    )
+  }
+
+  return (
+    <Fragment>
+      <div className="post-body__event">
+        <Fragment>{renderDataLinkInfo()}</Fragment>
         <div className="event-status">
           <Dropdown
             menu={{ items }}

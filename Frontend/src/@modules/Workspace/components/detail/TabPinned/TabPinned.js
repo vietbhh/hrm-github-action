@@ -13,9 +13,10 @@ import { Dropdown } from "antd"
 import { PushpinOutlined } from "@ant-design/icons"
 import Introduction from "../TabIntroduction/Introduction"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
+import AboutWorkgroup from "../TabFeed/AboutWorkgroup"
 
 const TabPinned = (props) => {
-  const { detailWorkspace, handlePinPost, handleUnPinPost } = props
+  const { detailWorkspace, tabActive, handlePinPost, handleUnPinPost, tabToggle } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -180,12 +181,12 @@ const TabPinned = (props) => {
       </div>
       <div className="div-right">
         <div id="div-sticky">
-          <Introduction
-            id={workspaceID}
+          <AboutWorkgroup
             loading={state.loading}
             workspaceInfo={detailWorkspace}
             introduction={detailWorkspace.introduction}
-            setIntroduction={setIntroduction}
+            tabActive={tabActive}
+            tabToggle={tabToggle}
           />
         </div>
       </div>
