@@ -1,22 +1,20 @@
 // ** React Imports
-import { useRef, useEffect, Fragment } from "react"
 import moment from "moment"
+import { Fragment, useEffect, useRef } from "react"
 // ** redux
+import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
 import { useDispatch } from "react-redux"
-import { showAddEventCalendarModal } from "../../../../@apps/modules/calendar/common/reducer/calendar"
 // ** Styles
-import { CardBody, Card } from "reactstrap"
+import { Card, CardBody } from "reactstrap"
 // ** Components
-import FullCalendar from "@fullcalendar/react"
-import listPlugin from "@fullcalendar/list"
 import dayGridPlugin from "@fullcalendar/daygrid"
-import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
-import notification from "@apps/utility/notification"
-import calendarImg from "@apps/modules/calendar/assets/images/calendar.png"
-import GroupAllDayEvent from "./GroupAllDayEvent"
-import CalendarDescription from "./CalendarDescription"
+import listPlugin from "@fullcalendar/list"
+import FullCalendar from "@fullcalendar/react"
+import timeGridPlugin from "@fullcalendar/timegrid"
 import AddCalendarButton from "@modules/Dashboard/components/details/calendar/AddCalendarButton"
+import CalendarDescription from "./CalendarDescription"
+import GroupAllDayEvent from "./GroupAllDayEvent"
 
 const Calendar = (props) => {
   const {

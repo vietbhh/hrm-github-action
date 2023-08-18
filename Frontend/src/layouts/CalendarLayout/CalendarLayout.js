@@ -7,7 +7,7 @@ import Layout from "layouts/_components/vertical/Layout"
 import "./assets/scss/chat.scss"
 
 // ** Menu Items Array
-import navigation from "../commonMenu"
+import navigation from "../ChatLayout/menuChat"
 
 // ** import component
 import Navbar2 from "layouts/_components/custom/Navbar2"
