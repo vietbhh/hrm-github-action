@@ -12,16 +12,19 @@ import moment from "moment"
 import { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
-import { useParams, useSearchParams, useLocation } from "react-router-dom"
+import { useParams, useLocation } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
+import AboutWorkgroup from "./AboutWorkgroup"
 import Introduction from "../TabIntroduction/Introduction"
 
 const TabFeed = (props) => {
   const {
     searchTextFeed,
     detailWorkspace,
+    tabActive,
     handleUnPinPost,
-    setSearchTextFeed
+    setSearchTextFeed,
+    tabToggle
   } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
@@ -320,12 +323,12 @@ const TabFeed = (props) => {
       </div>
       <div className="div-right">
         <div id="div-sticky">
-          <Introduction
-            id={workspaceID}
+          <AboutWorkgroup
             loading={state.loading}
             workspaceInfo={detailWorkspace}
             introduction={detailWorkspace.introduction}
-            setIntroduction={setIntroduction}
+            tabActive={tabActive}
+            tabToggle={tabToggle}
           />
         </div>
       </div>

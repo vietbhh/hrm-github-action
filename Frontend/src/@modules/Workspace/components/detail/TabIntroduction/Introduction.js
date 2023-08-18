@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "../../../common/api"
 // ** Styles
@@ -16,12 +16,15 @@ const Introduction = (props) => {
     loading,
     workspaceInfo,
     introduction,
+    tabActive,
     // ** methods
     setIntroduction
   } = props
 
   const [state, setState] = useMergedState({
-    isEditIntroduction: false
+    isEditIntroduction: false,
+    showSeeMore: false,
+    seeMore: false
   })
 
   const handleEdit = () => {
@@ -36,6 +39,20 @@ const Introduction = (props) => {
     })
   }
 
+  // ** effect
+  useEffect(() => {
+    if (loading === false) {
+      if (document.getElementById(`about-body-content`)) {
+        const height =
+          document.getElementById(`about-body-content`).offsetHeight
+
+        if (height >= 90) {
+          setState({ showSeeMore: true })
+        }
+      }
+    }
+  }, [tabActive, loading, workspaceInfo])
+
   // ** render
   const renderIntroductionContent = () => {
     if (
@@ -43,7 +60,30 @@ const Introduction = (props) => {
       !_.isEmpty(introduction) &&
       state.isEditIntroduction === false
     ) {
-      return <p className="introduction-text mt-75">{introduction}</p>
+      return (
+        <div id="about-body-content">
+          <div
+            className={` ${
+              state.showSeeMore && state.seeMore === false ? "hide" : ""
+            }`}>
+            <p className="introduction-text mt-75">{introduction}</p>
+          </div>
+          {state.showSeeMore && (
+            <a
+              className="btn-see-more"
+              onClick={(e) => {
+                e.preventDefault()
+                setState({ seeMore: !state.seeMore })
+              }}>
+              <p>
+                {state.seeMore === false
+                  ? useFormatMessage("modules.feed.post.text.see_more")
+                  : useFormatMessage("modules.feed.post.text.hide")}
+              </p>
+            </a>
+          )}
+        </div>
+      )
     }
 
     if (state.isEditIntroduction) {
@@ -136,8 +176,8 @@ const Introduction = (props) => {
 
     return (
       <div className="introduction-content">
-          <Fragment>{renderIntroductionContent()}</Fragment>
-        </div>
+        <Fragment>{renderIntroductionContent()}</Fragment>
+      </div>
     )
   }
 
