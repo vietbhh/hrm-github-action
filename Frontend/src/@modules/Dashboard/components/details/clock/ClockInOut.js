@@ -1,18 +1,16 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { MyAttendanceApi } from "@modules/Attendances/common/api"
-import { Fragment, useEffect } from "react"
 import moment from "moment"
+import { Fragment, useEffect } from "react"
 // ** redux
-import { useSelector, useDispatch } from "react-redux"
 import { setWorkSchedule } from "@modules/Attendances/common/reducer/attendance"
+import { useDispatch, useSelector } from "react-redux"
 // ** Styles
-import {  CardBody } from "reactstrap"
 // ** Components
 import AttendanceButton from "@modules/Attendances/components/details/myAttendance/AttendanceButton"
 import AttendanceTimer from "@modules/Attendances/components/details/myAttendance/AttendanceTimer"
 import AttendanceLogModal from "@modules/Attendances/components/modals/AttendanceLogModal"
-import LayoutDashboard from "@apps/modules/dashboard/main/components/LayoutDashboard"
 
 const ClockInOut = (props) => {
   const [state, setState] = useMergedState({
@@ -61,6 +59,9 @@ const ClockInOut = (props) => {
           employeeOffice: res.data.employee_office,
           loadingAttendance: false
         })
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
       .catch((err) => {
         setState({
@@ -69,6 +70,9 @@ const ClockInOut = (props) => {
           totalTimeAttendance: {},
           loadingAttendance: false
         })
+        if (_.isFunction(props.handleLayouts)) {
+          props.handleLayouts()
+        }
       })
   }
 
@@ -221,56 +225,20 @@ const ClockInOut = (props) => {
 
   return (
     <Fragment>
-      <LayoutDashboard
-        className="card-user-timeline dashboard-clock-in-out"
-        headerProps={{
-          id: "clock_in_out",
-          title: useFormatMessage("modules.attendance.title.clock_in_out"),
-          isRemoveWidget: true,
-          classIconBg: "new-clock-icon",
-          icon: (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon">
-              <path
-                d="M16.5 9C16.5 13.14 13.14 16.5 9 16.5C4.86 16.5 1.5 13.14 1.5 9C1.5 4.86 4.86 1.5 9 1.5C13.14 1.5 16.5 4.86 16.5 9Z"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M11.7825 11.385L9.4575 9.99751C9.0525 9.75751 8.7225 9.18001 8.7225 8.70751V5.63251"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          ),
-          ...props
-        }}>
-        <CardBody className="profile-suggestion min-height-50">
-          <div className="content-body">
-            <div className="time-attendance">
-              <div className="time text-center">
-                <Fragment>{renderAttendanceTimer()}</Fragment>
-              </div>
-              <div className="day text-center">
-                {moment().format("DD MMMM YYYY")}
-              </div>
-            </div>
-            <div className="ant-spin-nested-loading">
-              {state.loadingAttendance ? renderLoading() : renderBody()}
-            </div>
+      <div className="content-body">
+        <div className="time-attendance">
+          <div className="time text-center">
+            <Fragment>{renderAttendanceTimer()}</Fragment>
           </div>
-        </CardBody>
-        {state.addLogModal && renderAttendanceLogModal()}
-      </LayoutDashboard>
+          <div className="day text-center">
+            {moment().format("DD MMMM YYYY")}
+          </div>
+        </div>
+        <div className="ant-spin-nested-loading">
+          {state.loadingAttendance ? renderLoading() : renderBody()}
+        </div>
+      </div>
+      {state.addLogModal && renderAttendanceLogModal()}
     </Fragment>
   )
 }

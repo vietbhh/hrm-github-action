@@ -709,6 +709,9 @@
 
       .attendance-clock {
         .clock-time {
+          &.first_in_row{
+            margin-bottom: 10px;
+          }
           height: 50px;
 
           .clock-time-item {

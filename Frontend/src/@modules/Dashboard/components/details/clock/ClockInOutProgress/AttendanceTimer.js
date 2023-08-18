@@ -156,14 +156,12 @@ const AttendanceTimer = (props) => {
     return (
       <Fragment>
         <div className="ps-0 d-flex justify-content-between align-items-center">
-          <div className="ps-0 ms-0">
+          <div className="ps-0 ms-0">{renderAttendanceWorkingTime()}</div>
+          <div className="me-0">
             <AttendanceProgress
               progress={progress}
               progressWidth={props?.progressWidth}
             />
-          </div>
-          <div className="me-0">
-            <Fragment>{renderAttendanceWorkingTime()}</Fragment>
           </div>
         </div>
       </Fragment>

@@ -46,7 +46,7 @@ const Endorsement = (props) => {
     toggleModalCreatePost,
     dataMention,
     setDataCreateNew,
-
+    showTooltip = true,
     // ** edit
     idEndorsement = null,
     setData,
@@ -329,16 +329,20 @@ const Endorsement = (props) => {
 
   return (
     <Fragment>
-      <Tooltip
-        title={useFormatMessage("modules.feed.create_post.endorsement.title")}>
-        <li
-          className={classNames("create_post_footer-li cursor-pointer", {})}
-          onClick={() => {
-            toggleModal()
-          }}>
-          {iconEndorsement}
-        </li>
-      </Tooltip>
+      {showTooltip && (
+        <Tooltip
+          title={useFormatMessage(
+            "modules.feed.create_post.endorsement.title"
+          )}>
+          <li
+            className={classNames("create_post_footer-li cursor-pointer", {})}
+            onClick={() => {
+              toggleModal()
+            }}>
+            {iconEndorsement}
+          </li>
+        </Tooltip>
+      )}
 
       <Modal
         isOpen={modal}

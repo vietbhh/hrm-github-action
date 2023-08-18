@@ -72,15 +72,10 @@ const AttendanceWorkingTime = (props) => {
 
   const renderIcon = () => {
     if (canRunTimer) {
-      return (
-        <i className="fal fa-pause" />
-      )
+      return <i className="fal fa-pause" />
     }
 
-    return (
-      <i className="far fa-play" />
-
-    )
+    return <i className="far fa-play" />
   }
 
   const renderComponent = () => {
@@ -90,20 +85,18 @@ const AttendanceWorkingTime = (props) => {
 
     return (
       <div className="d-flex align-items-center attendance-working-time">
-        <div className="attendance-time me-2">
+        <div className="attendance-status d-flex">
+          <div className="w-100 d-flex justify-content-center align-items-center">
+            <Fragment>{renderIcon()}</Fragment>
+          </div>
+        </div>
+        <div className="attendance-time">
           <h4 className="mb-25">
             <Fragment>{renderInfinityTime()}</Fragment>
           </h4>
           <small>
             {useFormatMessage("modules.attendance.text.total_working_time")}
           </small>
-        </div>
-        <div>
-          <div className="attendance-status d-flex">
-            <div className="w-100 d-flex justify-content-center align-items-center">
-            <Fragment>{renderIcon()}</Fragment>
-            </div>
-          </div>
         </div>
       </div>
     )

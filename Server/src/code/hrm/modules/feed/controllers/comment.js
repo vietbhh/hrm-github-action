@@ -13,6 +13,7 @@ import {
   handleSendNotification
 } from "./feed.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
+import { isFile } from "#app/utility/handleData.js"
 
 // ** comment
 const submitComment = async (req, res, next) => {
@@ -20,22 +21,30 @@ const submitComment = async (req, res, next) => {
   const content = body.content
   const id_post = body.id_post
   const comment_more_count_original = body.comment_more_count_original
-  const image = req.files !== null ? req.files.image : null
   const dataEditComment = body?.dataEditComment || {}
   const created_by = body.created_by
   const data_user = body.data_user
-
+  const image = req.files !== null ? req.files.image : null
   try {
     const result = await handleUpImageComment(image, id_post)
-    if (isEmpty(dataEditComment)) {
+    if (
+      isEmpty(dataEditComment) ||
+      dataEditComment === "" ||
+      dataEditComment === undefined
+    ) {
       // insert
-      const commentModel = new commentMongoModel({
+      const dataInsert = {
         __user: req.__user,
         post_id: id_post,
         content: content,
         image_source: result.source,
         image_source_attribute: result.source_attribute
-      })
+      }
+      if (req.body?.image) {
+        dataInsert["image_source"] = req.body?.image
+      }
+
+      const commentModel = new commentMongoModel(dataInsert)
       const saveComment = await commentModel.save()
       await feedMongoModel.updateOne(
         { _id: id_post },
@@ -61,10 +70,12 @@ const submitComment = async (req, res, next) => {
     } else {
       // update
       const data_update = { content: content }
-      if (!dataEditComment.image) {
+      data_update["image_source"] = dataEditComment.image
+      if (image !== null) {
         data_update["image_source"] = result.source
         data_update["image_source_attribute"] = result.source_attribute
       }
+
       await commentMongoModel.updateOne(
         { _id: dataEditComment._id_comment },
         data_update
@@ -127,6 +138,9 @@ const submitCommentReply = async (req, res, next) => {
         updated_by: req.__user,
         created_at: Date.now()
       }
+      if (req.body?.image) {
+        dataSaveSubComment["image_source"] = req.body?.image
+      }
 
       await commentMongoModel.updateOne(
         { _id: id_comment_parent },
@@ -152,7 +166,8 @@ const submitCommentReply = async (req, res, next) => {
     } else {
       // update
       const data_update = { "sub_comment.$.content": content }
-      if (!dataEditComment.image || image) {
+      data_update["sub_comment.$.image_source"] = dataEditComment.image
+      if (image !== null) {
         data_update["sub_comment.$.image_source"] = result.source
         data_update["sub_comment.$.image_source_attribute"] =
           result.source_attribute
@@ -382,42 +397,44 @@ const deleteComment = async (req, res, next) => {
 
 // ** support function
 const handleUpImageComment = async (image, id_post) => {
-  const dateToDay = handleCurrentYMD()
-  const storePathTemp = path.join("modules", "comment_temp")
-  if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
-    fs.mkdirSync(path.join(localSavePath, storePathTemp), { recursive: true })
-  }
-  const storePath = path.join("modules", "comment", id_post, dateToDay)
-
   const result = {
     source: null,
     source_attribute: {}
   }
-  if (image) {
-    const type = image.mimetype
-    if (type.includes("/gif")) {
-      const result_image = await _uploadServices(storePath, [image])
-      result["source"] = result_image.uploadSuccess[0].path
-      result["source_attribute"] = result_image.uploadSuccess[0]
-    } else {
-      const image_name = Date.now() + "_" + Math.random() * 1000001 + ".webp"
-      const image_path = path.join(storePathTemp, image_name)
-      const image_source_webp = await handleCompressImage(image, image_path)
-      const file_info = {
-        source: image_source_webp,
-        name_source: image_name,
-        type: type
+
+  if (isFile(image)) {
+    const dateToDay = handleCurrentYMD()
+    const storePathTemp = path.join("modules", "comment_temp")
+    if (!fs.existsSync(path.join(localSavePath, storePathTemp))) {
+      fs.mkdirSync(path.join(localSavePath, storePathTemp), { recursive: true })
+    }
+    const storePath = path.join("modules", "comment", id_post, dateToDay)
+
+    if (image) {
+      const type = image.mimetype
+      if (type.includes("/gif")) {
+        const result_image = await _uploadServices(storePath, [image])
+        result["source"] = result_image.uploadSuccess[0].path
+        result["source_attribute"] = result_image.uploadSuccess[0]
+      } else {
+        const image_name = Date.now() + "_" + Math.random() * 1000001 + ".webp"
+        const image_path = path.join(storePathTemp, image_name)
+        const image_source_webp = await handleCompressImage(image, image_path)
+        const file_info = {
+          source: image_source_webp,
+          name_source: image_name,
+          type: type
+        }
+        const result_image = await handleMoveFileTempToMain(
+          file_info,
+          storePathTemp,
+          storePath
+        )
+        result["source"] = result_image.source
+        result["source_attribute"] = result_image.source_attribute
       }
-      const result_image = await handleMoveFileTempToMain(
-        file_info,
-        storePathTemp,
-        storePath
-      )
-      result["source"] = result_image.source
-      result["source_attribute"] = result_image.source_attribute
     }
   }
-
   return result
 }
 

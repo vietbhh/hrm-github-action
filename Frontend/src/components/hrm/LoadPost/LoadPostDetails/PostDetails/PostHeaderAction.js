@@ -718,7 +718,7 @@ const PostHeaderAction = (props) => {
     return (
       <Dropdown
         menu={{ items }}
-        placement="bottom"
+        placement="bottomRight"
         overlayClassName="post-header-button-dot"
         trigger={["click"]}>
         <div className="button-dot cursor-pointer">

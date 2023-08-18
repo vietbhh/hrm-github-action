@@ -1,6 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from "react"
-import moment from "moment"
+import { Fragment } from "react"
 // ** Styles
 import { Progress } from "antd"
 // ** Components
@@ -12,7 +11,6 @@ const AttendanceProgress = (props) => {
     progressWidth
     // ** methods
   } = props
-
   // ** render
   return (
     <Fragment>
@@ -20,7 +18,7 @@ const AttendanceProgress = (props) => {
         type="circle"
         percent={progress}
         strokeWidth={8}
-        size={progressWidth === undefined ? 80 : progressWidth}
+        size={progressWidth ?? "default"}
         strokeColor="#69dca1"
       />
     </Fragment>

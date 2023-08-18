@@ -1,17 +1,16 @@
 import WidgetPreview1 from "@apps/modules/dashboard/assets/images/WidgetPreview1.svg"
-import CardCalendar from "./CardCalendar"
 import Notepad from "@apps/modules/dashboard/main/components/Notepad"
 import { useFormatMessage } from "@apps/utility/common"
 import CardAnnouncements from "./CardAnnouncements"
 import CardAttendanceToDay from "./CardAttendanceToDay"
 import CarBirthday from "./CardBirthday"
+import CardCalendar from "./CardCalendar"
 import CardEmployees from "./CardEmployees"
+import CardStatistic from "./CardStatistic"
 import CardWorkOff from "./CardWorkOff"
-import ClockInOutWidget from "./details/clock/ClockInOutWidget"
-import FollowUp from "./details/follow/FollowUp"
 import MyTimeOff from "./MyTimeOff"
 import PendingApproval from "./PendingApproval"
-import CardStatistic from "./CardStatistic"
+import ClockInOutWidget from "./details/clock/ClockInOutWidget"
 
 const BackgroundWidget = () => {
   return <img className="img" src={WidgetPreview1} />

@@ -23,7 +23,6 @@ import AttachPhotoVideo from "../AttachPhotoVideo"
 import ChooseBackground from "../ChooseBackground"
 import EditorComponent from "../EditorComponent"
 import Emoji from "../Emoji"
-import Endorsement from "../Endorsement"
 import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
@@ -191,9 +190,6 @@ const ModalCreatePost = (props) => {
             setData(data, false, dataCustom)
           }
           setEmptyAfterSubmit()
-          notification.showSuccess({
-            text: useFormatMessage("notification.success")
-          })
         })
         .catch((err) => {
           setState({ loadingSubmit: false })
@@ -274,8 +270,9 @@ const ModalCreatePost = (props) => {
     let backgroundImage = null
     if (value !== null && value !== undefined) {
       const backgroundImageSplit = value.split("/")
-      if (backgroundImageSplit[3]) {
-        const _backgroundImageSplit = backgroundImageSplit[3].split(".")
+      if (backgroundImageSplit[backgroundImageSplit.length - 1]) {
+        const _backgroundImageSplit =
+          backgroundImageSplit[backgroundImageSplit.length - 1].split(".")
         if (_backgroundImageSplit[0]) {
           backgroundImage = _backgroundImageSplit[0]
         }
@@ -408,6 +405,9 @@ const ModalCreatePost = (props) => {
           poll_vote: true
         })
       }
+      if (optionCreate === "endorsement") {
+        toggleModalEndorsement()
+      }
 
       if (_.isFunction(setOptionCreate)) {
         setOptionCreate("")
@@ -458,8 +458,7 @@ const ModalCreatePost = (props) => {
     ),
     [file, state.loadingUploadAttachment]
   )
-
-  return (
+  return (optionCreate !== "" && modal) ? <></> : (
     <Modal
       isOpen={modal}
       toggle={() => toggleModal()}
@@ -497,7 +496,9 @@ const ModalCreatePost = (props) => {
             maxLine={2}
             minLine={2}
             showGraphic={true}
-            defaultImage={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
+            defaultImage={`${
+              import.meta.env.VITE_APP_URL
+            }/assets/images/link.png`}
           />
         )}
 
@@ -560,50 +561,6 @@ const ModalCreatePost = (props) => {
             modal={state.modal_tag}
             toggleModal={toggleModalTag}
           />
-
-          <Tooltip
-            title={useFormatMessage("modules.feed.create_post.text.poll_vote")}>
-            <li
-              className={classNames("create_post_footer-li", {
-                "cursor-not-allowed": state.backgroundImage !== null,
-                "cursor-pointer": state.backgroundImage === null
-              })}
-              onClick={() => {
-                if (state.backgroundImage === null) {
-                  toggleModalPollVote()
-                }
-              }}>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M9.5 2C9.5 1.44772 9.94772 1 10.5 1H13.5C14.0523 1 14.5 1.44772 14.5 2V20C14.5 20.5523 14.0523 21 13.5 21H10.5C9.94772 21 9.5 20.5523 9.5 20V2Z"
-                  fill="#FFA940"></path>
-                <path
-                  d="M17 6C17 5.44772 17.4477 5 18 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H18C17.4477 21 17 20.5523 17 20V6Z"
-                  fill="#FFA940"></path>
-                <path
-                  d="M2 10C2 9.44772 2.44772 9 3 9H6C6.55228 9 7 9.44772 7 10V20C7 20.5523 6.55228 21 6 21H3C2.44772 21 2 20.5523 2 20V10Z"
-                  fill="#FFA940"></path>
-              </svg>
-            </li>
-          </Tooltip>
-
-          <Endorsement
-            modal={state.modalEndorsement}
-            toggleModal={toggleModalEndorsement}
-            toggleModalCreatePost={toggleModal}
-            dataMention={dataMention}
-            setDataCreateNew={setDataCreateNew}
-            idEndorsement={dataPost?.link_id}
-            setData={setData}
-            setDataLink={setDataLink}
-            idPost={dataPost?._id}
-          />
-
           <Emoji
             editorState={state.editorState}
             setEditorState={onEditorStateChange}
