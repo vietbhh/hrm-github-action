@@ -6,6 +6,7 @@ import moment from "moment"
 // ** Styles
 import { CardBody, Card } from "reactstrap"
 // ** Components
+import "@fullcalendar/react/dist/vdom"
 import FullCalendar from "@fullcalendar/react"
 import listPlugin from "@fullcalendar/list"
 import dayGridPlugin from "@fullcalendar/daygrid"
