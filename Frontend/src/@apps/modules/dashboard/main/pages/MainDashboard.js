@@ -77,7 +77,7 @@ const MainDashboard = ({
     // check handleWidget
     check_is_handleWidget: false
   })
-  const widgetMargin = [0, 30]
+  const widgetMargin = [0, 15]
   const widgetRowHeight = 10
 
   // ** ref

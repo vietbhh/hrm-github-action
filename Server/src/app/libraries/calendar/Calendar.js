@@ -135,13 +135,9 @@ const addCalendar = async (calendarMongoModel, userId, req) => {
       }
     )
 
-    const newCalendar = await calendarMongoModel.findOne({
-      _id: idEvent
-    })
-
     return {
       success: true,
-      result: newCalendar
+      result: result
     }
   } catch (err) {
     return {

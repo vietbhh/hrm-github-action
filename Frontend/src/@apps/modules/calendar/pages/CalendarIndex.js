@@ -1,46 +1,28 @@
 // ** React Imports
 import { Fragment, useEffect } from "react"
 import { useMergedState } from "@apps/utility/common"
-import { calendarApi } from "../common/api"
-import moment from "moment"
+import { calendarNodeApi } from "../common/api"
 import { getArrWeekDate } from "../common/common"
+import moment from "moment"
+import dayjs from "dayjs"
+// ** redux
 // ** Styles
-// ** Components=
-import SidebarForIndex from "../components/sidebar/SidebarForIndex"
-import CalendarForIndex from "../components/calendar/CalendarForIndex"
-import SyncGoogleCalendarInfo from "../components/calendar/SyncGoogleCalendarInfo"
+// ** Components
 import ModalCreateEvent from "../components/modal/ModalCreateEvent"
+import FullCalendarComponent from "./FullCalendarComponent"
+import GroupAllDayEvent from "../components/calendar/GroupAllDayEvent"
+import ListEvent from "../components/sidebar/ListEvent"
 
 const CalendarIndex = (props) => {
   const [state, setState] = useMergedState({
     loading: true,
-    loadingCalendar: false,
     listCalendar: [],
-    calendarsColor: [],
-    currentCalendar: {},
-    syncGoogleInfo: {},
-    filter: {
-      from: moment().format("YYYY-MM-DD")
-    },
     filterCalendar: {
       from: getArrWeekDate().shift(),
       to: getArrWeekDate().pop()
     },
-    visibleAddEvent: false,
-    calendarYear: moment().year(),
-    changeYearType: "",
-    modal: false,
     dataEventCreated: {}
   })
-
-  const setFilter = (obj) => {
-    setState({
-      filter: {
-        ...state.filter,
-        ...obj
-      }
-    })
-  }
 
   const setFilterCalendar = (obj) => {
     setState({
@@ -59,7 +41,7 @@ const CalendarIndex = (props) => {
 
   const loadCalendar = () => {
     setState({
-      loadingCalendar: true
+      loading: true
     })
 
     const params = {
@@ -67,49 +49,49 @@ const CalendarIndex = (props) => {
       created_at_to: moment(state.filterCalendar.to).format("YYYY-MM-DD")
     }
 
-    calendarApi
+    calendarNodeApi
       .getCalendar(params)
       .then((res) => {
         const data = res.data.results
         const newCalendar = data.map((item) => {
-          let color = item.color === null ? "all-day-event" : item.color
-          if (item["is_dob"] !== undefined) {
-            color = "danger"
-          }
+          const color = item.color === null ? "all-day-event" : item.color
           const editable = item["is_dob"] === undefined
           return {
-            id: item.id,
-            start: item.start,
-            end: item.end,
-            title: item.title,
+            title: item.name,
+            id: item._id,
+            start: item.start
+              ? item.start
+              : dayjs(item.start_time_date).format("YYYY-MM-DD") +
+                " " +
+                dayjs(item.start_time_time).format("HH:mm:ss"),
+            end: item.end
+              ? item.end
+              : dayjs(item.end_time_date).format("YYYY-MM-DD") +
+                " " +
+                dayjs(item.end_time_time).format("HH:mm:ss"),
             allDay: item.allday,
             editable: editable,
-            calendar_tag: item.calendar_tag,
+            calendar_tag: item?.calendar_tag,
             extendedProps: {
-              isAllDay: item?.is_all_day,
-              listAllDayEvent: item?.is_all_day ? item.list_event : [],
+              isAllDay: item?.all_day_event,
+              listAllDayEvent: item?.all_day_event ? item.list_event : [],
               calendar: color,
               isEditable: item.is_editable
             }
           }
         })
+        
         setState({
           listCalendar: newCalendar,
-          loadingCalendar: false
+          loading: false
         })
       })
       .catch((err) => {
         setState({
           listCalendar: [],
-          loadingCalendar: false
+          loading: false
         })
       })
-  }
-
-  const toggleModal = (status = "") => {
-    setState({
-      modal: status === "" ? !state.modal : status
-    })
   }
 
   const handleAfterCreateEvent = (dataNew = {}) => {
@@ -122,56 +104,25 @@ const CalendarIndex = (props) => {
     loadCalendar()
   }, [state.filterCalendar])
 
-  useEffect(() => {
-    if (state.visibleAddEvent === true) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
-    }
-  }, [state.visibleAddEvent])
-
-  useEffect(() => {
-    if (Object.keys(state.dataEventCreated).length > 0) {
-      setFilter({
-        from: moment(state.dataEventCreated.start).format("YYYY-MM-DD")
-      })
-      setDataEventCreated({})
-    }
-  }, [state.dataEventCreated])
-
   // ** render
-  const renderSyncGoogleCalendarInfo = () => {
-    return <SyncGoogleCalendarInfo syncGoogleInfo={state.syncGoogleInfo} />
-  }
-
   return (
     <Fragment>
-      <div className="p-1 calendar-index-page">
-        <div className="d-flex align-items-start calendar-container">
-          <div className="pe-2 sidebar-section">
-            <SidebarForIndex
-              dataEventCreated={state.dataEventCreated}
-              filter={state.filter}
-              toggleModal={toggleModal}
-              setDataEventCreated={setDataEventCreated}
-              setFilter={setFilter}
-            />
-          </div>
-          <div className="calendar-section">
-            <CalendarForIndex
-              listCalendar={state.listCalendar}
-              filter={state.filter}
-              filterCalendar={state.filterCalendar}
-              setFilterCalendar={setFilterCalendar}
-              toggleModal={toggleModal}
-            />
-          </div>
-        </div>
-      </div>
+      <FullCalendarComponent
+        loading={state.loading}
+        listCalendar={state.listCalendar}
+        filterCalendar={state.filterCalendar}
+        dataEventCreated={state.dataEventCreated}
+        modalCreateEvent={ModalCreateEvent}
+        loadCalendar={loadCalendar}
+        setFilterCalendar={setFilterCalendar}
+        setDataEventCreated={setDataEventCreated}
+        groupAllDayEvent={GroupAllDayEvent}
+        listEvent={ListEvent}
+      />
       <ModalCreateEvent
         setDataCreateNew={undefined}
-        createEventApi={calendarApi.addCalendar}
-        getDetailApi={calendarApi.getDetailEvent}
+        createEventApi={calendarNodeApi.addCalendar}
+        getDetailApi={calendarNodeApi.getDetailEvent}
         afterCreate={handleAfterCreateEvent}
       />
     </Fragment>

@@ -15,21 +15,11 @@ const ListEvent = (props) => {
     loading
     // ** methods
   } = props
-  
+
   const date =
     type === "today"
       ? moment(filter.from).format("DD/MM/YYYY")
       : moment(filter.from).add(1, "days").format("DD/MM/YYYY")
-
-  const _getAllDayEvent = (item) => {
-    if (item?.all_day_event === true) {
-      return item.list_event
-    } else if (item?.is_dob === true) {
-      return item.employee_info
-    } else if (item?.is_holiday === true) {
-      return item.holiday_info
-    }
-  }
 
   // ** render
   const renderList = () => {
@@ -38,15 +28,13 @@ const ListEvent = (props) => {
     }
 
     const currentData = data[type] === undefined ? [] : data[type]
-    if (currentData === undefined) {
-      return ""
-    }
-    
+
     return (
       <Fragment>
         {currentData.map((item, index) => {
           if (item.allday === true) {
-            const allDayData = _getAllDayEvent(item)
+            const allDayData =
+              item?.all_day_event === true ? item.list_event : []
             return (
               <Fragment key={`event-item-all-day-${index}`}>
                 {allDayData.map((itemAllDay, indexAllDay) => {
@@ -64,7 +52,7 @@ const ListEvent = (props) => {
             return (
               <EventItem
                 isAllDay={false}
-                key={`event-item-${item._id}`}
+                key={`event-item-${index}`}
                 item={item}
               />
             )

@@ -1,7 +1,6 @@
 import {
   ErpDate,
   ErpInput,
-  ErpSelect,
   ErpSwitch,
   ErpTime
 } from "@apps/components/common/ErpField"
@@ -10,7 +9,6 @@ import { useSelector } from "react-redux"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { downloadApi } from "@apps/modules/download/common/api"
-//import { eventApi } from "@modules/Feed/common/api"
 import { renderIconAttachment } from "../../common/common"
 import {
   DropdownItem,
@@ -89,14 +87,6 @@ const ModalCreateEvent = (props) => {
     values.idEvent = idEvent
     values.idPost = idPost
     values.file = state.arrAttachment
-    values.start =
-      values.start_time_date.format("YYYY-MM-DD") +
-      " " +
-      values.start_time_time.format("HH:mm:ss")
-    values.end =
-      values.end_time_date.format("YYYY-MM-DD") +
-      " " +
-      values.end_time_time.format("HH:mm:ss")
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
 
     setState({ loadingSubmit: true })
@@ -137,9 +127,6 @@ const ModalCreateEvent = (props) => {
   const resetAfterSubmit = () => {
     setState({
       color: "#5398ff",
-      valueRepeat: "no_repeat",
-      valueAttendees: [],
-      dataAttendees: [],
       arrAttachment: [],
       switch_all_day: false
     })
@@ -183,25 +170,21 @@ const ModalCreateEvent = (props) => {
       setState({ loadingEdit: true })
       getDetailApi(idEvent)
         .then((res) => {
-          const resData = res.data
-          resData.start_time_date = dayjs(resData.start).format("YYYY-MM-DD")
-          resData.start_time_time = dayjs(resData.start).format("HH:mm:ss")
-          resData.end_time_date = dayjs(resData.end).format("YYYY-MM-DD")
-          resData.end_time_time = dayjs(resData.end).format("HH:mm:ss")
+          const resData = res.data.data
           setState({
             loadingEdit: false,
-            dataEdit: res.data,
-            color: res.data.color,
-            valueRepeat: res.data.repeat,
-            switch_all_day: res.data.all_day_event,
-            dataAttendees: res.data.attendees,
+            dataEdit: resData,
+            color: resData.color,
+            valueRepeat: resData.repeat,
+            switch_all_day: resData.all_day_event,
+            dataAttendees: resData.attendees,
             valueAttendees: []
           })
 
-          if (!_.isEmpty(res.data.attachment)) {
+          if (!_.isEmpty(resData.attachment)) {
             setState({ loadingAttachment: true })
             const promises = []
-            _.forEach(res.data.attachment, (item) => {
+            _.forEach(resData.attachment, (item) => {
               const promise = new Promise(async (resolve, reject) => {
                 if (item.type === "image") {
                   const _item = { ...item }
@@ -228,49 +211,11 @@ const ModalCreateEvent = (props) => {
           setState({ loadingEdit: false, dataEdit: {} })
         })
     } else {
-      setState({ loadingEdit: false, dataEdit: {} })
+      setState({ loadingEdit: false, dataEdit: {},  arrAttachment: [] })
     }
   }, [modal, idEvent])
 
   // ** render
-  const itemsColor = [
-    {
-      key: "1",
-      label: (
-        <div className="div-change-color">
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#5398ff" }}
-            onClick={() => setColor("#5398ff")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#ff6f2c" }}
-            onClick={() => setColor("#ff6f2c")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#44d38a" }}
-            onClick={() => setColor("#44d38a")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#ffc66f" }}
-            onClick={() => setColor("#ffc66f")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#ffe658" }}
-            onClick={() => setColor("#ffe658")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#f066b9" }}
-            onClick={() => setColor("#f066b9")}></div>
-          <div
-            className="div-btn-color"
-            style={{ backgroundColor: "#66e0f0" }}
-            onClick={() => setColor("#66e0f0")}></div>
-        </div>
-      )
-    }
-  ]
-
   const iconDate = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -332,7 +277,7 @@ const ModalCreateEvent = (props) => {
               )}
               className="input"
               name="event_name"
-              defaultValue={state.dataEdit?.title || ""}
+              defaultValue={state.dataEdit?.name || ""}
               loading={state.loadingEdit}
               useForm={methods}
               required
@@ -401,7 +346,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconDate}
                     defaultValue={
                       state.dataEdit.start_time_date
-                        ? moment(state.dataEdit.start_time_date)
+                        ? dayjs(state.dataEdit.start_time_date)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -417,7 +362,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.start_time_time
-                        ? state.dataEdit.start_time_time
+                        ? dayjs(state.dataEdit.start_time_time)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -435,7 +380,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconDate}
                     defaultValue={
                       state.dataEdit.end_time_date
-                        ? moment(state.dataEdit.end_time_date)
+                        ? dayjs(state.dataEdit.end_time_date)
                         : null
                     }
                     loading={state.loadingEdit}
@@ -451,7 +396,7 @@ const ModalCreateEvent = (props) => {
                     suffixIcon={iconTime}
                     defaultValue={
                       state.dataEdit.end_time_time
-                        ? state.dataEdit.end_time_time
+                        ? dayjs(state.dataEdit.end_time_time)
                         : null
                     }
                     loading={state.loadingEdit}

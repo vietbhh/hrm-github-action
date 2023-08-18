@@ -30,7 +30,7 @@ const FullCalendarComponent = (props) => {
     filter: {
       from: moment().format("YYYY-MM-DD")
     },
-
+    
     visibleAddEvent: false,
     calendarYear: moment().year()
   })
@@ -55,12 +55,8 @@ const FullCalendarComponent = (props) => {
 
   useEffect(() => {
     if (Object.keys(dataEventCreated).length > 0) {
-      const dateCreated =
-        dataEventCreated.start === undefined
-          ? dataEventCreated.start_time_date
-          : dataEventCreated.start
       setFilter({
-        from: moment(dateCreated).format("YYYY-MM-DD")
+        from: moment(dataEventCreated.start).format("YYYY-MM-DD")
       })
       setDataEventCreated({})
     }

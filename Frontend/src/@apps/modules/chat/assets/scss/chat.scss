@@ -7,9 +7,7 @@ $font-family: Helvetica;
 .navbar-2 {
   .chat-application .content-area-wrapper {
     padding: 0 !important;
-    height: calc(
-      var(--vh, 1vh) * 100 - (calc(2.75rem * 2) + 4.45rem + 0rem + 0rem + 0rem)
-    ) !important;
+    height: calc(var(--vh, 1vh) * 100 - 70px) !important;
   }
 }
 
@@ -32,6 +30,12 @@ $font-family: Helvetica;
     .chat-dot {
       color: #fd3b4c;
     }
+  }
+
+  footer {
+    min-height: 0px !important;
+    height: 0px !important;
+    position: fixed !important;
   }
 }
 
@@ -429,6 +433,7 @@ $font-family: Helvetica;
       .content-wrapper {
         padding: 0;
         background: #ffffff;
+        padding-bottom: 30px;
 
         .content-body:not(.sidebar-right-show) {
           grid-template-columns: auto 0;
@@ -729,7 +734,17 @@ $font-family: Helvetica;
             #form-chat {
               position: relative;
               height: calc(100% - 85px - 40px - 55px);
-
+              .chat {
+                .chat-avatar {
+                  .avatar {
+                    img {
+                      border: none !important;
+                      height: 40px !important;
+                      width: 40px !important;
+                    }
+                  }
+                }
+              }
               #label-file-upload-chat {
                 height: 100%;
                 border-top: unset;
