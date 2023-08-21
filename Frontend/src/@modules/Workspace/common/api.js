@@ -37,8 +37,8 @@ export const workspaceApi = {
       disableLoading: true
     })
   },
-  async update(id, data, serialize = true) {
-    const requestData = serialize ? serialize(_.cloneDeep(data)) : data
+  async update(id, data, serializeData = true) {
+    const requestData = serializeData ? serialize(_.cloneDeep(data)) : data
     return await axiosNodeApi.post(`/workspace/update/${id}`, requestData)
   },
   async getDetail(workspaceId) {

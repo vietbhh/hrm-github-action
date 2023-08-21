@@ -1,6 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { eventApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
+import classNames from "classnames"
 import moment from "moment"
 import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
@@ -118,19 +119,37 @@ const RenderPostEvent = (props) => {
             placement="bottom"
             trigger={["click"]}
             overlayClassName="feed dropdown-div-repeat dropdown-event-status">
-            <div className="event-status__dropdown">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-                  fill="#139FF8"
-                />
-              </svg>
-              {state.valueStatus}
+            <div
+              className={classNames("event-status__dropdown", {
+                "not-accept-event": state.valueStatus !== "yes"
+              })}>
+              {state.valueStatus !== "yes" ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 20 20"
+                  fill="none">
+                  <path
+                    d="M10 1.66675C5.40835 1.66675 1.66669 5.40841 1.66669 10.0001C1.66669 14.5917 5.40835 18.3334 10 18.3334C14.5917 18.3334 18.3334 14.5917 18.3334 10.0001C18.3334 5.40841 14.5917 1.66675 10 1.66675ZM12.8 11.9167C13.0417 12.1584 13.0417 12.5584 12.8 12.8001C12.675 12.9251 12.5167 12.9834 12.3584 12.9834C12.2 12.9834 12.0417 12.9251 11.9167 12.8001L10 10.8834L8.08335 12.8001C7.95835 12.9251 7.80002 12.9834 7.64169 12.9834C7.48335 12.9834 7.32502 12.9251 7.20002 12.8001C6.95835 12.5584 6.95835 12.1584 7.20002 11.9167L9.11669 10.0001L7.20002 8.08341C6.95835 7.84175 6.95835 7.44175 7.20002 7.20008C7.44169 6.95842 7.84169 6.95842 8.08335 7.20008L10 9.11675L11.9167 7.20008C12.1584 6.95842 12.5584 6.95842 12.8 7.20008C13.0417 7.44175 13.0417 7.84175 12.8 8.08341L10.8834 10.0001L12.8 11.9167Z"
+                    fill="#4F4D55"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path
+                    d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+                    fill="#139FF8"
+                  />
+                </svg>
+              )}
+
+              {useFormatMessage(`modules.feed.post.event.${state.valueStatus}`)}
             </div>
           </Dropdown>
         </div>

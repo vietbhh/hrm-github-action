@@ -4,7 +4,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { Card, CardBody, Col, Row, Button } from "reactstrap"
 
 import moment from "moment"
@@ -30,6 +30,8 @@ const TabPinned = (props) => {
     dataPin: [],
     loading: false
   })
+
+  const navigate = useNavigate()
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
   const params = useParams()
@@ -955,6 +957,20 @@ const TabPinned = (props) => {
           ),
           key: "1",
           onClick: () => handlePinPost(item?._id)
+        },
+        {
+          label: (
+            <div className="d-flex">
+              <i className="fa-regular fa-arrow-right me-50"></i>
+              <span>
+                {useFormatMessage("modules.posts.post_details.buttons.go_to_post")}
+              </span>
+            </div>
+          ),
+          key: "0",
+          onClick: () => {
+            navigate(`/posts/${item._id}`)
+          }
         }
       ]
       return (

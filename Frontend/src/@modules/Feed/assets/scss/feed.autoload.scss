@@ -570,6 +570,13 @@ $background-color-checkbox: #139ff8;
               cursor: pointer;
               text-transform: capitalize;
             }
+
+            .not-accept-event {
+              height: 34px;
+              width: 102px;
+              color: #4f4d55;
+              background: #e8e8e8;
+            }
           }
         }
 
@@ -1421,7 +1428,11 @@ $background-color-checkbox: #139ff8;
     padding: 10px;
     visibility: hidden;
     opacity: 0;
-    transition: all 0.3s ease, background 0s, border 0s, color 0s;
+    transition:
+      all 0.3s ease,
+      background 0s,
+      border 0s,
+      color 0s;
     z-index: 999;
 
     &.show {
@@ -1613,11 +1624,7 @@ $background-color-checkbox: #139ff8;
       padding: 0 12px;
     }
 
-    .load-feed
-      .load-post
-      .post-footer
-      .post-footer-button
-      .div-button-reaction {
+    .load-feed .load-post .post-footer .post-footer-button .div-button-reaction {
       gap: 30px;
     }
   }
@@ -2121,12 +2128,7 @@ $background-color-checkbox: #139ff8;
           box-sizing: border-box;
           border-radius: 12px;
           padding: 8px 12px;
-          background: linear-gradient(
-            to right,
-            rgb(241, 242, 244) 0%,
-            white 0%,
-            white 100%
-          );
+          background: linear-gradient(to right, rgb(241, 242, 244) 0%, white 0%, white 100%);
           font-weight: 600;
           font-size: 14px;
           color: rgb(38, 40, 44);
@@ -2349,20 +2351,12 @@ $background-color-checkbox: #139ff8;
 
           &.left {
             left: 0px;
-            background: linear-gradient(
-              90deg,
-              rgba(0, 0, 0, 0.3) 0%,
-              rgba(0, 0, 0, 0) 100%
-            );
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
           }
 
           &.right {
             right: 400px;
-            background: linear-gradient(
-              90deg,
-              rgba(0, 0, 0, 0.3) 0%,
-              rgba(0, 0, 0, 0) 100%
-            );
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 100%);
             transform: rotate(180deg);
           }
 
@@ -3637,6 +3631,9 @@ $background-color-checkbox: #139ff8;
     .modal-body {
       .btn-post {
         width: 480px;
+        background: #ffe658 !important;
+        border: none !important;
+        color: #32434f !important;
       }
 
       .form-group {
@@ -4669,12 +4666,7 @@ $background-color-checkbox: #139ff8;
   }
 
   .modal-announcement {
-    .modal-content
-      .modal-body
-      .div-event-time
-      .div-all-day
-      .div-show-announcement
-      .text-show {
+    .modal-content .modal-body .div-event-time .div-all-day .div-show-announcement .text-show {
       font-size: 12px;
     }
   }
@@ -4695,6 +4687,19 @@ $background-color-checkbox: #139ff8;
         min-width: 46px;
         width: 46px;
         height: 46px;
+      }
+    }
+  }
+
+  .custom-date-picker-endorsement {
+    .ant-picker-panel-container {
+      .ant-picker-header {
+        .ant-picker-header-prev-btn,
+        .ant-picker-header-super-prev-btn,
+        .ant-picker-header-next-btn,
+        .ant-picker-header-super-next-btn{
+          display: none !important;
+        }
       }
     }
   }

@@ -3729,8 +3729,8 @@
         "event": {
           "created_an": "created an",
           "event": "Event",
-          "yes": "Yes",
-          "no": "No",
+          "yes": "Accept",
+          "no": "Decline",
           "maybe": "Maybe",
           "people_invited": "people invited"
         },

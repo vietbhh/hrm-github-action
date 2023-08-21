@@ -1,14 +1,11 @@
 // ** React Imports
-import { useEffect } from "react"
 import { useMergedState } from "@apps/utility/common"
-import { workspaceApi } from "@modules/Workspace/common/api"
 import { useParams } from "react-router-dom"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
 import MediaHeader from "./MediaHeader"
 import MediaContent from "./MediaContent"
-import PreviewMediaContentModal from "../../modals/PreviewMediaContentModal/PreviewMediaContentModal"
 
 const TabMedia = (props) => {
   const {
