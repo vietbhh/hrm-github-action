@@ -1,14 +1,12 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { useForm } from "react-hook-form"
 // ** Styles
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
 // ** Components
-import PerfectScrollbar from "react-perfect-scrollbar"
 import FormEditGroupRule from "./FormEditGroupRule"
-import ListGroupRule from "../../detail/TabIntroduction/ListGroupRule"
 
 const EditGroupRuleModal = (props) => {
   const {
@@ -46,7 +44,7 @@ const EditGroupRuleModal = (props) => {
       }
 
       workspaceApi
-        .update(id, updateValues)
+        .update(id, updateValues, false)
         .then((res) => {
           reset({})
           const [groupRuleItem] = res.data.group_rules
@@ -56,10 +54,14 @@ const EditGroupRuleModal = (props) => {
         .catch((err) => {})
     } else {
       workspaceApi
-        .update(id, {
-          group_rules: [...groupRule, values],
-          add_new_group: true
-        })
+        .update(
+          id,
+          {
+            group_rules: [...groupRule, values],
+            add_new_group: true
+          },
+          false
+        )
         .then((res) => {
           reset({})
           //const [groupRuleItem] = res.data.group_rules
