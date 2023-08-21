@@ -59,7 +59,7 @@ const InviteWorkspaceModal = (props) => {
         <ModalBody>
           <Row className="mt-50">
             <Col sm={12} className="mb-1">
-              Filter members to invite by category
+              <span className="filter-text">Filter members to invite by category</span>
             </Col>
             <Col sm={12}>
               <EmployeesSelect

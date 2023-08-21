@@ -30,13 +30,7 @@ const ListMember = (props) => {
   // ** render
   const renderPagination = () => {
     if (disableLoadMore) {
-      return (
-        <Button.Ripple
-          className="custom-button custom-secondary"
-          disabled={true}>
-          {useFormatMessage("common.nodata")}
-        </Button.Ripple>
-      )
+      return ""
     }
 
     return (
@@ -59,8 +53,8 @@ const ListMember = (props) => {
               <Col
                 sm={12}
                 className={classnames({
-                  "mb-2": !isAdmin,
-                  "mb-75": isAdmin
+                  "mt-2": !isAdmin,
+                  "mt-75": isAdmin
                 })}
                 key={`list-member-item-${index}`}>
                 <MemberItem

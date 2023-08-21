@@ -3,6 +3,7 @@ import { Fragment, useState } from "react"
 import { useFormatMessage } from "@apps/utility/common"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Link } from "react-router-dom"
+import dayjs from "dayjs"
 // ** Styles
 import { Dropdown, Space } from "antd"
 import { Button } from "reactstrap"
@@ -156,25 +157,31 @@ const MemberItem = (props) => {
             className="w-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              id="Layer_1"
-              x="0px"
-              y="0px"
-              width="20px"
-              height="20px"
+              width="20"
+              height="20"
               viewBox="0 0 20 20"
-              enableBackground="new 0 0 20 20"
-              xmlSpace="preserve"
+              fill="none"
               className="me-50">
-              {" "}
-              <image
-                id="image0"
-                width="20"
-                height="20"
-                x="0"
-                y="0"
-                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAilBMVEUAAAAwQEwxQ08xQ08y Q08wQk0yQk4xQ08yQ08zQ1A0RFAxQ04yQ08xQk8yQk8wQEowRFAyQk4zQ0wwQFAyQlAzQ04yQk4w SFAyQk4wQ0wyRFAxQ04xQ08yQ08yQk0wQFAwRVAzQU4wQk0xQU4yQ08yQk4zRE8yQlAyRFAwQk4w Q1ExQU4yQ0/////YYjPwAAAALHRSTlMAQL/fr2CQ7+9QQKDf358wf8BQEGCwjyCAUICwz59gIDCg cLDgf89wcI9foNGEUCQAAAABYktHRC3N2kE9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH 5wcDCjQbW9hNqQAAAK9JREFUGNN90dkSgiAUBmA3lOJoGhlh5FKWVrz/88UyDi4zcXH4+WZgOOB5 f4YfhGGEFhInON7tCaTZYbJcFkdq0qmUZ2sImNvEsD0juOhKETer6jpDgeGm57pw2MiWyzV6EAWw QUY6tkE/i9Eac9yVcHf40Nir8nypMFishM5SCDmqkA4Gqbkgq2vVKn1P7TFIG5sa4VqmxHb8SQid Pd4gM86/eFw+MiN9X7b/vuEHqiYL5aXWzwAAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDctMDNU MDg6NTI6MjcrMDI6MDBUOKphAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA3LTAzVDA4OjUyOjI3 KzAyOjAwJWUS3QAAAABJRU5ErkJggg=="
+              <path
+                d="M8.74179 1.8583L4.58346 3.41663C3.62513 3.77496 2.8418 4.90829 2.8418 5.93329V12.1249C2.8418 13.1083 3.49181 14.4 4.28347 14.9916L7.8668 17.6666C9.0418 18.55 10.9751 18.55 12.1501 17.6666L15.7335 14.9916C16.5251 14.4 17.1751 13.1083 17.1751 12.1249V5.93329C17.1751 4.90829 16.3918 3.77496 15.4335 3.41663L11.2751 1.8583C10.5668 1.59997 9.43345 1.59997 8.74179 1.8583Z"
+                stroke="#32434F"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M10.0001 9.09998C9.96674 9.09998 9.92507 9.09998 9.89173 9.09998C9.1084 9.07498 8.4834 8.42497 8.4834 7.6333C8.4834 6.82497 9.14174 6.16663 9.95007 6.16663C10.7584 6.16663 11.4167 6.82497 11.4167 7.6333C11.4084 8.4333 10.7834 9.07498 10.0001 9.09998Z"
+                stroke="#32434F"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8.3417 11.4333C7.5417 11.9666 7.5417 12.8416 8.3417 13.375C9.25003 13.9833 10.7417 13.9833 11.65 13.375C12.45 12.8416 12.45 11.9666 11.65 11.4333C10.75 10.825 9.25837 10.825 8.3417 11.4333Z"
+                stroke="#32434F"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
             </svg>
             <span className="align-middle">
@@ -193,25 +200,31 @@ const MemberItem = (props) => {
             className="w-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-              id="Layer_1"
-              x="0px"
-              y="0px"
-              width="18px"
-              height="18px"
+              width="18"
+              height="18"
               viewBox="0 0 18 18"
-              enableBackground="new 0 0 18 18"
-              xmlSpace="preserve"
+              fill="none"
               className="me-50">
-              {" "}
-              <image
-                id="image0"
-                width="18"
-                height="18"
-                x="0"
-                y="0"
-                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAbFBMVEUAAAAwQFAwQFAwQEwx Q08xQ08yQ08wQk0yQ08yQk40RFA4QFAxQ04yQk8xQk8zQ08wSFAxQ08xQU4xQU4yQ08wQlAwQ1Ew Qk00QEwwQlAyQlAwRFAyQlAyRFAxQ04yQ08yQk4zQ04yQ0/////B+xLmAAAAInRSTlMAIBBAv++v YO+QQCCgn9/PIM+gsJ9wX3BAYGBAcHCw38CwU3pnVAAAAAFiS0dEIypibDoAAAAJcEhZcwAACxMA AAsTAQCanBgAAAAHdElNRQfnBwMKNTdwGxALAAAApklEQVQY01VQ6xqCIAzdABO0FMoo7KLu/R+y AaK5H2eH83F2A1gDBRxCqoqoOtWbIJQ2Tds2Z7rgaul6m5l1XbZf+62McCqmmuxe1GrJeBsY7h7A P5iY+E0/GQJ5TyOTl2Y7pS6BkgLIT8ySJ/JZ4l6pILtC0qIRlGF4syt84kTfpOM+BOaKyv2NOuQ8 ubKam8pqvK9ElKaa9wuNiybSc3M8mWgL+wFuwgiR1QQ8nQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAy My0wNy0wM1QwODo1Mzo1NSswMjowMCag2W8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDNU MDg6NTM6NTUrMDI6MDBX/WHTAAAAAElFTkSuQmCC"
+              <path
+                d="M9 16.5C13.125 16.5 16.5 13.125 16.5 9C16.5 4.875 13.125 1.5 9 1.5C4.875 1.5 1.5 4.875 1.5 9C1.5 13.125 4.875 16.5 9 16.5Z"
+                stroke="#32434F"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6.87988 11.1213L11.1225 6.8787"
+                stroke="#32434F"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.1225 11.1213L6.87988 6.87866"
+                stroke="#32434F"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
             </svg>
             <span className="align-middle">
@@ -249,13 +262,17 @@ const MemberItem = (props) => {
   }
 
   const renderMesseneButton = () => {
+    if (isAdmin === true) {
+      return ""
+    }
+
     if (parseInt(member.id) === parseInt(userState.id)) {
       return ""
     }
 
     return (
       <Button.Ripple
-        className=" d-flex align-items-center custom-button custom-primary mb-25"
+        className=" d-flex align-items-center custom-button custom-primary"
         disabled={loading}
         onClick={() => handleClickMessenge()}>
         <i className="fab fa-facebook-messenger me-50" />
@@ -266,7 +283,7 @@ const MemberItem = (props) => {
 
   return (
     <div className="w-100 d-flex align-items-center justify-content-between justify-items-center member-item">
-      <div className="w-50 d-flex align-items-center justify-content-start">
+      <div className="w-100 d-flex align-items-center justify-content-start">
         <Avatar
           userId={member.id}
           src={member.avatar}
@@ -277,13 +294,16 @@ const MemberItem = (props) => {
         />
         <div>
           <Link to={`/employees/u/${member.username}`}>
-            <h6 className="username mb-0">{member.username}</h6>
+            <h6 className="username mb-0">{member.full_name}</h6>
           </Link>
           <small className="join-time">
             {isAdmin
               ? useFormatMessage("modules.workspace.text.admin")
               : useFormatMessage("modules.workspace.text.joined_on", {
-                  date: "June 12, 2023"
+                  date:
+                    member?.joined_at !== undefined
+                      ? dayjs(member.joined_at).format("MMM DD, YYYY")
+                      : ""
                 })}
           </small>
         </div>
