@@ -58,6 +58,7 @@ const Endorsement = (props) => {
     optionSelectMember: [],
     modalChooseBadge: false,
     listBadge: [],
+    openDatePicker: false,
 
     // edit
     loadingEdit: false,
@@ -159,6 +160,7 @@ const Endorsement = (props) => {
           })
         })
         .catch((err) => {
+          console.log(err)
           setState({ loadingSubmit: false })
           notification.showError({
             text: useFormatMessage("notification.something_went_wrong")
@@ -208,6 +210,18 @@ const Endorsement = (props) => {
       .catch((err) => {
         return data
       })
+  }
+
+  const handleOpenChangeDatePicker = (open) => {
+    setState({
+      openDatePicker: open
+    })
+  }
+
+  const handleToggleOpenCalendar = () => {
+    setState({
+      openDatePicker: !state.openDatePicker
+    })
   }
 
   // ** useEffect
@@ -573,18 +587,25 @@ const Endorsement = (props) => {
               disabled={state.loadingSubmit}
               onClick={() => submitEndorsement()}>
               {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
-              {useFormatMessage("modules.feed.create_post.text.post")}
+              {idEndorsement
+                ? useFormatMessage("button.update")
+                : useFormatMessage("modules.feed.create_post.text.post")}
             </Button.Ripple>
             <div className="div-icon-date">
-              <ErpDate
-                nolabel
-                suffixIcon={iconDateEndorsement}
-                placement="topRight"
-                value={state.date}
-                onChange={(e) => {
-                  setState({ date: e })
-                }}
-              />
+              <div onClick={() => handleToggleOpenCalendar()}>
+                <ErpDate
+                  nolabel
+                  suffixIcon={iconDateEndorsement}
+                  open={state.openDatePicker}
+                  placement="topRight"
+                  popupClassName="custom-date-picker-endorsement"
+                  onOpenChange={handleOpenChangeDatePicker}
+                  value={state.date}
+                  onChange={(e) => {
+                    setState({ date: e })
+                  }}
+                />
+              </div>
             </div>
           </div>
         </ModalBody>

@@ -12,7 +12,7 @@ import moment from "moment"
 import { Fragment, useEffect } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
-import { useParams, useLocation, Link } from "react-router-dom"
+import { useParams, useNavigate} from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
 import AboutWorkgroup from "./AboutWorkgroup"
 import Introduction from "../TabIntroduction/Introduction"
@@ -40,7 +40,7 @@ const TabFeed = (props) => {
   const params = useParams()
   const workspaceID = params?.id
 
-  const location = useLocation()
+  const navigate = useNavigate()
 
   const apiLoadFeed = workspaceApi.loadFeed
   const setDataCreateNew = (data) => {
@@ -212,6 +212,20 @@ const TabFeed = (props) => {
                 ),
                 key: "1",
                 onClick: () => handlePinTop(item?._id)
+              },
+              {
+                label: (
+                  <div className="d-flex">
+                    <i className="fa-regular fa-arrow-right me-50"></i>
+                    <span>
+                      {useFormatMessage("modules.posts.post_details.buttons.go_to_post")}
+                    </span>
+                  </div>
+                ),
+                key: "0",
+                onClick: () => {
+                  navigate(`/posts/${item._id}`)
+                }
               }
             ]
 
@@ -261,7 +275,7 @@ const TabFeed = (props) => {
             )
           })}
           <div>
-            {data.length > 0 && (
+            {data.length > 3 && (
               <Button.Ripple
                 size="sm"
                 className="load-more-pinned custom-secondary"
