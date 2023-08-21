@@ -446,6 +446,7 @@ const updateWorkspace = async (req, res, next) => {
         ...workspaceInfo._doc,
         group_rules: requestData.group_rules
       }
+
       returnNewWorkspaceAfterUpdate = true
     } else {
       workSpaceUpdate = {
