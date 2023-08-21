@@ -3659,7 +3659,7 @@
         },
         "endorsement": {
           "title": "Endorsement",
-          "appreciation": "Appreciation",
+          "appreciation": "Endorsement",
           "select_member_for_endorsing": "Select member for endorsing",
           "add_cover_photo": "Add cover photo",
           "list_badges": "List badges",
@@ -3821,6 +3821,7 @@
         "title": "Announcement",
         "text": {
           "create_announcement": "Create Announcement",
+          "update_announcement": "Update Announcement",
           "announcement_title": "Announcement title",
           "announcement_title_placeholder": "Enter annoucement title",
           "pin_to_top": "Pin to top",

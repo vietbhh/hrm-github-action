@@ -133,7 +133,7 @@ const PostDetail = (props) => {
         })
       })
 
-    // hide menu
+   /*  // hide menu
     if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
       document.getElementsByClassName(`main-menu menu-fixed`)[0].style.display =
         "none"
@@ -161,7 +161,7 @@ const PostDetail = (props) => {
           `app-content content`
         )[0].style.minWidth = minWidth
       }
-    }
+    } */
   }, [])
 
   return (

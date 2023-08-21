@@ -41,6 +41,7 @@ const SidebarForIndex = (props) => {
     setState({
       loading: true
     })
+
     calendarNodeApi
       .getListEvent(filter)
       .then((res) => {

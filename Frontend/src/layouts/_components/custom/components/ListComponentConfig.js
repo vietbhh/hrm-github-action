@@ -1,8 +1,7 @@
-import { useFormatMessage } from "@apps/utility/common"
 import WidgetPreview1 from "@apps/modules/dashboard/assets/images/WidgetPreview1.svg"
-import ClockInOutWidget from "@modules/Dashboard/components/details/clock/ClockInOutWidget"
-import CardAnnouncements from "@apps/modules/dashboard/main/components/CardAnnouncements"
 import Notepad from "@apps/modules/dashboard/main/components/Notepad"
+import { useFormatMessage } from "@apps/utility/common"
+import ClockInOutWidget from "@modules/Dashboard/components/details/clock/ClockInOutWidget"
 
 const BackgroundWidget = () => {
   return <img className="img" src={WidgetPreview1} />
@@ -13,7 +12,7 @@ export const ListComponentConfig = (props) => {
     {
       id: "clock_in_out",
       title: useFormatMessage("modules.attendance.title.clock_in_out"),
-      component: <ClockInOutWidget {...props} noIcon progressWidth={60} />,
+      component: <ClockInOutWidget {...props} noIcon progressWidth={50} />,
       data_grid: {
         i: "clock_in_out",
         x: 8,

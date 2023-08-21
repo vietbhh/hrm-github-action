@@ -1,11 +1,10 @@
 // ** React Imports
-import { Fragment, useState } from "react"
+import { Fragment, useState } from "react";
 // ** Styles
-import { Spin } from "antd"
-import { Button } from "reactstrap"
+import { Spin } from "antd";
+import { Button } from "reactstrap";
 // ** Components
-import { Document, Page } from "react-pdf"
-
+import { Document, Page } from '@react-pdf/renderer';
 const PreviewPDF = (props) => {
   const {
     // ** props

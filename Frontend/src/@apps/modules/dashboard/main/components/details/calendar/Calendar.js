@@ -1,9 +1,11 @@
 // ** React Imports
 import { Fragment, useEffect, useRef } from "react"
-
+import moment from "moment"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../../../../calendar/common/reducer/calendar"
 // ** Styles
 // ** Components
-
 import "@fullcalendar/react/dist/vdom"
 import FullCalendar from "@fullcalendar/react"
 import listPlugin from "@fullcalendar/list"
@@ -14,9 +16,6 @@ import CalendarDescription from "./CalendarDescription"
 import AddCalendarButton from "./AddCalendarButton"
 import GroupAllDayEvent from "@apps/modules/calendar/components/calendar/GroupAllDayEvent"
 
-import { calendarApi } from "../../../../../calendar/common/api"
-import moment from "moment"
-import notification from "@apps/utility/notification"
 const Calendar = (props) => {
   const {
     // ** props
@@ -24,28 +23,25 @@ const Calendar = (props) => {
     showCalendarDescription,
     changeYearType,
     calendarYear,
+    filters,
     // ** methods
     handleShowAddEventModal,
-    setCalendarYear
+    setCalendarYear,
+    setFilter
   } = props
+
+  const dispatch = useDispatch()
 
   const currentHour = moment().hour()
   const calendarRef = useRef()
 
   const handleClickCalendar = (id) => {
-    calendarApi
-      .getEventDetail(item.id)
-      .then((res) => {
-        const calendarInfo = res.data.data
-
-        handleShowAddEventModal({
-          calendarInfo: calendarInfo,
-          viewOnly: !calendarInfo.is_editable
-        })
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: id,
+        viewOnly: false
       })
-      .catch((err) => {
-        notification.showError()
-      })
+    )
   }
 
   const handleChangeNavigateCalendar = () => {
@@ -147,14 +143,25 @@ const Calendar = (props) => {
       const extendedProps = calendarEvent._def.extendedProps
       const isAllDay = extendedProps.isAllDay
 
-      if (isAllDay !== undefined) {
-        return renderGroupAllDayEvent(extendedProps, calendarEvent.startStr)
+      if (isAllDay === true) {
+        return (
+          <GroupAllDayEvent
+            viewInfoOnly={false}
+            date={calendarEvent.startStr}
+            extendedProps={extendedProps}
+            handleShowAddEventModal={handleShowAddEventModal}
+          />
+        )
       }
     }
   }
 
   const renderCalendarDescription = () => {
-    return <CalendarDescription />
+    if (showCalendarDescription) {
+      return <CalendarDescription />
+    }
+
+    return ""
   }
 
   const renderAddCalendarButton = () => {
@@ -165,11 +172,19 @@ const Calendar = (props) => {
 
   return (
     <Fragment>
-      <FullCalendar {...calendarOptions} />
-      <Fragment>{renderAddCalendarButton()}</Fragment>
-      <Fragment>
-        {showCalendarDescription && renderCalendarDescription()}
-      </Fragment>
+      <FullCalendar
+        {...calendarOptions}
+        datesSet={(arg) => {
+          if (!moment(arg.end).isSame(filters.to)) {
+            setFilter({
+              from: moment(arg.start).format("YYYY-MM-DD"),
+              to: moment(arg.end).format("YYYY-MM-DD")
+            })
+          }
+        }}
+      />
+      <AddCalendarButton handleShowAddEventModal={handleShowAddEventModal} />
+      <Fragment>{renderCalendarDescription()}</Fragment>
     </Fragment>
   )
 }

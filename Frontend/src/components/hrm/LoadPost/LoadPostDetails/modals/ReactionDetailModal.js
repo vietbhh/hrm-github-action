@@ -39,8 +39,9 @@ const ReactionDetailModal = (props) => {
             <Link
               to={`/chat/${redux_list_user[item]?.username}`}
               className="ms-auto">
-              <button className="btn-chat">
-                {useFormatMessage("modules.feed.post.text.chat")}
+              <button className="d-flex align-items-center direct-message-button">
+                <i className="fab fa-facebook-messenger me-50" />
+                {useFormatMessage("modules.workspace.buttons.messenge")}
               </button>
             </Link>
           </div>

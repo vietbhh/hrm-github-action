@@ -6,10 +6,12 @@ import { useSelector } from "react-redux"
 import ModalAnnouncement from "./CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "./CreatePostDetails/modals/ModalCreateEvent"
 import ModalCreatePost from "./CreatePostDetails/modals/ModalCreatePost"
+import { iconEndorsement } from "../common/common"
+import Endorsement from "./CreatePostDetails/Endorsement"
 import { eventApi } from "@modules/Feed/common/api"
 // ** redux
 import { useDispatch } from "react-redux"
-import { showAddEventCalendarModal } from "../../../@apps/modules/calendar/common/reducer/calendar"
+import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
 
 const CreatePost = (props) => {
   const {
@@ -26,11 +28,10 @@ const CreatePost = (props) => {
     dataMention: [],
     optionCreate: "",
 
-    // ** event
-    modalCreateEvent: false,
-
     // ** announcement
-    modalAnnouncement: false
+    modalAnnouncement: false,
+    // endorsement
+    modalEndorsement: false
   })
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
@@ -38,13 +39,14 @@ const CreatePost = (props) => {
   const fullName = userData.full_name
   const userId = userData.id
 
-  const dispatch = useDispatch()
 
+  const dispatch = useDispatch()
   // ** function
   const toggleModalCreatePost = () => {
     setState({ modalCreatePost: !state.modalCreatePost })
   }
   const setOptionCreate = (value) => setState({ optionCreate: value })
+
   const toggleModalCreateEvent = () => {
     dispatch(
       showAddEventCalendarModal({
@@ -55,6 +57,8 @@ const CreatePost = (props) => {
   }
   const toggleModalAnnouncement = () =>
     setState({ modalAnnouncement: !state.modalAnnouncement })
+  const toggleModalEndorsement = () =>
+    setState({ modalEndorsement: !state.modalEndorsement })
 
   // ** useEffect
   useEffect(() => {
@@ -80,7 +84,7 @@ const CreatePost = (props) => {
         <hr />
         <div className="div-option">
           <ul className="ul-option">
-            <li>
+            {/*  <li>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -96,7 +100,7 @@ const CreatePost = (props) => {
               <span>
                 {useFormatMessage("modules.feed.create_post.text.task")}
               </span>
-            </li>
+            </li> */}
             <li onClick={() => toggleModalCreateEvent()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -160,6 +164,15 @@ const CreatePost = (props) => {
                 {useFormatMessage("modules.feed.create_post.text.announcement")}
               </span>
             </li>
+            <li
+              onClick={() => {
+                toggleModalEndorsement()
+              }}>
+              {iconEndorsement}
+              <span>
+                {useFormatMessage("modules.feed.create_post.endorsement.title")}
+              </span>
+            </li>
           </ul>
         </div>
       </div>
@@ -192,6 +205,14 @@ const CreatePost = (props) => {
         toggleModal={toggleModalAnnouncement}
         options_employee_department={options_employee_department}
         setDataCreateNew={setDataCreateNew}
+      />
+
+      <Endorsement
+        modal={state.modalEndorsement}
+        toggleModal={toggleModalEndorsement}
+        dataMention={state.dataMention}
+        setDataCreateNew={setDataCreateNew}
+        showTooltip={false}
       />
     </Fragment>
   )

@@ -568,7 +568,9 @@ const ModalAnnouncement = (props) => {
                   <Spinner size={"sm"} className="me-50" />
                 )}
                 {useFormatMessage(
-                  "modules.feed.announcement.text.create_announcement"
+                  _.isEmpty(state.dataEdit)
+                    ? "modules.feed.announcement.text.create_announcement"
+                    : "modules.feed.announcement.text.update_announcement"
                 )}
               </Button.Ripple>
             </form>

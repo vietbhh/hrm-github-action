@@ -64,5 +64,5 @@ const calendarSchema = baseSchema("m_calendar", {
   }
 })
 
-const calendarMongoModel = model("calendarMongoModelCore", calendarSchema)
+const calendarMongoModel = model("calendarMongoModel", calendarSchema)
 export default calendarMongoModel

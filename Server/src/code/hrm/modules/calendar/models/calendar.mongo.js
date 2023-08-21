@@ -137,5 +137,5 @@ const calendarSchema = baseSchema("m_calendar", {
   }
 })
 
-const calendarMongoModel = model("calendarMongoModel", calendarSchema)
+const calendarMongoModel = model("calendarMongoModelHRM", calendarSchema)
 export default calendarMongoModel

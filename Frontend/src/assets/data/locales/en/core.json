@@ -1033,7 +1033,9 @@
           "holiday": "Holiday",
           "etc": "ETC",
           "birthday": "Birthday",
-          "time_off": "Time Off"
+          "time_off": "Time Off",
+          "meetings": "Meetings",
+          "interviews": "interviews"
         }
       }
     },

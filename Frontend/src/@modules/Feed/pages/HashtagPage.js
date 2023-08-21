@@ -13,7 +13,8 @@ const HashtagPage = () => {
   const { hashtag } = useParams()
 
   // ** useEffect
-  useEffect(() => {
+  //Comment for later using hide menu on some layout
+  /* useEffect(() => {
     // hide menu
     if (document.getElementsByClassName(`main-menu menu-fixed`)[0]) {
       document.getElementsByClassName(`main-menu menu-fixed`)[0].style.display =
@@ -43,7 +44,7 @@ const HashtagPage = () => {
         )[0].style.minWidth = "1150px"
       }
     }
-  }, [])
+  }, []) */
 
   useEffect(() => {
     hashtagApi
