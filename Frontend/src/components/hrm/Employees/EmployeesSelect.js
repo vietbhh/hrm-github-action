@@ -58,14 +58,19 @@ const EmployeesSelect = (props) => {
       return (
         <Col sm={12} key={item.id}>
           <div
-            className="box-member d-flex"
+            className="box-member d-flex align-items-center ps-1 pe-1"
             onClick={() => handleUnSelected(key)}>
-            <Avatar src={item.avatar} className="me-50" />
-            <div>
-              <div className="title">{item.full_name}</div>
-              <span className="sub-email">{item?.email}</span>
+            <Avatar
+              src={item.avatar}
+              className="me-75"
+              imgHeight="36"
+              imgWidth="36"
+            />
+            <div className="d-flex flex-column justify-content-center">
+              <p className="mb-0 title">{item.full_name}</p>
+              <span className="sub-email">{item?.username}</span>
             </div>
-            <div className="ms-auto me-1">
+            <div className="ms-auto">
               <i class="fa-regular fa-xmark"></i>
             </div>
           </div>
@@ -79,12 +84,17 @@ const EmployeesSelect = (props) => {
       return (
         <Col sm={12} key={key}>
           <div
-            className="box-member d-flex"
+            className="box-member d-flex align-items-center"
             onClick={() => handleSelected(key)}>
-            <Avatar src={item.avatar} className="me-50" />
-            <div>
-              <div className="title">{item.full_name}</div>
-              <span className="sub-email">{item?.email}</span>
+            <Avatar
+              src={item.avatar}
+              className="me-75"
+              imgHeight="36"
+              imgWidth="36"
+            />
+            <div className="d-flex flex-column justify-content-center">
+              <p className="mb-0 title">{item.full_name}</p>
+              <span className="sub-email">{item?.username}</span>
             </div>
             <div className="ms-auto">
               <ErpCheckbox
@@ -297,32 +307,34 @@ const EmployeesSelect = (props) => {
     <>
       <Row>
         <Col sm={12} className="mb-2 filter">
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() =>
-              setState({ typeAdd: "members", recordsTotal: 0, members: [] })
-            }
-            className={`border rounded w-100 me-1 px-1 py-50  ${
-              state.typeAdd === "members" ? "border-primary bg-primary " : ""
-            }`}>
-            {useFormatMessage("modules.workspace.text.users")}
-          </span>
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() =>
-              setState({
-                typeAdd: "departments",
-                recordsTotal: 0,
-                departments: []
-              })
-            }
-            className={`border rounded w-100 me-1 px-1 py-50  ${
-              state.typeAdd === "departments"
-                ? "border-primary bg-primary "
-                : ""
-            }`}>
-            {useFormatMessage("modules.workspace.text.derpartment")}
-          </span>
+          <div className="d-flex">
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() =>
+                setState({ typeAdd: "members", recordsTotal: 0, members: [] })
+              }
+              className={`border common-button d-block rounded w-100 me-50 px-1 py-50  ${
+                state.typeAdd === "members" ? "border-primary bg-primary " : ""
+              }`}>
+              {useFormatMessage("modules.workspace.text.users")}
+            </span>
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() =>
+                setState({
+                  typeAdd: "departments",
+                  recordsTotal: 0,
+                  departments: []
+                })
+              }
+              className={`border common-button d-block rounded w-100 me-1 px-1 py-50  ${
+                state.typeAdd === "departments"
+                  ? "border-primary bg-primary "
+                  : ""
+              }`}>
+              {useFormatMessage("modules.workspace.text.derpartment")}
+            </span>
+          </div>
         </Col>
       </Row>
       <div className="d-flex ">
@@ -342,7 +354,7 @@ const EmployeesSelect = (props) => {
             <>
               <Row className="w-100">
                 <Col sm={12} className="mb-50">
-                  {useFormatMessage("modules.workspace.text.suggested")}
+                  <span className="suggest-text">{useFormatMessage("modules.workspace.text.suggested")}</span>
                 </Col>
               </Row>
               <PerfectScrollbar
@@ -372,19 +384,19 @@ const EmployeesSelect = (props) => {
             !state.dataSelected.length && `d-flex align-items-center`
           }`}>
           {state.dataSelected.length === 0 &&
-            state.department_selected.length === 0 && <EmptyContent />}
+            state.department_selected.length === 0 && <div className="p-1"><EmptyContent /></div>}
           {(state.dataSelected.length > 0 ||
             state.department_selected.length > 0) && (
             <>
-              <div className="mt-1 mb-2">
+              <div className="p-1 pb-0 mb-50 member-selected-text">
                 {useFormatMessage("modules.workspace.display.member_selected", {
                   number: state.dataSelected.length
                 })}
               </div>
               <PerfectScrollbar
                 style={{
-                  maxHeight: "400px",
-                  minHeight: "400px"
+                  maxHeight: "440px",
+                  minHeight: "440px"
                 }}>
                 <Row>
                   {renderMemberSelected(state.dataSelected)}

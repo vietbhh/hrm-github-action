@@ -41,12 +41,10 @@ const AboutWorkgroup = (props) => {
 
   // ** effect
   useEffect(() => {
-    if (document.getElementById(`about-workgroup-body-content`)) {
-      const height = document.getElementById(
-        `about-workgroup-body-content`
-      ).offsetHeight
+    if (workspaceInfo?.introduction !== undefined) {
+      const height = workspaceInfo.introduction.length
 
-      if (height >= 90) {
+      if (height >= 100) {
         setState({ showSeeMore: true })
       }
     }
@@ -93,7 +91,7 @@ const AboutWorkgroup = (props) => {
       </CardHeader>
       <CardBody>
         <div className="p-0 pt-25 mb-1">
-          <div className="introduction-content">
+          <div className="mb-75 introduction-content">
             <div
               id="about-workgroup-body-content"
               className={` ${
@@ -108,7 +106,7 @@ const AboutWorkgroup = (props) => {
                   e.preventDefault()
                   setState({ seeMore: !state.seeMore })
                 }}>
-                <p>
+                <p className="mb-0">
                   {state.seeMore === false
                     ? useFormatMessage("modules.feed.post.text.see_more")
                     : useFormatMessage("modules.feed.post.text.hide")}

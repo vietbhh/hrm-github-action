@@ -48,6 +48,15 @@ $background-color-checkbox: #139ff8;
     }
   }
 
+  .div-pinned-post {
+    .load-more-pinned {
+      font-size: 12px !important;
+      height: 36px;
+      border-radius: 12px;
+      font-weight: 400 !important;
+    }
+  }
+
   .div-create-post {
     background: #ffffff;
     padding: 20px 40px;
