@@ -13,6 +13,7 @@ import "../assets/scss/calendarHRM.scss"
 // ** Components
 import FullCalendarComponent from "../../../@apps/modules/calendar/pages/FullCalendarComponent"
 import ModalCreateEvent from "../../../components/hrm/CreatePost/CreatePostDetails/modals/ModalCreateEvent"
+import DetailEventModal from "../components/modal/EventDetails/EventDetailsModal"
 import GroupAllDayEvent from "../components/calendar/GroupAllDayEvent"
 import ListEventHRM from "../components/calendar/ListEventHRM"
 
@@ -114,6 +115,10 @@ const CalendarIndexHRM = () => {
     loadCalendar()
   }
 
+  const handleAfterRemoveEvent = () => {
+    loadCalendar()
+  }
+
   // ** effect
   useEffect(() => {
     loadCalendar()
@@ -171,6 +176,9 @@ const CalendarIndexHRM = () => {
         setDataEventCreated={setDataEventCreated}
         groupAllDayEvent={GroupAllDayEvent}
         listEvent={ListEventHRM}
+      />
+      <DetailEventModal
+        afterRemove={handleAfterRemoveEvent}
       />
       <ModalCreateEvent
         setDataCreateNew={undefined}

@@ -205,7 +205,7 @@ const ModalCreateEvent = (props) => {
       setState({ loadingEdit: true })
       getDetailApi(idEvent)
         .then((res) => {
-          const restData = res.data.data
+          const restData = res.data.data ? res.data.data : res.data
           setState({
             loadingEdit: false,
             dataEdit: restData,

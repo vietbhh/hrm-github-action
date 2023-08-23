@@ -4,7 +4,9 @@ import { Dropdown } from "antd"
 import classNames from "classnames"
 import moment from "moment"
 import React, { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
+// ** redux
+import { useSelector, useDispatch } from "react-redux"
+import { showDetailEventModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
 
 const RenderPostEvent = (props) => {
   const { dataLink } = props
@@ -14,6 +16,8 @@ const RenderPostEvent = (props) => {
 
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
+
+  const dispatch = useDispatch()
 
   // ** function
   const setValueStatus = (value) => setState({ valueStatus: value })
@@ -25,6 +29,12 @@ const RenderPostEvent = (props) => {
       .postUpdateEventStatus(params)
       .then((res) => {})
       .catch((err) => {})
+  }
+
+  const handleClick = () => {
+    dispatch(showDetailEventModal({
+      idEvent: dataLink?._id
+    }))
   }
 
   // ** useEffect
@@ -86,7 +96,7 @@ const RenderPostEvent = (props) => {
               : ""}
           </div>
         </div>
-        <div className="event-content">
+        <div className="event-content" onClick={() => handleClick()} style={{cursor: "pointer"}}>
           <div className="event-content__title">{dataLink?.name}</div>
           <div className="event-content__meeting-room">
             {dataLink?.meeting_room?.label}

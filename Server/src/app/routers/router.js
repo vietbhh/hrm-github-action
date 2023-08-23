@@ -31,7 +31,7 @@ walk(codeFolder, (err, dir) => {
 //Core Routers
 appRouter.use("/", coreRouter)
 
-walk(coreRouterFolder, (err, dir) => {
+/*walk(coreRouterFolder, (err, dir) => {
   fs.readdirSync(dir)
     .filter((file) => {
       return (
@@ -48,7 +48,7 @@ walk(coreRouterFolder, (err, dir) => {
       const { default: router } = await import(routerPath)
       appRouter.use("/" + routerBase, router)
     })
-})
+})*/
 
 //Modules Routers
 walk(codeFolder, (err, dir) => {

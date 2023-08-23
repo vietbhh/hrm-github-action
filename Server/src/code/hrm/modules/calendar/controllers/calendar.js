@@ -11,7 +11,7 @@ import { Op } from "sequelize"
 import { timeOffHolidaysModel } from "../../timeOff/models/timeOffHolidays.mysql.js"
 import { timeOffRequestsModel } from "../../timeOff/models/timeOffRequests.mysql.js"
 import { timeOffTypesModel } from "../../timeOff/models/timeOffTypes.mysql.js"
-import { getUser, usersModel } from "#app/models/users.mysql.js"
+import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
 import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
 
 const handleGetCalendar = async (req, res) => {
@@ -56,8 +56,10 @@ const handleGetDetailEvent = async (req, res) => {
   const owner = data.owner
   const employee = isArray(data.employee) ? data.employee : []
   let isEditable = false
+  let isOwner = false
   if (parseInt(owner) === parseInt(req.__user)) {
     isEditable = true
+    isOwner = true
   } else if (
     employee.some((itemSome) => {
       return parseInt(itemSome.id) === parseInt(req.__user)
@@ -66,10 +68,19 @@ const handleGetDetailEvent = async (req, res) => {
     isEditable = false
   }
 
+  const ownerInfo = await getUser(data.owner)
+
   return res.respond({
     data: {
       ...data._doc,
-      is_editable: isEditable
+      is_editable: isEditable,
+      is_owner: isOwner,
+      info_owner: {
+        label: ownerInfo?.full_name,
+        username: ownerInfo?.username,
+        avatar: ownerInfo?.avatar,
+        email: ownerInfo?.email
+      }
     }
   })
 }

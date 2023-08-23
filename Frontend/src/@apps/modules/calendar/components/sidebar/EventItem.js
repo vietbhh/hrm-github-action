@@ -7,7 +7,8 @@ import dayjs from "dayjs"
 const EventItem = (props) => {
   const {
     // ** props
-    item
+    item,
+    showFullDateTime = false
     // ** methods
   } = props
 

@@ -461,7 +461,8 @@
       "modals": {
         "title": {
           "create_event": "Create Event",
-          "update_event": "Update Event"
+          "update_event": "Update Event",
+          "event_details": "Event Details"
         },
         "buttons": {
           "add_attachment": "Add Attachments"
@@ -3655,7 +3656,9 @@
           "member": "member",
           "members": "members",
           "poll_setting": "Poll setting",
-          "close_poll_vote": "Close poll vote"
+          "close_poll_vote": "Close poll vote",
+          "member_invited": "{number} members invited",
+          "invited_you_to": "invited you to"
         },
         "endorsement": {
           "title": "Endorsement",
@@ -3814,7 +3817,14 @@
           "no_repeat": "No repeat",
           "repeat_every_day": "Repeat every day",
           "repeat_weekday": "Repeat weekday",
-          "repeat_week_on_monday": "Repeat week on Monday"
+          "repeat_week_on_monday": "Repeat week on Monday",
+          "tracking": "Tracking",
+          "remove_event": "\"{name}\" will be deleted!",
+          "remove_event_success": "Event has been deleted!",
+          "no_meeting_room": "No meeting room",
+          "no_reminder": "No reminder",
+          "no_description": "No details",
+          "no_attachment": "no attachment"
         }
       },
       "announcement": {

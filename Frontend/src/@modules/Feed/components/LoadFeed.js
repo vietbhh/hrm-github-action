@@ -1,7 +1,7 @@
 import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
-import React, { useEffect } from "react"
+import React, { Fragment, useEffect } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
@@ -12,7 +12,7 @@ import {
   loadUrlDataLink
 } from "../common/common"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
-import { useLocation, useParams } from "react-router-dom"
+import EventDetailsModal from "../../Calendar/components/modal/EventDetails/EventDetailsModal"
 
 const LoadFeed = (props) => {
   const {
@@ -198,6 +198,10 @@ const LoadFeed = (props) => {
     }
     return false
   }
+  
+  const handleAfterRemove = () => {
+    loadData(true)
+  }
 
   // ** useEffect
   useEffect(() => {
@@ -267,7 +271,8 @@ const LoadFeed = (props) => {
   }, [dataEmployee])
 
   return (
-    <div className="load-feed">
+    <Fragment>
+      <div className="load-feed">
       <InfiniteScroll
         dataLength={state.dataPost.length}
         next={loadData}
@@ -1262,6 +1267,8 @@ const LoadFeed = (props) => {
           )}
       </InfiniteScroll>
     </div>
+    <EventDetailsModal afterRemove={handleAfterRemove} />
+    </Fragment>
   )
 }
 
