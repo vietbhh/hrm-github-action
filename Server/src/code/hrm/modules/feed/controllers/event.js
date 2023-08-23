@@ -34,14 +34,16 @@ const getEventById = async (req, res, next) => {
 
     const ownerInfo = await getUser(data.owner)
     return res.respond({
-      ...data._doc,
-      is_editable: isEditable,
-      is_owner: isOwner,
-      info_owner: {
-        label: ownerInfo?.full_name,
-        username: ownerInfo?.username,
-        avatar: ownerInfo?.avatar,
-        email: ownerInfo?.email
+      data: {
+        ...data._doc,
+        is_editable: isEditable,
+        is_owner: isOwner,
+        info_owner: {
+          label: ownerInfo?.full_name,
+          username: ownerInfo?.username,
+          avatar: ownerInfo?.avatar,
+          email: ownerInfo?.email
+        }
       }
     })
   } catch (err) {

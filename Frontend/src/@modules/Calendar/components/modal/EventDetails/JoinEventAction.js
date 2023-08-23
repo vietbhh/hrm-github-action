@@ -14,8 +14,9 @@ import classNames from "classnames"
 const JoinEventAction = (props) => {
   const {
     // ** props
-    infoEvent
+    infoEvent,
     // ** methods
+    afterUpdateStatus
   } = props
 
   const currentEmployee = useSelector((state) => state.auth.userData)
@@ -41,8 +42,16 @@ const JoinEventAction = (props) => {
     const params = { id: infoEvent._id, status: status }
     eventApi
       .postUpdateEventStatus(params)
-      .then((res) => {})
-      .catch((err) => {})
+      .then((res) => {
+        if (_.isFunction(afterUpdateStatus)) {
+          afterUpdateStatus(status)
+        }
+      })
+      .catch((err) => {
+        if (_.isFunction(afterUpdateStatus)) {
+          afterUpdateStatus(status)
+        }
+      })
   }
 
   // ** render

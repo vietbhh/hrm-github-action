@@ -8,6 +8,7 @@ const calendarSlice = createSlice({
     modal: false,
     modalDetail: false,
     idEvent: null,
+    indexEvent: null,
     currentCalendar: {}
   },
   reducers: {
@@ -24,6 +25,7 @@ const calendarSlice = createSlice({
     },
     showDetailEventModal: (state, action) => {
       state.idEvent = action.payload.idEvent
+      state.indexEvent = action?.payload?.indexEvent === undefined ? state.indexEvent : action.payload.indexEvent
       state.viewOnly = action.payload.viewOnly
       state.modalDetail = true
     },

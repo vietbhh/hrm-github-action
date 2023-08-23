@@ -22,7 +22,8 @@ const EventDetailsModal = (props) => {
   const {
     // ** props
     // ** methods
-    afterRemove
+    afterRemove,
+    afterUpdateStatus
   } = props
 
   const [state, setState] = useMergedState({
@@ -91,7 +92,10 @@ const EventDetailsModal = (props) => {
           className={classNames("event-detail-body", {
             "event-detail-border": state.infoEvent.is_owner
           })}>
-          <JoinEventAction infoEvent={state.infoEvent} />
+          <JoinEventAction
+            infoEvent={state.infoEvent}
+            afterUpdateStatus={afterUpdateStatus}
+          />
           <EventTitle infoEvent={state.infoEvent} afterRemove={afterRemove} />
           <MembersInvited infoEvent={state.infoEvent} />
           <EventInfo infoEvent={state.infoEvent} />

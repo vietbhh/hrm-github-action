@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { showDetailEventModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
 
 const RenderPostEvent = (props) => {
-  const { dataLink } = props
+  const { dataLink, index } = props
   const [state, setState] = useMergedState({
     valueStatus: "yes"
   })
@@ -33,7 +33,8 @@ const RenderPostEvent = (props) => {
 
   const handleClick = () => {
     dispatch(showDetailEventModal({
-      idEvent: dataLink?._id
+      idEvent: dataLink?._id,
+      indexEvent: index
     }))
   }
 

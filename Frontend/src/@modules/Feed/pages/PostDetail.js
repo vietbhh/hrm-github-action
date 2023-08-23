@@ -45,6 +45,24 @@ const PostDetail = (props) => {
     navigate("/feed")
   }
 
+  const handleAfterUpdateStatus = (status) => {
+    const newDataPost = { ...state.dataPost }
+    const newDataLink = {...newDataPost["dataLink"]}
+    const newEmployee = _.isArray(newDataLink["employee"]) ? [...newDataLink["employee"]].map((item) => {
+      if (parseInt(item.id) === parseInt(userId)) {
+        return {
+          ...item,
+          status: status
+        }
+      }
+
+      return item
+    }) : newDataLink["employee"]
+    newDataLink["employee"] = newEmployee
+    newDataPost["dataLink"] = newDataLink
+    setState({ dataPost: newDataPost })
+  }
+
   // ** useEffect
   useEffect(() => {
     setState({ loadingPost: true })
@@ -91,7 +109,6 @@ const PostDetail = (props) => {
           const dataUrl = await loadUrlDataLink(data)
           data["dataLink"].cover_url = dataUrl.cover_url
           data["dataLink"].badge_url = dataUrl.badge_url
-
           setState({ loadingPost: false, dataPost: data })
         } else {
           setState({ loadingPost: false, dataPost: {} })
@@ -233,7 +250,10 @@ const PostDetail = (props) => {
           </div>
         </div>
       </div>
-      <EventDetailsModal afterRemove={handleAfterRemove} />
+      <EventDetailsModal
+        afterRemove={handleAfterRemove}
+        afterUpdateStatus={handleAfterUpdateStatus}
+      />
     </Fragment>
   )
 }
