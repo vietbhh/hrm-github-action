@@ -134,7 +134,7 @@ const _googleCloudUpload = async (storePath, files) => {
     projectId: process.env.GCS_PROJECT_ID
   })
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
-
+  
   const promises = []
 
   forEach(files, (file, key) => {
@@ -580,7 +580,6 @@ const removeFile = async (storePath, type = null) => {
     if (upload_type === "direct") {
       const savePath = path.join(localSavePath, storePath)
       if (fs.lstatSync(savePath).isFile()) {
-        console.log("ok vl", savePath)
         fs.unlink(savePath, (err) => {
           if (err) {
             throw err
