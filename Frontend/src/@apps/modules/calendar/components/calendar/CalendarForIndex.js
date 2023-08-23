@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react"
 import moment from "moment"
 // ** redux
 import { useDispatch } from "react-redux"
-import { showAddEventCalendarModal } from "../../common/reducer/calendar"
+import { showDetailEventModal, showAddEventCalendarModal } from "../../common/reducer/calendar"
 // ** Styles
 // ** Components
 import "@fullcalendar/react/dist/vdom"
@@ -42,7 +42,7 @@ const CalendarForIndex = (props) => {
 
   const handleClickCalendar = (calendarId) => {
     dispatch(
-      showAddEventCalendarModal({
+      showDetailEventModal({
         idEvent: calendarId,
         viewOnly: false
       })

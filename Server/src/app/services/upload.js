@@ -134,7 +134,7 @@ const _googleCloudUpload = async (storePath, files) => {
     projectId: process.env.GCS_PROJECT_ID
   })
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
-
+  
   const promises = []
 
   forEach(files, (file, key) => {
@@ -572,5 +572,40 @@ const copyFilesServices = async (pathFrom, pathTo, filename, type = null) => {
   }
 }
 
-export { _uploadServices, copyFilesServices, moveFileFromServerToGCS }
+const removeFile = async (storePath, type = null) => {
+  const upload_type = type === null ? await getSetting("upload_type") : type
+  if (!storePath) throw new Error("missing_store_path")
 
+  try {
+    if (upload_type === "direct") {
+      const savePath = path.join(localSavePath, storePath)
+      if (fs.lstatSync(savePath).isFile()) {
+        fs.unlink(savePath, (err) => {
+          if (err) {
+            throw err
+          }
+        })
+      }
+    } else if (upload_type === "cloud_storage") {
+      const storage = new Storage({
+        keyFilename: path.join(
+          dirname(global.__basedir),
+          "Server",
+          "service_account_file.json"
+        ),
+        projectId: process.env.GCS_PROJECT_ID
+      })
+      const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
+      bucket.file(storePath).delete({})
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export {
+  _uploadServices,
+  copyFilesServices,
+  moveFileFromServerToGCS,
+  removeFile
+}

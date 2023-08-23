@@ -148,9 +148,13 @@ const addCalendar = async (calendarMongoModel, userId, req) => {
 }
 
 const getDetailEvent = async (calendarMongoModel, id) => {
-  const data = await calendarMongoModel.findById(id)
-
-  return data
+  try {
+    const data = await calendarMongoModel.findById(id)
+    data["color"] = data.color.replace("#", "")
+    return data
+  } catch (err) {
+    return {}
+  }
 }
 
 const getListEvent = async (calendarMongoModel, query) => {

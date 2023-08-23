@@ -6,7 +6,9 @@ const calendarSlice = createSlice({
   initialState: {
     viewOnly: false,
     modal: false,
+    modalDetail: false,
     idEvent: null,
+    indexEvent: null,
     currentCalendar: {}
   },
   reducers: {
@@ -20,6 +22,20 @@ const calendarSlice = createSlice({
     },
     removeCurrentCalendar: (state) => {
       state.currentCalendar = {}
+    },
+    showDetailEventModal: (state, action) => {
+      state.idEvent = action.payload.idEvent
+      state.indexEvent = action?.payload?.indexEvent === undefined ? state.indexEvent : action.payload.indexEvent
+      state.viewOnly = action.payload.viewOnly
+      state.modalDetail = true
+    },
+    hideDetailEventModal: (state, action) => {
+
+      state.modalDetail =
+        action?.payload?.modalDetail !== undefined
+          ? action.payload.modalDetail
+          : false
+      state.idEvent = null
     }
   }
 })
@@ -27,7 +43,9 @@ const calendarSlice = createSlice({
 export const {
   showAddEventCalendarModal,
   hideAddEventCalendarModal,
-  removeCurrentCalendar
+  removeCurrentCalendar,
+  showDetailEventModal,
+  hideDetailEventModal
 } = calendarSlice.actions
 
 export default calendarSlice.reducer

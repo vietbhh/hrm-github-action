@@ -25,6 +25,7 @@ import { showAddEventCalendarModal } from "../../../@apps/modules/calendar/commo
 const LoadPost = (props) => {
   const {
     data, // data post
+    index, // index post
     current_url, // current url (vd: /feed)
     dataMention, // data arr user tag [{id: id, name: name,link: "#", avatar: getAvatarUrl(value.id * 1)}]
     offReactionAndComment = false, // tắt div reaction, comment: true / false
@@ -123,7 +124,7 @@ const LoadPost = (props) => {
     }
 
     if (data.type === "event") {
-      return <RenderPostEvent dataLink={data.dataLink} />
+      return <RenderPostEvent dataLink={data.dataLink} index={index}/>
     }
 
     if (data.type === "endorsement") {

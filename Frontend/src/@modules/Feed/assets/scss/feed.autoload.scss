@@ -4457,6 +4457,233 @@ $background-color-checkbox: #139ff8;
   }
 }
 
+.modal-event-detail {
+  $common-text-color: #32434f;
+  width: 540px;
+
+  .custom-secondary {
+    border: none !important;
+    background-color: #eceff3 !important;
+  }
+
+  .modal-content {
+    .modal-header {
+    }
+
+    .modal-body {
+      .event-detail-border {
+        border-top: 1px solid #e4e6e8 !important;
+        border-bottom: 1px solid #e4e6e8 !important;
+      }
+
+      .event-detail-body {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 1.3rem !important;
+
+        .join-event-action-section {
+          padding: 1rem;
+          border: 1px solid #e6e6e6;
+          border-radius: 12px;
+
+          .event-info {
+            font-size: 14px;
+            font-weight: 500;
+
+            .event-name-text {
+              color: #1751d0;
+            }
+          }
+
+          .time-created {
+            font-size: 12px;
+            font-weight: 300;
+          }
+
+          .button-action {
+            .common-action-button {
+              padding: 8px 10px;
+              font-size: 12px;
+              border-radius: 6px;
+              background-color: #ffffff !important;
+              color: #4f4d55 !important;
+              border: 1px solid #e6e6e6 !important;
+            }
+
+            .common-action-button.active {
+              background-color: #1751d0 !important;
+              color: #ffffff !important;
+              border: none !important;
+            }
+          }
+        }
+
+        .event-title-section {
+          .event-item {
+            height: 55px;
+            .color {
+              height: 50px;
+              width: 8px;
+              border-radius: 6px;
+            }
+
+            .bg-color-5398ff {
+              background-color: #0ea5e9;
+            }
+
+            .bg-color-f066b9 {
+              background-color: #8b5cf6;
+            }
+
+            .bg-color-ffc66f {
+              background-color: #f59e0b;
+            }
+
+            .bg-color-ff6f2c {
+              background-color: #f43f5e;
+            }
+
+            .bg-color-44d38a {
+              background-color: #10b981;
+            }
+
+            .info {
+              .title {
+                font-size: 18px;
+                font-weight: 500;
+                color: $common-text-color;
+                margin-bottom: 0.7rem !important;
+              }
+
+              .time {
+                font-size: 14px;
+                font-weight: 300;
+                color: $common-text-color;
+              }
+            }
+
+            .out-date-info {
+              .time,
+              .title {
+                //text-decoration: line-through;
+              }
+            }
+          }
+
+          .action {
+            .custom-secondary {
+              width: 30px;
+              height: 30px;
+              border-radius: 10px !important;
+              background-color: #ffffff !important;
+
+              &:hover {
+                background-color: #f5f5f8 !important;
+              }
+            }
+          }
+        }
+
+        .members-invited-section {
+          .employee {
+            .list-employee {
+              .employee-item {
+                border: 2px solid #ffffff !important;
+                margin-left: -10px;
+              }
+              .rest-employee-number {
+                height: 28px;
+                width: 28px;
+                border-radius: 50%;
+                font-size: 12px;
+                font-weight: 400;
+                background-color: #eceff3;
+                z-index: 2;
+              }
+            }
+            .text-number {
+              font-size: 14px;
+              font-weight: 300;
+            }
+          }
+
+          .action {
+            .custom-secondary {
+              float: right;
+              width: 79px;
+              height: 36px;
+              color: #4f4d55 !important;
+            }
+          }
+        }
+
+        .event-info-section {
+          .event-info-item {
+            .icon-area {
+              width: 6.5%;
+            }
+
+            .text-area {
+              width: 93.5%;
+              font-size: 14px;
+              font-weight: 300;
+              color: #32434f;
+            }
+
+            .attach-file-section {
+              .attach-file-item {
+                min-width: 185px;
+                height: 36px;
+                border-radius: 8px !important;
+                background-color: rgba(193, 244, 212, 0.5);
+                font-size: 12px;
+                color: #016626;
+              }
+              .remove-file-btn {
+                cursor: pointer;
+                padding: 0 !important;
+                padding-bottom: 1px !important;
+                border: none !important;
+                background-color: inherit !important;
+              }
+            }
+          }
+        }
+      }
+      .tracking-section {
+        padding-top: 1rem !important;
+        padding-left: 3px;
+        padding-right: 3px;
+
+        .list-employee {
+          .employee-item {
+            .employee-name {
+              font-size: 12px;
+              font-weight: 400;
+              color: #0a090b;
+              line-height: 1;
+            }
+
+            .status-text {
+              font-size: 10px;
+              font-weight: 300;
+              color: #a3a1a1;
+            }
+
+            .text-yes {
+              color: #019939;
+            }
+
+            .text-no {
+              color: #e12121;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 1920px) {
   .div-left.feed > div,
   .div-left .feed > div {
@@ -4697,7 +4924,7 @@ $background-color-checkbox: #139ff8;
         .ant-picker-header-prev-btn,
         .ant-picker-header-super-prev-btn,
         .ant-picker-header-next-btn,
-        .ant-picker-header-super-next-btn{
+        .ant-picker-header-super-next-btn {
           display: none !important;
         }
       }
