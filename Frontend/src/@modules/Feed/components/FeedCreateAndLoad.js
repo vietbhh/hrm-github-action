@@ -35,7 +35,8 @@ const FeedCreateAndLoad = (props) => {
       data_options.push({
         value: `${item.id}_employee`,
         label: item.full_name,
-        avatar: item.avatar
+        avatar: item.avatar,
+        tag: item.email
       })
     })
     feedApi
@@ -45,7 +46,8 @@ const FeedCreateAndLoad = (props) => {
           data_options.push({
             value: `${item.id}_department`,
             label: item.name,
-            avatar: ""
+            avatar: "",
+            tag: "department"
           })
         })
 

@@ -39,6 +39,7 @@ const PostHeaderAction = (props) => {
     turn_off_commenting,
     view_edit_history,
     send_noti_unseen,
+    divider,
     ...rest
   } = customAction || {}
 
@@ -387,7 +388,8 @@ const PostHeaderAction = (props) => {
     },
     divider1: {
       type: "divider",
-      condition: true
+      condition: true,
+      ...divider
     },
     turn_off_commenting: {
       onClick: () => {

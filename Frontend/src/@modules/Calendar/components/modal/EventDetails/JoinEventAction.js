@@ -15,11 +15,11 @@ const JoinEventAction = (props) => {
   const {
     // ** props
     infoEvent,
+    currentEmployee,
     // ** methods
     afterUpdateStatus
   } = props
-
-  const currentEmployee = useSelector((state) => state.auth.userData)
+  
   const listEmployee = !_.isArray(infoEvent.employee) ? [] : infoEvent.employee
   let currentStatus = null
   listEmployee.map((item) => {
@@ -211,6 +211,7 @@ const JoinEventAction = (props) => {
   }
 
   const renderComponent = () => {
+    console.log(infoEvent)
     if (infoEvent.is_owner === true) {
       return ""
     }
@@ -219,13 +220,13 @@ const JoinEventAction = (props) => {
       <div className="mb-2 join-event-action-section">
         <div className="d-flex align-items-start">
           <div className="me-75">
-            <Avatar imgWidth="46" imgHeight="46" src={infoOwner.avatar} />
+            <Avatar imgWidth="46" imgHeight="46" src={infoOwner?.avatar} />
           </div>
           <div>
             <p className="mb-0 event-info">
-              <b>{infoOwner.label}</b>{" "}
+              <b>{infoOwner?.label}</b>{" "}
               {useFormatMessage("modules.feed.create_post.text.invited_you_to")}{" "}
-              <span className="event-name-text">{infoEvent.name}</span>
+              <span className="event-name-text">{infoEvent?.name}</span>
             </p>
             <p className="mt-0 time-created">
               {dayjs(infoEvent.created_at).format("MMM DD, YYYY")}

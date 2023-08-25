@@ -21,14 +21,33 @@ const submitEndorsement = async (req, res, next) => {
   try {
     const member = []
     const receivers = []
-    forEach(body.valueSelectMember, (item) => {
-      const value = item.value
-      member.push(value)
 
-      if (req.__user.toString() !== value.toString()) {
-        receivers.push(value)
+    let checkIsAll = false
+    forEach(body.valueSelectMember, (item) => {
+      if (item.value === "all") {
+        checkIsAll = true
+        return
       }
     })
+
+    if (checkIsAll) {
+      const listEmployee = await getUserActivated()
+      forEach(listEmployee, (item) => {
+        employee.push(item.id)
+        if (parseInt(item.id) !== parseInt(req.__user)) {
+          receivers.push(item.id)
+        }
+      })
+    } else {
+      forEach(body.valueSelectMember, (item) => {
+        const value = item.value
+        member.push(value)
+
+        if (req.__user.toString() !== value.toString()) {
+          receivers.push(value)
+        }
+      })
+    }
 
     const dataInsert = {
       __user: req.__user,

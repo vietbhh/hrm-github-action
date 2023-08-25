@@ -19,7 +19,6 @@ import {
   DropdownToggle
 } from "reactstrap"
 import classNames from "classnames"
-import moment from "moment"
 import React, { Fragment, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import {
@@ -37,6 +36,7 @@ import { hideAddEventCalendarModal } from "../../../../../@apps/modules/calendar
 import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
+import MemberSelect from "../../../MemberSelect/MemberSelect"
 
 const ModalCreateEvent = (props) => {
   const {
@@ -147,19 +147,31 @@ const ModalCreateEvent = (props) => {
   }
 
   const handleAddAttendees = () => {
-    const dataAttendees = [...state.dataAttendees]
-    _.forEach(state.valueAttendees, (item) => {
-      const indexData = dataAttendees.findIndex(
-        (val) => val.value === item.value
-      )
-      const indexOption = options_employee_department.findIndex(
-        (val) => val.value === item.value
-      )
-      if (indexData === -1 && indexOption !== -1) {
-        dataAttendees.push(options_employee_department[indexOption])
-      }
-    })
-    setState({ valueAttendees: [], dataAttendees: dataAttendees })
+    if (state.valueAttendees.some((itemSome) => itemSome.value === "all")) {
+      setState({
+        valueAttendees: [],
+        dataAttendees: [
+          {
+            label: "all",
+            value: "all"
+          }
+        ]
+      })
+    } else {
+      const dataAttendees = [...state.dataAttendees]
+      _.forEach(state.valueAttendees, (item) => {
+        const indexData = dataAttendees.findIndex(
+          (val) => val.value === item.value
+        )
+        const indexOption = options_employee_department.findIndex(
+          (val) => val.value === item.value
+        )
+        if (indexData === -1 && indexOption !== -1) {
+          dataAttendees.push(options_employee_department[indexOption])
+        }
+      })
+      setState({ valueAttendees: [], dataAttendees: dataAttendees })
+    }
   }
 
   const handleRemoveAttendees = (index) => {
@@ -639,17 +651,20 @@ const ModalCreateEvent = (props) => {
                 {useFormatMessage("modules.feed.create_event.text.attendees")}
               </label>
               <div className="div-input-btn-select">
-                <ErpSelect
-                  nolabel
+                <MemberSelect
+                  noLabel={true}
                   placeholder={useFormatMessage(
                     "modules.feed.create_event.text.attendees_placeholder"
                   )}
-                  className="select select-attendees"
+                  classNameProps="select-attendees"
                   isMulti={true}
                   options={options_employee_department}
                   value={state.valueAttendees}
-                  components={{ Option: Option, MultiValueLabel: CustomMulti }}
-                  onChange={(e) => setState({ valueAttendees: e })}
+                  selectDepartment={true}
+                  selectAll={true}
+                  handleOnchange={(e) => {
+                    setState({ valueAttendees: e })
+                  }}
                 />
                 <button
                   type="button"
