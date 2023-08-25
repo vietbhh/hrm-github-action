@@ -213,6 +213,7 @@ const CreatePost = (props) => {
         dataMention={state.dataMention}
         setDataCreateNew={setDataCreateNew}
         showTooltip={false}
+        toggleModalCreatePost={toggleModalCreatePost}
       />
     </Fragment>
   )

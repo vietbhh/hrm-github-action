@@ -34,6 +34,7 @@ const EventDetailsModal = (props) => {
   const calendarState = useSelector((state) => state.calendar)
   const { modalDetail, modal, idEvent } = calendarState
   const modalDetailStatus = modalDetail !== "pending" ? modalDetail : false
+  const currentEmployee = useSelector((state) => state.auth.userData)
 
   const dispatch = useDispatch()
 
@@ -94,6 +95,7 @@ const EventDetailsModal = (props) => {
           })}>
           <JoinEventAction
             infoEvent={state.infoEvent}
+            currentEmployee={currentEmployee}
             afterUpdateStatus={afterUpdateStatus}
           />
           <EventTitle infoEvent={state.infoEvent} afterRemove={afterRemove} />

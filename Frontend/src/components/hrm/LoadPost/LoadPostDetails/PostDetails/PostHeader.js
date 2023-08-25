@@ -34,6 +34,22 @@ const PostHeader = (props) => {
   const userId = userData.id
   const dataEmployee = useSelector((state) => state.users.list)
 
+  const conditionShowEditHistory =
+    _.isArray(data.edit_history) && data.edit_history.length > 0
+  const currentCustomAction = {
+    ...customAction,
+    view_edit_history: {
+      ...customAction?.view_edit_history,
+      condition: conditionShowEditHistory
+    },
+    divider: {
+      ...customAction?.divider,
+      condition:
+        parseInt(data?.created_by?.id) === parseInt(userId) ||
+        conditionShowEditHistory
+    }
+  }
+
   const [state, setState] = useMergedState({
     dataMention: []
   })
@@ -261,7 +277,7 @@ const PostHeader = (props) => {
               setData={setData}
               handleCloseModal={handleCloseModal}
               dataModal={dataModal}
-              customAction={customAction}
+              customAction={currentCustomAction}
               offPostHeaderAction={offPostHeaderAction}
               setEditDescription={setEditDescription}
               toggleModalCreatePost={toggleModalCreatePost}

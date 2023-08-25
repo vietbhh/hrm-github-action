@@ -19,48 +19,73 @@ const addEvent = async (req, insertFeed = true) => {
   const employee = []
   const employee_arr_id = []
   const department = []
-  forEach(body.dataAttendees, (item) => {
-    const value = item.value
-    const value_arr = value.split("_")
-    if (value_arr[1] === "employee") {
-      arrEmployeeAttendeesCheck.push(value_arr[0].toString())
 
+  let checkIsAll = false
+  forEach(body.dataAttendees, (item) => {
+    if (item.value === "all") {
+      checkIsAll = true
+      return
+    }
+  })
+
+  if (checkIsAll) {
+    const listEmployee = await getUserActivated()
+    forEach(listEmployee, (item) => {
+      arrEmployeeAttendeesCheck.push(item.id.toString())
       employee.push({
-        id: value_arr[0],
+        id: item.id,
         status: "yes",
         dateUpdate: Date.now()
       })
 
-      if (req.__user.toString() !== value_arr[0].toString()) {
-        employee_arr_id.push(value_arr[0])
+      if (req.__user.toString() !== item.id.toString()) {
+        employee_arr_id.push(item.id)
       }
-    }
-    if (value_arr[1] === "department") {
-      department.push(value_arr[0])
-    }
-  })
-
-  if (!isEmpty(department)) {
-    const dataEmployeeDepartment = await getUserActivated({
-      department_id: department
     })
-    forEach(dataEmployeeDepartment, (item) => {
-      const index = employee.findIndex((val) => val.id === item.id)
-      if (
-        index === -1 &&
-        arrEmployeeAttendeesCheck.indexOf(item.id.toString()) === -1
-      ) {
+  } else {
+    forEach(body.dataAttendees, (item) => {
+      const value = item.value
+      const value_arr = value.split("_")
+      if (value_arr[1] === "employee") {
+        arrEmployeeAttendeesCheck.push(value_arr[0].toString())
+
         employee.push({
-          id: item.id,
+          id: value_arr[0],
           status: "yes",
           dateUpdate: Date.now()
         })
 
-        if (req.__user.toString() !== item.id.toString()) {
-          employee_arr_id.push(item.id)
+        if (req.__user.toString() !== value_arr[0].toString()) {
+          employee_arr_id.push(value_arr[0])
         }
       }
+      if (value_arr[1] === "department") {
+        department.push(value_arr[0])
+      }
     })
+
+    if (!isEmpty(department)) {
+      const dataEmployeeDepartment = await getUserActivated({
+        department_id: department
+      })
+      forEach(dataEmployeeDepartment, (item) => {
+        const index = employee.findIndex((val) => val.id === item.id)
+        if (
+          index === -1 &&
+          arrEmployeeAttendeesCheck.indexOf(item.id.toString()) === -1
+        ) {
+          employee.push({
+            id: item.id,
+            status: "yes",
+            dateUpdate: Date.now()
+          })
+
+          if (req.__user.toString() !== item.id.toString()) {
+            employee_arr_id.push(item.id)
+          }
+        }
+      })
+    }
   }
 
   try {

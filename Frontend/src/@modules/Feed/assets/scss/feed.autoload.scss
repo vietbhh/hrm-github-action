@@ -569,13 +569,47 @@ $background-color-checkbox: #139ff8;
               gap: 7px;
               cursor: pointer;
               text-transform: capitalize;
+              height: 38px;
             }
 
             .not-accept-event {
-              height: 34px;
-              width: 102px;
               color: #4f4d55;
               background: #e8e8e8;
+            }
+          }
+        }
+
+        .post-body__event.body-bg-5398ff {
+          background-color: #0ea5e9;
+          .event-content {
+            .event-content__title, .event-content__meeting-room, .event-content__people {
+              color: #ffffff !important;
+            }
+          }
+        }
+
+        .post-body__event.body-bg-f066b9 {
+          background-color: #8b5cf6;
+          .event-content {
+            .event-content__title, .event-content__meeting-room, .event-content__people {
+              color: #ffffff !important;
+            }
+          }
+        }
+        .post-body__event.body-bg-ffc66f {
+          background-color: #f59e0b;
+        }
+        .post-body__event.body-bg-ff6f2c {
+          background-color: #f43f5e;
+        }
+        .post-body__event.body-bg-44d38a {
+          background-color: #10b981;
+        }
+        .post-body__event.body-bg-66e0f0 {
+          background-color: rgb(102, 224, 240);
+          .event-content {
+            .event-content__title, .event-content__meeting-room, .event-content__people {
+              color: #ffffff !important;
             }
           }
         }
@@ -3016,6 +3050,10 @@ $background-color-checkbox: #139ff8;
 }
 
 .modal-tag-your-colleagues {
+  .body-header {
+    padding: 1.5rem;
+    margin-bottom: 0 !important;
+  }
   .body-content {
     display: flex;
 
@@ -3037,13 +3075,17 @@ $background-color-checkbox: #139ff8;
       padding-right: 10px !important;
     }
 
+    .list-member__list {
+      padding-top: 0px;
+    }
+
     .list-user-react {
-      padding: 10px !important;
+      padding: 0px !important;
       cursor: pointer;
     }
 
     hr {
-      margin: 10px 0 !important;
+      margin: 5px 0 !important;
     }
 
     .div-list-member {
@@ -3089,6 +3131,11 @@ $background-color-checkbox: #139ff8;
     margin-top: 15px;
     width: 100%;
     text-align: right;
+
+    .button-save,
+    .button-cancel {
+      padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x) !important;
+    }
   }
 }
 
@@ -4545,6 +4592,10 @@ $background-color-checkbox: #139ff8;
 
             .bg-color-44d38a {
               background-color: #10b981;
+            }
+
+            .bg-color-66e0f0 {
+              background-color: rgb(102, 224, 240);
             }
 
             .info {

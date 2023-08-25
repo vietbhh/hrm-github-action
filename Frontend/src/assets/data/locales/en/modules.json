@@ -3658,7 +3658,8 @@
           "poll_setting": "Poll setting",
           "close_poll_vote": "Close poll vote",
           "member_invited": "{number} members invited",
-          "invited_you_to": "invited you to"
+          "invited_you_to": "invited you to",
+          "select_all": "Select all"
         },
         "endorsement": {
           "title": "Endorsement",
@@ -3666,7 +3667,9 @@
           "select_member_for_endorsing": "Select member for endorsing",
           "add_cover_photo": "Add cover photo",
           "list_badges": "List badges",
-          "editor_placeholder": "Write something about this..."
+          "editor_placeholder": "Write something about this...",
+          "empty_member": "Please chose members.",
+          "empty_badge": "Please chose a badge."
         }
       },
       "post": {
