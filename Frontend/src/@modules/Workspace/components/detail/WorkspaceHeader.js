@@ -221,31 +221,34 @@ const WorkspaceHeader = (props) => {
       {
         label: (
           <div className="leave-item d-flex align-items-center justify-content-center">
-            <div className="w-85">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                id="Layer_1"
-                x="0px"
-                y="0px"
-                width="22px"
-                height="22px"
-                viewBox="0 0 22 22"
-                enableBackground="new 0 0 22 22"
-                xmlSpace="preserve"
-                className="me-1">
-                {" "}
-                <image
-                  id="image0"
-                  width="22"
-                  height="22"
-                  x="0"
-                  y="0"
-                  href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAclBMVEUAAAAwQEowQk0yQk4w QEwxQk8wQ0wzQ08yQk04QFAzQ1AxQ08wQk0yQ08wQFAyQ08yQ08wQFAyQlAwRFAwRVAyQk4yRE4w Q1ExQ08yQk40QFAyQlAwQlAyQk4wQFAxQU4wSFAwQ1AyRFA0RFAyQ0////9RoEO5AAAAJHRSTlMA MGCAQN9Qz2AgUL9w3xCv7zBgQDCQgF/PwEBwcNAgoCBQcEBQNPwxAAAAAWJLR0QlwwHJDwAAAAlw SFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMaEYgFZiYAAAChSURBVBjThZHbEoIwEEMXWqBQ KVelioJK/v8bdYReBjuap8x5yE42RD8UxYzFfAd5go+S2KcpMpET5YXEwcNJqTZX1crSBq2xHYSX 0VtfH61lcHmnQlXDNyZSGkMAW77iVBppgFvcn40y4BIMaQPZG6URrtq1V7etnMAUqtO4xt4fiEpt UmbcHe7ej46IJi7B/OOPcp2hfu72WQRj46Lon15KVwxFLklQ8AAAACV0RVh0ZGF0ZTpjcmVhdGUA MjAyMy0wNy0wNlQwMzoyNjoxNyswMDowMM3+skUAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDct MDZUMDM6MjY6MTcrMDA6MDC8owr5AAAAAElFTkSuQmCC"
-                />
-              </svg>
-              {useFormatMessage("modules.workspace.display.leave_workspace")}
+            <div className="w-85 d-flex align-items-center">
+              <div style={{ marginLeft: "2px" }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  version="1.1"
+                  id="Layer_1"
+                  x="0px"
+                  y="0px"
+                  width="22px"
+                  height="22px"
+                  viewBox="0 0 22 22"
+                  enableBackground="new 0 0 22 22"
+                  xmlSpace="preserve"
+                  className="me-1">
+                  <image
+                    id="image0"
+                    width="22"
+                    height="22"
+                    x="0"
+                    y="0"
+                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAclBMVEUAAAAwQEowQk0yQk4w QEwxQk8wQ0wzQ08yQk04QFAzQ1AxQ08wQk0yQ08wQFAyQ08yQ08wQFAyQlAwRFAwRVAyQk4yRE4w Q1ExQ08yQk40QFAyQlAwQlAyQk4wQFAxQU4wSFAwQ1AyRFA0RFAyQ0////9RoEO5AAAAJHRSTlMA MGCAQN9Qz2AgUL9w3xCv7zBgQDCQgF/PwEBwcNAgoCBQcEBQNPwxAAAAAWJLR0QlwwHJDwAAAAlw SFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMaEYgFZiYAAAChSURBVBjThZHbEoIwEEMXWqBQ KVelioJK/v8bdYReBjuap8x5yE42RD8UxYzFfAd5go+S2KcpMpET5YXEwcNJqTZX1crSBq2xHYSX 0VtfH61lcHmnQlXDNyZSGkMAW77iVBppgFvcn40y4BIMaQPZG6URrtq1V7etnMAUqtO4xt4fiEpt UmbcHe7ej46IJi7B/OOPcp2hfu72WQRj46Lon15KVwxFLklQ8AAAACV0RVh0ZGF0ZTpjcmVhdGUA MjAyMy0wNy0wNlQwMzoyNjoxNyswMDowMM3+skUAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDct MDZUMDM6MjY6MTcrMDA6MDC8owr5AAAAAElFTkSuQmCC"
+                  />
+                </svg>
+              </div>
+              <div style={{ marginLeft: "-2px" }}>
+                {useFormatMessage("modules.workspace.display.leave_workspace")}
+              </div>
             </div>
           </div>
         ),
