@@ -156,24 +156,32 @@ const EmployeesSelect = (props) => {
     })
     const members = state.members
     const selected = member_selected.map((e) => e["id_user"])
-    // props.filters = {"id NOT IN (1,2,3)"}
-    //  props.excepts = member_selected
     defaultModuleApi.getUsers(props).then((res) => {
       const results = res.data.results
       const test =
         selected.length > 0
           ? results.filter((x) => !selected.includes(x.id))
           : results
-      const concat = !props.search ? members.concat(test) : test
-
+      // concat = !props.search ? members.concat(test) : test
+      let concat =
+        props.search && res.data.page > 1 ? members.concat(test) : test
+      if (!props.search) {
+        concat = members.concat(test)
+      }
+      const recordsTotal =
+        props.search && res.data.recordsTotal <= results.length
+          ? test.length
+          : res.data.recordsTotal
       setState({
         members: concat,
         page: res.data.page,
-        recordsTotal: res.data.recordsTotal,
-        perPage: res.data.recordsFiltered,
+        recordsTotal: recordsTotal,
+        perPage: state.perPage,
         loading: false,
+        hasMore: res.data.hasMore,
         ...props
       })
+      //.data.recordsFiltered
     })
   }
 
@@ -253,6 +261,7 @@ const EmployeesSelect = (props) => {
     const page = state.page + 1
     if (state.typeAdd === "members") {
       if (
+        state.hasMore &&
         state.recordsTotal > state.members.length &&
         state.members.length <= state.page * state.perPage &&
         !state.loading
@@ -354,7 +363,9 @@ const EmployeesSelect = (props) => {
             <>
               <Row className="w-100">
                 <Col sm={12} className="mb-50">
-                  <span className="suggest-text">{useFormatMessage("modules.workspace.text.suggested")}</span>
+                  <span className="suggest-text">
+                    {useFormatMessage("modules.workspace.text.suggested")}
+                  </span>
                 </Col>
               </Row>
               <PerfectScrollbar
@@ -384,7 +395,11 @@ const EmployeesSelect = (props) => {
             !state.dataSelected.length && `d-flex align-items-center`
           }`}>
           {state.dataSelected.length === 0 &&
-            state.department_selected.length === 0 && <div className="p-1"><EmptyContent /></div>}
+            state.department_selected.length === 0 && (
+              <div className="p-1">
+                <EmptyContent />
+              </div>
+            )}
           {(state.dataSelected.length > 0 ||
             state.department_selected.length > 0) && (
             <>
