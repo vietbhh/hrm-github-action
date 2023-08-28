@@ -125,7 +125,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
   const DefaultComp = lazy(() =>
     import(`../../@apps/modules/default/pages/DefaultModule.js`)
   )
-
+  const AllRoutePaths = []
   customRoutes.forEach((item) => {
     let Comp = DefaultComp
     let moduleProps = { module: item }
@@ -133,7 +133,11 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
       !isEmpty(item.componentPath) &&
       item.componentPath !== "default_route"
     ) {
-      Comp = lazy(() => import(/* @vite-ignore */"../../@modules/" + item.componentPath + ".js"))
+      Comp = lazy(() =>
+        import(
+          /* @vite-ignore */ "../../@modules/" + item.componentPath + ".js"
+        )
+      )
       moduleProps = {}
     }
     const routeOption = isUndefined(item.options?.routes?.meta)
@@ -150,21 +154,7 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
             resource: item.permitResource
           }
         : { action: "login", resource: "app" }
-
-    if (!isEmpty(defaultDashboardComponent)) {
-      const DashboardComp = lazy(() =>
-        import(/* @vite-ignore */"../../@modules/" + defaultDashboardComponent + ".js")
-      )
-      listRoutes.push({
-        path: "/dashboard",
-        element: <DashboardComp />,
-        meta: {
-          action: "login",
-          resource: "app"
-        }
-      })
-    }
-
+    AllRoutePaths.push(item.routePath)
     listRoutes.push({
       path: item.routePath,
       element: isEmpty(item.redirectPath) ? (
@@ -182,7 +172,27 @@ const getRoutes = (layout, customRoutes, defaultDashboardComponent) => {
       ...moduleProps
     })
   })
-  listRoutes.push(...Routes)
+
+  if (!isEmpty(defaultDashboardComponent)) {
+    const DashboardComp = lazy(() =>
+      import(
+        /* @vite-ignore */ "../../@modules/" + defaultDashboardComponent + ".js"
+      )
+    )
+    listRoutes.push({
+      path: "/dashboard",
+      element: <DashboardComp />,
+      meta: {
+        action: "login",
+        resource: "app"
+      }
+    })
+  }
+
+  Routes.forEach((item) => {
+    if (!AllRoutePaths.includes(item.path)) listRoutes.push(item)
+  })
+
   layouts.forEach((layoutItem) => {
     const LayoutRoutes = MergeLayoutRoutes(
       layoutItem,
