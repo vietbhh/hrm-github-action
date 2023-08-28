@@ -6,7 +6,7 @@ import classNames from "classnames"
 import { isEmpty } from "lodash-es"
 import { Fragment, useEffect, useRef } from "react"
 import AvatarEditor from "react-avatar-editor"
-import ContentLoader from "react-content-loader"
+
 import defaultWorkspaceCover from "./assets/images/default_workspace_cover.webp"
 
 import { Dropdown, Image } from "antd"
@@ -84,13 +84,7 @@ const CoverEditor = (props) => {
     }
   ]
 
-  if (state.loading)
-    return (
-      <ContentLoader
-        viewBox="0 0 208 208"
-        height={208}
-        width={208}></ContentLoader>
-    )
+  if (state.loading) return ""
   else
     return (
       <Fragment>

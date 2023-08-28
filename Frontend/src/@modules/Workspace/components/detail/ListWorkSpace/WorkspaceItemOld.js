@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
-import defaultWorkSpaceCover from "../../../../../../src/components/hrm/CoverEditor/assets/images/default_workspace_cover.webp"
+import defaultWorkSpaceCover from "@src/components/hrm/CoverEditor/assets/images/default_workspace_cover.webp"
 
 const WorkspaceItem = (props) => {
   const {

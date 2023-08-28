@@ -23,13 +23,12 @@ const CoverImage = (props) => {
 
   const [state, setState] = useMergedState({
     loading: false,
-    coverImage: "",
-    defaultWorkspaceCover: ""
+    coverImage: ""
   })
   const saveCoverImage = (image) => {
     const dataPost = { ...dataSave, image: image }
     saveCoverImageApi(dataPost).then((res) => {
-      setState({ defaultWorkspaceCover: image })
+      setState({ coverImage: res.data })
     })
   }
   const removeCover = () => {
@@ -46,8 +45,7 @@ const CoverImage = (props) => {
               text: useFormatMessage("notification.save.success")
             })
             setState({
-              coverImage: "",
-              defaultWorkspaceCover: defaultWorkspaceCover
+              coverImage: ""
             })
           })
           .catch((err) => {
@@ -60,55 +58,32 @@ const CoverImage = (props) => {
   }
   // ** effect
   useEffect(() => {
-    if (src) {
-      setState({
-        coverImage: src,
-        defaultWorkspaceCover: ""
-      })
-    } else {
-      setState({
-        coverImage: "",
-        defaultWorkspaceCover: defaultWorkspaceCover
-      })
-    }
+    setState({
+      coverImage: src
+    })
   }, [src])
 
   // ** render
-  const renderEditButton = () => {
-    if (isEditable === true) {
-      return (
-        <CoverEditor
-          src=""
-          className="btn-cover"
-          saveCoverImage={saveCoverImage}
-          removeCover={removeCover}
-        />
-      )
-    }
-
-    return ""
-  }
 
   return (
     <div className="image-cover">
-      {state.defaultWorkspaceCover && (
-        <img
-          src={state.defaultWorkspaceCover}
-          width="100%"
-          className="w-100 workspaceCover"
-        />
-      )}
+      <Photo
+        src={state.coverImage}
+        width="100%"
+        className="w-100 workspaceCover"
+        defaultPhoto={defaultWorkspaceCover}
+      />
 
-      {state.coverImage && !state.defaultWorkspaceCover && (
-        <Photo
-          loading={state.loading}
-          src={state.coverImage}
-          width="100%"
-          className="w-100 workspaceCover"
-        />
-      )}
-
-      <Fragment>{renderEditButton()}</Fragment>
+      <Fragment>
+        {isEditable === true && (
+          <CoverEditor
+            src=""
+            className="btn-cover"
+            saveCoverImage={saveCoverImage}
+            removeCover={removeCover}
+          />
+        )}
+      </Fragment>
     </div>
   )
 }

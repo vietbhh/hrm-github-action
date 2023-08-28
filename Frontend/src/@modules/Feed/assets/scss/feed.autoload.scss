@@ -451,10 +451,18 @@ $background-color-checkbox: #139ff8;
 
       .post-body {
         font-family: Helvetica;
+        
+        .post__with-tags{
+          font-size: 13px;
+          .name{
+            font-weight: bold;
+            color: #32434F;
+          }
+        }
         .post-body-media {
           text-align: center;
         }
-
+        
         &.post-body__background-image {
           width: 100%;
           height: 365px;
@@ -889,12 +897,25 @@ $background-color-checkbox: #139ff8;
       flex-direction: column;
       justify-content: center;
 
+      
       .name {
         font-weight: 600;
         font-size: 15px;
         color: $primary-text-color;
       }
 
+      .name__workspace-in-feed{
+        color: #97989A;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+      }
+
+      .name-divider{
+        color: #97989A;
+        margin: 0 7px;
+      }
+      
       .after-name {
         font-weight: 400;
         font-size: 15px;
@@ -1639,14 +1660,7 @@ $background-color-checkbox: #139ff8;
     font-size: 14px;
   }
 
-  a {
-    color: $btn-background-color;
 
-    &:hover {
-      color: darken($color: $btn-background-color, $amount: 15);
-      text-decoration: underline;
-    }
-  }
 
   .preview-link-component {
     border: 1px solid #f1f1f5;
@@ -3581,7 +3595,7 @@ $background-color-checkbox: #139ff8;
     }
 
     .text-primary {
-      color: #44d38a !important;
+      color: $primary-text-color !important;
     }
   }
 
@@ -3621,7 +3635,7 @@ $background-color-checkbox: #139ff8;
         height: 45px;
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         &.first_in_row {
           margin-bottom: 10px;
         }

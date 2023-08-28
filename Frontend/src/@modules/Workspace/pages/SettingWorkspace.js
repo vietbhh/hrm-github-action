@@ -192,9 +192,9 @@ const SettingWorkspace = () => {
                       <path
                         d="M12.3278 6.37223L15.6278 9.67223M4.07788 17.9222L8.08003 17.1158C8.2925 17.073 8.48758 16.9684 8.64079 16.8151L17.6 7.85098C18.0295 7.42119 18.0292 6.72454 17.5993 6.29512L15.7015 4.39938C15.2717 3.97013 14.5754 3.97043 14.146 4.40003L5.18591 13.3651C5.033 13.5181 4.92859 13.7128 4.88574 13.9248L4.07788 17.9222Z"
                         stroke="#32434F"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </div>
@@ -287,23 +287,23 @@ const SettingWorkspace = () => {
                       <path
                         d="M7.83997 20.0201L9.42997 21.2101C10.84 22.2701 13.16 22.2701 14.57 21.2101L18.87 18.0001C19.82 17.2901 20.6 15.7401 20.6 14.5601V7.12012"
                         stroke="#32434F"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M18.98 4.34006C18.83 4.25006 18.67 4.17006 18.51 4.10006L13.52 2.23006C12.69 1.92006 11.33 1.92006 10.5 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L5.34003 18.1401"
                         stroke="#32434F"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M22 2L2 22"
                         stroke="#32434F"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                     <div className="label-field ms-1">

@@ -6,16 +6,13 @@ import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import {
   Button,
-  Col,
   Modal,
   ModalBody,
   ModalFooter,
-  ModalHeader,
-  Row,
   Spinner
 } from "reactstrap"
-import { workspaceApi } from "../../common/api"
 import AvatarBox from "../../../../@apps/components/common/AvatarBox"
+import { workspaceApi } from "../../common/api"
 const EditInformationModal = (props) => {
   const { modal, handleModal, infoWorkspace, loadData } = props
   const [state, setState] = useMergedState({
@@ -85,9 +82,9 @@ const EditInformationModal = (props) => {
                       <path
                         d="M1.66675 7.71412C1.66675 6.21515 2.8819 5 4.38086 5V5C5.28834 5 6.13577 4.54647 6.63914 3.7914L6.66675 3.75C7.18737 2.96907 8.06383 2.5 9.00239 2.5H10.9978C11.9363 2.5 12.8128 2.96907 13.3334 3.75L13.361 3.7914C13.8644 4.54647 14.7118 5 15.6193 5V5C17.1183 5 18.3334 6.21515 18.3334 7.71412V13.5C18.3334 15.7091 16.5426 17.5 14.3334 17.5H5.66675C3.45761 17.5 1.66675 15.7091 1.66675 13.5V7.71412Z"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <ellipse
                         cx="10.0001"
@@ -95,9 +92,9 @@ const EditInformationModal = (props) => {
                         rx="3.33333"
                         ry="3.33333"
                         stroke="white"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </span>
