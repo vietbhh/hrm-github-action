@@ -32,6 +32,7 @@ const RepeatEventDropDown = (props) => {
     openRepeatDropdown: false
   })
 
+  console.log(valueRepeat)
   const weekDay = valueRepeat?.week_day
   const dateInMonth = valueRepeat?.value_repeat
   const orderWeekDateInMonth = valueRepeat?.order_week_date_in_month

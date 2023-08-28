@@ -36,68 +36,52 @@ const calendarSchema = baseSchema("m_calendar", {
     default: false
   },
   repeat: {
-    type: [
-      {
-        value: {
-          type: String,
-          default: "no_repeat"
-        },
-        week_day: {
-          type: Number,
-          default: ""
-        },
-        date_in_month: {
-          type: Number,
-          default: ""
-        },
-        order_week_date_in_month: {
-          type: Number,
-          default: ""
-        },
-        // ** custom
-        end_time: {
-          type: [
-            {
-              type_option: { type: String, default: "never" },
-              on_date: { type: Date, default: "" },
-              after: { type: Number, default: "" }
-            }
-          ]
-        },
-        repeat_at: {
-          type: [
-            {
-              weekDay: {
-                type: String,
-                default: ""
-              },
-              date: {
-                type: Date,
-                default: ""
-              },
-              order_week_date_in_month: {
-                type: Number,
-                default: ""
-              }
-            }
-          ]
-        },
-        repeat_every: {
-          type: [
-            {
-              after: {
-                type: Number,
-                default: ""
-              },
-              type_option: {
-                type: String,
-                default: ""
-              }
-            }
-          ]
-        }
+    value: {
+      type: String,
+      default: "no_repeat"
+    },
+    week_day: {
+      type: Number,
+      default: ""
+    },
+    date_in_month: {
+      type: Number,
+      default: ""
+    },
+    order_week_date_in_month: {
+      type: Number,
+      default: ""
+    },
+    // ** custom
+    end_time: {
+      type_option: { type: String, default: "never" },
+      on_date: { type: Date, default: "" },
+      after: { type: Number, default: "" }
+    },
+    repeat_at: {
+      weekDay: {
+        type: String,
+        default: ""
+      },
+      date: {
+        type: Date,
+        default: ""
+      },
+      order_week_date_in_month: {
+        type: Number,
+        default: ""
       }
-    ]
+    },
+    repeat_every: {
+      after: {
+        type: Number,
+        default: ""
+      },
+      type_option: {
+        type: String,
+        default: ""
+      }
+    }
   },
   // ** employee: bao gồm employee được chọn và employee trong department được chọn
   employee: {

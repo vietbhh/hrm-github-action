@@ -12,7 +12,7 @@ import { timeOffHolidaysModel } from "#code/hrm/modules/timeOff/models/timeOffHo
 import { timeOffRequestsModel } from "#code/hrm/modules/timeOff/models/timeOffRequests.mysql.js"
 import { timeOffTypesModel } from "#code/hrm/modules/timeOff/models/timeOffTypes.mysql.js"
 import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
-import { getOptionValue } from "#app/helpers/appOptionsHelper"
+import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
 
 const handleGetCalendar = async (req, res) => {
   const query = req.query

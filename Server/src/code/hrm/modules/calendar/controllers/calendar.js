@@ -13,6 +13,7 @@ import { timeOffRequestsModel } from "../../timeOff/models/timeOffRequests.mysql
 import { timeOffTypesModel } from "../../timeOff/models/timeOffTypes.mysql.js"
 import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
 import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
+import { getListEventRepeat } from "../libraries/calendar/Calendar.js"
 
 const handleGetCalendar = async (req, res) => {
   const query = req.query
@@ -43,7 +44,10 @@ const handleGetCalendar = async (req, res) => {
     .filter((item) => {
       return item !== undefined
     })
-  const result = resultFilter.concat(arrAllDay)
+
+  const eventRepeat = getListEventRepeat(resultFilter, query)
+  
+  const result = eventRepeat.concat(arrAllDay)
 
   return res.respond({
     results: result
