@@ -94,7 +94,7 @@ const addEvent = async (req, insertFeed = true) => {
       body.start_time_time,
       body.reminder.value
     )
-
+      console.log(employee)
     const dataInsert = {
       __user: req.__user,
       name: body.event_name,
