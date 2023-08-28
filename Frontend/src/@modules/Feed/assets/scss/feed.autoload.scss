@@ -582,7 +582,9 @@ $background-color-checkbox: #139ff8;
         .post-body__event.body-bg-5398ff {
           background-color: #0ea5e9;
           .event-content {
-            .event-content__title, .event-content__meeting-room, .event-content__people {
+            .event-content__title,
+            .event-content__meeting-room,
+            .event-content__people {
               color: #ffffff !important;
             }
           }
@@ -591,7 +593,9 @@ $background-color-checkbox: #139ff8;
         .post-body__event.body-bg-f066b9 {
           background-color: #8b5cf6;
           .event-content {
-            .event-content__title, .event-content__meeting-room, .event-content__people {
+            .event-content__title,
+            .event-content__meeting-room,
+            .event-content__people {
               color: #ffffff !important;
             }
           }
@@ -608,7 +612,9 @@ $background-color-checkbox: #139ff8;
         .post-body__event.body-bg-66e0f0 {
           background-color: rgb(102, 224, 240);
           .event-content {
-            .event-content__title, .event-content__meeting-room, .event-content__people {
+            .event-content__title,
+            .event-content__meeting-room,
+            .event-content__people {
               color: #ffffff !important;
             }
           }
@@ -4117,6 +4123,79 @@ $background-color-checkbox: #139ff8;
         }
       }
     }
+  }
+}
+
+.modal-custom-repeat {
+  max-width: 400px !important;
+
+  .repeat-body {
+    margin-top: 1rem;
+    font-size: 12px !important;
+    padding: 10px 14px;
+
+    .row {
+      .col-sm-5,
+      .col-sm-7,
+      .col-sm-12 {
+        padding-left: unset !important;
+        padding-right: unset !important;
+      }
+    }
+
+    .pick-date {
+      .form-group {
+        width: 100% !important;
+      }
+    }
+
+    .col-label {
+      font-weight: 500;
+    }
+
+    .form-group {
+      width: fit-content !important;
+
+      .form-label {
+        display: none !important;
+      }
+
+      .common-input {
+      }
+
+      .input-every-number,
+      .input-every-select,
+      .input-after-times {
+        width: 100px;
+      }
+    }
+
+    .repeat-at-option-list {
+      .repeat-at-option-item {
+        text-transform: uppercase;
+        cursor: pointer;
+        font-size: 11px;
+      }
+
+      .repeat-at-option-item.active {
+        background-color: #ffe658;
+        padding: 3px;
+        border-radius: 50%;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .custom-radio {
+      .form-check-input:checked {
+        background-color: #ffe658 !important;
+        border: none !important;
+      }
+    }
+  }
+  .btn-post {
+    width: 300px !important;
   }
 }
 
