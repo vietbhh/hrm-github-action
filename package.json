@@ -6,6 +6,7 @@
     "start-fe": "cd Frontend && yarn run start",
     "start-server": "cd Server && yarn run start",
     "start-backend": "cd Backend && php -S localhost:80 -t applications/default/public/",
+    "start-backend-server": "npm-run-all -p start-backend start-server",
     "start": "npm-run-all -p start-backend start-server start-fe"
   },
   "devDependencies": {
