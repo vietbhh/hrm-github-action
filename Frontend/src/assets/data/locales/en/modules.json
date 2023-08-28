@@ -3861,6 +3861,10 @@
               "5": "fr",
               "6": "sa",
               "0": "su"
+            },
+            "repeat_at_month_option": {
+              "date": "On {date} every month",
+              "order_week_date_in_month": "On {order} {week_day} every month"
             }
           }
         }

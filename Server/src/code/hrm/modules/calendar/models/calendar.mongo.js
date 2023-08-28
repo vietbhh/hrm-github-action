@@ -65,8 +65,22 @@ const calendarSchema = baseSchema("m_calendar", {
           ]
         },
         repeat_at: {
-          type: String,
-          default: ""
+          type: [
+            {
+              weekDay: {
+                type: String,
+                default: ""
+              },
+              date: {
+                type: Date,
+                default: ""
+              },
+              order_week_date_in_month: {
+                type: Number,
+                default: ""
+              }
+            }
+          ]
         },
         repeat_every: {
           type: [

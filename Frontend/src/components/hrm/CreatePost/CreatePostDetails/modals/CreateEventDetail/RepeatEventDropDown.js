@@ -5,6 +5,20 @@ import { Dropdown } from "antd"
 import { Fragment } from "react"
 // ** Components
 
+export const getAffix = (number) => {
+  if (_.isEmpty(number)) {
+    return ""
+  } else if (parseInt(number) === 1) {
+    return "st"
+  } else if (parseInt(number) === 2) {
+    return "nd"
+  } else if (parseInt(number) === 3) {
+    return "rd"
+  }
+
+  return "th"
+}
+
 const RepeatEventDropDown = (props) => {
   const {
     // ** props
@@ -48,7 +62,7 @@ const RepeatEventDropDown = (props) => {
       newValue["order_week_date_in_month"] = orderWeekDateInMonth
       newValue["week_day"] = weekDay
     }
-    
+
     setValueRepeat(newValue)
   }
 
@@ -57,20 +71,6 @@ const RepeatEventDropDown = (props) => {
   }
 
   // ** render
-  const getAffix = (number) => {
-    if (_.isEmpty(number)) {
-      return ""
-    } else if (parseInt(number) === 1) {
-      return "st"
-    } else if (parseInt(number) === 2) {
-      return "nd"
-    } else if (parseInt(number) === 3) {
-      return "rd"
-    }
-
-    return "th"
-  }
-
   const renderCurrentRepeatText = (value) => {
     if (value === "repeat_every_weekday_on") {
       return (
