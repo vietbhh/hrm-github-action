@@ -461,7 +461,8 @@
       "modals": {
         "title": {
           "create_event": "Create Event",
-          "update_event": "Update Event"
+          "update_event": "Update Event",
+          "event_details": "Event Details"
         },
         "buttons": {
           "add_attachment": "Add Attachments"
@@ -484,7 +485,9 @@
           "holiday": "Holiday",
           "etc": "ETC",
           "birthday": "Birthday",
-          "time_off": "Time Off"
+          "time_off": "Time Off",
+          "meetings": "Meetings",
+          "interviews": "Interviews"
         }
       }
     },
@@ -3653,15 +3656,20 @@
           "member": "member",
           "members": "members",
           "poll_setting": "Poll setting",
-          "close_poll_vote": "Close poll vote"
+          "close_poll_vote": "Close poll vote",
+          "member_invited": "{number} members invited",
+          "invited_you_to": "invited you to",
+          "select_all": "Select all"
         },
         "endorsement": {
           "title": "Endorsement",
-          "appreciation": "Appreciation",
+          "appreciation": "Endorsement",
           "select_member_for_endorsing": "Select member for endorsing",
           "add_cover_photo": "Add cover photo",
           "list_badges": "List badges",
-          "editor_placeholder": "Write something about this..."
+          "editor_placeholder": "Write something about this...",
+          "empty_member": "Please chose members.",
+          "empty_badge": "Please chose a badge."
         }
       },
       "post": {
@@ -3727,8 +3735,8 @@
         "event": {
           "created_an": "created an",
           "event": "Event",
-          "yes": "Yes",
-          "no": "No",
+          "yes": "Accept",
+          "no": "Decline",
           "maybe": "Maybe",
           "people_invited": "people invited"
         },
@@ -3812,13 +3820,21 @@
           "no_repeat": "No repeat",
           "repeat_every_day": "Repeat every day",
           "repeat_weekday": "Repeat weekday",
-          "repeat_week_on_monday": "Repeat week on Monday"
+          "repeat_week_on_monday": "Repeat week on Monday",
+          "tracking": "Tracking",
+          "remove_event": "\"{name}\" will be deleted!",
+          "remove_event_success": "Event has been deleted!",
+          "no_meeting_room": "No meeting room",
+          "no_reminder": "No reminder",
+          "no_description": "No details",
+          "no_attachment": "no attachment"
         }
       },
       "announcement": {
         "title": "Announcement",
         "text": {
           "create_announcement": "Create Announcement",
+          "update_announcement": "Update Announcement",
           "announcement_title": "Announcement title",
           "announcement_title_placeholder": "Enter annoucement title",
           "pin_to_top": "Pin to top",
@@ -3872,7 +3888,7 @@
         "view_all": "View All",
         "see_all": "See All",
         "back_to_workgroup": "Back to workgroup",
-        "load_more": "Load More",
+        "load_more": "Load more",
         "add_description": "Add description",
         "edit": "Edit",
         "save": "Save",
@@ -4176,6 +4192,8 @@
         "request_workspace": "sent a request to join the workspace",
         "need_approval": "needs approval",
         "you_have_a_new_event": "You have a new event",
+        "invite_to_the_event": "You have an invitation to the ",
+        "event": "event",
         "you_have_a_new_announcement": "You have a new announcement",
         "you_have_a_new_endorse": "You have a new endorse",
         "liked_your_post": "liked your post",

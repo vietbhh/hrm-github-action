@@ -1,18 +1,33 @@
-import { downloadApi } from "@apps/modules/download/common/api"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
-import { timeDifference, useFormatMessage } from "@apps/utility/common"
-import notification from "@apps/utility/notification"
 import SwAlert from "@apps/utility/SwAlert"
+import { timeDifference, useFormatMessage } from "@apps/utility/common"
+import { isFile } from "@apps/utility/handleData"
+import notification from "@apps/utility/notification"
 import { feedApi } from "@modules/Feed/common/api"
 import { handleReaction, renderImageReact } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
+import classNames from "classnames"
 import React, { Fragment } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import DropdownReaction from "./DropdownReaction"
-import classNames from "classnames"
+
+export const handleImageCommentUrl = (image) => {
+  if (image) {
+    if (isFile(image)) {
+      return <img src={URL.createObjectURL(image)} />
+    } else if (_.isString(image)) {
+      if (image.startsWith("http")) {
+        return <img src={image} />
+      } else {
+        return <Photo src={image} className="" />
+      }
+    }
+  }
+  return null
+}
 
 const Comment = (props) => {
   const {
@@ -154,14 +169,18 @@ const Comment = (props) => {
         }
       }
 
-      let image = null
+      /* let image = null
       if (dataComment.image_source) {
-        await downloadApi
-          .getPhoto(dataComment.image_source)
-          .then((response) => {
-            image = URL.createObjectURL(response.data)
-          })
-      }
+        if (dataComment.image_source.startsWith("http")) {
+          image = dataComment.image_source
+        } else {
+          await downloadApi
+            .getPhoto(dataComment.image_source)
+            .then((response) => {
+              image = URL.createObjectURL(response.data)
+            })
+        }
+      } */
 
       const params = {
         _id_post: id_post,
@@ -169,7 +188,7 @@ const Comment = (props) => {
         _id_sub_comment: id_sub_comment,
         comment_more_count_original: comment_more_count_original,
         content: dataComment?.content || "",
-        image: image
+        image: dataComment.image_source
       }
       setDataEditComment(params)
     }
@@ -191,14 +210,22 @@ const Comment = (props) => {
     }
 
     return (
-      <div
-        className="content__react"
-        onClick={() => handleShowModalReactionDetail(reaction)}>
-        {_.map(arrImage, (image, key) => {
-          return <img key={key} src={renderImageReact(image)} />
-        })}
-        <small className="ms-25 me-25">{count_react}</small>
-      </div>
+      <Fragment>
+        <div
+          className={`content__react react_c${arrImage.length}`}
+          onClick={() => handleShowModalReactionDetail(reaction)}>
+          <div className="react__images">
+            {_.map(arrImage, (image, key) => {
+              return (
+                <span key={key} className="react__image">
+                  <img src={renderImageReact(image)} />
+                </span>
+              )
+            })}
+          </div>
+          <small>{count_react}</small>
+        </div>
+      </Fragment>
     )
   }
 
@@ -331,7 +358,7 @@ const Comment = (props) => {
           </div>
           {dataComment?.image_source && (
             <div className="body__image">
-              <Photo src={dataComment.image_source} className="" />
+              {handleImageCommentUrl(dataComment.image_source)}
             </div>
           )}
 

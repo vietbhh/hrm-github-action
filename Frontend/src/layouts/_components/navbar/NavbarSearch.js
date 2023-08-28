@@ -196,7 +196,6 @@ const NavbarSearch = ({
           </svg>
         )}
 
-        {checkLayout && <span className="text-search">Search</span>}
 
         {iconRight && <span className="ms-auto">{iconRight}</span>}
       </NavLink>

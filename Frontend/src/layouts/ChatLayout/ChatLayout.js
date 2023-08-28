@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom"
 // ** Core Layout Import
 // !Do not remove the Layout import
 import Layout from "layouts/_components/vertical/Layout"
-
+import "./assets/scss/chat.scss"
 // ** Menu Items Array
 import navigation from "./menuChat"
 
@@ -15,12 +15,13 @@ const ChatLayout = (props) => {
   return (
     <Layout
       menuData={navigation}
-      navbar={(navProps) => <Navbar2 {...navProps} />}
+      navbar={(navProps) => <Navbar2 {...navProps} logoLeftLink="/chat" logoLeftTitle="Chat" />}
       /* customMenuComponent={(customProps) => (
         <CustomMenuComponent {...customProps} />
       )} */
       className="navbar-2 chat"
       fixedSidebarCollapsed={true}
+      logoLeft={true}
       {...props}>
       <Outlet />
     </Layout>

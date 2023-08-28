@@ -11,7 +11,7 @@ const CardAnnouncements = (props) => {
       <LayoutDashboard
         headerProps={{
           id: "announcement",
-          title: useFormatMessage("announcement.title"),
+          title: useFormatMessage("modules.dashboard.announcement.title"),
           isRemoveWidget: true,
           classIconBg: "news-bg-icon",
           icon: (

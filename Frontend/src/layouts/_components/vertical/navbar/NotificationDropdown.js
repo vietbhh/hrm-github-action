@@ -15,12 +15,12 @@ import {
 } from "reactstrap"
 
 import { defaultModuleApi } from "@apps/utility/moduleApi"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 // ** redux
+import { handleSeenNotification, toggleOpenDropdown } from "@store/notification"
 import { Fragment, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { handleSeenNotification, toggleOpenDropdown } from "@store/notification"
 
 const NotificationDropdown = () => {
   const notification = useSelector((state) => state.notification)
@@ -94,7 +94,7 @@ const NotificationDropdown = () => {
     }
 
     return (
-      <p className="ps-3 pb-2">
+      <p className="empty-notification">
         {useFormatMessage("notification.no_notification")}
       </p>
     )

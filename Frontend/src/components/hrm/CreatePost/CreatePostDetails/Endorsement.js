@@ -5,7 +5,7 @@ import { getBadgeFromKey } from "@modules/FriNet/common/common"
 import { Tooltip } from "antd"
 import classNames from "classnames"
 import { ContentState, EditorState, convertToRaw } from "draft-js"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import {
   Button,
@@ -38,6 +38,7 @@ import { endorsementApi } from "@modules/Feed/common/api"
 import htmlToDraft from "html-to-draftjs"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import moment from "moment"
+import MemberSelect from "../../MemberSelect/MemberSelect"
 
 const Endorsement = (props) => {
   const {
@@ -46,7 +47,7 @@ const Endorsement = (props) => {
     toggleModalCreatePost,
     dataMention,
     setDataCreateNew,
-
+    showTooltip = true,
     // ** edit
     idEndorsement = null,
     setData,
@@ -58,6 +59,7 @@ const Endorsement = (props) => {
     optionSelectMember: [],
     modalChooseBadge: false,
     listBadge: [],
+    openDatePicker: false,
 
     // edit
     loadingEdit: false,
@@ -70,27 +72,28 @@ const Endorsement = (props) => {
     activeCoverString: "cover0",
     coverImg: null,
     valueBadge: {},
-    editorState: EditorState.createEmpty(),
     date: null
   })
+  const [editorState, stEditorState] = useState(EditorState.createEmpty())
 
   const dataEmployee = useSelector((state) => state.users.list)
 
   // ** function
   const onEditorStateChange = (editorState) => {
-    setState({ editorState: editorState })
+    stEditorState(editorState)
   }
   const setEmptyEditorState = () => {
     const emptyEditorState = EditorState.moveFocusToEnd(
       EditorState.createEmpty()
     )
-    setState({ editorState: emptyEditorState })
+    stEditorState(emptyEditorState)
   }
+
   const toggleModalChooseBadge = () =>
     setState({ modalChooseBadge: !state.modalChooseBadge })
 
   const handleCheckContentBeforeSubmit = () => {
-    const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+    const editorStateRaw = convertToRaw(editorState.getCurrentContent())
     let html = draftToHtml(editorStateRaw)
     html = decodeHTMLEntities(html)
     let check_content = false
@@ -98,24 +101,37 @@ const Endorsement = (props) => {
       check_content = true
     }
 
-    let check_can_submit = false
-    if (
-      check_content === true &&
-      !_.isEmpty(state.valueSelectMember) &&
-      !_.isEmpty(state.valueBadge)
-    ) {
-      check_can_submit = true
+    if (check_content === false) {
+      return {
+        canSubmit: false,
+        err: ""
+      }
     }
 
-    return check_can_submit
+    if (_.isEmpty(state.valueSelectMember)) {
+      return {
+        canSubmit: false,
+        err: "empty_member"
+      }
+    }
+    if (_.isEmpty(state.valueBadge)) {
+      return {
+        canSubmit: false,
+        err: "empty_badge"
+      }
+    }
+
+    return {
+      canSubmit: true
+    }
   }
 
   const submitEndorsement = () => {
     const checkSubmit = handleCheckContentBeforeSubmit()
-    if (checkSubmit) {
+    if (checkSubmit.canSubmit === true) {
       setState({ loadingSubmit: true })
 
-      const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
+      const editorStateRaw = convertToRaw(editorState.getCurrentContent())
       const content = draftToHtml(editorStateRaw)
       const _content = detectUrl(content)
       const result_tag_user = handleTagUserAndReplaceContent(
@@ -165,8 +181,12 @@ const Endorsement = (props) => {
           })
         })
     } else {
+      const notificationText =
+        checkSubmit.err === ""
+          ? useFormatMessage("notification.something_went_wrong")
+          : useFormatMessage(`modules.feed.create_post.endorsement.${checkSubmit.err}`)
       notification.showError({
-        text: useFormatMessage("notification.something_went_wrong")
+        text: notificationText
       })
     }
   }
@@ -210,11 +230,33 @@ const Endorsement = (props) => {
       })
   }
 
+  const handleOpenChangeDatePicker = (open) => {
+    setState({
+      openDatePicker: open
+    })
+  }
+
+  const handleToggleOpenCalendar = () => {
+    setState({
+      openDatePicker: !state.openDatePicker
+    })
+  }
+
+  const handleSetValueSelectMember = (e) => {
+    setState({
+      valueSelectMember: e
+    })
+  }
+
   // ** useEffect
   useEffect(() => {
     const optionSelectMember = []
     _.forEach(dataEmployee, (item) => {
-      optionSelectMember.push({ value: item.id, label: item.full_name })
+      optionSelectMember.push({
+        value: item.id,
+        label: item.full_name,
+        tag: item.email
+      })
     })
     setState({ optionSelectMember: optionSelectMember })
 
@@ -256,7 +298,7 @@ const Endorsement = (props) => {
               contentBlock.contentBlocks
             )
             const editorState = EditorState.createWithContent(contentState)
-            setState({ editorState: editorState })
+            setEditorState(editorState)
           }
 
           const valueSelectMember = []
@@ -329,22 +371,26 @@ const Endorsement = (props) => {
 
   return (
     <Fragment>
-      <Tooltip
-        title={useFormatMessage("modules.feed.create_post.endorsement.title")}>
-        <li
-          className={classNames("create_post_footer-li cursor-pointer", {})}
-          onClick={() => {
-            toggleModal()
-          }}>
-          {iconEndorsement}
-        </li>
-      </Tooltip>
+      {showTooltip && (
+        <Tooltip
+          title={useFormatMessage(
+            "modules.feed.create_post.endorsement.title"
+          )}>
+          <li
+            className={classNames("create_post_footer-li cursor-pointer", {})}
+            onClick={() => {
+              toggleModal()
+            }}>
+            {iconEndorsement}
+          </li>
+        </Tooltip>
+      )}
 
       <Modal
         isOpen={modal}
         toggle={() => {
           toggleModal()
-          toggleModalCreatePost()
+          //toggleModalCreatePost()
         }}
         className="feed modal-dialog-centered modal-create-post modal-create-event modal-create-endorsement"
         modalTransition={{ timeout: 100 }}
@@ -359,7 +405,7 @@ const Endorsement = (props) => {
             className="div-btn-close"
             onClick={() => {
               toggleModal()
-              toggleModalCreatePost()
+              //toggleModalCreatePost()
             }}>
             <i className="fa-solid fa-xmark"></i>
           </div>
@@ -367,22 +413,26 @@ const Endorsement = (props) => {
         <ModalBody>
           {state.loadingEdit && <DefaultSpinner />}
 
-          <div className="div-select mt-1">
-            <label title="Attendees" className="form-label">
-              {useFormatMessage(
-                "modules.feed.create_post.endorsement.select_member_for_endorsing"
-              )}
-            </label>
-            <ErpSelect
-              nolabel
-              className="select"
-              options={state.optionSelectMember}
-              isMulti={true}
-              value={state.valueSelectMember}
-              onChange={(e) => setState({ valueSelectMember: e })}
-            />
+          <div className="div-select div-attendees mt-1">
+            <div className="select-attendees">
+              <label title="Attendees" className="form-label">
+                {useFormatMessage(
+                  "modules.feed.create_post.endorsement.select_member_for_endorsing"
+                )}
+              </label>
+              <MemberSelect
+                noLabel={true}
+                //options={state.optionSelectMember}
+                isMulti={true}
+                //value={state.valueSelectMember}
+                handleOnchange={(e) => handleSetValueSelectMember(e)}
+              />
+              {/*<ErpSelect nolabel options={state.optionSelectMember}
+                isMulti={true}
+                value={state.valueSelectMember}
+                onChange={(e) => setState({ valueSelectMember: e })}/>*/}
+            </div>
           </div>
-
           <div className="div-cover">
             {(state.coverImg !== null || state.cover_url !== null) && (
               <Fragment>
@@ -547,7 +597,7 @@ const Endorsement = (props) => {
 
           <div className="div-write-editor">
             <EditorComponent
-              editorState={state.editorState}
+              editorState={editorState}
               onEditorStateChange={onEditorStateChange}
               dataMention={dataMention}
               backgroundImage={null}
@@ -556,7 +606,7 @@ const Endorsement = (props) => {
               )}
             />
             <Emoji
-              editorState={state.editorState}
+              editorState={editorState}
               setEditorState={onEditorStateChange}
             />
           </div>
@@ -569,18 +619,25 @@ const Endorsement = (props) => {
               disabled={state.loadingSubmit}
               onClick={() => submitEndorsement()}>
               {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
-              {useFormatMessage("modules.feed.create_post.text.post")}
+              {idEndorsement
+                ? useFormatMessage("button.update")
+                : useFormatMessage("modules.feed.create_post.text.post")}
             </Button.Ripple>
             <div className="div-icon-date">
-              <ErpDate
-                nolabel
-                suffixIcon={iconDateEndorsement}
-                placement="topRight"
-                value={state.date}
-                onChange={(e) => {
-                  setState({ date: e })
-                }}
-              />
+              <div onClick={() => handleToggleOpenCalendar()}>
+                <ErpDate
+                  nolabel
+                  suffixIcon={iconDateEndorsement}
+                  open={state.openDatePicker}
+                  placement="topRight"
+                  popupClassName="custom-date-picker-endorsement"
+                  onOpenChange={handleOpenChangeDatePicker}
+                  value={state.date}
+                  onChange={(e) => {
+                    setState({ date: e })
+                  }}
+                />
+              </div>
             </div>
           </div>
         </ModalBody>

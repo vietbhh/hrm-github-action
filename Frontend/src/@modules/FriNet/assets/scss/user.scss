@@ -234,7 +234,11 @@
           right: 2px !important;
 
           &:after {
-            background-image: url(str-replace(str-replace($chevron-right, "currentColor", "#FFFFFF"), "#", "%23"));
+            background-image: url(str-replace(
+              str-replace($chevron-right, "currentColor", "#FFFFFF"),
+              "#",
+              "%23"
+            ));
             background-repeat: no-repeat;
             background-position: center;
             background-size: 22px;
@@ -251,7 +255,11 @@
           left: 0px !important;
 
           &:after {
-            background-image: url(str-replace(str-replace($chevron-left, "currentColor", "#FFFFFF"), "#", "%23"));
+            background-image: url(str-replace(
+              str-replace($chevron-left, "currentColor", "#FFFFFF"),
+              "#",
+              "%23"
+            ));
             background-repeat: no-repeat;
             background-position: center;
             background-size: 22px;
@@ -332,6 +340,9 @@
       }
 
       .link-info-section {
+        .card-body {
+          padding: 8px 20px;
+        }
         a {
           font-size: 14px;
           font-weight: 300;
@@ -449,7 +460,11 @@
 }
 
 @media (min-width: 1920px) {
-  .separate-sidebar-layout .app-content .content-wrapper .page-body .div-content {
+  .separate-sidebar-layout
+    .app-content
+    .content-wrapper
+    .page-body
+    .div-content {
     gap: 0px !important;
     justify-content: unset !important;
 

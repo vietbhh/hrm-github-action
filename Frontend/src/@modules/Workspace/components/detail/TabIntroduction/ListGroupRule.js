@@ -42,7 +42,9 @@ const ListGroupRule = (props) => {
           setList={handleSetAndUpdateGroupRule}
           animation={200}
           delayOnTouchStart={true}
-          delay={2}>
+          delay={2}
+          helperClass="draggable-item"
+          forceFallback={true}>
           {groupRule.map((item, key, array) => {
             return (
               <GroupRuleItem

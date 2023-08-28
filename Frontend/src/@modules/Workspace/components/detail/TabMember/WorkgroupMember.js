@@ -206,14 +206,14 @@ const WorkgroupMember = (props) => {
   return (
     <Card>
       <CardBody>
-        <div className="section border-bot">
+        <div className="pt-0 section border-bot">
           <HeaderSection
             totalMember={state.totalMember}
             filter={state.filter}
             setSearchText={setSearchText}
           />
         </div>
-        <div className="section mt-50">
+        <div className="mt-0 pt-0 section ">
           <Fragment>{renderBody()}</Fragment>
         </div>
       </CardBody>

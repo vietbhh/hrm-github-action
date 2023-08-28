@@ -238,10 +238,11 @@ export const handleDataMention = (dataEmployee, userId) => {
     if (userId !== value.id) {
       data_mention.push({
         id: value.id,
-        name: "@" + value.username,
+        name: value.full_name,
         link: "/u/" + value.username,
         avatar: getAvatarUrl(value.id * 1),
-        full_name: value.full_name
+        full_name: value.full_name,
+        title: `@${value.username}`
       })
     }
   })

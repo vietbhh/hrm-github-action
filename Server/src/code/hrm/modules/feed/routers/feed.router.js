@@ -17,7 +17,9 @@ import {
 import {
   getEventById,
   submitEvent,
-  updateEventStatus
+  updateEventStatus,
+  removeEvent,
+  removeFile
 } from "../controllers/event.js"
 import {
   deletePost,
@@ -77,6 +79,8 @@ router.get("/get-post-interactive-member/:id", getPostInteractiveMember)
 router.post("/submit-event", submitEvent)
 router.get("/get-event-by-id/:id", getEventById)
 router.post("/update-event-status", updateEventStatus)
+router.post("/remove-event", removeEvent)
+router.post("/remove-file/:id", removeFile)
 
 router.post("/submit-announcement", submitAnnouncement)
 router.get("/get-announcement-by-id/:id", getAnnouncementById)

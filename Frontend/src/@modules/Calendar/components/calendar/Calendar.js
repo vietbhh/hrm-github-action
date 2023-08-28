@@ -1,21 +1,20 @@
 // ** React Imports
-import { defaultModuleApi } from "@apps/utility/moduleApi"
-import { calendarApi } from "../../common/api"
-import { useRef, useEffect, Fragment } from "react"
 import moment from "moment"
+import { Fragment, useEffect, useRef } from "react"
+// ** redux
+import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
+import { useDispatch } from "react-redux"
 // ** Styles
-import { CardBody, Card } from "reactstrap"
+import { Card, CardBody } from "reactstrap"
 // ** Components
-import FullCalendar from "@fullcalendar/react"
-import listPlugin from "@fullcalendar/list"
 import dayGridPlugin from "@fullcalendar/daygrid"
-import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
-import notification from "@apps/utility/notification"
-import calendarImg from "@apps/modules/calendar/assets/images/calendar.png"
-import GroupAllDayEvent from "./GroupAllDayEvent"
-import CalendarDescription from "./CalendarDescription"
+import listPlugin from "@fullcalendar/list"
+import FullCalendar from "@fullcalendar/react"
+import timeGridPlugin from "@fullcalendar/timegrid"
 import AddCalendarButton from "@modules/Dashboard/components/details/calendar/AddCalendarButton"
+import CalendarDescription from "./CalendarDescription"
+import GroupAllDayEvent from "./GroupAllDayEvent"
 
 const Calendar = (props) => {
   const {
@@ -28,37 +27,17 @@ const Calendar = (props) => {
     setCalendarYear
   } = props
 
+  const dispatch = useDispatch()
+
   const calendarRef = useRef()
 
   const handleClickCalendar = (id, editable) => {
-    defaultModuleApi
-      .getDetail("calendars", id)
-      .then((res) => {
-        const calendarInfo = res.data.data
-        calendarInfo["is_editable"] = editable
-        handleShowAddEventModal({
-          calendarInfo: calendarInfo,
-          viewOnly: false
-        })
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: id,
+        viewOnly: false
       })
-      .catch((err) => {
-        notification.showError()
-      })
-  }
-
-  const handleDropCalendar = (id, start, end) => {
-    const values = {
-      start: moment(start),
-      end: end === null ? moment(start) : moment(end)
-    }
-    calendarApi
-      .updateCalendar(id, values)
-      .then((res) => {
-        notification.showSuccess("notification.update.success")
-      })
-      .catch((err) => {
-        notification.showError("notification.update.error")
-      })
+    )
   }
 
   const handleChangeNavigateCalendar = () => {
@@ -187,13 +166,6 @@ const Calendar = (props) => {
       }
     },
     dateClick(info) {},
-    eventDrop({ event: droppedEvent }) {
-      handleDropCalendar(
-        droppedEvent._def.publicId,
-        droppedEvent.start,
-        droppedEvent.end
-      )
-    },
     direction: "ltr"
   }
 

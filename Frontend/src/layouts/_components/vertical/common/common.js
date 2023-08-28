@@ -15,7 +15,7 @@ export const handleFormatMessageStr = (str) => {
   if (listFormatMessage !== null) {
     listFormatMessage.map((text) => {
       const formatText = text.replace(/[{}]/g, "")
-      newStr = str.replace(text, useFormatMessage(formatText))
+      newStr = newStr.replace(text, useFormatMessage(formatText))
     })
   }
 
@@ -29,7 +29,7 @@ export const handleFormatUrl = (str, strReplace) => {
   if (listFormat !== null) {
     listFormat.map((text) => {
       const formatText = text.replace(/[{}]/g, "")
-      newStr = str.replace(text, strReplace)
+      newStr = newStr.replace(text, strReplace)
     })
   }
 

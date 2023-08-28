@@ -1,7 +1,6 @@
 // ** React Imports
 import { Fragment } from "react"
 // ** Styles
-import { Popover } from "antd"
 // ** Components
 import AllDayEvent from "./AllDayEvent"
 import HolidayEvent from "./HolidayEvent"
@@ -46,14 +45,12 @@ const GroupAllDayEvent = (props) => {
     if (isAllDay) {
       const listAllDayEvent = extendedProps.listAllDayEvent
       return (
-        <Fragment>
-          <AllDayEvent
-            viewInfoOnly={viewInfoOnly}
-            listAllDayEvent={listAllDayEvent}
-            date={date}
-            handleShowAddEventModal={handleShowAddEventModal}
-          />
-        </Fragment>
+        <AllDayEvent
+          viewInfoOnly={viewInfoOnly}
+          listAllDayEvent={listAllDayEvent}
+          date={date}
+          handleShowAddEventModal={handleShowAddEventModal}
+        />
       )
     }
 
@@ -63,11 +60,7 @@ const GroupAllDayEvent = (props) => {
   const renderHoliday = () => {
     if (isHoliday) {
       const listHoliday = extendedProps.listHoliday
-      return (
-        <Fragment>
-          <HolidayEvent listHoliday={listHoliday} />
-        </Fragment>
-      )
+      return <HolidayEvent listHoliday={listHoliday} />
     }
 
     return ""
@@ -76,11 +69,7 @@ const GroupAllDayEvent = (props) => {
   const renderTimeOff = () => {
     if (isTimeOff) {
       const listTimeOff = extendedProps.listTimeOff
-      return (
-        <Fragment>
-          <TimeOffEvent listTimeOff={listTimeOff} />
-        </Fragment>
-      )
+      return <TimeOffEvent listTimeOff={listTimeOff} />
     }
 
     return ""
@@ -89,11 +78,7 @@ const GroupAllDayEvent = (props) => {
   const renderDOB = () => {
     if (isDOB) {
       const listEmployeeDob = extendedProps.listEmployeeDob
-      return (
-        <Fragment>
-          <EmployeeDOBEvent listEmployeeDob={listEmployeeDob} date={date} />
-        </Fragment>
-      )
+      return <EmployeeDOBEvent listEmployeeDob={listEmployeeDob} date={date} />
     }
 
     return ""
@@ -102,35 +87,24 @@ const GroupAllDayEvent = (props) => {
   const renderChecklist = () => {
     if (isChecklist) {
       const listChecklist = extendedProps.listChecklist
-
-      return (
-        <Fragment>
-          <ChecklistEvent listChecklist={listChecklist} date={date} />
-        </Fragment>
-      )
+      return <ChecklistEvent listChecklist={listChecklist} date={date} />
     }
 
     return ""
   }
 
-  const renderComponent = () => {
-    return (
-      <Fragment>
-        <div
-          className={`d-flex align-items-center all-day-event ${
-            numberEvent > 2 ? "all-day-event-collapse" : ""
-          }`}>
-          <Fragment>{renderAllDay()}</Fragment>
-          <Fragment>{renderHoliday()}</Fragment>
-          <Fragment>{renderTimeOff()}</Fragment>
-          <Fragment>{renderDOB()}</Fragment>
-          <Fragment>{renderChecklist()}</Fragment>
-        </div>
-      </Fragment>
-    )
-  }
-
-  return <Fragment>{renderComponent()}</Fragment>
+  return (
+    <div
+      className={`d-flex align-items-center all-day-event ${
+        numberEvent > 2 ? "all-day-event-collapse" : ""
+      }`}>
+      <Fragment>{renderAllDay()}</Fragment>
+      <Fragment>{renderHoliday()}</Fragment>
+      <Fragment>{renderTimeOff()}</Fragment>
+      <Fragment>{renderDOB()}</Fragment>
+      <Fragment>{renderChecklist()}</Fragment>
+    </div>
+  )
 }
 
 export default GroupAllDayEvent

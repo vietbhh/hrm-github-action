@@ -165,6 +165,18 @@ export const eventApi = {
 
   async getGetEventById(id) {
     return await axiosNodeApi.get("/feed/get-event-by-id/" + id)
+  },
+  
+  async removeEvent(id) {
+    return await axiosNodeApi.post(`/feed/remove-event`, {
+      id: id
+    })
+  },
+
+  async removeAttachment(id, file) {
+    return await axiosNodeApi.post(`/feed/remove-file/${id}`, {
+      file: file
+    })
   }
 }
 

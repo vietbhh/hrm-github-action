@@ -22,6 +22,7 @@ import {
   ModalHeader,
   Spinner
 } from "reactstrap"
+import MemberSelect from "../../../MemberSelect/MemberSelect"
 
 const ModalAnnouncement = (props) => {
   const {
@@ -121,19 +122,31 @@ const ModalAnnouncement = (props) => {
   }
 
   const handleAddAttendees = () => {
-    const dataAttendees = [...state.dataAttendees]
-    _.forEach(state.valueAttendees, (item) => {
-      const indexData = dataAttendees.findIndex(
-        (val) => val.value === item.value
-      )
-      const indexOption = options_employee_department.findIndex(
-        (val) => val.value === item.value
-      )
-      if (indexData === -1 && indexOption !== -1) {
-        dataAttendees.push(options_employee_department[indexOption])
-      }
-    })
-    setState({ valueAttendees: [], dataAttendees: dataAttendees })
+    if (state.valueAttendees.some((itemSome) => itemSome.value === "all")) {
+      setState({
+        valueAttendees: [],
+        dataAttendees: [
+          {
+            label: "all",
+            value: "all"
+          }
+        ]
+      })
+    } else {
+      const dataAttendees = [...state.dataAttendees]
+      _.forEach(state.valueAttendees, (item) => {
+        const indexData = dataAttendees.findIndex(
+          (val) => val.value === item.value
+        )
+        const indexOption = options_employee_department.findIndex(
+          (val) => val.value === item.value
+        )
+        if (indexData === -1 && indexOption !== -1) {
+          dataAttendees.push(options_employee_department[indexOption])
+        }
+      })
+      setState({ valueAttendees: [], dataAttendees: dataAttendees })
+    }
   }
 
   const handleRemoveAttendees = (index) => {
@@ -407,16 +420,20 @@ const ModalAnnouncement = (props) => {
                 {useFormatMessage("modules.feed.announcement.text.send_to")}
               </label>
               <div className="div-input-btn-select">
-                <ErpSelect
-                  nolabel
+                <MemberSelect
+                  noLabel={true}
                   placeholder={useFormatMessage(
-                    "modules.feed.announcement.text.send_to_placeholder"
+                    "modules.feed.create_event.text.attendees_placeholder"
                   )}
-                  className="select"
+                  classNameProps="select-attendees"
                   isMulti={true}
                   options={options_employee_department}
                   value={state.valueAttendees}
-                  onChange={(e) => setState({ valueAttendees: e })}
+                  selectDepartment={true}
+                  selectAll={true}
+                  handleOnchange={(e) => {
+                    setState({ valueAttendees: e })
+                  }}
                 />
                 <button
                   type="button"
@@ -568,7 +585,9 @@ const ModalAnnouncement = (props) => {
                   <Spinner size={"sm"} className="me-50" />
                 )}
                 {useFormatMessage(
-                  "modules.feed.announcement.text.create_announcement"
+                  _.isEmpty(state.dataEdit)
+                    ? "modules.feed.announcement.text.create_announcement"
+                    : "modules.feed.announcement.text.update_announcement"
                 )}
               </Button.Ripple>
             </form>

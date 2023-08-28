@@ -1,7 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { workspaceApi } from "@modules/Workspace/common/api"
-import { Badge, Dropdown, Space } from "antd"
+import { Dropdown, Space } from "antd"
 import { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -15,7 +15,6 @@ import SearchPostModal from "../modals/SearchPostModal"
 import { getTabByNameOrId } from "../../common/common"
 import SwAlert from "@apps/utility/SwAlert"
 
-import { ErpDate } from "@apps/components/common/ErpField"
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
@@ -601,12 +600,18 @@ const WorkspaceHeader = (props) => {
             loadData={loadData}
           />
 
-          <CardBody className="pb-0">
-            <div className="d-flex justify-content-between align-items-center name-and-action">
+          <CardBody className="pb-0 pt-50">
+            <div className="d-flex justify-content-between align-items-center m-50 ms-0 me-0 name-and-action">
               <div className="ps-25 workspaceInformation">
                 <h2 className="mb-25 workspaceName">{data?.name}</h2>
                 <p className="mb-0 workspaceOverviewInfo">
-                  {data?.type} · {data?.members ? data?.members.length : 0}{" "}
+                  <span
+                    style={{
+                      textTransform: "capitalize"
+                    }}>
+                    {data?.type}
+                  </span>{" "}
+                  · {data?.members ? data?.members.length : 0}{" "}
                   {useFormatMessage("modules.workspace.display.members")}
                   {/*{data?.pinPosts && data?.pinPosts.length}{" "}
                 {useFormatMessage("modules.workspace.text.posts")}*/}

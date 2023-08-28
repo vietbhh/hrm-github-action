@@ -2,6 +2,9 @@
 import { Fragment, useEffect, useRef } from "react"
 import { calendarApi } from "../../../../../@apps/modules/calendar/common/api"
 import moment from "moment"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
 // ** Styles
 // ** Components
 import notification from "@apps/utility/notification"
@@ -21,28 +24,25 @@ const Calendar = (props) => {
     showCalendarDescription,
     changeYearType,
     calendarYear,
+    filters,
     // ** methods
     handleShowAddEventModal,
-    setCalendarYear
+    setCalendarYear,
+    setFilter
   } = props
+
+  const dispatch = useDispatch()
 
   const currentHour = moment().hour()
   const calendarRef = useRef()
 
   const handleClickCalendar = (id) => {
-    calendarApi
-      .getEventDetail(item.id)
-      .then((res) => {
-        const calendarInfo = res.data.data
-
-        handleShowAddEventModal({
-          calendarInfo: calendarInfo,
-          viewOnly: !calendarInfo.is_editable
-        })
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: id,
+        viewOnly: false
       })
-      .catch((err) => {
-        notification.showError()
-      })
+    )
   }
 
   const handleChangeNavigateCalendar = () => {
@@ -67,17 +67,6 @@ const Calendar = (props) => {
   }, [calendarYear])
 
   // ** render
-  const renderGroupAllDayEvent = (extendedProps, date) => {
-    return (
-      <GroupAllDayEvent
-        viewInfoOnly={false}
-        date={date}
-        extendedProps={extendedProps}
-        handleShowAddEventModal={handleShowAddEventModal}
-      />
-    )
-  }
-
   const calendarOptions = {
     ref: calendarRef,
     events: listCalendar,
@@ -152,34 +141,47 @@ const Calendar = (props) => {
       const isAllDay = extendedProps.isAllDay
       const isChecklist = extendedProps.isChecklist
       if (
-        isDOB !== undefined ||
-        isHoliday !== undefined ||
-        isTimeOff !== undefined ||
-        isAllDay !== undefined ||
-        isChecklist !== undefined
+        isAllDay === true ||
+        isDOB === true ||
+        isHoliday === true ||
+        isTimeOff === true ||
+        isChecklist === true
       ) {
-        return renderGroupAllDayEvent(extendedProps, calendarEvent.startStr)
+        return (
+          <GroupAllDayEvent
+            viewInfoOnly={false}
+            date={calendarEvent.startStr}
+            extendedProps={extendedProps}
+            handleShowAddEventModal={handleShowAddEventModal}
+          />
+        )
       }
     }
   }
 
   const renderCalendarDescription = () => {
-    return <CalendarDescription />
-  }
+    if (showCalendarDescription === true) {
+      return <CalendarDescription />
+    }
 
-  const renderAddCalendarButton = () => {
-    return (
-      <AddCalendarButton handleShowAddEventModal={handleShowAddEventModal} />
-    )
+    return ""
   }
 
   return (
     <Fragment>
-      <FullCalendar {...calendarOptions} />
-      <Fragment>{renderAddCalendarButton()}</Fragment>
-      <Fragment>
-        {showCalendarDescription && renderCalendarDescription()}
-      </Fragment>
+      <FullCalendar
+        {...calendarOptions}
+        datesSet={(arg) => {
+          if (!moment(arg.end).isSame(filters.to)) {
+            setFilter({
+              from: moment(arg.start).format("YYYY-MM-DD"),
+              to: moment(arg.end).format("YYYY-MM-DD")
+            })
+          }
+        }}
+      />
+      <AddCalendarButton handleShowAddEventModal={handleShowAddEventModal} />
+      <Fragment>{renderCalendarDescription()}</Fragment>
     </Fragment>
   )
 }

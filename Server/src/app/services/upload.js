@@ -1,10 +1,9 @@
 import { Storage } from "@google-cloud/storage"
 import fs from "fs"
-import fse from "fs-extra"
-import { forEach, isEmpty, toPath } from "lodash-es"
+import { forEach, isEmpty } from "lodash-es"
+import mime from "mime-types"
 import path, { dirname } from "path"
 import { getSetting } from "./settings.js"
-import mime from "mime-types"
 
 const safeFileName = (fileName) => {
   return fileName
@@ -24,7 +23,7 @@ export const localSavePath = path.join(
   dirname(global.__basedir),
   "Backend",
   "applications",
-  process.env.code,
+  process.env.CODE,
   "writable",
   "uploads"
 )
@@ -135,7 +134,7 @@ const _googleCloudUpload = async (storePath, files) => {
     projectId: process.env.GCS_PROJECT_ID
   })
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
-
+  
   const promises = []
 
   forEach(files, (file, key) => {
@@ -411,7 +410,7 @@ const _uploadServices = async (
     return _localUpload(storePath, files, uploadByFileContent)
   } else if (upload_type === "cloud_storage") {
     const storePathGCS = path
-      .join(process.env.code, storePath)
+      .join(process.env.CODE, storePath)
       .replace(/\\/g, "/")
     return _googleCloudUpload(storePathGCS, files)
   }
@@ -455,7 +454,7 @@ const moveFileFromServerToGCS = async (serverPath, storagePath, filename) => {
 
   const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
 
-  const toPath = path.join(process.env.code, storagePath).replace(/\\/g, "/")
+  const toPath = path.join(process.env.CODE, storagePath).replace(/\\/g, "/")
 
   const promises = []
 
@@ -566,11 +565,47 @@ const copyFilesServices = async (pathFrom, pathTo, filename, type = null) => {
     return _handleCopyDirect(pathFrom, pathTo, filename)
   } else if (upload_type === "cloud_storage") {
     const pathFromGCS = path
-      .join(process.env.code, pathFrom)
+      .join(process.env.CODE, pathFrom)
       .replace(/\\/g, "/")
-    const pathToGCS = path.join(process.env.code, pathTo).replace(/\\/g, "/")
+    const pathToGCS = path.join(process.env.CODE, pathTo).replace(/\\/g, "/")
     return _handleCopyCloudStorage(pathFromGCS, pathToGCS, filename)
   }
 }
 
-export { _uploadServices, copyFilesServices, moveFileFromServerToGCS }
+const removeFile = async (storePath, type = null) => {
+  const upload_type = type === null ? await getSetting("upload_type") : type
+  if (!storePath) throw new Error("missing_store_path")
+
+  try {
+    if (upload_type === "direct") {
+      const savePath = path.join(localSavePath, storePath)
+      if (fs.lstatSync(savePath).isFile()) {
+        fs.unlink(savePath, (err) => {
+          if (err) {
+            throw err
+          }
+        })
+      }
+    } else if (upload_type === "cloud_storage") {
+      const storage = new Storage({
+        keyFilename: path.join(
+          dirname(global.__basedir),
+          "Server",
+          "service_account_file.json"
+        ),
+        projectId: process.env.GCS_PROJECT_ID
+      })
+      const bucket = storage.bucket(process.env.GCS_BUCKET_NAME)
+      bucket.file(storePath).delete({})
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export {
+  _uploadServices,
+  copyFilesServices,
+  moveFileFromServerToGCS,
+  removeFile
+}

@@ -17,10 +17,15 @@ import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreateP
 import MemberVoteModal from "./LoadPostDetails/modals/MemberVoteModal"
 import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
 import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
+import { eventApi } from "@modules/Feed/common/api"
+// ** redux
+import { useDispatch } from "react-redux"
+import { showAddEventCalendarModal } from "../../../@apps/modules/calendar/common/reducer/calendar"
 
 const LoadPost = (props) => {
   const {
     data, // data post
+    index, // index post
     current_url, // current url (vd: /feed)
     dataMention, // data arr user tag [{id: id, name: name,link: "#", avatar: getAvatarUrl(value.id * 1)}]
     offReactionAndComment = false, // tắt div reaction, comment: true / false
@@ -50,15 +55,14 @@ const LoadPost = (props) => {
     modalCreatePost: false,
 
     //
-    modalCreateEvent: false,
-
-    //
     modalAnnouncement: false,
 
     // with tag
     modalWith: false,
     dataUserOtherWith: []
   })
+
+  const dispatch = useDispatch()
 
   // ** function
   const setCommentMoreCountOriginal = (value = 0) => {
@@ -69,8 +73,15 @@ const LoadPost = (props) => {
   const toggleModalCreatePost = () =>
     setState({ modalCreatePost: !state.modalCreatePost })
 
-  const toggleModalCreateEvent = () =>
-    setState({ modalCreateEvent: !state.modalCreateEvent })
+  const toggleModalCreateEvent = () => {
+    dispatch(
+      showAddEventCalendarModal({
+        idEvent: null,
+        viewOnly: false
+      })
+    )
+  }
+    
 
   const toggleModalAnnouncement = () =>
     setState({ modalAnnouncement: !state.modalAnnouncement })
@@ -89,7 +100,9 @@ const LoadPost = (props) => {
           maxLine={2}
           minLine={2}
           showGraphic={true}
-          defaultImage={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
+          defaultImage={`${
+            import.meta.env.VITE_APP_URL
+          }/assets/images/link.png`}
         />
       )
     }
@@ -111,7 +124,7 @@ const LoadPost = (props) => {
     }
 
     if (data.type === "event") {
-      return <RenderPostEvent dataLink={data.dataLink} />
+      return <RenderPostEvent dataLink={data.dataLink} index={index}/>
     }
 
     if (data.type === "endorsement") {
@@ -247,14 +260,13 @@ const LoadPost = (props) => {
 
           {data?.type === "event" && (
             <ModalCreateEvent
-              modal={state.modalCreateEvent}
-              toggleModal={toggleModalCreateEvent}
-              idEvent={data?.link_id}
               setData={setData}
               setDataLink={setDataLink}
               idPost={data?._id}
               options_employee_department={options_employee_department}
               optionsMeetingRoom={optionsMeetingRoom}
+              createEventApi={eventApi.postSubmitEvent}
+              getDetailApi={eventApi.getGetEventById}
             />
           )}
 

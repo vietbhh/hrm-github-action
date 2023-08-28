@@ -172,34 +172,36 @@ const TagYourColleagues = (props) => {
                     </div>
                   </div>
 
-                  {_.map(state.data_tag, (value, index) => {
-                    const index_user = dataMention.findIndex(
-                      (item) => item.id === value
-                    )
-                    let data_user = {}
-                    if (index_user !== -1) {
-                      data_user = dataMention[index_user]
-                    }
-                    return (
-                      <Fragment key={index}>
-                        <div className="d-flex align-items-center list-user-react">
-                          <Avatar
-                            className="img me-1"
-                            src={data_user?.avatar}
-                          />
-                          <span className="name">{data_user?.full_name}</span>
-                          <div
-                            className="ms-auto text-center"
-                            style={{ width: "20px" }}
-                            onClick={() => handleCheckedUser(value)}>
-                            <i className="fa-solid fa-xmark"></i>
+                  <div className="list-member__list">
+                    {_.map(state.data_tag, (value, index) => {
+                      const index_user = dataMention.findIndex(
+                        (item) => item.id === value
+                      )
+                      let data_user = {}
+                      if (index_user !== -1) {
+                        data_user = dataMention[index_user]
+                      }
+                      return (
+                        <Fragment key={index}>
+                          <div className="d-flex align-items-center list-user-react">
+                            <Avatar
+                              className="img me-1"
+                              src={data_user?.avatar}
+                            />
+                            <span className="name">{data_user?.full_name}</span>
+                            <div
+                              className="ms-auto text-center"
+                              style={{ width: "20px" }}
+                              onClick={() => handleCheckedUser(value)}>
+                              <i className="fa-solid fa-xmark"></i>
+                            </div>
                           </div>
-                        </div>
 
-                        <hr />
-                      </Fragment>
-                    )
-                  })}
+                          <hr />
+                        </Fragment>
+                      )
+                    })}
+                  </div>
                 </Fragment>
               )}
             </div>
@@ -207,13 +209,13 @@ const TagYourColleagues = (props) => {
           <div className="body-footer">
             <button
               type="button"
-              className="button-cancel me-1"
+              className="button-cancel me-1 btn"
               onClick={() => toggleModal()}>
               {useFormatMessage("app.close")}
             </button>
             <button
               type="button"
-              className="button-save"
+              className="button-save btn"
               onClick={() => {
                 setTagYourColleagues(state.data_tag)
                 toggleModal()

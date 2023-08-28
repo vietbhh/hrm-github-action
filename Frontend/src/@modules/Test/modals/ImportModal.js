@@ -8,7 +8,7 @@ import notification from "@apps/utility/notification"
 import UILoader from "@core/components/ui-loader"
 import Uppy from "@uppy/core"
 import "@uppy/core/dist/style.css"
-import "@uppy/dashboard/dist/style.css"
+//import "@uppy/dashboard/dist/style.css"
 import { DragDrop } from "@uppy/react"
 import { isEmpty } from "lodash"
 import { Fragment, useEffect } from "react"
@@ -29,7 +29,7 @@ import {
   Spinner,
   Table
 } from "reactstrap"
-import "uppy/dist/uppy.css"
+//import "uppy/dist/uppy.css"
 import { testApi } from "../common/api"
 
 import { FieldHandle } from "@apps/utility/FieldHandler"

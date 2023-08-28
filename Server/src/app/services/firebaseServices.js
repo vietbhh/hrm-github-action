@@ -2,8 +2,7 @@ import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
 import {
   getDefaultFridayLogo,
   handleFormatMessageStr,
-  stripHTML,
-  useFormatMessage
+  stripHTML
 } from "#app/utility/common.js"
 import { cert, initializeApp } from "firebase-admin/app"
 import { getMessaging } from "firebase-admin/messaging"

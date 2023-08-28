@@ -55,12 +55,18 @@ const WorkspaceItem = (props) => {
     if (workspaceType === "manage") {
       return (
         <div className="workspace-item common-border">
-          <div className="mb-25 image-container">
+          <div
+            className="mb-25 image-container"
+            onClick={() => handleClickViewGroup()}>
             <Fragment>{renderCoverImage()}</Fragment>
           </div>
           <div className="p-1 content-container">
             <div className="mb-1">
-              <p className="mb-50 text-color-title">{infoWorkspace.name}</p>
+              <p
+                className="mb-50 text-color-title"
+                onClick={() => handleClickViewGroup()}>
+                {infoWorkspace.name}
+              </p>
               <small>
                 {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
                 {infoWorkspace.member_number === 1
