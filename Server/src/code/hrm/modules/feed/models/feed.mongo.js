@@ -105,17 +105,19 @@ const feedSchema = baseSchema("m_feed", {
     default: []
   },
   link_permission: {
-    is_all: {
-      type: Boolean,
-      default: false
-    },
-    employee: {
-      type: [String],
-      default: []
-    },
-    department: {
-      type: [String],
-      default: []
+    type: {
+      is_all: {
+        type: Boolean,
+        default: false
+      },
+      employee: {
+        type: [String],
+        default: []
+      },
+      department: {
+        type: [String],
+        default: []
+      }
     }
   },
   tag_user: {
