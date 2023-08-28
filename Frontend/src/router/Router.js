@@ -39,7 +39,6 @@ const Router = (props) => {
     index: true,
     element: <Navigate replace to={homeRoute} />
   }
-
   const routes = useRoutes([
     indexItem,
     ...allRoutes,
@@ -54,7 +53,6 @@ const Router = (props) => {
       children: [{ path: "*", element: <NotFoundAuth /> }]
     }
   ])
-
   return routes
 }
 
