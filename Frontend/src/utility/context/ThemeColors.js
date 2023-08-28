@@ -54,6 +54,7 @@ const ThemeContext = ({ children }) => {
     <ThemeColors.Provider value={{ colors }}>
       <ConfigProvider
         theme={{
+          hashed: false,
           token: {
             colorPrimary: colors?.primary?.main ?? "#f9d324"
           }
