@@ -3,6 +3,8 @@ import noimg from "@src/assets/images/erp/img-not-found.png"
 import { Image, Skeleton } from "antd"
 import { useEffect, useState } from "react"
 import { downloadApi } from "../common/api"
+import { isEmpty } from "lodash"
+import CircleSpinner from "../../../components/spinner/CircleSpinner"
 const CACHE = {}
 
 function hashArgs(...args) {
@@ -24,18 +26,17 @@ const Photo = (props) => {
     defaultPhoto,
     ...rest
   } = props
-  let defaultImg = _.isUndefined(src) ? defaultPhoto : false
-  defaultImg = _.isUndefined(defaultPhoto) ? noimg : false
+  const defaultImg = _.isUndefined(defaultPhoto) ? noimg : defaultPhoto
   const [image, setImage] = useState(defaultImg)
 
   useEffect(() => {
+    let imgUrl = ""
     if (isFileList(src)) {
       setImage(URL.createObjectURL(src[0]))
     } else {
-      let imgUrl = ""
-      const cacheID = hashArgs(src)
+      if (!_.isUndefined(src) && src !== "") {
+        const cacheID = hashArgs(src)
 
-      if (!_.isUndefined(src)) {
         if (CACHE[cacheID] !== undefined) {
           imgUrl = CACHE[cacheID]
           setImage(URL.createObjectURL(imgUrl))
@@ -47,26 +48,17 @@ const Photo = (props) => {
           })
         }
       } else {
-        setImage(noimg)
-      }
-
-      return () => {
-        setImage(false)
-        URL.revokeObjectURL(imgUrl)
+        setImage(defaultImg)
       }
     }
-  }, [src])
 
+    return () => {
+      setImage(false)
+      URL.revokeObjectURL(imgUrl)
+    }
+  }, [src])
   if (!image) {
-    return (
-      <Skeleton.Avatar
-        shape="square"
-        size="default"
-        active={true}
-        style={{ width: width, height: height }}
-        {...placeholder}
-      />
-    )
+    return <CircleSpinner center={true} />
   } else {
     return (
       <Image

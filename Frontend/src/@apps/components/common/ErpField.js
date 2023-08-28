@@ -324,7 +324,6 @@ export const ErpNumber = (props) => {
   const {
     name,
     id,
-    type,
     defaultValue,
     required,
     readOnly,
@@ -493,8 +492,7 @@ export const ErpNumber = (props) => {
   )
 }
 ErpNumber.propsTypes = {
-  ...commonPropsType,
-  type: PropTypes.string
+  ...commonPropsType
 }
 ErpNumber.defaultProps = {
   ...commonDefaultProps
