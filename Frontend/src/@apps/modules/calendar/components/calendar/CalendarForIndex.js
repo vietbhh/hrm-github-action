@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react"
 import moment from "moment"
 // ** redux
 import { useDispatch } from "react-redux"
-import { showDetailEventModal, showAddEventCalendarModal } from "../../common/reducer/calendar"
+import { showDetailEventModal } from "../../common/reducer/calendar"
 // ** Styles
 // ** Components
 import "@fullcalendar/react/dist/vdom"

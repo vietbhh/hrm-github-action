@@ -493,8 +493,7 @@ export const ErpNumber = (props) => {
   )
 }
 ErpNumber.propsTypes = {
-  ...commonPropsType,
-  type: PropTypes.string
+  ...commonPropsType
 }
 ErpNumber.defaultProps = {
   ...commonDefaultProps
