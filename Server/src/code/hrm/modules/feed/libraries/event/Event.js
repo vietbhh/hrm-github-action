@@ -17,6 +17,7 @@ const addEvent = async (req, insertFeed = true) => {
 
   const arrEmployeeAttendeesCheck = []
   const employee = []
+  const employeeId = []
   const employee_arr_id = []
   const department = []
 
@@ -49,6 +50,7 @@ const addEvent = async (req, insertFeed = true) => {
       if (value_arr[1] === "employee") {
         arrEmployeeAttendeesCheck.push(value_arr[0].toString())
 
+        employeeId.push(value_arr[0])
         employee.push({
           id: value_arr[0],
           status: "yes",
@@ -129,10 +131,27 @@ const addEvent = async (req, insertFeed = true) => {
       // ** insert feed
       let out = undefined
       if (insertFeed) {
+        const linkPermission = {
+          is_all: false,
+          employee: [],
+          department: []
+        }
+
+        if (checkIsAll) {
+          linkPermission["is_all"] = true
+          linkPermission["employee"] = []
+          linkPermission["department"] = []
+        } else {
+          linkPermission["is_all"] = false
+          linkPermission["employee"] = employeeId
+          linkPermission["department"] = department
+        }
+
         const feedModel = new feedMongoModel({
           __user: req.__user,
           type: "event",
-          link_id: idEvent
+          link_id: idEvent,
+          link_permission: linkPermission
         })
         out = await feedModel.save()
         await calendarMongoModel.updateOne(
