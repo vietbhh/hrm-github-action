@@ -90,7 +90,7 @@ const getWorkspace = async (req, res, next) => {
 const saveCoverImage = async (req, res) => {
   const image = req.body.image
   try {
-    const update = _handleUploadImage(image, req.body._id)
+    const update = await _handleUploadImage(image, req.body._id)
 
     return res.respond(update)
   } catch (err) {
@@ -101,15 +101,16 @@ const saveCoverImage = async (req, res) => {
 const _handleUploadImage = async (image, id) => {
   const imageFile = {}
   imageFile.content = image
-  imageFile.name = id + "_cover.png"
+  imageFile.name = id + "_" + Date.now() + "_cover.png"
   const pathUpload = "modules/workspace/" + id
-  const upp = await _uploadServices(pathUpload, [imageFile], true)
-  const update = await workspaceMongoModel.findOneAndUpdate(
+  const uploadPath = await _uploadServices(pathUpload, [imageFile], true)
+  const newImagePath = uploadPath.uploadSuccess[0]?.path
+  await workspaceMongoModel.findOneAndUpdate(
     { _id: id },
-    { $set: { cover_image: upp.uploadSuccess[0]?.path } }
+    { $set: { cover_image: newImagePath } }
   )
 
-  return update
+  return newImagePath
 }
 
 const removeCoverImage = async (req, res) => {
@@ -157,6 +158,16 @@ const getPostWorkspace = async (req, res) => {
   }
 }
 
+const getUserWorkspaceIds = async (userId) => {
+  const filter = { "members.id_user": parseInt(userId) }
+  const workspaces = await workspaceMongoModel.find(filter)
+  const idWorkspace = []
+  for (const item of workspaces) {
+    idWorkspace.push(item._id)
+  }
+  return idWorkspace
+}
+
 const getListWorkspace = async (req, res, next) => {
   const page = req.query.page === 1 ? 0 : req.query.page - 1
   const limit = req.query.limit
@@ -168,19 +179,10 @@ const getListWorkspace = async (req, res, next) => {
 
   try {
     let filter = {}
-    if (workspaceType === "joined") {
-      filter = { members: parseInt(userId) }
+    if (workspaceType === "joined" || workspaceType === "both") {
+      filter = { "members.id_user": parseInt(userId) }
     } else if (workspaceType === "managed") {
       filter = { administrators: parseInt(userId) }
-    } else if (workspaceType === "both") {
-      filter = {
-        $or: [
-          {
-            "members.id_user": parseInt(userId)
-          },
-          { administrators: parseInt(userId) }
-        ]
-      }
     }
     if (status !== undefined && status !== "" && status !== "all") {
       filter["status"] = status
@@ -193,7 +195,6 @@ const getListWorkspace = async (req, res, next) => {
     }
 
     let workspace = []
-
     if (limit === 0) {
       workspace = await workspaceMongoModel
         .find(filter)
@@ -1345,6 +1346,7 @@ export {
   getWorkspace,
   getWorkspaceOverview,
   saveWorkspace,
+  getUserWorkspaceIds,
   getListWorkspace,
   saveCoverImage,
   updateWorkspace,

@@ -1,8 +1,12 @@
 import LinkPreview from "@apps/components/link-preview/LinkPreview"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { eventApi } from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
 import React, { Fragment } from "react"
+import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
+import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
+import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreatePost"
 import LoadPostMedia from "./LoadPostDetails/LoadPostMedia"
 import ButtonReaction from "./LoadPostDetails/PostDetails/ButtonReaction"
 import PostComment from "./LoadPostDetails/PostDetails/PostComment"
@@ -13,14 +17,11 @@ import RenderContentPost from "./LoadPostDetails/PostDetails/RenderContentPost"
 import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 import RenderPostEndorsement from "./LoadPostDetails/PostDetails/RenderPostEndorsement"
 import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
-import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreatePost"
 import MemberVoteModal from "./LoadPostDetails/modals/MemberVoteModal"
-import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
-import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
-import { eventApi } from "@modules/Feed/common/api"
 // ** redux
-import { useDispatch } from "react-redux"
-import { showAddEventCalendarModal } from "../../../@apps/modules/calendar/common/reducer/calendar"
+import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
+import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 
 const LoadPost = (props) => {
   const {
@@ -45,7 +46,8 @@ const LoadPost = (props) => {
 
     // only view edit history
     isViewEditHistory = false,
-    setDataCreateNew
+    setDataCreateNew,
+    isInWorkspace = false
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -81,7 +83,6 @@ const LoadPost = (props) => {
       })
     )
   }
-    
 
   const toggleModalAnnouncement = () =>
     setState({ modalAnnouncement: !state.modalAnnouncement })
@@ -124,7 +125,7 @@ const LoadPost = (props) => {
     }
 
     if (data.type === "event") {
-      return <RenderPostEvent dataLink={data.dataLink} index={index}/>
+      return <RenderPostEvent dataLink={data.dataLink} index={index} />
     }
 
     if (data.type === "endorsement") {
@@ -152,6 +153,69 @@ const LoadPost = (props) => {
 
     return {}
   }
+  const dataEmployee = useSelector((state) => state.users.list)
+  const renderWithTag = (startDlash = false) => {
+    if (!_.isEmpty(data.tag_user) && !_.isEmpty(data.tag_user.tag)) {
+      if (data.tag_user.tag.length > 2) {
+        return (
+          <span className="post__with-tags">
+            {startDlash && "— "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <Link to={`/u/${dataEmployee?.[data.tag_user.tag[0]]?.username}`}>
+              <span className="name">
+                {dataEmployee?.[data.tag_user.tag[0]]?.full_name}
+              </span>
+            </Link>{" "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.and")}
+            </span>{" "}
+            <span
+              className="name cursor-pointer"
+              onClick={() => {
+                const data_tag = [...data.tag_user.tag]
+                data_tag.shift()
+                setDataUserOtherWith(data_tag)
+                toggleModalWith()
+              }}>
+              {data.tag_user.tag.length - 1}{" "}
+              {useFormatMessage(`modules.feed.post.text.others`)}
+            </span>
+          </span>
+        )
+      } else {
+        return (
+          <span className="post__with-tags">
+            {startDlash && "— "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <Link to={`/u/${dataEmployee?.[data.tag_user.tag[0]]?.username}`}>
+              <span className="name">
+                {dataEmployee?.[data.tag_user.tag[0]]?.full_name}
+              </span>
+            </Link>{" "}
+            {data.tag_user.tag.length === 2 && (
+              <>
+                <span className="text-default">
+                  {useFormatMessage("modules.feed.post.text.and")}
+                </span>{" "}
+                <Link
+                  to={`/u/${dataEmployee?.[data.tag_user.tag[1]]?.username}`}>
+                  <span className="name">
+                    {dataEmployee?.[data.tag_user.tag[1]]?.full_name}
+                  </span>
+                </Link>
+              </>
+            )}
+          </span>
+        )
+      }
+    }
+
+    return ""
+  }
 
   return (
     <Fragment>
@@ -169,6 +233,8 @@ const LoadPost = (props) => {
           toggleModalWith={toggleModalWith}
           setDataUserOtherWith={setDataUserOtherWith}
           isViewEditHistory={isViewEditHistory}
+          isInWorkspace={isInWorkspace}
+          renderWithTag={renderWithTag}
         />
         <div
           className={classNames("post-body", {
@@ -187,6 +253,9 @@ const LoadPost = (props) => {
           </div>
 
           {renderBody()}
+          {data?.permission === "workspace" && !isInWorkspace && (
+            <Fragment>{renderWithTag(true)}</Fragment>
+          )}
 
           {data.has_poll_vote === true && (
             <RenderPollVote

@@ -1,12 +1,10 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import {
   timeDifference,
-  useFormatMessage,
-  useMergedState
+  useFormatMessage
 } from "@apps/utility/common"
-import { handleDataMention } from "@modules/Feed/common/common"
 import birthdayImg from "@src/layouts/_components/vertical/images/birthday.svg"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import PostHeaderAction from "./PostHeaderAction"
@@ -25,9 +23,9 @@ const PostHeader = (props) => {
     toggleModalCreatePost,
     toggleModalCreateEvent,
     toggleModalAnnouncement,
-    toggleModalWith,
-    setDataUserOtherWith,
-    isViewEditHistory = false // only view edit history
+    isViewEditHistory = false, // only view edit history
+    isInWorkspace,
+    renderWithTag
   } = props
 
   const userData = useSelector((state) => state.auth.userData)
@@ -49,16 +47,6 @@ const PostHeader = (props) => {
         conditionShowEditHistory
     }
   }
-
-  const [state, setState] = useMergedState({
-    dataMention: []
-  })
-
-  // ** useEffect
-  useEffect(() => {
-    const data_mention = handleDataMention(dataEmployee, userId)
-    setState({ dataMention: data_mention })
-  }, [dataEmployee])
 
   // ** render
   const renderAfterName = () => {
@@ -157,66 +145,7 @@ const PostHeader = (props) => {
     return ""
   }
 
-  const renderWithTag = () => {
-    if (!_.isEmpty(data.tag_user) && !_.isEmpty(data.tag_user.tag)) {
-      if (data.tag_user.tag.length > 2) {
-        return (
-          <span>
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.with")}
-            </span>{" "}
-            <Link to={`/u/${dataEmployee?.[data.tag_user.tag[0]]?.username}`}>
-              <span className="name">
-                {dataEmployee?.[data.tag_user.tag[0]]?.full_name}
-              </span>
-            </Link>{" "}
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.and")}
-            </span>{" "}
-            <span
-              className="name cursor-pointer"
-              onClick={() => {
-                const data_tag = [...data.tag_user.tag]
-                data_tag.shift()
-                setDataUserOtherWith(data_tag)
-                toggleModalWith()
-              }}>
-              {data.tag_user.tag.length - 1}{" "}
-              {useFormatMessage(`modules.feed.post.text.others`)}
-            </span>
-          </span>
-        )
-      } else {
-        return (
-          <span>
-            <span className="text-default">
-              {useFormatMessage("modules.feed.post.text.with")}
-            </span>{" "}
-            <Link to={`/u/${dataEmployee?.[data.tag_user.tag[0]]?.username}`}>
-              <span className="name">
-                {dataEmployee?.[data.tag_user.tag[0]]?.full_name}
-              </span>
-            </Link>{" "}
-            {data.tag_user.tag.length === 2 && (
-              <>
-                <span className="text-default">
-                  {useFormatMessage("modules.feed.post.text.and")}
-                </span>{" "}
-                <Link
-                  to={`/u/${dataEmployee?.[data.tag_user.tag[1]]?.username}`}>
-                  <span className="name">
-                    {dataEmployee?.[data.tag_user.tag[1]]?.full_name}
-                  </span>
-                </Link>
-              </>
-            )}
-          </span>
-        )
-      }
-    }
-
-    return ""
-  }
+  
 
   const renderAppendComponent = () => {
     if (
@@ -229,9 +158,64 @@ const PostHeader = (props) => {
     return ""
   }
 
-  return (
-    <Fragment>
-      <div className="post-header">
+  const headerPostWorkspaceInFeed = () => {
+    const workspaceData = data?.permission_ids?.[0]
+    return (
+      <Fragment>
+        <Link
+          to={`/workspace/${workspaceData?._id}`}
+          onClick={(e) => {
+            if (isViewEditHistory) {
+              e.preventDefault()
+            }
+          }}>
+          <Avatar className="img" src={data?.created_by?.avatar} />
+        </Link>
+        <div className="post-header-title">
+          <div className="div-name">
+            <Link
+              to={`/workspace/${workspaceData?._id}`}
+              onClick={(e) => {
+                if (isViewEditHistory) {
+                  e.preventDefault()
+                }
+              }}>
+              <span className="name">{workspaceData?.name || ""}</span>{" "}
+            </Link>
+            {renderAfterName()}
+          </div>
+
+          <div className="d-flex align-content-center">
+            <Link
+              to={`/u/${data?.created_by?.username}`}
+              onClick={(e) => {
+                if (isViewEditHistory) {
+                  e.preventDefault()
+                }
+              }}>
+              <span className="name__workspace-in-feed">
+                {data?.created_by?.full_name || ""}
+              </span>{" "}
+            </Link>
+            <span className="name-divider">·</span>
+            <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
+              <span className="time">
+                {timeDifference(data.created_at)}{" "}
+                {data.edited &&
+                  ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
+              </span>
+            </Link>
+
+            <Fragment>{renderAppendComponent()}</Fragment>
+          </div>
+        </div>
+      </Fragment>
+    )
+  }
+
+  const headerPostNormal = () => {
+    return (
+      <Fragment>
         <Link
           to={`/u/${data?.created_by?.username}`}
           onClick={(e) => {
@@ -270,6 +254,15 @@ const PostHeader = (props) => {
             </Fragment>
           )}
         </div>
+      </Fragment>
+    )
+  }
+  return (
+    <Fragment>
+      <div className="post-header">
+        {data?.permission === "workspace" && !isInWorkspace
+          ? headerPostWorkspaceInFeed()
+          : headerPostNormal()}
         {!isViewEditHistory && (
           <div className="post-header-right">
             <PostHeaderAction

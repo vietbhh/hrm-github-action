@@ -86,7 +86,6 @@ export const AppSettingField = (props) => {
 
   const commonProps = {
     name: field,
-    placeholder: "",
     label: useFormatMessage(
       `settings.apps.fields.${field}`,
       {},

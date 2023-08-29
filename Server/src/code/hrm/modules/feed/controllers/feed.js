@@ -38,6 +38,7 @@ import {
   sendNotificationPostPending,
   sendNotificationUnseenPost
 } from "../../workspace/controllers/notification.js"
+import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -388,6 +389,8 @@ const loadFeedController = async (req, res, next) => {
   const isFeaturedPost = request.is_featured_post
   const type = request.type
 
+  const userWorkspaceIds = await getUserWorkspaceIds(req.__user)
+
   if (request.idPostCreateNew !== "" && request.idPostCreateNew !== undefined) {
     filter["_id"] = { $lt: request.idPostCreateNew }
   }
@@ -407,6 +410,24 @@ const loadFeedController = async (req, res, next) => {
     } else if (type === "workspace") {
       filter["permission"] = "workspace"
     }
+  } else {
+    filter["$or"] = [
+      {
+        $and: [
+          { permission: "workspace" },
+          {
+            permission_ids: {
+              $in: userWorkspaceIds
+            }
+          }
+        ]
+      },
+      {
+        permission: {
+          $in: ["only_me", "default"]
+        }
+      }
+    ]
   }
 
   try {
@@ -1024,6 +1045,20 @@ const handleDataFeedById = async (id, loadComment = -1) => {
   const _feed = await handleDataComment(feed, loadComment)
   const data = await handleDataBeforeReturn(_feed)
 
+  if (data.permission === "workspace") {
+    const workspaceId = []
+    data.permission_ids.map((workspaceIdItem) => {
+      if (workspaceIdItem.match(/^[0-9a-fA-F]{24}$/)) {
+        workspaceId.push(workspaceIdItem)
+      }
+    })
+    data.permission_ids = await workspaceMongoModel
+      .find({
+        _id: { $in: workspaceId }
+      })
+      .select("_id name cover_image")
+  }
+
   // check data link
   let dataLink = {}
   if (data.type === "announcement") {
@@ -1099,6 +1134,21 @@ const handleDataLoadFeed = async (page, pageLength, feed, feedCount) => {
       }
 
       _value["dataLink"] = dataLink
+
+      if (_value.permission === "workspace") {
+        const workspaceId = []
+        _value.permission_ids.map((workspaceIdItem) => {
+          if (workspaceIdItem.match(/^[0-9a-fA-F]{24}$/)) {
+            workspaceId.push(workspaceIdItem)
+          }
+        })
+        _value.permission_ids = await workspaceMongoModel
+          .find({
+            _id: { $in: workspaceId }
+          })
+          .select("_id name cover_image")
+      }
+
       resolve(_value)
     })
     promises.push(promise)

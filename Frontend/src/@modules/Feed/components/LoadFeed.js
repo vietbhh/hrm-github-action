@@ -292,7 +292,6 @@ const LoadFeed = (props) => {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
-
   return (
     <Fragment>
       <div className="load-feed">
@@ -346,6 +345,7 @@ const LoadFeed = (props) => {
                 options_employee_department={options_employee_department}
                 optionsMeetingRoom={optionsMeetingRoom}
                 setDataCreateNew={setDataCreateNew}
+                isInWorkspace={!_.isEmpty(workspace)}
               />
             )
           })}
@@ -394,6 +394,7 @@ const LoadFeed = (props) => {
                   customAction={customAction}
                   options_employee_department={options_employee_department}
                   optionsMeetingRoom={optionsMeetingRoom}
+                  isInWorkspace={!_.isEmpty(workspace)}
                 />
               </LazyLoadComponent>
             )

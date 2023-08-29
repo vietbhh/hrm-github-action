@@ -7,16 +7,15 @@ import LoadFeed from "@modules/Feed/components/LoadFeed"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import { Dropdown } from "antd"
+import { stripHTML } from "layouts/_components/vertical/common/common"
 import { map } from "lodash-es"
 import moment from "moment"
 import { Fragment, useEffect } from "react"
-import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
-import { useParams, useNavigate} from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
-import AboutWorkgroup from "./AboutWorkgroup"
-import Introduction from "../TabIntroduction/Introduction"
 import { getTabByNameOrId } from "../../../common/common"
+import AboutWorkgroup from "./AboutWorkgroup"
 
 const TabFeed = (props) => {
   const {
@@ -129,27 +128,6 @@ const TabFeed = (props) => {
       loadData()
     })
   }
-  const handleUnPinPostOLD = (idPost) => {
-    const dataPinned = [...detailWorkspace.pinPosts]
-    const index = dataPinned.findIndex((p) => p.post === idPost)
-    dataPinned.splice(index, 1)
-    let numStt = 1
-    const dataPinnedUpdate = []
-    map(dataPinned, (item, key) => {
-      dataPinnedUpdate.push({ post: item.post, stt: numStt })
-      numStt += 1
-    })
-    detailWorkspace.pinPosts = dataPinnedUpdate
-    const dataUpdate = {
-      pinPosts: JSON.stringify(dataPinnedUpdate)
-    }
-    workspaceApi.update(params.id, dataUpdate).then((res) => {
-      notification.showSuccess({
-        text: useFormatMessage("notification.save.success")
-      })
-      loadData()
-    })
-  }
 
   const handleClickRemoveSearch = () => {
     window.history.replaceState(null, "", "?tab=feed")
@@ -218,11 +196,13 @@ const TabFeed = (props) => {
                   <div className="d-flex">
                     <i className="fa-regular fa-arrow-right me-50"></i>
                     <span>
-                      {useFormatMessage("modules.posts.post_details.buttons.go_to_post")}
+                      {useFormatMessage(
+                        "modules.posts.post_details.buttons.go_to_post"
+                      )}
                     </span>
                   </div>
                 ),
-                key: "0",
+                key: "2",
                 onClick: () => {
                   navigate(`/posts/${item._id}`)
                 }
@@ -234,7 +214,11 @@ const TabFeed = (props) => {
                 <div className="post-pinned">
                   <div className="content-post d-flex align-items-center mb-50">
                     <div>
-                      {ReactHtmlParser(item?.content)}
+                      <Link
+                        className="text-primary-color text-truncate"
+                        to={`/posts/${item._id}`}>
+                        {stripHTML(item?.content)}
+                      </Link>
                       <div
                         className="post-info d-flex align-items-center mt-50"
                         style={{ fontSize: "12px" }}>
@@ -317,12 +301,6 @@ const TabFeed = (props) => {
     }
   }
 
-  const setIntroduction = (data) => {
-    setState({ loading: true })
-    detailWorkspace.introduction = data
-    setState({ loading: false })
-  }
-
   const renderSearchText = () => {
     if (searchTextFeed.trim().length > 0) {
       return (
@@ -354,9 +332,12 @@ const TabFeed = (props) => {
             setDataCreateNew={setDataCreateNew}
             workspace={workspaceID}
             approveStatus={state.approveStatus}
+            allowPostType={["event", "poll"]}
           />
         )}
-        <Fragment>{renderPinned(state.dataPinned)}</Fragment>
+        <Fragment>
+          {!_.isEmpty(state.dataPinned) && renderPinned(state.dataPinned)}
+        </Fragment>
         <Fragment>{renderSearchText()}</Fragment>
         <LoadFeed
           searchTextFeed={searchTextFeed}
