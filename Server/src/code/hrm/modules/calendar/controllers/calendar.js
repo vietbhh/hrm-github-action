@@ -42,12 +42,46 @@ const handleGetCalendar = async (req, res) => {
       }
     })
     .filter((item) => {
+      return item.repeat?.value === "no_repeat"
+    })
+    .filter((item) => {
       return item !== undefined
     })
 
-  const eventRepeat = getListEventRepeat(resultFilter, query)
-  
-  const result = eventRepeat.concat(arrAllDay)
+  const listRepeatEvent = await getCalendar(
+    calendarMongoModel,
+    req.__user,
+    {},
+    {
+      "repeat.value": {
+        $ne: "no_repeat"
+      }
+    }
+  )
+
+  const resultRepeatEvent = listRepeatEvent.result
+    .map((item) => {
+      const owner = item.owner
+      const employee = isArray(item.employee) ? item.employee : []
+
+      if (parseInt(owner) === parseInt(req.__user)) {
+        return item
+      } else if (
+        employee.some((itemSome) => {
+          return parseInt(itemSome.id) === parseInt(req.__user)
+        })
+      ) {
+        return item
+      }
+    })
+    .filter((item) => {
+      return item !== undefined
+    })
+
+  const eventRepeat = getListEventRepeat(resultRepeatEvent, query)
+
+  const allEvent = resultFilter.concat(eventRepeat)
+  const result = allEvent.concat(arrAllDay)
 
   return res.respond({
     results: result
@@ -109,7 +143,66 @@ const handleGetListEvent = async (req, res) => {
   const arrAllDay = map(allDayEvent, (item) => {
     return item
   })
-  const result = listCalendar.result.concat(arrAllDay)
+
+  const resultFilter = listCalendar.result
+    .map((item) => {
+      const owner = item.owner
+      const employee = isArray(item.employee) ? item.employee : []
+
+      if (parseInt(owner) === parseInt(req.__user)) {
+        return item
+      } else if (
+        employee.some((itemSome) => {
+          return parseInt(itemSome.id) === parseInt(req.__user)
+        })
+      ) {
+        return item
+      }
+    })
+    .filter((item) => {
+      return item.repeat?.value === "no_repeat"
+    })
+    .filter((item) => {
+      return item !== undefined
+    })
+
+  const listRepeatEvent = await getCalendar(
+    calendarMongoModel,
+    req.__user,
+    {},
+    {
+      "repeat.value": {
+        $ne: "no_repeat"
+      }
+    }
+  )
+
+  const resultRepeatEvent = listRepeatEvent.result
+    .map((item) => {
+      const owner = item.owner
+      const employee = isArray(item.employee) ? item.employee : []
+
+      if (parseInt(owner) === parseInt(req.__user)) {
+        return item
+      } else if (
+        employee.some((itemSome) => {
+          return parseInt(itemSome.id) === parseInt(req.__user)
+        })
+      ) {
+        return item
+      }
+    })
+    .filter((item) => {
+      return item !== undefined
+    })
+
+  const eventRepeat = getListEventRepeat(resultRepeatEvent, {
+    created_at_to: dayjs(query["created_at_to"]).add(1, "day")
+  })
+
+  const allEvent = resultFilter.concat(eventRepeat)
+
+  const result = allEvent.concat(arrAllDay)
 
   const listEvent = {
     today: [],
@@ -121,7 +214,7 @@ const handleGetListEvent = async (req, res) => {
       ? item.start
       : dayjs(item.start_time_date).format("YYYY-MM-DD")
 
-    if (startDate === query.created_at_from) {
+    if (dayjs(startDate).isSame(query.created_at_from, "day")) {
       listEvent.today.push(item)
     } else if (dayjs(startDate).diff(query.created_at_from) > 0) {
       listEvent.tomorrow.push(item)

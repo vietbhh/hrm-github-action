@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import dayjs from "dayjs"
 import { useForm } from "react-hook-form"
@@ -8,12 +8,10 @@ import { getAffix } from "../CreateEventDetail/RepeatEventDropDown"
 import {
   Button,
   Col,
-  Label,
   Modal,
   ModalBody,
   ModalHeader,
-  Row,
-  Spinner
+  Row
 } from "reactstrap"
 // ** Components
 import {
@@ -29,16 +27,12 @@ const ModalCustomRepeatEvent = (props) => {
   const {
     // ** props
     modal,
+    dataEdit,
+    valueRepeat,
     // ** methods
-    handleModal
+    handleModal,
+    setValueRepeat
   } = props
-
-  const currentDate = dayjs()
-  const repeatAtDate = currentDate
-  const repeatAtWeekday = currentDate.day()
-  const repeatAtOrderWeekDateInMonth = Math.ceil(
-    parseInt(currentDate.format("DD")) / 7
-  )
 
   const optionSelect = [
     {
@@ -68,59 +62,16 @@ const ModalCustomRepeatEvent = (props) => {
     endTimeTypeOption: "never",
     endTimeOnDate: "",
     endTimeAfter: "",
-    chosenRepeatAtWeek: repeatAtWeekday,
+    chosenRepeatAtWeek: "",
     chosenRepeatAtMonth: {
-      date: repeatAtDate
+      date: ""
+    },
+    init: {
+      repeatAtDate: "",
+      repeatAtWeekday: "",
+      repeatAtOrderWeekDateInMonth: ""
     }
   })
-
-  const repeatAtMonthOption = [
-    {
-      key: "repeat_at_month_option_date",
-      label: (
-        <div
-          onClick={() =>
-            handleChangeRepeatAtMonth({
-              type: "date",
-              date: repeatAtDate
-            })
-          }>
-          {useFormatMessage(
-            "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.date",
-            {
-              date: `${repeatAtDate.format("DD")}${getAffix(
-                repeatAtDate.format("DD")
-              )}`
-            }
-          )}
-        </div>
-      )
-    },
-    {
-      label: (
-        <div
-          onClick={() =>
-            handleChangeRepeatAtMonth({
-              type: "order_week_date_in_month",
-              order: repeatAtOrderWeekDateInMonth,
-              week_day: repeatAtWeekday
-            })
-          }>
-          {useFormatMessage(
-            "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.order_week_date_in_month",
-            {
-              order: useFormatMessage(
-                `modules.feed.create_event.text.ordinal_number.${repeatAtOrderWeekDateInMonth}`
-              ),
-              week_day: useFormatMessage(
-                `common.day_in_week.${repeatAtWeekday}`
-              )
-            }
-          )}
-        </div>
-      )
-    }
-  ]
 
   const methods = useForm()
 
@@ -143,13 +94,99 @@ const ModalCustomRepeatEvent = (props) => {
       setState({
         chosenRepeatAtMonth: {
           order: obj.order,
-          week_day: obj.week_day
+          weekDay: obj.weekDay
         }
       })
     }
   }
 
-  const handleClickSave = () => {}
+  const handleClickSave = () => {
+    const repeatEvery = {
+      after: state.repeatEveryAfter,
+      type_option: state.repeatEveryTypeOption?.value
+    }
+    console.log(repeatEvery)
+    const repeatAt = {}
+    if (repeatEvery.type_option === "week") {
+      repeatAt["weekDay"] = state.chosenRepeatAtWeek
+    } else if (repeatEvery.type_option === "month") {
+      repeatAt["date"] =
+        state.chosenRepeatAtMonth?.date === undefined
+          ? ""
+          : state.chosenRepeatAtMonth.date
+      repeatAt["week_day"] =
+        state.chosenRepeatAtMonth?.weekDay === undefined
+          ? ""
+          : state.chosenRepeatAtMonth.weekDay
+      repeatAt["order_week_date_in_month"] =
+        state.chosenRepeatAtMonth?.order === undefined
+          ? ""
+          : state.chosenRepeatAtMonth.order
+    }
+
+    const endDate = {
+      type_option: state.endTimeTypeOption
+    }
+
+    if (endDate.type_option === "on_date") {
+      endDate["on_date"] = state.endTimeOnDate
+    } else if (endDate.type_option === "after") {
+      endDate["after"] = state.endTimeAfter
+    }
+
+    setValueRepeat(
+      {
+        value: "customize",
+        end_time: endDate,
+        repeat_at: repeatAt,
+        repeat_every: repeatEvery
+      },
+      false
+    )
+
+    handleModal()
+  }
+
+  // ** effect
+  useEffect(() => {
+    if (Object.keys(valueRepeat).length > 0) {
+      let currentDate = dayjs()
+      if (Object.keys(dataEdit).length > 0) {
+        currentDate = dayjs(dataEdit.start_time_date)
+      }
+      console.log(currentDate)
+      const [repeatEveryTypeOptionEdit] = optionSelect.filter((item) => {
+        return item.value === valueRepeat?.repeat_every?.type_option
+      })
+
+      setState({
+        repeatEveryAfter: valueRepeat?.repeat_every?.after,
+        repeatEveryTypeOption:
+          repeatEveryTypeOptionEdit === undefined
+            ? optionSelect[0]
+            : repeatEveryTypeOptionEdit,
+        repeatAtMonthChosen: {
+          date: valueRepeat?.repeat_at?.date,
+          weekDay: valueRepeat?.repeat_at?.week_day,
+          order: valueRepeat?.repeat_at?.order_week_date_in_month
+        },
+        endTimeTypeOption: valueRepeat?.end_time?.type_option,
+        endTimeOnDate: dayjs(valueRepeat?.end_time?.on_date),
+        endTimeAfter: valueRepeat?.end_time?.after,
+        chosenRepeatAtWeek: currentDate.day(),
+        chosenRepeatAtMonth: {
+          date: currentDate
+        },
+        init: {
+          repeatAtDate: currentDate,
+          repeatAtWeekday: currentDate.day(),
+          repeatAtOrderWeekDateInMonth: Math.ceil(
+            parseInt(currentDate.format("DD")) / 7
+          )
+        }
+      })
+    }
+  }, [valueRepeat])
 
   // ** render
   const renderRepeatAt = () => {
@@ -170,9 +207,12 @@ const ModalCustomRepeatEvent = (props) => {
                   <div
                     key={`repeat-at-option-item-${item}`}
                     className={classNames("repeat-at-option-item", {
-                      active: parseInt(state.chosenRepeatAtWeek) === parseInt(item)
+                      active:
+                        parseInt(state.chosenRepeatAtWeek) === parseInt(item)
                     })}
-                    onClick={() => handleChangeState(item, "chosenRepeatAtWeek")}>
+                    onClick={() =>
+                      handleChangeState(item, "chosenRepeatAtWeek")
+                    }>
                     {useFormatMessage(
                       `modules.feed.create_event.text.custom_repeat.repeat_at_option.${item}`
                     )}
@@ -187,7 +227,53 @@ const ModalCustomRepeatEvent = (props) => {
       return (
         <Dropdown
           menu={{
-            items: repeatAtMonthOption
+            items: [
+              {
+                key: "repeat_at_month_option_date",
+                label: (
+                  <div
+                    onClick={() =>
+                      handleChangeRepeatAtMonth({
+                        type: "date",
+                        date: state.init.repeatAtDate
+                      })
+                    }>
+                    {useFormatMessage(
+                      "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.date",
+                      {
+                        date: `${state.init.repeatAtDate.format(
+                          "DD"
+                        )}${getAffix(state.init.repeatAtDate.format("DD"))}`
+                      }
+                    )}
+                  </div>
+                )
+              },
+              {
+                label: (
+                  <div
+                    onClick={() =>
+                      handleChangeRepeatAtMonth({
+                        type: "order_week_date_in_month",
+                        order: state.init.repeatAtOrderWeekDateInMonth,
+                        weekDay: state.init.repeatAtWeekday
+                      })
+                    }>
+                    {useFormatMessage(
+                      "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.order_week_date_in_month",
+                      {
+                        order: useFormatMessage(
+                          `modules.feed.create_event.text.ordinal_number.${state.init.repeatAtOrderWeekDateInMonth}`
+                        ),
+                        week_day: useFormatMessage(
+                          `common.day_in_week.${state.init.repeatAtWeekday}`
+                        )
+                      }
+                    )}
+                  </div>
+                )
+              }
+            ]
           }}
           placement="bottom"
           trigger={["click"]}
@@ -214,7 +300,7 @@ const ModalCustomRepeatEvent = (props) => {
                             `modules.feed.create_event.text.ordinal_number.${state.chosenRepeatAtMonth.order}`
                           ),
                           week_day: useFormatMessage(
-                            `common.day_in_week.${state.chosenRepeatAtMonth.week_day}`
+                            `common.day_in_week.${state.chosenRepeatAtMonth.weekDay}`
                           )
                         }
                       )}

@@ -59,7 +59,7 @@ const calendarSchema = baseSchema("m_calendar", {
       after: { type: Number, default: "" }
     },
     repeat_at: {
-      weekDay: {
+      week_day: {
         type: String,
         default: ""
       },

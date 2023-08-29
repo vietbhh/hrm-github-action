@@ -32,9 +32,8 @@ const RepeatEventDropDown = (props) => {
     openRepeatDropdown: false
   })
 
-  console.log(valueRepeat)
   const weekDay = valueRepeat?.week_day
-  const dateInMonth = valueRepeat?.value_repeat
+  const dateInMonth = valueRepeat?.date_in_month
   const orderWeekDateInMonth = valueRepeat?.order_week_date_in_month
 
   const currentValueRepeat = valueRepeat
@@ -68,6 +67,9 @@ const RepeatEventDropDown = (props) => {
   }
 
   const handleClickCustomize = () => {
+    setValueRepeat({
+      value: "customize"
+    }, false)
     toggleModalCustomRepeat()
   }
 
@@ -146,19 +148,6 @@ const RepeatEventDropDown = (props) => {
                   <Fragment>
                     {renderCurrentRepeatText("repeat_every_weekday_on")}
                   </Fragment>
-                </div>
-              )
-            },
-            {
-              key: "repeat_every_weekday",
-              label: (
-                <div
-                  onClick={() =>
-                    handleChangeValueRepeat("repeat_every_weekday")
-                  }>
-                  {useFormatMessage(
-                    "modules.feed.create_event.text.repeat_every_weekday"
-                  )}
                 </div>
               )
             },

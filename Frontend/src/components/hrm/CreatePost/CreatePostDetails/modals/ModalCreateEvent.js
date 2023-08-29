@@ -146,7 +146,16 @@ const ModalCreateEvent = (props) => {
   // ** function
   const setColor = (value) => setState({ color: value })
   const setValueRepeat = (value, isNew = true) => {
-    setState({ valueRepeat: value })
+    if (isNew) {
+      setState({ valueRepeat: value })
+    }
+
+    setState({
+      valueRepeat: {
+        ...state.valueRepeat,
+        ...value
+      }
+    })
   }
 
   const resetAfterSubmit = () => {
@@ -321,12 +330,13 @@ const ModalCreateEvent = (props) => {
       if (name === "start_time_date") {
         setState({
           valueRepeat: {
-            defaultValueRepeat,
+            ...defaultValueRepeat,
             ...getRepeatData(value.start_time_date)
           }
         })
       }
     })
+
     return () => subscription.unsubscribe()
   }, [watch])
 
@@ -560,6 +570,7 @@ const ModalCreateEvent = (props) => {
                     loading={state.loadingEdit}
                     useForm={methods}
                     name="start_time_date"
+                    allowClear={false}
                     required
                   />
                 </div>
@@ -575,6 +586,7 @@ const ModalCreateEvent = (props) => {
                     }
                     loading={state.loadingEdit}
                     useForm={methods}
+                    allowClear={false}
                     name="start_time_time"
                   />
                 </div>
@@ -594,6 +606,7 @@ const ModalCreateEvent = (props) => {
                     loading={state.loadingEdit}
                     useForm={methods}
                     name="end_time_date"
+                    allowClear={false}
                     required
                   />
                 </div>
@@ -609,6 +622,7 @@ const ModalCreateEvent = (props) => {
                     }
                     loading={state.loadingEdit}
                     useForm={methods}
+                    allowClear={false}
                     name="end_time_time"
                   />
                 </div>
@@ -895,7 +909,11 @@ const ModalCreateEvent = (props) => {
       </Modal>
       <ModalCustomRepeatEvent
         modal={state.modalCustomRepeat}
+        dataEdit={state.dataEdit}
+        valueRepeat={state.valueRepeat}
+        defaultValueRepeat={defaultValueRepeat}
         handleModal={toggleModalCustomRepeat}
+        setValueRepeat={setValueRepeat}
       />
     </Fragment>
   )
