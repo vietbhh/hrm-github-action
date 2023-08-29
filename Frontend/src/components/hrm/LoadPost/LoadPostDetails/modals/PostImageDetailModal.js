@@ -11,6 +11,7 @@ import PostComment from "../PostDetails/PostComment"
 import PostHeader from "../PostDetails/PostHeader"
 import PostShowReaction from "../PostDetails/PostShowReaction"
 import RenderContentPost from "../PostDetails/RenderContentPost"
+import { useSelector } from "react-redux"
 
 const PostImageDetailModal = (props) => {
   const {
@@ -274,6 +275,77 @@ const PostImageDetailModal = (props) => {
     return <Skeleton.Image active={true} refs={imageRef} />
   }
 
+  const dataEmployee = useSelector((state) => state.users.list)
+  const renderWithTag = (startDlash = false) => {
+    if (
+      !_.isEmpty(state.data.tag_user) &&
+      !_.isEmpty(state.data.tag_user.tag)
+    ) {
+      if (state.data.tag_user.tag.length > 2) {
+        return (
+          <span className="post__with-tags">
+            {startDlash && "— "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <Link
+              to={`/u/${dataEmployee?.[state.data.tag_user.tag[0]]?.username}`}>
+              <span className="name">
+                {dataEmployee?.[state.data.tag_user.tag[0]]?.full_name}
+              </span>
+            </Link>{" "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.and")}
+            </span>{" "}
+            <span
+              className="name cursor-pointer"
+              onClick={() => {
+                const data_tag = [...state.data.tag_user.tag]
+                data_tag.shift()
+                setDataUserOtherWith(data_tag)
+                toggleModalWith()
+              }}>
+              {state.data.tag_user.tag.length - 1}{" "}
+              {useFormatMessage(`modules.feed.post.text.others`)}
+            </span>
+          </span>
+        )
+      } else {
+        return (
+          <span className="post__with-tags">
+            {startDlash && "— "}
+            <span className="text-default">
+              {useFormatMessage("modules.feed.post.text.with")}
+            </span>{" "}
+            <Link
+              to={`/u/${dataEmployee?.[state.data.tag_user.tag[0]]?.username}`}>
+              <span className="name">
+                {dataEmployee?.[state.data.tag_user.tag[0]]?.full_name}
+              </span>
+            </Link>{" "}
+            {state.data.tag_user.tag.length === 2 && (
+              <>
+                <span className="text-default">
+                  {useFormatMessage("modules.feed.post.text.and")}
+                </span>{" "}
+                <Link
+                  to={`/u/${
+                    dataEmployee?.[state.data.tag_user.tag[1]]?.username
+                  }`}>
+                  <span className="name">
+                    {dataEmployee?.[state.data.tag_user.tag[1]]?.full_name}
+                  </span>
+                </Link>
+              </>
+            )}
+          </span>
+        )
+      }
+    }
+
+    return ""
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -337,6 +409,7 @@ const PostImageDetailModal = (props) => {
                     }
                   }}
                   setEditDescription={setEditDescription}
+                  renderWithTag={renderWithTag}
                 />
               </div>
               <div

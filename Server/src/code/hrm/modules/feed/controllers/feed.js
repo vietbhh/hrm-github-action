@@ -526,9 +526,24 @@ const loadFeedProfile = async (req, res, next) => {
 // get feed by id
 const getFeedById = async (req, res, next) => {
   const id = req.params.id
+  const userWorkspaceIds = await getUserWorkspaceIds(req.__user)
   try {
     const data = await handleDataFeedById(id)
-    return res.respond(data)
+
+    if (data.permission === "workspace") {
+      if (!isEmpty(data.permission_ids)) {
+        const group = data.permission_ids[0]
+
+        if (
+          group.type === "public" ||
+          userWorkspaceIds.some((userWorkspaceIds) =>
+            userWorkspaceIds.equals(group._id)
+          )
+        )
+          return res.respond(data)
+      }
+    }
+    return res.fail("post_not_found")
   } catch (err) {
     return res.fail(err.message)
   }
@@ -1056,7 +1071,7 @@ const handleDataFeedById = async (id, loadComment = -1) => {
       .find({
         _id: { $in: workspaceId }
       })
-      .select("_id name cover_image")
+      .select("_id name cover_image type")
   }
 
   // check data link

@@ -2,6 +2,7 @@ import { useMergedState } from "@apps/utility/common"
 import SidebarWidget from "layouts/_components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
 import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
+import { ListSidebarWidget } from "../common/ListSidebarWidget"
 
 const Feed = (props) => {
   const {
@@ -95,7 +96,7 @@ const Feed = (props) => {
         <div className="div-right">
           <div id="div-sticky-height"></div>
           <div id="div-sticky">
-            <SidebarWidget />
+            <SidebarWidget listComponent={ListSidebarWidget} />
           </div>
         </div>
       </div>
