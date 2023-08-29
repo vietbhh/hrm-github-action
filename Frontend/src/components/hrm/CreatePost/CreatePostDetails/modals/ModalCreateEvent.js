@@ -37,6 +37,8 @@ import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
 import MemberSelect from "../../../MemberSelect/MemberSelect"
+import RepeatEventDropDown from "./CreateEventDetail/RepeatEventDropDown"
+import ModalCustomRepeatEvent from "./CustomRepeatEvent/ModalCustomRepeatEvent"
 
 const ModalCreateEvent = (props) => {
   const {
@@ -54,13 +56,18 @@ const ModalCreateEvent = (props) => {
     getDetailApi,
     afterCreate
   } = props
+  const defaultValueRepeat = {
+    value: "no_repeat"
+  }
   const [state, setState] = useMergedState({
     loadingSubmit: false,
     isEditable: true,
     //
     color: "#5398ff",
-    valueRepeat: "no_repeat",
+    valueRepeat: defaultValueRepeat,
+    startDate: dayjs(),
     switch_all_day: false,
+    modalCustomRepeat: false,
 
     // ** Attendees
     valueAttendees: [],
@@ -87,8 +94,14 @@ const ModalCreateEvent = (props) => {
     dispatch(hideAddEventCalendarModal())
   }
 
+  const toggleModalCustomRepeat = () => {
+    setState({
+      modalCustomRepeat: !state.modalCustomRepeat
+    })
+  }
+
   const methods = useForm({ mode: "onSubmit" })
-  const { handleSubmit, reset, setValue } = methods
+  const { handleSubmit, reset, setValue, watch } = methods
   const onSubmit = (values) => {
     values.color = state.color
     values.valueRepeat = state.valueRepeat
@@ -132,7 +145,18 @@ const ModalCreateEvent = (props) => {
 
   // ** function
   const setColor = (value) => setState({ color: value })
-  const setValueRepeat = (value) => setState({ valueRepeat: value })
+  const setValueRepeat = (value, isNew = true) => {
+    if (isNew) {
+      setState({ valueRepeat: value })
+    }
+
+    setState({
+      valueRepeat: {
+        ...state.valueRepeat,
+        ...value
+      }
+    })
+  }
 
   const resetAfterSubmit = () => {
     setState({
@@ -211,6 +235,18 @@ const ModalCreateEvent = (props) => {
     setState({ arrAttachment: arrAttachment })
   }
 
+  const getRepeatData = (day) => {
+    const weekDayByDate = day.day()
+    const dateInMonthByDate = day.format("DD")
+    const order = Math.ceil(parseInt(dateInMonthByDate) / 7)
+
+    return {
+      week_day: weekDayByDate,
+      date_in_month: dateInMonthByDate,
+      order_week_date_in_month: order
+    }
+  }
+
   // ** useEffect
   useEffect(() => {
     if (modal && idEvent) {
@@ -218,12 +254,13 @@ const ModalCreateEvent = (props) => {
       getDetailApi(idEvent)
         .then((res) => {
           const restData = res.data.data
+          const repeat = restData.repeat
           setState({
             loadingEdit: false,
             dataEdit: restData,
             isEditable: restData.is_editable,
             color: restData.color,
-            valueRepeat: restData.repeat,
+            valueRepeat: repeat,
             switch_all_day: restData.all_day_event,
             dataAttendees: restData.attendees,
             valueAttendees: []
@@ -259,9 +296,20 @@ const ModalCreateEvent = (props) => {
           setState({ loadingEdit: false, dataEdit: {} })
         })
     } else {
+      const currentTime = dayjs()
+      const repeatData = {
+        ...state.valueRepeat,
+        ...getRepeatData(currentTime)
+      }
       setState({
         loadingEdit: false,
-        dataEdit: {},
+        dataEdit: {
+          start_time_date: currentTime,
+          start_time_time: currentTime,
+          end_time_date: currentTime,
+          end_time_time: currentTime
+        },
+        valueRepeat: repeatData,
         arrAttachment: [],
         isEditable: true
       })
@@ -276,6 +324,21 @@ const ModalCreateEvent = (props) => {
     ) {
     }
   }, [modal])
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (name === "start_time_date") {
+        setState({
+          valueRepeat: {
+            ...defaultValueRepeat,
+            ...getRepeatData(value.start_time_date)
+          }
+        })
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   // ** render
   const iconDate = (
@@ -349,43 +412,6 @@ const ModalCreateEvent = (props) => {
     {
       value: "no_remind",
       label: useFormatMessage("modules.feed.create_event.text.no_remind")
-    }
-  ]
-
-  const optionsRepeat = [
-    {
-      key: "no_repeat",
-      label: (
-        <div onClick={() => setValueRepeat("no_repeat")}>
-          {useFormatMessage("modules.feed.create_event.text.no_repeat")}
-        </div>
-      )
-    },
-    {
-      key: "repeat_every_day",
-      label: (
-        <div onClick={() => setValueRepeat("repeat_every_day")}>
-          {useFormatMessage("modules.feed.create_event.text.repeat_every_day")}
-        </div>
-      )
-    },
-    {
-      key: "repeat_weekday",
-      label: (
-        <div onClick={() => setValueRepeat("repeat_weekday")}>
-          {useFormatMessage("modules.feed.create_event.text.repeat_weekday")}
-        </div>
-      )
-    },
-    {
-      key: "repeat_week_on_monday",
-      label: (
-        <div onClick={() => setValueRepeat("repeat_week_on_monday")}>
-          {useFormatMessage(
-            "modules.feed.create_event.text.repeat_week_on_monday"
-          )}
-        </div>
-      )
     }
   ]
 
@@ -544,6 +570,7 @@ const ModalCreateEvent = (props) => {
                     loading={state.loadingEdit}
                     useForm={methods}
                     name="start_time_date"
+                    allowClear={false}
                     required
                   />
                 </div>
@@ -559,6 +586,7 @@ const ModalCreateEvent = (props) => {
                     }
                     loading={state.loadingEdit}
                     useForm={methods}
+                    allowClear={false}
                     name="start_time_time"
                   />
                 </div>
@@ -578,6 +606,7 @@ const ModalCreateEvent = (props) => {
                     loading={state.loadingEdit}
                     useForm={methods}
                     name="end_time_date"
+                    allowClear={false}
                     required
                   />
                 </div>
@@ -593,6 +622,7 @@ const ModalCreateEvent = (props) => {
                     }
                     loading={state.loadingEdit}
                     useForm={methods}
+                    allowClear={false}
                     name="end_time_time"
                   />
                 </div>
@@ -618,30 +648,11 @@ const ModalCreateEvent = (props) => {
                 </span>
               </div>
 
-              <Dropdown
-                menu={{ items: optionsRepeat }}
-                placement="bottom"
-                trigger={["click"]}
-                overlayClassName="feed dropdown-div-repeat">
-                <div className="div-repeat">
-                  <span className="text-repeat">
-                    {useFormatMessage(
-                      `modules.feed.create_event.text.${state.valueRepeat}`
-                    )}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="10"
-                    height="6"
-                    viewBox="0 0 10 6"
-                    fill="none">
-                    <path
-                      d="M8.61251 0H4.45918H0.719181C0.0791811 0 -0.240819 0.773333 0.212515 1.22667L3.66585 4.68C4.21918 5.23333 5.11918 5.23333 5.67251 4.68L6.98585 3.36667L9.12585 1.22667C9.57251 0.773333 9.25251 0 8.61251 0Z"
-                      fill="#9399A2"
-                    />
-                  </svg>
-                </div>
-              </Dropdown>
+              <RepeatEventDropDown
+                valueRepeat={state.valueRepeat}
+                setValueRepeat={setValueRepeat}
+                toggleModalCustomRepeat={toggleModalCustomRepeat}
+              />
             </div>
           </div>
 
@@ -896,6 +907,14 @@ const ModalCreateEvent = (props) => {
           </div>
         </ModalBody>
       </Modal>
+      <ModalCustomRepeatEvent
+        modal={state.modalCustomRepeat}
+        dataEdit={state.dataEdit}
+        valueRepeat={state.valueRepeat}
+        defaultValueRepeat={defaultValueRepeat}
+        handleModal={toggleModalCustomRepeat}
+        setValueRepeat={setValueRepeat}
+      />
     </Fragment>
   )
 }

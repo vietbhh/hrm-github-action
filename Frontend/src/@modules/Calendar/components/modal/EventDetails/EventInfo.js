@@ -145,7 +145,7 @@ const EventInfo = (props) => {
         <div className="text-area">
           {infoEvent.repeat !== null
             ? useFormatMessage(
-                `modules.feed.create_event.text.${infoEvent.repeat}`
+                `modules.feed.create_event.text.${infoEvent.repeat?.value}`
               )
             : useFormatMessage(`modules.feed.create_event.text.no_repeat`)}
         </div>

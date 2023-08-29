@@ -211,7 +211,6 @@ const JoinEventAction = (props) => {
   }
 
   const renderComponent = () => {
-    console.log(infoEvent)
     if (infoEvent.is_owner === true) {
       return ""
     }
