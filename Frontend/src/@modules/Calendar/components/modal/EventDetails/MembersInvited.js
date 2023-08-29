@@ -65,11 +65,7 @@ const MembersInvited = (props) => {
           })}
         </p>
       </div>
-      <div className="w-25 action">
-        <Button.Ripple className=" custom-secondary">
-          {useFormatMessage("button.add")}
-        </Button.Ripple>
-      </div>
+      <div className="w-25 action"></div>
     </div>
   )
 }
