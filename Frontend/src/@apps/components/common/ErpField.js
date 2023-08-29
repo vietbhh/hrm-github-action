@@ -324,7 +324,6 @@ export const ErpNumber = (props) => {
   const {
     name,
     id,
-    type,
     defaultValue,
     required,
     readOnly,
