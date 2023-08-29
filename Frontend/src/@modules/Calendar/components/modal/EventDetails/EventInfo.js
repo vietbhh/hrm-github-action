@@ -15,7 +15,6 @@ const EventInfo = (props) => {
   const meetingRoom = infoEvent.meeting_room
   const isOwner = infoEvent.is_owner
   const repeat = infoEvent.repeat
-  console.log(repeat)
 
   const [state, setState] = useMergedState({
     listAttachment: infoEvent.attachment
@@ -56,7 +55,6 @@ const EventInfo = (props) => {
   }
 
   const renderCurrentRepeatText = (value) => {
-    console.log(value)
     if (value === "repeat_every_weekday_on") {
       return (
         <Fragment>
