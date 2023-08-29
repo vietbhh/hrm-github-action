@@ -1,4 +1,5 @@
 // ** React Imports
+import { Fragment } from "react"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 // ** Components
@@ -13,6 +14,8 @@ const EventInfo = (props) => {
 
   const meetingRoom = infoEvent.meeting_room
   const isOwner = infoEvent.is_owner
+  const repeat = infoEvent.repeat
+  console.log(repeat)
 
   const [state, setState] = useMergedState({
     listAttachment: infoEvent.attachment
@@ -49,6 +52,57 @@ const EventInfo = (props) => {
           )
         })}
       </div>
+    )
+  }
+
+  const renderCurrentRepeatText = (value) => {
+    console.log(value)
+    if (value === "repeat_every_weekday_on") {
+      return (
+        <Fragment>
+          {useFormatMessage(
+            "modules.feed.create_event.text.repeat_every_weekday_on",
+            {
+              week_day: useFormatMessage(
+                `common.day_in_week.${repeat?.week_day}`
+              )
+            }
+          )}
+        </Fragment>
+      )
+    } else if (value === "repeat_every_month_on") {
+      return (
+        <Fragment>
+          {useFormatMessage(
+            "modules.feed.create_event.text.repeat_every_month_on",
+            {
+              date: `${repeat?.date_in_month}${getAffix(repeat?.date_in_month)}`
+            }
+          )}
+        </Fragment>
+      )
+    } else if (value === "repeat_on_week_day_num_every_month") {
+      return (
+        <Fragment>
+          {useFormatMessage(
+            "modules.feed.create_event.text.repeat_on_week_day_num_every_month",
+            {
+              order: useFormatMessage(
+                `modules.feed.create_event.text.ordinal_number.${repeat?.order_week_date_in_month}`
+              ),
+              week_day: useFormatMessage(
+                `common.day_in_week.${repeat?.week_day}`
+              )
+            }
+          )}
+        </Fragment>
+      )
+    }
+
+    return (
+      <Fragment>
+        {useFormatMessage(`modules.feed.create_event.text.${value}`)}
+      </Fragment>
     )
   }
 
@@ -144,9 +198,7 @@ const EventInfo = (props) => {
         </div>
         <div className="text-area">
           {infoEvent.repeat !== null
-            ? useFormatMessage(
-                `modules.feed.create_event.text.${infoEvent.repeat?.value}`
-              )
+            ? renderCurrentRepeatText(infoEvent.repeat?.value)
             : useFormatMessage(`modules.feed.create_event.text.no_repeat`)}
         </div>
       </div>

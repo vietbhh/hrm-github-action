@@ -3819,7 +3819,7 @@
           "no_remind": "No remind",
           "no_repeat": "No repeat",
           "repeat_every_day": "Repeat every day",
-          "repeat_every_weekday_on": "Repeat every day on {week_day}",
+          "repeat_every_weekday_on": "Repeat every week on {week_day}",
           "repeat_every_weekday": "Repeat every weekday",
           "repeat_every_month_on": "Repeat every month on {date}",
           "repeat_on_week_day_num_every_month": "Repeat on the {order} {week_day} every month",
