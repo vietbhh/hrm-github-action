@@ -3,7 +3,7 @@ import { _uploadServices } from "#app/services/upload.js"
 import { forEach } from "lodash-es"
 import dayjs from "dayjs"
 
-const getCalendar = async (calendarMongoModel, userId, query = {}) => {
+const getCalendar = async (calendarMongoModel, userId, query = {}, condition = {}) => {
   const createdAtFrom =
     query["created_at_from"] !== undefined ? query["created_at_from"] : ""
   const createdAtTo =
@@ -21,7 +21,10 @@ const getCalendar = async (calendarMongoModel, userId, query = {}) => {
     filter["color"] = { $regex: color, $options: "i" }
   }
 
-  const listCalendar = await calendarMongoModel.find(filter)
+  const listCalendar = await calendarMongoModel.find({
+    ...filter,
+    ...condition
+  })
   const result = listCalendar.map((item) => {
     return {
       ...item._doc,
