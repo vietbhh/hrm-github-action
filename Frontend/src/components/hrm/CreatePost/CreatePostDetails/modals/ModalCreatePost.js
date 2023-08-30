@@ -181,9 +181,9 @@ const ModalCreatePost = (props) => {
             if (approveStatus !== "pending") {
               setDataCreateNew(res.data)
             } else {
-              SwAlert.showInfo({
+              SwAlert.showSuccess({
                 title: "",
-                text: useFormatMessage("modules.feed.post.post_pending")
+                text: useFormatMessage("modules.feed.post.text.post_pending")
               })
             }
           }

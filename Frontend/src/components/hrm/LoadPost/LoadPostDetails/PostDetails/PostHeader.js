@@ -179,9 +179,6 @@ const PostHeader = (props) => {
               <span className="name">{workspaceData?.name || ""}</span>{" "}
             </Link>
             {renderAfterName()}
-            {data?.approve_status === "pending" && (
-              <Badge color="warning">Post is pending</Badge>
-            )}
           </div>
 
           <div className="d-flex align-content-center">
@@ -239,9 +236,6 @@ const PostHeader = (props) => {
             </Link>
             {renderAfterName()}
             {_.isFunction(renderWithTag) && renderWithTag()}
-            {data?.approve_status === "pending" && (
-              <Badge color="warning">Post is pending</Badge>
-            )}
           </div>
 
           {!isViewEditHistory && (

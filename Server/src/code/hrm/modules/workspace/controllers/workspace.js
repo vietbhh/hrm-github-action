@@ -1028,12 +1028,14 @@ const approvePost = async (req, res) => {
       { new: true }
     )
     const data = await handleDataBeforeReturn(feedUpdate)
+    const sender = await getUser(req.__user)
     if (data) {
       sendNotificationApprovePost(
         infoWorkSpace,
+        data,
         data?.approve_status,
         data?.created_by?.id,
-        req.__user
+        sender.dataValues
       )
 
       if (data?.approve_status === "approved" && infoWorkSpace) {
