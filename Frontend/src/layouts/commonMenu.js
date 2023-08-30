@@ -5,7 +5,9 @@ import { useFormatMessage } from "@apps/utility/common"
 const menuConfig = [
   {
     header: useFormatMessage("layout.navigation"),
-    header_short: useFormatMessage("layout.nav")
+    header_short: useFormatMessage("layout.nav"),
+    action: "login",
+    resource: "app"
   },
   {
     id: "overview",
@@ -49,7 +51,7 @@ const menuConfig = [
         icon: <Icon.Circle size={6} />,
         navLink: "/employees/org-chart"
       },
-     /*  {
+      /*  {
         id: "insurance",
         title: "menu.insurance",
         type: "item",
@@ -374,7 +376,7 @@ const menuConfig = [
         resource: "reports",
         icon: <Icon.Circle size={6} />,
         navLink: "/reports/attendance"
-      },
+      }
       /* {
         id: "reports-recruitment",
         title: "menu.reportsRecruitment",
