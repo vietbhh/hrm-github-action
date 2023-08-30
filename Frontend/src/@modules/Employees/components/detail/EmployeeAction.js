@@ -145,7 +145,7 @@ const EmployeeAction = (props) => {
         parseInt(employeeData?.account_status?.value) === 2 && canHiring,
       ...reinvite
     },
-    onboarding: {
+    /*onboarding: {
       title: useFormatMessage("modules.employees.buttons.onboarding"),
       icon: <i className="iconly-Login me-25"></i>,
       onClick: () => {
@@ -156,7 +156,7 @@ const EmployeeAction = (props) => {
       condition: () =>
         parseInt(employeeData?.status?.value) === 11 && canHiring,
       ...onboarding
-    },
+    },*/
     offboarding: {
       title: useFormatMessage("modules.employees.buttons.offboarding"),
       icon: <i className="iconly-Logout me-25"></i>,
