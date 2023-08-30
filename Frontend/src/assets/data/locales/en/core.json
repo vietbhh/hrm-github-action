@@ -272,7 +272,8 @@
           "to": "To"
         }
       }
-    }
+    },
+    "approvepost" : "Approve post"
   },
   "manage": {
     "module": {
