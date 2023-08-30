@@ -101,6 +101,7 @@ export const getListEventRepeat = (listEvent, query) => {
         const today = new Date(item.start_time_date)
 
         let loopTime = 0
+        let loopTimeDay = 0
         for (
           let day = today;
           day <= createdAtTo;
@@ -115,7 +116,7 @@ export const getListEventRepeat = (listEvent, query) => {
             break
           } else if (
             endTimeRepeat.type_option === "after" &&
-            parseInt(endTimeRepeat.after) === parseInt(loopTime)
+            parseInt(endTimeRepeat.after) === parseInt(loopTimeDay)
           ) {
             break
           }
@@ -127,6 +128,8 @@ export const getListEventRepeat = (listEvent, query) => {
               start_time_date: date.format("YYYY-MM-DD"),
               end_time_date: endDate.format("YYYY-MM-DD")
             })
+
+            loopTimeDay += 1
           }
 
           loopTime += 1
