@@ -154,7 +154,7 @@ const ModalCustomRepeatEvent = (props) => {
       if (Object.keys(dataEdit).length > 0) {
         currentDate = dayjs(dataEdit.start_time_date)
       }
-      console.log(currentDate)
+
       const [repeatEveryTypeOptionEdit] = optionSelect.filter((item) => {
         return item.value === valueRepeat?.repeat_every?.type_option
       })
@@ -170,7 +170,7 @@ const ModalCustomRepeatEvent = (props) => {
           weekDay: valueRepeat?.repeat_at?.week_day,
           order: valueRepeat?.repeat_at?.order_week_date_in_month
         },
-        endTimeTypeOption: valueRepeat?.end_time?.type_option,
+        endTimeTypeOption: valueRepeat?.end_time?.type_option === undefined ? "never" : valueRepeat.end_time.type_option,
         endTimeOnDate: dayjs(valueRepeat?.end_time?.on_date),
         endTimeAfter: valueRepeat?.end_time?.after,
         chosenRepeatAtWeek: currentDate.day(),

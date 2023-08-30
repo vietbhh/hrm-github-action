@@ -26,6 +26,7 @@ const handleGetCalendar = async (req, res) => {
   const arrAllDay = map(allDayEvent, (item) => {
     return item
   })
+
   const resultFilter = listCalendar.result
     .map((item) => {
       const owner = item.owner
@@ -42,7 +43,7 @@ const handleGetCalendar = async (req, res) => {
       }
     })
     .filter((item) => {
-      return item.repeat?.value === "no_repeat"
+      return item !== undefined && item?.repeat?.value === "no_repeat"
     })
     .filter((item) => {
       return item !== undefined
@@ -160,7 +161,7 @@ const handleGetListEvent = async (req, res) => {
       }
     })
     .filter((item) => {
-      return item.repeat?.value === "no_repeat"
+      return item?.repeat?.value === "no_repeat"
     })
     .filter((item) => {
       return item !== undefined

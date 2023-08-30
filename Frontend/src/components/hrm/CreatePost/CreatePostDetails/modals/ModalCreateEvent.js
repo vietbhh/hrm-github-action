@@ -309,21 +309,12 @@ const ModalCreateEvent = (props) => {
           end_time_date: currentTime,
           end_time_time: currentTime
         },
-        valueRepeat: repeatData,
+        valueRepeat: defaultValueRepeat,
         arrAttachment: [],
         isEditable: true
       })
     }
   }, [modal, idEvent])
-
-  useEffect(() => {
-    if (
-      modal === true &&
-      options_employee_department === undefined &&
-      optionsMeetingRoom === undefined
-    ) {
-    }
-  }, [modal])
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -414,52 +405,6 @@ const ModalCreateEvent = (props) => {
       label: useFormatMessage("modules.feed.create_event.text.no_remind")
     }
   ]
-
-  const Option = (props) => {
-    const { data } = props
-    return (
-      <>
-        <components.Option {...props}>
-          <div className="d-flex justify-content-left align-items-start">
-            <Avatar
-              userId={data.value}
-              className="my-0 me-50 mt-25"
-              size="sm"
-              src={data.avatar}
-            />
-            <div className="d-flex flex-column">
-              <p className="user-name text-truncate mb-0">
-                <span className="d-block fw-bold">{data.label}</span>{" "}
-                <small className="text-truncate text-username mb-0">
-                  {data.tag === "department"
-                    ? `@${useFormatMessage(
-                        "modules.calendar.fields.department"
-                      )}`
-                    : data.tag}
-                </small>
-              </p>
-            </div>
-          </div>
-        </components.Option>
-      </>
-    )
-  }
-
-  const CustomMulti = ({ data, ...props }) => {
-    return (
-      <components.MultiValueLabel {...props}>
-        <div className="d-flex align-items-center">
-          <Avatar
-            src={data.avatar}
-            userId={data.value}
-            className="my-0 me-50"
-            size="sm"
-          />
-          <small>{data.label}</small>
-        </div>
-      </components.MultiValueLabel>
-    )
-  }
 
   return (
     <Fragment>
