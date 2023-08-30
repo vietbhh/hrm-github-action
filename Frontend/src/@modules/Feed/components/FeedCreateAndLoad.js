@@ -25,6 +25,7 @@ const FeedCreateAndLoad = (props) => {
 
   // ** function
   const setDataCreateNew = (value) => {
+    console.log("value", value)
     setState({ dataCreateNew: value })
   }
 

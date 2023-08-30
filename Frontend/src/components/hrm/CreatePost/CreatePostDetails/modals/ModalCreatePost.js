@@ -27,7 +27,7 @@ import HeaderCreatePost from "../HeaderCreatePost"
 import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
-
+import SwAlert from "@apps/utility/SwAlert"
 const ModalCreatePost = (props) => {
   const {
     modal,
@@ -178,7 +178,14 @@ const ModalCreatePost = (props) => {
         .postSubmitPost(params)
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
-            setDataCreateNew(res.data)
+            if (approveStatus !== "pending") {
+              setDataCreateNew(res.data)
+            } else {
+              SwAlert.showInfo({
+                title: "",
+                text: useFormatMessage("modules.feed.post.post_pending")
+              })
+            }
           }
           if (_.isFunction(setData)) {
             const data = res.data

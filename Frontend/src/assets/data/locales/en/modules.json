@@ -3737,7 +3737,9 @@
           "edited_at": "Edited at",
           "send_in_messenger": "Send in messenger",
           "share_to_a_group": "Share to a group",
-          "this_post_has_been_edited": "This post has been edited"
+          "this_post_has_been_edited": "This post has been edited",
+          "post_pending" : "Your article has been posted and is in the review process, please wait for moderation!"
+
         },
         "react": {
           "like": "Like",

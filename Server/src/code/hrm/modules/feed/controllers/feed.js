@@ -383,7 +383,7 @@ const loadFeedController = async (req, res, next) => {
   const request = req.query
   const page = request.page
   const pageLength = request.pageLength
-  const filter = { ref: null }
+  const filter = { ref: null, approve_status: "approved" }
   const from = request.from
   const to = request.to
   const isFeaturedPost = request.is_featured_post
