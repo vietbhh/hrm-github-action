@@ -17,6 +17,7 @@ import EventInfo from "./EventInfo"
 import Tracking from "./Tracking"
 import classNames from "classnames"
 import JoinEventAction from "./JoinEventAction"
+import SwAlert from "@apps/utility/SwAlert"
 
 const EventDetailsModal = (props) => {
   const {
@@ -82,53 +83,60 @@ const EventDetailsModal = (props) => {
   }, [modalDetail, modal])
 
   // ** render
-  const renderBody = () => {
+  const renderComponent = () => {
     if (state.loading) {
       return ""
     }
 
-    return (
-      <Fragment>
-        <div
-          className={classNames("event-detail-body", {
-            "event-detail-border": state.infoEvent.is_owner
-          })}>
-          <JoinEventAction
-            infoEvent={state.infoEvent}
-            currentEmployee={currentEmployee}
-            afterUpdateStatus={afterUpdateStatus}
-          />
-          <EventTitle infoEvent={state.infoEvent} afterRemove={afterRemove} />
-          <MembersInvited infoEvent={state.infoEvent} />
-          <EventInfo infoEvent={state.infoEvent} />
-        </div>
-        <div>
-          <Tracking infoEvent={state.infoEvent} />
-        </div>
-      </Fragment>
-    )
+    if (state.infoEvent?.name === undefined) {
+      SwAlert.showError({
+        title: useFormatMessage(
+          "modules.feed.create_post.text.detail_event_error"
+        )
+      })
+    } else {
+      return (
+        <Modal
+          isOpen={modalDetailStatus}
+          toggle={() => toggleModal()}
+          className="modal-dialog-centered feed modal-create-post modal-create-event modal-event-detail"
+          modalTransition={{ timeout: 100 }}
+          backdropTransition={{ timeout: 100 }}>
+          <ModalHeader>
+            <span className="text-title">
+              {useFormatMessage("modules.calendar.modals.title.event_details")}
+            </span>
+            <div className="div-btn-close" onClick={() => toggleModal()}>
+              <i className="fa-regular fa-xmark"></i>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <div
+              className={classNames("event-detail-body", {
+                "event-detail-border": state.infoEvent.is_owner
+              })}>
+              <JoinEventAction
+                infoEvent={state.infoEvent}
+                currentEmployee={currentEmployee}
+                afterUpdateStatus={afterUpdateStatus}
+              />
+              <EventTitle
+                infoEvent={state.infoEvent}
+                afterRemove={afterRemove}
+              />
+              <MembersInvited infoEvent={state.infoEvent} />
+              <EventInfo infoEvent={state.infoEvent} />
+            </div>
+            <div>
+              <Tracking infoEvent={state.infoEvent} />
+            </div>
+          </ModalBody>
+        </Modal>
+      )
+    }
   }
 
-  return (
-    <Modal
-      isOpen={modalDetailStatus}
-      toggle={() => toggleModal()}
-      className="modal-dialog-centered feed modal-create-post modal-create-event modal-event-detail"
-      modalTransition={{ timeout: 100 }}
-      backdropTransition={{ timeout: 100 }}>
-      <ModalHeader>
-        <span className="text-title">
-          {useFormatMessage("modules.calendar.modals.title.event_details")}
-        </span>
-        <div className="div-btn-close" onClick={() => toggleModal()}>
-          <i className="fa-regular fa-xmark"></i>
-        </div>
-      </ModalHeader>
-      <ModalBody>
-        <Fragment>{renderBody()}</Fragment>
-      </ModalBody>
-    </Modal>
-  )
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default EventDetailsModal

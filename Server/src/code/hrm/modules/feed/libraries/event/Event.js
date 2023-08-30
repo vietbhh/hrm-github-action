@@ -1,5 +1,5 @@
 import calendarMongoModel from "#code/hrm/modules/calendar/models/calendar.mongo.js"
-import { getUserActivated } from "#app/models/users.mysql.js"
+import { getUser, getUserActivated } from "#app/models/users.mysql.js"
 import { forEach, isEmpty } from "lodash-es"
 import moment from "moment"
 import feedMongoModel from "../../models/feed.mongo.js"
@@ -97,8 +97,10 @@ const addEvent = async (req, insertFeed = true) => {
       body.reminder.value
     )
 
+    const userId = req.__user
+
     const dataInsert = {
-      __user: req.__user,
+      __user: userId,
       name: body.event_name,
       color: body.color,
       start_time_date: body.start_time_date,
@@ -161,84 +163,12 @@ const addEvent = async (req, insertFeed = true) => {
       }
 
       // ** send notification
-      const userId = req.__user
-      const receivers = employee_arr_id
-      const bodyNotification = `{{modules.network.notification.invite_to_the_event}} <strong>${body.event_name}</strong> {{modules.network.notification.event}}`
-      const link = out === undefined ? `/calendar` : `/posts/${out._id}`
-      const notificationAction =
-        out === undefined
-          ? null
-          : [
-              {
-                status: "",
-                message: "",
-                contents: [
-                  {
-                    key: "accepted",
-                    type: "api_button",
-                    text: "Accept",
-                    color: "success",
-                    api_url: "/feed/update-event-status",
-                    api_type: "node",
-                    api_methods: "post",
-                    api_post_data: {
-                      id: out._id,
-                      status: "yes"
-                    },
-                    api_option: {
-                      disableLoading: true
-                    }
-                  },
-                  {
-                    key: "declined",
-                    type: "api_button",
-                    text: "Decline",
-                    color: "danger",
-                    api_url: "/feed/update-event-status",
-                    api_type: "node",
-                    api_methods: "post",
-                    api_post_data: {
-                      id: out._id,
-                      status: "no"
-                    },
-                    api_option: {
-                      disableLoading: true
-                    }
-                  },
-                  {
-                    key: "maybe",
-                    type: "api_button",
-                    text: "Maybe",
-                    color: "warning",
-                    api_url: "/feed/update-event-status",
-                    api_type: "node",
-                    api_methods: "post",
-                    api_post_data: {
-                      id: out._id,
-                      status: "maybe"
-                    },
-                    api_option: {
-                      disableLoading: true
-                    }
-                  }
-                ]
-              }
-            ]
-
-      sendNotification(
+      await _handleSendNotification(
         userId,
-        receivers,
-        {
-          title: "",
-          body: bodyNotification,
-          link: link,
-          actions: notificationAction
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
+        employee_arr_id,
+        body.event_name,
+        out,
+        idEvent
       )
 
       _id = idEvent
@@ -246,7 +176,28 @@ const addEvent = async (req, insertFeed = true) => {
       result = { dataFeed: _out, dataLink: {} }
     } else {
       data_old = await calendarMongoModel.findById(idEdit)
+      const oldEmployee = data_old.employee
       await calendarMongoModel.updateOne({ _id: idEdit }, dataInsert)
+
+      const newEmployeeUpdate = []
+      employee.map((itemNew) => {
+        if (
+          !oldEmployee.some(
+            (itemSome) => parseInt(itemSome.id) === parseInt(itemNew.id)
+          )
+        ) {
+          newEmployeeUpdate.push(itemNew.id)
+        }
+      })
+
+      const postData = !isEmpty(data_old.id_post) ? {_id: data_old.id_post} : undefined
+      await _handleSendNotification(
+        userId,
+        newEmployeeUpdate,
+        dataInsert.name,
+        postData,
+        idEdit
+      )
 
       let _dataFeed = {}
       if (idPost && insertFeed) {
@@ -349,6 +300,100 @@ const addEvent = async (req, insertFeed = true) => {
       err: err.message
     }
   }
+}
+
+const _handleSendNotification = async (
+  userId,
+  employee_arr_id,
+  event_name,
+  out,
+  idEvent
+) => {
+  if (employee_arr_id.length === 0) {
+    return false
+  }
+
+  const userInfo = await getUser(userId)
+
+  const receivers = employee_arr_id
+  const bodyNotification = `<strong>${userInfo.full_name}</strong> {{modules.feed.create_post.text.invited_you_to}} <strong>${event_name}</strong> {{modules.network.notification.event}}`
+  const link = out === undefined ? `/calendar` : `/posts/${out._id}`
+  const notificationAction =
+    out === undefined
+      ? null
+      : [
+          {
+            status: "",
+            message: "",
+            contents: [
+              {
+                key: "accepted",
+                type: "api_button",
+                text: "Accept",
+                color: "success",
+                api_url: "/feed/update-event-status",
+                api_type: "node",
+                api_methods: "post",
+                api_post_data: {
+                  id: idEvent,
+                  status: "yes"
+                },
+                api_option: {
+                  disableLoading: true
+                }
+              },
+              {
+                key: "declined",
+                type: "api_button",
+                text: "Decline",
+                color: "danger",
+                api_url: "/feed/update-event-status",
+                api_type: "node",
+                api_methods: "post",
+                api_post_data: {
+                  id: idEvent,
+                  status: "no"
+                },
+                api_option: {
+                  disableLoading: true
+                }
+              },
+              {
+                key: "maybe",
+                type: "api_button",
+                text: "Maybe",
+                color: "warning",
+                api_url: "/feed/update-event-status",
+                api_type: "node",
+                api_methods: "post",
+                api_post_data: {
+                  id: idEvent,
+                  status: "maybe"
+                },
+                api_option: {
+                  disableLoading: true
+                }
+              }
+            ]
+          }
+        ]
+
+  sendNotification(
+    userId,
+    receivers,
+    {
+      title: "",
+      body: bodyNotification,
+      link: link,
+      actions: notificationAction,
+      icon: parseInt(userId),
+      //icon: icon
+      //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+    },
+    {
+      skipUrls: ""
+    }
+  )
 }
 
 const handleReminderDate = (date, time, reminder) => {

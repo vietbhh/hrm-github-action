@@ -3,6 +3,7 @@ import { addEvent } from "../libraries/event/Event.js"
 import { updateNotificationStatusAction } from "#app/libraries/notifications/Notifications.js"
 import { removeFile as removeFileService } from "#app/services/upload.js"
 import { getUser } from "#app/models/users.mysql.js"
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEvent = async (req, res, next) => {
   const addResult = await addEvent(req)
@@ -58,7 +59,7 @@ const updateEventStatus = async (req, res, next) => {
   const status = body.status
 
   try {
-    await calendarMongoModel.updateOne(
+    /*await calendarMongoModel.updateOne(
       { _id: id, "employee.id": user_id },
       {
         $set: {
@@ -66,18 +67,42 @@ const updateEventStatus = async (req, res, next) => {
           "employee.$.dateUpdate": Date.now()
         }
       }
-    )
+    )*/
 
     let msg = ""
     if (status === "yes") {
-      msg = "Accepted"
+      msg = "accepted"
     } else if (status === "no") {
-      msg = "Declined"
+      msg = "declined"
     } else if (status === "maybe") {
-      msg = "Maybe"
+      msg = "maybe"
     }
 
-    const result = await updateNotificationStatusAction(
+    // ** send notification to event owner
+    const eventInfo = await calendarMongoModel.findById(id)
+    const userId = req.__user
+    const userInfo = await getUser(userId)
+    const receivers = [userInfo.owner]
+    const bodyNotification = `<b>${userInfo.username}</b> {{modules.feed.create_post.text.is}} {{modules.feed.create_post.text.${msg}}} {{modules.feed.create_post.text.to_join_event}} <b>${eventInfo.name}</b>`
+    
+    sendNotification(
+      userId,
+      receivers,
+      {
+        title: "",
+        body: bodyNotification,
+        link: "",
+        actions: null
+        //icon: icon
+        //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+      },
+      {
+        skipUrls: ""
+      }
+    )
+
+    // ** update notification action
+    /*const result = await updateNotificationStatusAction(
       body?.notification_id,
       body?.notification_index,
       body?.notification_status,
@@ -86,7 +111,7 @@ const updateEventStatus = async (req, res, next) => {
 
     return res.respond({
       notification_info: result
-    })
+    })*/
   } catch (err) {
     return res.fail(err.message)
   }
