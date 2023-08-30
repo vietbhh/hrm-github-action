@@ -3659,7 +3659,14 @@
           "close_poll_vote": "Close poll vote",
           "member_invited": "{number} members invited",
           "invited_you_to": "invited you to",
-          "select_all": "Select all"
+          "select_all": "All users",
+          "is": "is",
+          "to_join_event": "to join event",
+          "accepted": "accepted",
+          "declined": "declined",
+          "maybe": "maybe",
+          "detail_event_error": "Sorry!... This event is not availabel.",
+          "less_than_start_time_date": "End time date must be greater than Start time date"
         },
         "endorsement": {
           "title": "Endorsement",
