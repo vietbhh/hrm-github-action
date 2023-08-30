@@ -309,6 +309,34 @@ class Permissions extends ErpController
 			'value' => ['modules.candidates.manage']
 		],
 		[
+			'name' => 'create_post_announcement',
+			'value' => ['modules.feed.create_announcement']
+		],
+		[
+			'name' => 'create_post_endorsement',
+			'value' => ['modules.feed.create_endorsement']
+		],
+		[
+			'name' => 'post_without_approval',
+			'value' => ['modules.feed.PostWithoutApproval']
+		],
+		[
+			'name' => 'approval_post',
+			'value' => ['modules.feed.ApprovalPost']
+		],
+		[
+			'name' => 'manage_post',
+			'value' => ['modules.feed.ManagePost']
+		],
+		[
+			'name' => 'create_workgroup',
+			'value' => ['modules.workspace.create_workgroup']
+		],
+		[
+			'name' => 'manage_workgroup',
+			'value' => ['modules.workspace.manage_workgroup']
+		],
+		[
 			'name' => 'news_manage',
 			'value' => ['modules.news.manage']
 		],
@@ -450,6 +478,10 @@ class Permissions extends ErpController
 			"recruitment_jobs",
 			"candidates_manage",
 			"recruitment_settings"
+		],
+		"create_post" => [
+			"create_post_announcement",
+			"create_post_endorsement"
 		]
 	];
 

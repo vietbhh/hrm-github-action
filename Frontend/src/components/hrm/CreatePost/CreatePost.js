@@ -1,7 +1,7 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { handleDataMention } from "@modules/Feed/common/common"
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useContext, useEffect } from "react"
 import { useSelector } from "react-redux"
 import ModalAnnouncement from "./CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "./CreatePostDetails/modals/ModalCreateEvent"
@@ -12,6 +12,7 @@ import { eventApi } from "@modules/Feed/common/api"
 // ** redux
 import { useDispatch } from "react-redux"
 import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
+import { AbilityContext } from "utility/context/Can"
 
 const CreatePost = (props) => {
   const {
@@ -24,6 +25,14 @@ const CreatePost = (props) => {
     optionsMeetingRoom = [],
     allowPostType = []
   } = props
+  const ability = useContext(AbilityContext)
+  const createAnnouncement = ability.can("create_announcement", "feed")
+  const createEndorsement = ability.can("create_endorsement", "feed")
+  const PostWithoutApproval = ability.can("PostWithoutApproval", "feed")
+  let approveStatusfm = approveStatus
+  if (workspace.length <= 0 && !PostWithoutApproval) {
+    approveStatusfm = "pending"
+  }
   const [state, setState] = useMergedState({
     modalCreatePost: false,
     dataMention: [],
@@ -155,7 +164,7 @@ const CreatePost = (props) => {
               </li>
             )}
 
-            {checkAllowPostType("announcement") && (
+            {createAnnouncement && checkAllowPostType("announcement") && (
               <li onClick={() => toggleModalAnnouncement()}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +189,7 @@ const CreatePost = (props) => {
                 </span>
               </li>
             )}
-            {checkAllowPostType("endorsement") && (
+            {createEndorsement && checkAllowPostType("endorsement") && (
               <li
                 onClick={() => {
                   toggleModalEndorsement()
@@ -207,7 +216,7 @@ const CreatePost = (props) => {
         dataMention={state.dataMention}
         workspace={workspace}
         setDataCreateNew={setDataCreateNew}
-        approveStatus={approveStatus}
+        approveStatus={approveStatusfm}
         optionCreate={state.optionCreate}
         setOptionCreate={setOptionCreate}
       />

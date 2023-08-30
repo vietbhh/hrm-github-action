@@ -458,7 +458,9 @@ const ModalCreatePost = (props) => {
     ),
     [file, state.loadingUploadAttachment]
   )
-  return (optionCreate !== "" && modal) ? <></> : (
+  return optionCreate !== "" && modal ? (
+    <></>
+  ) : (
     <Modal
       isOpen={modal}
       toggle={() => toggleModal()}

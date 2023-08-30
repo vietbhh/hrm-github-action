@@ -1,10 +1,11 @@
 // ** React Imports
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import { Fragment, useEffect, useRef } from "react"
+import { Fragment, useContext, useEffect, useRef } from "react"
 // ** Styles
 import { Button } from "reactstrap"
 // ** Components
 import { ErpInput } from "@apps/components/common/ErpField"
+import { AbilityContext } from "utility/context/Can"
 
 const WorkspaceFilter = (props) => {
   const {
@@ -14,7 +15,8 @@ const WorkspaceFilter = (props) => {
     setFilter,
     toggleModal
   } = props
-
+  const ability = useContext(AbilityContext)
+  const createWorkgroup = ability.can("create_workgroup", "workspace")
   const [state, setState] = useMergedState({
     showInput: false
   })
@@ -105,13 +107,15 @@ const WorkspaceFilter = (props) => {
   return (
     <div className="d-flex align-items-center">
       <Fragment>{renderSearch()}</Fragment>
-      <Button.Ripple
-        color="primary"
-        className="ms-2 common-border"
-        onClick={() => handleClickCreate()}>
-        <i className="fas fa-plus me-50" />
-        {useFormatMessage("modules.workspace.buttons.create_group")}
-      </Button.Ripple>
+      {createWorkgroup && (
+        <Button.Ripple
+          color="primary"
+          className="ms-2 common-border"
+          onClick={() => handleClickCreate()}>
+          <i className="fas fa-plus me-50" />
+          {useFormatMessage("modules.workspace.buttons.create_group")}
+        </Button.Ripple>
+      )}
     </div>
   )
 }

@@ -376,6 +376,21 @@
             "employee_groups_des": "View, create, and update employee groups",
             "employee_level": "Employee Level",
             "employee_level_des": "View, create, and update employee level"
+          },
+          "post" : {
+            "post"  :"Post",
+            "create_post" : "CreatePost",
+            "create_announcement" : "Create Announcement",
+            "create_endorsement"  : "Create Endorsement",
+            "post_without_approval" : "PostWithoutApproval",
+            "approval_post" : "ApprovalPost",
+            "manage_post" : "ManagePost"
+
+          },
+          "workgroup" :{
+            "workgroup" : "Workgroup",
+            "create_workgroup" :"CreateWorkgroup",
+            "manage_workgroup" : "ManageWorkgroup"
           }
         },
         "other": {
