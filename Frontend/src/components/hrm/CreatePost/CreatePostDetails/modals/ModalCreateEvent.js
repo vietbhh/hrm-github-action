@@ -298,7 +298,7 @@ const ModalCreateEvent = (props) => {
     } else {
       const currentTime = dayjs()
       const repeatData = {
-        ...state.valueRepeat,
+        ...defaultValueRepeat,
         ...getRepeatData(currentTime)
       }
       setState({
@@ -309,7 +309,7 @@ const ModalCreateEvent = (props) => {
           end_time_date: currentTime,
           end_time_time: currentTime
         },
-        valueRepeat: defaultValueRepeat,
+        valueRepeat: repeatData,
         arrAttachment: [],
         isEditable: true
       })
