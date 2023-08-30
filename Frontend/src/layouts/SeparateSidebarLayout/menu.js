@@ -159,6 +159,63 @@ const menuConfig = [
       </svg>
     ),
     navLink: "/workspace/list"
+  },
+  {
+    id: "approvepost",
+    title: "layout.approvepost",
+    type: "dropdown",
+    action: "ApprovalPost",
+    resource: "feed",
+    icon: (
+      <svg
+        width="36"
+        height="36"
+        viewBox="0 0 36 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          opacity="0.8"
+          d="M18 0C4.62856 0 0 6.48672 0 17.9095C0 31.3482 6.63427 36 18 36C31.3714 36 35.9999 29.5133 35.9999 18.0905C36.0256 4.65183 29.3914 0 18 0Z"
+          fill="#69DCA1"
+        />
+        <path
+          d="M18.3083 15.3999H22.6834"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M13.3167 15.3999L13.9417 16.0249L15.8167 14.1499"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M18.3083 21.2334H22.6834"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M13.3167 21.2334L13.9417 21.8584L15.8167 19.9834"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M15.5 26.3334H20.5C24.6666 26.3334 26.3333 24.6667 26.3333 20.5001V15.5001C26.3333 11.3334 24.6666 9.66675 20.5 9.66675H15.5C11.3333 9.66675 9.66663 11.3334 9.66663 15.5001V20.5001C9.66663 24.6667 11.3333 26.3334 15.5 26.3334Z"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    ),
+    navLink: "/feed/approve-post"
   }
   /* {
     id: "setting-member",

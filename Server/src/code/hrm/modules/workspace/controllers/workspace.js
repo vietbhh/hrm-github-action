@@ -999,11 +999,23 @@ const approvePost = async (req, res) => {
   try {
     const idWorkspace = req.body.idWorkspace
     delete req.body.idWorkspace
+
     const infoWorkSpace = await workspaceMongoModel.findById(idWorkspace)
     if (req.body?.all) {
       delete req.body.all
+
+      if (infoWorkSpace) {
+        const feedUpdate = await feedMongoModel.updateMany(
+          { permission_ids: { $in: req.body?.id }, approve_status: "pending" },
+          {
+            ...req.body
+          }
+        )
+        return res.respond(feedUpdate)
+      }
+
       const feedUpdate = await feedMongoModel.updateMany(
-        { permission_ids: { $in: req.body?.id }, approve_status: "pending" },
+        { permission: "default", approve_status: "pending" },
         {
           ...req.body
         }
@@ -1016,15 +1028,17 @@ const approvePost = async (req, res) => {
       { new: true }
     )
     const data = await handleDataBeforeReturn(feedUpdate)
+    const sender = await getUser(req.__user)
     if (data) {
       sendNotificationApprovePost(
         infoWorkSpace,
+        data,
         data?.approve_status,
         data?.created_by?.id,
-        req.__user
+        sender.dataValues
       )
 
-      if (data?.approve_status === "approved") {
+      if (data?.approve_status === "approved" && infoWorkSpace) {
         const NOT_notification = infoWorkSpace.notification.map((i) => {
           if (i.status === "off") {
             return parseInt(i.id_user)

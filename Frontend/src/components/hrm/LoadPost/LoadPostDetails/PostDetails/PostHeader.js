@@ -5,6 +5,7 @@ import React, { Fragment } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import PostHeaderAction from "./PostHeaderAction"
+import { Badge } from "reactstrap"
 
 const PostHeader = (props) => {
   const {
@@ -195,7 +196,9 @@ const PostHeader = (props) => {
             <span className="name-divider">·</span>
             <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
               <span className="time">
-                {data.created_at !== "" && data.created_at !== undefined && timeDifference(data.created_at)}{" "}
+                {data.created_at !== "" &&
+                  data.created_at !== undefined &&
+                  timeDifference(data.created_at)}{" "}
                 {data.edited &&
                   ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
               </span>
@@ -239,7 +242,9 @@ const PostHeader = (props) => {
             <Fragment>
               <span className="time">
                 <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
-                {data.created_at !== "" && data.created_at !== undefined && timeDifference(data.created_at)}{" "}
+                  {data.created_at !== "" &&
+                    data.created_at !== undefined &&
+                    timeDifference(data.created_at)}{" "}
                   {data.edited &&
                     ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
                 </Link>

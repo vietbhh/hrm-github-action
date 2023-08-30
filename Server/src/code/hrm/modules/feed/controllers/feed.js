@@ -383,7 +383,7 @@ const loadFeedController = async (req, res, next) => {
   const request = req.query
   const page = request.page
   const pageLength = request.pageLength
-  const filter = { ref: null }
+  const filter = { ref: null, approve_status: "approved" }
   const from = request.from
   const to = request.to
   const isFeaturedPost = request.is_featured_post
@@ -1443,6 +1443,35 @@ const differentCompare2Object = (obj1 = {}, obj2 = {}, keyCheck) => {
   return false
 }
 
+const getPostPending = async (req, res) => {
+  try {
+    const filter = {
+      permission: "default",
+      approve_status: "pending"
+    }
+    if (req.query?.search) {
+      filter.content = { $regex: new RegExp(req.query?.search) }
+    }
+
+    const pageLength = req.query.pageLength
+    const skip = req.query.page <= 1 ? 0 : req.query.page * pageLength
+    const postList = await feedMongoModel
+      .find(filter)
+      .skip(skip)
+      .limit(pageLength)
+      .sort({
+        _id: req.query.sort
+      })
+    const beforeReturn = await handleDataBeforeReturn(postList, true)
+    const feedCount = await feedMongoModel.find(filter).count()
+    return res.respond({
+      results: beforeReturn,
+      recordsTotal: feedCount
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1467,5 +1496,6 @@ export {
   turnOffNotification,
   turnOffCommenting,
   handleDataHistory,
-  getDataEditHistory
+  getDataEditHistory,
+  getPostPending
 }
