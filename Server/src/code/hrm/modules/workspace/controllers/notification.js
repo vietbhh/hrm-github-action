@@ -60,12 +60,15 @@ const sendNotificationApprovePost = async (
   receivers,
   sender
 ) => {
-  const body =
+  let body =
     "Post in workgroup <strong>" +
     infoWorkspace?.name +
     "</strong> has been " +
     hanlde
 
+  if (!infoWorkspace?.name) {
+    body = "Post in feed has been " + hanlde
+  }
   const link =
     hanlde === "approved" ? "workspace/" + infoWorkspace?.id + "?tab=feed" : ""
   await sendNotification(sender, receivers, {

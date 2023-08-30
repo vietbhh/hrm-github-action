@@ -143,6 +143,10 @@ export const feedApi = {
 
   async getGetDataEditHistory(post_id) {
     return await axiosNodeApi.get("/feed/get-data-edit-history/" + post_id)
+  },
+  async loadPendingPost(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/feed/pending-posts?${strParams}`)
   }
 }
 
@@ -166,7 +170,7 @@ export const eventApi = {
   async getGetEventById(id) {
     return await axiosNodeApi.get("/feed/get-event-by-id/" + id)
   },
-  
+
   async removeEvent(id) {
     return await axiosNodeApi.post(`/feed/remove-event`, {
       id: id

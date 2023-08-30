@@ -299,6 +299,81 @@ export const features_list = [
     ]
   },
   {
+    title: useFormatMessage(`modules.permissions.text.features.post.post`),
+    content: [
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.post.create_announcement`
+        ),
+        name: "create_post_announcement",
+        des: useFormatMessage(
+          `modules.permissions.text.features.post.create_announcement`
+        )
+      },
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.post.create_endorsement`
+        ),
+        name: "create_post_endorsement",
+        des: useFormatMessage(
+          `modules.permissions.text.features.post.create_endorsement`
+        )
+      },
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.post.post_without_approval`
+        ),
+        name: "post_without_approval",
+        des: useFormatMessage(
+          `modules.permissions.text.features.post.post_without_approval`
+        )
+      },
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.post.approval_post`
+        ),
+        name: "approval_post",
+        des: useFormatMessage(
+          `modules.permissions.text.features.post.approval_post`
+        )
+      },
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.post.manage_post`
+        ),
+        name: "manage_post",
+        des: useFormatMessage(
+          `modules.permissions.text.features.post.manage_post`
+        )
+      }
+    ]
+  },
+  {
+    title: useFormatMessage(
+      `modules.permissions.text.features.workgroup.workgroup`
+    ),
+    content: [
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.workgroup.create_workgroup`
+        ),
+        name: "create_workgroup",
+        des: useFormatMessage(
+          `modules.permissions.text.features.workgroup.create_workgroup`
+        )
+      },
+      {
+        title: useFormatMessage(
+          `modules.permissions.text.features.workgroup.manage_workgroup`
+        ),
+        name: "manage_workgroup",
+        des: useFormatMessage(
+          `modules.permissions.text.features.workgroup.manage_workgroup`
+        )
+      }
+    ]
+  },
+  {
     title: useFormatMessage(`modules.permissions.text.features.news.news`),
     content: [
       {
@@ -315,7 +390,9 @@ export const features_list = [
     title: useFormatMessage(`modules.permissions.text.features.assets.assets`),
     content: [
       {
-        title: useFormatMessage(`modules.permissions.text.features.assets.asset_list.title`),
+        title: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_list.title`
+        ),
         name: "asset_list",
         des: useFormatMessage(
           `modules.permissions.text.features.assets.asset_list.description`
@@ -323,7 +400,9 @@ export const features_list = [
         child: []
       },
       {
-        title: useFormatMessage(`modules.permissions.text.features.assets.asset_inventory.title`),
+        title: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_inventory.title`
+        ),
         name: "asset_inventory",
         des: useFormatMessage(
           `modules.permissions.text.features.assets.asset_inventory.description`
@@ -331,7 +410,9 @@ export const features_list = [
         child: []
       },
       {
-        title: useFormatMessage(`modules.permissions.text.features.assets.asset_import.title`),
+        title: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_import.title`
+        ),
         name: "asset_import",
         des: useFormatMessage(
           `modules.permissions.text.features.assets.asset_import.description`
@@ -339,7 +420,9 @@ export const features_list = [
         child: []
       },
       {
-        title: useFormatMessage(`modules.permissions.text.features.assets.asset_generate_qr_code.title`),
+        title: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_generate_qr_code.title`
+        ),
         name: "asset_qr_code_generator",
         des: useFormatMessage(
           `modules.permissions.text.features.assets.asset_generate_qr_code.description`
@@ -347,7 +430,9 @@ export const features_list = [
         child: []
       },
       {
-        title: useFormatMessage(`modules.permissions.text.features.assets.asset_types.title`),
+        title: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_types.title`
+        ),
         name: "asset_type",
         des: useFormatMessage(
           `modules.permissions.text.features.assets.asset_types.description`
@@ -355,7 +440,9 @@ export const features_list = [
         child: []
       },
       {
-        title: useFormatMessage(`modules.permissions.text.features.assets.asset_groups.title`),
+        title: useFormatMessage(
+          `modules.permissions.text.features.assets.asset_groups.title`
+        ),
         name: "asset_group",
         des: useFormatMessage(
           `modules.permissions.text.features.assets.asset_groups.description`

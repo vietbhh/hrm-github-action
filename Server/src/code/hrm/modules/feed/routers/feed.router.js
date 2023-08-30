@@ -36,7 +36,8 @@ import {
   updateContentMedia,
   updatePostReaction,
   updateSeenPost,
-  uploadTempAttachmentController
+  uploadTempAttachmentController,
+  getPostPending
 } from "../controllers/feed.js"
 import { getDataHashtag, loadFeedHashtag } from "../controllers/hashtag.js"
 import { getPostInteractiveMember } from "../controllers/management.js"
@@ -93,4 +94,5 @@ router.get("/get-load-feed-hashtag", loadFeedHashtag)
 
 router.post("/save-saved", saveSaved)
 
+router.get("/pending-posts", getPostPending)
 export default router
