@@ -106,18 +106,28 @@ class Employees extends Employee
 
 	public function offboard_post($id)
 	{
+		helper('app_select_option');
 		$getPost = $this->request->getPost();
 		if (!mayUpdateResource('employees', $id)) return $this->failForbidden(MISSING_UPDATE_PERMISSION);
 		if (!hasPermission('modules.employees.termination')) return $this->failForbidden(MISSING_PERMISSION);
 		try {
-			$getPost['status'] = 15;
-			if ($this->updateEmployee($id, $getPost)) {
-				//Delete onboarding checklist if it is exist
-				$this->_handleRemoveChecklistEmployeeOffboarding($id);
-				//Todo handle other task for off-boarding
-				return $this->respondUpdated($id);
+			$lastWorkingDate = $getPost['last_working_date'];
+			if (strtotime($lastWorkingDate) <= strtotime(date('Y-m-d'))) {
+				$employeeModel = new EmployeesModel();
+				$result = $employeeModel->resign([$id]);
+				if ($result['success'] == false) {
+					throw new \Exception($result['err']);
+				}
 			} else {
-				return $this->fail(FAILED_SAVE);
+				$getPost['status'] = getOptionValue('employees', 'status', 'offboarding');
+				if ($this->updateEmployee($id, $getPost)) {
+					//Delete onboarding checklist if it is exist
+					$this->_handleRemoveChecklistEmployeeOffboarding($id);
+					//Todo handle other task for off-boarding
+					return $this->respondUpdated($id);
+				} else {
+					return $this->fail(FAILED_SAVE);
+				}
 			}
 		} catch (\Exception $e) {
 			return $this->failValidationErrors($e->getMessage());

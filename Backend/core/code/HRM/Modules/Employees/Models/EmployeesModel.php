@@ -3,6 +3,7 @@
 namespace HRM\Modules\Employees\Models;
 
 use App\Models\AppModel;
+use App\Models\UserModel;
 
 class EmployeesModel extends AppModel
 {
@@ -54,4 +55,28 @@ class EmployeesModel extends AppModel
 		return $this->where("email", $email)->asArray()->first();
 	}
 
+	public function resign($userIds = [])
+	{
+		try {
+			helper('app_select_option');
+			$this->setAllowedFields(['account_status', 'status']);
+			$this->whereIn('id', $userIds)->set('account_status',  getOptionValue('employees', 'account_status', 'deactivated'))
+				->set('status', getOptionValue('employees', 'status', 'resigned'))->update();
+
+			$userModel = new UserModel();
+			$userModel->whereIn('id', $userIds)->set([
+				'active' => 0,
+				'account_status' => 'deactivated'
+			])->update();
+
+			return [
+				"success" => true
+			];
+		} catch (\Exception $e) {
+			return [
+				"success" => false,
+				"err" => $e->getMessage()
+			];
+		}
+	}
 }
