@@ -121,9 +121,12 @@ const ModalCreateEvent = (props) => {
         }
       })
 
-      setError("end_time_date", {
-        type: "custom",
-        message: "a"
+      return false
+    } else if (values.start_time_time.diff(values.end_time_time, "minute") > 0)  {
+      setState({
+        errorSubmit: {
+          end_time_time: ["less_than_start_time_time"]
+        }
       })
 
       return false
