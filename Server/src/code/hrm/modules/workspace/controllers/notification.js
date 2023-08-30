@@ -56,25 +56,32 @@ const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
 
 const sendNotificationApprovePost = async (
   infoWorkspace,
+  post,
   hanlde,
   receivers,
   sender
 ) => {
-  let body =
-    "Post in workgroup <strong>" +
-    infoWorkspace?.name +
-    "</strong> has been " +
-    hanlde
+  const contentPost = post?.content
 
-  if (!infoWorkspace?.name) {
-    body = "Post in feed has been " + hanlde
+  let body = contentPost.replace(/<[^>]+>/g, "")
+
+  if (body.length > 80) {
+    body = body.substring(0, 80) + "..."
   }
-  const link =
+
+  let link =
     hanlde === "approved" ? "workspace/" + infoWorkspace?.id + "?tab=feed" : ""
-  await sendNotification(sender, receivers, {
-    title: "",
+
+  const title =
+    "Your post has been " + hanlde + " by <b>" + sender?.full_name + "</b>"
+  if (!infoWorkspace?.name) {
+    link = "posts/" + post._id
+  }
+  await sendNotification(sender.id, receivers, {
+    title: title,
     body: body,
-    link: link
+    link: link,
+    icon: parseInt(sender.id)
   })
 }
 
