@@ -1,8 +1,5 @@
 import Avatar from "@apps/modules/download/pages/Avatar"
-import {
-  timeDifference,
-  useFormatMessage
-} from "@apps/utility/common"
+import { timeDifference, useFormatMessage } from "@apps/utility/common"
 import birthdayImg from "@src/layouts/_components/vertical/images/birthday.svg"
 import React, { Fragment } from "react"
 import { useSelector } from "react-redux"
@@ -145,8 +142,6 @@ const PostHeader = (props) => {
     return ""
   }
 
-  
-
   const renderAppendComponent = () => {
     if (
       renderAppendHeaderComponent !== undefined &&
@@ -200,7 +195,7 @@ const PostHeader = (props) => {
             <span className="name-divider">·</span>
             <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
               <span className="time">
-                {timeDifference(data.created_at)}{" "}
+                {data.created_at !== "" && data.created_at !== undefined && timeDifference(data.created_at)}{" "}
                 {data.edited &&
                   ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
               </span>
@@ -237,14 +232,14 @@ const PostHeader = (props) => {
               <span className="name">{data?.created_by?.full_name || ""}</span>{" "}
             </Link>
             {renderAfterName()}
-            {renderWithTag()}
+            {_.isFunction(renderWithTag) && renderWithTag()}
           </div>
 
           {!isViewEditHistory && (
             <Fragment>
               <span className="time">
                 <Link to={`/posts/${data.ref ? data.ref : data._id}`}>
-                  {timeDifference(data.created_at)}{" "}
+                {data.created_at !== "" && data.created_at !== undefined && timeDifference(data.created_at)}{" "}
                   {data.edited &&
                     ` · ${useFormatMessage("modules.feed.post.text.edited")}`}
                 </Link>

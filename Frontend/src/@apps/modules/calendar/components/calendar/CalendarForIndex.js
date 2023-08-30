@@ -162,7 +162,7 @@ const CalendarForIndex = (props) => {
       }
     },
     dateClick(info) {
-      handleClickCalendar(null)
+      //handleClickCalendar(null)
     },
     direction: "ltr",
     eventAllow: (dropInfo, draggedEvent) => {

@@ -204,3 +204,7 @@ hr.hr-primary {
     }
   }
 }
+
+[class^="ant-dropdown-menu"], [class*=" ant-dropdown-menu"] {
+  font-family: $font-family-sans-serif;
+}

@@ -627,7 +627,7 @@ const WorkspaceHeader = (props) => {
                   </Fragment>
                 )}
 
-                {!state.joined && !state.waitJoined && (
+                {!state.joined && !state.waitJoined && data?.mode === "visible" && (
                   <>
                     <Button
                       className="btn btn-success"
@@ -638,7 +638,7 @@ const WorkspaceHeader = (props) => {
                     </Button>
                   </>
                 )}
-                {!state.joined && state.waitJoined && (
+                {!state.joined && state.waitJoined && data?.mode === "visible" && (
                   <Button
                     className="btn btn-secondary custom-secondary"
                     onClick={() => handleCancelJoin()}>

@@ -3834,7 +3834,10 @@
           "no_remind": "No remind",
           "no_repeat": "No repeat",
           "repeat_every_day": "Repeat every day",
-          "repeat_weekday": "Repeat weekday",
+          "repeat_every_weekday_on": "Repeat every week on {week_day}",
+          "repeat_every_weekday": "Repeat every weekday",
+          "repeat_every_month_on": "Repeat every month on {date}",
+          "repeat_on_week_day_num_every_month": "Repeat on the {order} {week_day} every month",
           "repeat_week_on_monday": "Repeat week on Monday",
           "tracking": "Tracking",
           "remove_event": "\"{name}\" will be deleted!",
@@ -3842,7 +3845,43 @@
           "no_meeting_room": "No meeting room",
           "no_reminder": "No reminder",
           "no_description": "No details",
-          "no_attachment": "no attachment"
+          "no_attachment": "no attachment",
+          "customize": "Customize...",
+          "ordinal_number": {
+            "1": "first",
+            "2": "second",
+            "3": "third",
+            "4": "fouth",
+            "5": "fifth",
+            "6": "sixth"
+          },
+          "custom_repeat": {
+            "title": "Custom repeat",
+            "repeat_every": "Repeat Every",
+            "repeat_at": "Repeat at",
+            "day": "Day",
+            "week": "Week",
+            "month": "Month",
+            "end_time": {
+              "never": "Nerver",
+              "on_date": "On date",
+              "after": "After",
+              "times": "times"
+            },
+            "repeat_at_option": {
+              "1": "mo",
+              "2": "tu",
+              "3": "we",
+              "4": "th",
+              "5": "fr",
+              "6": "sa",
+              "0": "su"
+            },
+            "repeat_at_month_option": {
+              "date": "On {date} every month",
+              "order_week_date_in_month": "On {order} {week_day} every month"
+            }
+          }
         }
       },
       "announcement": {
@@ -3936,8 +3975,8 @@
         "export_excel_file": "Export excel file",
         "view_group": "View Group",
         "create_group": "Create Group",
-        "decline" : "Decline",
-        "copy" : "Copy",
+        "decline": "Decline",
+        "copy": "Copy",
         "add_cover": "Add Cover",
         "messenge": "Messenge",
         "get_started": "Get started"
@@ -4022,8 +4061,8 @@
           "approvals": "Pending approvals",
           "request": "Member requests"
         },
-        "member_selected" : "{number} member selected",
-        "derpartment_selected" : "{number} derpartment selected",
+        "member_selected": "{number} member selected",
+        "derpartment_selected": "{number} derpartment selected",
         "waring_create_groupchat": {
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
@@ -4132,9 +4171,9 @@
         "handled_decline_join_request": "Declined",
         "write_something_about_your_group": "Write something about your group",
         "requested_on": "Requested on {date}",
-        "suggested" : "Suggested",
-        "derpartment" : "Derpartment",
-        "users" : "Users",
+        "suggested": "Suggested",
+        "derpartment": "Derpartment",
+        "users": "Users",
         "new_today": "new today"
       },
       "app_options": {
