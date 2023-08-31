@@ -18,7 +18,6 @@ import Tracking from "./Tracking"
 import classNames from "classnames"
 import JoinEventAction from "./JoinEventAction"
 import SwAlert from "@apps/utility/SwAlert"
-import TrackingDetailsModal from "../TrackingDetails/TrackingDetailsModal"
 
 const EventDetailsModal = (props) => {
   const {
@@ -31,7 +30,6 @@ const EventDetailsModal = (props) => {
   const [state, setState] = useMergedState({
     loading: true,
     infoEvent: {}
-    
   })
 
   const calendarState = useSelector((state) => state.calendar)
