@@ -4093,7 +4093,8 @@
         "liked_your_comment": "liked your comment",
         "replied_on_your_comment": "replied on your comment",
         "notification_unseen": "There's a post you haven't seen yet, check it out",
-        "sent_notification": "Sent notification"
+        "sent_notification": "Sent notification",
+        "reaction_post_tag" : "posts you're tagged in"
       }
     },
     "timeline": {

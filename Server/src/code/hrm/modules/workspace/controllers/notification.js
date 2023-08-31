@@ -1,6 +1,17 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { getUser } from "#app/models/users.mysql.js"
 import workspaceMongoModel from "../models/workspace.mongo.js"
+
+const compactContent = (content = "") => {
+  const contentPost = content
+  let body = contentPost.replace(/<[^>]+>/g, "")
+  if (body.length > 80) {
+    body = body.substring(0, 80) + "..."
+  }
+
+  return '"' + body + '"'
+}
+
 const sendNotificationApproveJoin = async (
   infoWorkspace,
   hanlde,
@@ -143,11 +154,39 @@ const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
   )
 }
 
+const sendNotificationReactionPost = async (
+  post,
+  userReaction,
+  reaction,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    userReaction.full_name +
+    "</b> " +
+    reaction +
+    " {{modules.network.notification.reaction_post_tag}}"
+  const link = "posts/" + post._id
+  const body = compactContent(post.content)
+
+  console.log("title", title)
+  console.log("bodybodybody", body)
+  console.log("userReaction", userReaction)
+  console.log("receivers", receivers)
+  console.log("link", link)
+  await sendNotification(userReaction?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(userReaction?.id)
+  })
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
   sendNotificationPostPending,
   sendNotificationRequestJoin,
   sendNotificationUnseenPost,
-  sendNotificationNewPost
+  sendNotificationNewPost,
+  sendNotificationReactionPost
 }

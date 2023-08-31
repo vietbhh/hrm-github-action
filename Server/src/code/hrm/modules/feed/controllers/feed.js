@@ -36,6 +36,7 @@ import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
   sendNotificationPostPending,
+  sendNotificationReactionPost,
   sendNotificationUnseenPost
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
@@ -582,6 +583,19 @@ const updatePostReaction = async (req, res, next) => {
   const react_action = body.react_action
   const full_name = body.full_name
   const created_by = body.created_by
+  const infoPost = await feedMongoModel.findById(id)
+  const turn_off_notification = infoPost.turn_off_notification
+
+  const arrTag = infoPost.tag_user.tag
+  const arrMention = infoPost.tag_user.mention
+  const allTag = arrTag.concat(arrMention)
+  const allTagCheckExist = [...new Set(allTag)]
+  const allTagSend = allTagCheckExist.filter(
+    (i) => !turn_off_notification.includes(i)
+  )
+
+  console.log("allTagSend", allTagSend)
+
   try {
     await feedMongoModel.updateMany(
       { _id: id, "reaction.react_user": req.__user },
@@ -602,7 +616,14 @@ const updatePostReaction = async (req, res, next) => {
           }
         )
       }
-
+      if (allTagSend.length > 0) {
+        sendNotificationReactionPost(
+          infoPost,
+          { id: req.__user, full_name: full_name },
+          react_type,
+          allTagSend
+        )
+      }
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
