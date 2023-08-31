@@ -59,7 +59,7 @@ const updateEventStatus = async (req, res, next) => {
   const status = body.status
 
   try {
-    /*await calendarMongoModel.updateOne(
+    await calendarMongoModel.updateOne(
       { _id: id, "employee.id": user_id },
       {
         $set: {
@@ -67,7 +67,7 @@ const updateEventStatus = async (req, res, next) => {
           "employee.$.dateUpdate": Date.now()
         }
       }
-    )*/
+    )
 
     let msg = ""
     if (status === "yes") {
@@ -84,7 +84,7 @@ const updateEventStatus = async (req, res, next) => {
     const userInfo = await getUser(userId)
     const receivers = [userInfo.owner]
     const bodyNotification = `<b>${userInfo.username}</b> {{modules.feed.create_post.text.is}} {{modules.feed.create_post.text.${msg}}} {{modules.feed.create_post.text.to_join_event}} <b>${eventInfo.name}</b>`
-    
+
     sendNotification(
       userId,
       receivers,
@@ -102,16 +102,22 @@ const updateEventStatus = async (req, res, next) => {
     )
 
     // ** update notification action
-    /*const result = await updateNotificationStatusAction(
-      body?.notification_id,
-      body?.notification_index,
-      body?.notification_status,
-      msg
-    )
+    if (eventInfo.important === false) {
+      const result = await updateNotificationStatusAction(
+        body?.notification_id,
+        body?.notification_index,
+        body?.notification_status,
+        msg
+      )
 
-    return res.respond({
-      notification_info: result
-    })*/
+      return res.respond({
+        notification_info: result
+      })
+    } else {
+      return res.respond({
+        msg: "success"
+      })
+    }
   } catch (err) {
     return res.fail(err.message)
   }

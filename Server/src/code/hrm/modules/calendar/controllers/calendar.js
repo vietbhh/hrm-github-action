@@ -82,7 +82,24 @@ const handleGetCalendar = async (req, res) => {
   const eventRepeat = getListEventRepeat(resultRepeatEvent, query)
 
   const allEvent = resultFilter.concat(eventRepeat)
-  const result = allEvent.concat(arrAllDay)
+
+  const filterAcceptEvent = allEvent.map((item) => {
+    if (item.important === true || item.id_post === "") {
+      return item 
+    } else {
+      const [employeeInEvent] = item.employee.filter((itemFilter) => {
+        return parseInt(itemFilter.id) === parseInt(req.__user)
+      })
+      
+      if (employeeInEvent?.status === "yes" || employeeInEvent?.status === "maybe") {
+        return item
+      }
+
+      return undefined
+    }
+  }).filter((item) => item !== undefined)
+
+  const result = filterAcceptEvent.concat(arrAllDay)
 
   return res.respond({
     results: result
@@ -203,7 +220,23 @@ const handleGetListEvent = async (req, res) => {
 
   const allEvent = resultFilter.concat(eventRepeat)
 
-  const result = allEvent.concat(arrAllDay)
+  const filterAcceptEvent = allEvent.map((item) => {
+    if (item.important === true || item.id_post === "") {
+      return item 
+    } else {
+      const [employeeInEvent] = item.employee.filter((itemFilter) => {
+        return parseInt(itemFilter.id) === parseInt(req.__user)
+      })
+      
+      if (employeeInEvent?.status === "yes" || employeeInEvent?.status === "maybe") {
+        return item
+      }
+
+      return undefined
+    }
+  }).filter((item) => item !== undefined)
+
+  const result = filterAcceptEvent.concat(arrAllDay)
 
   const listEvent = {
     today: [],
