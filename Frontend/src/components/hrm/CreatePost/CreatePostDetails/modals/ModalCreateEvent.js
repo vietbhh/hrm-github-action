@@ -68,6 +68,7 @@ const ModalCreateEvent = (props) => {
     valueRepeat: defaultValueRepeat,
     startDate: dayjs(),
     switch_all_day: false,
+    switch_important: false,
     modalCustomRepeat: false,
     errorSubmit: {},
 
@@ -122,7 +123,9 @@ const ModalCreateEvent = (props) => {
       })
 
       return false
-    } else if (values.start_time_time.diff(values.end_time_time, "minute") > 0)  {
+    } else if (
+      values.start_time_time.diff(values.end_time_time, "minute") > 0
+    ) {
       setState({
         errorSubmit: {
           end_time_time: ["less_than_start_time_time"]
@@ -186,7 +189,8 @@ const ModalCreateEvent = (props) => {
       valueAttendees: [],
       dataAttendees: [],
       arrAttachment: [],
-      switch_all_day: false
+      switch_all_day: false,
+      switch_important: false
     })
     reset()
   }
@@ -283,6 +287,7 @@ const ModalCreateEvent = (props) => {
             color: restData.color,
             valueRepeat: repeat,
             switch_all_day: restData.all_day_event,
+            switch_important: restData.important,
             dataAttendees: restData.attendees,
             valueAttendees: []
           })
@@ -547,7 +552,25 @@ const ModalCreateEvent = (props) => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
-
+          <div className="div-event-important">
+            <div className="div-switch">
+              <ErpSwitch
+                nolabel
+                useForm={methods}
+                name="switch_important"
+                defaultValue={state.switch_important}
+                loading={state.loadingEdit}
+              />
+              <span className="text">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.important"
+                  )}
+                </span>
+            </div>
+            <p className="mb-0 important-text">
+              {useFormatMessage("modules.feed.create_post.text.important_text")}
+            </p>
+          </div>
           <div className="div-event-time">
             <div
               className={classNames("div-select-time", {

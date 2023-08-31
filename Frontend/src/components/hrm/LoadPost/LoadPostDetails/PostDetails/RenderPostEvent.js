@@ -13,7 +13,12 @@ const RenderPostEvent = (props) => {
   const [state, setState] = useMergedState({
     valueStatus: "yes"
   })
-  const colorEvent = (dataLink?.color === undefined || _.isEmpty(dataLink.color)) ? "" : dataLink.color.replace("#", "")
+  const isImportant =
+    dataLink?.important === undefined ? false : dataLink.important
+  const colorEvent =
+    dataLink?.color === undefined || _.isEmpty(dataLink.color)
+      ? ""
+      : dataLink.color.replace("#", "")
 
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
@@ -47,7 +52,7 @@ const RenderPostEvent = (props) => {
     if (!_.isEmpty(employee) && employee !== "[]") {
       const index = employee.findIndex((val) => val.id === userId)
       if (index !== -1) {
-        const status = employee[index].status
+        const status = employee[index].status === "" ? "respond" : employee[index].status
         setState({ valueStatus: status })
       }
     }
@@ -127,6 +132,10 @@ const RenderPostEvent = (props) => {
   }
 
   const renderIcon = (status) => {
+    if (isImportant || state.valueStatus === "respond") {
+      return ""
+    }
+
     if (state.valueStatus === "maybe") {
       return (
         <svg
@@ -157,7 +166,6 @@ const RenderPostEvent = (props) => {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          
         </svg>
       )
     } else if (state.valueStatus === "yes") {
@@ -200,13 +208,18 @@ const RenderPostEvent = (props) => {
             menu={{ items }}
             placement="bottom"
             trigger={["click"]}
-            overlayClassName="feed dropdown-div-repeat dropdown-event-status">
+            overlayClassName="feed dropdown-div-repeat dropdown-event-status"
+            disabled={isImportant}>
             <div
               className={classNames("event-status__dropdown", {
-                "not-accept-event": state.valueStatus !== "yes"
+                "not-accept-event": isImportant || state.valueStatus !== "yes"
               })}>
               <Fragment>{renderIcon()}</Fragment>
-              {useFormatMessage(`modules.feed.post.event.${state.valueStatus}`)}
+              {isImportant
+                ? useFormatMessage("modules.feed.create_post.text.mandatory")
+                : useFormatMessage(
+                    `modules.feed.post.event.${state.valueStatus}`
+                  )}
             </div>
           </Dropdown>
         </div>

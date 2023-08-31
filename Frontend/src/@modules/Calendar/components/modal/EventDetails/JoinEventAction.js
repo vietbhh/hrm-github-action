@@ -19,7 +19,7 @@ const JoinEventAction = (props) => {
     // ** methods
     afterUpdateStatus
   } = props
-  
+
   const listEmployee = !_.isArray(infoEvent.employee) ? [] : infoEvent.employee
   let currentStatus = null
   listEmployee.map((item) => {
@@ -56,6 +56,13 @@ const JoinEventAction = (props) => {
 
   // ** render
   const renderAction = () => {
+    if (infoEvent.important) {
+      return (
+        <p className="mb-0 important-text">
+          {useFormatMessage("modules.feed.create_post.text.action_important_text")}
+        </p>
+      )
+    }
     return (
       <Space>
         <Button.Ripple

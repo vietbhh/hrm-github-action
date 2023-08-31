@@ -1,10 +1,12 @@
 // ** React Imports
 import { Fragment } from "react"
-import { useFormatMessage } from "@apps/utility/common"
+import { useFormatMessage, useMergedState } from "@apps/utility/common"
+import { useSelector } from "react-redux"
 // ** Styles
-import { Col, Row } from "reactstrap"
+import { Button, Col, Row } from "reactstrap"
 // ** Components
 import Avatar from "@apps/modules/download/pages/Avatar"
+import TrackingDetailsModal from "../TrackingDetails/TrackingDetailsModal"
 
 const Tracking = (props) => {
   const {
@@ -13,55 +15,86 @@ const Tracking = (props) => {
     // ** methods
   } = props
 
-  const listAttendees = infoEvent.attendees
+  const [state, setState] = useMergedState({
+    trackingModal: false
+  })
 
-  // ** render
-  const renderListEmployee = () => {
-    if (!_.isArray(listAttendees)) {
-      return ""
-    }
+  const listEmployeeState = useSelector((state) => state.users.list)
 
-    if (listAttendees.length === 0) {
-      return ""
-    }
-
-    const listEmployee = !_.isArray(infoEvent.employee)
-      ? []
-      : infoEvent.employee
-    const employeeLength = listAttendees.length
-    const listEmployeeDisplay =
-      employeeLength <= 4 ? listAttendees : listAttendees.slice(0, 4)
-    const listEmployeeDisplayFilter = listEmployeeDisplay
-      .map((item) => {
-        const employeeId =
-          item.value.search("_employee") > 0
-            ? item.value.replace("_employee", "")
-            : null
-
-        if (employeeId === null) {
-          return undefined
-        }
-
-        const [infoEmployee] = listEmployee.filter((itemFilter) => {
-          return parseInt(itemFilter.id) === parseInt(employeeId)
+  const listEmployee = !_.isArray(infoEvent.employee)
+    ? []
+    : infoEvent.employee
+        .filter((item) => {
+          return item.status !== ""
+        })
+        .map((item) => {
+          const infoEmployee =
+            listEmployeeState[parseInt(item.id)] === undefined
+              ? {}
+              : listEmployeeState[item.id]
+          return {
+            ...item,
+            avatar: infoEmployee?.avatar,
+            label: infoEmployee?.full_name
+          }
         })
 
-        return {
-          ...item,
-          info_employee: infoEmployee
-        }
-      })
-      .filter((item) => {
-        return item !== undefined
-      })
-      .filter((item, index) => {
-        return index < 4
-      })
+  const employeeLength = listEmployee.length
+
+  const toggleTrackingModal = () => {
+    setState({
+      trackingModal: !state.trackingModal
+    })
+  }
+
+  const handleClickViewAll = () => {
+    toggleTrackingModal()
+  }
+
+  // ** render
+  const renderTrackingDetailsModal = () => {
+    if (state.trackingModal === false) {
+      return ""
+    }
+
+    return (
+      <TrackingDetailsModal
+        modal={state.trackingModal}
+        infoEvent={infoEvent}
+        listEmployee={listEmployee}
+        handleModal={toggleTrackingModal}
+      />
+    )
+  }
+
+  const renderListEmployee = () => {
+    if (infoEvent.important === true) {
+      return (
+        <div className="d-flex justify-content-center important-div">
+          <p className="important-text">
+            {useFormatMessage("modules.feed.create_post.text.important_text")}
+          </p>
+        </div>
+      )
+    }
+
+    if (listEmployee.length === 0) {
+      return (
+        <div className="d-flex justify-content-center important-div">
+          <p className="important-text">
+            {useFormatMessage(
+              "modules.feed.create_post.text.no_employee_reaction_text"
+            )}
+          </p>
+        </div>
+      )
+    }
+    const listEmployeeDisplay =
+      employeeLength <= 4 ? listEmployee : listEmployee.slice(0, 4)
 
     return (
       <Row className="list-employee">
-        {listEmployeeDisplayFilter.map((item, index) => {
-          const infoEmployee = item.info_employee
+        {listEmployeeDisplay.map((item, index) => {
           return (
             <Col
               sm={6}
@@ -73,10 +106,8 @@ const Tracking = (props) => {
                 </div>
                 <div>
                   <p className="mb-0 employee-name">{item.label}</p>
-                  <small className={`status-text text-${infoEmployee.status}`}>
-                    {useFormatMessage(
-                      `modules.feed.post.event.${infoEmployee.status}`
-                    )}
+                  <small className={`status-text text-${item.status}`}>
+                    {useFormatMessage(`modules.feed.post.event.${item.status}`)}
                   </small>
                 </div>
               </div>
@@ -87,20 +118,43 @@ const Tracking = (props) => {
     )
   }
 
+  const renderViewAll = () => {
+    if (employeeLength <= 4) {
+      return ""
+    }
+
+    return (
+      <Button.Ripple
+        size="sm"
+        className="view-all-btn"
+        onClick={() => handleClickViewAll()}>
+        {useFormatMessage("modules.calendar.text.view_all")}
+      </Button.Ripple>
+    )
+  }
+
   const renderComponent = () => {
     if (infoEvent.is_owner === false) {
       return ""
     }
 
     return (
-      <div className="tracking-section">
-        <h6 className="mb-1">
-          {useFormatMessage("modules.feed.create_event.text.tracking")}
-        </h6>
-        <div className="body">
-          <Fragment>{renderListEmployee()}</Fragment>
+      <Fragment>
+        <div className="tracking-section">
+          <div className="d-flex align-items-center justify-content-between">
+            <h6 className="mb-1">
+              {useFormatMessage("modules.feed.create_event.text.tracking")}
+            </h6>
+            <div>
+              <Fragment>{renderViewAll()}</Fragment>
+            </div>
+          </div>
+          <div className="body">
+            <Fragment>{renderListEmployee()}</Fragment>
+          </div>
         </div>
-      </div>
+        <Fragment>{renderTrackingDetailsModal()}</Fragment>
+      </Fragment>
     )
   }
 
