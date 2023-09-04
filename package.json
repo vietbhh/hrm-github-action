@@ -3,13 +3,22 @@
   "author": "longth",
   "license": "MIT",
   "scripts": {
+    "install-fe-dep": "cd Frontend && yarn install",
+    "install-sv-dep": "cd Server && yarn install",
+    "install-be-dep": "cd Backend && composer install",
+    "install-dep": "npm-run-all -p install-be-dep install-fe-dep install-sv-dep",
     "start-fe": "cd Frontend && yarn run start",
     "start-server": "cd Server && yarn run start",
-    "start-backend": "cd Backend && php -S localhost:80 -t applications/default/public/",
+    "start-backend": "cd Backend && php -S localhost:${npm_config_port} -t applications/default/public/",
     "start-backend-server": "npm-run-all -p start-backend start-server",
-    "start": "npm-run-all -p start-backend start-server start-fe"
+    "start": "npm-run-all -p start-backend start-server start-fe",
+    "test" : "env-cmd -x node index.js --arg=\\$VAR"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {
+    "env-cmd": "^10.1.0",
+    "wait-on": "^7.0.1"
   }
 }
