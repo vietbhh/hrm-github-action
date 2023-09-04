@@ -32,7 +32,6 @@ import image_22 from "@modules/Feed/assets/images/background-feed/22.png"
 import image_23 from "@modules/Feed/assets/images/background-feed/23.png"
 
 import { EditorState, Modifier } from "draft-js"
-import { checkHTMLTag } from "../../../layouts/_components/vertical/common/common"
 
 export const decodeHTMLEntities = (text) => {
   const entities = [
@@ -216,7 +215,7 @@ export const detectUrl = (txt, onlyGetLink = false) => {
         const text_href = 'href="' + url
         if (text.includes(text_href)) {
           return url
-        } 
+        }
         return '<a href="' + url + '" target="_blank">' + url + "</a>"
       }
     )
