@@ -151,6 +151,8 @@ const ModalCreatePost = (props) => {
         dataMention,
         _content
       )
+
+      //return false
       const __content = result_tag_user.content
       const mention = result_tag_user.tag_user
       const arrHashtag = detectHashtag(__content)

@@ -32,6 +32,7 @@ import image_22 from "@modules/Feed/assets/images/background-feed/22.png"
 import image_23 from "@modules/Feed/assets/images/background-feed/23.png"
 
 import { EditorState, Modifier } from "draft-js"
+import { checkHTMLTag } from "../../../layouts/_components/vertical/common/common"
 
 export const decodeHTMLEntities = (text) => {
   const entities = [
@@ -215,7 +216,7 @@ export const detectUrl = (txt, onlyGetLink = false) => {
         const text_href = 'href="' + url
         if (text.includes(text_href)) {
           return url
-        }
+        } 
         return '<a href="' + url + '" target="_blank">' + url + "</a>"
       }
     )
@@ -256,6 +257,11 @@ export const handleTagUserAndReplaceContent = (dataMention, content) => {
   _.forEach(dataMention, (value) => {
     _content = _content.replace(value.name, function (val) {
       tag_user.push(value.id)
+      const text_href = 'href="' + value.link + '"'
+      if (_content.includes(text_href)) {
+        return value.name
+      }
+
       return (
         '<a href="' + value.link + '" target="_blank">' + value.name + "</a>"
       )
