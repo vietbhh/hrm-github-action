@@ -1,5 +1,5 @@
 import { isNumber } from "lodash-es"
-import { DataTypes, Op } from "sequelize"
+import { DataTypes, Op, where } from "sequelize"
 import appModelMysql from "./app.mysql.js"
 
 const usersModel = appModelMysql("users", {
@@ -90,5 +90,11 @@ const getUserActivated = (condition = {}) => {
     }
   })
 }
-
-export { usersModel, getUser, getUsers, getUserActivated }
+const getUserbyDepartment = (idDepartment = []) => {
+  console.log("idDepartmentidDepartmentidDepartmentidDepartment", idDepartment)
+  return usersModel.findAll({
+    department_id: { $in: idDepartment },
+    account_status: "activated"
+  })
+}
+export { usersModel, getUser, getUsers, getUserActivated, getUserbyDepartment }
