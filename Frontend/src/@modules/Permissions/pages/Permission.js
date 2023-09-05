@@ -115,113 +115,111 @@ const Permission = (props) => {
 
   return (
     <React.Fragment>
-      <SettingLayout>
-        <Card>
-          <CardHeader className="pb-0">
-            <div className="d-flex flex-wrap justify-content-between w-100">
-              <div className="add-new">
-                <Button.Ripple
-                  color="primary"
-                  className="btn-add"
-                  onClick={handleFormModal}>
-                  <i className="icpega Actions-Plus"></i>
-                  <span className="align-self-center">
-                    {useFormatMessage("modules.permissions.buttons.add")}
-                  </span>
-                </Button.Ripple>
-              </div>
-              <div className="d-flex">
-                <ErpInput
-                  placeholder="Search"
-                  prepend={<i className="iconly-Search icli"></i>}
-                  nolabel
-                  onChange={(e) => {
-                    handleSearchVal(e)
-                  }}
-                />
-              </div>
+      <Card>
+        <CardHeader className="pb-0">
+          <div className="d-flex flex-wrap justify-content-between w-100">
+            <div className="add-new">
+              <Button.Ripple
+                color="primary"
+                className="btn-add"
+                onClick={handleFormModal}>
+                <i className="icpega Actions-Plus"></i>
+                <span className="align-self-center">
+                  {useFormatMessage("modules.permissions.buttons.add")}
+                </span>
+              </Button.Ripple>
             </div>
-          </CardHeader>
-          <CardBody className="pt-0">
-            <Table
-              autoHeight
-              data={state.data}
-              headerHeight={45}
-              renderLoading={() =>
-                state.loading ? <TableLoader rows="5" /> : false
-              }>
-              <Column flexGrow={2} verticalAlign="middle">
-                <HeaderCell>{useFormatMessage("app.role")}</HeaderCell>
-                <Cell>
-                  {(row, rowIndex) => {
-                    return (
-                      <Fragment>
-                        <span
-                          className="text-dark cursor-pointer"
-                          onClick={() => {
-                            handleUpdateClick(row.id)
-                          }}>
-                          {row.name}
-                        </span>
-                      </Fragment>
-                    )
-                  }}
-                </Cell>
-              </Column>
-              <Column flexGrow={2} verticalAlign="middle">
-                <HeaderCell>{useFormatMessage("app.descriptions")}</HeaderCell>
-                <Cell dataKey="description" />
-              </Column>
-              <Column flexGrow={1} verticalAlign="middle">
-                <HeaderCell>{useFormatMessage("app.members")}</HeaderCell>
-                <Cell dataKey="users" />
-              </Column>
-              <Column flexGrow={2} verticalAlign="middle" align="right">
-                <HeaderCell>{useFormatMessage("app.action")}</HeaderCell>
-                <Cell>
-                  {(row, rowIndex) => {
-                    return (
-                      <Fragment>
+            <div className="d-flex">
+              <ErpInput
+                placeholder="Search"
+                prepend={<i className="iconly-Search icli"></i>}
+                nolabel
+                onChange={(e) => {
+                  handleSearchVal(e)
+                }}
+              />
+            </div>
+          </div>
+        </CardHeader>
+        <CardBody className="pt-0">
+          <Table
+            autoHeight
+            data={state.data}
+            headerHeight={45}
+            renderLoading={() =>
+              state.loading ? <TableLoader rows="5" /> : false
+            }>
+            <Column flexGrow={2} verticalAlign="middle">
+              <HeaderCell>{useFormatMessage("app.role")}</HeaderCell>
+              <Cell>
+                {(row, rowIndex) => {
+                  return (
+                    <Fragment>
+                      <span
+                        className="text-dark cursor-pointer"
+                        onClick={() => {
+                          handleUpdateClick(row.id)
+                        }}>
+                        {row.name}
+                      </span>
+                    </Fragment>
+                  )
+                }}
+              </Cell>
+            </Column>
+            <Column flexGrow={2} verticalAlign="middle">
+              <HeaderCell>{useFormatMessage("app.descriptions")}</HeaderCell>
+              <Cell dataKey="description" />
+            </Column>
+            <Column flexGrow={1} verticalAlign="middle">
+              <HeaderCell>{useFormatMessage("app.members")}</HeaderCell>
+              <Cell dataKey="users" />
+            </Column>
+            <Column flexGrow={2} verticalAlign="middle" align="right">
+              <HeaderCell>{useFormatMessage("app.action")}</HeaderCell>
+              <Cell>
+                {(row, rowIndex) => {
+                  return (
+                    <Fragment>
+                      <Button.Ripple
+                        title={`Update`}
+                        color="flat-dark"
+                        size="sm"
+                        className="btn-edit"
+                        onClick={() => {
+                          handleUpdateClick(row.id)
+                        }}>
+                        <i className="iconly-Edit-Square icli"></i>
+                      </Button.Ripple>
+                      <Button.Ripple
+                        title={`Duplicate`}
+                        color="flat-dark"
+                        size="sm"
+                        className="btn-edit"
+                        onClick={() => {
+                          handleDuplicateClick(row.id)
+                        }}>
+                        <Copy size="14" />
+                      </Button.Ripple>
+                      {row.can_delete === "true" && (
                         <Button.Ripple
-                          title={`Update`}
                           color="flat-dark"
                           size="sm"
-                          className="btn-edit"
+                          className="btn-delete"
                           onClick={() => {
-                            handleUpdateClick(row.id)
+                            handleDeleteClick(row.id)
                           }}>
-                          <i className="iconly-Edit-Square icli"></i>
+                          <Trash size={15} />
                         </Button.Ripple>
-                        <Button.Ripple
-                          title={`Duplicate`}
-                          color="flat-dark"
-                          size="sm"
-                          className="btn-edit"
-                          onClick={() => {
-                            handleDuplicateClick(row.id)
-                          }}>
-                          <Copy size="14" />
-                        </Button.Ripple>
-                        {row.can_delete === "true" && (
-                          <Button.Ripple
-                            color="flat-dark"
-                            size="sm"
-                            className="btn-delete"
-                            onClick={() => {
-                              handleDeleteClick(row.id)
-                            }}>
-                            <Trash size={15} />
-                          </Button.Ripple>
-                        )}
-                      </Fragment>
-                    )
-                  }}
-                </Cell>
-              </Column>
-            </Table>
-          </CardBody>
-        </Card>
-      </SettingLayout>
+                      )}
+                    </Fragment>
+                  )
+                }}
+              </Cell>
+            </Column>
+          </Table>
+        </CardBody>
+      </Card>
       <PermitFormModal
         loadData={loadData}
         modal={state.modal}

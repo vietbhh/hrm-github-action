@@ -97,7 +97,10 @@
     "quick_access": "Quick access",
     "navigation": "Navigation",
     "nav": "Nav",
+    "other": "Other",
     "quick": "Quick",
+    "setting_member": "Setting member",
+    "manage_endorsement": "Manage Endorsement",
     "notification": {
       "title": "Notification",
       "recent_notification": "Recent Notification",

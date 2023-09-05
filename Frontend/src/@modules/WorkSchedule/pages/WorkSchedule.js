@@ -88,42 +88,38 @@ const WorkSchedule = (props) => {
         {useFormatMessage(item.status?.label)}
       </div>
       <Dropdown
-        overlay={
-          <Menu
-            items={[
-              {
-                label: (
-                  <div>
-                    {useFormatMessage(
-                      "modules.work_schedules.buttons.set_default"
-                    )}
-                  </div>
-                ),
-                onClick: () => handleSetDefault(item?.id),
-                disabled: item.default
-              },
-              {
-                label: (
-                  <div>
-                    {useFormatMessage(
-                      "modules.work_schedules.buttons.duplicate"
-                    )}
-                  </div>
-                ),
-                onClick: () => handleDuplicate(item?.id)
-              },
-              {
-                label: <div>{useFormatMessage("button.edit")}</div>,
-                onClick: () => handleEdit(item?.id)
-              },
-              {
-                label: <div>{useFormatMessage("button.delete")}</div>,
-                onClick: () => handleDelete(item),
-                disabled: item.default
-              }
-            ]}
-          />
-        }
+        menu={{
+          items: [
+            {
+              label: (
+                <div>
+                  {useFormatMessage(
+                    "modules.work_schedules.buttons.set_default"
+                  )}
+                </div>
+              ),
+              onClick: () => handleSetDefault(item?.id),
+              disabled: item.default
+            },
+            {
+              label: (
+                <div>
+                  {useFormatMessage("modules.work_schedules.buttons.duplicate")}
+                </div>
+              ),
+              onClick: () => handleDuplicate(item?.id)
+            },
+            {
+              label: <div>{useFormatMessage("button.edit")}</div>,
+              onClick: () => handleEdit(item?.id)
+            },
+            {
+              label: <div>{useFormatMessage("button.delete")}</div>,
+              onClick: () => handleDelete(item),
+              disabled: item.default
+            }
+          ]
+        }}
         placement="bottomRight"
         overlayClassName="drop_workschedule">
         <Button className="p-0" color="flat-secondary">
@@ -264,12 +260,20 @@ const WorkSchedule = (props) => {
   }
   return (
     <React.Fragment>
+      <div className="d-flex align-items-center justify-content-between mb-1">
+        <h2 className="card-title">
+          {useFormatMessage("modules.work_schedules.title")}
+        </h2>
+        <Button.Ripple
+          color="primary"
+          onClick={() => history("/work-schedules/add")}>
+          <Plus size={20} />{" "}
+          {useFormatMessage("modules.work_schedules.buttons.add_new")}
+        </Button.Ripple>
+      </div>
       <Card className="extraWidthLayoutPage work_schedule">
         <FormProvider {...methods}>
           <CardBody>
-            <h2 className="card-title font-medium-5">
-              {useFormatMessage("modules.work_schedules.title")}
-            </h2>
             <Row>
               <Col sm={12} md={3}>
                 <FieldHandle
@@ -317,16 +321,6 @@ const WorkSchedule = (props) => {
                   label={useFormatMessage("modules.recruitments.fields.search")}
                   nolabel
                 />
-              </Col>
-              <Col sm={2} className="ms-auto">
-                <div className="form-group d-flex justify-content-end">
-                  <Button.Ripple
-                    color="primary"
-                    onClick={() => history("/work-schedules/add")}>
-                    <Plus size={20} />{" "}
-                    {useFormatMessage("modules.work_schedules.buttons.add_new")}
-                  </Button.Ripple>
-                </div>
               </Col>
             </Row>
             <Row className="mt-3">
