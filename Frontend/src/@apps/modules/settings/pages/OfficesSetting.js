@@ -97,128 +97,129 @@ const OfficesSetting = () => {
 
   return (
     <Fragment>
-      <SettingLayout>
-        <div className="setting-offices-wrapper">
-          <div className="d-flex flex-row-reverse">
-            <Button.Ripple
-              className="btn-add"
-              color="primary"
-              onClick={handleFormModal}>
-              <i className="icpega Actions-Plus"></i>
-              <span className="align-self-center">
-                {useFormatMessage("modules.offices.buttons.add")}
-              </span>
-            </Button.Ripple>
-          </div>
-          {state.loading ? (
-            <SquareLoader className="mt-3" />
-          ) : (
-            state.data.map((item) => (
-              <Fragment key={item.id}>
-                <div className="d-block with-box-shadow with-border-radius offices-row mt-2">
-                  <div className="d-flex">
-                    <p className="offices-title d-flex">
-                      {item.name}{" "}
-                      {item.is_headquarter && (
-                        <span className="is_headquarter">HEADQUARTER</span>
+      <div className="setting-offices-wrapper">
+        <div className="d-flex align-items-center justify-content-between">
+          <h2 className="mb-0 title">
+            {useFormatMessage("modules.offices.title")}
+          </h2>
+          <Button.Ripple
+            className="btn-add"
+            color="primary"
+            onClick={handleFormModal}>
+            <i className="icpega Actions-Plus"></i>
+            <span className="align-self-center">
+              {useFormatMessage("modules.offices.buttons.add")}
+            </span>
+          </Button.Ripple>
+        </div>
+        {state.loading ? (
+          <SquareLoader className="mt-3" />
+        ) : (
+          state.data.map((item) => (
+            <Fragment key={item.id}>
+              <div className="d-block with-box-shadow with-border-radius offices-row mt-2">
+                <div className="d-flex">
+                  <p className="offices-title d-flex">
+                    {item.name}{" "}
+                    {item.is_headquarter && (
+                      <span className="is_headquarter">HEADQUARTER</span>
+                    )}
+                  </p>
+
+                  <UncontrolledButtonDropdown className="ms-auto">
+                    <DropdownToggle color="flat-primary">
+                      <i className="iconly-Filter icli"></i>
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem
+                        onClick={() => {
+                          handleUpdateClick(item.id)
+                        }}>
+                        {useFormatMessage("button.update")}
+                      </DropdownItem>
+                      <DropdownItem
+                        onClick={() => {
+                          handleDeleteClick(item.id)
+                        }}>
+                        {useFormatMessage("button.delete")}
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledButtonDropdown>
+                </div>
+                <div
+                  className="d-flex"
+                  style={{
+                    marginTop: "8px"
+                  }}>
+                  <span>
+                    <i className="iconly-Location icli text-primary"></i>{" "}
+                    {item.address}
+                  </span>
+                  <span className="ms-auto">
+                    <ErpSwitch
+                      id={`is_active_${item.id}`}
+                      name="is_active"
+                      inline
+                      defaultChecked={item.is_active}
+                      onChange={(e) => {
+                        _handleUpdateActive(item.id, e.target.checked)
+                      }}
+                    />
+                  </span>
+                </div>
+                <hr className="hr-primary" />
+
+                <div className="row offices-detail-row">
+                  <div className="col-sm-12 col-md-6">
+                    <span className="offices-label">
+                      {useFormatMessage(
+                        "modules.offices.display.num_of_employees"
                       )}
-                    </p>
-
-                    <UncontrolledButtonDropdown className="ms-auto">
-                      <DropdownToggle color="flat-primary">
-                        <i className="iconly-Filter icli"></i>
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem
-                          onClick={() => {
-                            handleUpdateClick(item.id)
-                          }}>
-                          {useFormatMessage("button.update")}
-                        </DropdownItem>
-                        <DropdownItem
-                          onClick={() => {
-                            handleDeleteClick(item.id)
-                          }}>
-                          {useFormatMessage("button.delete")}
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledButtonDropdown>
-                  </div>
-                  <div
-                    className="d-flex"
-                    style={{
-                      marginTop: "8px"
-                    }}>
-                    <span>
-                      <i className="iconly-Location icli text-primary"></i>{" "}
-                      {item.address}
-                    </span>
-                    <span className="ms-auto">
-                      <ErpSwitch
-                        id={`is_active_${item.id}`}
-                        name="is_active"
-                        inline
-                        defaultChecked={item.is_active}
-                        onChange={(e) => {
-                          _handleUpdateActive(item.id, e.target.checked)
-                        }}
-                      />
                     </span>
                   </div>
-                  <hr className="hr-primary" />
-
-                  <div className="row offices-detail-row">
-                    <div className="col-sm-12 col-md-6">
-                      <span className="offices-label">
-                        {useFormatMessage(
-                          "modules.offices.display.num_of_employees"
-                        )}
-                      </span>
-                    </div>
-                    <div className="col-sm-12 col-md-6">
-                      {addComma(item.num_of_employees || 0)}{" "}
-                      {useFormatMessage("modules.offices.display.employees")}
-                    </div>
-                  </div>
-                  <div className="row offices-detail-row">
-                    <div className="col-sm-12 col-md-6">
-                      <span className="offices-label">
-                        {useFormatMessage("modules.offices.fields.phone")}
-                      </span>
-                    </div>
-                    <div className="col-sm-12 col-md-6">{item.phone}</div>
-                  </div>
-                  <div className="row offices-detail-row">
-                    <div className="col-sm-12 col-md-6">
-                      <span className="offices-label">
-                        {useFormatMessage("modules.offices.fields.email")}
-                      </span>
-                    </div>
-                    <div className="col-sm-12 col-md-6">{item.email}</div>
+                  <div className="col-sm-12 col-md-6">
+                    {addComma(item.num_of_employees || 0)}{" "}
+                    {useFormatMessage("modules.offices.display.employees")}
                   </div>
                 </div>
-              </Fragment>
-            ))
-          )}
-        </div>
+                <div className="row offices-detail-row">
+                  <div className="col-sm-12 col-md-6">
+                    <span className="offices-label">
+                      {useFormatMessage("modules.offices.fields.phone")}
+                    </span>
+                  </div>
+                  <div className="col-sm-12 col-md-6">{item.phone}</div>
+                </div>
+                <div className="row offices-detail-row">
+                  <div className="col-sm-12 col-md-6">
+                    <span className="offices-label">
+                      {useFormatMessage("modules.offices.fields.email")}
+                    </span>
+                  </div>
+                  <div className="col-sm-12 col-md-6">{item.email}</div>
+                </div>
+              </div>
+            </Fragment>
+          ))
+        )}
+      </div>
 
-        <FormModalDefaultModule
-          loadData={loadData}
-          modal={state.modal}
-          metas={module.metas}
-          module={module.config}
-          handleModal={handleFormModal}
-          options={module.options}
-          updateDataId={state.updateDataId}
-          uploadFiles={false}
-          permissionsSelect={false}
-          modalProps={{
-            className: "modal-sx modal-add"
-          }}
-          advButton={false}
-          modalTitle="modules.offices.buttons.add"
-        />
-      </SettingLayout>
+      <FormModalDefaultModule
+        loadData={loadData}
+        modal={state.modal}
+        metas={module.metas}
+        module={module.config}
+        handleModal={handleFormModal}
+        options={module.options}
+        updateDataId={state.updateDataId}
+        uploadFiles={false}
+        permissionsSelect={false}
+        modalProps={{
+          className: "modal-sx modal-add"
+        }}
+        advButton={false}
+        modalTitle="modules.offices.buttons.add"
+      />
     </Fragment>
   )
 }

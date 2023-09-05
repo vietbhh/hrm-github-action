@@ -707,7 +707,7 @@ const NewSchedule = (props) => {
   return (
     <React.Fragment>
       <UILoader blocking={state.blockUI}>
-        <Card className="extraWidthLayoutPage work_schedule">
+        <Card className="extraWidthLayoutPage work_schedule" style={{borderRadius: "12px"}}>
           <FormProvider {...methods}>
             <CardBody>
               <h2 className="card-title ms-1 font-medium-5">

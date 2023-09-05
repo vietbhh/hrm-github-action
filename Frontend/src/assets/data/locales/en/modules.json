@@ -484,6 +484,20 @@
         }
       }
     },
+    "meeting_room": {
+      "title": {
+        "index": "Meeting rooms",
+        "manage": "Room Management"
+      },
+      "fields": {
+        "name": "Room name",
+        "location": "Location",
+        "status": "Status" 
+      },
+      "buttons": {
+        "create": "Create Room"
+      }
+    },
     "calendar_tags": {
       "title": {
         "calendar": "Calendar"
