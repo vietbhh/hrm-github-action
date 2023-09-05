@@ -58,7 +58,6 @@ const CreateMeetingRoomModal = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err)
         notification.showError()
       })
   }
