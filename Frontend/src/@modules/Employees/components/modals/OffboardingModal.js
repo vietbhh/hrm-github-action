@@ -50,7 +50,7 @@ const OffboardingModal = (props) => {
         setState({ submitting: false })
         props.onComplete()
         setAssignType("offboarding")
-        toggleAssignChecklistModal()
+        //toggleAssignChecklistModal()
         if (typeof loadDataOverView === "function") {
           loadDataOverView()
         }

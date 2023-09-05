@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux"
 import ListDefaultModule from "@apps/modules/default/components/ListDefaultModule"
-import SettingLayout from "@apps/modules/settings/components/SettingLayout"
 
 const EmployeeLevel = (props) => {
   const module = "employee_level"
@@ -9,14 +8,12 @@ const EmployeeLevel = (props) => {
   const options = moduleData.options
 
   return (
-    <SettingLayout>
-      <ListDefaultModule
-        module={moduleData.config}
-        metas={metas}
-        options={options}
-        breadcrumb={false}
-      />
-    </SettingLayout>
+    <ListDefaultModule
+      module={moduleData.config}
+      metas={metas}
+      options={options}
+      breadcrumb={false}
+    />
   )
 }
 

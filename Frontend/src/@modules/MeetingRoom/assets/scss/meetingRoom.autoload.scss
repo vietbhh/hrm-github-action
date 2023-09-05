@@ -1,0 +1,46 @@
+.manage-meeting-room-page {
+    display: flex;
+    justify-content: center;
+    .div-container {
+        width: 100%;
+
+        .header-section {
+            .title {
+                color: #4f4d55 !important;
+            }
+            .btn {
+                border-radius: 12px !important;
+            }
+        }
+        .body-section {
+            .card {
+                border-radius: 12px !important;
+            }
+        }
+    }
+}
+
+.modal-create-meeting-room {
+    max-width: 500px !important;
+
+    .modal-content {
+        padding-bottom: 1rem !important;
+        
+        .modal-body {
+            .loading-div {
+                .app-loader {
+                    height: auto;
+                }
+            }
+
+            .footer-section {
+                .save-btn {
+                    border: none !important;
+                    background-color: #eceff3 !important;
+                    height: 42px;
+                    color: #4f4d55 !important;
+                }
+            }
+        }
+    }
+}

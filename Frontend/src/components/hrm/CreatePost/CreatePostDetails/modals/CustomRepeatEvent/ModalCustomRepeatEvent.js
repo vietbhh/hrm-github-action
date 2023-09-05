@@ -4,6 +4,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import dayjs from "dayjs"
 import { useForm } from "react-hook-form"
 import { getAffix } from "../CreateEventDetail/RepeatEventDropDown"
+import classNames from "classnames"
 // ** Styles
 import {
   Button,
@@ -13,6 +14,7 @@ import {
   ModalHeader,
   Row
 } from "reactstrap"
+import { Dropdown } from "antd"
 // ** Components
 import {
   ErpDate,
@@ -20,8 +22,6 @@ import {
   ErpSelect,
   ErpRadio
 } from "@apps/components/common/ErpField"
-import classNames from "classnames"
-import { Dropdown } from "antd"
 
 const ModalCustomRepeatEvent = (props) => {
   const {

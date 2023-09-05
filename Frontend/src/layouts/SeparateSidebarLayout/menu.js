@@ -3,7 +3,10 @@ import React from "react"
 
 const menuConfig = [
   {
-    header: useFormatMessage("layout.navigation")
+    header: useFormatMessage("layout.navigation"),
+    header_short: useFormatMessage("layout.nav"),
+    action: "login",
+    resource: "app"
   },
   {
     id: "home",

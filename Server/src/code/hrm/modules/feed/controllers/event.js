@@ -3,6 +3,7 @@ import { addEvent } from "../libraries/event/Event.js"
 import { updateNotificationStatusAction } from "#app/libraries/notifications/Notifications.js"
 import { removeFile as removeFileService } from "#app/services/upload.js"
 import { getUser } from "#app/models/users.mysql.js"
+import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 
 const submitEvent = async (req, res, next) => {
   const addResult = await addEvent(req)
@@ -70,23 +71,53 @@ const updateEventStatus = async (req, res, next) => {
 
     let msg = ""
     if (status === "yes") {
-      msg = "Accepted"
+      msg = "accepted"
     } else if (status === "no") {
-      msg = "Declined"
+      msg = "declined"
     } else if (status === "maybe") {
-      msg = "Maybe"
+      msg = "maybe"
     }
 
-    const result = await updateNotificationStatusAction(
-      body?.notification_id,
-      body?.notification_index,
-      body?.notification_status,
-      msg
+    // ** send notification to event owner
+    const eventInfo = await calendarMongoModel.findById(id)
+    const userId = req.__user
+    const userInfo = await getUser(userId)
+    const receivers = [userInfo.owner]
+    const bodyNotification = `<b>${userInfo.username}</b> {{modules.feed.create_post.text.is}} {{modules.feed.create_post.text.${msg}}} {{modules.feed.create_post.text.to_join_event}} <b>${eventInfo.name}</b>`
+
+    sendNotification(
+      userId,
+      receivers,
+      {
+        title: "",
+        body: bodyNotification,
+        link: "",
+        actions: null
+        //icon: icon
+        //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
+      },
+      {
+        skipUrls: ""
+      }
     )
 
-    return res.respond({
-      notification_info: result
-    })
+    // ** update notification action
+    if (eventInfo.important === false) {
+      const result = await updateNotificationStatusAction(
+        body?.notification_id,
+        body?.notification_index,
+        body?.notification_status,
+        msg
+      )
+
+      return res.respond({
+        notification_info: result
+      })
+    } else {
+      return res.respond({
+        msg: "success"
+      })
+    }
   } catch (err) {
     return res.fail(err.message)
   }

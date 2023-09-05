@@ -147,7 +147,7 @@ export const ListComponentConfig = (props) => {
     {
       id: "clock_in_out",
       title: useFormatMessage("modules.attendance.title.clock_in_out"),
-      component: <ClockInOutWidget {...props} />,
+      component: <ClockInOutWidget {...props} progressWidth={50} />,
       data_grid: {
         i: "clock_in_out",
         x: 8,

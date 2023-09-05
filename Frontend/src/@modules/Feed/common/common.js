@@ -256,6 +256,11 @@ export const handleTagUserAndReplaceContent = (dataMention, content) => {
   _.forEach(dataMention, (value) => {
     _content = _content.replace(value.name, function (val) {
       tag_user.push(value.id)
+      const text_href = 'href="' + value.link + '"'
+      if (_content.includes(text_href)) {
+        return value.name
+      }
+
       return (
         '<a href="' + value.link + '" target="_blank">' + value.name + "</a>"
       )

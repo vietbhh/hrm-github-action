@@ -15,6 +15,10 @@ const calendarSchema = baseSchema("m_calendar", {
     type: String,
     default: "blue"
   },
+  important: {
+    type: Boolean,
+    default: false
+  },
   start_time_date: {
     type: Date,
     default: null

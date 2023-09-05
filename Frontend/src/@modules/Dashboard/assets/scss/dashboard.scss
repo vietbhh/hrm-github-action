@@ -683,7 +683,6 @@
     }
 
     .attendance-progress {
-      margin-top: 1rem;
       .attendance-working-time {
         .attendance-time {
           text-align: right;
@@ -693,7 +692,7 @@
           }
         }
 
-        .attendance-status {
+        /* .attendance-status {
           height: 55px;
           width: 55px;
           background: #69dca1;
@@ -704,7 +703,7 @@
             font-weight: 700;
             color: #ffffff;
           }
-        }
+        } */
       }
 
       .attendance-clock {
@@ -714,11 +713,11 @@
           }
           height: 50px;
 
-          .clock-time-item {
+          /* .clock-time-item {
             color: #6c5dd3;
             font-weight: 500;
             font-size: 16px;
-          }
+          } */
 
           .clock-time-type {
             font-weight: 400;

@@ -10,6 +10,7 @@ class Cronjob
 {
 	public function auto_resigned()
 	{
+		helper('app_select_option');
 		$module = \Config\Services::modules();
 		$module->setModule('employees');
 
@@ -17,7 +18,7 @@ class Cronjob
 
 
 		$listEmployee = $model->asArray()->where([
-			'status' => 15,
+			'status' => getOptionValue('employees', 'status', 'offboarding'),
 			'last_working_date <=' => date('Y-m-d')
 		])->findAll();
 		$arrayId = [];
@@ -26,9 +27,8 @@ class Cronjob
 		}
 
 		if (!empty($arrayId)) {
-			$model->setAllowedFields(['account_status', 'status'])->set(['account_status' => 4, 'status' => 16])->whereIn('id', $arrayId)->update();
-			$userModel = new UserModel();
-			$userModel->set(['active' => 0, 'account_status' => 'deactivated'])->whereIn('id', $arrayId)->update();
+			$employeeModel = new EmployeesModel();
+			$employeeModel->resign($arrayId);
 		}
 	}
 

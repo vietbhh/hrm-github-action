@@ -11,7 +11,6 @@ import Avatar from "@apps/modules/download/pages/Avatar"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { renderIconAttachment } from "@modules/Feed/common/common"
-import { Dropdown } from "antd"
 import {
   DropdownItem,
   DropdownMenu,
@@ -22,6 +21,7 @@ import classNames from "classnames"
 import React, { Fragment, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import {
+  Alert,
   Button,
   Label,
   Modal,
@@ -39,6 +39,7 @@ import localeData from "dayjs/plugin/localeData"
 import MemberSelect from "../../../MemberSelect/MemberSelect"
 import RepeatEventDropDown from "./CreateEventDetail/RepeatEventDropDown"
 import ModalCustomRepeatEvent from "./CustomRepeatEvent/ModalCustomRepeatEvent"
+import { AlertCircle } from "react-feather"
 
 const ModalCreateEvent = (props) => {
   const {
@@ -67,7 +68,9 @@ const ModalCreateEvent = (props) => {
     valueRepeat: defaultValueRepeat,
     startDate: dayjs(),
     switch_all_day: false,
+    switch_important: false,
     modalCustomRepeat: false,
+    errorSubmit: {},
 
     // ** Attendees
     valueAttendees: [],
@@ -101,7 +104,8 @@ const ModalCreateEvent = (props) => {
   }
 
   const methods = useForm({ mode: "onSubmit" })
-  const { handleSubmit, reset, setValue, watch } = methods
+  const { handleSubmit, reset, setValue, watch, setError } = methods
+
   const onSubmit = (values) => {
     values.color = state.color
     values.valueRepeat = state.valueRepeat
@@ -110,6 +114,26 @@ const ModalCreateEvent = (props) => {
     values.idPost = idPost
     values.file = state.arrAttachment
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
+
+    if (values.start_time_date.diff(values.end_time_date, "day") > 0) {
+      setState({
+        errorSubmit: {
+          end_time_date: ["less_than_start_time_date"]
+        }
+      })
+
+      return false
+    } else if (
+      values.start_time_time.diff(values.end_time_time, "minute") > 0
+    ) {
+      setState({
+        errorSubmit: {
+          end_time_time: ["less_than_start_time_time"]
+        }
+      })
+
+      return false
+    }
 
     setState({ loadingSubmit: true })
     createEventApi(params)
@@ -126,7 +150,7 @@ const ModalCreateEvent = (props) => {
 
         resetAfterSubmit()
         toggleModal()
-        setState({ loadingSubmit: false })
+        setState({ loadingSubmit: false, errorSubmit: {} })
         notification.showSuccess({
           text: useFormatMessage("notification.success")
         })
@@ -165,7 +189,8 @@ const ModalCreateEvent = (props) => {
       valueAttendees: [],
       dataAttendees: [],
       arrAttachment: [],
-      switch_all_day: false
+      switch_all_day: false,
+      switch_important: false
     })
     reset()
   }
@@ -176,7 +201,7 @@ const ModalCreateEvent = (props) => {
         valueAttendees: [],
         dataAttendees: [
           {
-            label: "all",
+            label: useFormatMessage("modules.feed.create_post.text.select_all"),
             value: "all"
           }
         ]
@@ -262,6 +287,7 @@ const ModalCreateEvent = (props) => {
             color: restData.color,
             valueRepeat: repeat,
             switch_all_day: restData.all_day_event,
+            switch_important: restData.important,
             dataAttendees: restData.attendees,
             valueAttendees: []
           })
@@ -311,7 +337,8 @@ const ModalCreateEvent = (props) => {
         },
         valueRepeat: repeatData,
         arrAttachment: [],
-        isEditable: true
+        isEditable: true,
+        errorSubmit: {}
       })
     }
   }, [modal, idEvent])
@@ -406,6 +433,37 @@ const ModalCreateEvent = (props) => {
     }
   ]
 
+  const renderErrorSubmit = () => {
+    if (Object.keys(state.errorSubmit).length === 0) {
+      return ""
+    }
+
+    return (
+      <Fragment>
+        {_.map(state.errorSubmit, (item) => {
+          return (
+            <Fragment>
+              {item.map((itemError) => {
+                return (
+                  <Alert color="danger">
+                    <div className="d-flex align-items-center alert-body">
+                      <AlertCircle size={15} /> &nbsp;
+                      <span>
+                        {useFormatMessage(
+                          `modules.feed.create_post.text.${itemError}`
+                        )}
+                      </span>
+                    </div>
+                  </Alert>
+                )
+              })}
+            </Fragment>
+          )
+        })}
+      </Fragment>
+    )
+  }
+
   return (
     <Fragment>
       <Modal
@@ -494,7 +552,25 @@ const ModalCreateEvent = (props) => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
-
+          <div className="div-event-important">
+            <div className="div-switch">
+              <ErpSwitch
+                nolabel
+                useForm={methods}
+                name="switch_important"
+                defaultValue={state.switch_important}
+                loading={state.loadingEdit}
+              />
+              <span className="text">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.important"
+                  )}
+                </span>
+            </div>
+            <p className="mb-0 important-text">
+              {useFormatMessage("modules.feed.create_post.text.important_text")}
+            </p>
+          </div>
           <div className="div-event-time">
             <div
               className={classNames("div-select-time", {
@@ -731,7 +807,7 @@ const ModalCreateEvent = (props) => {
             />
           </div>
 
-          <div className="div-add-attachment">
+          <div className="mb-1 div-add-attachment">
             <Label for="attach-doc">
               <div className="div-add-attachment__choose">
                 <svg
@@ -829,7 +905,9 @@ const ModalCreateEvent = (props) => {
               })}
             </div>
           </div>
-
+          <div className="error-section">
+            <Fragment>{renderErrorSubmit()}</Fragment>
+          </div>
           <div className="text-center">
             <form onSubmit={handleSubmit(onSubmit)}>
               <Button.Ripple

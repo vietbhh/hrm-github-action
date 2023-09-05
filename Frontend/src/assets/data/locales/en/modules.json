@@ -484,6 +484,20 @@
         }
       }
     },
+    "meeting_room": {
+      "title": {
+        "index": "Meeting rooms",
+        "manage": "Room Management"
+      },
+      "fields": {
+        "name": "Room name",
+        "location": "Location",
+        "status": "Status" 
+      },
+      "buttons": {
+        "create": "Create Room"
+      }
+    },
     "calendar_tags": {
       "title": {
         "calendar": "Calendar"
@@ -3674,7 +3688,20 @@
           "close_poll_vote": "Close poll vote",
           "member_invited": "{number} members invited",
           "invited_you_to": "invited you to",
-          "select_all": "Select all"
+          "select_all": "All users",
+          "is": "is",
+          "to_join_event": "to join event",
+          "accepted": "accepted",
+          "declined": "declined",
+          "maybe": "maybe",
+          "detail_event_error": "Sorry!... This event is not availabel.",
+          "less_than_start_time_date": "End time date must be greater than Start time date",
+          "less_than_start_time_time": "End time time must be greater than Start time time",
+          "important_text": "All attendees are required to attend this event",
+          "important": "Important",
+          "mandatory": "Mandatory",
+          "action_important_text": "All member invited are required to attend this event",
+          "no_employee_reaction_text": "There is no one has responded to the event invitation yet"
         },
         "endorsement": {
           "title": "Endorsement",
@@ -3755,7 +3782,8 @@
           "yes": "Accept",
           "no": "Decline",
           "maybe": "Maybe",
-          "people_invited": "people invited"
+          "people_invited": "people invited",
+          "respond": "Respond"
         },
         "endorsement": {
           "endorsed": "endorsed",
