@@ -1,10 +1,9 @@
 import SquareLoader from "@apps/components/spinner/SquareLoader"
 import { useFormatMessage } from "@apps/utility/common"
 import React, { useEffect, useState } from "react"
-import { Button, CardBody, CardHeader, CardTitle } from "reactstrap"
+import { Button, Card, CardBody, CardHeader, CardTitle } from "reactstrap"
 import { generalApi } from "../common/api"
 import GeneralForm from "../components/general/GeneralForm"
-import SettingLayout from "../components/SettingLayout"
 const GeneralSetting = () => {
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(true)
@@ -22,10 +21,10 @@ const GeneralSetting = () => {
   }, [])
 
   return (
-    <SettingLayout>
-      <div className="setting-wrapper">
-        <CardHeader className="pt-0">
-          <CardTitle tag="h4">
+    <Card className="setting-wrapper">
+      <CardHeader className="">
+        <CardTitle>
+          <h2>
             <Button.Ripple
               tag="span"
               className="btn-icon rounded-circle "
@@ -41,15 +40,19 @@ const GeneralSetting = () => {
                 fontSize: "1.2rem",
                 color: "black"
               }}>
-              {useFormatMessage("about.title")}
+              {useFormatMessage("common.comInfo")}
             </span>
-          </CardTitle>
-        </CardHeader>
-        <CardBody>
-          {loading ? <SquareLoader className="mt-3" /> : <GeneralForm data={data} />}
-        </CardBody>
-      </div>
-    </SettingLayout>
+          </h2>
+        </CardTitle>
+      </CardHeader>
+      <CardBody>
+        {loading ? (
+          <SquareLoader className="mt-3" />
+        ) : (
+          <GeneralForm data={data} />
+        )}
+      </CardBody>
+    </Card>
   )
 }
 
