@@ -1,6 +1,19 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { getUser } from "#app/models/users.mysql.js"
 import workspaceMongoModel from "../models/workspace.mongo.js"
+
+const compactContent = (content = "") => {
+  const contentPost = content
+  let body = contentPost.replace(/<[^>]+>/g, "")
+  body = body.replace(/\u00a0/g, "")
+
+  if (body.length > 80) {
+    body = body.substring(0, 80) + "..."
+  }
+
+  return body
+}
+
 const sendNotificationApproveJoin = async (
   infoWorkspace,
   hanlde,
@@ -38,7 +51,7 @@ const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
     body += " and " + (infoWorkspace.request_joins.length - 1) + " others"
   }
   body +=
-    " sent a request to join workgroup <strong>" +
+    " {{modules.network.notification.sent_request_join_workgroup}} <strong>" +
     infoWorkspace?.name +
     "</strong>"
 
@@ -90,7 +103,7 @@ const sendNotificationPostPending = async (feed, sender) => {
   const body =
     "<strong>" +
     sender?.full_name +
-    "</strong> has posted in workgroup <strong>" +
+    "</strong> {{modules.network.notification.has_posted_workgroup}} <strong>" +
     workspaceInfo?.name +
     "</strong>"
 
@@ -104,14 +117,23 @@ const sendNotificationPostPending = async (feed, sender) => {
   })
 }
 
-const sendNotificationUnseenPost = async (sender, receivers, link) => {
+const sendNotificationUnseenPost = async (post, sender, receivers) => {
+  const title =
+    "<b>" +
+    sender?.full_name +
+    "</b>" +
+    " {{modules.network.notification.asked_to_see_this_post}}"
+
+  const body = compactContent(post?.content)
+  const link = "post/" + post?._id
   await sendNotification(
-    sender,
+    sender?.id,
     receivers,
     {
-      title: "",
-      body: "{{modules.network.notification.notification_unseen}}",
-      link: link
+      title: title,
+      body: body,
+      link: link,
+      icon: parseInt(sender?.id)
     },
     {
       skipUrls: ""
@@ -123,7 +145,7 @@ const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
   const body =
     "<strong>" +
     feed?.created_by?.full_name +
-    "</strong> posted a new post in workgroup <strong>" +
+    "</strong> {{modules.network.notification.posted_new_post_workgroup}} <strong>" +
     infoWorkspace?.name +
     "</strong>"
 
@@ -143,11 +165,169 @@ const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
   )
 }
 
+const sendNotificationReactionPost = async (
+  post,
+  userReaction,
+  reaction,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    userReaction.full_name +
+    "</b> " +
+    reaction +
+    " {{modules.network.notification.reaction_post}}"
+  const link = "posts/" + post._id
+  const body = compactContent(post.content)
+  await sendNotification(userReaction?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(userReaction?.id)
+  })
+}
+
+const sendNotificationReactionPostTag = async (
+  post,
+  userReaction,
+  reaction,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    userReaction.full_name +
+    "</b> " +
+    reaction +
+    " {{modules.network.notification.reaction_post_tag}}"
+  const link = "posts/" + post._id
+  const body = compactContent(post.content)
+  await sendNotification(userReaction?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(userReaction?.id)
+  })
+}
+const sendNotificationCommentPost = async (post, user, comment, receivers) => {
+  const title =
+    "<b>" +
+    user.full_name +
+    "</b> {{modules.network.notification.commented_on_your_post}}"
+  const link = "posts/" + post._id
+  const body = compactContent(comment)
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id)
+  })
+}
+
+const sendNotificationCommentPostTag = async (
+  post,
+  userReaction,
+  comment,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    userReaction.full_name +
+    "</b> {{modules.network.notification.comment_post_tag}}"
+  const link = "posts/" + post._id
+  const body = compactContent(comment)
+  await sendNotification(userReaction?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(userReaction?.id)
+  })
+}
+
+const sendNotificationTagInCommentPost = async (
+  post,
+  userReaction,
+  comment,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    userReaction.full_name +
+    "</b> {{modules.network.notification.tag_comment}}"
+  const link = "posts/" + post._id
+  const body = compactContent(comment)
+  await sendNotification(userReaction?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(userReaction?.id)
+  })
+}
+
+const sendNotificationTagInPost = async (post, user, comment, receivers) => {
+  const title =
+    "<b>" + user.full_name + "</b> {{modules.network.notification.tag_post}}"
+  const link = "posts/" + post._id
+  const body = compactContent(comment)
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id)
+  })
+}
+
+const sendNotificationEndorsement = async (
+  link,
+  user,
+  badget_name,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    user.full_name +
+    "</b> {{modules.network.notification.has_endorsed_post}} " +
+    badget_name
+  const body = ""
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id)
+  })
+}
+
+const sendNotificationEndorsementAll = async (
+  link,
+  endor_user,
+  badget_name,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    endor_user.full_name +
+    "</b> {{modules.network.notification.was_endorsed_post}} " +
+    badget_name
+  const body = ""
+  await sendNotification(endor_user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(endor_user?.id)
+  })
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
   sendNotificationPostPending,
   sendNotificationRequestJoin,
   sendNotificationUnseenPost,
-  sendNotificationNewPost
+  sendNotificationNewPost,
+  sendNotificationReactionPost,
+  sendNotificationReactionPostTag,
+  sendNotificationCommentPost,
+  sendNotificationCommentPostTag,
+  sendNotificationTagInCommentPost,
+  sendNotificationTagInPost,
+  sendNotificationEndorsement,
+  sendNotificationEndorsementAll
 }

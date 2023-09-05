@@ -1,6 +1,10 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import calendarMongoModel from "#code/hrm/modules/calendar/models/calendar.mongo.js"
-import { getUserActivated } from "#app/models/users.mysql.js"
+import {
+  getUser,
+  getUserActivated,
+  getUserbyDepartment
+} from "#app/models/users.mysql.js"
 import { getSetting } from "#app/services/settings.js"
 import {
   _uploadServices,
@@ -36,6 +40,9 @@ import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
   sendNotificationPostPending,
+  sendNotificationReactionPost,
+  sendNotificationReactionPostTag,
+  sendNotificationTagInPost,
   sendNotificationUnseenPost
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
@@ -178,23 +185,17 @@ const submitPostController = async (req, res, next) => {
     // insert hashtag
     await handleInsertHashTag(body.arrHashtag, req.__user, _id_parent)
 
-    // send notification
+    // send notification tag
     if (!is_edit && body.approveStatus === "approved") {
       const receivers = union(mention, tag)
-      const link_notification = `/posts/${_id_parent}`
-      const userId = body.data_user.id
-      const full_name = body.data_user.full_name
-      const body_noti =
-        "<strong>" +
-        full_name +
-        "</strong> {{modules.network.notification.tag_post}}"
-      await handleSendNotification(
-        userId,
-        receivers,
-        body_noti,
-        link_notification,
-        _id_parent
-      )
+      if (receivers) {
+        sendNotificationTagInPost(
+          { _id: _id_parent },
+          body.data_user,
+          body.content,
+          receivers
+        )
+      }
     }
 
     if (body.file.length === 0) {
@@ -582,6 +583,17 @@ const updatePostReaction = async (req, res, next) => {
   const react_action = body.react_action
   const full_name = body.full_name
   const created_by = body.created_by
+  const infoPost = await feedMongoModel.findById(id)
+  const turn_off_notification = infoPost.turn_off_notification
+  turn_off_notification.push(req.__user)
+  const arrTag = infoPost.tag_user.tag
+  const arrMention = infoPost.tag_user.mention
+  const allTag = arrTag.concat(arrMention)
+  const allTagCheckExist = [...new Set(allTag)]
+  const allTagSend = allTagCheckExist.filter(
+    (i) => !turn_off_notification.includes(i)
+  )
+
   try {
     await feedMongoModel.updateMany(
       { _id: id, "reaction.react_user": req.__user },
@@ -602,15 +614,23 @@ const updatePostReaction = async (req, res, next) => {
           }
         )
       }
-
+      if (allTagSend.length > 0) {
+        sendNotificationReactionPostTag(
+          infoPost,
+          { id: req.__user, full_name: full_name },
+          react_type,
+          allTagSend
+        )
+      }
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
-        const userId = req.__user
         const receivers = [created_by]
-        const body_noti =
-          full_name + " {{modules.network.notification.liked_your_post}}"
-        const link = `/posts/${id}`
-        await handleSendNotification(userId, receivers, body_noti, link, id)
+        sendNotificationReactionPost(
+          infoPost,
+          { id: req.__user, full_name: full_name },
+          react_type,
+          receivers
+        )
       }
     }
 
@@ -773,14 +793,33 @@ const sendNotificationUnseen = async (req, res, next) => {
     const seen = feed.seen
     const permission = feed.permission
     const permission_ids = feed.permission_ids
+    const type = feed.type
+    const link_permiss = feed.link_permission
+    const link_permiss_employee = link_permiss?.employee
+    const link_permiss_department = link_permiss?.department
+
+    const dataUser = await getUserActivated()
+    const arrUserActive = []
+    forEach(dataUser, (item) => {
+      arrUserActive.push(item.id.toString())
+    })
+
     let receivers = []
-    if (permission === "default") {
-      const dataUser = await getUserActivated()
-      const arrIdUser = []
-      forEach(dataUser, (item) => {
-        arrIdUser.push(item.id.toString())
-      })
-      receivers = arrIdUser.filter((x) => !seen.includes(x))
+    if (permission === "default" && type === "event") {
+      if (link_permiss.is_all) {
+        receivers = arrUserActive.filter((x) => !seen.includes(x))
+      } else {
+        const listUserbyDepartment = await getUserbyDepartment(
+          link_permiss_department
+        )
+        const result = listUserbyDepartment.map((x) => x["id"].toString())
+        const employeeConcat = link_permiss_employee.concat(result)
+        const checkExist = [...new Set(employeeConcat)]
+        receivers = checkExist.filter((x) => !seen.includes(x))
+      }
+    } else if (permission === "default") {
+      //  announcement \ endorsement
+      receivers = arrUserActive.filter((x) => !seen.includes(x))
     } else if (permission === "workspace") {
       if (!isEmpty(permission_ids)) {
         const dataWorkspace = await workspaceMongoModel.findById(
@@ -795,9 +834,9 @@ const sendNotificationUnseen = async (req, res, next) => {
     } else if (permission === "employee") {
       receivers = permission_ids.filter((x) => !seen.includes(x))
     }
-
     if (!isEmpty(receivers)) {
-      sendNotificationUnseenPost(req.__user, receivers, `/posts/${post_id}`)
+      const dataSender = await getUser(req.__user)
+      sendNotificationUnseenPost(feed, dataSender, receivers)
     }
 
     return res.respond("success")

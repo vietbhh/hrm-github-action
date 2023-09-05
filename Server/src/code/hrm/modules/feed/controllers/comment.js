@@ -14,6 +14,11 @@ import {
 } from "./feed.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { isFile } from "#app/utility/handleData.js"
+import {
+  sendNotificationCommentPost,
+  sendNotificationCommentPostTag,
+  sendNotificationTagInCommentPost
+} from "../../workspace/controllers/notification.js"
 
 // ** comment
 const submitComment = async (req, res, next) => {
@@ -50,22 +55,26 @@ const submitComment = async (req, res, next) => {
         { _id: id_post },
         { $push: { comment_ids: saveComment._id } }
       )
+      const infoPost = await feedMongoModel.findById(id_post)
 
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
-        const userId = req.__user
         const receivers = [created_by]
-        const body_noti =
-          data_user.full_name +
-          " {{modules.network.notification.commented_on_your_post}}"
-        const link = `/posts/${id_post}`
-        await handleSendNotification(
-          userId,
-          receivers,
-          body_noti,
-          link,
-          id_post
-        )
+        sendNotificationCommentPost(infoPost, data_user, content, receivers)
+      }
+
+      // send notification tag
+      const turn_off_notification = infoPost.turn_off_notification
+      turn_off_notification.push(data_user.id)
+      const arrTag = infoPost.tag_user.tag
+      const arrMention = infoPost.tag_user.mention
+      const allTag = arrTag.concat(arrMention)
+      const allTagCheckExist = [...new Set(allTag)]
+      const allTagSend = allTagCheckExist.filter(
+        (i) => !turn_off_notification.includes(i)
+      )
+      if (allTagSend.length > 0) {
+        sendNotificationCommentPostTag(infoPost, data_user, content, allTagSend)
       }
     } else {
       // update
@@ -94,18 +103,13 @@ const submitComment = async (req, res, next) => {
       if (dataFeed.ref) {
         link_notification = `/posts/${dataFeed.ref}/${id_post}`
       }
-      const userId = body.data_user.id
-      const full_name = body.data_user.full_name
-      const body_noti =
-        "<strong>" +
-        full_name +
-        "</strong> {{modules.network.notification.tag_comment}}"
-      await handleSendNotification(
-        userId,
-        body.tag_user,
-        body_noti,
-        link_notification,
-        id_post
+      console.log("runnnnn body.tag_user m .", body.tag_user)
+      const infoPost = { _id: id_post }
+      sendNotificationTagInCommentPost(
+        infoPost,
+        data_user,
+        content,
+        body.tag_user
       )
     }
 
