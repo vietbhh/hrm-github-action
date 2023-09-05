@@ -4251,7 +4251,7 @@
         "invite_to_the_event": "You have an invitation to the ",
         "event": "event",
         "you_have_a_new_announcement": "You have a new announcement",
-        "you_have_a_new_endorse": "You have a new endorse",
+        "you_have_a_new_endorse": "has endorsed you with badget",
         "liked_your_post": "liked your post",
         "commented_on_your_post": "commented on your post",
         "liked_your_comment": "liked your comment",
@@ -4260,7 +4260,12 @@
         "sent_notification": "Sent notification",
         "reaction_post_tag" : "posts you're tagged in",
         "comment_post_tag" : "commented  posts you're tagged in",
-        "asked_to_see_this_post" :  "asked you to see this post"
+        "asked_to_see_this_post" :  "asked you to see this post",
+        "has_endorsed_post" :  "has endorsed you with badget",
+        "was_endorsed_post" : "was endorsed with badget",
+        "posted_new_post_workgroup" : "posted a new post in workgroup",
+        "has_posted_workgroup" : "has posted in workgroup",
+        "sent_request_join_workgroup" : "sent a request to join workgroup"
       }
     },
     "timeline": {

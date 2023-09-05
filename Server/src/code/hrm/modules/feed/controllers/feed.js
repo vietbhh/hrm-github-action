@@ -797,32 +797,29 @@ const sendNotificationUnseen = async (req, res, next) => {
     const link_permiss = feed.link_permission
     const link_permiss_employee = link_permiss?.employee
     const link_permiss_department = link_permiss?.department
+
+    const dataUser = await getUserActivated()
+    const arrUserActive = []
+    forEach(dataUser, (item) => {
+      arrUserActive.push(item.id.toString())
+    })
+
     let receivers = []
-    console.log("feed", feed)
     if (permission === "default" && type === "event") {
       if (link_permiss.is_all) {
-        const dataUser = await getUserActivated()
-        const arrIdUser = []
-        forEach(dataUser, (item) => {
-          arrIdUser.push(item.id.toString())
-        })
-        receivers = arrIdUser.filter((x) => !seen.includes(x))
+        receivers = arrUserActive.filter((x) => !seen.includes(x))
       } else {
-        const tessttttt = await getUserbyDepartment(link_permiss_department)
-        const result = tessttttt.map((x) => x["id"].toString())
+        const listUserbyDepartment = await getUserbyDepartment(
+          link_permiss_department
+        )
+        const result = listUserbyDepartment.map((x) => x["id"].toString())
         const employeeConcat = link_permiss_employee.concat(result)
         const checkExist = [...new Set(employeeConcat)]
         receivers = checkExist.filter((x) => !seen.includes(x))
       }
     } else if (permission === "default") {
       //  announcement \ endorsement
-      console.log("rrrrrrrrrrrrr")
-      const dataUser = await getUserActivated()
-      const arrIdUser = []
-      forEach(dataUser, (item) => {
-        arrIdUser.push(item.id.toString())
-      })
-      receivers = arrIdUser.filter((x) => !seen.includes(x))
+      receivers = arrUserActive.filter((x) => !seen.includes(x))
     } else if (permission === "workspace") {
       if (!isEmpty(permission_ids)) {
         const dataWorkspace = await workspaceMongoModel.findById(
@@ -837,7 +834,6 @@ const sendNotificationUnseen = async (req, res, next) => {
     } else if (permission === "employee") {
       receivers = permission_ids.filter((x) => !seen.includes(x))
     }
-
     if (!isEmpty(receivers)) {
       const dataSender = await getUser(req.__user)
       sendNotificationUnseenPost(feed, dataSender, receivers)

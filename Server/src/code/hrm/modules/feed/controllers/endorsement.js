@@ -11,6 +11,11 @@ import {
   handleInsertHashTag,
   handlePullHashtag
 } from "./feed.js"
+import {
+  sendNotificationEndorsement,
+  sendNotificationEndorsementAll
+} from "../../workspace/controllers/notification.js"
+import { getUser, getUserActivated } from "#app/models/users.mysql.js"
 
 const submitEndorsement = async (req, res, next) => {
   const file = req.files
@@ -22,32 +27,15 @@ const submitEndorsement = async (req, res, next) => {
     const member = []
     const receivers = []
 
-    let checkIsAll = false
     forEach(body.valueSelectMember, (item) => {
-      if (item.value === "all") {
-        checkIsAll = true
-        return
+      const id = item.value.replace("_employee", "")
+      member.push(id)
+      if (parseInt(id) !== parseInt(req.__user)) {
+        receivers.push(id)
       }
     })
 
-    if (checkIsAll) {
-      const listEmployee = await getUserActivated()
-      forEach(listEmployee, (item) => {
-        employee.push(item.id)
-        if (parseInt(item.id) !== parseInt(req.__user)) {
-          receivers.push(item.id)
-        }
-      })
-    } else {
-      forEach(body.valueSelectMember, (item) => {
-        const value = item.value
-        member.push(value)
-
-        if (req.__user.toString() !== value.toString()) {
-          receivers.push(value)
-        }
-      })
-    }
+    const listEmployee = await getUserActivated()
 
     const dataInsert = {
       __user: req.__user,
@@ -89,23 +77,36 @@ const submitEndorsement = async (req, res, next) => {
       )
 
       // ** send notification
-      const userId = req.__user
-      const bodyNoti = "{{modules.network.notification.you_have_a_new_endorse}}"
+      const userId = await getUser(req.__user)
       const link = `/posts/${feedData._id}`
-      sendNotification(
+
+      sendNotificationEndorsement(
+        link,
         userId,
-        receivers,
-        {
-          title: "",
-          body: bodyNoti,
-          link: link
-          //icon: icon
-          //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-        },
-        {
-          skipUrls: ""
-        }
+        dataInsert.badge_name,
+        receivers
       )
+
+      // send Notification all user
+      forEach(member, async (id) => {
+        const receiversAll = []
+        let endor_user = await getUser(parseInt(id))
+
+        forEach(listEmployee, (item) => {
+          if (
+            parseInt(item.id) !== parseInt(req.__user) &&
+            parseInt(item.id) !== parseInt(id)
+          ) {
+            receiversAll.push(item.id)
+          }
+        })
+        sendNotificationEndorsementAll(
+          link,
+          endor_user,
+          dataInsert.badge_name,
+          receiversAll
+        )
+      })
 
       _id = idEndorsement
       const _feedData = await handleDataBeforeReturn(feedData)

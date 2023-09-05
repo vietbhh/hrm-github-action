@@ -51,7 +51,7 @@ const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
     body += " and " + (infoWorkspace.request_joins.length - 1) + " others"
   }
   body +=
-    " sent a request to join workgroup <strong>" +
+    " {{modules.network.notification.sent_request_join_workgroup}} <strong>" +
     infoWorkspace?.name +
     "</strong>"
 
@@ -103,7 +103,7 @@ const sendNotificationPostPending = async (feed, sender) => {
   const body =
     "<strong>" +
     sender?.full_name +
-    "</strong> has posted in workgroup <strong>" +
+    "</strong> {{modules.network.notification.has_posted_workgroup}} <strong>" +
     workspaceInfo?.name +
     "</strong>"
 
@@ -145,7 +145,7 @@ const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
   const body =
     "<strong>" +
     feed?.created_by?.full_name +
-    "</strong> posted a new post in workgroup <strong>" +
+    "</strong> {{modules.network.notification.posted_new_post_workgroup}} <strong>" +
     infoWorkspace?.name +
     "</strong>"
 
@@ -277,7 +277,7 @@ const sendNotificationTagInPost = async (post, user, comment, receivers) => {
 }
 
 const sendNotificationEndorsement = async (
-  post,
+  link,
   user,
   badget_name,
   receivers
@@ -287,13 +287,32 @@ const sendNotificationEndorsement = async (
     user.full_name +
     "</b> {{modules.network.notification.has_endorsed_post}} " +
     badget_name
-  const link = "posts/" + post._id
-  const body = compactContent(comment)
+  const body = ""
   await sendNotification(user?.id, receivers, {
     title: title,
     body: body,
     link: link,
     icon: parseInt(user?.id)
+  })
+}
+
+const sendNotificationEndorsementAll = async (
+  link,
+  endor_user,
+  badget_name,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    endor_user.full_name +
+    "</b> {{modules.network.notification.was_endorsed_post}} " +
+    badget_name
+  const body = ""
+  await sendNotification(endor_user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(endor_user?.id)
   })
 }
 export {
@@ -309,5 +328,6 @@ export {
   sendNotificationCommentPostTag,
   sendNotificationTagInCommentPost,
   sendNotificationTagInPost,
-  sendNotificationEndorsement
+  sendNotificationEndorsement,
+  sendNotificationEndorsementAll
 }

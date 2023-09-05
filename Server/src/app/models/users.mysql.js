@@ -91,10 +91,8 @@ const getUserActivated = (condition = {}) => {
   })
 }
 const getUserbyDepartment = (idDepartment = []) => {
-  console.log("idDepartmentidDepartmentidDepartmentidDepartment", idDepartment)
   return usersModel.findAll({
-    department_id: { $in: idDepartment },
-    account_status: "activated"
+    where: { department_id: idDepartment, account_status: "activated" }
   })
 }
 export { usersModel, getUser, getUsers, getUserActivated, getUserbyDepartment }
