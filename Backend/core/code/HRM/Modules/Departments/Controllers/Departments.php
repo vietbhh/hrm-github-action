@@ -8,6 +8,7 @@
 namespace HRM\Modules\Departments\Controllers;
 
 use App\Controllers\ErpController;
+use HRM\Modules\Employees\Models\EmployeesModel;
 
 class Departments extends ErpController
 {
@@ -27,10 +28,10 @@ class Departments extends ErpController
 		$listDepartment = $model->asArray()->orderBy('id ASC')->findAll();
 		$dataHandle = handleDataBeforeReturn('departments', $listDepartment, true);
 		$modules->setModule('employees');
-		$employeeModel = $modules->model;
+		$employeeModel = new EmployeesModel();
 
 		foreach ($dataHandle as $key => $item) {
-			$dataHandle[$key]['employees'] = $employeeModel->where('department_id', $item['id'])->findAll();
+			$dataHandle[$key]['employees'] = $employeeModel->exceptResigned()->where('department_id', $item['id'])->findAll();
 		}
 
 		if ($parent) {
@@ -50,7 +51,7 @@ class Departments extends ErpController
 
 			$dataHandle = handleDataBeforeReturn('departments', $arr, true);
 			foreach ($dataHandle as $key => $item) {
-				$dataHandle[$key]['employees'] = $employeeModel->where('department_id', $item['id'])->findAll();
+				$dataHandle[$key]['employees'] = $employeeModel->exceptResigned()->where('department_id', $item['id'])->findAll();
 			}
 			return $this->respond($dataHandle);
 		}
@@ -139,8 +140,8 @@ class Departments extends ErpController
 			array_push($idDepNoLineManager, $dataHandle['data']['id']);
 
 			$modules->setModule('employees');
-			$employeeModel = $modules->model;
-			$arrEmployees = $employeeModel->asArray()->whereIn('department_id', $idDepNoLineManager)->findAll();
+			$employeeModel = new EmployeesModel();
+			$arrEmployees = $employeeModel->asArray()->exceptResigned()->whereIn('department_id', $idDepNoLineManager)->findAll();
 			if ($arrEmployees) {
 				foreach ($arrEmployees as $key => $value) {
 					$updateLineManage = [
@@ -227,8 +228,8 @@ class Departments extends ErpController
 			$builder = $db->table('m_employees');
 
 			$modules->setModule('employees');
-			$modelEmployee = $modules->model;
-			$arrEmployees = $modelEmployee->asArray()->where('department_id', $post['department_from'])->findAll();
+			$modelEmployee = new EmployeesModel();
+			$arrEmployees = $modelEmployee->asArray()->exceptResigned()->where('department_id', $post['department_from'])->findAll();
 			if ($arrEmployees) {
 				//$idLineManager = $this->getLineManager($arrEmployees[0]);
 				foreach ($arrEmployees as $key => $value) {
@@ -332,8 +333,9 @@ class Departments extends ErpController
 			$db = \Config\Database::connect();
 			$builder = $db->table('m_employees');
 			$modules = \Config\Services::modules('employees');
-			$employeeModel = $modules->model;
-			$arrEmployees = $employeeModel->select('id,department_id,line_manager')->asArray()->where('department_id', $post['department_delete'])->findAll();
+			$employeeModel = new EmployeesModel();
+			$arrEmployees = $employeeModel->select('id,department_id,line_manager')->asArray()->exceptResigned()->where('department_id', $post['department_delete'])->findAll();
+
 			if (!$arrEmployees) {
 				$modules->setModule('departments');
 				$model = $modules->model;
@@ -367,7 +369,7 @@ class Departments extends ErpController
 							->update();
 					}
 					if ($post['deleteAll'] == 'true') {
-						$arrEmployees = $employeeModel->select('id,department_id,line_manager')->asArray()->whereIN('department_id', $post['childDelete'])->findAll();
+						$arrEmployees = $employeeModel->select('id,department_id,line_manager')->exceptResigned()->asArray()->whereIN('department_id', $post['childDelete'])->findAll();
 						foreach ($arrEmployees as $key => $val) {
 							$arrEmployees[$key]['line_manager'] = $id;
 							$arrEmployees[$key]['department_id'] = $post['department_next'];
