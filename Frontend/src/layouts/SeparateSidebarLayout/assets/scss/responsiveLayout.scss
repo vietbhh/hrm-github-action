@@ -1,0 +1,155 @@
+@media (max-width: 767.98px) {
+    .header-navbar {
+        z-index: 996 !important;
+    }
+
+    .vertical-overlay-menu {
+        .main-menu {
+            width: 100vw !important;
+
+            .navbar-header {
+                width: 100%;
+                padding-right: 20px;
+                padding-left: 20px;
+            }
+
+            .nav-bar-user-content {
+                width: calc(100% - 40px);
+                margin-top: 20px;
+                margin-left: 20px;
+                display: block !important;
+
+                .navbar-nav {
+                    padding: 14px 20px;
+                    background-color: #f7f7f5;
+                    border-radius: 12px;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-direction: row;
+
+                    li {
+                        &:first-child {
+                            display: none;
+                        }
+                    }
+
+                    .nav-link {
+                        padding: 0px !important;
+                        svg {
+                            width: 24px !important;
+                            height: 24px !important;
+                        }
+
+                        .fa-gear {
+                            padding-top: 2px;
+                            font-size: 20px !important;
+                            line-height: 20px !important;
+                        }
+                    }
+                }
+            }
+
+            .main-menu-content {
+                padding-top: 0 !important;
+
+                .scrollbar-container {
+                    height: calc(100% - 370px) !important;
+                }
+            }
+
+            .div-sidebar-bottom {
+                margin-top: 10px !important;
+            }
+        }
+
+        .header-navbar {
+            .navbar-container {
+                display: flex;
+                justify-content: space-between;
+
+                .navbar-nav {
+                    //margin-left: unset !important;
+                    li {
+                        display: none;
+
+                        &:first-child {
+                            display: block !important;
+                        }
+                    }
+                }
+
+                .logo-wrapper {
+                    img {
+                        display: block !important;
+                        height: auto;
+                        width: 103px;
+                    }
+                }
+
+                .bookmark-wrapper {
+                    order: 3;
+                    //margin-left: auto;
+                    .navbar-nav {
+                        li {
+                            display: block;
+                            .menu-toggle {
+                                padding: 0 !important;
+                                padding-left: 20px !important;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .navbar-logo-min {
+                padding-right: 30px;
+            }
+        }
+    }
+
+    .sidenav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 120vh;
+        background-color: unset !important;
+        z-index: 997;
+        display: block;
+        visibility: hidden;
+        opacity: unset !important;
+        transition: all 0.5s ease;
+        &.show {
+            opacity: unset !important;
+            visibility: visible;
+            transition: all 0.5s ease;
+        }
+    }
+
+    .separate-sidebar-layout {
+        font-size: 10px !important;
+
+        .main-menu {
+            position: fixed;
+            top: 0;
+            margin: 0;
+            z-index: 99999;
+
+            .navbar-header {
+                width: 100%;
+                padding-right: 20px;
+                padding-left: 20px;
+            }
+
+            .nav-bar-user-content {
+                width: calc(100% - 20px);
+                margin-top: 10px;
+                margin-left: 10px;
+            }
+        }
+
+        .header-navbar {
+            width: 100vw;
+        }
+    }
+}

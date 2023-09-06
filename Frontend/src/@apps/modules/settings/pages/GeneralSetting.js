@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react"
 import { Button, Card, CardBody, CardHeader, CardTitle } from "reactstrap"
 import { generalApi } from "../common/api"
 import GeneralForm from "../components/general/GeneralForm"
-import SettingLayout from "../components/SettingLayout"
 const GeneralSetting = () => {
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(true)

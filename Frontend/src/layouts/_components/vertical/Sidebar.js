@@ -1,6 +1,7 @@
 // ** React Imports
 import { Fragment, useRef, useState } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
+import { useSelector } from "react-redux"
 // ** Vertical Menu Components
 import classNames from "classnames"
 
@@ -8,6 +9,7 @@ import QuickAccess from "./sidebar/QuickAccess"
 import UserDropdown from "./sidebar/UserDropdown"
 import VerticalNavMenuItems from "./sidebar/VerticalNavMenuItems"
 import VerticalMenuHeader from "./VerticalMenuHeader"
+import NavbarUser from "./navbar/NavbarUser"
 
 const Sidebar = (props) => {
   // ** Props
@@ -26,7 +28,8 @@ const Sidebar = (props) => {
     hideQuickAccess,
     hideVerticalMenuHeader,
     userId,
-    notMenuCollapsed
+    notMenuCollapsed,
+    showVerticalMenuHeaderOnMobile
   } = props
 
   // ** States
@@ -40,6 +43,9 @@ const Sidebar = (props) => {
 
   // ** Ref
   const shadowRef = useRef(null)
+
+  const customSettingMenu =
+    useSelector((state) => state.auth.settings).top_menu_config || {}
 
   // ** Function to handle Mouse Enter
   const onMouseEnter = () => {
@@ -73,7 +79,8 @@ const Sidebar = (props) => {
         onClick={onMouseEnter}
         onMouseLeave={() => setMenuHover(false)}>
         {/* Vertical Menu Header */}
-        {hideVerticalMenuHeader !== true && (
+        {(hideVerticalMenuHeader !== true ||
+          showVerticalMenuHeaderOnMobile === true && windowWidth <= 767.98) && (
           <VerticalMenuHeader
             setGroupOpen={setGroupOpen}
             menuHover={menuHover}
@@ -82,6 +89,14 @@ const Sidebar = (props) => {
         )}
         {/* Vertical Menu Header Shadow */}
         <div className="shadow-bottom" ref={shadowRef}></div>
+        <div className="nav-bar-user-content d-none">
+          <NavbarUser
+            customSettingMenu={customSettingMenu}
+            saveQuickAccess={saveQuickAccess}
+            defaultMenuNav={defaultMenuNav}
+            settingPermits={settingPermits}
+          />
+        </div>
         {/* Perfect Scrollbar */}
         <div className="main-menu-content">
           <PerfectScrollbar

@@ -5,7 +5,6 @@ import UpdateDefaultModle from "@apps/modules/default/components/UpdateDefaultMo
 import React from "react"
 import { useSelector } from "react-redux"
 import { Navigate, useParams } from "react-router-dom"
-import SettingLayout from "../components/SettingLayout"
 
 const GroupsSetting = (props) => {
   const params = useParams()

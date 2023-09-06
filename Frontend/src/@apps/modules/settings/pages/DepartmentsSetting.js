@@ -23,53 +23,51 @@ const DepartmentsSetting = (props) => {
   }
   return (
     <React.Fragment>
-      <SettingLayout>
-        {(action === undefined || action === "page") && (
-          <ListDefaultModule
-            {...props}
-            module={moduleStore.config}
-            metas={moduleStore.metas}
-            options={moduleStore.options}
-            filters={filters}
-            breadcrumb={false}
-          />
-        )}
-        {action === "add" && (
-          <AddDefaultModule
-            {...props}
-            module={moduleStore.config}
-            metas={moduleStore.metas}
-            options={moduleStore.options}
-          />
-        )}
-        {action === "update" && (
-          <UpdateDefaultModle
-            {...props}
-            module={moduleStore.config}
-            metas={moduleStore.metas}
-            options={moduleStore.options}
-          />
-        )}
+      {(action === undefined || action === "page") && (
+        <ListDefaultModule
+          {...props}
+          module={moduleStore.config}
+          metas={moduleStore.metas}
+          options={moduleStore.options}
+          filters={filters}
+          breadcrumb={false}
+        />
+      )}
+      {action === "add" && (
+        <AddDefaultModule
+          {...props}
+          module={moduleStore.config}
+          metas={moduleStore.metas}
+          options={moduleStore.options}
+        />
+      )}
+      {action === "update" && (
+        <UpdateDefaultModle
+          {...props}
+          module={moduleStore.config}
+          metas={moduleStore.metas}
+          options={moduleStore.options}
+        />
+      )}
 
-        {action === "detail" && (
-          <DetailDefaultModule
-            {...props}
-            module={modulestore.config}
-            metas={moduleStore.metas}
-            options={moduleStore.options}
-          />
-        )}
+      {action === "detail" && (
+        <DetailDefaultModule
+          {...props}
+          module={modulestore.config}
+          metas={moduleStore.metas}
+          options={moduleStore.options}
+        />
+      )}
 
-        {action === "import" && (
-          <ImportDefaultModule
-            {...props}
-            module={moduleStore.config}
-            metas={moduleStore.metas}
-            options={moduleStore.options}
-            filters={filters}
-          />
-        )}
-      </SettingLayout>
+      {action === "import" && (
+        <ImportDefaultModule
+          {...props}
+          module={moduleStore.config}
+          metas={moduleStore.metas}
+          options={moduleStore.options}
+          filters={filters}
+        />
+      )}
     </React.Fragment>
   )
 }

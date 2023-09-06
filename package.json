@@ -3,17 +3,30 @@
   "author": "longth",
   "license": "MIT",
   "scripts": {
+    "install-fe-dep": "cd Frontend && yarn install",
+    "install-sv-dep": "cd Server && yarn install",
+    "install-be-dep": "cd Backend && composer install",
+    "install-all-dep": "npm-run-all -s install-be-dep install-fe-dep install-sv-dep",
+    "remove-all-dep" : "./remove-all-dep.sh",
     "start-fe": "cd Frontend && yarn run start",
     "start-server": "cd Server && yarn run start",
-    "start-backend": "cd Backend && php -S localhost:80 -t applications/default/public/",
-    "start-backend-server": "npm-run-all -p start-backend start-server",
-    "start": "npm-run-all -p start-backend start-server start-fe"
+    "start-backend": "cd Backend/applications/default && php spark start",
+    "start": "npm-run-all -p start-backend start-server start-fe",
+    "init-env" : "./init-env.sh",
+    "build-fe": "cd Frontend && yarn run build",
+    "build-app" : "npm-run-all -s init-env build-fe",
+    "init-app-env" : "./init-app.sh",
+    "init-app" : "npm-run-all -s \"init-app-env {1} {2} {3} {4}\" build-app --",
+    "start-production-fe": "cd Frontend && yarn run preview",
+    "start-production-server": "cd Server && yarn run prod",
+    "start-production-test": "npm-run-all -p start-backend start-production-server  \"start-production-fe --port {1}\" --"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {
-    "i18next": "^23.2.5",
-    "react-idle-timer": "^5.4.2"
+    "env-cmd": "^10.1.0",
+    "global": "^4.4.0",
+    "wait-on": "^7.0.1"
   }
 }

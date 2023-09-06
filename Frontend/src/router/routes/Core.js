@@ -106,7 +106,7 @@ const CoreRoutes = [
     path: "/settings/users/:action?/:id?",
     element: <UsersSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "users"
     }
@@ -124,7 +124,7 @@ const CoreRoutes = [
     path: "/settings/departments/:action?/:id?",
     element: <DepartmentsSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "departments"
     }
