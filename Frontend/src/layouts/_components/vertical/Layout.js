@@ -110,7 +110,7 @@ const Layout = (props) => {
     _.map(
       _.filter(
         listSettingMenu,
-        (item) => ability.can(item.action, item.resource) && !item.hide
+        (item) => ability.can(item.action, item.resource) && !item.hide && !item.hide && item.type !== "header"
       ),
       (item) => item
     ),
