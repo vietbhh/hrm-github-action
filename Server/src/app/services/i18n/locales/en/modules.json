@@ -3698,7 +3698,8 @@
           "edited_at": "Edited at",
           "send_in_messenger": "Send in messenger",
           "share_to_a_group": "Share to a group",
-          "this_post_has_been_edited": "This post has been edited"
+          "this_post_has_been_edited": "This post has been edited",
+          "approve_setting" : "Post Approval Setting"
         },
         "react": {
           "like": "Like",
@@ -4101,7 +4102,8 @@
         "was_endorsed_post" : "was endorsed with badget",
         "posted_new_post_workgroup" : "posted a new post in workgroup",
         "has_posted_workgroup" : "has posted in workgroup",
-        "sent_request_join_workgroup" : "sent a request to join workgroup"
+        "sent_request_join_workgroup" : "sent a request to join workgroup",
+        "requested_approval_post" : "requested approval for his post on the shared wall"
       }
     },
     "timeline": {

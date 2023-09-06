@@ -315,6 +315,21 @@ const sendNotificationEndorsementAll = async (
     icon: parseInt(endor_user?.id)
   })
 }
+
+const sendNotificationPostPendingFeed = async (post, post_owner, receivers) => {
+  const title =
+    "<b>" +
+    post_owner.full_name +
+    "</b> {{modules.network.notification.requested_approval_post}} "
+  const body = compactContent(post.content)
+  const link = "/feed/approve-post"
+  await sendNotification(post_owner?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(post_owner?.id)
+  })
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -329,5 +344,6 @@ export {
   sendNotificationTagInCommentPost,
   sendNotificationTagInPost,
   sendNotificationEndorsement,
-  sendNotificationEndorsementAll
+  sendNotificationEndorsementAll,
+  sendNotificationPostPendingFeed
 }

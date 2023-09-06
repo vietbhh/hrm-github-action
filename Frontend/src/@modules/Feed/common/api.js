@@ -147,7 +147,20 @@ export const feedApi = {
   async loadPendingPost(params) {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/feed/pending-posts?${strParams}`)
+  },
+
+  async loadUserApprovePost(params) {
+    const strParams = object2QueryString(params)
+    return await axiosApi.get(`/employees/load-approve-post?${strParams}`)
+  },
+
+  async saveSettingPostApprove(data) {
+    return await axiosApi.post(
+      "/employees/save-setting-approve-feed",
+      serialize(_.cloneDeep(data))
+    )
   }
+  // /feedApi
 }
 
 export const eventApi = {

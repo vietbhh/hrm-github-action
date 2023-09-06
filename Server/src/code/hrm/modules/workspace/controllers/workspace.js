@@ -851,9 +851,6 @@ const loadDataMedia = async (req, res, next) => {
       }
     }
 
-    feedCondition["owner"] = owner
-    postCondition["owner"] = owner
-
     const listFeed = await feedMongoModel
       .find(feedCondition)
       .skip(page * pageLength)
