@@ -40,6 +40,7 @@ import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
   sendNotificationPostPending,
+  sendNotificationPostPendingFeed,
   sendNotificationReactionPost,
   sendNotificationReactionPostTag,
   sendNotificationTagInPost,
@@ -166,6 +167,12 @@ const submitPostController = async (req, res, next) => {
       out = saveFeedParent
       if (workspace_type === "workspace" && body.approveStatus === "pending") {
         sendNotificationPostPending(dataInsert, body.data_user)
+      }
+      if (workspace_type === "default" && body.approveStatus === "pending") {
+        const userApprove = await getSetting(
+          "feed_approval_post_notification_user"
+        )
+        sendNotificationPostPendingFeed(dataInsert, body.data_user, userApprove)
       }
     } else {
       _id_parent = _id_post_edit

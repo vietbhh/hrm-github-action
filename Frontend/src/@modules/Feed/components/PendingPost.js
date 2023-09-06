@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, Col, Row, Spinner } from "reactstrap"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { workspaceApi } from "../../Workspace/common/api"
+import PostApprovalSettingModal from "./modals/PostApprovalSettingModal"
 const workspace_type = [
   {
     value: "desc",
@@ -30,7 +31,8 @@ const PendingPost = (props) => {
     sort: "desc",
     page: 1,
     recordsTotal: 0,
-    pageLength: 10
+    pageLength: 10,
+    settingModal: false
   })
 
   const current_url = window.location.pathname
@@ -142,6 +144,7 @@ const PendingPost = (props) => {
                 {state.loading && <Spinner size="sm" className="me-50" />}
                 {useFormatMessage("button.approve")}
               </Button>
+
               <Button
                 type="submit"
                 color="secondary"
@@ -160,6 +163,9 @@ const PendingPost = (props) => {
         </Card>
       )
     })
+  }
+  const handleSettingModal = () => {
+    setState({ settingModal: !state.settingModal })
   }
 
   return (
@@ -196,6 +202,16 @@ const PendingPost = (props) => {
                       "modules.workspace.buttons.decline_all_posts"
                     )}
                   </Button>
+                  {!idWorkspace && (
+                    <Button
+                      style={{ maxWidth: "50px" }}
+                      color="secondary"
+                      className="ms-1 btn-action-secondary "
+                      onClick={() => handleSettingModal()}
+                      disabled={state.loading}>
+                      <i className="fa-light fa-gear"></i>
+                    </Button>
+                  )}
                 </div>
               </div>
               <Row>
@@ -938,6 +954,11 @@ const PendingPost = (props) => {
           )}
         </div>
       </div>
+
+      <PostApprovalSettingModal
+        modal={state.settingModal}
+        handleModal={handleSettingModal}
+      />
     </Fragment>
   )
 }

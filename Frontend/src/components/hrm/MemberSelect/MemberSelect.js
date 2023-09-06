@@ -31,7 +31,6 @@ const MemberSelect = (props) => {
     loading: true,
     currentOption: []
   })
-
   const dataEmployee = useSelector((state) => state.users.list)
 
   const loadData = () => {

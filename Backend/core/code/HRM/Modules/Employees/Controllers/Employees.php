@@ -1962,6 +1962,50 @@ class Employees extends Employee
 		return $this->respond($idArr);
 	}
 
+	public function load_approve_post_get()
+	{
+		$authorize = \Config\Services::authorization();
+		$employeeModel = new EmployeesModel();
+		$builder = $employeeModel->asArray()->exceptResignedEmployee();
+		$data = $builder->findAll();
+		$arrHasPer = [];
+		foreach ($data as $user):
+			$isSuper = $authorize->hasPermission('sys.superpower', $user['id']);
+			if ($isSuper) {
+				$arrHasPer[] = $user;
+			} else {
+				$checkPer = $authorize->hasPermission('modules.feed.ApprovalPost', $user['id']);
+				if ($checkPer) {
+					$arrHasPer[] = $user;
+				}
+			}
+
+		endforeach;
+		$dataHandle = handleDataBeforeReturn('employees', $arrHasPer, true);
+		$userSelected = preference('feed_approval_post_notification_user');
+		$arrSelected = [];
+		foreach ($dataHandle as $key => $val):
+			$dataHandle[$key]['label'] = $val['full_name'];
+			$dataHandle[$key]['tag'] = $val['email'];
+			$dataHandle[$key]['value'] = $val['id'] . "_employee";
+			if (in_array($val['id'], $userSelected)) {
+				$arrSelected[] = $dataHandle[$key];
+			}
+		endforeach;
+		$dataReturn['userSelected'] = $arrSelected;
+		$dataReturn['userData'] = $dataHandle;
+		return $this->respond($dataReturn);
+
+	}
+
+	public function save_setting_approve_feed_post()
+	{
+		$getPost = $this->request->getPost();
+		$Users = $getPost['users'];
+		preference('feed_approval_post_notification_user', $Users, true);
+		return $this->respond(1);
+	}
+
 	/**
 	 *  support function
 	 */

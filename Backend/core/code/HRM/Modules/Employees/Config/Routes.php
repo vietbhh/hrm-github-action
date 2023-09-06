@@ -47,6 +47,8 @@ $routes->get('employees/get-setting-column-table', 'Employees::get_setting_colum
 $routes->post('employees/save-setting-column-table', 'Employees::save_setting_column_table_post',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/update-employee-user-metas', 'Employees::update_employee_user_metas_post',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->get('employees/in-department', 'Employees::in_department_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
+$routes->get('employees/load-approve-post', 'Employees::load_approve_post_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
+$routes->post('employees/save-setting-approve-feed', 'Employees::save_setting_approve_feed_post',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/add-custom-field', 'Employees::add_custom_field_post',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->get('employees/load-tab-content', 'Employees::load_tab_content_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/load-custom-field-detail/(:any)', 'Employees::load_custom_field_detail_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
