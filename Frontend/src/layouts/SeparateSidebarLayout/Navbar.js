@@ -64,16 +64,21 @@ const NavbarComponent = (props) => {
         )}
 
         {windowWidth < windowWidthMin && (
-          <NavLink
-            className="nav-menu-main menu-toggle hidden-xs"
-            style={{ color: "#32434F" }}
-            to={"#"}
-            onClick={(e) => {
-              e.preventDefault()
-              setMenuVisibility(true)
-            }}>
-            <Icon.Menu className="ficon" />
-          </NavLink>
+          <div className="w-100 d-flex align-items-center justify-content-between navbar-logo-min">
+            <div className="logo-wrapper">
+              <Logo src={logoDefault} alt="logo" className="d-none" />
+            </div>
+            <NavLink
+              className="nav-menu-main menu-toggle hidden-xs"
+              style={{ color: "#32434F" }}
+              to={"#"}
+              onClick={(e) => {
+                e.preventDefault()
+                setMenuVisibility(true)
+              }}>
+              <Icon.Menu className="ficon" />
+            </NavLink>
+          </div>
         )}
 
         <div className="bookmark-wrapper d-flex align-items-center">
