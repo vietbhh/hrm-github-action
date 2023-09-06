@@ -1,4 +1,7 @@
 @media (max-width: 767.98px) {
+    .separate-sidebar-layout .app-content {
+        margin-left: 0 !important;
+    }
     .header-navbar {
         z-index: 996 !important;
     }
@@ -127,8 +130,6 @@
     }
 
     .separate-sidebar-layout {
-        font-size: 10px !important;
-
         .main-menu {
             position: fixed;
             top: 0;
@@ -142,9 +143,9 @@
             }
 
             .nav-bar-user-content {
-                width: calc(100% - 20px);
+                width: calc(100%);
                 margin-top: 10px;
-                margin-left: 10px;
+                margin-left: 0px;
             }
         }
 

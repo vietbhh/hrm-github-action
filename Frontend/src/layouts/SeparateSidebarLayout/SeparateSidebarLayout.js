@@ -105,6 +105,7 @@ const SeparateSidebarLayout = (props) => {
         notMenuCollapsed={true}
         hideQuickAccess={true}
         hideVerticalMenuHeader={true}
+        showVerticalMenuHeaderOnMobile={true}
         {...props}>
         <Outlet />
       </Layout>

@@ -5493,3 +5493,48 @@ $background-color-checkbox: #139ff8;
     text-decoration: none !important;
   }
 }
+
+@media (max-width: 767.98px) {
+  .app-content {
+    .content-wrapper {
+      .feed {
+        .div-create-post {
+          .div-post {
+            .avatar {
+              img {
+                height: 40px;
+                width: 40px;
+              }
+            }
+          }
+          .div-option {
+            .ul-option {
+              li {
+                padding: 0 4px !important;
+                &:nth-child(2),
+                &:nth-child(3) {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .load-feed {
+        .load-post {
+          .post-footer {
+          .post-footer-button {
+            button {
+              padding: 0 10px !important;
+              span {
+                display: none !important;
+              }
+            }
+          }
+          }
+        }
+      }
+    }
+  }
+}
