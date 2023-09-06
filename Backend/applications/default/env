@@ -20,6 +20,8 @@ database.default.hostname = ''
 database.default.database = ''
 database.default.username = ''
 database.default.password = ''
+#default database port is 3306
+#database.default.port = ''
 
 db.mongodb.hostname = ''
 db.mongodb.port = ''
