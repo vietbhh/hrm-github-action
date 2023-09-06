@@ -1,0 +1,12 @@
+@import "@scss/friday";
+
+.empty-layout {
+  &.separate-sidebar-layout {
+    .app-content {
+      max-width: unset;
+      @media (max-width: 1920px) {
+        max-width: unset !important;
+      }
+    }
+  }
+}
