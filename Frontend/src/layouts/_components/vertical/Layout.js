@@ -59,7 +59,8 @@ const Layout = (props) => {
     hideQuickAccess,
     hideVerticalMenuHeader,
     notMenuCollapsed = false,
-    hideSidebar = false
+    hideSidebar = false,
+    showVerticalMenuHeaderOnMobile = false
   } = props
 
   // ** Hooks
@@ -320,6 +321,7 @@ const Layout = (props) => {
             hideVerticalMenuHeader={hideVerticalMenuHeader}
             userId={userId}
             notMenuCollapsed={notMenuCollapsed}
+            showVerticalMenuHeaderOnMobile={showVerticalMenuHeaderOnMobile}
           />
         )}
         {children}
