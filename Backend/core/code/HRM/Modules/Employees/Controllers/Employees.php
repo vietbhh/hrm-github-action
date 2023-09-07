@@ -108,26 +108,33 @@ class Employees extends Employee
 	{
 		helper('app_select_option');
 		$getPost = $this->request->getPost();
+
 		if (!mayUpdateResource('employees', $id)) return $this->failForbidden(MISSING_UPDATE_PERMISSION);
 		if (!hasPermission('modules.employees.termination')) return $this->failForbidden(MISSING_PERMISSION);
+		$arrId = $id == 'multi' ? $getPost['employees_id'] : [$id];
 		try {
 			$lastWorkingDate = $getPost['last_working_date'];
 			if (strtotime($lastWorkingDate) <= strtotime(date('Y-m-d'))) {
 				$employeeModel = new EmployeesModel();
-				$result = $employeeModel->resign([$id]);
+				$result = $employeeModel->resign($arrId);
 				if ($result['success'] == false) {
 					throw new \Exception($result['err']);
 				}
 			} else {
 				$getPost['status'] = getOptionValue('employees', 'status', 'offboarding');
-				if ($this->updateEmployee($id, $getPost)) {
-					//Delete onboarding checklist if it is exist
-					$this->_handleRemoveChecklistEmployeeOffboarding($id);
-					//Todo handle other task for off-boarding
-					return $this->respondUpdated($id);
-				} else {
-					return $this->fail(FAILED_SAVE);
+
+				foreach ($arrId as $rowId) {
+					if ($this->updateEmployee($rowId, $getPost)) {
+						//Delete onboarding checklist if it is exist
+						$this->_handleRemoveChecklistEmployeeOffboarding($rowId);
+					} else {
+						return $this->fail(FAILED_SAVE);
+						break;
+					}
 				}
+
+				//Todo handle other task for off-boarding
+				return $this->respondUpdated($arrId);
 			}
 		} catch (\Exception $e) {
 			return $this->failValidationErrors($e->getMessage());
@@ -430,34 +437,40 @@ class Employees extends Employee
 
 	public function invite($id)
 	{
-		if (!mayAccessResource('employees', $id)) return $this->failForbidden(MISSING_ACCESS_PERMISSION);
+		//if (!mayAccessResource('employees', $id)) return $this->failForbidden(MISSING_ACCESS_PERMISSION);
 		if (!hasPermission('modules.employees.hiring')) return $this->failForbidden(MISSING_PERMISSION);
 		$employeeModel = new EmployeesModel();
 		$userModel = new UserModel();
-		$employeeData = $employeeModel->find($id);
-		$userData = $userModel->find($id);
-		if (empty($employeeData) || empty($userData)) {
-			return $this->failNotFound(NOT_FOUND);
-		}
+		$postData = $this->request->getPost();
 
-		$userData->generateActivateHash();
+		$arrEmployeeId = $id == 'multi' ? $postData['employee_id'] : [$id];
 
-		$activator = service('activator');
-		$sent = $activator->send($userData);
-		if (!$sent) {
-			return $this->failServerError($activator->error());
-		} else {
-			$employeeData['account_status'] = 2;
-			try {
-				$employeeModel->setAllowedFields(['account_status'])->save($employeeData);
-			} catch (\Exception $e) {
-				return $this->failServerError($e->getMessage());
+		foreach ($arrEmployeeId as $row) {
+			$employeeData = $employeeModel->find($row);
+			$userData = $userModel->find($row);
+			if (empty($employeeData) || empty($userData)) {
+				return $this->failNotFound(NOT_FOUND);
 			}
-			$userData->account_status = $this->accountStatusConvert[2];
-			try {
-				$userModel->save($userData);
-			} catch (\Exception $e) {
-				return $this->failServerError($e->getMessage());
+
+			$userData->generateActivateHash();
+
+			$activator = service('activator');
+			$sent = $activator->send($userData);
+			if (!$sent) {
+				return $this->failServerError($activator->error());
+			} else {
+				$employeeData['account_status'] = 2;
+				try {
+					$employeeModel->setAllowedFields(['account_status'])->save($employeeData);
+				} catch (\Exception $e) {
+					return $this->failServerError($e->getMessage());
+				}
+				$userData->account_status = $this->accountStatusConvert[2];
+				try {
+					$userModel->save($userData);
+				} catch (\Exception $e) {
+					return $this->failServerError($e->getMessage());
+				}
 			}
 		}
 
@@ -1969,7 +1982,7 @@ class Employees extends Employee
 		$builder = $employeeModel->asArray()->exceptResignedEmployee();
 		$data = $builder->findAll();
 		$arrHasPer = [];
-		foreach ($data as $user):
+		foreach ($data as $user) :
 			$isSuper = $authorize->hasPermission('sys.superpower', $user['id']);
 			if ($isSuper) {
 				$arrHasPer[] = $user;
@@ -1984,7 +1997,7 @@ class Employees extends Employee
 		$dataHandle = handleDataBeforeReturn('employees', $arrHasPer, true);
 		$userSelected = preference('feed_approval_post_notification_user');
 		$arrSelected = [];
-		foreach ($dataHandle as $key => $val):
+		foreach ($dataHandle as $key => $val) :
 			$dataHandle[$key]['label'] = $val['full_name'];
 			$dataHandle[$key]['tag'] = $val['email'];
 			$dataHandle[$key]['value'] = $val['id'] . "_employee";
@@ -1995,7 +2008,6 @@ class Employees extends Employee
 		$dataReturn['userSelected'] = $arrSelected;
 		$dataReturn['userData'] = $dataHandle;
 		return $this->respond($dataReturn);
-
 	}
 
 	public function save_setting_approve_feed_post()
