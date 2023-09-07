@@ -16,7 +16,7 @@
     "build-fe": "cd Frontend && yarn run build",
     "build-app": "npm-run-all -s init-env build-fe",
     "init-app-env": "./init-app.sh",
-    "init-app": "npm-run-all -s \"init-app-env {1} {2} {3} {4}\" build-app --",
+    "init-app": "npm-run-all -s \"init-app-env {1} {2} {3} {4} {5}\" build-app --",
     "start-production-fe": "cd Frontend && yarn run preview",
     "start-production-server": "cd Server && yarn run prod",
     "start-production-test": "npm-run-all -p start-backend start-production-server  \"start-production-fe --port {1}\" --"
