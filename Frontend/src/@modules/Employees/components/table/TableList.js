@@ -1,14 +1,28 @@
 import { ErpCheckbox } from "@apps/components/common/ErpField"
 import TableLoader from "@apps/components/spinner/TableLoader"
-import { fieldLabel, useMergedState } from "@apps/utility/common"
+import {
+  fieldLabel,
+  useMergedState,
+  useFormatMessage
+} from "@apps/utility/common"
 import DragAndDrop from "@apps/utility/DragAndDrop"
 import { isUndefined } from "@apps/utility/handleData"
 import { cellHandle } from "@apps/utility/TableHandler"
+import { Space } from "antd"
 import classNames from "classnames"
 import { filter, isEmpty, isFunction, isNull, map, orderBy } from "lodash"
-import { Fragment, useEffect, useRef } from "react"
+import { Fragment, useContext, useEffect, useRef, useMemo } from "react"
 import { useDrag, useDrop } from "react-dnd"
+import { Button } from "reactstrap"
+import { AbilityContext } from "utility/context/Can"
+import { useDispatch } from "react-redux"
+import { showOffboardingModal } from "@modules/Employees/common/offboardingReducer"
 import { Pagination, Table } from "rsuite"
+import InviteEmployeesModal from "../modals/InviteEmployeesModal"
+import SwAlert from "@apps/utility/SwAlert"
+import { defaultModuleApi } from "@apps/utility/moduleApi"
+import notification from "@apps/utility/notification"
+
 const { Column, HeaderCell, Cell } = Table
 
 const CellDisplay = (props) => {
@@ -91,6 +105,7 @@ const TableList = (props) => {
     recordsTotal,
     currentPage,
     perPage,
+    module,
     pagination,
     onChangePage,
     onChangeLength,
@@ -101,12 +116,22 @@ const TableList = (props) => {
     onResize,
     customColumnBefore,
     customColumnAfter,
-    currentSort
+    currentSort,
+    onComplete,
+    loadData
   } = props
   const [state, setState] = useMergedState({
     selectedRows: [],
-    metas: { ...metas }
+    listMemberInvite: [],
+    listMemberOffBoarding: [],
+    metas: { ...metas },
+    modalInvite: false
   })
+
+  const dispatch = useDispatch()
+
+  const ability = useContext(AbilityContext)
+  const canTermination = ability.can("termination", "employees")
 
   const selectAllRef = useRef()
   const handleCheckAll = (checked) => {
@@ -122,6 +147,12 @@ const TableList = (props) => {
       : selectedRows.filter((item) => parseInt(item) !== parseInt(value))
     setState({
       selectedRows: nextSelectedRows
+    })
+  }
+
+  const toggleModalInvite = () => {
+    setState({
+      modalInvite: !state.modalInvite
     })
   }
 
@@ -170,6 +201,56 @@ const TableList = (props) => {
     })
   }
 
+  const handleOnChangePage = (page) => {
+    setState({
+      selectedRows: []
+    })
+    onChangePage(page)
+  }
+
+  const handleClickInviteEmployees = () => {
+    toggleModalInvite()
+  }
+
+  const handleClickOffBoardingEmployees = () => {
+    dispatch(showOffboardingModal(state.listMemberOffBoarding))
+  }
+
+  const handleDeleteClick = (idDelete = "") => {
+    if (idDelete !== "") {
+      const ids = _.isArray(idDelete) ? idDelete : [idDelete]
+      SwAlert.showWarning({
+        confirmButtonText: useFormatMessage("button.delete")
+      }).then((res) => {
+        if (res.value) {
+          _handleDeleteClick(ids)
+        }
+      })
+    }
+  }
+
+  const _handleDeleteClick = (ids) => {
+    defaultModuleApi
+      .delete(module, ids.join(), "/employees/delete")
+      .then((result) => {
+        loadData(
+          {
+            page: state.currentPage
+          },
+          { selectedRows: [] }
+        )
+        notification.showSuccess({
+          text: useFormatMessage("notification.delete.success")
+        })
+        setState({
+          selectedRows: []
+        })
+      })
+      .catch((err) => {
+        notification.showError({ text: err.message })
+      })
+  }
+
   useEffect(() => {
     handleDragColumn()
   }, [metas])
@@ -194,14 +275,85 @@ const TableList = (props) => {
     if (isFunction(onSelectedRow)) {
       onSelectedRow(state.selectedRows)
     }
+
+    const tempInvite = []
+    const tempOffBoarding = []
+    state.selectedRows.map((item) => {
+      const [currentUserSelected] = data.filter(
+        (itemFilter) => parseInt(itemFilter.id) === parseInt(item)
+      )
+
+      if (
+        currentUserSelected?.status?.name_option !== "offboarding" &&
+        currentUserSelected?.status?.name_option !== "resigned" &&
+        (currentUserSelected?.account_status?.name_option === "uninvited" ||
+          currentUserSelected?.status?.name_option === "invited")
+      ) {
+        tempInvite.push(currentUserSelected)
+      } else if (
+        [11, 12, 13, 14].includes(
+          parseInt(currentUserSelected?.status?.value)
+        ) &&
+        canTermination
+      ) {
+        tempOffBoarding.push(currentUserSelected)
+      }
+    })
+
+    setState({
+      listMemberInvite: tempInvite,
+      listMemberOffBoarding: tempOffBoarding
+    })
   }, [data, state.selectedRows])
 
   if (loading) {
     return <TableLoader rows="15" />
   }
 
+  const renderActionButton = () => {
+    return (
+      <Fragment>
+        {state.listMemberInvite.length > 0 && (
+          <Button.Ripple
+            color="success"
+            onClick={() => handleClickInviteEmployees()}>
+            {useFormatMessage("modules.employees.buttons.invite_member", {
+              number: state.listMemberInvite.length
+            })}
+          </Button.Ripple>
+        )}
+
+        {state.listMemberOffBoarding.length > 0 && (
+          <Button.Ripple
+            color="warning"
+            onClick={() => handleClickOffBoardingEmployees()}>
+            {useFormatMessage("modules.employees.buttons.onboarding_member", {
+              number: state.listMemberOffBoarding.length
+            })}
+          </Button.Ripple>
+        )}
+
+        {(ability.can("delete", module) || ability.can("deleteAll", module)) &&
+          state.selectedRows.length > 0 && (
+            <Fragment>
+              <Button.Ripple
+                color="danger"
+                onClick={() => {
+                  handleDeleteClick(state.selectedRows)
+                }}>
+                {useFormatMessage("app.delete")}
+              </Button.Ripple>
+            </Fragment>
+          )}
+      </Fragment>
+    )
+  }
+
   return (
     <Fragment>
+      <Space className="mb-1">
+        <Fragment>{renderActionButton()}</Fragment>
+      </Space>
       <DragAndDrop>
         <div>
           <Table
@@ -364,7 +516,7 @@ const TableList = (props) => {
           activePage={currentPage}
           limit={parseInt(perPage)}
           total={recordsTotal}
-          onChangePage={onChangePage}
+          onChangePage={handleOnChangePage}
           onChangeLimit={onChangeLength}
           className="mt-2"
           layout={["limit", "|", "total", "-", "pager"]}
@@ -372,6 +524,12 @@ const TableList = (props) => {
       ) : (
         ""
       )}
+      <InviteEmployeesModal
+        modal={state.modalInvite}
+        listEmployee={state.listMemberInvite}
+        handleModal={toggleModalInvite}
+        onComplete={onComplete}
+      />
     </Fragment>
   )
 }

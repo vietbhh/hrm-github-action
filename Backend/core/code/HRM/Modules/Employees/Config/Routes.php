@@ -29,7 +29,7 @@ $routes->post('employees/related/(:any)/(:any)', 'Employees::related_post/$1/$2'
 $routes->delete('employees/related/(:any)/(:any)/(:any)', 'Employees::related_delete/$1/$2/$3',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/rehire/(:any)', 'Employees::rehire_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->get('employees/org-chart/?(:any)?', 'Employees::org_chart_get/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
-$routes->add('employees/invite/(:any)', 'Employees::invite/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
+$routes->post('employees/invite/(:any)', 'Employees::invite/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->get('employees/export-excel', 'Employees::export_excel_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/preview', 'Employees::preview_post',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees/import', 'Employees::import_post',['namespace' => 'HRM\Modules\Employees\Controllers']);

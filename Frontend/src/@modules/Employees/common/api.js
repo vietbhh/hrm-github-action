@@ -221,8 +221,11 @@ export const employeesApi = {
   async getConfig() {
     return await axiosApi.get("/employees/config")
   },
-  async sendInvite(id) {
-    return await axiosApi.get("/employees/invite/" + id)
+  async sendInvite(id, data = {}) {
+    return await axiosApi.post(
+      "/employees/invite/" + id,
+      serialize(_.cloneDeep(data))
+    )
   },
 
   async getExportExcel() {
