@@ -40,8 +40,15 @@ const OffboardingModal = (props) => {
   }
   const onSubmit = (values) => {
     setState({ submitting: true })
+    let idSubmit = user?.id
+    if (_.isArray(user)) {
+      idSubmit = "multi"
+      values["employees_id"] = user.map((item) => {
+        return item.id
+      })
+    }
     employeesApi
-      .offboard(user.id, values)
+      .offboard(idSubmit, values)
       .then((res) => {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
@@ -57,7 +64,6 @@ const OffboardingModal = (props) => {
       })
       .catch((err) => {
         setState({ submitting: false })
-        console.log(err)
         notification.showError({
           text: useFormatMessage("notification.save.error")
         })
@@ -67,6 +73,22 @@ const OffboardingModal = (props) => {
     mode: "onSubmit"
   })
   const { handleSubmit, errors, control, register, reset, setValue } = methods
+
+  // ** render
+  const renderMember = () => {
+    if (_.isArray(user)) {
+      return (
+        <div className="d-flex align-items-center flex-wrap">
+          {user.map((item) => {
+            return <UserDisplay user={item} className="mb-1 me-75" />
+          })}
+        </div>
+      )
+    } else {
+      return <UserDisplay user={user} className="mb-1" />
+    }
+  }
+
   return (
     <React.Fragment>
       <Modal
@@ -85,7 +107,7 @@ const OffboardingModal = (props) => {
             <ModalBody>
               <Row>
                 <Col md="12">
-                  <UserDisplay user={user} className="mb-1" />
+                  <Fragment>{renderMember()}</Fragment>
                 </Col>
                 {!isEmpty(fields) &&
                   orderBy(

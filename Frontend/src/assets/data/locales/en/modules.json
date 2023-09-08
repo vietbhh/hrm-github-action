@@ -600,6 +600,8 @@
       "buttons": {
         "add": "New Profile",
         "invite": "Invite",
+        "invite_member": "Invite {number} members",
+        "onboarding_member": "Offboarding {number} members",
         "reinvite": "Re-Invite",
         "onboarding": "Onboarding",
         "offboarding": "Offboarding",
