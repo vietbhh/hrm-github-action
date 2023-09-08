@@ -3731,7 +3731,7 @@
           "delete_post": "Delete post",
           "delete_image_video": "Delete image/video",
           "reply": "Reply",
-          "placeholder_input": "Write your comment...",
+          "placeholder_input": "Write something...",
           "you": "You",
           "other": "other",
           "and": "and",
@@ -3805,7 +3805,8 @@
       "manage_post": {
         "title": {
           "index": "Manage Posts",
-          "featured_post": "Featured posts"
+          "featured_post": "Featured posts",
+          "user_post": "{label}'s post"
         },
         "text": {
           "description": "Track activities and view reports about posts in your organization.",

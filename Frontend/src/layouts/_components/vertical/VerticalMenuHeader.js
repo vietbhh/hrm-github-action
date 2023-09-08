@@ -10,7 +10,6 @@ import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
 
 const VerticalMenuHeader = (props) => {
-  console.log("render")
   // ** Props
   const {
     skin,
