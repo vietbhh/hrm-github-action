@@ -143,6 +143,7 @@ const Layout = (props) => {
     if (menuVisibility && windowWidth < 1200) {
       setMenuVisibility(false)
     }
+    
   }, [location])
 
   //** Sets Window Size & Layout Props

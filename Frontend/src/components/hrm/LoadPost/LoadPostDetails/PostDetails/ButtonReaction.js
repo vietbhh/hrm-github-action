@@ -11,6 +11,7 @@ import React, { Fragment, useEffect } from "react"
 import { useSelector } from "react-redux"
 import ModalSendInMessenger from "../modals/ModalSendInMessenger"
 import DropdownReaction from "./DropdownReaction"
+import ModalPostComment from "../modals/ModalPostComment.js/ModalPostComment"
 
 const ButtonReaction = (props) => {
   const {
@@ -20,17 +21,25 @@ const ButtonReaction = (props) => {
     setCommentMoreCountOriginal,
     setFocusCommentForm
   } = props
+
   const [state, setState] = useMergedState({
     checkLike: "",
     modalSendInMessenger: false,
     titleModalInMessenger: "",
-    typeChat: ""
+    typeChat: "",
+    postCommentModal: false
   })
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const full_name = userData.full_name
 
   // ** function
+  const togglePostCommentModal = () => {
+    setState({
+      postCommentModal: !state.postCommentModal
+    })
+  }
+
   const updateReaction = (react_type) => {
     const _data = { ...data }
     const reaction = _data.reaction ? _data.reaction : []
@@ -57,6 +66,11 @@ const ButtonReaction = (props) => {
 
   const toggleModalSendInMessenger = () =>
     setState({ modalSendInMessenger: !state.modalSendInMessenger })
+
+  const handleClickCommentButton = () => {
+    //setFocusCommentForm(true)
+    togglePostCommentModal()
+  }
 
   // ** useEffect
   useEffect(() => {
@@ -321,7 +335,7 @@ const ButtonReaction = (props) => {
 
         <button
           className="btn-comment"
-          onClick={() => setFocusCommentForm(true)}>
+          onClick={() => handleClickCommentButton()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23"
@@ -381,6 +395,15 @@ const ButtonReaction = (props) => {
         title={state.titleModalInMessenger}
         typeChat={state.typeChat}
       />
+
+      {state.postCommentModal && (
+        <ModalPostComment
+          modal={state.postCommentModal}
+          dataPreview={data}
+          handleModal={togglePostCommentModal}
+          setData={setData}
+        />
+      )}
     </Fragment>
   )
 }

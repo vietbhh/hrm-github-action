@@ -70,6 +70,7 @@ const PostCommentForm = (props) => {
     setFocusCommentForm,
     created_by_comment_parent = null
   } = props
+
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
     image: null,
@@ -78,7 +79,7 @@ const PostCommentForm = (props) => {
     // mention
     open: false,
     mentions: dataMention,
-    suggestions: dataMention
+    suggestions: dataMention === undefined ? [] : dataMention
   })
 
   const userData = useSelector((state) => state.auth.userData)
@@ -231,7 +232,9 @@ const PostCommentForm = (props) => {
   }
   // ** useEffect
   useEffect(() => {
-    setState({ mentions: dataMention, suggestions: dataMention })
+    if (dataMention !== undefined) {
+      setState({ mentions: dataMention, suggestions: dataMention })
+    }
   }, [dataMention])
 
   /*  useEffect(() => {

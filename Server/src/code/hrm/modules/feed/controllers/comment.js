@@ -103,7 +103,7 @@ const submitComment = async (req, res, next) => {
       if (dataFeed.ref) {
         link_notification = `/posts/${dataFeed.ref}/${id_post}`
       }
-      console.log("runnnnn body.tag_user m .", body.tag_user)
+
       const infoPost = { _id: id_post }
       sendNotificationTagInCommentPost(
         infoPost,
