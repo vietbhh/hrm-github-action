@@ -13,6 +13,9 @@ import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/
 import EditInformationModal from "../components/modals/EditInformationModal"
 import WorkgroupPrivacy from "../components/detail/CreateWorkspace/WorkGroupPrivacy"
 import { isEmpty } from "lodash"
+import { Dropdown, Space } from "antd"
+import MenuSettingWorkspace from "../components/detail/MenuSettingWorkspace"
+
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
@@ -64,6 +67,7 @@ const SettingWorkspace = () => {
     editModal: false
   })
   const params = useParams()
+  console.log("params", params)
   const navigate = useNavigate()
   const methods = useForm({
     mode: "onSubmit"
@@ -130,6 +134,9 @@ const SettingWorkspace = () => {
   return (
     <WorkspaceSettingLayout>
       <div className="workspace-setting row">
+        <div className="col-md-12 ">
+          <MenuSettingWorkspace menu={"setting"} />
+        </div>
         <div className="col-md-12 ">
           <Card>
             <CardBody className="p-50 d-flex align-items-center w-100">
