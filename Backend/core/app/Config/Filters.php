@@ -1,7 +1,7 @@
 <?php namespace Config;
 
 use App\Filters\CorsFilter;
-use App\Filters\LoginFilter;
+use App\Filters\JWTLoginFilter;
 use App\Filters\PermissionFilter;
 use App\Filters\RoleFilter;
 use CodeIgniter\Config\BaseConfig;
@@ -15,7 +15,7 @@ class Filters extends BaseConfig
 		'toolbar' => \CodeIgniter\Filters\DebugToolbar::class,
 		'honeypot' => \CodeIgniter\Filters\Honeypot::class,
 		'cors' => CorsFilter::class,
-		'login' => LoginFilter::class,
+		'jwtLogin' => JWTLoginFilter::class,
 		'role' => RoleFilter::class,
 		'permission' => PermissionFilter::class
 	];
@@ -24,7 +24,7 @@ class Filters extends BaseConfig
 	public $globals = [
 		'before' => [
 			'cors',
-			'login' => ['except' => ['auth/*', 'header-assistant/*', 'download/public/*', 'download/logo/*', 'download/avatar', 'download/avatar/*', 'lib/download/*']]
+			'jwtLogin' => ['except' => ['auth/*', 'header-assistant/*', 'download/public/*', 'download/logo/*', 'download/avatar', 'download/avatar/*', 'lib/download/*']]
 			//'honeypot'
 			// 'csrf',
 		],
@@ -46,9 +46,16 @@ class Filters extends BaseConfig
 
 	public function __construct()
 	{
-		$codeFilters = new \CODE\Filters();
-		$clientFilters = new \CLIENT\Config\Filters();
-		$this->globals['before']['login']['except'] = array_merge($this->globals['before']['login']['except'], $codeFilters->getPublicRoute(), $clientFilters->getPublicRoute());
+		helper('common');
+		$codeFiltersClass = new \CODE\Filters();
+		$codeFiltersConfig = $codeFiltersClass->getFilterConfig();
+		$clientFiltersClass = new \CLIENT\Config\Filters();
+		$clientFiltersConfig = $clientFiltersClass->getFilterConfig();
+
+		$this->aliases = array_unique(array_merge_deep([$this->aliases, $codeFiltersConfig['aliases'], $clientFiltersConfig['aliases']]));
+		$this->globals = array_merge_deep([$this->globals, $codeFiltersConfig['globals'], $clientFiltersConfig['globals']]);
+		$this->methods = array_merge_deep([$this->methods, $codeFiltersConfig['methods'], $clientFiltersConfig['methods']]);
+		$this->filters = array_merge_deep([$this->filters, $codeFiltersConfig['filters'], $clientFiltersConfig['filters']]);
 	}
 
 }

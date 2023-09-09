@@ -2,8 +2,6 @@
 
 namespace FRIDAY\Config;
 
-use Daycry\CronJob\Scheduler;
-
 class Filters
 {
 	/*
@@ -11,6 +9,21 @@ class Filters
 	 * ['download/*']
 	 * */
 	public array $public_router = [];
+
+	/*
+	 * DECLARE CONFIG FILTER HERE
+	 * */
+	public function getFilterConfig(): array
+	{
+		return [
+			'aliases' => [],
+			'globals' => [
+				'before' => ['jwtLogin' => ['except' => $this->public_router]]
+			],
+			'methods' => [],
+			'filters' => []
+		];
+	}
 }
 
 ?>

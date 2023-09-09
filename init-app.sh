@@ -1,6 +1,8 @@
 
 #!/bin/bash
 printf "Initialing app env...\n"
+export COMPOSER_ALLOW_SUPERUSER=1
+export NODE_OPTIONS="--max-old-space-size=8192"
 HOST=$1
 APP_PORT=$2
 PHP_PORT=$3
