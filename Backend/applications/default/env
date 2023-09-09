@@ -32,10 +32,10 @@ db.mongodb.password = ''
 #port for running by php spark - if not set - app will run in port 80
 #sparkRunningPort = 8083
 
-app.baseURL = 'http://192.168.1.6'
+app.baseURL = 'http://localhost'
 app.siteURL = 'http://localhost:3000';
 app.nodeApiUrl = 'http://localhost:6969';
-app.dataURL = 'http://192.168.1.6';
+app.dataURL = 'http://localhost';
 
 # firebase messaging
 firebase_server_key="AAAAuvA35qk:APA91bHePnwFMmMOfc0MWVLAqB51CJs_mznuVZV_zFoazjSL6E9tQr4aqjnY20J5YtoL3usGT-FYuptPGnpDBEuPkQUXj4ZyKgU3OMtC3fpc_ALL63CsO-QRp5OpIXJMU7dUaVvg4m8_"
