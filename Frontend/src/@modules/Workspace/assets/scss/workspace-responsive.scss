@@ -1,5 +1,4 @@
 @media (max-width: 767.98px) {
-
 .list-workspace-page  {
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -8,110 +7,114 @@
         font-style: normal;
         font-weight: 600;
     }
-    .card-workspace-managed{
-        padding: 0;
-        background-color : transparent !important;
-        padding-left: 0px !important;
-        padding-right: 0px !important;
-        .card-header{
-            padding: 0px;
-            .text-color-title{
-                font-size: 18px !important;
-                font-weight: 500;
-            }
-        }
-        .card-body{
-            padding: 0px;
-        }
-        .workspace-manage-list{
-            .workspace-item{
-                border-radius: 16px;
-                background: var(--other-white, #FFF);
-                display: flex;
-                align-items: center!important;
-                .image-container{
-                    margin-bottom: 0px !important;
-                    padding: 8px;
-                    height: auto !important;
-                    img{
-                        border-radius: 12px;
-                        width: 76px !important;
-                        height: 76px !important;
-                    }
-                    .ant-image{
-                        border-radius: 12px;
-                        width: 76px !important;
-                        height: 76px !important;
-                    }
-                    width: 25%;
+    .body{
+        .card-workspace-managed{
+            padding: 0;
+            background-color : transparent !important;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            .card-header{
+                padding: 0px;
+                .text-color-title{
+                    font-size: 18px !important;
+                    font-weight: 500;
                 }
-                .content-container{
-                    display: flex;
-                    align-items: center!important;
-                    width: 75%;
-                    .text-color-title {
-                        font-size: 15px !important;
-                        font-style: normal;
-                        font-weight: 400;
-                    }
-                    .btn-container{
-                        margin-left: auto;
-                        button{
-                            border-radius: 12px !important;
+            }
+            .card-body{
+                padding: 0px;
+                .workspace-manage-list{
+                    .workspace-item{
+                        border-radius: 16px;
+                        background: var(--other-white, #FFF);
+                        display: flex;
+                        align-items: center!important;
+                        .image-container{
+                            margin-bottom: 0px !important;
+                            padding: 8px;
+                            height: auto !important;
+                            width: auto !important;
+                            img{
+                                border-radius: 12px;
+                                width: 76px !important;
+                                height: 76px !important;
+                            }
+                            .ant-image{
+                                border-radius: 12px;
+                                width: 76px !important;
+                                height: 76px !important;
+                            }
+                        }
+                        .content-container{
+                            display: flex;
+                            align-items: center!important;
+                            width: 100%;
+                            .text-color-title {
+                                font-size: 15px !important;
+                                font-style: normal;
+                                font-weight: 400;
+                            }
+                            .btn-container{
+                                margin-left: auto;
+                                button{
+                                    border-radius: 12px !important;
+                                }
+                            }
                         }
                     }
+                    .col {
+                        width: 100% !important;
+                        flex: none;
+                    }
                 }
-            }
-            .col {
-                width: 100% !important;
-                flex: none;
-            }
-        }
 
-        .workspace-joined-list{
-            margin-top: 1rem;
-            .workspace-item{
-                border-radius: 16px;
-                background: var(--other-white, #FFF);
-                display: flex;
-                align-items: center!important;
-                .image-container{
-                    
-                    border : none !important;
-                    margin-bottom: 0px !important;
-                    padding: 8px;
-                    height: auto !important;
-                    img{
-                        border-radius: 12px;
-                        width: 76px !important;
-                        height: 76px !important;
+                .workspace-joined-list{
+                    margin-top: 1rem;
+                    .workspace-item{
+                        border-radius: 16px;
+                        background: var(--other-white, #FFF);
+                        display: flex;
+                        align-items: center!important;
+                        justify-content: normal !important;
+                        .image-container{
+                            
+                            border : none !important;
+                            margin-bottom: 0px !important;
+                            padding: 8px;
+                            height: auto !important;
+                            width: auto !important;
+                            img{
+                                border-radius: 12px;
+                                width: 64px !important;
+                                height: 64px !important;
+                            }
+                        }
+                        .content-container{
+                            border : none !important;
+                            display: flex;
+                            align-items: center!important;
+                            width: 100% !important;
+                            .text-color-title {
+                                font-size: 15px !important;
+                                font-style: normal;
+                                font-weight: 400;
+                            
+                            }
+                            .btn-container{
+                                margin-left: auto;
+                            }
+                        }
                     }
-                   
-                    width: 25%;
+                    .col-sm-6 {
+                        width: 100% !important;
+                        flex: none;
+                    }
+                }
 
-                }
-                .content-container{
-                    border : none !important;
-                    display: flex;
-                    align-items: center!important;
-                    width: 75%;
-                    .text-color-title {
-                        font-size: 15px !important;
-                        font-style: normal;
-                        font-weight: 400;
-                       
-                    }
-                    .btn-container{
-                        margin-left: auto;
-                    }
-                }
             }
-            .col-sm-6 {
-                width: 100% !important;
-                flex: none;
-            }
+
         }
     }
+
 }
 .invite-workspace-modal-off{
     width: auto !important;
@@ -140,6 +143,7 @@
             .div-content{
                 .div-left{
                     width: 100% !important;
+                    margin-right: 0px !important;
                 }
             }
         }
@@ -180,6 +184,15 @@
             }
         }
     }
+    .tab-content{
+        .tab-pane{
+            .tab-introduction{
+                .row{
+                    margin-right: 0px !important;
+                }
+            }
+        }
+    }
 }
 .modal {
         background: rgba(19, 19, 38, 0.10);
@@ -194,6 +207,17 @@
         margin-left: 0px !important;
     }
 }
+.preview-workspace-media-modal{
+    .modal-content {
+        .modal-body{
+            .preview-image{
+                img{
+                    height : auto !important
+                }
+            }
+        }
+    }
+}   
 }
 @media (max-width: 1199px) {
     .separate-sidebar-layout{

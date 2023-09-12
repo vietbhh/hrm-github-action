@@ -66,6 +66,7 @@ const EditIntroduction = (props) => {
             <Button.Ripple
               type="submit"
               size="md"
+              className="custom-primary"
               color="primary"
               disabled={loading}>
               {useFormatMessage("modules.workspace.buttons.save")}
@@ -73,7 +74,7 @@ const EditIntroduction = (props) => {
             <Button.Ripple
               type="button"
               size="md"
-              color="danger"
+              color="secondary"
               disabled={loading}
               onClick={() => handleClickCancel()}>
               {useFormatMessage("button.cancel")}

@@ -37,7 +37,7 @@ const TabMember = (props) => {
   return (
     <div className="tab-member">
       <Row>
-        <Col sm={8} className="pe-0">
+        <Col md={8} lg={8} className="pe-0">
           <WorkgroupMember
             id={id}
             userState={userState}
@@ -48,7 +48,7 @@ const TabMember = (props) => {
             setIsReloadAdmin={setIsReloadAdmin}
           />
         </Col>
-        <Col sm={4}>
+        <Col md={4} lg={4}>
           <WorkgroupAdmin
             id={id}
             userState={userState}

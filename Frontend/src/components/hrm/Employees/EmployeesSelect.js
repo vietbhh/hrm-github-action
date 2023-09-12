@@ -379,15 +379,17 @@ const EmployeesSelect = (props) => {
                       {useFormatMessage("modules.workspace.text.suggested")}
                     </span>
 
-                    <div
-                      onClick={() => setState({ viewSelected: true })}
-                      className="ms-auto"
-                      style={{
-                        fontSize: "12px",
-                        color: "var(--secondary-500, #2F9BFA)"
-                      }}>
-                      See all selected ({state.dataSelected.length})
-                    </div>
+                    {state.dataSelected.length > 0 && (
+                      <div
+                        onClick={() => setState({ viewSelected: true })}
+                        className="ms-auto"
+                        style={{
+                          fontSize: "12px",
+                          color: "var(--secondary-500, #2F9BFA)"
+                        }}>
+                        See all selected ({state.dataSelected.length})
+                      </div>
+                    )}
                   </Col>
                 </Row>
                 <PerfectScrollbar
@@ -401,16 +403,30 @@ const EmployeesSelect = (props) => {
               </>
             )}
             {state.typeAdd === "departments" && (
-              <PerfectScrollbar
-                onYReachEnd={() => endScrollDepartment()}
-                style={{
-                  height: "400px",
-                  minHeight: "400px"
-                }}>
-                <Row className="w-100">
-                  {renderDepartment(state.departments)}
-                </Row>
-              </PerfectScrollbar>
+              <>
+                {state.dataSelected.length > 0 && (
+                  <div
+                    onClick={() => setState({ viewSelected: true })}
+                    className="ms-auto"
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--secondary-500, #2F9BFA)"
+                    }}>
+                    See all selected ({state.dataSelected.length})
+                  </div>
+                )}
+
+                <PerfectScrollbar
+                  onYReachEnd={() => endScrollDepartment()}
+                  style={{
+                    height: "400px",
+                    minHeight: "400px"
+                  }}>
+                  <Row className="w-100">
+                    {renderDepartment(state.departments)}
+                  </Row>
+                </PerfectScrollbar>
+              </>
             )}
           </div>
         )}
