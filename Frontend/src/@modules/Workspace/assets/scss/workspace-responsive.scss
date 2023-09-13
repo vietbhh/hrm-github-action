@@ -218,6 +218,60 @@
         }
     }
 }   
+
+.workspace-pending-post {
+    .num_of_pending{
+        font-size: 15px !important;
+    }
+}
+.workspace-setting-layout-page {
+    .content-container {
+        .request-to-join-container {
+            .header {
+                .title{
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+}
+.info-workgroup-modal{
+    .about-group-container{
+        box-shadow : none !important;
+            .card-header{
+                padding: 0px !important;
+            }
+            .card-body{
+                padding: 0px !important;
+                .workspace-info-item{
+                    .icon-section{
+                        margin-right: 0.5rem ;
+                    }
+                    
+                }
+                .footer-about{
+                    button{
+                        width: 100%;
+                        border-radius: 12px;
+                        background: var(--neutral-shade-9, #F2F1ED) !important;
+                        border-color: var(--neutral-shade-9, #F2F1ED) !important;
+                        color: var(--neutral-shade-2, #403F3A) !important;
+                        font-size: 14px;
+                        font-weight: 600;
+
+                    }
+                }
+            }
+    }
+}
+.select-option-menu-workgroup{
+    .select__control{
+        border: none !important;
+        .select__single-value{
+            font-size: 18px !important;
+        }
+    } 
+}
 }
 @media (max-width: 1199px) {
     .separate-sidebar-layout{

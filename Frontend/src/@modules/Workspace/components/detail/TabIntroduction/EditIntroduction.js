@@ -74,6 +74,7 @@ const EditIntroduction = (props) => {
             <Button.Ripple
               type="button"
               size="md"
+              className="custom-secondary"
               color="secondary"
               disabled={loading}
               onClick={() => handleClickCancel()}>

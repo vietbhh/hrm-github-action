@@ -15,12 +15,10 @@ const InfoWorkgroupModal = (props) => {
       toggle={() => handleModal()}
       backdrop={"static"}
       size="sm"
-      className="create-workgroup-modal"
+      className="create-workgroup-modal info-workgroup-modal"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
-      <ModalHeader toggle={() => handleModal()}>
-        {useFormatMessage("modules.workspace.display.search_post")}
-      </ModalHeader>
+      <ModalHeader toggle={() => handleModal()}></ModalHeader>
       <ModalBody>
         <AboutWorkgroup workspaceInfo={workspaceInfo} />
       </ModalBody>

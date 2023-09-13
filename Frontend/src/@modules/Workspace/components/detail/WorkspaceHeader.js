@@ -579,10 +579,7 @@ const WorkspaceHeader = (props) => {
       })
     }
   }, [data])
-  console.log(
-    "checkMobilecheckMobilecheckMobilecheckMobilecheckMobile",
-    checkMobile
-  )
+
   const renderChatButton = () => {
     if (
       !_.isEmpty(data.group_chat_id) ||
