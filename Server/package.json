@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=development nodemon index.js",
-    "prod": "NODE_ENV=production nodemon index.js"
+    "start": "NODE_ENV=development nodemon index.js --host 0.0.0.0",
+    "prod": "NODE_ENV=production nodemon index.js --host 0.0.0.0"
   },
   "repository": "https://github.com/FridayOs/core",
   "author": "hailongtrinh",
