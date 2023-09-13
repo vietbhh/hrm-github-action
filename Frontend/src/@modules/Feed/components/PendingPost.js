@@ -215,7 +215,7 @@ const PendingPost = (props) => {
                 </div>
               </div>
               <Row>
-                <Col md="4">
+                <Col xs="6" md="4">
                   <ErpSelect
                     name="sort"
                     nolabel
@@ -232,7 +232,7 @@ const PendingPost = (props) => {
                     onChange={(e) => loadData({ sort: e?.value })}
                   />
                 </Col>
-                <Col md="8">
+                <Col xs="6" md="8">
                   <ErpInput
                     nolabel
                     placeholder="Search"

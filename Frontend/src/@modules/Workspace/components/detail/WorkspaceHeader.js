@@ -15,6 +15,8 @@ import SearchPostModal from "../modals/SearchPostModal"
 import { getTabByNameOrId } from "../../common/common"
 import SwAlert from "@apps/utility/SwAlert"
 
+import { ErpDate, ErpSelect } from "@apps/components/common/ErpField"
+import InfoWorkgroupModal from "../modals/InfoWorkgroupModal"
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
@@ -24,6 +26,13 @@ const arrSplice = (arr = [], IDrm) => {
   return arr
 }
 
+const checkMediaWidth = (x) => {
+  if (x.matches) {
+    return true
+  }
+
+  return false
+}
 const WorkspaceHeader = (props) => {
   //  disabled: data?.administrators ? !data?.administrators.includes(userId)  : true
   const {
@@ -40,6 +49,31 @@ const WorkspaceHeader = (props) => {
     ? data?.administrators.includes(userId)
     : false
 
+  const checkMobile = checkMediaWidth(
+    window.matchMedia("(max-width: 767.98px)")
+  )
+  const optionTab = [
+    {
+      value: 1,
+      label: useFormatMessage("modules.workspace.display.feed")
+    },
+    {
+      value: 2,
+      label: useFormatMessage("modules.workspace.display.pinned")
+    },
+    {
+      value: 4,
+      label: useFormatMessage("modules.workspace.display.member")
+    },
+    {
+      value: 5,
+      label: useFormatMessage("modules.workspace.display.media")
+    },
+    {
+      value: 3,
+      label: useFormatMessage("modules.workspace.display.information")
+    }
+  ]
   const renderDropMenu = (dataWorkspace) => {
     const items = [
       {
@@ -272,6 +306,7 @@ const WorkspaceHeader = (props) => {
     waitJoined: false,
     showInput: false,
     modal: false,
+    infoWorkgroupModal: false,
     items: renderDropMenu(data)
   })
 
@@ -478,7 +513,9 @@ const WorkspaceHeader = (props) => {
       toggleModal()
     }
   }
-
+  const handleClickInfoButton = () => {
+    setState({ infoWorkgroupModal: !state.infoWorkgroupModal })
+  }
   const toggleModal = () => {
     setState({
       modal: !state.modal
@@ -627,73 +664,98 @@ const WorkspaceHeader = (props) => {
                   </Fragment>
                 )}
 
-                {!state.joined && !state.waitJoined && data?.mode === "visible" && (
-                  <>
+                {!state.joined &&
+                  !state.waitJoined &&
+                  data?.mode === "visible" && (
+                    <>
+                      <Button
+                        className="btn btn-success"
+                        onClick={() => handleJoin()}>
+                        {useFormatMessage(
+                          "modules.workspace.buttons.join_workspace"
+                        )}
+                      </Button>
+                    </>
+                  )}
+                {!state.joined &&
+                  state.waitJoined &&
+                  data?.mode === "visible" && (
                     <Button
-                      className="btn btn-success"
-                      onClick={() => handleJoin()}>
-                      {useFormatMessage(
-                        "modules.workspace.buttons.join_workspace"
-                      )}
+                      className="btn btn-secondary custom-secondary"
+                      onClick={() => handleCancelJoin()}>
+                      {useFormatMessage("button.cancel")}
                     </Button>
-                  </>
-                )}
-                {!state.joined && state.waitJoined && data?.mode === "visible" && (
-                  <Button
-                    className="btn btn-secondary custom-secondary"
-                    onClick={() => handleCancelJoin()}>
-                    {useFormatMessage("button.cancel")}
-                  </Button>
-                )}
+                  )}
               </div>
             </div>
             <Nav tabs className="mb-0 nav-tab-custom">
-              <NavItem>
-                <NavLink
-                  active={tabActive === 1}
-                  onClick={() => {
-                    handleClickTabName(1)
-                  }}>
-                  {useFormatMessage("modules.workspace.display.feed")}
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={tabActive === 2}
-                  onClick={() => {
-                    handleClickTabName(2)
-                  }}>
-                  {useFormatMessage("modules.workspace.display.pinned")}
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={tabActive === 4}
-                  onClick={() => {
-                    handleClickTabName(4)
-                  }}>
-                  {useFormatMessage("modules.workspace.display.member")}
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={tabActive === 5}
-                  onClick={() => {
-                    handleClickTabName(5)
-                  }}>
-                  {useFormatMessage("modules.workspace.display.media")}
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={tabActive === 3}
-                  onClick={() => {
-                    handleClickTabName(3)
-                  }}>
-                  {useFormatMessage("modules.workspace.display.information")}
-                </NavLink>
-              </NavItem>
+              {!checkMobile && (
+                <>
+                  <NavItem>
+                    <NavLink
+                      active={tabActive === 1}
+                      onClick={() => {
+                        handleClickTabName(1)
+                      }}>
+                      {useFormatMessage("modules.workspace.display.feed")}
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      active={tabActive === 2}
+                      onClick={() => {
+                        handleClickTabName(2)
+                      }}>
+                      {useFormatMessage("modules.workspace.display.pinned")}
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      active={tabActive === 4}
+                      onClick={() => {
+                        handleClickTabName(4)
+                      }}>
+                      {useFormatMessage("modules.workspace.display.member")}
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      active={tabActive === 5}
+                      onClick={() => {
+                        handleClickTabName(5)
+                      }}>
+                      {useFormatMessage("modules.workspace.display.media")}
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      active={tabActive === 3}
+                      onClick={() => {
+                        handleClickTabName(3)
+                      }}>
+                      {useFormatMessage(
+                        "modules.workspace.display.information"
+                      )}
+                    </NavLink>
+                  </NavItem>
+                </>
+              )}
 
+              <div className="action-nav">
+                <Space className="pe-1">
+                  <ErpSelect
+                    options={optionTab}
+                    defaultValue={optionTab[0]}
+                    className="w-100"
+                    nolabel
+                    isClearable={false}
+                    formGroupClass="mb-0"
+                    onChange={(e) => {
+                      handleClickTabName(e?.value)
+                    }}
+                  />
+                </Space>
+              </div>
               {state.joined && (
                 <div className="action-nav ms-auto">
                   <Space className="pe-1">
@@ -723,7 +785,46 @@ const WorkspaceHeader = (props) => {
                         />
                       </svg>
                     </Button>
-
+                    {checkMobile && (
+                      <Button
+                        className="btn-sm custom-secondary animate__animated animate__zoomIn"
+                        onClick={() => handleClickInfoButton()}>
+                        <svg
+                          width="24"
+                          height="25"
+                          viewBox="0 0 24 25"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M12 22.1812C17.5 22.1812 22 17.6812 22 12.1812C22 6.68115 17.5 2.18115 12 2.18115C6.5 2.18115 2 6.68115 2 12.1812C2 17.6812 6.5 22.1812 12 22.1812Z"
+                            stroke="#696760"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M12 8.18115V13.1812"
+                            stroke="#696760"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M11.9945 16.1812H12.0035H11.9945Z"
+                            fill="#696760"
+                          />
+                          <path
+                            d="M11.9945 16.1812H12.0035"
+                            stroke="#696760"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </Button>
+                    )}
                     <Dropdown
                       menu={{ items: renderDropMenu(data) }}
                       placement="bottomRight"
@@ -753,6 +854,11 @@ const WorkspaceHeader = (props) => {
               members={data.members}
               handleDone={handleDoneAddAD}
               handleModal={handleSelectAD}
+            />
+            <InfoWorkgroupModal
+              modal={state.infoWorkgroupModal}
+              workspaceInfo={data}
+              handleModal={handleClickInfoButton}
             />
           </CardBody>
         </Card>

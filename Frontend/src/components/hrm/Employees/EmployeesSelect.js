@@ -12,7 +12,14 @@ const findKeyByID = (arr = [], id) => {
   const index = arr.findIndex((p) => p.id === id)
   return index
 }
+const checkMediaWidth = (x) => {
+  if (x.matches) {
+    // If media query matches
+    return true
+  }
 
+  return false
+}
 const EmployeesSelect = (props) => {
   const { handleSelect, dataDetail, member_selected, select_department } = props
   const [state, setState] = useMergedState({
@@ -26,8 +33,12 @@ const EmployeesSelect = (props) => {
     perPage: 10,
     dataSelected: [],
     department_selected: [],
-    typeAdd: "members"
+    typeAdd: "members",
+    viewSelected: false
   })
+  const checkMobile = checkMediaWidth(
+    window.matchMedia("(max-width: 767.98px)")
+  )
 
   const handleSelected = (key) => {
     let data = state.members
@@ -347,92 +358,138 @@ const EmployeesSelect = (props) => {
         </Col>
       </Row>
       <div className="d-flex ">
-        <div className="content-select">
-          <Row>
-            <Col>
-              <ErpInput
-                nolabel
-                placeholder="Search"
-                className="search_invite"
-                prepend={<i className="fa-regular fa-magnifying-glass"></i>}
-                onChange={(e) => handleFilterText(e.target.value)}
-              />
-            </Col>
-          </Row>
-          {state.typeAdd === "members" && (
-            <>
-              <Row className="w-100">
-                <Col sm={12} className="mb-50">
-                  <span className="suggest-text">
-                    {useFormatMessage("modules.workspace.text.suggested")}
-                  </span>
-                </Col>
-              </Row>
-              <PerfectScrollbar
-                onYReachEnd={endScrollLoad}
-                style={{
-                  height: "400px",
-                  minHeight: "400px"
-                }}>
-                <Row className="w-100">{renderMember(state.members)}</Row>
-              </PerfectScrollbar>
-            </>
-          )}
-          {state.typeAdd === "departments" && (
-            <PerfectScrollbar
-              onYReachEnd={() => endScrollDepartment()}
-              style={{
-                height: "400px",
-                minHeight: "400px"
-              }}>
-              <Row className="w-100">{renderDepartment(state.departments)}</Row>
-            </PerfectScrollbar>
-          )}
-        </div>
+        {!state.viewSelected && (
+          <div className="content-select">
+            <Row>
+              <Col>
+                <ErpInput
+                  nolabel
+                  placeholder="Search"
+                  className="search_invite"
+                  prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                  onChange={(e) => handleFilterText(e.target.value)}
+                />
+              </Col>
+            </Row>
+            {state.typeAdd === "members" && (
+              <>
+                <Row className="w-100">
+                  <Col sm={12} className="mb-50 d-flex align-items-center">
+                    <span className="suggest-text">
+                      {useFormatMessage("modules.workspace.text.suggested")}
+                    </span>
 
-        <div
-          className={`content-selected ${
-            !state.dataSelected.length && `d-flex align-items-center`
-          }`}>
-          {state.dataSelected.length === 0 &&
-            state.department_selected.length === 0 && (
-              <div className="p-1">
-                <EmptyContent />
-              </div>
-            )}
-          {(state.dataSelected.length > 0 ||
-            state.department_selected.length > 0) && (
-            <>
-              <div className="p-1 pb-0 mb-50 member-selected-text">
-                {useFormatMessage("modules.workspace.display.member_selected", {
-                  number: state.dataSelected.length
-                })}
-              </div>
-              <PerfectScrollbar
-                style={{
-                  maxHeight: "440px",
-                  minHeight: "440px"
-                }}>
-                <Row>
-                  {renderMemberSelected(state.dataSelected)}
-                  {select_department && (
-                    <>
-                      <div className="mt-1 mb-2">
-                        {useFormatMessage(
-                          "modules.workspace.display.derpartment_selected",
-                          {
-                            number: state.department_selected.length
-                          }
-                        )}
+                    {state.dataSelected.length > 0 && (
+                      <div
+                        onClick={() => setState({ viewSelected: true })}
+                        className="ms-auto"
+                        style={{
+                          fontSize: "12px",
+                          color: "var(--secondary-500, #2F9BFA)"
+                        }}>
+                        See all selected ({state.dataSelected.length})
                       </div>
-                      {renderDepartmentSelected(state.department_selected)}
-                    </>
-                  )}
+                    )}
+                  </Col>
                 </Row>
-              </PerfectScrollbar>
-            </>
-          )}
-        </div>
+                <PerfectScrollbar
+                  onYReachEnd={endScrollLoad}
+                  style={{
+                    height: "400px",
+                    minHeight: "400px"
+                  }}>
+                  <Row className="w-100">{renderMember(state.members)}</Row>
+                </PerfectScrollbar>
+              </>
+            )}
+            {state.typeAdd === "departments" && (
+              <>
+                {state.dataSelected.length > 0 && (
+                  <div
+                    onClick={() => setState({ viewSelected: true })}
+                    className="ms-auto"
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--secondary-500, #2F9BFA)"
+                    }}>
+                    See all selected ({state.dataSelected.length})
+                  </div>
+                )}
+
+                <PerfectScrollbar
+                  onYReachEnd={() => endScrollDepartment()}
+                  style={{
+                    height: "400px",
+                    minHeight: "400px"
+                  }}>
+                  <Row className="w-100">
+                    {renderDepartment(state.departments)}
+                  </Row>
+                </PerfectScrollbar>
+              </>
+            )}
+          </div>
+        )}
+
+        {(!checkMobile || state.viewSelected) && (
+          <div
+            className={`content-selected ${
+              !state.dataSelected.length && `d-flex align-items-center`
+            }`}>
+            {state.dataSelected.length === 0 &&
+              state.department_selected.length === 0 && (
+                <div className="p-1">
+                  <EmptyContent />
+                </div>
+              )}
+            {(state.dataSelected.length > 0 ||
+              state.department_selected.length > 0) && (
+              <>
+                <div className="d-flex p-1 pb-0 mb-50 member-selected-text">
+                  {useFormatMessage(
+                    "modules.workspace.display.member_selected",
+                    {
+                      number: state.dataSelected.length
+                    }
+                  )}
+
+                  <div
+                    onClick={() => setState({ viewSelected: false })}
+                    className="ms-auto"
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--secondary-500, #2F9BFA)"
+                    }}>
+                    Back to select
+                  </div>
+                </div>
+
+                <PerfectScrollbar
+                  style={{
+                    maxHeight: "440px",
+                    minHeight: "440px"
+                  }}>
+                  <Row>
+                    {renderMemberSelected(state.dataSelected)}
+                    {select_department && (
+                      <>
+                        <div className="mt-1 mb-2">
+                          {useFormatMessage(
+                            "modules.workspace.display.derpartment_selected",
+                            {
+                              number: state.department_selected.length
+                            }
+                          )}
+                        </div>
+                        {renderDepartmentSelected(state.department_selected)}
+                      </>
+                    )}
+                  </Row>
+                </PerfectScrollbar>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </>
   )

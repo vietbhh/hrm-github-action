@@ -13,11 +13,21 @@ import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/
 import EditInformationModal from "../components/modals/EditInformationModal"
 import WorkgroupPrivacy from "../components/detail/CreateWorkspace/WorkGroupPrivacy"
 import { isEmpty } from "lodash"
+import { Dropdown, Space } from "antd"
+import MenuSettingWorkspace from "../components/detail/MenuSettingWorkspace"
+
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
   return index
 }
 
+const checkMediaWidth = (x) => {
+  if (x.matches) {
+    return true
+  }
+
+  return false
+}
 const membership_approval = [
   {
     value: "approver",
@@ -63,6 +73,9 @@ const SettingWorkspace = () => {
     loading: true,
     editModal: false
   })
+  const checkMobile = checkMediaWidth(
+    window.matchMedia("(max-width: 767.98px)")
+  )
   const params = useParams()
   const navigate = useNavigate()
   const methods = useForm({
@@ -130,6 +143,12 @@ const SettingWorkspace = () => {
   return (
     <WorkspaceSettingLayout>
       <div className="workspace-setting row">
+        {checkMobile && (
+          <div className="col-md-12 ">
+            <MenuSettingWorkspace menu={"setting"} idWorkgroup={params.id} />
+          </div>
+        )}
+
         <div className="col-md-12 ">
           <Card>
             <CardBody className="p-50 d-flex align-items-center w-100">
@@ -163,7 +182,7 @@ const SettingWorkspace = () => {
           </div>
           <Card>
             <CardBody>
-              <div className="workspace_infomation d-flex">
+              <div className="workspace_infomation d-flex w-100">
                 <div className="rounded-circle" style={{ width: "100px " }}>
                   <AvatarBox
                     currentAvatar={state.detailWorkspace?.avatar}
@@ -171,7 +190,7 @@ const SettingWorkspace = () => {
                     readOnly={true}
                   />
                 </div>
-                <div className="d-flex ms-1">
+                <div className="d-flex ms-1 w-100">
                   <div>
                     <div className="workspace_name">
                       {state.detailWorkspace?.name}

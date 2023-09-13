@@ -100,7 +100,7 @@ const TabIntroduction = (props) => {
   return (
     <div className="tab-introduction">
       <Row>
-        <Col sm={8} className="col pe-0">
+        <Col md={8} lg={8} className="pe-0">
           <div>
             <Introduction
               id={id}
@@ -123,7 +123,7 @@ const TabIntroduction = (props) => {
             />
           </div>
         </Col>
-        <Col sm={4} className="col">
+        <Col md={4} lg={4} className="pe-0">
           <WorkspaceInfo workspaceInfo={state.workspaceInfo} />
         </Col>
       </Row>
