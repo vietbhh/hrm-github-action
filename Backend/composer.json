@@ -18,8 +18,8 @@
     "google/apiclient": "^2.12.1",
     "google/cloud-storage": "dev-main",
     "guzzlehttp/guzzle": "7.5.x-dev",
+    "phpoffice/phpspreadsheet": "^1.28",
     "fabpot/goutte": "dev-master",
-    "phpoffice/phpspreadsheet": "dev-master",
     "phpoffice/phpword": "dev-master"
   },
   "require-dev": {

@@ -5,7 +5,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
 
-class LoginFilter implements FilterInterface
+class JWTLoginFilter implements FilterInterface
 {
 	/**
 	 * Do whatever processing this filter needs to do.
