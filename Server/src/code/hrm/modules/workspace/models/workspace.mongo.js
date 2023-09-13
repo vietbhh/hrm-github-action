@@ -58,7 +58,6 @@ const workspaceSchema = baseSchema("m_workspace", {
     default: [],
     cover_image: String
   },
-  introduction: String,
   group_rules: [
     {
       title: String,

@@ -32,7 +32,7 @@ const TabIntroduction = (props) => {
 
   const setIntroduction = (data) => {
     setState({
-      introduction: data
+      description: data
     })
   }
 
@@ -71,6 +71,7 @@ const TabIntroduction = (props) => {
         setState({
           workspaceInfo: res.data,
           introduction: res.data?.introduction,
+          description: res.data?.description,
           groupRule:
             res.data?.group_rules === undefined ? [] : res.data?.group_rules
         })
@@ -106,7 +107,7 @@ const TabIntroduction = (props) => {
               id={id}
               loading={state.loading}
               workspaceInfo={state.workspaceInfo}
-              introduction={state.introduction}
+              introduction={state.description}
               tabActive={tabActive}
               setIntroduction={setIntroduction}
             />
