@@ -59,6 +59,7 @@ sed -i 's/.*app.siteURL.*/app.siteURL = "'"$APP_URL"'"/' Backend/applications/de
 sed -i 's/.*app.nodeApiUrl.*/app.nodeApiUrl = "'"$NODE_API_URL"'"/' Backend/applications/default/.env
 sed -i 's/.*app.dataURL.*/app.dataURL = "'"$PHP_API_URL"'"/' Backend/applications/default/.env
 sed -i 's/.*#sparkRunningPort.*/sparkRunningPort = '"$PHP_API_PORT"'/' Backend/applications/default/.env
+sed -i 's/.*#sparkRunningHost.*/sparkRunningHost = '"$PHP_API_HOST"'/' Backend/applications/default/.env
 printf "Done setup env file in Backend/applications/default/.env...\n"
 
 

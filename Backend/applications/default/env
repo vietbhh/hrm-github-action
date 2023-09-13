@@ -31,6 +31,7 @@ db.mongodb.password = ''
 
 #port for running by php spark - if not set - app will run in port 80
 #sparkRunningPort = 8083
+#sparkRunningHost = localhost
 
 app.baseURL = 'http://localhost'
 app.siteURL = 'http://localhost:3000';

@@ -148,9 +148,9 @@
   "scripts": {
     "build-css": "sh ./style.sh&&echo 'Compile style completed!'",
     "build-modules": "sh ./build_modules.sh",
-    "start": "yarn run build-css&&vite",
+    "start": "yarn run build-css&&vite --host 0.0.0.0",
     "build": "yarn run build-css&&yarn run build-modules&&vite build",
-    "preview": "yarn run vite preview",
+    "preview": "yarn run vite preview --host 0.0.0.0",
     "format": "prettier --write \"src/**/*.js\"",
     "lint": "eslint src/**/*.js src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix"
