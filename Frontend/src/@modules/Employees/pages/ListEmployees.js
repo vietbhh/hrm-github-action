@@ -1,21 +1,17 @@
 import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
 import ExportModalDefaultModule from "@apps/modules/default/components/modals/ExportModalDefaultModule"
 import FilterModalDefaultModule from "@apps/modules/default/components/table/FilterModalDefaultModule"
-import Avatar from "@apps/modules/download/pages/Avatar"
 import { FieldHandle } from "@apps/utility/FieldHandler"
-import SwAlert from "@apps/utility/SwAlert"
 import { cellHandle, defaultCellHandle } from "@apps/utility/TableHandler"
 import { getBool, useFormatMessage, useMergedState } from "@apps/utility/common"
 import { isArray, isUndefined } from "@apps/utility/handleData"
-import { defaultModuleApi } from "@apps/utility/moduleApi"
-import notification from "@apps/utility/notification"
 import AssignChecklistModal from "@modules/Checklist/components/modals/AssignChecklistModal"
 import { updateStateModule } from "@store/app/app"
 import { handleFetchProfile } from "@store/authentication"
 import { TreeSelect } from "antd"
 import { filter, isEmpty, isObject, map } from "lodash"
 import { debounce } from "lodash-es"
-import { Fragment, useContext, useEffect, useRef } from "react"
+import { Fragment, useContext, useEffect, useMemo, useRef } from "react"
 import {
   Download,
   MoreVertical,
@@ -51,6 +47,8 @@ import OffboardingModal from "../components/modals/OffboardingModal"
 import RehireModal from "../components/modals/RehireModal"
 import TableList from "../components/table/TableList"
 import SettingTableModalEmployee from "./SettingTableModalEmployee"
+import UserInfo from "./UserInfo"
+
 const { Cell } = Table
 const { SHOW_PARENT } = TreeSelect
 
@@ -329,22 +327,11 @@ const ListEmployees = (props) => {
       case "full_name":
         return (
           <Fragment>
-            <Link
-              className="d-flex justify-content-left align-items-center text-dark"
-              tag="div"
-              to={`/employees/u/${rowData.username}`}>
-              <Avatar className="my-0 me-50" size="sm" src={rowData.avatar} />
-              <div className="d-flex flex-column">
-                <p className="user-name text-truncate mb-0">
-                  <span
-                    style={{
-                      fontWeight: 400
-                    }}>
-                    {rowData.full_name}
-                  </span>{" "}
-                </p>
-              </div>
-            </Link>
+            <UserInfo
+              loading={state.loading}
+              rowData={rowData}
+              data={state.data}
+            />
           </Fragment>
         )
       case "status":
@@ -364,38 +351,6 @@ const ListEmployees = (props) => {
       default:
         return cellHandle(field, rowData, cellProps)
     }
-  }
-
-  const handleDeleteClick = (idDelete = "") => {
-    if (idDelete !== "") {
-      const ids = isArray(idDelete) ? idDelete : [idDelete]
-      SwAlert.showWarning({
-        confirmButtonText: useFormatMessage("button.delete")
-      }).then((res) => {
-        if (res.value) {
-          _handleDeleteClick(ids)
-        }
-      })
-    }
-  }
-
-  const _handleDeleteClick = (ids) => {
-    defaultModuleApi
-      .delete(module, ids.join(), "/employees/delete")
-      .then((result) => {
-        loadData(
-          {
-            page: state.currentPage
-          },
-          { selectedRows: [] }
-        )
-        notification.showSuccess({
-          text: useFormatMessage("notification.delete.success")
-        })
-      })
-      .catch((err) => {
-        notification.showError({ text: err.message })
-      })
   }
 
   const setReduxAuth = (employee_view) => {
@@ -771,21 +726,6 @@ const ListEmployees = (props) => {
                 />
               </div>
 
-              <div className="d-block ms-1">
-                {(ability.can("delete", module) ||
-                  ability.can("deleteAll", module)) &&
-                  state.selectedRows.length > 0 && (
-                    <Fragment>
-                      <Button.Ripple
-                        color="flat-danger"
-                        onClick={() => {
-                          handleDeleteClick(state.selectedRows)
-                        }}>
-                        <Trash2 size={15} /> {useFormatMessage("app.delete")}
-                      </Button.Ripple>
-                    </Fragment>
-                  )}
-              </div>
               <div className="d-flex ms-auto">
                 <EmployeeView
                   filters={filters}
@@ -876,7 +816,7 @@ const ListEmployees = (props) => {
               module={module}
               loading={state.loading}
               CustomCell={CellDisplay}
-              allowSelectRow={false}
+              allowSelectRow={true}
               customColumnAfter={customColumnAfter}
               onChangePage={(page) => {
                 loadData({
@@ -903,11 +843,7 @@ const ListEmployees = (props) => {
                   sortColumn: { orderCol: key, orderType: type }
                 })
               }}
-              onSelectedRow={(rows) => {
-                setState({
-                  selectedRows: rows
-                })
-              }}
+              
               onDragColumn={(values) => {
                 employeesApi
                   .postUpdateEmployeeUserMetas({ data: values })
@@ -936,6 +872,12 @@ const ListEmployees = (props) => {
                 sortColumn: state.orderCol,
                 sortType: state.orderType
               }}
+              onComplete={() => {
+                loadData({
+                  page: state.currentPage
+                })
+              }}
+              loadData={loadData}
             />
           </CardBody>
         </Card>

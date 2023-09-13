@@ -45,47 +45,57 @@ const PostComment = (props) => {
   return (
     <Fragment>
       <div className="post-comment">
-        {!_.isEmpty(data.comment_list) && (
-          <>
-            {_.map(data.comment_list, (value, index) => {
-              return (
-                <Fragment key={index}>
-                  <div className="post-comment__div-comment">
-                    <Comment
-                      id_post={data._id}
-                      id_comment={value._id}
-                      setData={setData}
-                      comment_more_count_original={comment_more_count_original}
-                      setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-                      dataComment={value}
-                      setDataShowFormReply={setDataShowFormReply}
-                      dataShowFormReply={state.dataShowFormReply}
-                      apiReaction={feedApi.postUpdateCommentReaction}
-                      setDataReactionAndModal={setDataReactionAndModal}
-                      setDataEditComment={setDataEditComment}
-                      data={data}
-                    />
+        <div className="post-comment__list">
+          {!_.isEmpty(data.comment_list) && (
+            <>
+              {_.map(data.comment_list, (value, index) => {
+                return (
+                  <Fragment key={index}>
+                    <div className="post-comment__div-comment">
+                      <Comment
+                        id_post={data._id}
+                        id_comment={value._id}
+                        setData={setData}
+                        comment_more_count_original={
+                          comment_more_count_original
+                        }
+                        setCommentMoreCountOriginal={
+                          setCommentMoreCountOriginal
+                        }
+                        dataComment={value}
+                        setDataShowFormReply={setDataShowFormReply}
+                        dataShowFormReply={state.dataShowFormReply}
+                        apiReaction={feedApi.postUpdateCommentReaction}
+                        setDataReactionAndModal={setDataReactionAndModal}
+                        setDataEditComment={setDataEditComment}
+                        data={data}
+                      />
 
-                    <CommentReply
-                      id_post={data._id}
-                      setData={setData}
-                      comment_more_count_original={comment_more_count_original}
-                      setCommentMoreCountOriginal={setCommentMoreCountOriginal}
-                      dataComment={value}
-                      data={data}
-                      dataMention={dataMention}
-                      dataShowFormReply={state.dataShowFormReply}
-                      id_comment_parent={value._id}
-                      setDataReactionAndModal={setDataReactionAndModal}
-                      comment_more_count={data.comment_more_count}
-                      setDataShowFormReply={setDataShowFormReply}
-                    />
-                  </div>
-                </Fragment>
-              )
-            })}
-          </>
-        )}
+                      <CommentReply
+                        id_post={data._id}
+                        setData={setData}
+                        comment_more_count_original={
+                          comment_more_count_original
+                        }
+                        setCommentMoreCountOriginal={
+                          setCommentMoreCountOriginal
+                        }
+                        dataComment={value}
+                        data={data}
+                        dataMention={dataMention}
+                        dataShowFormReply={state.dataShowFormReply}
+                        id_comment_parent={value._id}
+                        setDataReactionAndModal={setDataReactionAndModal}
+                        comment_more_count={data.comment_more_count}
+                        setDataShowFormReply={setDataShowFormReply}
+                      />
+                    </div>
+                  </Fragment>
+                )
+              })}
+            </>
+          )}
+        </div>
 
         {data.comment_more_count > 0 && (
           <div className="div-comment__comment_more">

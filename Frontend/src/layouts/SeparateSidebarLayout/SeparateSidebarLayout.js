@@ -12,6 +12,7 @@ import Navbar from "./Navbar"
 import "./assets/scss/layout.scss"
 import { workspaceApi } from "@modules/Workspace/common/api"
 import { Fragment, useEffect } from "react"
+import "./assets/scss/responsiveLayout.scss"
 
 const SeparateSidebarLayout = (props) => {
   const [state, setState] = useMergedState({
@@ -30,7 +31,6 @@ const SeparateSidebarLayout = (props) => {
     if (item.is_admin_group) {
       return `${item.name} *`
     }
-
     return item.name
   }
 
@@ -105,6 +105,7 @@ const SeparateSidebarLayout = (props) => {
         notMenuCollapsed={true}
         hideQuickAccess={true}
         hideVerticalMenuHeader={true}
+        showVerticalMenuHeaderOnMobile={true}
         {...props}>
         <Outlet />
       </Layout>
@@ -112,6 +113,7 @@ const SeparateSidebarLayout = (props) => {
   }
 
   return <Fragment>{renderComponent()}</Fragment>
+
 }
 
 export default SeparateSidebarLayout

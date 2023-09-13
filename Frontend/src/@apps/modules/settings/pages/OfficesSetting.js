@@ -18,7 +18,7 @@ import {
   DropdownToggle,
   UncontrolledButtonDropdown
 } from "reactstrap"
-import SettingLayout from "../components/SettingLayout"
+
 const OfficesSetting = () => {
   const [state, setState] = useMergedState({
     data: [],

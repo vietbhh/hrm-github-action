@@ -184,37 +184,37 @@ const menuConfig = [
         <path
           d="M18.3083 15.3999H22.6834"
           stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M13.3167 15.3999L13.9417 16.0249L15.8167 14.1499"
           stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M18.3083 21.2334H22.6834"
           stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M13.3167 21.2334L13.9417 21.8584L15.8167 19.9834"
           stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M15.5 26.3334H20.5C24.6666 26.3334 26.3333 24.6667 26.3333 20.5001V15.5001C26.3333 11.3334 24.6666 9.66675 20.5 9.66675H15.5C11.3333 9.66675 9.66663 11.3334 9.66663 15.5001V20.5001C9.66663 24.6667 11.3333 26.3334 15.5 26.3334Z"
           stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     ),

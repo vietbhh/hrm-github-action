@@ -1,10 +1,9 @@
 <?php namespace App\Entities;
 
-use CodeIgniter\Entity\Entity;
 use Myth\Auth\Authorization\GroupModel;
 use Myth\Auth\Authorization\PermissionModel;
 
-class User extends Entity
+class User extends \Myth\Auth\Entities\User
 {
 	/**
 	 * Maps names used in sets and gets against unique
