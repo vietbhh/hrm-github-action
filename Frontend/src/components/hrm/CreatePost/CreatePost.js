@@ -206,20 +206,22 @@ const CreatePost = (props) => {
         </div>
       </div>
 
-      <ModalCreatePost
-        modal={state.modalCreatePost}
-        toggleModal={toggleModalCreatePost}
-        setModal={(value) => setState({ modalCreatePost: value })}
-        avatar={avatar}
-        fullName={fullName}
-        userId={userId}
-        dataMention={state.dataMention}
-        workspace={workspace}
-        setDataCreateNew={setDataCreateNew}
-        approveStatus={approveStatusfm}
-        optionCreate={state.optionCreate}
-        setOptionCreate={setOptionCreate}
-      />
+      {state.modalCreatePost && (
+        <ModalCreatePost
+          modal={state.modalCreatePost}
+          toggleModal={toggleModalCreatePost}
+          setModal={(value) => setState({ modalCreatePost: value })}
+          avatar={avatar}
+          fullName={fullName}
+          userId={userId}
+          dataMention={state.dataMention}
+          workspace={workspace}
+          setDataCreateNew={setDataCreateNew}
+          approveStatus={approveStatusfm}
+          optionCreate={state.optionCreate}
+          setOptionCreate={setOptionCreate}
+        />
+      )}
 
       <ModalCreateEvent
         options_employee_department={options_employee_department}
