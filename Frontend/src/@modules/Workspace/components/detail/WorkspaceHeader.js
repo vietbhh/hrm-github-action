@@ -740,22 +740,24 @@ const WorkspaceHeader = (props) => {
                   </NavItem>
                 </>
               )}
+              {checkMobile && (
+                <div className="action-nav">
+                  <Space className="pe-1">
+                    <ErpSelect
+                      options={optionTab}
+                      defaultValue={optionTab[0]}
+                      className="w-100"
+                      nolabel
+                      isClearable={false}
+                      formGroupClass="mb-0"
+                      onChange={(e) => {
+                        handleClickTabName(e?.value)
+                      }}
+                    />
+                  </Space>
+                </div>
+              )}
 
-              <div className="action-nav">
-                <Space className="pe-1">
-                  <ErpSelect
-                    options={optionTab}
-                    defaultValue={optionTab[0]}
-                    className="w-100"
-                    nolabel
-                    isClearable={false}
-                    formGroupClass="mb-0"
-                    onChange={(e) => {
-                      handleClickTabName(e?.value)
-                    }}
-                  />
-                </Space>
-              </div>
               {state.joined && (
                 <div className="action-nav ms-auto">
                   <Space className="pe-1">

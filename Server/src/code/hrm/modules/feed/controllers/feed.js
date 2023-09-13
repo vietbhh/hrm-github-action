@@ -537,7 +537,6 @@ const getFeedById = async (req, res, next) => {
   const userWorkspaceIds = await getUserWorkspaceIds(req.__user)
   try {
     const data = await handleDataFeedById(id)
-
     if (data.permission === "workspace") {
       if (!isEmpty(data.permission_ids)) {
         const group = data.permission_ids[0]
@@ -550,6 +549,8 @@ const getFeedById = async (req, res, next) => {
         )
           return res.respond(data)
       }
+    } else {
+      return res.respond(data)
     }
     return res.fail("post_not_found")
   } catch (err) {

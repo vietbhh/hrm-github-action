@@ -379,7 +379,7 @@ const EmployeesSelect = (props) => {
                       {useFormatMessage("modules.workspace.text.suggested")}
                     </span>
 
-                    {state.dataSelected.length > 0 && (
+                    {checkMobile && state.dataSelected.length > 0 && (
                       <div
                         onClick={() => setState({ viewSelected: true })}
                         className="ms-auto"
@@ -404,7 +404,7 @@ const EmployeesSelect = (props) => {
             )}
             {state.typeAdd === "departments" && (
               <>
-                {state.dataSelected.length > 0 && (
+                {checkMobile && state.dataSelected.length > 0 && (
                   <div
                     onClick={() => setState({ viewSelected: true })}
                     className="ms-auto"
@@ -452,16 +452,17 @@ const EmployeesSelect = (props) => {
                       number: state.dataSelected.length
                     }
                   )}
-
-                  <div
-                    onClick={() => setState({ viewSelected: false })}
-                    className="ms-auto"
-                    style={{
-                      fontSize: "12px",
-                      color: "var(--secondary-500, #2F9BFA)"
-                    }}>
-                    Back to select
-                  </div>
+                  {checkMobile && (
+                    <div
+                      onClick={() => setState({ viewSelected: false })}
+                      className="ms-auto"
+                      style={{
+                        fontSize: "12px",
+                        color: "var(--secondary-500, #2F9BFA)"
+                      }}>
+                      Back to select
+                    </div>
+                  )}
                 </div>
 
                 <PerfectScrollbar

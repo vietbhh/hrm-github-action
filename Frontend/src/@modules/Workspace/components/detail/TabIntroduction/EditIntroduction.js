@@ -15,7 +15,7 @@ const EditIntroduction = (props) => {
     id,
     api,
     introduction,
-    customInputName = "introduction",
+    customInputName = "description",
     // ** methods
     handleCancelEdit,
     setIntroduction
