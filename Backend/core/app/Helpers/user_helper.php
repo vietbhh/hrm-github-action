@@ -8,7 +8,7 @@ if (!function_exists('addUser')) {
 	/**
 	 * @throws Exception
 	 */
-	function addUser($data, $setPwd = false): bool
+	function addUser($data, $setPwd = false, $addUserToDefaultGroup = true, $addUserToGroups = []): bool
 	{
 		$validation = \Config\Services::validation();
 		$modules = \Config\Services::modules();
@@ -37,8 +37,16 @@ if (!function_exists('addUser')) {
 		$id = $userModel->getInsertID();
 		$saveUser['id'] = $id;
 		$groupModel = new GroupModel();
-		$group = $groupModel->where('default', TRUE)->first();
-		$groupModel->addUserToGroup($id, $group->id);
+		if ($addUserToDefaultGroup) {
+			$defaultGroup = $groupModel->where('default', TRUE)->first();
+			$addUserToGroups[] = $defaultGroup->id;
+		}
+		if(!empty($addUserToGroups)){
+			foreach ($addUserToGroups as $groupId) {
+				$groupModel->addUserToGroup($id, $groupId);
+			}
+		}
+
 
 		if (filter_var($getPost['invitation_active'], FILTER_VALIDATE_BOOLEAN) === true) {
 			$activator = service('activator');

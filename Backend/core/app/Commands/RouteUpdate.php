@@ -200,7 +200,9 @@ if(!isset(\$routes))
 						if (strpos($method->getDocComment(), '_skip_auto_route_') !== false) continue;
 
 						$method_name_array = explode('_', $method->name);
+
 						$http_method = end($method_name_array);
+
 						if (in_array($http_method, array('get', 'post', 'put', 'delete'))) {
 							array_pop($method_name_array);
 							$method_name = implode('-', $method_name_array);
@@ -255,7 +257,7 @@ if(!isset(\$routes))
 						}
 
 						$n = strtolower($controller_path . '/' . $uri_addons);
-						$configuration_template .= "\t\$subroutes->add('$n', '$controller::$param_addons');\n";
+						$configuration_template .= "\t\$subroutes->$http_method('$n', '$controller::$param_addons');\n";
 					}
 				}
 
