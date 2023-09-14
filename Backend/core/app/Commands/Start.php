@@ -57,11 +57,13 @@ class Start extends BaseCommand
 	public function run(array $params)
 	{
 		$port = $_ENV['sparkRunningPort'] ?? 80;
-		print_r($port);
+		$host = $_ENV['sparkRunningHost'] ?? 'localhost';
 
 		$_SERVER['argv'][2] = '--port';
 		$_SERVER['argv'][3] = $port;
-		$_SERVER['argc']    = 4;
+		$_SERVER['argv'][4] = '--host';
+		$_SERVER['argv'][5] = $host;
+		$_SERVER['argc'] = 5;
 		CLI::init();
 
 		$this->call('serve');

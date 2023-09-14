@@ -14,12 +14,15 @@
     "codeigniter4/translations": "^4.1",
     "dragonmantank/cron-expression": "^3.2",
     "smalot/pdfparser": "^2.0",
-    "codeigniter4/settings": "dev-develop",
+    "codeigniter4/settings": "^2.1.2",
     "google/apiclient": "^2.12.1",
-    "google/cloud-storage": "dev-main",
+    "google/cloud-storage": "^1.33.1",
     "guzzlehttp/guzzle": "7.5.x-dev",
+    "dusterio/link-preview": "^1.2.18",
+    "google/cloud": "^0.218.0",
     "phpoffice/phpspreadsheet": "^1.28",
-    "fabpot/goutte": "dev-master"
+    "fabpot/goutte": "^4.0.3",
+    "phpoffice/phpword": "^1.1.0"
   },
   "require-dev": {
     "mikey179/vfsstream": "1.6.*",

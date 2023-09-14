@@ -2096,6 +2096,11 @@
   dependencies:
     lodash.throttle "^4.1.1"
 
+"@vitejs/plugin-basic-ssl@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-basic-ssl/-/plugin-basic-ssl-1.0.1.tgz#48c46eab21e0730921986ce742563ae83fe7fe34"
+  integrity sha512-pcub+YbFtFhaGRTo1832FQHQSHvMrlb43974e2eS8EKleR3p1cDdkJFPci1UhwkEf1J9Bz+wKBSzqpKp7nNj2A==
+
 "@vitejs/plugin-react@^4.0.3":
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-4.0.3.tgz#007d27ad5ef1eac4bf8c29e168ba9be2203c371b"

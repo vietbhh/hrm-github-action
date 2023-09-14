@@ -19,6 +19,7 @@
     "init-app-env": "./init-app.sh",
     "init-app": "export NODE_OPTIONS=--max-old-space-size=8192 && npm-run-all -s \"init-app-env {1} {2} {3} {4} {5}\" build-app --",
     "init-app-win": "npm-run-all -s \"init-app-env {1} {2} {3} {4} {5}\" build-app --",
+    "init-app-test": "npm-run-all -s \"init-app-env {1} {2} {3} {4} {5}\" --",
     "start-production-fe": "cd Frontend && yarn run preview",
     "start-production-server": "cd Server && yarn run prod",
     "start-production-test": "npm-run-all -p start-backend start-production-server  \"start-production-fe --port {1}\" --"
