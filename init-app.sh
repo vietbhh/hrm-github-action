@@ -4,7 +4,7 @@ printf "Initialing app env...\n"
 export COMPOSER_ALLOW_SUPERUSER=1
 export NODE_OPTIONS="--max-old-space-size=8192"
 DB_NAME=$1
-if [[ -z $3 || -z $4 || -z $5 ]]; then
+if [[ -z $3 || -z $4 ]]; then
 printf "Initialing app by friday build server...\n"
 
 BUILD_SV=$2
@@ -30,7 +30,8 @@ PHP_URL=$PHP_API_HOST":"$PHP_PORT
 NODE_PORT="8002"
 NODE_API_HOST="localhost"
 NODE_URL=$NODE_API_HOST":"$NODE_PORT
-
+HOST_PROTOCOL="https"
+ENV_TYPE="both"
 for ((i=0; i<"${#LISTS[*]}"; i++)); do
     BUILD_CURRENT="${LISTS[$i]}"
     if [ $BUILD_CURRENT == $BUILD_SV ]; then
@@ -52,15 +53,32 @@ for ((i=0; i<"${#LISTS[*]}"; i++)); do
 done
 else
 printf "Initialing app by params...\n"
-APP_HOST=$2
-PHP_API_HOST=$2
-NODE_API_HOST=$2
-APP_PORT=$3
-PHP_PORT=$4
-NODE_PORT=$5
+APP_PORT=$2
+PHP_PORT=$3
+NODE_PORT=$4
+
+HOST=$5
+if [[ -z $5 ]]; then
+HOST="localhost"
+fi
+
+APP_HOST=$HOST
+PHP_API_HOST=$HOST
+NODE_API_HOST=$HOST
 APP_URL=$APP_HOST":"$APP_PORT
 PHP_URL=$PHP_API_HOST":"$PHP_PORT
 NODE_URL=$NODE_API_HOST":"$NODE_PORT
+
+ENV_TYPE=$6
+if [[ -z $6 ]]; then
+ENV_TYPE="dev"
+fi
+
+HOST_PROTOCOL=$7
+if [[ -z $7 ]]; then
+HOST_PROTOCOL="http"
+fi
+
 fi
 
 cp env .env
@@ -76,6 +94,8 @@ sed -i 's/^NODE_API_URL.*/NODE_API_URL="'"$NODE_URL"'"/' .env
 sed -i 's/^MYSQL_DATABASE.*/MYSQL_DATABASE="'"$DB_NAME"'"/' .env
 sed -i 's/^MONGO_DATABASE.*/MONGO_DATABASE="'"$DB_NAME"'"/' .env
 sed -i 's/^FIRESTORE_DB.*/FIRESTORE_DB="'"$DB_NAME"'"/' .env
+sed -i 's/^HOST_PROTOCOL.*/HOST_PROTOCOL="'"$HOST_PROTOCOL"'"/' .env
+sed -i 's/^ENV_TYPE.*/ENV_TYPE="'"$ENV_TYPE"'"/' .env
 chmod +x init-env.sh
 chmod +x remove-all-dep.sh
 
