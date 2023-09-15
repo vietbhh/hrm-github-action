@@ -3,6 +3,7 @@
   "author": "longth",
   "license": "MIT",
   "scripts": {
+    "update-lang" : "./update-lang.sh",
     "install-fe-dep": "cd Frontend && yarn install",
     "install-sv-dep": "cd Server && yarn install",
     "install-be-dep": "cd Backend && composer install",

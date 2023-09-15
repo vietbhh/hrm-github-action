@@ -1,0 +1,1 @@
+cp -rf Frontend/src/assets/data/locales/* Server/src/app/services/i18n/locales
