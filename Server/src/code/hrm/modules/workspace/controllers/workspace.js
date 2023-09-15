@@ -1187,7 +1187,7 @@ const getListWorkspaceSeparateType = async (req, res) => {
     let condition = {}
     if (text.trim().length > 0) {
       condition = {
-        name: { $regex: ".*" + text + ".*" }
+        name: { $regex: ".*" + text + ".*", $options: "i"}
       }
     }
 

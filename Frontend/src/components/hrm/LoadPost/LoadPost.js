@@ -304,21 +304,23 @@ const LoadPost = (props) => {
       {/* render modal */}
       {!isViewEditHistory && (
         <Fragment>
-          <ModalCreatePost
-            modal={state.modalCreatePost}
-            toggleModal={toggleModalCreatePost}
-            setModal={(value) => setState({ modalCreatePost: value })}
-            dataMention={dataMention}
-            workspace={[]}
-            avatar={data?.created_by?.avatar}
-            fullName={data?.created_by?.full_name}
-            userId={data?.created_by?.id}
-            approveStatus={data?.approve_status}
-            dataPost={data}
-            setData={setData}
-            setDataLink={setDataLink}
-            setDataCreateNew={setDataCreateNew}
-          />
+          {state.modalCreatePost && (
+            <ModalCreatePost
+              modal={state.modalCreatePost}
+              toggleModal={toggleModalCreatePost}
+              setModal={(value) => setState({ modalCreatePost: value })}
+              dataMention={dataMention}
+              workspace={[]}
+              avatar={data?.created_by?.avatar}
+              fullName={data?.created_by?.full_name}
+              userId={data?.created_by?.id}
+              approveStatus={data?.approve_status}
+              dataPost={data}
+              setData={setData}
+              setDataLink={setDataLink}
+              setDataCreateNew={setDataCreateNew}
+            />
+          )}
 
           <MemberVoteModal
             modal={state.modalWith}

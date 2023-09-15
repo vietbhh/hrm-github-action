@@ -14,9 +14,9 @@ const HeaderCreatePost = (props) => {
     setPrivacyType,
     tag_your_colleagues,
     toggleModalTag,
-    toggleModalCreatePost
+    toggleModalCreatePost,
+    is_poll
   } = props
-
   // ** render
   const items = [
     {
@@ -170,7 +170,9 @@ const HeaderCreatePost = (props) => {
     <Fragment>
       <div className="div-header-title">
         <span className="text-title">
-          {useFormatMessage("modules.feed.create_post.title")}
+          {is_poll
+            ? useFormatMessage("modules.feed.create_post.text.create_poll")
+            : useFormatMessage("modules.feed.create_post.title")}
         </span>
         <div className="div-btn-close" onClick={() => toggleModalCreatePost()}>
           <i className="fa-regular fa-xmark"></i>

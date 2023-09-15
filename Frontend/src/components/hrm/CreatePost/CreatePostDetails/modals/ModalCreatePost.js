@@ -452,7 +452,6 @@ const ModalCreatePost = (props) => {
       setState({ disable_btn_post: true })
     }
   }, [state.poll_vote_detail])
-
   // ** render
   const renderPreviewAttachment = useMemo(
     () => (
@@ -486,6 +485,7 @@ const ModalCreatePost = (props) => {
           tag_your_colleagues={state.tag_your_colleagues}
           toggleModalTag={toggleModalTag}
           toggleModalCreatePost={toggleModal}
+          is_poll={state.poll_vote}
         />
       </ModalHeader>
       <ModalBody>
