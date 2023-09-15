@@ -12,8 +12,10 @@ export default ({ mode }) => {
   const config = {
     plugins: [react()],
     server: {
-      https : true,
       port: startPort
+    },
+    preview: {
+      port: startPort,
     },
     css: {
       preprocessorOptions: {
