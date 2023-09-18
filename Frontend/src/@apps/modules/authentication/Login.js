@@ -4,11 +4,15 @@ import {
   ErpPassword
 } from "@apps/components/common/ErpField"
 import { useFormatMessage } from "@apps/utility/common"
-import notification from "@apps/utility/notification"
 import "@scss/friday/authentication.scss"
 import login3D from "@src/assets/images/pages/login/login3D.png"
 import useJwt from "@src/auth/jwt/useJwt"
 import { AbilityContext } from "@src/utility/context/Can"
+import { initAppData } from "@store/app/app"
+import { updateListUsers } from "@store/app/users"
+import { handleLogin } from "@store/authentication"
+import { initialLayout } from "@store/layout"
+import { handleNotification } from "@store/notification"
 import { Fragment, useContext, useState } from "react"
 import { AlertCircle, Check } from "react-feather"
 import Helmet from "react-helmet"
@@ -25,10 +29,6 @@ import {
   CardTitle,
   Spinner
 } from "reactstrap"
-import { initAppData } from "@store/app/app"
-import { updateListUsers } from "@store/app/users"
-import { handleLogin } from "@store/authentication"
-import { initialLayout } from "@store/layout"
 import Header from "./Header"
 
 const Login = (props) => {
@@ -68,6 +68,10 @@ const Login = (props) => {
           refreshToken,
           list_user
         } = res.data
+
+        const listNotification = res.data.list_notification ?? []
+        const numberNotification = res.data.number_notification ?? 0
+
         dispatch(initialLayout(settings))
         i18n.changeLanguage(settings.language)
         dispatch(
@@ -83,6 +87,13 @@ const Login = (props) => {
           initAppData({ unit, modules, routes, filters, optionsModules })
         )
         dispatch(updateListUsers(list_user))
+        // ** save notification to redux
+        dispatch(
+          handleNotification({
+            listNotification,
+            numberNotification
+          })
+        )
         ability.update(permits)
         navigate(from)
       })

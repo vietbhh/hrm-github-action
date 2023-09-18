@@ -11,7 +11,7 @@ const handleAddNewGroupToFireStore = async (
   userId,
   groupName,
   arrMember,
-  isSystem
+  isSystem = false
 ) => {
   if (!userId) {
     throw new Error("Not permission")

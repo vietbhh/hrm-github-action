@@ -2091,7 +2091,8 @@ export const ErpUserSelect = (props) => {
         options: res.data.results,
         hasMore: res.data.hasMore,
         additional: {
-          page: page + 1
+          page: page + 1,
+          apiProps: loadOptionsApi
         }
       }
     })

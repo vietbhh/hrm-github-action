@@ -7,7 +7,6 @@ import { Badge } from "reactstrap"
 // ** Components
 import NotificationItem from "./NotificationItem"
 
-
 const ListNotification = (props) => {
   const {
     // ** props
@@ -43,11 +42,11 @@ const ListNotification = (props) => {
       <Fragment>
         {listNotification.map((item, index) => {
           if (index < 10) {
-            const Wrap = item.link ? Fragment : Link
-            const wrapProps = item.link ? {} : { to: item.link }
+            const Wrap = item.link && item.link === "" ? Fragment : Link
+            const wrapProps = item.link && item.link === ""  ? {} : { to: item.link }
             return (
               <Wrap key={index} {...wrapProps}>
-                <NotificationItem item={item}  key={`notification-${index}`} />
+                <NotificationItem item={item} key={`notification-${index}`} />
               </Wrap>
             )
           }
