@@ -2773,6 +2773,7 @@ $font-family: Helvetica;
                         .input-group-text,
                         .DraftEditor-root {
                           background-color: #f7f7f5 !important;
+                          overflow: hidden !important;
                         }
 
                         .emotions-dropdown-menu {
