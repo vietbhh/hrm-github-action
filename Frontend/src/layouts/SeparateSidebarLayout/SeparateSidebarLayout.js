@@ -10,6 +10,7 @@ import navigation from "./menu"
 import { useFormatMessage } from "@apps/utility/common"
 import Navbar from "./Navbar"
 import "./assets/scss/layout.scss"
+import "./assets/scss/responsiveLayout.scss"
 
 const SeparateSidebarLayout = (props) => {
   const menuYourProjects = [
@@ -170,6 +171,7 @@ const SeparateSidebarLayout = (props) => {
       notMenuCollapsed={true}
       hideQuickAccess={true}
       hideVerticalMenuHeader={true}
+      showVerticalMenuHeaderOnMobile={true}
       {...props}>
       <Outlet />
     </Layout>

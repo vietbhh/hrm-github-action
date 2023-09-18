@@ -59,7 +59,8 @@ const Layout = (props) => {
     hideQuickAccess,
     hideVerticalMenuHeader,
     notMenuCollapsed = false,
-    hideSidebar = false
+    hideSidebar = false,
+    showVerticalMenuHeaderOnMobile = false
   } = props
 
   // ** Hooks
@@ -109,7 +110,7 @@ const Layout = (props) => {
     _.map(
       _.filter(
         listSettingMenu,
-        (item) => ability.can(item.action, item.resource) && !item.hide
+        (item) => ability.can(item.action, item.resource) && !item.hide && !item.hide && item.type !== "header"
       ),
       (item) => item
     ),
@@ -142,6 +143,7 @@ const Layout = (props) => {
     if (menuVisibility && windowWidth < 1200) {
       setMenuVisibility(false)
     }
+    
   }, [location])
 
   //** Sets Window Size & Layout Props
@@ -320,6 +322,7 @@ const Layout = (props) => {
             hideVerticalMenuHeader={hideVerticalMenuHeader}
             userId={userId}
             notMenuCollapsed={notMenuCollapsed}
+            showVerticalMenuHeaderOnMobile={showVerticalMenuHeaderOnMobile}
           />
         )}
         {children}

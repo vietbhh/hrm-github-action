@@ -225,4 +225,23 @@ class GroupModel extends Model
 		cache_clear_regex('/_permissions$/');
 		return $result;
 	}
+
+	public function isGroupHasPermission($permission, int $groupId)
+	{
+
+		$permissionId = $permission;
+		if (is_string($permission)) {
+			$permissionModel = new PermissionModel();
+			$per = $permissionModel->asArray()->select('id')->where("name", $permission)->first();
+			if ($per) $permissionId = $per['id'];
+			else return 0;
+		}
+
+		$permissions = $this->getPermissionsForGroup($groupId);
+		$check = array_search($permissionId, array_column($permissions, 'id'));
+		if ($check || $check === 0) {
+			return 1;
+		}
+		return 0;
+	}
 }

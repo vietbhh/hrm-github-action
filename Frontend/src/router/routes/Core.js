@@ -89,7 +89,7 @@ const CoreRoutes = [
     path: "/settings/general",
     element: <GeneralSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "app"
     }
@@ -107,7 +107,7 @@ const CoreRoutes = [
     path: "/settings/users/:action?/:id?",
     element: <UsersSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "users"
     }
@@ -116,7 +116,7 @@ const CoreRoutes = [
     path: "/settings/offices/:action?/:id?",
     element: <OfficesSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "offices"
     }
@@ -125,7 +125,7 @@ const CoreRoutes = [
     path: "/settings/departments/:action?/:id?",
     element: <DepartmentsSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "departments"
     }
@@ -134,7 +134,7 @@ const CoreRoutes = [
     path: "/settings/groups/:action?/:id?",
     element: <GroupsSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "groups"
     }
@@ -143,7 +143,7 @@ const CoreRoutes = [
     path: "/settings/job-titles/:action?/:id?",
     element: <JobTitlesSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "job_titles"
     }
@@ -152,7 +152,7 @@ const CoreRoutes = [
     path: "/settings/permissions",
     element: <PermitsSetting />,
     meta: {
-      layout: "empty",
+      layout: "setting",
       action: "manage",
       resource: "permits"
     }

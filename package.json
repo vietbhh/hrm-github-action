@@ -3,13 +3,28 @@
   "author": "longth",
   "license": "MIT",
   "scripts": {
+    "update-lang" : "./update-lang.sh",
+    "install-fe-dep": "cd Frontend && yarn install",
+    "install-sv-dep": "cd Server && yarn install",
+    "install-be-dep": "cd Backend && composer install",
+    "install-all-dep": "export COMPOSER_ALLOW_SUPERUSER=1 && npm-run-all -s install-be-dep install-fe-dep install-sv-dep",
+    "install-all-dep-win": "npm-run-all -s install-be-dep install-fe-dep install-sv-dep",
+    "remove-all-dep": "./remove-all-dep.sh",
     "start-fe": "cd Frontend && yarn run start",
     "start-server": "cd Server && yarn run start",
-    "start-backend": "cd Backend && php -S localhost:80 -t applications/default/public/",
-    "start-backend-server": "npm-run-all -p start-backend start-server",
-    "start": "npm-run-all -p start-backend start-server start-fe"
+    "start-backend": "cd Backend/applications/default && php spark start",
+    "start": "npm-run-all -p start-backend start-server start-fe",
+    "init-env": "./init-env.sh",
+    "init-app-env" : "./init-app.sh",
+    "init-app": "npm-run-all -s \"init-app-env {1} {2} {3} {4} {5} {6} {7}\" init-env --",
+    "build-app": "export NODE_OPTIONS=--max-old-space-size=8192 && cd Frontend && yarn run build",
+    "build-app-win": "cd Frontend && yarn run build",
+    "start-production-fe": "cd Frontend && yarn run preview",
+    "start-production-server": "cd Server && yarn run prod",
+    "start-production": "npm-run-all -p start-backend start-production-server start-production-fe"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
-  }
+  },
+  "dependencies": {}
 }

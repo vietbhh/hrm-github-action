@@ -25,8 +25,8 @@ class Auth extends \Myth\Auth\Config\Auth
 	 * @var array
 	 */
 	public $authenticationLibs = [
-		//'local' => 'Myth\Auth\Authentication\LocalAuthenticator',
-		'local' => JWTAuthenticatior::class
+		'local' => 'Myth\Auth\Authentication\LocalAuthenticator',
+		'jwt' => JWTAuthenticatior::class
 	];
 
 	/**

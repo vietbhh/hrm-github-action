@@ -11,6 +11,7 @@ import Logo from "@apps/modules/download/pages/Logo"
 import NavbarBookmarks from "layouts/_components/vertical/navbar/NavbarBookmarks"
 import NavbarUser from "layouts/_components/vertical/navbar/NavbarUser"
 import { useSelector } from "react-redux"
+import { Fragment } from "react"
 
 const NavbarComponent = (props) => {
   const {
@@ -35,8 +36,10 @@ const NavbarComponent = (props) => {
       expand="lg"
       container={false}
       light={true}
-      className={classNames(`header-navbar navbar`, {})}>
-      <div className="navbar-container d-flex align-items-center">
+      className={classNames(`header-navbar navbar`, {
+        "navbar-logo-min": windowWidth < windowWidthMin
+      })}>
+      <div className="navbar-container d-flex align-items-center navbar-separate">
         {windowWidth >= windowWidthMin && (
           <div className="navbar-logo">
             <NavLink
@@ -64,16 +67,21 @@ const NavbarComponent = (props) => {
         )}
 
         {windowWidth < windowWidthMin && (
-          <NavLink
-            className="nav-menu-main menu-toggle hidden-xs"
-            style={{ color: "#32434F" }}
-            to={"#"}
-            onClick={(e) => {
-              e.preventDefault()
-              setMenuVisibility(true)
-            }}>
-            <Icon.Menu className="ficon" />
-          </NavLink>
+          <Fragment>
+            <div className="logo-wrapper">
+              <Logo src={logoDefault} alt="logo" className="d-none" />
+            </div>
+            <NavLink
+              className="nav-menu-main menu-toggle hidden-xs"
+              style={{ color: "#32434F" }}
+              to={"#"}
+              onClick={(e) => {
+                e.preventDefault()
+                setMenuVisibility(true)
+              }}>
+              <Icon.Menu className="ficon" />
+            </NavLink>
+          </Fragment>
         )}
 
         <div className="bookmark-wrapper d-flex align-items-center">

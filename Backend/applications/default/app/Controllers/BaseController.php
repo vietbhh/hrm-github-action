@@ -35,7 +35,7 @@ class BaseController extends ErpController
 	 *
 	 * @var array
 	 */
-	protected $helpers = ['CLIENT\Helpers\\view'];
+	protected $helpers = ['common','app','db','module','preferences', 'CLIENT\Helpers\\view'];
 
 	/**
 	 * Constructor.

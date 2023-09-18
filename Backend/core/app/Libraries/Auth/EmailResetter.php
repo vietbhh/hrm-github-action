@@ -27,7 +27,7 @@ class EmailResetter extends BaseResetter implements ResetterInterface
 	 *
 	 * @return mixed
 	 */
-	public function send(Entity $user = null): bool
+	public function send(Entity $user = null, $emailForgotTemplates = null): bool
 	{
 		helper('preferences');
 		$email = Services::email();
@@ -44,7 +44,7 @@ class EmailResetter extends BaseResetter implements ResetterInterface
 		$sent = $email->initialize($mailConfig)
 			->setTo($user->email)
 			->setSubject(lang('Auth.forgotSubject'))
-			->setMessage(view($this->config->views['emailForgot'], ['app_name' => preference('app_name'), 'hash' => $user->reset_hash, 'name' => $user->full_name ?? $user->username, 'email' => $user->email, 'supportEmail' => $supportEmail, 'ip' => $_SERVER['REMOTE_ADDR']]))
+			->setMessage(view($emailForgotTemplates ?? $this->config->views['emailForgot'], ['app_name' => preference('app_name'), 'hash' => $user->reset_hash, 'name' => $user->full_name ?? $user->username, 'email' => $user->email, 'supportEmail' => $supportEmail, 'ip' => $_SERVER['REMOTE_ADDR']]))
 			->setMailType('html')
 			->send();
 

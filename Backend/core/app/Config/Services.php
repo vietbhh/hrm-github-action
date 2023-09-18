@@ -42,7 +42,7 @@ require_once SYSTEMPATH . 'Config/Services.php';
 class Services extends CoreServices
 {
 
-	public static function authentication(string $lib = 'local', Model $userModel = null, Model $loginModel = null, bool $getShared = true)
+	public static function authentication(string $lib = 'jwt', Model $userModel = null, Model $loginModel = null, bool $getShared = true)
 	{
 		if ($getShared) {
 			return self::getSharedInstance('authentication', $lib, $userModel, $loginModel);

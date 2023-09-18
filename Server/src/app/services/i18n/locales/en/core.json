@@ -964,14 +964,17 @@
         "type": "Type",
         "event_sync": "Synced with Google Calendar",
         "upcoming_events": "Upcoming Events",
-        "view_all": "View All"
+        "view_all": "View All",
+        "today": "Today",
+        "tomorrow": "Tomorrow"
       },
       "buttons": {
         "add_event": "Add Event",
         "add": "Add",
         "update": "Update",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "new_event": "New Event"
       },
       "modals": {
         "title": {
@@ -980,6 +983,37 @@
         },
         "buttons": {
           "add_attachment": "Add Attachments"
+        }
+      },
+      "create_event": {
+        "title": "Create event",
+        "text": {
+          "event_name": "Event name",
+          "event_name_placeholder": "Enter event name",
+          "start_time": "Start time",
+          "end_time": "End time",
+          "all_day_event": "All-day event",
+          "attendees": "Attendees",
+          "attendees_placeholder": "Enter workgroup, email or username",
+          "meeting_room": "Meeting room",
+          "meeting_room_placeholder": "Choose meeting room",
+          "set_reminder": "Set reminder",
+          "online_meeting": "Online meeting",
+          "details": "Details",
+          "details_placeholder": "What are the details?",
+          "add_attachment_files": "Add attachment files",
+          "just_in_time": "Just in time",
+          "5_minutes_before": "5 minutes before",
+          "10_minutes_before": "10 minutes before",
+          "15_minutes_before": "15 minutes before",
+          "30_minutes_before": "30 minutes before",
+          "1_hour_before": "1 hour before",
+          "1_day_before": "1 day before",
+          "no_remind": "No remind",
+          "no_repeat": "No repeat",
+          "repeat_every_day": "Repeat every day",
+          "repeat_weekday": "Repeat weekday",
+          "repeat_week_on_monday": "Repeat week on Monday"
         }
       }
     },
@@ -999,7 +1033,9 @@
           "holiday": "Holiday",
           "etc": "ETC",
           "birthday": "Birthday",
-          "time_off": "Time Off"
+          "time_off": "Time Off",
+          "meetings": "Meetings",
+          "interviews": "interviews"
         }
       }
     },
