@@ -1,7 +1,7 @@
 source $(dirname $0)/.env
-APP_URL=$HOST_PROTOCOL":\/\/"$APP_HOST":"$APP_PORT
-PHP_API_URL=$HOST_PROTOCOL":\/\/"$PHP_API_HOST":"$PHP_API_PORT
-NODE_API_URL=$HOST_PROTOCOL":\/\/"$NODE_API_HOST":"$NODE_API_PORT
+APP_URL=$HOST_PROTOCOL":\/\/"$APP_URL
+PHP_API_URL=$HOST_PROTOCOL":\/\/"$PHP_API_URL
+NODE_API_URL=$HOST_PROTOCOL":\/\/"$NODE_API_URL
 
 MONGO_DB_PASSWORD_ENCODE=$MONGO_PASSWORD
 MONGO_DB_PASSWORD_ENCODE=$(echo "$MONGO_DB_PASSWORD_ENCODE" | sed 's/%/%25/g')
@@ -59,13 +59,14 @@ sed -i 's/.*app.siteURL.*/app.siteURL = "'"$APP_URL"'"/' Backend/applications/de
 sed -i 's/.*app.nodeApiUrl.*/app.nodeApiUrl = "'"$NODE_API_URL"'"/' Backend/applications/default/.env
 sed -i 's/.*app.dataURL.*/app.dataURL = "'"$PHP_API_URL"'"/' Backend/applications/default/.env
 sed -i 's/.*#sparkRunningPort.*/sparkRunningPort = '"$PHP_API_PORT"'/' Backend/applications/default/.env
+sed -i 's/.*#sparkRunningHost.*/sparkRunningHost = '"$PHP_API_HOST"'/' Backend/applications/default/.env
 printf "Done setup env file in Backend/applications/default/.env...\n"
 
 
 printf "Setup env Frontend...\n"
 cp Frontend/env Frontend/.env
 printf "Done setup env file in Frontend/.env...\n"
-
+if [[ $ENV_TYPE == "dev" || $ENV_TYPE == "both" ]]; then
 cp Frontend/env.development Frontend/.env.development
 sed -i 's/.*HOST.*/HOST="'"$APP_HOST"'"/' Frontend/.env.development
 sed -i 's/.*VITE_PORT.*/VITE_PORT='"$APP_PORT"'/' Frontend/.env.development
@@ -74,7 +75,8 @@ sed -i 's/.*VITE_APP_API_URL.*/VITE_APP_API_URL="'"$PHP_API_URL"'"/' Frontend/.e
 sed -i 's/.*VITE_APP_NODE_API_URL.*/VITE_APP_NODE_API_URL="'"$NODE_API_URL"'"/' Frontend/.env.development
 sed -i 's/.*VITE_APP_FIRESTORE_DB.*/VITE_APP_FIRESTORE_DB="'"$FIRESTORE_DB"'"/' Frontend/.env.development
 printf "Done setup env file in Frontend/.env.development...\n"
-
+fi
+if [[ $ENV_TYPE == "prod" || $ENV_TYPE == "both" ]]; then
 cp Frontend/env.production Frontend/.env.production
 sed -i 's/.*HOST.*/HOST="'"$APP_HOST"'"/' Frontend/.env.production
 sed -i 's/.*VITE_PORT.*/VITE_PORT='"$APP_PORT"'/' Frontend/.env.production
@@ -83,12 +85,12 @@ sed -i 's/.*VITE_APP_API_URL.*/VITE_APP_API_URL="'"$PHP_API_URL"'"/' Frontend/.e
 sed -i 's/.*VITE_APP_NODE_API_URL.*/VITE_APP_NODE_API_URL="'"$NODE_API_URL"'"/' Frontend/.env.production
 sed -i 's/.*VITE_APP_FIRESTORE_DB.*/VITE_APP_FIRESTORE_DB="'"$FIRESTORE_DB"'"/' Frontend/.env.production
 printf "Done setup env file in Frontend/.env.production...\n"
-
+fi
 
 printf "Setup env Server...\n"
 cp Server/env Server/.env
 printf "Done setup env file in Server/.env...\n"
-
+if [[ $ENV_TYPE == "dev" || $ENV_TYPE == "both" ]]; then
 cp Server/env.development Server/.env.development
 sed -i 's/^PORT.*/PORT='"$NODE_API_PORT"'/' Server/.env.development
 sed -i 's/.*MYSQL_HOST.*/MYSQL_HOST="'"$MYSQL_HOST"'"/' Server/.env.development
@@ -96,15 +98,14 @@ sed -i 's/.*MYSQL_PORT.*/MYSQL_PORT="'"$MYSQL_PORT"'"/' Server/.env.development
 sed -i 's/.*MYSQL_USERNAME.*/MYSQL_USERNAME="'"$MYSQL_USERNAME"'"/' Server/.env.development
 sed -i 's/.*MYSQL_PASSWORD.*/MYSQL_PASSWORD="'"$MYSQL_PASSWORD"'"/' Server/.env.development
 sed -i 's/.*MYSQL_DATABASE.*/MYSQL_DATABASE="'"$MYSQL_DATABASE"'"/' Server/.env.development
-
 sed -i 's/.*MONGODB_URI.*/MONGODB_URI="'"$MONGO_DB_URI"'"/' Server/.env.development
-
 sed -i 's/.*SITEURL.*/SITEURL="'"$APP_URL"'"/' Server/.env.development
 sed -i 's/.*BASEURL.*/BASEURL="'"$PHP_API_URL"'"/' Server/.env.development
 sed -i 's/.*NODEAPIURL.*/NODEAPIURL="'"$NODE_API_URL"'"/' Server/.env.development
 sed -i 's/^CODE.*/CODE="'"$CODE"'"/' Server/.env.development
 printf "Done setup env file in Frontend/.env.development...\n"
-
+fi
+if [[ $ENV_TYPE == "prod" || $ENV_TYPE == "both" ]]; then
 cp Server/env.production Server/.env.production
 sed -i 's/^PORT.*/PORT='"$NODE_API_PORT"'/' Server/.env.production
 sed -i 's/.*MYSQL_HOST.*/MYSQL_HOST="'"$MYSQL_HOST"'"/' Server/.env.production
@@ -112,12 +113,11 @@ sed -i 's/.*MYSQL_PORT.*/MYSQL_PORT="'"$MYSQL_PORT"'"/' Server/.env.production
 sed -i 's/.*MYSQL_USERNAME.*/MYSQL_USERNAME="'"$MYSQL_USERNAME"'"/' Server/.env.production
 sed -i 's/.*MYSQL_PASSWORD.*/MYSQL_PASSWORD="'"$MYSQL_PASSWORD"'"/' Server/.env.production
 sed -i 's/.*MYSQL_DATABASE.*/MYSQL_DATABASE="'"$MYSQL_DATABASE"'"/' Server/.env.production
-
 sed -i 's/.*MONGODB_URI.*/MONGODB_URI="'"$MONGO_DB_URI"'"/' Server/.env.production
-
 sed -i 's/.*SITEURL.*/SITEURL="'"$APP_URL"'"/' Server/.env.production
 sed -i 's/.*BASEURL.*/BASEURL="'"$PHP_API_URL"'"/' Server/.env.production
 sed -i 's/.*NODEAPIURL.*/NODEAPIURL="'"$NODE_API_URL"'"/' Server/.env.production
 sed -i 's/^CODE=.*/CODE="'"$CODE"'"/' Server/.env.production
 printf "Done setup env file in Server/.env.production...\n"
+fi
 

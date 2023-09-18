@@ -24,7 +24,7 @@ const RequestToJoinHeader = (props) => {
 
   const handleClickApproveAll = (type) => {
     if (parseInt(totalRequestJoin) === 0) {
-      return false 
+      return false
     }
 
     setLoading(true)
@@ -108,7 +108,7 @@ const RequestToJoinHeader = (props) => {
         </div>
         <div className="filter-section">
           <Row>
-            <Col sm="4" className="pe-75 me-0">
+            <Col xs="6" md="4" className="pe-75 me-0">
               <ErpSelect
                 className="select-filter"
                 options={options}
@@ -117,7 +117,7 @@ const RequestToJoinHeader = (props) => {
                 onChange={(values) => handleChangeSelect(values)}
               />
             </Col>
-            <Col sm="8" className="ps-0 ms-0">
+            <Col xs="6" md="8" className="ps-0 ms-0">
               <ErpInput
                 placeholder={useFormatMessage(
                   "modules.workspace.text.find_a_member"

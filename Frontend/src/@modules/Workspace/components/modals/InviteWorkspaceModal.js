@@ -36,7 +36,11 @@ const InviteWorkspaceModal = (props) => {
 
   const handleAdd = () => {
     const dataSelected = state.dataSelected
-    handleDone(dataSelected, "members")
+    const arr_member_selected = member_selected.map((x) => x.id_user)
+    const dataFilter = dataSelected.filter(
+      (employee) => !arr_member_selected.includes(employee.id)
+    )
+    handleDone(dataFilter, "members")
   }
 
   const getDataSelect = (data = [], typeAdd) => {
@@ -59,7 +63,9 @@ const InviteWorkspaceModal = (props) => {
         <ModalBody>
           <Row className="mt-50">
             <Col sm={12} className="mb-1">
-              <span className="filter-text">Filter members to invite by category</span>
+              <span className="filter-text">
+                Filter members to invite by category
+              </span>
             </Col>
             <Col sm={12}>
               <EmployeesSelect

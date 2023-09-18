@@ -270,4 +270,32 @@ if (!function_exists('create_slug')) {
 	}
 }
 
+if (!function_exists('array_merge_deep')) {
+	/*
+	 * $merged = array_merge_deep([$ar_1, $ar_2]);
+	 * */
+	function array_merge_deep($arrays)
+	{
+		$result = array();
+		foreach ($arrays as $array) {
+			foreach ($array as $key => $value) {
+				// Renumber integer keys as array_merge_recursive() does. Note that PHP
+				// automatically converts array keys that are integer strings (e.g., '1')
+				// to integers.
+				if (is_integer($key)) {
+					$result[] = $value;
+				} elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+					$result[$key] = array_merge_deep(array(
+						$result[$key],
+						$value,
+					));
+				} else {
+					$result[$key] = $value;
+				}
+			}
+		}
+		return $result;
+	}
+}
+
 ?>

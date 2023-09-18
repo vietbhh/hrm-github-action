@@ -39,7 +39,7 @@ const Sidebar = (props) => {
   const [currentActiveGroup, setCurrentActiveGroup] = useState([])
   const [activeItem, setActiveItem] = useState(null)
 
-  const showMenu = windowWidth < 767.98  ? menuVisibility === true : true
+  const showMenu = windowWidth < 767.98 ? menuVisibility === true : true
 
   // ** Menu Hover State
   const [menuHover, setMenuHover] = useState(false)
@@ -67,7 +67,6 @@ const Sidebar = (props) => {
       }
     }
   }
-  
   return (
     <Fragment>
       {showMenu === true && (

@@ -28,7 +28,6 @@ const RequestToJoinBody = (props) => {
       [type]: true,
       is_all: false
     }
-    console.log("values", values)
 
     workspaceApi
       .update(id, values)

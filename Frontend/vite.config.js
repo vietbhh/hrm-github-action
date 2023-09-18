@@ -14,6 +14,9 @@ export default ({ mode }) => {
     server: {
       port: startPort
     },
+    preview: {
+      port: startPort,
+    },
     css: {
       preprocessorOptions: {
         scss: {
@@ -189,7 +192,7 @@ export default ({ mode }) => {
     }
   }
 
-  if(mode !== "development"){
+  if (mode !== "development") {
     config.build.cssCodeSplit = false
     config.build.rollupOptions.input = ["index.html", "build_modules.js"]
   }

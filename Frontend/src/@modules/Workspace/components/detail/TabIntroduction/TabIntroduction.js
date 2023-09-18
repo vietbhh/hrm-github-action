@@ -32,7 +32,7 @@ const TabIntroduction = (props) => {
 
   const setIntroduction = (data) => {
     setState({
-      introduction: data
+      description: data
     })
   }
 
@@ -71,6 +71,7 @@ const TabIntroduction = (props) => {
         setState({
           workspaceInfo: res.data,
           introduction: res.data?.introduction,
+          description: res.data?.description,
           groupRule:
             res.data?.group_rules === undefined ? [] : res.data?.group_rules
         })
@@ -100,13 +101,13 @@ const TabIntroduction = (props) => {
   return (
     <div className="tab-introduction">
       <Row>
-        <Col sm={8} className="col pe-0">
+        <Col md={8} lg={8} className="pe-0">
           <div>
             <Introduction
               id={id}
               loading={state.loading}
               workspaceInfo={state.workspaceInfo}
-              introduction={state.introduction}
+              introduction={state.description}
               tabActive={tabActive}
               setIntroduction={setIntroduction}
             />
@@ -123,7 +124,7 @@ const TabIntroduction = (props) => {
             />
           </div>
         </Col>
-        <Col sm={4} className="col">
+        <Col md={4} lg={4} className="pe-0">
           <WorkspaceInfo workspaceInfo={state.workspaceInfo} />
         </Col>
       </Row>

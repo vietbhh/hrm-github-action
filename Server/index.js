@@ -51,8 +51,6 @@ mongoose
 const server = http.createServer(app)
 /** Create socket connection */
 new appSocket(server)
-
-server.listen(
-  process.env.PORT,
-  () => `Server is running on port ${process.env.PORT}`
+server.listen(process.env.PORT, () =>
+  console.warn(`Server is running on port ${process.env.PORT}`)
 )

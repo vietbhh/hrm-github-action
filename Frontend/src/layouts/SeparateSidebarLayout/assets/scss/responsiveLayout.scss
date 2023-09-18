@@ -2,6 +2,7 @@
     .separate-sidebar-layout .app-content {
         margin-left: 0 !important;
     }
+
     .header-navbar {
         z-index: 996 !important;
     }
@@ -56,7 +57,7 @@
                 padding-top: 0 !important;
 
                 .scrollbar-container {
-                    height: calc(100% - 370px) !important;
+                    height: calc(100% - 300px) !important;
                 }
             }
 
@@ -104,6 +105,29 @@
                 }
             }
 
+            .navbar-separate {
+                padding-right: 10px !important;
+                .nav-menu-main {
+                    order: 3;
+                }
+
+                .navbar-nav {
+                    li {
+                        .nav-link-search {
+                            padding-right: 20px !important;
+                        }
+                    }
+                }
+
+                .bookmark-wrapper {
+                    display: none !important;
+                }
+            }
+
+            .navbar-separate>div {
+                padding-right: unset !important;
+            }
+
             .navbar-logo-min {
                 padding-right: 30px;
             }
@@ -130,6 +154,8 @@
     }
 
     .separate-sidebar-layout {
+        font-size: 10px !important;
+
         .main-menu {
             position: fixed;
             top: 0;

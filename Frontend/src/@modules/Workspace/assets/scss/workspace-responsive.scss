@@ -1,0 +1,285 @@
+@media (max-width: 767.98px) {
+.list-workspace-page  {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    .text-color-title{
+        font-size: 24px !important;
+        font-style: normal;
+        font-weight: 600;
+    }
+    .body{
+        .card-workspace-managed{
+            padding: 0;
+            background-color : transparent !important;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            .card-header{
+                padding: 0px;
+                .text-color-title{
+                    font-size: 18px !important;
+                    font-weight: 500;
+                }
+            }
+            .card-body{
+                padding: 0px;
+                .workspace-manage-list{
+                    .workspace-item{
+                        border-radius: 16px;
+                        background: var(--other-white, #FFF);
+                        display: flex;
+                        align-items: center!important;
+                        .image-container{
+                            margin-bottom: 0px !important;
+                            padding: 8px;
+                            height: auto !important;
+                            width: auto !important;
+                            img{
+                                border-radius: 12px;
+                                width: 76px !important;
+                                height: 76px !important;
+                            }
+                            .ant-image{
+                                border-radius: 12px;
+                                width: 76px !important;
+                                height: 76px !important;
+                            }
+                        }
+                        .content-container{
+                            display: flex;
+                            align-items: center!important;
+                            width: 100%;
+                            .text-color-title {
+                                font-size: 15px !important;
+                                font-style: normal;
+                                font-weight: 400;
+                            }
+                            .btn-container{
+                                margin-left: auto;
+                                button{
+                                    border-radius: 12px !important;
+                                }
+                            }
+                        }
+                    }
+                    .col {
+                        width: 100% !important;
+                        flex: none;
+                    }
+                }
+
+                .workspace-joined-list{
+                    margin-top: 1rem;
+                    .workspace-item{
+                        border-radius: 16px;
+                        background: var(--other-white, #FFF);
+                        display: flex;
+                        align-items: center!important;
+                        justify-content: normal !important;
+                        .image-container{
+                            
+                            border : none !important;
+                            margin-bottom: 0px !important;
+                            padding: 8px;
+                            height: auto !important;
+                            width: auto !important;
+                            img{
+                                border-radius: 12px;
+                                width: 64px !important;
+                                height: 64px !important;
+                            }
+                        }
+                        .content-container{
+                            border : none !important;
+                            display: flex;
+                            align-items: center!important;
+                            width: 100% !important;
+                            .text-color-title {
+                                font-size: 15px !important;
+                                font-style: normal;
+                                font-weight: 400;
+                            
+                            }
+                            .btn-container{
+                                margin-left: auto;
+                            }
+                        }
+                    }
+                    .col-sm-6 {
+                        width: 100% !important;
+                        flex: none;
+                    }
+                }
+
+            }
+
+        }
+    }
+
+}
+.invite-workspace-modal-off{
+    width: auto !important;
+    .modal-body{
+     padding: 0 !important;
+     .content-select{
+        width: 100%;
+     }
+     .content-selected{
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+     }
+    }
+}
+.separate-sidebar-layout{
+    .wrapper__menu-content{
+        padding : 0 24px !important;
+        .app-content{
+            margin-left : 0px !important;
+        }
+    }
+    .app-content{
+        .content-wrapper{
+            .tab-pane{
+            .div-content{
+                .div-left{
+                    width: 100% !important;
+                    margin-right: 0px !important;
+                }
+            }
+        }
+
+    }
+}
+
+
+}
+.workspace{
+    .work-space-header{
+        height: 262px !important;
+        .card-body{
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            .name-and-action{
+                .workspaceAction{
+                    padding-right: 0.25rem !important;
+                }
+            }
+            .nav-tab-custom{
+                padding-top: 5px !important;
+                padding-left: 0.25rem !important;
+            }
+        }
+        .image-cover{
+            height : 120px !important;
+            .ant-image{
+                height: 120px !important;
+            }
+            .cameraBtn{
+                left: 78% !important;
+                padding: 3px 10px !important;
+            }
+            .coverPhoto{
+                height: 120px !important;
+                min-height : 120px !important;
+            }
+        }
+    }
+    .tab-content{
+        .tab-pane{
+            .tab-introduction{
+                .row{
+                    margin-right: 0px !important;
+                }
+            }
+        }
+    }
+}
+.modal {
+        background: rgba(19, 19, 38, 0.10);
+        backdrop-filter: blur(11px);
+}
+
+.workspace-setting-layout-page {
+    .nav-container{
+        display: none !important;
+    }
+    .content-container{
+        margin-left: 0px !important;
+    }
+}
+.preview-workspace-media-modal{
+    .modal-content {
+        .modal-body{
+            .preview-image{
+                img{
+                    height : auto !important
+                }
+            }
+        }
+    }
+}   
+
+.workspace-pending-post {
+    .num_of_pending{
+        font-size: 15px !important;
+    }
+}
+.workspace-setting-layout-page {
+    .content-container {
+        .request-to-join-container {
+            .header {
+                .title{
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+}
+.info-workgroup-modal{
+    .about-group-container{
+        box-shadow : none !important;
+            .card-header{
+                padding: 0px !important;
+            }
+            .card-body{
+                padding: 0px !important;
+                .workspace-info-item{
+                    .icon-section{
+                        margin-right: 0.5rem ;
+                    }
+                    
+                }
+                .footer-about{
+                    button{
+                        width: 100%;
+                        border-radius: 12px;
+                        background: var(--neutral-shade-9, #F2F1ED) !important;
+                        border-color: var(--neutral-shade-9, #F2F1ED) !important;
+                        color: var(--neutral-shade-2, #403F3A) !important;
+                        font-size: 14px;
+                        font-weight: 600;
+
+                    }
+                }
+            }
+    }
+}
+.select-option-menu-workgroup{
+    .select__control{
+        border: none !important;
+        .select__single-value{
+            font-size: 18px !important;
+        }
+    } 
+}
+}
+@media (max-width: 1199px) {
+    .separate-sidebar-layout{
+        .wrapper__menu-content{
+            .app-content{
+                margin-left : 0px !important;
+            }
+        }
+    }
+}
+

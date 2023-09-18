@@ -9,7 +9,15 @@ import { useSelector } from "react-redux"
 import RequestToJoinHeader from "../components/detail/RequestToJoin/RequestToJoinHeader"
 import RequestToJoinBody from "../components/detail/RequestToJoin/RequestToJoinBody"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
+import MenuSettingWorkspace from "../components/detail/MenuSettingWorkspace"
 
+const checkMediaWidth = (x) => {
+  if (x.matches) {
+    return true
+  }
+
+  return false
+}
 const RequestJoinWorkspace = (props) => {
   const [state, setState] = useMergedState({
     loading: true,
@@ -21,7 +29,9 @@ const RequestJoinWorkspace = (props) => {
       text: ""
     }
   })
-
+  const checkMobile = checkMediaWidth(
+    window.matchMedia("(max-width: 767.98px)")
+  )
   const { id } = useParams()
 
   const userState = useSelector((state) => state.auth.userData)
@@ -75,6 +85,14 @@ const RequestJoinWorkspace = (props) => {
   return (
     <WorkspaceSettingLayout isAdmin={state.isAdminGroup}>
       <div className="workspace request-to-join-container">
+        {checkMobile && (
+          <div className="row">
+            <div className="col-md-12 ">
+              <MenuSettingWorkspace menu={"request"} idWorkgroup={id} />
+            </div>
+          </div>
+        )}
+
         <RequestToJoinHeader
           id={id}
           loading={state.loading}
