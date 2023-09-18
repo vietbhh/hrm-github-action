@@ -4,6 +4,11 @@ import appModelMysql from "../../../models/app.mysql.js"
 const modulesModel = appModelMysql(
   "modules",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     name: {
       type: DataTypes.TEXT
     },
@@ -49,6 +54,7 @@ const modulesModel = appModelMysql(
 const getModule = async (module) => {
   const moduleInfo = await modulesModel.findOne({
     attributes: [
+      "id",
       "name",
       "tableName",
       "type",
@@ -66,7 +72,7 @@ const getModule = async (module) => {
       name: module
     }
   })
-  
+  if(!moduleInfo) throw new Error("MODULE_NOT_FOUND")
   return moduleInfo
 }
 

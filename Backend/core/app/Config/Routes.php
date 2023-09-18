@@ -52,7 +52,7 @@ $routes->post('user/change-pwd/validate', 'User::validateCurrentPwd');
 
 $routes->get('app/module/users', 'App::users_get');
 $routes->get('app/module/([A-Za-z0-9\-\_]+)', 'App::module_get/$1');
-$routes->get('module/([A-Za-z0-9\-\_]+)/?(:alpha)?', 'App::load_get/$1/$2');
+$routes->add('module/([A-Za-z0-9\-\_]+)/?(:alpha)?', 'App::load_get/$1/$2');
 $routes->get('module/([A-Za-z0-9\-\_]+)/linked', 'App::linked_get/$1');
 $routes->get('module/([A-Za-z0-9\-\_]+)/(:num)', 'App::detail_get/$1/$2');
 $routes->post('module/([A-Za-z0-9\-\_]+)/create-option', 'App::create_option/$1');
@@ -134,6 +134,7 @@ $routes->post('user/remove-device-token', 'User::remove_device_token_post');
 /*** Route for Libs ***/
 $routes->post('lib/upload', 'Lib::upload_post');
 $routes->get('lib/download/(:alphanum)', 'Lib::download_get/$1');
+$routes->get('lib/delete/(:alphanum)', 'Lib::delete_get/$1');
 
 /*** Route for General controller ***/
 $routes->post('task/add', 'Task::add_post');

@@ -42,10 +42,10 @@ const NotificationItem = (props) => {
     const newStr = handleFormatMessageStr(str)
 
     if (type === "title") {
-      return checkHTMLTag(str) ? (
-        <span dangerouslySetInnerHTML={{ __html: str }}></span>
+      return checkHTMLTag(newStr) ? (
+        <span dangerouslySetInnerHTML={{ __html: newStr }}></span>
       ) : (
-        <Fragment>{str}</Fragment>
+        <Fragment>{newStr}</Fragment>
       )
     } else if (type === "content") {
       return checkHTMLTag(newStr) ? (
