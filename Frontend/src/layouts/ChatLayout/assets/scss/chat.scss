@@ -2693,7 +2693,7 @@ $font-family: Helvetica;
 
                       .avatar {
                         border-radius: 14px !important;
-                        
+
                         img {
                           height: 32px !important;
                           width: 32px !important;
@@ -2752,10 +2752,10 @@ $font-family: Helvetica;
 
                       .div-message-search-result {
                         width: 90vw;
-                        margin-top: 15px;
+                        margin-top: 10px;
 
                         .arrow {
-                          top: 1px !important;
+                          display: none;
                         }
                       }
                     }

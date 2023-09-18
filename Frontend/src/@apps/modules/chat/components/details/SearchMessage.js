@@ -5,11 +5,9 @@ import { AES, enc } from "crypto-js"
 import { Fragment, useEffect, useRef } from "react"
 import { X } from "react-feather"
 import { FormProvider, useForm } from "react-hook-form"
-import ReactHtmlParser from "react-html-parser"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { InputGroup, InputGroupText, Spinner } from "reactstrap"
 import { formatTime, replaceHtmlMessage } from "../../common/common"
-import classNames from "classnames"
 
 const SearchMessage = (props) => {
   const {
