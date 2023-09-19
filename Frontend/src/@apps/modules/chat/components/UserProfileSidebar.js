@@ -305,6 +305,25 @@ const UserProfileSidebar = (props) => {
           show: userSidebarRight === true
         })}>
         <header className="user-profile-header">
+          <span
+            className="close-icon-left d-none"
+            onClick={() => handleUserSidebarRight()}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none">
+              <path
+                d="M14.9998 19.9201L8.47984 13.4001C7.70984 12.6301 7.70984 11.3701 8.47984 10.6001L14.9998 4.08008"
+                stroke="#292D32"
+                strokeWidth="1.5"
+                strokeMiterlimit="10"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
           <span className="close-icon" onClick={handleUserSidebarRight}>
             <X size={14} />
           </span>

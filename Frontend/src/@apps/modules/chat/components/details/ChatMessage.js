@@ -584,7 +584,9 @@ const ChatMessage = (props) => {
               maxLine={2}
               minLine={2}
               showGraphic={true}
-              defaultImage={`${import.meta.env.VITE_APP_URL}/assets/images/link.png`}
+              defaultImage={`${
+                import.meta.env.VITE_APP_URL
+              }/assets/images/link.png`}
               componentClassName="link-preview"
             />
           </>
@@ -996,7 +998,7 @@ const ChatMessage = (props) => {
           <div className="chat-content-reaction">
             <Dropdown
               menu={{ items: items_react }}
-              placement="top"
+              placement="bottom"
               trigger={["hover"]}
               overlayClassName="chat-content-reaction-dropdown-react"
               arrow={{
@@ -1005,48 +1007,42 @@ const ChatMessage = (props) => {
               <svg
                 className="reaction"
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
+                width="20"
+                height="21"
+                viewBox="0 0 20 21"
                 fill="none">
                 <g clipPath={`url(#react_icon_${chat.time}`}>
-                  <circle
-                    cx="9"
-                    cy="9"
-                    r="8.25"
-                    stroke="#C3C3C6"
-                    strokeWidth="2"
-                  />
                   <path
-                    d="M6 11.25C6 11.25 7.28571 12.375 9 12.375C10.7143 12.375 12 11.25 12 11.25"
-                    stroke="#C3C3C6"
-                    strokeWidth="2"
+                    d="M7.5 18.8332H12.5C16.6667 18.8332 18.3333 17.1665 18.3333 12.9998V7.99984C18.3333 3.83317 16.6667 2.1665 12.5 2.1665H7.5C3.33333 2.1665 1.66667 3.83317 1.66667 7.99984V12.9998C1.66667 17.1665 3.33333 18.8332 7.5 18.8332Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                   <path
-                    d="M6 6.75H6.1875"
-                    stroke="#C3C3C6"
-                    strokeWidth="2"
+                    d="M12.9167 8.625C13.607 8.625 14.1667 8.06536 14.1667 7.375C14.1667 6.68464 13.607 6.125 12.9167 6.125C12.2263 6.125 11.6667 6.68464 11.6667 7.375C11.6667 8.06536 12.2263 8.625 12.9167 8.625Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                   <path
-                    d="M12 6.75H12.1875"
-                    stroke="#C3C3C6"
-                    strokeWidth="2"
+                    d="M7.08333 8.625C7.77369 8.625 8.33333 8.06536 8.33333 7.375C8.33333 6.68464 7.77369 6.125 7.08333 6.125C6.39298 6.125 5.83333 6.68464 5.83333 7.375C5.83333 8.06536 6.39298 8.625 7.08333 8.625Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12.9167 13C11.9444 13.8333 9.41667 15 7.08333 13"
+                    stroke="#696760"
+                    strokeLinecap="round"
                   />
                 </g>
-                <defs>
-                  <clipPath id={`react_icon_${chat.time}`}>
-                    <rect width="18" height="18" fill="white" />
-                  </clipPath>
-                </defs>
               </svg>
             </Dropdown>
-
             <Tooltip title={useFormatMessage("modules.chat.text.reply")}>
               <svg
                 onClick={() => {
@@ -1074,20 +1070,32 @@ const ChatMessage = (props) => {
                 }}
                 className="reaction"
                 xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
                 fill="none">
                 <path
-                  d="M8.97989 7.14725V5.68975C8.97989 4.87392 7.98989 4.46142 7.41239 5.03892L3.20489 9.24642C2.84739 9.60392 2.84739 10.1814 3.20489 10.5389L7.41239 14.7464C7.98989 15.3239 8.97989 14.9206 8.97989 14.1048V12.5556C13.5632 12.5556 16.7716 14.0223 19.0632 17.2306C18.1466 12.6473 15.3966 8.06392 8.97989 7.14725Z"
-                  fill="#C3C3C6"
+                  d="M17.3667 11.9332H5.83331C4.44998 11.9332 3.33331 10.8165 3.33331 9.43318V6.6665"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14.7333 14.5665L17.3667 11.9332L14.7333 9.2998"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Tooltip>
 
             <Dropdown
               menu={{ items: items_more }}
-              placement="top"
+              placement="bottom"
               trigger={["hover"]}
               overlayClassName="chat-content-reaction-dropdown-more"
               arrow={{
@@ -1096,21 +1104,21 @@ const ChatMessage = (props) => {
               <svg
                 className="reaction"
                 xmlns="http://www.w3.org/2000/svg"
-                width="3"
-                height="14"
-                viewBox="0 0 3 14"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
                 fill="none">
                 <path
-                  d="M2.54545 1.27273C2.54545 1.97564 1.97563 2.54545 1.27273 2.54545C0.569819 2.54545 0 1.97564 0 1.27273C0 0.569819 0.569819 0 1.27273 0C1.97563 0 2.54545 0.569819 2.54545 1.27273Z"
-                  fill="#C3C3C6"
+                  d="M12 18C12 16.8954 11.1046 16 10 16C8.89543 16 8 16.8954 8 18C8 19.1046 8.89543 20 10 20C11.1046 20 12 19.1046 12 18Z"
+                  fill="#696760"
                 />
                 <path
-                  d="M2.54545 7C2.54545 7.70291 1.97563 8.27273 1.27273 8.27273C0.569819 8.27273 0 7.70291 0 7C0 6.29709 0.569819 5.72727 1.27273 5.72727C1.97563 5.72727 2.54545 6.29709 2.54545 7Z"
-                  fill="#C3C3C6"
+                  d="M12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12C11.1046 12 12 11.1046 12 10Z"
+                  fill="#696760"
                 />
                 <path
-                  d="M2.54545 12.7273C2.54545 13.4302 1.97563 14 1.27273 14C0.569819 14 0 13.4302 0 12.7273C0 12.0244 0.569819 11.4545 1.27273 11.4545C1.97563 11.4545 2.54545 12.0244 2.54545 12.7273Z"
-                  fill="#C3C3C6"
+                  d="M12 2C12 0.89543 11.1046 0 10 0C8.89543 0 8 0.89543 8 2C8 3.10457 8.89543 4 10 4C11.1046 4 12 3.10457 12 2Z"
+                  fill="#696760"
                 />
               </svg>
             </Dropdown>
@@ -1131,6 +1139,7 @@ const ChatMessage = (props) => {
           key={index}
           className={classnames("chat", {
             "chat-left": !item.line_time && item.senderId !== userId,
+            "chat-right": !item.line_time && item.senderId === userId,
             "chat-line-break": item.line_time === true
           })}>
           {item.line_time ? (
@@ -1139,16 +1148,16 @@ const ChatMessage = (props) => {
             </div>
           ) : (
             <>
-              {item.senderId !== userId && (
-                <div className="chat-avatar">
-                  <Avatar
-                    imgWidth={36}
-                    imgHeight={36}
-                    className="box-shadow-1 cursor-pointer"
-                    src={_avatar}
-                  />
-                </div>
-              )}
+            {item.senderId !== userId && (
+              <div className="chat-avatar">
+                <Avatar
+                  imgWidth={36}
+                  imgHeight={36}
+                  className="box-shadow-1 cursor-pointer"
+                  src={_avatar}
+                />
+              </div>
+            )}
 
               <div className="chat-body">
                 {item.messages.map((chat, index) => {

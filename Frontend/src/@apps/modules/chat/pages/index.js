@@ -196,7 +196,9 @@ const AppChat = (props) => {
   // ** Sidebar & overlay toggle functions
   const handleSidebar = () => setSidebar(!sidebar)
   const handleUserSidebarLeft = () => setUserSidebarLeft(!userSidebarLeft)
-  const handleUserSidebarRight = () => setUserSidebarRight(!userSidebarRight)
+  const handleUserSidebarRight = () => {
+    setUserSidebarRight(!userSidebarRight)
+  }
   const handleOverlayClick = () => {
     setSidebar(false)
     setUserSidebarRight(false)
@@ -1245,6 +1247,8 @@ const AppChat = (props) => {
 
               <Chat
                 store={store}
+                sidebar={sidebar}
+                userSidebarRight={userSidebarRight}
                 handleSidebar={handleSidebar}
                 userSidebarLeft={userSidebarLeft}
                 handleUserSidebarRight={handleUserSidebarRight}
