@@ -124,7 +124,7 @@ class JWTAuthenticatior implements \Myth\Auth\Authentication\AuthenticatorInterf
 	 * generate access token
 	 *
 	 */
-	protected function generateAccessToken(int $userId)
+	public function generateAccessToken(int $userId)
 	{
 		helper('date');
 		$secret = $_ENV['jwt_secret'];

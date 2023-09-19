@@ -14,6 +14,9 @@ class NodeServer
 		];
 		$authenticate = \Config\Services::authentication();
 		$token = $authenticate->token();
+		if (!$token) {
+			$token = $authenticate->generateAccessToken(1)['token'];
+		}
 		if ($token) {
 			$defaultOptions['headers']['Authorization'] = 'Bearer ' . $token;
 		}

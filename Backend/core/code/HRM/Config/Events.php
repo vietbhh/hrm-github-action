@@ -89,4 +89,9 @@ Events::on('update_line_manager_employee', function ($data) {
 	$event->updateLineManager($data);
 });
 
+Events::on('user_on_active', function ($data) {
+	$event = new \HRM\Modules\Employees\Config\Events();
+	$event->updateWorkgroupAndChatGroup($data);
+});
+
 ?>

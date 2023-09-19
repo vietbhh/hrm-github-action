@@ -205,7 +205,15 @@ class Events
 			// auto add employee to group
 			$employeeGroupService = \HRM\Modules\EmployeeGroups\Libraries\EmployeeGroups\Config\Services::employeeGroups();
 			$employeeGroupService->autoAddEmployeeToGroup($dataSaveEmployee['id']);
+
+			// update employee workgroup and chat group
+			$this->updateWorkgroupAndChatGroup($params['dataSaveEmployee']);
 		}
+
+		/**
+		 * @param array $dataSaveEmployee
+		 * time-off
+		 */
 	}
 
 	public function updateLineManager($dataSave)
@@ -238,6 +246,71 @@ class Events
 		$this->onUpdateEmployeeEvent($params);
 
 		$model->save($dataSave);
+	}
+
+	/**
+	 * @param array $dataSaveEmployee (include employee_id and department_id)
+	 * remove user from old workgroup and chat group
+	 * add user to new workgroup and chat group
+	 * -- get workgroup_id by department.custom_fields.workgroup_id
+	 */
+	public function updateWorkgroupAndChatGroup($dataSaveEmployee)
+	{
+		$employeeId = isset($dataSaveEmployee['id']) ? $dataSaveEmployee['id'] : 0;
+		$modules = \Config\Services::modules('employees');
+		$model = $modules->model;
+		$infoEmployee = $model->asArray()->find($employeeId);
+		if (!$infoEmployee) {
+			return false;
+		}
+
+		$departmentId = isset($dataSaveEmployee['department_id']) ? $dataSaveEmployee['department_id'] : 0;
+		if (intval($infoEmployee['department_id']) !== intval($departmentId)) {
+			$nodeServer = \Config\Services::nodeServer();
+			if (empty($employeeId) || empty($departmentId)) {
+				return [
+					'success' => false,
+					'msg' => 'empty user id or department_id'
+				];
+			}
+			$modulesDepartment = \Config\Services::modules('departments');
+			$modelDepartment = $modulesDepartment->model;
+			if ($departmentId != 'empty') {
+				$infoDepartment = $modelDepartment
+					->asArray()
+					->select(['id', 'custom_fields'])
+					->where('id', $departmentId)
+					->first();
+				if (!$infoDepartment) {
+					return [
+						'success' => false,
+						'msg' => 'user department ' . $departmentId . ' not found'
+					];
+				}
+				$customField = json_decode($infoDepartment['custom_fields'], true);
+			} else {
+				$customField = [
+					'workgroup_id' => null
+				];
+			}
+
+			// ** remove from old workgroup and chat group
+			$infoOldDepartment = $modelDepartment
+				->asArray()
+				->select(['id', 'custom_fields'])
+				->where('id', $infoEmployee['department_id'])
+				->first();
+			$customFieldOld = json_decode($infoOldDepartment['custom_fields'], true);
+			
+			$result = $nodeServer->node->post('/workspace/update-workspace-member-and-chat-group', [
+				'json' => [
+					'employee_id' => $employeeId,
+					'workspace_add' => isset($customField['workgroup_id']) && !empty($customField['workgroup_id']) ? $customField['workgroup_id'] : null,
+					'workspace_remove' => isset($customFieldOld['workgroup_id']) && !empty($customFieldOld['workgroup_id']) ? $customFieldOld['workgroup_id'] : null,
+				]
+			]);
+			return $result->getBody();
+		}
 	}
 
 
