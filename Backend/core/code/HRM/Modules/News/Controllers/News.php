@@ -10,6 +10,7 @@
 namespace HRM\Modules\News\Controllers;
 
 use App\Controllers\ErpController;
+use HRM\Modules\Employees\Models\EmployeesModel;
 
 class News extends ErpController
 {
@@ -150,7 +151,7 @@ class News extends ErpController
 		$module = \Config\Services::modules($moduleName);
 		$getPara = $this->request->getGet();
 
-		$employeesModel = $module->model;
+		$employeesModel = new EmployeesModel();
 		if (!mayList($moduleName)) {
 			return $this->failForbidden(MISSING_LIST_PERMISSION);
 		}
@@ -160,7 +161,7 @@ class News extends ErpController
 		}
 
 		$employeesModel->whereIn("department_id", $getPara['department']);
-		$data = $employeesModel->select(['id as value', 'avatar as icon', 'full_name', 'email', 'username as label'])->findAll();
+		$data = $employeesModel->select(['id as value', 'avatar as icon', 'full_name', 'email', 'username as label'])->exceptResigned()->findAll();
 
 		return $this->respond(handleDataBeforeReturn($module, $data, true));
 	}
