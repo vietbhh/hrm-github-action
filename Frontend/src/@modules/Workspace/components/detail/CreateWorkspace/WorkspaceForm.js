@@ -22,7 +22,7 @@ const WorkspaceForm = (props) => {
     <div className="create-workspace-form">
       <div className="mb-1">
         <p className="mb-25 field-label">
-          {useFormatMessage("modules.workspace.fields.workgroup_name")}
+          {useFormatMessage("modules.workspace.fields.workgroup_name")}*
         </p>
         <ErpInput
           nolabel={true}
@@ -38,7 +38,7 @@ const WorkspaceForm = (props) => {
       </div>
       <div className="mb-1">
         <p className="mb-25 field-label">
-          {useFormatMessage("modules.workspace.fields.description")}
+          {useFormatMessage("modules.workspace.fields.description")}*
         </p>
         <ErpInput
           type="textarea"
