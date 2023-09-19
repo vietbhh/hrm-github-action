@@ -97,7 +97,8 @@ const workspaceSchema = baseSchema("m_workspace", {
   is_system: {
     type: Boolean,
     default: false
-  }
+  },
+  system: { type: Boolean, default: false },
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

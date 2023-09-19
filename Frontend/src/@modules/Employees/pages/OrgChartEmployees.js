@@ -17,7 +17,7 @@ import { MoreVertical } from "react-feather"
 import { Tree, TreeNode } from "react-organizational-chart"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
-import { Navigate, useParams } from "react-router-dom"
+import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import "../assets/scss/departmentsSetting.scss"
 import { departmentApi } from "../common/api"
@@ -127,6 +127,23 @@ const OrgChartEmployees = (props) => {
     })
   }
 
+  const create_workgroup = async (departmentId) => {
+    await departmentApi
+      .createDepartmentWorkspace(departmentId)
+      .then((res) => {
+        loadData(state.params)
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
+      })
+      .catch((err) => {
+        notification.showError({
+          text: err
+        })
+        setState({ loading: false })
+      })
+  }
+
   const moveEmployee = (idEmployee, idDepartmentFrom, idDepartmentTo) => {
     departmentApi
       .changeDepartment({
@@ -232,6 +249,7 @@ const OrgChartEmployees = (props) => {
         canDrop: monitor.canDrop()
       })
     })
+    const navigate = useNavigate()
     const isActive = canDrop && isOver
     let backgroundColor = "white"
     if (isActive) {
@@ -275,7 +293,25 @@ const OrgChartEmployees = (props) => {
         key: "btn_deleta",
         onClick: () => handleDelete(org),
         disabled: !org.id
-      }
+      },
+      _.isEmpty(org.custom_fields?.workgroup_id) ||
+      _.isUndefined(org.custom_fields?.workgroup_id)
+        ? {
+            label: <div>Create workgroup</div>,
+            key: "btn_create_workgroup",
+            onClick: () => {
+              create_workgroup(org.id)
+            },
+            disabled: !org.id
+          }
+        : {
+            label: <div>View workgroup</div>,
+            key: "btn_view_workgroup",
+            onClick: () => {
+              navigate("/workspace/" + org.custom_fields?.workgroup_id)
+            },
+            disabled: !org.id
+          }
     ]
     return (
       <div ref={drop}>

@@ -29,15 +29,12 @@ const PostDetail = (props) => {
     optionsMeetingRoom: []
   })
   const { idPost, idMedia } = useParams()
+  console.log(idMedia)
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const cover = userData?.cover || ""
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = `/posts/${idPost}`
-
-  const screenWidth = screen.width
-  const marginLeft = screenWidth <= 1920 ? "340px" : "330px"
-  const minWidth = screenWidth <= 1920 ? "1020px" : "1150px"
 
   const navigate = useNavigate()
 
@@ -47,17 +44,19 @@ const PostDetail = (props) => {
 
   const handleAfterUpdateStatus = (status) => {
     const newDataPost = { ...state.dataPost }
-    const newDataLink = {...newDataPost["dataLink"]}
-    const newEmployee = _.isArray(newDataLink["employee"]) ? [...newDataLink["employee"]].map((item) => {
-      if (parseInt(item.id) === parseInt(userId)) {
-        return {
-          ...item,
-          status: status
-        }
-      }
+    const newDataLink = { ...newDataPost["dataLink"] }
+    const newEmployee = _.isArray(newDataLink["employee"])
+      ? [...newDataLink["employee"]].map((item) => {
+          if (parseInt(item.id) === parseInt(userId)) {
+            return {
+              ...item,
+              status: status
+            }
+          }
 
-      return item
-    }) : newDataLink["employee"]
+          return item
+        })
+      : newDataLink["employee"]
     newDataLink["employee"] = newEmployee
     newDataPost["dataLink"] = newDataLink
     setState({ dataPost: newDataPost })
@@ -71,11 +70,13 @@ const PostDetail = (props) => {
       .then(async (res) => {
         if (!_.isEmpty(res.data)) {
           const data = res.data
-          if (idPost === idMedia) {
-            setState({ _idMedia: idMedia })
-          } else {
-            setState({ _idMedia: "" })
-            window.history.replaceState(null, "", current_url)
+          if (state._idMedia == "" && idMedia) {
+            if (idPost === idMedia) {
+              setState({ _idMedia: idMedia })
+            } else {
+              setState({ _idMedia: "" })
+              window.history.replaceState(null, "", current_url)
+            }
           }
 
           const data_attachment = await handleLoadAttachmentThumb(data, cover)
@@ -115,7 +116,7 @@ const PostDetail = (props) => {
         }
       })
       .catch((err) => {
-        setState({ loadingPost: false })
+        setState({ loadingPost: false, dataPost: {} })
       })
   }, [idPost, idMedia])
 

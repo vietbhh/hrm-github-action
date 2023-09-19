@@ -33,12 +33,11 @@ export const fetchProfile = () => {
         userData,
         permits,
         init: { settings, unit, modules, routes, filters, optionsModules },
-        list_notification,
         list_user
       } = res.data
 
-      const listNotification = res.data.list_notification
-      const numberNotification = res.data.number_notification
+      const listNotification = res.data.list_notification ?? []
+      const numberNotification = res.data.number_notification ?? 0
       store.dispatch(initialLayout(settings))
       setIndexCustom(settings)
       store.dispatch(

@@ -5,6 +5,7 @@ import {
   serialize
 } from "@apps/utility/handleData"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
+import { axiosNodeApi } from "../../../@apps/utility/api"
 
 export const userApi = {
   async getProfile() {
@@ -417,6 +418,11 @@ export const employeesApi = {
 }
 
 export const departmentApi = {
+  async createDepartmentWorkspace(id) {
+    return await axiosNodeApi.get(
+      "/employees/create-department-workgroup/" + id
+    )
+  },
   async postSave(data) {
     return await axiosApi.post(
       "/departments/add",
