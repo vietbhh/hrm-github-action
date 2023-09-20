@@ -103,6 +103,7 @@ sed -i 's/.*SITEURL.*/SITEURL="'"$APP_URL"'"/' Server/.env.development
 sed -i 's/.*BASEURL.*/BASEURL="'"$PHP_API_URL"'"/' Server/.env.development
 sed -i 's/.*NODEAPIURL.*/NODEAPIURL="'"$NODE_API_URL"'"/' Server/.env.development
 sed -i 's/^CODE.*/CODE="'"$CODE"'"/' Server/.env.development
+sed -i 's/^FIRESTORE_DB.*/FIRESTORE_DB="'"$FIRESTORE_DB"'"/' Server/.env.development
 printf "Done setup env file in Frontend/.env.development...\n"
 fi
 if [[ $ENV_TYPE == "prod" || $ENV_TYPE == "both" ]]; then
@@ -118,6 +119,7 @@ sed -i 's/.*SITEURL.*/SITEURL="'"$APP_URL"'"/' Server/.env.production
 sed -i 's/.*BASEURL.*/BASEURL="'"$PHP_API_URL"'"/' Server/.env.production
 sed -i 's/.*NODEAPIURL.*/NODEAPIURL="'"$NODE_API_URL"'"/' Server/.env.production
 sed -i 's/^CODE=.*/CODE="'"$CODE"'"/' Server/.env.production
+sed -i 's/^FIRESTORE_DB.*/FIRESTORE_DB="'"$FIRESTORE_DB"'"/' Server/.env.production
 printf "Done setup env file in Server/.env.production...\n"
 fi
 

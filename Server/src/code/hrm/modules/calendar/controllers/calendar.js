@@ -3,16 +3,16 @@ import {
   getDetailEvent
 } from "#app/libraries/calendar/Calendar.js"
 import calendarMongoModel from "#code/hrm/modules/calendar/models/calendar.mongo.js"
-import { map, isArray } from "lodash-es"
 import { addEvent } from "#code/hrm/modules/feed/libraries/event/Event.js"
 import dayjs from "dayjs"
+import { isArray, map } from "lodash-es"
 // ** models
+import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
+import { getUser, getUsersExceptResigned } from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { timeOffHolidaysModel } from "../../timeOff/models/timeOffHolidays.mysql.js"
 import { timeOffRequestsModel } from "../../timeOff/models/timeOffRequests.mysql.js"
 import { timeOffTypesModel } from "../../timeOff/models/timeOffTypes.mysql.js"
-import { getUser, getUsers, usersModel } from "#app/models/users.mysql.js"
-import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
 import { getListEventRepeat } from "../libraries/calendar/Calendar.js"
 
 const handleGetCalendar = async (req, res) => {
@@ -285,7 +285,7 @@ const _getListAllDayEvent = async (arrAllDay = {}, query = {}, userId = 1) => {
   const userOffice = userInfo.office
 
   // get list employee dob
-  const listEmployee = await usersModel.findAll()
+  const listEmployee = await getUsersExceptResigned()
   map(listEmployee, (item) => {
     const dob = item.dob
     if (dob !== undefined && dob !== null) {
@@ -478,8 +478,7 @@ const _getListAllDayEvent = async (arrAllDay = {}, query = {}, userId = 1) => {
 }
 
 export {
-  handleGetCalendar,
-  handleAddCalendar,
-  handleGetDetailEvent,
+  handleAddCalendar, handleGetCalendar, handleGetDetailEvent,
   handleGetListEvent
 }
+

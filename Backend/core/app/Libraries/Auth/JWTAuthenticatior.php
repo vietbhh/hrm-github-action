@@ -172,7 +172,7 @@ class JWTAuthenticatior implements \Myth\Auth\Authentication\AuthenticatorInterf
 	public function jwtTokenHandler()
 	{
 		$request = \Config\Services::request();
-		$headers = $request->getHeader('Authorization');
+		$headers = $request->header('Authorization');
 		if (!empty($headers)) {
 			if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
 				$this->token = $matches[1];

@@ -95,7 +95,7 @@ class TimeOffSchedule extends ErpController
 
         $builder = $modelEmployee
             ->asArray()
-            ->exceptResignedEmployee()
+            ->exceptResigned()
             ->select([
                 'm_employees.id',
                 'm_employees.full_name',

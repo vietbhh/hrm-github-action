@@ -358,11 +358,11 @@ class Auth extends ResourceController
 		);
 
 		$throttler = service('throttler');
-
 		if ($throttler->check(md5($this->request->getIPAddress()), 2, MINUTE) === false) {
 			return service('response')->setStatusCode(429)->setBody(lang('Auth.tooManyRequests', [$throttler->getTokentime()]));
 		}
-		$user =  $users->where('activate_hash', $this->request->getPost('token'))->where('active', 0)->first(false);
+
+		$user = $users->where('activate_hash', $this->request->getPost('token'))->where('active', 0)->first(false);
 		if (is_null($user)) {
 			return $this->failNotFound('user_not_found');
 		}

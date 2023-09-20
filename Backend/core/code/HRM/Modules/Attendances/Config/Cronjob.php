@@ -13,7 +13,7 @@ class Cronjob
 		if (!$attendanceAutoMailNotification) {
 			return false;
 		}
-		
+
 		$datetoday = date('Y-m-d');
 		$attendanceModules = \Config\Services::modules("attendances");
 		$attendanceModel = $attendanceModules->model;
@@ -36,9 +36,8 @@ class Cronjob
 			$date_check = date('Y-m-d', strtotime($date_to . " -$day_notification day"));
 			if (strtotime($datetoday) == strtotime($date_check)) {
 				$person_in_charge = json_decode(preference("attendance_person_in_charge"), true);
-				$employeeModules = \Config\Services::modules("employees");
-				$employeeModel = $employeeModules->model;
-				$data_employee_manager_db = $employeeModel->whereIn("id", $person_in_charge)->select("id, full_name, email")->asArray()->findAll();
+				$employeeModel = new EmployeesModel();
+				$data_employee_manager_db = $employeeModel->whereIn("id", $person_in_charge)->select("id, full_name, email")->exceptResigned()->asArray()->findAll();
 				\CodeIgniter\Events\Events::trigger('send_mail_notification_manager', $data_employee_manager_db);
 
 				return true;
