@@ -94,6 +94,10 @@ const workspaceSchema = baseSchema("m_workspace", {
   group_chat_id: {
     type: String
   },
+  is_system: {
+    type: Boolean,
+    default: false
+  },
   system: { type: Boolean, default: false },
 })
 

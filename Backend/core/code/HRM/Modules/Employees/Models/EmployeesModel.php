@@ -69,6 +69,11 @@ class EmployeesModel extends AppModel
 				'account_status' => 'deactivated'
 			])->update();
 
+			foreach ($userIds as $id) {
+				$userInfo = $userModel->where('id', $id)->first();
+				\CodeIgniter\Events\Events::trigger('on_after_update_account_status_user', $userInfo);
+			}
+
 			return [
 				"success" => true
 			];
