@@ -2501,13 +2501,15 @@ $font-family: Helvetica;
 @media (max-width: 767.98px) {
   .wrapper:has(.sidebar-hided) {
     .header-navbar {
-      display: none;
+      display: none !important;
     }
 
     .wrapper__menu-content {
       .chat-application {
         padding-top: unset !important;
-
+        .header-navbar-shadow {
+          display: none !important;
+        }
         .content-area-wrapper {
           height: 100vh !important;
         }
@@ -2524,6 +2526,8 @@ $font-family: Helvetica;
 
   .wrapper {
     .header-navbar {
+      margin: unset !important;
+      width: 100vw !important;
       .navbar-container {
         .autocomplete-container {
           li {
@@ -2541,14 +2545,14 @@ $font-family: Helvetica;
           .sidebar-left {
             .sidebar-content {
               width: 100% !important;
-              padding-left: 2rem;
-              padding-right: 2rem !important;
+              padding-left: 24px;
+              padding-right: 24px !important;
               background-color: #f0f3f6 !important;
 
               .chat-fixed-search {
                 padding-left: 0.25rem;
                 padding-right: 0.25rem;
-                margin-top: 20px;
+                margin-top: 24px;
                 max-width: 100% !important;
 
                 .chat-input-search {
@@ -2568,6 +2572,7 @@ $font-family: Helvetica;
                 width: 100% !important;
                 .chat-list-title {
                   margin-left: 0.25rem;
+                  margin-top: 24px;
                   text-transform: uppercase;
                   font-size: 12px !important;
                   color: #8C8A82;
@@ -2578,10 +2583,10 @@ $font-family: Helvetica;
                   .div-li-chat {
                     margin: unset;
                     li {
-                      padding-left: 0.5rem;
-                      padding-right: 0.5rem;
+                      padding: 12px;
 
                       .chat-info {
+                        padding-left: 12px;
                         h5 {
                           font-size: 15px;
                           font-weight: 500;
@@ -2626,6 +2631,7 @@ $font-family: Helvetica;
                       }
                       .user-chats {
                         .chats {
+                          margin-top: 34px;
                           .chat-content {
                             .text {
                               font-size: 14px !important;
@@ -2770,8 +2776,11 @@ $font-family: Helvetica;
                       gap: 15px;
                       .input-group-merge {
                         height: 45px;
+                        box-shadow: unset !important;
+
                         .input-group-text,
                         .DraftEditor-root {
+                          border-color: #ffffff !important;
                           background-color: #f7f7f5 !important;
                           overflow: hidden !important;
                         }
