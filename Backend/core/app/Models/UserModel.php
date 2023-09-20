@@ -158,4 +158,13 @@ class UserModel extends \Tatter\Permits\Models\UserModel
 		return $users;
 
 	}
+
+	public function exceptDeactivated(){
+		return $this->where('users.account_status !=', 'deactivated');
+	}
+
+	public function onlyActived(){
+		return $this->where('users.account_status', 'activated');
+	}
+
 }

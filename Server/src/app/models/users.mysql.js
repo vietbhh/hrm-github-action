@@ -90,9 +90,28 @@ const getUserActivated = (condition = {}) => {
     }
   })
 }
+
+const getUsersExceptResigned = (condition = {}) => {
+  return usersModel.findAll({
+    where: {
+      account_status: {
+        [Op.ne]: "deactivated"
+      },
+      ...condition
+    }
+  })
+}
+
 const getUserbyDepartment = (idDepartment = []) => {
   return usersModel.findAll({
     where: { department_id: idDepartment, account_status: "activated" }
   })
 }
-export { usersModel, getUser, getUsers, getUserActivated, getUserbyDepartment }
+export {
+  usersModel,
+  getUser,
+  getUsers,
+  getUserActivated,
+  getUserbyDepartment,
+  getUsersExceptResigned
+}

@@ -92,7 +92,7 @@ class Attendance extends ErpController
         $modelEmployee = new EmployeesModel();
         $builderEmployee = $modelEmployee
             ->asArray()
-            ->exceptResignedEmployee()
+            ->exceptResigned()
             ->select([
                 'm_employees.id',
                 'm_employees.full_name',

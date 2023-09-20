@@ -17,6 +17,51 @@ import {
   sendNotificationApprovePost,
   sendNotificationNewPost
 } from "./notification.js"
+
+const _saveWorkspace = async (
+  saveData,
+  createChatGroup = false,
+  members = [],
+  admin = [],
+  user
+) => {
+  const dataSave = {
+    members: [],
+    ...saveData,
+    administrators: admin,
+    __user: user
+  }
+
+  const joined_time = moment().toISOString()
+  for (const item of members) {
+    dataSave.members = [
+      ...dataSave.members,
+      {
+        id_user: item,
+        joined_at: joined_time
+      }
+    ]
+  }
+
+  try {
+    if (createChatGroup === "true" || createChatGroup === true) {
+      const groupChatId = await handleAddNewGroupToFireStore(
+        user,
+        dataSave.name,
+        members,
+        true
+      )
+      dataSave["group_chat_id"] = groupChatId
+    }
+
+    const workspace = new workspaceMongoModel(dataSave)
+    await workspace.save()
+    return workspace
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 const saveWorkspace = async (req, res, next) => {
   const dataSave = {
     name: req.body.workspace_name,
@@ -36,26 +81,19 @@ const saveWorkspace = async (req, res, next) => {
   }
 
   try {
-    if (
-      req.body.workspace_crate_group_chat === "true" ||
-      req.body.workspace_crate_group_chat === true
-    ) {
-      const groupChatId = await handleAddNewGroupToFireStore(
-        req.__user,
-        req.body.workspace_name,
-        [req.__user],
-        true
-      )
-      dataSave["group_chat_id"] = groupChatId
-    }
-    const workspace = new workspaceMongoModel(dataSave)
+    const workspace = await _saveWorkspace(
+      dataSave,
+      workspace_crate_group_chat,
+      [req.__user],
+      [req.__user],
+      req.__user
+    )
 
-    const saveData = await workspace.save(async (err, saved) => {
-      if (req.body?.image !== undefined && req.body.image !== "") {
-        await _handleUploadImage(req.body.image, saved._id)
-      }
-      return res.respond(saved)
-    })
+    const saveData = await workspace.save()
+    if (req.body?.image !== undefined && req.body.image !== "") {
+      await _handleUploadImage(req.body.image, saved._id)
+    }
+    return res.respond(saveData)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -1187,7 +1225,7 @@ const getListWorkspaceSeparateType = async (req, res) => {
     let condition = {}
     if (text.trim().length > 0) {
       condition = {
-        name: { $regex: ".*" + text + ".*", $options: "i"}
+        name: { $regex: ".*" + text + ".*", $options: "i" }
       }
     }
 
@@ -1356,6 +1394,7 @@ const createGroupChat = async (req, res) => {
 export {
   getWorkspace,
   getWorkspaceOverview,
+  _saveWorkspace,
   saveWorkspace,
   getUserWorkspaceIds,
   getListWorkspace,

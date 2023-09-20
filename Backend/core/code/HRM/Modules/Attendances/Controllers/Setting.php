@@ -190,7 +190,7 @@ class Setting extends ErpController
 				$ngayChamCong = explode(' ', $data[1])[0];
 				$arrJson[] = ['id' => $id * 1, 'time' => $ngayChamCong . ' ' . $giocham];
 				// get Employee
-				$infoEmployees = $model->asArray()->where('id_time_machine', $id)->first();
+				$infoEmployees = $model->asArray()->where('id_time_machine', $id)->exceptResigned()->first();
 				if (!$infoEmployees) continue;
 				$idWorkSchedule = $infoEmployees['work_schedule'];
 				$modelWorkSchedule = new WorkScheduleModel();

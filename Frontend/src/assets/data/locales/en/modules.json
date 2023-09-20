@@ -524,9 +524,9 @@
       "title": "Departments",
       "text": {
         "title_org_chart": "Department Organizational Chart",
-        "new_department": "New Department",
+        "new_department": "Add Department",
         "edit_department": "Edit Department",
-        "new_department_sub": "New subordinate department",
+        "new_department_sub": "Add child department",
         "error_line_manager": "Can't move Line manager to child department",
         "delete_department": "Delete Department",
         "delete_all_department": "Delete all child department",

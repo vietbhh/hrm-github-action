@@ -1,11 +1,9 @@
 import {
   ErpInput,
-  ErpUserSelect,
-  ErpCheckbox
+  ErpUserSelect
 } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import {
   Button,
@@ -65,7 +63,7 @@ const ModalNewGroup = (props) => {
       unseen: unseen,
       unseen_detail: setDataUnseenDetail("add", userId, timestamp, [], member),
       des: "Never settle!",
-      is_system: values.is_system
+      is_system: false
     }
     await handleAddNewGroup(docData).then((res) => {
       setTimeout(() => {
@@ -78,13 +76,6 @@ const ModalNewGroup = (props) => {
       }, 500)
     })
   }
-
-  // ** useEffect
-  useEffect(() => {
-    if (modal) {
-      setValue("is_system", false)
-    }
-  }, [modal])
 
   return (
     <Modal
@@ -115,13 +106,6 @@ const ModalNewGroup = (props) => {
                   isMulti={true}
                   excepts={[userId]}
                   loadOptionsApi={{ filters: { account_status: "activated" } }}
-                />
-              </Col>
-              <Col sm="12">
-                <ErpCheckbox
-                  label={useFormatMessage("modules.chat.text.is_system")}
-                  useForm={methods}
-                  name="is_system"
                 />
               </Col>
             </Row>

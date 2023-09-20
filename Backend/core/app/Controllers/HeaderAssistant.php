@@ -15,7 +15,7 @@ class HeaderAssistant extends ErpController
 		$userModel = new UserModel();
 		$month = date('m');
 		$day = date('d');
-		$data_birthday = $userModel->select(["id", "full_name"])->where("Month(dob) = '$month'")->where("DAY(dob) = '$day'")->asArray()->findAll();
+		$data_birthday = $userModel->select(["id", "full_name"])->where("Month(dob) = '$month'")->where("DAY(dob) = '$day'")->exceptDeactivated()->asArray()->findAll();
 		$result['data_birthday'] = $this->_renderBirthday($data_birthday);
 		$result['data_custom'] = $data_custom;
 		return $this->respond($result);

@@ -32,6 +32,7 @@ class Departments extends ErpController
 
 		foreach ($dataHandle as $key => $item) {
 			$dataHandle[$key]['employees'] = $employeeModel->exceptResigned()->where('department_id', $item['id'])->findAll();
+			$dataHandle[$key]['custom_fields'] = empty($dataHandle[$key]['custom_fields']) ? null : json_decode($dataHandle[$key]['custom_fields'], true);
 		}
 
 		if ($parent) {
