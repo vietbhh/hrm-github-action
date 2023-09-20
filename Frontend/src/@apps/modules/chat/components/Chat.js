@@ -272,7 +272,7 @@ const ChatLog = (props) => {
     if (
       !Object.keys(selectedUser).length &&
       !userSidebarLeft &&
-      window.innerWidth < 992
+      (window.innerWidth < 992)
     ) {
       handleSidebar()
     }
