@@ -91,8 +91,7 @@ const NavbarUser = (props) => {
       />
       <AppDrawer />
       {renderBookmarks()}
-      {!_.isEmpty(settingPermits) && (
-        <UncontrolledDropdown
+      {/* <UncontrolledDropdown
           tag="li"
           className="dropdown-notification nav-item dropdown-setting">
           <DropdownToggle
@@ -126,7 +125,9 @@ const NavbarUser = (props) => {
               </Fragment>
             ))}
           </DropdownMenu>
-        </UncontrolledDropdown>
+        </UncontrolledDropdown> */}
+      {!_.isEmpty(settingPermits) && (
+        <li className="nav-item"><Link to="/settings/general" className="nav-link" id="setting"><i className="fa-regular fa-gear bell"></i></Link></li>
       )}
     </ul>
   )
