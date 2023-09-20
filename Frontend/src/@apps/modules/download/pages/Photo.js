@@ -1,10 +1,10 @@
+import { useMergedState } from "@apps/utility/common"
 import { isFileList } from "@apps/utility/handleData"
 import noimg from "@src/assets/images/erp/img-not-found.png"
-import { Image, Skeleton } from "antd"
-import { useEffect, useState } from "react"
-import { downloadApi } from "../common/api"
-import { isEmpty } from "lodash"
+import { Image } from "antd"
+import { useEffect } from "react"
 import CircleSpinner from "../../../components/spinner/CircleSpinner"
+import { downloadApi } from "../common/api"
 const CACHE = {}
 
 function hashArgs(...args) {
@@ -27,42 +27,57 @@ const Photo = (props) => {
     ...rest
   } = props
   const defaultImg = _.isUndefined(defaultPhoto) ? noimg : defaultPhoto
-  const [image, setImage] = useState(defaultImg)
-
+  const [state, setState] = useMergedState({
+    image: defaultImg,
+    fallback: true
+  })
   useEffect(() => {
     let imgUrl = ""
     if (isFileList(src)) {
-      setImage(URL.createObjectURL(src[0]))
+      setState({ image: URL.createObjectURL(src[0]) })
     } else {
       if (!_.isUndefined(src) && src !== "") {
         const cacheID = hashArgs(src)
 
         if (CACHE[cacheID] !== undefined) {
-          imgUrl = CACHE[cacheID]
-          setImage(URL.createObjectURL(imgUrl))
+          imgUrl = URL.createObjectURL(CACHE[cacheID])
+          setState({
+            image: imgUrl,
+            fallback: false
+          })
         } else {
+          setState({
+            fallback: true
+          })
           downloadApi.getPhoto(src).then((response) => {
-            imgUrl = response.data
-            CACHE[cacheID] = imgUrl
-            setImage(URL.createObjectURL(response.data))
+            CACHE[cacheID] = response.data
+            imgUrl = URL.createObjectURL(CACHE[cacheID])
+            setState({
+              image: imgUrl
+            })
           })
         }
       } else {
-        setImage(defaultImg)
+        setState({
+          image: defaultImg
+        })
       }
     }
 
     return () => {
-      setImage(false)
+      setState({
+        image: false
+      })
       URL.revokeObjectURL(imgUrl)
     }
   }, [src])
-  if (!image) {
+
+  if (!state.image) {
     return <CircleSpinner center={true} />
   } else {
     return (
       <Image
-        src={image}
+        src={state.image}
         alt={alt}
         preview={{
           mask: false
@@ -75,6 +90,11 @@ const Photo = (props) => {
         style={{
           cursor: "pointer"
         }}
+        {...(state.fallback
+          ? {
+              fallback: noimg
+            }
+          : {})}
         {...rest}
       />
     )
