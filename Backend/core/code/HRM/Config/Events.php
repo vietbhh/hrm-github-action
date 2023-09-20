@@ -89,4 +89,9 @@ Events::on('update_line_manager_employee', function ($data) {
 	$event->updateLineManager($data);
 });
 
+Events::on('on_after_update_account_status_user', function ($data) {
+	$event = new \HRM\Modules\Employees\Config\Events();
+	$event->onUpdateAccountStatusUser($data);
+});
+
 ?>

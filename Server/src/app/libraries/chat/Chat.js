@@ -79,7 +79,7 @@ const handleAddNewGroupToFireStore = async (
   })
 }
 
-const handleAddMemberToFireStoreGroup = async (userId, groupId, arrMember) => {
+const handleAddMemberToFireStoreGroup = async (userId, groupId, arrMember, checkPermission = true) => {
   if (!userId) {
     throw new Error("Not permission")
   }
@@ -94,14 +94,14 @@ const handleAddMemberToFireStoreGroup = async (userId, groupId, arrMember) => {
 
   const refGroup = db
     .collection(`${firestoreDb}/chat_groups/groups`)
-    .doc(group_id)
+    .doc(groupId)
   const docGroup = await refGroup.get()
   if (!docGroup.exists) {
     throw new Error("No such document group")
   }
 
   const dataGroup = docGroup.data()
-  if (dataGroup.user.indexOf(userId) === -1) {
+  if (dataGroup.user.indexOf(userId) === -1 && checkPermission) {
     throw new Error("No permission")
   }
 
@@ -143,7 +143,8 @@ const handleAddMemberToFireStoreGroup = async (userId, groupId, arrMember) => {
 const handleRemoveMemberFromFireStoreGroup = async (
   userId,
   groupId,
-  arrMember
+  arrMember,
+  checkPermission = true
 ) => {
   if (!userId) {
     throw new Error("Not permission")
@@ -159,14 +160,14 @@ const handleRemoveMemberFromFireStoreGroup = async (
 
   const refGroup = db
     .collection(`${firestoreDb}/chat_groups/groups`)
-    .doc(group_id)
+    .doc(groupId)
   const docGroup = await refGroup.get()
   if (!docGroup.exists) {
     throw new Error("No such document group")
   }
 
   const dataGroup = docGroup.data()
-  if (dataGroup.admin.indexOf(userId) === -1) {
+  if (dataGroup.admin.indexOf(userId) === -1 && checkPermission) {
     throw new Error("You are not an administrator")
   }
 
@@ -202,7 +203,7 @@ const handleRemoveMemberFromFireStoreGroup = async (
     unseen_detail: unseen_detail
   }
 
-  await handleUpdateGroup(group_id, docData)
+  await handleUpdateGroup(groupId, docData)
 
   return "success"
 }

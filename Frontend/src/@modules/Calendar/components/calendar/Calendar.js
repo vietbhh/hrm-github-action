@@ -7,10 +7,11 @@ import { useDispatch } from "react-redux"
 // ** Styles
 import { Card, CardBody } from "reactstrap"
 // ** Components
+import "@fullcalendar/react/dist/vdom"
+import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from "@fullcalendar/list"
-import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import AddCalendarButton from "@modules/Dashboard/components/details/calendar/AddCalendarButton"
 import CalendarDescription from "./CalendarDescription"

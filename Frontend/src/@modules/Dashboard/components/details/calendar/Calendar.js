@@ -8,6 +8,7 @@ import { showAddEventCalendarModal } from "../../../../../@apps/modules/calendar
 // ** Styles
 // ** Components
 import notification from "@apps/utility/notification"
+import "@fullcalendar/react/dist/vdom"
 import FullCalendar from "@fullcalendar/react"
 import listPlugin from "@fullcalendar/list"
 import dayGridPlugin from "@fullcalendar/daygrid"

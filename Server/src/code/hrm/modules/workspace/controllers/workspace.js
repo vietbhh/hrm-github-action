@@ -10,7 +10,11 @@ import { Storage } from "@google-cloud/storage"
 import moment from "moment/moment.js"
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { handleDataLoadFeed } from "../../feed/controllers/feed.js"
-import { handleAddNewGroupToFireStore } from "#app/libraries/chat/Chat.js"
+import {
+  handleAddNewGroupToFireStore,
+  handleAddMemberToFireStoreGroup,
+  handleRemoveMemberFromFireStoreGroup
+} from "#app/libraries/chat/Chat.js"
 import {
   sendNotificationRequestJoin,
   sendNotificationApproveJoin,
@@ -1391,6 +1395,65 @@ const createGroupChat = async (req, res) => {
   }
 }
 
+const updateWorkspaceMemberAndChatGroup = async (req, res) => {
+  const workspaceIdAdd = isEmpty(req.body.workspace_add) ? null : req.body.workspace_add
+  const workspaceIdRemove = isEmpty(req.body.workspace_remove) ? null : req.body.workspace_remove
+  const memberId = req.body.employee_id
+  try {
+    if (workspaceIdAdd !== null) {
+      const workspace = await workspaceMongoModel.findById(workspaceIdAdd)
+      const pushData = {
+        id_user: memberId,
+        joined_at: moment().toISOString()
+      }
+      const members =
+        workspace?.members === undefined
+          ? [pushData]
+          : [...workspace.members, pushData]
+
+      const arrMemberId = members.map((item) => {
+        return item.id_user
+      })
+
+      await workspaceMongoModel.updateOne(
+        {
+          _id: workspaceIdAdd
+        },
+        { ...workspace._doc, members: members }
+      )
+      await handleAddMemberToFireStoreGroup(req.__user, workspace.group_chat_id, arrMemberId, false)
+    }
+
+    if (workspaceIdRemove !== null) {
+      const workspace = await workspaceMongoModel.findById(workspaceIdRemove)
+      const dataUpdateWorkspace = _handleRemoveMember(workspace, {
+        member_id: memberId
+      })
+      const arrMemberId = workspace?.members === undefined ? [] : workspace.members.map((item) => {
+        return item.id_user
+      })
+      await workspaceMongoModel.updateOne(
+        {
+          _id: workspaceIdRemove
+        },
+        { ...dataUpdateWorkspace }
+      )
+
+      await handleRemoveMemberFromFireStoreGroup(req.__user, workspace.group_chat_id, arrMemberId, false)
+    }
+
+    return res.respond({
+      success: true
+    })
+  } catch (err) {
+    console.log(err)
+    return res.respond({
+      success: false,
+      err: err
+    })
+  }
+}
+
 export {
   getWorkspace,
   getWorkspaceOverview,
@@ -1413,5 +1476,6 @@ export {
   getListWorkspaceSeparateType,
   saveAvatar,
   deleteWorkspace,
-  createGroupChat
+  createGroupChat,
+  updateWorkspaceMemberAndChatGroup
 }

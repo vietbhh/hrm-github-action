@@ -28,6 +28,8 @@ const ChatLog = (props) => {
   // ** Props & Store
   const {
     handleUserSidebarRight,
+    sidebar,
+    userSidebarRight,
     handleSidebar,
     store,
     userSidebarLeft,
@@ -43,6 +45,7 @@ const ChatLog = (props) => {
     unread,
     handleSeenMessage,
     updateMessage,
+    windowWidth,
     dataEmployees,
     queryLimit,
     checkAddMessage,
@@ -95,6 +98,8 @@ const ChatLog = (props) => {
       localStorage.setItem("formChatFocus", true)
     }
   }
+
+  const isMinWidth = windowWidth < 767.98
 
   // ** redux
   const typing = useSelector((state) => state.chat.typing)
@@ -342,13 +347,25 @@ const ChatLog = (props) => {
           <svg
             className="me-50"
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none">
             <path
-              d="M8.97989 7.14725V5.68975C8.97989 4.87392 7.98989 4.46142 7.41239 5.03892L3.20489 9.24642C2.84739 9.60392 2.84739 10.1814 3.20489 10.5389L7.41239 14.7464C7.98989 15.3239 8.97989 14.9206 8.97989 14.1048V12.5556C13.5632 12.5556 16.7716 14.0223 19.0632 17.2306C18.1466 12.6473 15.3966 8.06392 8.97989 7.14725Z"
-              fill="#C3C3C6"
+              d="M17.3667 11.9332H5.83331C4.44998 11.9332 3.33331 10.8165 3.33331 9.43318V6.6665"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeMiterlimit="10"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14.7333 14.5665L17.3667 11.9332L14.7333 9.2998"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeMiterlimit="10"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
           {useFormatMessage("modules.chat.text.replying_to")} {replying_to}
@@ -604,7 +621,11 @@ const ChatLog = (props) => {
 
   return (
     <Fragment>
-      <div ref={divChatRef} className="chat-app-window">
+      <div
+        ref={divChatRef}
+        className={classnames("chat-app-window", {
+          hide: userSidebarRight === true
+        })}>
         <div
           className={classnames("start-chat-area", {
             "d-none": Object.keys(selectedUser).length
@@ -624,12 +645,29 @@ const ChatLog = (props) => {
               "d-none": selectedUser === null
             })}>
             <div className="chat-navbar">
-              <header className="chat-header">
+              <header
+                className={classnames("chat-header", {
+                  "sidebar-hided": !sidebar
+                })}>
                 <div className="d-flex align-items-center">
                   <div
                     className="sidebar-toggle d-block d-lg-none me-1"
                     onClick={handleSidebar}>
-                    <i className="fa-regular fa-arrow-left-to-line"></i>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none">
+                      <path
+                        d="M15 19.9201L8.48 13.4001C7.71 12.6301 7.71 11.3701 8.48 10.6001L15 4.08008"
+                        stroke="#292D32"
+                        strokeWidth="1.5"
+                        strokeMiterlimit="10"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </div>
                   {renderAvatar(selectedGroup, "me-1", "36", "36")}
                   <div className="chat-header-name">
@@ -648,13 +686,18 @@ const ChatLog = (props) => {
                   </div>
                 </div>
                 <div className="d-flex align-items-center">
-                  <SearchMessage
-                    handleSearchMessage={handleSearchMessage}
-                    selectedUser={selectedUser}
-                    setSearchMessageHighlight={setSearchMessageHighlight}
-                    scrollToMessage={props.scrollToMessage}
-                    keyEncrypt={keyEncrypt}
-                  />
+                  {!isMinWidth ? (
+                    <SearchMessage
+                      isMini={false}
+                      handleSearchMessage={handleSearchMessage}
+                      selectedUser={selectedUser}
+                      setSearchMessageHighlight={setSearchMessageHighlight}
+                      scrollToMessage={props.scrollToMessage}
+                      keyEncrypt={keyEncrypt}
+                    />
+                  ) : (
+                    ""
+                  )}
 
                   <button
                     className="chat-header-btn-border left"
@@ -702,6 +745,18 @@ const ChatLog = (props) => {
                       />
                     </svg>
                   </button>
+                  {isMinWidth ? (
+                    <SearchMessage
+                      isMini={true}
+                      handleSearchMessage={handleSearchMessage}
+                      selectedUser={selectedUser}
+                      setSearchMessageHighlight={setSearchMessageHighlight}
+                      scrollToMessage={props.scrollToMessage}
+                      keyEncrypt={keyEncrypt}
+                    />
+                  ) : (
+                    ""
+                  )}
                   <button
                     className={`btn-icon-more`}
                     onClick={() =>

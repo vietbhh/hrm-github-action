@@ -19,7 +19,8 @@ import {
   getListWorkspaceSeparateType,
   saveAvatar,
   deleteWorkspace,
-  createGroupChat
+  createGroupChat,
+  updateWorkspaceMemberAndChatGroup
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -43,5 +44,6 @@ router.post("/remove-cover-image/:id", removeCoverImage)
 router.post("/save-avatar", saveAvatar)
 router.post("/delete", deleteWorkspace)
 router.post("/create-group-chat/:id", createGroupChat)
+router.post("/update-workspace-member-and-chat-group", updateWorkspaceMemberAndChatGroup)
 
 export default router
