@@ -119,8 +119,10 @@ class Users extends ErpController
 		}
 		if ($type === 'activate') $user->activate();
 		if ($type === 'deactivate') $user->deactivate();
+
 		try {
 			$model->save($user);
+			\CodeIgniter\Events\Events::trigger('on_after_update_account_status_user', $user);
 		} catch (\ReflectionException $e) {
 			return $this->fail(FAILED_SAVE);
 		}

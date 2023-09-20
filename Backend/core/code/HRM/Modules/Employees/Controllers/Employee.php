@@ -295,6 +295,7 @@ class Employee extends ErpController
 				\CodeIgniter\Events\Events::trigger('update_line_manager_employee', $saveEmployee);
 			}
 		} catch (\ReflectionException $e) {
+			throw new \Exception($e->getMessage());
 			return false;
 		}
 

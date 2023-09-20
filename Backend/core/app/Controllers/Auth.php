@@ -363,7 +363,6 @@ class Auth extends ResourceController
 			return service('response')->setStatusCode(429)->setBody(lang('Auth.tooManyRequests', [$throttler->getTokentime()]));
 		}
 		$user =  $users->where('activate_hash', $this->request->getPost('token'))->where('active', 0)->first(false);
-		$userArray =  $users->where('activate_hash', $this->request->getPost('token'))->where('active', 0)->asArray()->first();
 		if (is_null($user)) {
 			return $this->failNotFound('user_not_found');
 		}
@@ -381,11 +380,9 @@ class Auth extends ResourceController
 		} catch (\Exception $e) {
 		}
 
-		$eventData = $userArray;
-		$eventData['department_id'] = 'empty';
-		\CodeIgniter\Events\Events::trigger('user_on_active', $eventData);
 		$user->password = $this->request->getPost('password');
 		$users->save($user);
+		\CodeIgniter\Events\Events::trigger('on_after_update_account_status_user', $user);
 
 		return $this->respond('success');
 	}
