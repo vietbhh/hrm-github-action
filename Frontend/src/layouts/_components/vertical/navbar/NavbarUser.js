@@ -1,26 +1,21 @@
 // ** Third Party Components
-import { Fragment, useContext } from "react"
+import { useContext } from "react"
 import { NavLink as Link } from "react-router-dom"
 import { AbilityContext } from "utility/context/Can"
+import AppDrawer from "../../navbar/AppDrawer"
+import NavbarSearch from "../../navbar/NavbarSearch"
 import NavbarChat from "./NavbarChat"
 import NavbarInbox from "./NavbarInbox"
-import NavbarSearch from "../../navbar/NavbarSearch"
 import NotificationDropdown from "./NotificationDropdown"
-import AppDrawer from "../../navbar/AppDrawer"
 // ** Reactstrap Imports
 import {
   NavItem,
   NavLink,
-  UncontrolledTooltip,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledDropdown
+  UncontrolledTooltip
 } from "reactstrap"
 
 // ** Store & Actions
 import { useSelector } from "react-redux"
-import { useFormatMessage } from "@apps/utility/common"
 
 const NavbarUser = (props) => {
   // ** Props
@@ -91,8 +86,7 @@ const NavbarUser = (props) => {
       />
       <AppDrawer />
       {renderBookmarks()}
-      {!_.isEmpty(settingPermits) && (
-        <UncontrolledDropdown
+      {/* <UncontrolledDropdown
           tag="li"
           className="dropdown-notification nav-item dropdown-setting">
           <DropdownToggle
@@ -126,7 +120,9 @@ const NavbarUser = (props) => {
               </Fragment>
             ))}
           </DropdownMenu>
-        </UncontrolledDropdown>
+        </UncontrolledDropdown> */}
+      {!_.isEmpty(settingPermits) && (
+        <li className="nav-item"><Link to="/settings/general" className="nav-link" id="setting"><i className="fa-regular fa-gear bell"></i></Link></li>
       )}
     </ul>
   )
