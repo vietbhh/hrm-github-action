@@ -256,3 +256,14 @@ export const savedApi = {
     return await axiosNodeApi.post("/feed/save-saved", data)
   }
 }
+
+export const postSavedApi = {
+  async list(page, search) {
+    return await axiosNodeApi.get("/feed/post-saved", {
+      params: {
+        page,
+        search
+      }
+    })
+  }
+}
