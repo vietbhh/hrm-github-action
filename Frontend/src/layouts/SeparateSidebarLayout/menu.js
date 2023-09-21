@@ -247,7 +247,7 @@ const menuConfig = [
   } */
   {
     id: "post_saved",
-    title: "layout.post_saved",
+    title: "menu.posts_saved",
     icon: (
       <svg
         width="36"

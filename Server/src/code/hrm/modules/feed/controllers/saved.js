@@ -1,7 +1,6 @@
-import feedMongoModel, {feedSchema} from "../models/feed.mongo.js"
+import feedMongoModel from "../models/feed.mongo.js"
 import savedMongoModel from "../models/saved.mongo.js"
 import {getUser} from "#app/models/users.mysql.js";
-import {model} from "mongoose";
 
 const saveSaved = async (req, res, next) => {
     try {
@@ -9,8 +8,7 @@ const saveSaved = async (req, res, next) => {
         const action = body.action
         const type = body.type
         const id = body.id
-        console.log('action: ', action);
-        console.log('type: ', type);
+
         if (action !== "add" && action !== "remove") {
             return res.fail("err action")
         }
