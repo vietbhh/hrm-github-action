@@ -40,6 +40,7 @@ const InviteWorkspaceModal = (props) => {
     const dataFilter = dataSelected.filter(
       (employee) => !arr_member_selected.includes(employee.id)
     )
+
     handleDone(dataFilter, "members")
   }
 

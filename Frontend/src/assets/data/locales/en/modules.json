@@ -4100,7 +4100,8 @@
         "waring_create_groupchat": {
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
-        }
+        },
+        "wait_approval_member"  : "Invitation sent, please wait for admin approval"
       },
       "fields": {
         "workspace_name": "Workspace name",

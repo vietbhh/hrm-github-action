@@ -444,6 +444,7 @@ const updateWorkspace = async (req, res, next) => {
       workSpaceUpdate = _handleUpdateGroupRule(workspaceInfo, requestData)
       returnCurrentPageForPagination = ""
     } else if (requestData.hasOwnProperty("update_administrator")) {
+      requestData.data = JSON.parse(requestData.data)
       workSpaceUpdate = _handleUpdateAdministrator(workspaceInfo, requestData)
       returnCurrentPageForPagination = requestData.type === "members"
     } else if (requestData.hasOwnProperty("remove_member")) {
@@ -635,7 +636,7 @@ const loadDataMember = async (req, res, next) => {
     if (text.trim().length > 0) {
       condition = {
         full_name: {
-          [Op.like]: `${text}%`
+          [Op.like]: `%${text}%`
         }
       }
     }
@@ -706,6 +707,7 @@ const loadDataMember = async (req, res, next) => {
         workspace?.members === undefined || workspace?.members === null
           ? []
           : workspace?.members
+
       const listMember = workspaceMember.reverse().map((item) => {
         return item.id_user
       })

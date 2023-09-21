@@ -91,7 +91,6 @@ const LoadPost = (props) => {
   const setDataUserOtherWith = (value) => setState({ dataUserOtherWith: value })
 
   // ** useEffect
-
   // ** render
   const renderBody = () => {
     if (data.type === "link" && data.link[0]) {
@@ -251,12 +250,10 @@ const LoadPost = (props) => {
               isViewEditHistory={isViewEditHistory}
             />
           </div>
-
           {renderBody()}
           {data?.permission === "workspace" && !isInWorkspace && (
             <Fragment>{renderWithTag(true)}</Fragment>
           )}
-
           {data.has_poll_vote === true && (
             <RenderPollVote
               data={data}

@@ -427,7 +427,6 @@ const ModalCreatePost = (props) => {
       setState({ backgroundImage: null, showChooseBackgroundImage: false })
     }
   }, [state.poll_vote])
-
   // useEffect
   useEffect(() => {
     let check_options = true

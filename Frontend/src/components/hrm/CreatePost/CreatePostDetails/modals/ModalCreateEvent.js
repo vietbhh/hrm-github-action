@@ -55,7 +55,8 @@ const ModalCreateEvent = (props) => {
     // ** api
     createEventApi,
     getDetailApi,
-    afterCreate
+    afterCreate,
+    workspace
   } = props
   const defaultValueRepeat = {
     value: "no_repeat"
@@ -113,8 +114,8 @@ const ModalCreateEvent = (props) => {
     values.idEvent = idEvent
     values.idPost = idPost
     values.file = state.arrAttachment
+    values.workspace = workspace
     const params = { body: JSON.stringify(values), file: state.arrAttachment }
-
     if (values.start_time_date.diff(values.end_time_date, "day") > 0) {
       setState({
         errorSubmit: {
@@ -562,10 +563,8 @@ const ModalCreateEvent = (props) => {
                 loading={state.loadingEdit}
               />
               <span className="text">
-                  {useFormatMessage(
-                    "modules.feed.create_post.text.important"
-                  )}
-                </span>
+                {useFormatMessage("modules.feed.create_post.text.important")}
+              </span>
             </div>
             <p className="mb-0 important-text">
               {useFormatMessage("modules.feed.create_post.text.important_text")}
