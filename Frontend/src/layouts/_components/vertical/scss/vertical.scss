@@ -804,6 +804,13 @@ $margin-navigation-a: 22px !default;
                     border: none;
                     padding: 10px 14px;
                     font-size: 10px;
+                    background-color: #e8e8e8 !important;
+                    color: #32434f !important;
+
+                    &:hover {
+                      background-color: #2F9BFA !important;
+                      color: #ffffff !important;
+                    }
                   }
 
                   .color-primary {
