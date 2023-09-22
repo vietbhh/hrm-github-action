@@ -4011,7 +4011,8 @@
         "copy": "Copy",
         "add_cover": "Add Cover",
         "messenge": "Messenge",
-        "get_started": "Get started"
+        "get_started": "Get started",
+        "send_invite" : "Send invites"
       },
       "display": {
         "create_workspace_title": "Create Workspace",

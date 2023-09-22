@@ -1,5 +1,5 @@
 import EmployeesSelect from "@/components/hrm/Employees/EmployeesSelect"
-import { useMergedState } from "@apps/utility/common"
+import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
@@ -84,7 +84,7 @@ const InviteWorkspaceModal = (props) => {
               disabled={state.loading}
               className="btn-send-invite ms-auto me-auto w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              Send invites
+              {useFormatMessage("modules.workspace.buttons.send_invite")}
             </Button>
           </ModalFooter>
         </form>

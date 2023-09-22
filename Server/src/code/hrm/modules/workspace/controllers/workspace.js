@@ -19,7 +19,8 @@ import {
   sendNotificationRequestJoin,
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
-  sendNotificationNewPost
+  sendNotificationNewPost,
+  sendNotificationAddMember
 } from "./notification.js"
 
 const _saveWorkspace = async (
@@ -542,6 +543,13 @@ const updateWorkspace = async (req, res, next) => {
             ? JSON.parse(requestData.members)
             : requestData.members
 
+        const newMember = []
+        arrMember.map((item) => {
+          if (!item?._id) {
+            newMember.push(item.id_user)
+          }
+        })
+
         updateData.members = arrMember.map((item) => {
           if (item?._id === undefined) {
             return {
@@ -552,6 +560,10 @@ const updateWorkspace = async (req, res, next) => {
 
           return item
         })
+        if (newMember.length > 0) {
+          sendNotificationAddMember(updateData, req.__user, arrMember)
+        }
+        return
       }
       if (requestData?.administrators) {
         updateData.administrators =
@@ -1396,8 +1408,12 @@ const createGroupChat = async (req, res) => {
 }
 
 const updateWorkspaceMemberAndChatGroup = async (req, res) => {
-  const workspaceIdAdd = isEmpty(req.body.workspace_add) ? null : req.body.workspace_add
-  const workspaceIdRemove = isEmpty(req.body.workspace_remove) ? null : req.body.workspace_remove
+  const workspaceIdAdd = isEmpty(req.body.workspace_add)
+    ? null
+    : req.body.workspace_add
+  const workspaceIdRemove = isEmpty(req.body.workspace_remove)
+    ? null
+    : req.body.workspace_remove
   const memberId = req.body.employee_id
   try {
     if (workspaceIdAdd !== null) {
@@ -1421,7 +1437,12 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
         },
         { ...workspace._doc, members: members }
       )
-      await handleAddMemberToFireStoreGroup(req.__user, workspace.group_chat_id, arrMemberId, false)
+      await handleAddMemberToFireStoreGroup(
+        req.__user,
+        workspace.group_chat_id,
+        arrMemberId,
+        false
+      )
     }
 
     if (workspaceIdRemove !== null) {
@@ -1429,9 +1450,12 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       const dataUpdateWorkspace = _handleRemoveMember(workspace, {
         member_id: memberId
       })
-      const arrMemberId = workspace?.members === undefined ? [] : workspace.members.map((item) => {
-        return item.id_user
-      })
+      const arrMemberId =
+        workspace?.members === undefined
+          ? []
+          : workspace.members.map((item) => {
+              return item.id_user
+            })
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceIdRemove
@@ -1439,7 +1463,12 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
         { ...dataUpdateWorkspace }
       )
 
-      await handleRemoveMemberFromFireStoreGroup(req.__user, workspace.group_chat_id, arrMemberId, false)
+      await handleRemoveMemberFromFireStoreGroup(
+        req.__user,
+        workspace.group_chat_id,
+        arrMemberId,
+        false
+      )
     }
 
     return res.respond({

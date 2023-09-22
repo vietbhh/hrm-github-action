@@ -54,11 +54,15 @@ const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
     "</strong>"
 
   if (infoWorkspace.request_joins.length >= 2) {
-    body = "{{modules.network.notification.requests_to_join}} <strong>" +
-    infoWorkspace?.name +
-    "</strong> {{modules.network.notification.from}} <strong>" +
-    memberInfo?.dataValues?.full_name + " and " + (infoWorkspace.request_joins.length - 1) + " others"
-    "</strong>"
+    body =
+      "{{modules.network.notification.requests_to_join}} <strong>" +
+      infoWorkspace?.name +
+      "</strong> {{modules.network.notification.from}} <strong>" +
+      memberInfo?.dataValues?.full_name +
+      " and " +
+      (infoWorkspace.request_joins.length - 1) +
+      " others"
+    ;("</strong>")
   }
 
   await sendNotification(
@@ -389,6 +393,21 @@ const sendCommonWorkgroupNotification = async (
   })
 }
 
+const sendNotificationAddMember = async (workgroup, sender, receivers) => {
+  console.log("sender", sender)
+  const title =
+    "You have been added to the group" +
+    workgroup?.group_name +
+    "by " +
+    sender?.full_name
+  const link = "workspace/" + workgroup._id
+  await sendNotification(sender?.id, receivers, {
+    title: title,
+    body: "",
+    link: link,
+    icon: parseInt(sender?.id)
+  })
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -405,5 +424,6 @@ export {
   sendNotificationEndorsement,
   sendNotificationEndorsementAll,
   sendNotificationPostPendingFeed,
-  sendCommonWorkgroupNotification
+  sendCommonWorkgroupNotification,
+  sendNotificationAddMember
 }
