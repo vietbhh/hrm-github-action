@@ -22,6 +22,7 @@ import {
   Spinner
 } from "reactstrap"
 import { HeaderAssistantApi } from "../../common/api"
+import dayjs from "dayjs"
 const { RangePicker } = DatePicker
 
 const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
@@ -122,13 +123,15 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         } else {
           setValue("image_position", { value: "right", label: "Right" })
         }
+        const dateFrom = res.data.date_from.split("-").reverse().join("-")
+        const dateTo = res.data.date_to.split("-").reverse().join("-")
         setValue("title", res.data.title)
         setValue("content", res.data.content)
-        setValue("date_from", res.data.date_from)
-        setValue("date_to", res.data.date_to)
+        setValue("date_from", dateFrom)
+        setValue("date_to", dateTo)
         setState({
-          date_from: res.data.date_from,
-          date_to: res.data.date_to,
+          date_from: dateFrom,
+          date_to: dateTo,
           image: res.data.image,
           loadingEdit: false
         })
@@ -147,7 +150,8 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         dataIndex: "title",
         key: "title",
         editable: true,
-        width: 200,
+        width: 130,
+        ellipsis: true,
         render: (text, record) => {
           return <>{text}</>
         }
@@ -159,7 +163,8 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         dataIndex: "content",
         key: "content",
         editable: true,
-        width: 200,
+        width: 130,
+        ellipsis: true,
         render: (text, record) => {
           return <>{text}</>
         }
@@ -169,7 +174,6 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         dataIndex: "image",
         key: "image",
         editable: true,
-        width: 200,
         render: (text, record) => {
           return (
             <>
@@ -190,7 +194,6 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         dataIndex: "image_position",
         key: "image_position",
         editable: true,
-        width: 200,
         render: (text, record) => {
           return (
             <>
@@ -204,7 +207,6 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         dataIndex: "date",
         key: "date",
         editable: true,
-        width: 200,
         render: (text, record) => {
           return (
             <>
@@ -219,7 +221,7 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
         dataIndex: "6",
         key: "6",
         align: "center",
-        width: 70,
+        width: 90,
         render: (id, record) => {
           return (
             <div className="d-flex justify-content-around align-items-center">
@@ -293,7 +295,7 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
     <Modal
       isOpen={modal}
       toggle={() => toggleModal()}
-      className="modal-xl modal-notepad modal-header-assistant"
+      className="modal-md modal-notepad modal-header-assistant"
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}
       /* backdrop={"static"} */
@@ -376,7 +378,7 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
                   <label className="form-label">
                     {useFormatMessage(
                       "layout.header.header_assistant.fields.date"
-                    )}
+                    )} *
                   </label>
                   <RangePicker
                     className="form-control range-picker-edit"
@@ -395,10 +397,10 @@ const HeaderAssistantModal = ({ modal, toggleModal, getBirthdayAndCustom }) => {
                     onChange={changeDate}
                     value={[
                       state.date_from !== ""
-                        ? moment(state.date_from, "DD-MM-YYYY")
+                        ? dayjs(state.date_from)
                         : "",
                       state.date_from !== ""
-                        ? moment(state.date_to, "DD-MM-YYYY")
+                        ? dayjs(state.date_to)
                         : ""
                     ]}
                   />
