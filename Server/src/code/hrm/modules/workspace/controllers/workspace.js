@@ -560,8 +560,10 @@ const updateWorkspace = async (req, res, next) => {
 
           return item
         })
+        console.log("updateData.members", updateData.members)
         if (newMember.length > 0) {
-          sendNotificationAddMember(updateData, req.__user, arrMember)
+          const sender = await getUser(req.__user)
+          sendNotificationAddMember(updateData, sender, arrMember)
         }
         return
       }
