@@ -10,8 +10,9 @@ import NotificationItem from "./NotificationItem"
 const ListNotification = (props) => {
   const {
     // ** props
-    listNotification
+    listNotification,
     // ** methods
+    toggleOpen
   } = props
 
   // ** render
@@ -46,7 +47,7 @@ const ListNotification = (props) => {
             const wrapProps = item.link && item.link === ""  ? {} : { to: item.link }
             return (
               <Wrap key={index} {...wrapProps}>
-                <NotificationItem item={item} key={`notification-${index}`} />
+                <NotificationItem item={item} key={`notification-${index}`} toggleOpen={toggleOpen}/>
               </Wrap>
             )
           }

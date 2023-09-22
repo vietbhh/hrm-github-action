@@ -7,9 +7,6 @@ import { Fragment } from "react"
 import classnames from "classnames"
 import { useNavigate } from "react-router-dom"
 import { getDefaultFridayLogo, timeDifference } from "@apps/utility/common"
-// ** redux
-import { toggleOpenDropdown } from "@store/notification"
-import { useDispatch } from "react-redux"
 // ** Styles
 // ** Components
 import NotificationAction from "./NotificationAction"
@@ -17,18 +14,18 @@ import NotificationAction from "./NotificationAction"
 const NotificationItem = (props) => {
   const {
     // ** props
-    item
+    item,
     // ** methods
+    toggleOpen
   } = props
 
   const notificationLink = item.link.trim()
 
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handleClickNotification = (notificationLink) => {
     if (notificationLink.length > 0) {
-      dispatch(toggleOpenDropdown(false))
+      toggleOpen(false)
       navigate(notificationLink)
     }
   }
@@ -95,7 +92,7 @@ const NotificationItem = (props) => {
             )}
           </div>
           <div>
-            <NotificationAction notificationInfo={item} />
+            <NotificationAction notificationInfo={item} toggleOpen={toggleOpen}/>
           </div>
         </div>
       </div>
