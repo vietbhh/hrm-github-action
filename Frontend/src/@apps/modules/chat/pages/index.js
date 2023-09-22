@@ -1211,6 +1211,12 @@ const AppChat = (props) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (windowWidth < 767.98 && id === undefined) {
+      handleSidebar()
+    }
+  }, [id])
+
   return (
     <Fragment>
       <IdleTimerProvider timeout={1000 * 60} onAction={onAction}>
