@@ -25,7 +25,6 @@ const CreatePost = (props) => {
     optionsMeetingRoom = [],
     allowPostType = []
   } = props
-
   const ability = useContext(AbilityContext)
   const createAnnouncement = ability.can("create_announcement", "feed")
   const createEndorsement = ability.can("create_endorsement", "feed")

@@ -61,6 +61,7 @@ const ModalCreateEvent = (props) => {
   const defaultValueRepeat = {
     value: "no_repeat"
   }
+
   const [state, setState] = useMergedState({
     loadingSubmit: false,
     isEditable: true,

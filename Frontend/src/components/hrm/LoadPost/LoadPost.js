@@ -48,7 +48,8 @@ const LoadPost = (props) => {
     // only view edit history
     isViewEditHistory = false,
     setDataCreateNew,
-    isInWorkspace = false
+    isInWorkspace = false,
+    workspace
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -337,6 +338,8 @@ const LoadPost = (props) => {
               optionsMeetingRoom={optionsMeetingRoom}
               createEventApi={eventApi.postSubmitEvent}
               getDetailApi={eventApi.getGetEventById}
+              workspace={workspace ? workspace[0] : ""}
+              setDataCreateNew={setDataCreateNew}
             />
           )}
 

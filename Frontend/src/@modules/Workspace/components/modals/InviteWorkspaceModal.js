@@ -1,5 +1,5 @@
 import EmployeesSelect from "@/components/hrm/Employees/EmployeesSelect"
-import { useMergedState } from "@apps/utility/common"
+import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
@@ -13,6 +13,8 @@ import {
   Row,
   Spinner
 } from "reactstrap"
+
+import notification from "@apps/utility/notification"
 const InviteWorkspaceModal = (props) => {
   const { modal, handleModal, handleDone, member_selected } = props
   const [state, setState] = useMergedState({
@@ -33,14 +35,18 @@ const InviteWorkspaceModal = (props) => {
     mode: "onSubmit"
   })
   const { handleSubmit, errors, control, register, reset, setValue } = methods
-
   const handleAdd = () => {
     const dataSelected = state.dataSelected
     const arr_member_selected = member_selected.map((x) => x.id_user)
     const dataFilter = dataSelected.filter(
       (employee) => !arr_member_selected.includes(employee.id)
     )
-
+    if (dataSelected.length <= 0) {
+      notification.showError({
+        text: "No data has been selected yet"
+      })
+      return
+    }
     handleDone(dataFilter, "members")
   }
 
