@@ -69,7 +69,9 @@ const NavbarComponent = (props) => {
         {windowWidth < windowWidthMin && (
           <Fragment>
             <div className="logo-wrapper">
-              <Logo src={logoDefault} alt="logo" className="d-none" />
+              <NavLink to="/">
+                <Logo src={logoDefault} alt="logo" className="d-none" />
+              </NavLink>
             </div>
             <NavLink
               className="nav-menu-main menu-toggle hidden-xs"

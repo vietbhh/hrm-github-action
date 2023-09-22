@@ -19,8 +19,9 @@ import { Button } from "reactstrap"
 const NotificationAction = (props) => {
   const {
     // ** props
-    notificationInfo
+    notificationInfo,
     // ** methods
+    toggleOpen
   } = props
 
   const action =
@@ -112,7 +113,7 @@ const NotificationAction = (props) => {
 
   const handleClickLinkButton = (e, itemContent) => {
     e.preventDefault()
-    dispatch(toggleOpenDropdown())
+    toggleOpen()
     navigate(itemContent.url)
   }
 

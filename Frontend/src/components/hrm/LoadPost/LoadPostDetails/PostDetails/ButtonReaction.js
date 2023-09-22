@@ -18,6 +18,7 @@ const ButtonReaction = (props) => {
     data,
     setData,
     comment_more_count_original,
+    isFocusCommentOnclick,
     setCommentMoreCountOriginal,
     setFocusCommentForm
   } = props
@@ -68,8 +69,11 @@ const ButtonReaction = (props) => {
     setState({ modalSendInMessenger: !state.modalSendInMessenger })
 
   const handleClickCommentButton = () => {
-    //setFocusCommentForm(true)
-    togglePostCommentModal()
+    if (isFocusCommentOnclick) {
+      setFocusCommentForm(true)
+    } else {
+      togglePostCommentModal()
+    }
   }
 
   // ** useEffect

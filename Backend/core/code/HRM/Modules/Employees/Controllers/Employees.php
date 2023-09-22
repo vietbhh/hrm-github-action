@@ -176,16 +176,17 @@ class Employees extends Employee
 		$employeeModel = new EmployeesModel();
 		$userModel = new UserModel();
 		$ids = explode(',', $ids);
-
+		$db = db_connect();
 		foreach ($ids as $id) {
 			if (!mayDeleteResource('employees', $id)) return $this->failForbidden(MISSING_DELETE_PERMISSION . '_' . $id);
 			$employeeModel->delete($id);
+			$db->query('SET foreign_key_checks = 0');
 			$userModel->delete($id);
-
 			foreach ($arrDel as $val) {
 				$modules->setModule($val);
 				$modules->model->where('employee', $id)->delete();
 			}
+			$db->query('SET foreign_key_checks = 1');
 		}
 
 		return $this->respondDeleted(json_encode($ids));
@@ -1979,7 +1980,7 @@ class Employees extends Employee
 	{
 		$authorize = \Config\Services::authorization();
 		$employeeModel = new EmployeesModel();
-		$builder = $employeeModel->asArray()->exceptResignedEmployee();
+		$builder = $employeeModel->asArray()->exceptResigned();
 		$data = $builder->findAll();
 		$arrHasPer = [];
 		foreach ($data as $user) :

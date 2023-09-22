@@ -119,7 +119,7 @@ class TimeMachine extends ErpController
 				$idAttendance = $infoAttendance['id'];
 
 				// get info Employee
-				$infoEmployees = $model->asArray()->where('id_time_machine', $id)->first();
+				$infoEmployees = $model->asArray()->where('id_time_machine', $id)->exceptResigned()->first();
 				if (!$infoEmployees) continue;
 
 				$idWorkSchedule = $infoEmployees['work_schedule'];

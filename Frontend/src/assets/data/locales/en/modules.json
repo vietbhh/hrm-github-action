@@ -377,20 +377,19 @@
             "employee_level": "Employee Level",
             "employee_level_des": "View, create, and update employee level"
           },
-          "post" : {
-            "post"  :"Post",
-            "create_post" : "CreatePost",
-            "create_announcement" : "Create Announcement",
-            "create_endorsement"  : "Create Endorsement",
-            "post_without_approval" : "PostWithoutApproval",
-            "approval_post" : "ApprovalPost",
-            "manage_post" : "ManagePost"
-
+          "post": {
+            "post": "Post",
+            "create_post": "CreatePost",
+            "create_announcement": "Create Announcement",
+            "create_endorsement": "Create Endorsement",
+            "post_without_approval": "PostWithoutApproval",
+            "approval_post": "ApprovalPost",
+            "manage_post": "ManagePost"
           },
-          "workgroup" :{
-            "workgroup" : "Workgroup",
-            "create_workgroup" :"CreateWorkgroup",
-            "manage_workgroup" : "ManageWorkgroup"
+          "workgroup": {
+            "workgroup": "Workgroup",
+            "create_workgroup": "CreateWorkgroup",
+            "manage_workgroup": "ManageWorkgroup"
           }
         },
         "other": {
@@ -492,7 +491,7 @@
       "fields": {
         "name": "Room name",
         "location": "Location",
-        "status": "Status" 
+        "status": "Status"
       },
       "buttons": {
         "create": "Create Room"
@@ -3767,9 +3766,8 @@
           "send_in_messenger": "Send in messenger",
           "share_to_a_group": "Share to a group",
           "this_post_has_been_edited": "This post has been edited",
-          "post_pending" : "Your article has been posted and is in the review process, please wait for moderation!",
-          "approve_setting" : "Post Approval Setting"
-
+          "post_pending": "Your article has been posted and is in the review process, please wait for moderation!",
+          "approve_setting": "Post Approval Setting"
         },
         "react": {
           "like": "Like",
@@ -3930,6 +3928,13 @@
           "one_week": "One week",
           "send_to": "Send to",
           "send_to_placeholder": "Enter workgroup, email or username"
+        }
+      },
+      "post_saved": {
+        "action": {
+          "access": "Go to post",
+          "remove": "Remove saved",
+          "loadCompleted": "Yay! You have seen it all"
         }
       }
     },
@@ -4101,7 +4106,8 @@
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
         },
-        "wait_approval_member"  : "Invitation sent, please wait for admin approval"
+        "wait_approval_member"  : "Invitation sent, please wait for admin approval",
+        "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4291,15 +4297,15 @@
         "replied_on_your_comment": "replied on your comment",
         "notification_unseen": "There's a post you haven't seen yet, check it out",
         "sent_notification": "Sent notification",
-        "reaction_post_tag" : "posts you're tagged in",
-        "comment_post_tag" : "commented  posts you're tagged in",
-        "asked_to_see_this_post" :  "asked you to see this post",
-        "has_endorsed_post" :  "has endorsed you with badget",
-        "was_endorsed_post" : "was endorsed with badget",
-        "posted_new_post_workgroup" : "posted a new post in workgroup",
-        "has_posted_workgroup" : "has posted in workgroup",
-        "sent_request_join_workgroup" : "sent a request to join workgroup",
-        "requested_approval_post" : "requested approval for his post on the shared wall"
+        "reaction_post_tag": "posts you're tagged in",
+        "comment_post_tag": "commented  posts you're tagged in",
+        "asked_to_see_this_post": "asked you to see this post",
+        "has_endorsed_post": "has endorsed you with badget",
+        "was_endorsed_post": "was endorsed with badget",
+        "posted_new_post_workgroup": "posted a new post in workgroup",
+        "has_posted_workgroup": "has posted in workgroup",
+        "sent_request_join_workgroup": "sent a request to join workgroup",
+        "requested_approval_post": "requested approval for his post on the shared wall"
       }
     },
     "timeline": {

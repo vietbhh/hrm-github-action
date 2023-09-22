@@ -35,6 +35,7 @@ const LoadPost = (props) => {
     offPostHeaderAction = false, // hide Post header action
     renderAppendHeaderComponent,
     setDataLink,
+    isFocusCommentOnclick = false,
 
     // only page post details
     idMedia = "",
@@ -280,6 +281,7 @@ const LoadPost = (props) => {
                   comment_more_count_original={
                     state.comment_more_count_original
                   }
+                  isFocusCommentOnclick={isFocusCommentOnclick}
                   setCommentMoreCountOriginal={setCommentMoreCountOriginal}
                   setFocusCommentForm={setFocusCommentForm}
                 />

@@ -6,7 +6,7 @@ import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardBody } from "reactstrap"
+import { Button, Card, CardBody, Alert } from "reactstrap"
 import AvatarBox from "../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../common/api"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
@@ -330,11 +330,23 @@ const SettingWorkspace = () => {
                       <div className="sub-label">
                         By deleting your group, you will delete all information
                         in this group: post, photos, videos,...
+                        {state.detailWorkspace.is_system === true ? (
+                          <div className="mt-1">
+                            <Alert color="danger" className="mb-0 p-25">
+                              {useFormatMessage(
+                                "modules.workspace.display.warning_delete_system_workgroup"
+                              )}
+                            </Alert>
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                     <Button
                       color="secondary"
                       className="btn-secondary ms-auto"
+                      disabled={state.detailWorkspace.is_system === true}
                       onClick={() => handleDeleteWS()}>
                       Delete
                     </Button>

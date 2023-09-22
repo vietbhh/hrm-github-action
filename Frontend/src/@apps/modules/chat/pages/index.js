@@ -196,7 +196,9 @@ const AppChat = (props) => {
   // ** Sidebar & overlay toggle functions
   const handleSidebar = () => setSidebar(!sidebar)
   const handleUserSidebarLeft = () => setUserSidebarLeft(!userSidebarLeft)
-  const handleUserSidebarRight = () => setUserSidebarRight(!userSidebarRight)
+  const handleUserSidebarRight = () => {
+    setUserSidebarRight(!userSidebarRight)
+  }
   const handleOverlayClick = () => {
     setSidebar(false)
     setUserSidebarRight(false)
@@ -1211,6 +1213,12 @@ const AppChat = (props) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (windowWidth < 767.98 && id === undefined) {
+      handleSidebar()
+    }
+  }, [id])
+
   return (
     <Fragment>
       <IdleTimerProvider timeout={1000 * 60} onAction={onAction}>
@@ -1245,6 +1253,8 @@ const AppChat = (props) => {
 
               <Chat
                 store={store}
+                sidebar={sidebar}
+                userSidebarRight={userSidebarRight}
                 handleSidebar={handleSidebar}
                 userSidebarLeft={userSidebarLeft}
                 handleUserSidebarRight={handleUserSidebarRight}

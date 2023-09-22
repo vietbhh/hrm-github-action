@@ -20,7 +20,6 @@ const ModalPostComment = (props) => {
   return (
     <Modal
       isOpen={modal}
-      style={{ top: "100px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
       className="modal-dialog-centered feed modal-create-post modal-create-event modal-post-comment"
@@ -44,6 +43,7 @@ const ModalPostComment = (props) => {
           avatarWidth={20}
           offReactionAndComment={false}
           offPostHeaderAction={false}
+          isFocusCommentOnclick={true}
           setData={setData}
         />
       </ModalBody>

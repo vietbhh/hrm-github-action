@@ -122,7 +122,7 @@ class Notifications
 			$userModel->select(['id', 'username', 'device_token'])->asArray();
 			if (is_numeric($receivers)) $userModel->where('id', $receivers);
 			else $userModel->whereIn('id', $receivers);
-			$listUser = $userModel->findAll();
+			$listUser = $userModel->onlyActived()->findAll();
 			if ($saveToDb) {
 				$saveNotificationData = [
 					'sender_id' => user_id() ?? 0,
