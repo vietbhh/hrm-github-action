@@ -358,11 +358,12 @@ class Auth extends ResourceController
 		);
 
 		$throttler = service('throttler');
+
 		if ($throttler->check(md5($this->request->getIPAddress()), 2, MINUTE) === false) {
 			return service('response')->setStatusCode(429)->setBody(lang('Auth.tooManyRequests', [$throttler->getTokentime()]));
 		}
-
 		$user = $users->where('activate_hash', $this->request->getPost('token'))->where('active', 0)->first(false);
+
 		if (is_null($user)) {
 			return $this->failNotFound('user_not_found');
 		}
@@ -379,9 +380,10 @@ class Auth extends ResourceController
 			}
 		} catch (\Exception $e) {
 		}
-
+		
 		$user->password = $this->request->getPost('password');
 		$users->save($user);
+
 		\CodeIgniter\Events\Events::trigger('on_after_update_account_status_user', $user);
 
 		return $this->respond('success');
