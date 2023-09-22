@@ -28,7 +28,7 @@ class ErpController extends ResourceController
 	 *
 	 * @var array
 	 */
-	protected $helpers = ['common','app','db','module','preferences'];
+	protected $helpers = ['auth','common','app','db','module','preferences'];
 	//protected $userData = [];
 
 	/**

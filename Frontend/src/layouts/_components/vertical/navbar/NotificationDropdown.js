@@ -18,7 +18,7 @@ import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { useNavigate } from "react-router-dom"
 
 // ** redux
-import { handleSeenNotification, toggleOpenDropdown } from "@store/notification"
+import { handleSeenNotification } from "@store/notification"
 import { Fragment, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -26,9 +26,13 @@ const NotificationDropdown = () => {
   const notification = useSelector((state) => state.notification)
   const listNotificationStore = notification.listNotification
   const numberNotificationStore = notification.numberNotification
-  const openDropdown = notification.openDropdown
 
   const [focusIconNotification, setFocusIconNotification] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  const toggleOpen = (status = undefined) => {
+    setOpen(status === undefined ? !open : status)
+  }
 
   const dispatch = useDispatch()
 
@@ -54,12 +58,12 @@ const NotificationDropdown = () => {
 
   const handleToggleDropdown = () => {
     setFocusIconNotification(!focusIconNotification)
-    dispatch(toggleOpenDropdown())
+    setOpen(!open)
   }
 
   const handleClickSeeAll = () => {
     navigate("/notification")
-    dispatch(toggleOpenDropdown(false))
+    setOpen(false)
   }
 
   useEffect(() => {
@@ -78,15 +82,14 @@ const NotificationDropdown = () => {
             options={{
               wheelPropagation: false
             }}>
-            <ListNotification listNotification={listNotificationStore} />
+            <ListNotification
+              listNotification={listNotificationStore}
+              toggleOpen={toggleOpen}
+            />
           </PerfectScrollbar>
           <li className="p-1 pt-2 pb-2 d-flex justify-content-center footer-noti">
-            <Button.Ripple
-              color="primary"
-              onClick={() => handleClickSeeAll()}>
-              {useFormatMessage(
-                "layout.notification.see_all_notification"
-              )}
+            <Button.Ripple color="primary" onClick={() => handleClickSeeAll()}>
+              {useFormatMessage("layout.notification.see_all_notification")}
             </Button.Ripple>
           </li>
         </Fragment>
@@ -102,7 +105,7 @@ const NotificationDropdown = () => {
 
   return (
     <Dropdown
-      isOpen={openDropdown}
+      isOpen={open}
       toggle={() => handleToggleDropdown()}
       tag="li"
       className="dropdown-notification nav-item">
