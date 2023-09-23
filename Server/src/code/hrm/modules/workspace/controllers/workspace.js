@@ -20,7 +20,9 @@ import {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
   sendNotificationNewPost,
-  sendNotificationAddMember
+  sendNotificationAddMember,
+  sendNotificationAddMemberWaitApproval,
+  sendNotificationHasNewMember
 } from "./notification.js"
 
 const _saveWorkspace = async (
@@ -411,7 +413,7 @@ const _handleApproveJoinRequest = (workspace, requestData) => {
 }
 
 const handleDeclineJoinRequest = (workspace, requestData) => {
-  if (requestData.is_all === true) {
+  if (requestData.is_all === true || requestData.is_all === "true") {
     return {
       ...workspace._doc,
       request_joins: []
@@ -535,6 +537,7 @@ const updateWorkspace = async (req, res, next) => {
         current_page: currentPage
       })
     } else {
+      const sender = await getUser(req.__user)
       const updateData = { ...workSpaceUpdate }
       delete updateData._id
       if (requestData?.members) {
@@ -560,11 +563,30 @@ const updateWorkspace = async (req, res, next) => {
 
           return item
         })
-        console.log("updateData.members", updateData.members)
         if (newMember.length > 0) {
-          const sender = await getUser(req.__user)
-          sendNotificationAddMember(updateData, sender, arrMember)
+          updateData.id = workspaceId
+          sendNotificationAddMember(updateData, sender, newMember)
+          // for admin
+          const handleMember = await getUsers(newMember)
+
+          const handleMemberMap = handleMember.map((item) => {
+            return {
+              id: item.dataValues.id,
+              full_name: item.dataValues.full_name,
+              username: item.dataValues.username,
+              email: item.dataValues.email,
+              phone: item.dataValues.phone
+            }
+          })
+
+          sendNotificationHasNewMember(
+            updateData,
+            handleMemberMap,
+            updateData.administrators,
+            sender
+          )
         }
+
         return
       }
       if (requestData?.administrators) {
@@ -584,6 +606,12 @@ const updateWorkspace = async (req, res, next) => {
           typeof requestData.request_joins === "string"
             ? JSON.parse(requestData.request_joins)
             : requestData.request_joins
+        const newMember = []
+        requestJoinData.map((item) => {
+          if (!item?._id) {
+            newMember.push(item.id_user)
+          }
+        })
         updateData.request_joins = requestJoinData.map((item) => {
           if (item?._id === undefined) {
             return {
@@ -599,6 +627,7 @@ const updateWorkspace = async (req, res, next) => {
         if (updateData?.membership_approval !== "auto") {
           updateData.id = workspaceId
           sendNotificationRequestJoin(updateData)
+          sendNotificationAddMemberWaitApproval(updateData, sender, newMember)
           delete updateData.id
         }
       }
