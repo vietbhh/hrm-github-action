@@ -11,10 +11,17 @@ const GifBoxButton = (props) => {
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen)
   }
+
+  const getContainer = (triggernode) => {
+    //debugger;
+    return triggernode.parentNode
+  }
+
   return (
     <Fragment>
       <Label className={`mb-0 cursor-pointer`} for={`attach-gif`}>
         <Popover
+          getPopupContainer={getContainer}
           content={
             <ReactGiphySearchBox
               apiKey="rvUhAQyj80vEsaA4laeRiB6Fx5WDM4Bk"

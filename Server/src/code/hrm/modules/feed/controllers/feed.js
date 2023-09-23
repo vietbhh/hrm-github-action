@@ -631,7 +631,15 @@ const updatePostReaction = async (req, res, next) => {
         )
       }
       // ** send notification
-      if (req.__user.toString() !== created_by.toString()) {
+      const arrUserNotReceivedNotification = isEmpty(
+        infoPost.turn_off_notification
+      )
+        ? []
+        : infoPost.turn_off_notification
+      if (
+        req.__user.toString() !== created_by.toString() &&
+        !arrUserNotReceivedNotification.includes(created_by)
+      ) {
         const receivers = [created_by]
         sendNotificationReactionPost(
           infoPost,
