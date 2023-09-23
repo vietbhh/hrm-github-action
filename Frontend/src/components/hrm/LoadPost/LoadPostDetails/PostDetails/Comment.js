@@ -8,7 +8,7 @@ import { feedApi } from "@modules/Feed/common/api"
 import { handleReaction, renderImageReact } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
 import classNames from "classnames"
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
@@ -48,6 +48,9 @@ const Comment = (props) => {
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const full_name = userData.full_name
+
+  const [showSeeMore, setShowSeeMore] = useState(false)
+  const [seeMore, setSeeMore] = useState(false)
 
   const actions = {
     edit_comment: {
@@ -193,6 +196,21 @@ const Comment = (props) => {
       setDataEditComment(params)
     }
   }
+
+  // ** effect
+  useEffect(() => {
+    if (document.getElementById(`post-body-comment-${dataComment._id}`)) {
+      const height = document.getElementById(
+        `post-body-comment-${dataComment._id}`
+      ).offsetHeight
+      console.log(height)
+      if (height >= 90) {
+        setShowSeeMore(true)
+      } else {
+        setShowSeeMore(false)
+      }
+    }
+  }, [dataComment?.content])
 
   // ** render
   const renderReactComment = (reaction) => {
@@ -351,8 +369,27 @@ const Comment = (props) => {
                 {dataComment?.created_by?.full_name}
               </Link>
             </div>
-            <div className="content__comment">
-              {ReactHtmlParser(dataComment?.content)}
+            <div
+              className="content__comment"
+              id={`post-body-comment-${dataComment._id}`}>
+              <div
+                className={`${showSeeMore && seeMore === false ? "hide" : ""}`}>
+                {ReactHtmlParser(dataComment?.content)}
+              </div>
+              {showSeeMore && (
+                <a
+                  className="btn-see-more"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setSeeMore(!seeMore)
+                  }}>
+                  <p>
+                    {seeMore === false
+                      ? useFormatMessage("modules.feed.post.text.see_more")
+                      : useFormatMessage("modules.feed.post.text.hide")}
+                  </p>
+                </a>
+              )}
             </div>
             {renderReactComment(dataComment?.reaction || [])}
           </div>
