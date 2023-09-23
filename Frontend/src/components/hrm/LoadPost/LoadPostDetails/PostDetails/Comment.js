@@ -203,7 +203,6 @@ const Comment = (props) => {
       const height = document.getElementById(
         `post-body-comment-${dataComment._id}`
       ).offsetHeight
-      console.log(height)
       if (height >= 90) {
         setShowSeeMore(true)
       } else {

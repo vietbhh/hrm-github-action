@@ -29,7 +29,6 @@ const ModalViewEditHistory = (props) => {
         .getGetDataEditHistory(post_id)
         .then(async (res) => {
           const promises = []
-          console.log(res.data)
           _.forEach(res.data.dataHistory, async (item, index) => {
             const promise = new Promise(async (resolve, reject) => {
               const _dataPost = { ...item }
