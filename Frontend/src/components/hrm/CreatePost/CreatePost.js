@@ -23,7 +23,8 @@ const CreatePost = (props) => {
     // create event / announcement
     options_employee_department = [],
     optionsMeetingRoom = [],
-    allowPostType = []
+    allowPostType = [],
+    ...rest
   } = props
   const ability = useContext(AbilityContext)
   const createAnnouncement = ability.can("create_announcement", "feed")
@@ -68,12 +69,27 @@ const CreatePost = (props) => {
     setState({ modalAnnouncement: !state.modalAnnouncement })
   const toggleModalEndorsement = () =>
     setState({ modalEndorsement: !state.modalEndorsement })
-
   // ** useEffect
   useEffect(() => {
-    const data_mention = handleDataMention(dataEmployee, userId)
+    let data_mention = handleDataMention(dataEmployee, userId)
+
+    if (rest?.detailWorkspace?.members) {
+      const arrMemberId = rest.detailWorkspace?.members?.map(
+        (item) => item.id_user
+      )
+
+      let newDataEmployee = {}
+      Object.keys(dataEmployee).forEach((key) => {
+        if (arrMemberId.includes(dataEmployee[key].id)) {
+          newDataEmployee[Number(dataEmployee[key].id)] = dataEmployee[key]
+        }
+      })
+
+      data_mention = handleDataMention(newDataEmployee, userId)
+    }
+
     setState({ dataMention: data_mention })
-  }, [dataEmployee])
+  }, [dataEmployee, rest.detailWorkspace])
 
   const checkAllowPostType = (typeCheck) => {
     if (_.isEmpty(allowPostType)) return true

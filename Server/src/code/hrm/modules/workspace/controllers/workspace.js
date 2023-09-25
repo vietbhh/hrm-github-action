@@ -87,7 +87,7 @@ const saveWorkspace = async (req, res, next) => {
     const workspace = await _saveWorkspace(
       dataSave,
       req.body.workspace_crate_group_chat,
-      [req.__user],
+      [],
       [req.__user],
       req.__user
     )
@@ -171,7 +171,8 @@ const getPostWorkspace = async (req, res) => {
     const filter = {
       permission_ids: req.query.id,
       permission: "workspace",
-      approve_status: "pending"
+      approve_status: "pending",
+      content: { $ne: ''},
     }
     if (req.query?.search) {
       filter.content = { $regex: new RegExp(req.query?.search) }
