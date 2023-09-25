@@ -22,7 +22,9 @@ import {
   sendNotificationNewPost,
   sendNotificationAddMember,
   sendNotificationAddMemberWaitApproval,
-  sendNotificationHasNewMember
+  sendNotificationHasNewMember,
+  sendNotificationKickMember,
+  sendNotificationAssignedAdmin
 } from "./notification.js"
 
 const _saveWorkspace = async (
@@ -437,6 +439,7 @@ const updateWorkspace = async (req, res, next) => {
     res.fail("invalid_work_space_id")
   }
 
+  const sender = await getUser(req.__user)
   const requestData = req.body
   try {
     const workspaceInfo = await workspaceMongoModel.findById(workspaceId)
@@ -451,11 +454,14 @@ const updateWorkspace = async (req, res, next) => {
       workSpaceUpdate = _handleUpdateGroupRule(workspaceInfo, requestData)
       returnCurrentPageForPagination = ""
     } else if (requestData.hasOwnProperty("update_administrator")) {
+      requestData.data = JSON.parse(requestData.data)
       workSpaceUpdate = _handleUpdateAdministrator(workspaceInfo, requestData)
       returnCurrentPageForPagination = requestData.type === "members"
+      sendNotificationAssignedAdmin(workspaceInfo, sender, requestData.data?.id)
     } else if (requestData.hasOwnProperty("remove_member")) {
       workSpaceUpdate = _handleRemoveMember(workspaceInfo, requestData)
       returnCurrentPageForPagination = "members"
+      sendNotificationKickMember(workspaceInfo, sender, [requestData.member_id])
     } else if (requestData.hasOwnProperty("approve_join_request")) {
       workSpaceUpdate = _handleApproveJoinRequest(workspaceInfo, requestData)
       let receivers = requestData.member_id

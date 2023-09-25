@@ -44,7 +44,7 @@ const MemberItem = (props) => {
     }).then((res) => {
       if (res.isConfirmed === true) {
         const values = {
-          data: member,
+          data: JSON.stringify(member),
           type: type,
           update_administrator: true
         }

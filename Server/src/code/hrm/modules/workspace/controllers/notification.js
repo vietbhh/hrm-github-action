@@ -470,7 +470,7 @@ const sendNotificationAssignedAdmin = async (workgroup, sender, receivers) => {
     "</b> added you as admin of group <b>" +
     workgroup?.name +
     "</b>"
-  const link = "workgroup/" + workgroup.id
+  const link = "workspace/" + workgroup.id
   await sendNotification(sender?.id, receivers, {
     title: "",
     body: title,
@@ -486,7 +486,7 @@ const sendNotificationKickMember = async (workgroup, sender, receivers) => {
     "</b> has removed you from the group <b>" +
     workgroup?.name +
     "</b>"
-  const link = ""
+  const link = "workgroup/" + workgroup.id
   await sendNotification(sender?.id, receivers, {
     title: "",
     body: title,

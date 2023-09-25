@@ -583,7 +583,6 @@ const WorkspaceHeader = (props) => {
       })
     }
   }, [data])
-  console.log("data?.members", data?.members)
   const renderChatButton = () => {
     if (
       !_.isEmpty(data.group_chat_id) ||
