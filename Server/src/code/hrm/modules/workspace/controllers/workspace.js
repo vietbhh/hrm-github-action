@@ -581,16 +581,18 @@ const updateWorkspace = async (req, res, next) => {
               phone: item.dataValues.phone
             }
           })
-
-          sendNotificationHasNewMember(
-            updateData,
-            handleMemberMap,
-            updateData.administrators,
-            sender
+          const adminExist = [...updateData.administrators].filter(
+            (item) => item != req.__user
           )
+          if (adminExist) {
+            sendNotificationHasNewMember(
+              updateData,
+              handleMemberMap,
+              adminExist,
+              sender
+            )
+          }
         }
-
-        return
       }
       if (requestData?.administrators) {
         updateData.administrators =
