@@ -334,6 +334,7 @@ const TabFeed = (props) => {
             workspace={workspaceID}
             approveStatus={state.approveStatus}
             allowPostType={["event", "poll"]}
+            detailWorkspace={detailWorkspace}
           />
         )}
         <Fragment>

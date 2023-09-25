@@ -97,6 +97,7 @@ const RequestJoinWorkspace = (props) => {
           id={id}
           loading={state.loading}
           totalRequestJoin={state.totalRequestJoin}
+          setState={setState}
           setFilter={setFilter}
           setRequestJoins={setRequestJoins}
         />
