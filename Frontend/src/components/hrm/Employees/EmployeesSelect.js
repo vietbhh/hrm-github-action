@@ -162,12 +162,14 @@ const EmployeesSelect = (props) => {
   }
 
   const loadData = (props) => {
+    const props_send = { ...props }
+    props_send.filters = { account_status: "activated" }
     setState({
       loading: true
     })
     const members = state.members
     const selected = member_selected.map((e) => e["id_user"])
-    defaultModuleApi.getUsers(props).then((res) => {
+    defaultModuleApi.getUsers(props_send).then((res) => {
       const results = res.data.results
       const test =
         selected.length > 0

@@ -32,6 +32,7 @@ const EventTitle = (props) => {
         modalDetail: "pending"
       })
     )
+    console.log("infoEvent", infoEvent)
     dispatch(
       showAddEventCalendarModal({
         idEvent: infoEvent._id
@@ -50,7 +51,9 @@ const EventTitle = (props) => {
           .removeEvent(infoEvent._id)
           .then((res) => {
             notification.showSuccess({
-              text: useFormatMessage("modules.feed.create_event.text.remove_event_success")
+              text: useFormatMessage(
+                "modules.feed.create_event.text.remove_event_success"
+              )
             })
             dispatch(hideDetailEventModal())
             if (_.isFunction(afterRemove)) {

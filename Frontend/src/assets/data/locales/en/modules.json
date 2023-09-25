@@ -4106,6 +4106,7 @@
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
         },
+        "wait_approval_member"  : "Invitation sent, please wait for admin approval",
         "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!"
       },
       "fields": {

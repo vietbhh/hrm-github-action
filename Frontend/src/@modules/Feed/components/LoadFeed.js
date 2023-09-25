@@ -207,7 +207,7 @@ const LoadFeed = (props) => {
   const handleAfterUpdateStatus = (status) => {
     const { indexEvent } = calendarState
     const allDataPost = [...state.dataPost]
-    const newDataPost = {...allDataPost[indexEvent]}
+    const newDataPost = { ...allDataPost[indexEvent] }
     const newDataLink = { ...newDataPost["dataLink"] }
     const newEmployee = _.isArray(newDataLink["employee"])
       ? [...newDataLink["employee"]].map((item) => {
@@ -346,6 +346,7 @@ const LoadFeed = (props) => {
                 optionsMeetingRoom={optionsMeetingRoom}
                 setDataCreateNew={setDataCreateNew}
                 isInWorkspace={!_.isEmpty(workspace)}
+                workspace={workspace}
               />
             )
           })}
@@ -395,6 +396,8 @@ const LoadFeed = (props) => {
                   options_employee_department={options_employee_department}
                   optionsMeetingRoom={optionsMeetingRoom}
                   isInWorkspace={!_.isEmpty(workspace)}
+                  workspace={workspace}
+                  setDataCreateNew={setDataCreateNew}
                 />
               </LazyLoadComponent>
             )

@@ -130,7 +130,8 @@ const TabFeed = (props) => {
   }
 
   const handleClickRemoveSearch = () => {
-    window.history.replaceState(null, "", "?tab=feed")
+    setSearchTextFeed("")
+    //window.history.replaceState(null, "", "?tab=feed")
   }
 
   const handleClickLoadMorePinned = () => {
@@ -354,7 +355,7 @@ const TabFeed = (props) => {
           <AboutWorkgroup
             loading={state.loading}
             workspaceInfo={detailWorkspace}
-            introduction={detailWorkspace.introduction}
+            introduction={detailWorkspace.description}
             tabActive={tabActive}
             tabToggle={tabToggle}
           />

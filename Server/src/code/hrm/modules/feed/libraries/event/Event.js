@@ -14,13 +14,12 @@ const addEvent = async (req, insertFeed = true) => {
   const body = JSON.parse(req.body.body)
   const idEdit = body.idEvent
   const idPost = body.idPost
-
   const arrEmployeeAttendeesCheck = []
   const employee = []
   const employeeId = []
   const employee_arr_id = []
   const department = []
-
+  const workspace = body?.workspace
   let checkIsAll = false
   forEach(body.dataAttendees, (item) => {
     if (item.value === "all") {
@@ -150,14 +149,22 @@ const addEvent = async (req, insertFeed = true) => {
           linkPermission["employee"] = employeeId
           linkPermission["department"] = department
         }
-
+        let permission = "default"
+        let permission_id = []
+        if (workspace) {
+          permission = "workspace"
+          permission_id = [workspace]
+        }
         const feedModel = new feedMongoModel({
           __user: req.__user,
           type: "event",
           link_id: idEvent,
-          link_permission: linkPermission
+          link_permission: linkPermission,
+          permission: permission,
+          permission_ids: permission_id
         })
         out = await feedModel.save()
+
         await calendarMongoModel.updateOne(
           { _id: idEvent },
           { id_post: out._id }
@@ -181,7 +188,6 @@ const addEvent = async (req, insertFeed = true) => {
       data_old = await calendarMongoModel.findById(idEdit)
       const oldEmployee = data_old.employee
       await calendarMongoModel.updateOne({ _id: idEdit }, dataInsert)
-
       const newEmployeeUpdate = []
       employee.map((itemNew) => {
         if (
@@ -284,6 +290,7 @@ const addEvent = async (req, insertFeed = true) => {
         field_compare,
         { type: "event" }
       )
+
       if (!isEmpty(data_edit_history)) {
         await feedMongoModel.updateOne(
           { _id: idPost },
