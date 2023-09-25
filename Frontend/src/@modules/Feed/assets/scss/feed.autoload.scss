@@ -652,6 +652,14 @@ $background-color-checkbox: #139ff8;
             font-size: 14px;
             color: $primary-text-color;
 
+            .hide {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 4;
+              -webkit-box-orient: vertical;
+            }
+
             p {
               margin-bottom: 0;
               margin-top: 0;

@@ -56,9 +56,17 @@ const submitComment = async (req, res, next) => {
         { $push: { comment_ids: saveComment._id } }
       )
       const infoPost = await feedMongoModel.findById(id_post)
+      const arrUserNotReceivedNotification = isEmpty(
+        infoPost.turn_off_notification
+      )
+        ? []
+        : infoPost.turn_off_notification
 
       // ** send notification
-      if (req.__user.toString() !== created_by.toString()) {
+      if (
+        req.__user.toString() !== created_by.toString() &&
+        !arrUserNotReceivedNotification.includes(created_by)
+      ) {
         const receivers = [created_by]
         sendNotificationCommentPost(infoPost, data_user, content, receivers)
       }

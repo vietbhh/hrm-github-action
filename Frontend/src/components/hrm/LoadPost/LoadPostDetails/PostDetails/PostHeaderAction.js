@@ -770,11 +770,13 @@ const PostHeaderAction = (props) => {
     <Fragment>
       {renderPostHeaderAction()}
 
-      <ModalViewEditHistory
-        modal={state.modal_view_edit_history}
-        toggleModal={toggleModalViewEditHistory}
-        post_id={data?._id}
-      />
+      {state.modal_view_edit_history && (
+        <ModalViewEditHistory
+          modal={state.modal_view_edit_history}
+          toggleModal={toggleModalViewEditHistory}
+          post_id={data?._id}
+        />
+      )}
     </Fragment>
   )
 }

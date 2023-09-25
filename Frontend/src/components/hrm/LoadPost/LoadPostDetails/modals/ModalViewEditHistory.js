@@ -32,6 +32,9 @@ const ModalViewEditHistory = (props) => {
           _.forEach(res.data.dataHistory, async (item, index) => {
             const promise = new Promise(async (resolve, reject) => {
               const _dataPost = { ...item }
+              if (_dataPost["thum"] === undefined) {
+                _dataPost['thumb'] = res.data.dataFeed?.thumb
+              }
               const data_attachment = await handleLoadAttachmentThumb(
                 _dataPost,
                 ""

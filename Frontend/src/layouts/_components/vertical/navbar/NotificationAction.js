@@ -9,7 +9,7 @@ import {
   handleFormatUrl
 } from "layouts/_components/vertical/common/common"
 // ** redux
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { handleNotification, toggleOpenDropdown } from "@store/notification"
 // ** Styles
 import { Space } from "antd"
@@ -36,8 +36,6 @@ const NotificationAction = (props) => {
 
   const notificationState = useSelector((state) => state.notification)
   const { listNotification } = notificationState
-
-  const dispatch = useDispatch()
 
   const _handleSetNewNotificationState = (res, index) => {
     if (res?.data?.notification_info === undefined) {
