@@ -15,7 +15,6 @@ import { Tooltip } from "antd"
 import classNames from "classnames"
 import { ContentState, EditorState, convertToRaw } from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import htmlToDraft from "html-to-draftjs"
 import { useEffect, useMemo, useState } from "react"
 import { useSelector } from "react-redux"
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
@@ -92,6 +91,12 @@ const ModalCreatePost = (props) => {
   const setArrLink = (value) => setState({ arrLink: value })
 
   const setPrivacyType = (value) => setState({ privacy_type: value })
+
+  const setEditorState = (data) => {
+    setState({
+      editorState: data
+    })
+  }
 
   const onEditorStateChange = (editorState) => {
     setState({ editorState: editorState })
@@ -322,19 +327,6 @@ const ModalCreatePost = (props) => {
     setState({ modalEndorsement: !state.modalEndorsement })
 
   // ** useEffect
-  useEffect(() => {
-    if (!_.isEmpty(dataPost)) {
-      const content_html = dataPost.content
-      const contentBlock = htmlToDraft(content_html)
-      if (contentBlock) {
-        const contentState = ContentState.createFromBlockArray(
-          contentBlock.contentBlocks
-        )
-        const editorState = EditorState.createWithContent(contentState)
-        setState({ editorState: editorState })
-      }
-    }
-  }, [dataPost])
 
   // ** edit post
   useEffect(() => {
@@ -427,7 +419,6 @@ const ModalCreatePost = (props) => {
       setState({ backgroundImage: null, showChooseBackgroundImage: false })
     }
   }, [state.poll_vote])
-
   // useEffect
   useEffect(() => {
     let check_options = true
@@ -490,11 +481,13 @@ const ModalCreatePost = (props) => {
       </ModalHeader>
       <ModalBody>
         <EditorComponent
+          dataPost={dataPost}
           editorState={state.editorState}
           onEditorStateChange={onEditorStateChange}
           dataMention={dataMention}
           backgroundImage={state.backgroundImage}
           showChooseBackgroundImage={state.showChooseBackgroundImage}
+          setEditorState={setEditorState}
         />
 
         {renderPreviewAttachment}

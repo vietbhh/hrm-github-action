@@ -227,6 +227,7 @@ const CreatePost = (props) => {
         options_employee_department={options_employee_department}
         optionsMeetingRoom={optionsMeetingRoom}
         setDataCreateNew={setDataCreateNew}
+        workspace={workspace}
         createEventApi={eventApi.postSubmitEvent}
         getDetailApi={eventApi.getGetEventById}
       />

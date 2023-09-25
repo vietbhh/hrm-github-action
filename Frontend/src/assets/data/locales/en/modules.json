@@ -3929,6 +3929,13 @@
           "send_to": "Send to",
           "send_to_placeholder": "Enter workgroup, email or username"
         }
+      },
+      "post_saved": {
+        "action": {
+          "access": "Go to post",
+          "remove": "Remove saved",
+          "loadCompleted": "Yay! You have seen it all"
+        }
       }
     },
     "posts": {
@@ -4100,6 +4107,7 @@
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
         },
+        "wait_approval_member"  : "Invitation sent, please wait for admin approval",
         "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!"
       },
       "fields": {

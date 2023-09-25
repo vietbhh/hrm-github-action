@@ -27,6 +27,7 @@ const TabMedia = (props) => {
   })
 
   const arrMember = detailWorkspace?.members ? detailWorkspace?.members : []
+
   const isMember = arrMember.some(
     (itemSome) => parseInt(itemSome.id_user) === parseInt(userId)
   )

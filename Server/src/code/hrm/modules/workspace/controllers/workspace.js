@@ -62,7 +62,6 @@ const _saveWorkspace = async (
       )
       dataSave["group_chat_id"] = groupChatId
     }
-
     const workspace = new workspaceMongoModel(dataSave)
     await workspace.save()
     return workspace
@@ -92,17 +91,15 @@ const saveWorkspace = async (req, res, next) => {
   try {
     const workspace = await _saveWorkspace(
       dataSave,
-      workspace_crate_group_chat,
+      req.body.workspace_crate_group_chat,
       [req.__user],
       [req.__user],
       req.__user
     )
-
-    const saveData = await workspace.save()
     if (req.body?.image !== undefined && req.body.image !== "") {
-      await _handleUploadImage(req.body.image, saved._id)
+      await _handleUploadImage(req.body.image, workspace._id)
     }
-    return res.respond(saveData)
+    return res.respond(workspace)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -688,7 +685,7 @@ const loadDataMember = async (req, res, next) => {
     if (text.trim().length > 0) {
       condition = {
         full_name: {
-          [Op.like]: `${text}%`
+          [Op.like]: `%${text}%`
         }
       }
     }
@@ -759,6 +756,7 @@ const loadDataMember = async (req, res, next) => {
         workspace?.members === undefined || workspace?.members === null
           ? []
           : workspace?.members
+
       const listMember = workspaceMember.reverse().map((item) => {
         return item.id_user
       })

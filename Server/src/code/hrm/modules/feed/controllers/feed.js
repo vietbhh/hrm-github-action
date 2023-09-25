@@ -138,8 +138,8 @@ const submitPostController = async (req, res, next) => {
 
     const dataInsert = {
       __user: req.__user,
-      permission_ids: body.workspace,
-      permission: workspace_type,
+      // permission_ids: body.workspace,
+      // permission: workspace_type,
       content: body.content,
       type: type_feed_parent,
       medias: [],
@@ -156,7 +156,10 @@ const submitPostController = async (req, res, next) => {
       poll_vote_detail: save_poll_vote_detail,
       hashtag: body.arrHashtag
     }
-
+    if (!body?._id_post_edit) {
+      dataInsert.permission_ids = body.workspace
+      dataInsert.permission = workspace_type
+    }
     if (!is_edit) {
       const feedModelParent = new feedMongoModel({
         ...dataInsert,
@@ -631,7 +634,15 @@ const updatePostReaction = async (req, res, next) => {
         )
       }
       // ** send notification
-      if (req.__user.toString() !== created_by.toString()) {
+      const arrUserNotReceivedNotification = isEmpty(
+        infoPost.turn_off_notification
+      )
+        ? []
+        : infoPost.turn_off_notification
+      if (
+        req.__user.toString() !== created_by.toString() &&
+        !arrUserNotReceivedNotification.includes(created_by)
+      ) {
         const receivers = [created_by]
         sendNotificationReactionPost(
           infoPost,
