@@ -1,12 +1,13 @@
-import { ErpInput, ErpSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import ReactHtmlParser from "react-html-parser"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardFooter, Spinner } from "reactstrap"
+import { setAppTitle } from "../../../redux/app/app"
 import { workspaceApi } from "../common/api"
-import ReactHtmlParser from "react-html-parser"
 import WorkspaceForm from "../components/detail/CreateWorkspace/WorkspaceForm"
 const CreateWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -27,6 +28,12 @@ const CreateWorkspace = (props) => {
       navigate(`/workspace/${res.data._id}`)
     })
   }
+  
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle(useFormatMessage("modules.workspace.display.create_workspace_title")))
+  }, [])
+  
 
   return (
     <Fragment>

@@ -1,24 +1,25 @@
-import { Row, Col } from "rsuite"
+import { ErpInput } from "@apps/components/common/ErpField"
+import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import Avatar from "@apps/modules/download/pages/Avatar"
+import Photo from "@apps/modules/download/pages/Photo"
+import SwAlert from "@apps/utility/SwAlert"
+import { formatDate, useFormatMessage, useMergedState } from "@apps/utility/common"
+import notification from "@apps/utility/notification"
+import { arrImage } from "@modules/Feed/common/common"
+import { Dropdown } from "antd"
+import classNames from "classnames"
+import { Fragment, useCallback, useEffect } from "react"
 import * as Icon from "react-feather"
 import ReactHtmlParser from "react-html-parser"
-import "../assets/scss/postSaved.scss"
-import { Link } from "react-router-dom"
-import { postSavedApi, savedApi } from "../common/api"
-import { useEffect, useCallback, Fragment } from "react"
-import { formatDate } from "@apps/utility/common"
-import Avatar from "@apps/modules/download/pages/Avatar"
-import SwAlert from "@apps/utility/SwAlert"
-import { useFormatMessage, useMergedState } from "@apps/utility/common"
-import notification from "@apps/utility/notification"
-import Photo from "@apps/modules/download/pages/Photo"
-import { arrImage } from "@modules/Feed/common/common"
-import classNames from "classnames"
-import { Card, CardBody } from "reactstrap"
-import { ErpInput } from "@apps/components/common/ErpField"
-import "react-perfect-scrollbar/dist/css/styles.css"
-import { Dropdown } from "antd"
 import InfiniteScroll from "react-infinite-scroll-component"
-import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import "react-perfect-scrollbar/dist/css/styles.css"
+import { useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
+import { Card, CardBody } from "reactstrap"
+import { Col, Row } from "rsuite"
+import { setAppTitle } from "../../../redux/app/app"
+import "../assets/scss/postSaved.scss"
+import { postSavedApi, savedApi } from "../common/api"
 import UnavailableData from "../components/UnavailableData"
 
 export default function PostSaved() {
@@ -157,6 +158,11 @@ export default function PostSaved() {
   useEffect(() => {
     getData()
   }, [state.page, state.search])
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle(useFormatMessage("menu:menu.posts_saved")))
+  }, [])
 
   return (
     <Fragment>

@@ -3,6 +3,8 @@ import SidebarWidget from "layouts/_components/custom/SidebarWidget"
 import { Fragment, useEffect, useMemo } from "react"
 import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
 import { ListSidebarWidget } from "../common/ListSidebarWidget"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const Feed = (props) => {
   const {
@@ -68,6 +70,11 @@ const Feed = (props) => {
       }
     }
   }
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle("Home"))
+  }, [])
 
   // ** useEffect
   useEffect(() => {
