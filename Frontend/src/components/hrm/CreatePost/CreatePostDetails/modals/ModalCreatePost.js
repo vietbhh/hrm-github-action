@@ -279,17 +279,8 @@ const ModalCreatePost = (props) => {
   }
 
   const setBackgroundImage = (value) => {
-    let backgroundImage = null
-    if (value !== null && value !== undefined) {
-      const backgroundImageSplit = value.split("/")
-      if (backgroundImageSplit[backgroundImageSplit.length - 1]) {
-        const _backgroundImageSplit =
-          backgroundImageSplit[backgroundImageSplit.length - 1].split(".")
-        if (_backgroundImageSplit[0]) {
-          backgroundImage = _backgroundImageSplit[0]
-        }
-      }
-    }
+    const backgroundImage = value !== null ? value + 1 : null
+
     setState({ backgroundImage: backgroundImage })
     handleInsertEditorState("", state.editorState, onEditorStateChange)
   }
