@@ -1292,6 +1292,7 @@ const AppChat = (props) => {
 
               <UserProfileSidebar
                 user={user}
+                settingUser={settingUser}
                 userSidebarRight={userSidebarRight}
                 handleUserSidebarRight={handleUserSidebarRight}
                 dataEmployees={state.dataEmployees}
@@ -1303,6 +1304,7 @@ const AppChat = (props) => {
                 setActive={setActive}
                 setActiveFullName={setActiveFullName}
                 selectedGroup={state.selectedGroup}
+                sendMessage={sendMessage}
               />
             </div>
           </div>

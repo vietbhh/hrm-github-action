@@ -72,7 +72,13 @@
         "delete": "Delete",
         "unsent": "Unsent",
         "unsent_message": "Unsent message",
-        "is_system": "Is system"
+        "is_system": "Is system",
+        "change_group_cover": "has changed the cover image",
+        "change_group_avatar": "changed the group avatar",
+        "add_member_to_group_chat": "added {name} to the group",
+        "remove_member_from_group_chat": "removed {name} from the group",
+        "left_group_chat": "has left the group"
+
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",

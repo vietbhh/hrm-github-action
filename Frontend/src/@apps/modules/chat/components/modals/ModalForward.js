@@ -11,6 +11,7 @@ import {
   Row
 } from "reactstrap"
 import { renderAvatar } from "../../common/common"
+import { useEffect } from "react"
 
 const ModalForward = (props) => {
   const {
@@ -188,6 +189,15 @@ const ModalForward = (props) => {
     setState({ filteredChat: [...filteredChatsArr] })
     setState({ filteredContacts: [...filteredContactssArr] })
   }
+
+  // ** effect
+  useEffect(() => {
+    if (modal === true) {
+      setState({
+        query: ""
+      })
+    }
+  }, [modal])
 
   return (
     <Modal

@@ -45,8 +45,8 @@ export const replaceMessageBreakLine = (txt) => {
   return txt
 }
 
-export const triGram = (txt) => {
-  txt = txt.slice(0, 500)
+export const triGram = (txt, slice = false) => {
+  txt = slice ? txt.slice(0, 500) : txt
   txt = replaceTextMessage(txt)
   const map = {}
   const s1 = (txt || "").toLowerCase()

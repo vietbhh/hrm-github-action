@@ -17,7 +17,9 @@ const ProfileSidebarGroup = (props) => {
     setDataUnseenDetail,
     handleUpdateGroup,
     userId,
-    isAdminSystem
+    settingUser,
+    isAdminSystem,
+    sendMessage
   } = props
 
   // ** render
@@ -200,6 +202,17 @@ const ProfileSidebarGroup = (props) => {
                                 )
                               }
                               handleUpdateGroup(selectedGroup.id, docData)
+                              sendMessage(
+                                selectedGroup.id,
+                                `${settingUser.full_name} ${useFormatMessage(
+                                  "modules.chat.text.remove_member_from_group_chat", {
+                                    name: name
+                                  }
+                                )}`,
+                                {
+                                  type: "notification"
+                                }
+                              )
                             }
                           })
                         }}>
