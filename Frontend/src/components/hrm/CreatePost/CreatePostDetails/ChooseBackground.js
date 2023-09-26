@@ -127,7 +127,7 @@ const ChooseBackground = (props) => {
                     style={{ backgroundImage: `url("${value.image}")` }}
                     onClick={() => {
                       toggleModalChooseBackground()
-                      setBackgroundImage(value.image)
+                      setBackgroundImage(index)
                     }}></div>
                 )
               })}
