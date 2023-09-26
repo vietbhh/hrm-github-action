@@ -4018,7 +4018,8 @@
         "copy": "Copy",
         "add_cover": "Add Cover",
         "messenge": "Messenge",
-        "get_started": "Get started"
+        "get_started": "Get started",
+        "send_invites" : "Send invites"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4107,7 +4108,11 @@
           "text": "Create a linked group chat via message"
         },
         "wait_approval_member"  : "Invitation sent, please wait for admin approval",
-        "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!"
+        "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!",
+        "member_already" : "{full_name} is already a member of the group. Please select again",
+        "no_data_selected" : "No data has been selected yet",
+        "invite_memvers_to_group" : "Invite members to this group",
+        "filter_member_category" : "Filter members to invite by category"
       },
       "fields": {
         "workspace_name": "Workspace name",

@@ -179,11 +179,14 @@ const sendNotificationReactionPost = async (
     " {{modules.network.notification.reaction_post}}"
   const link = "posts/" + post._id
   const body = compactContent(post.content)
+
   await sendNotification(userReaction?.id, receivers, {
     title: title,
     body: body,
     link: link,
-    icon: parseInt(userReaction?.id)
+    icon: parseInt(userReaction?.id),
+    custom_fields: { source_id: post._id, source_type: "reaction" },
+    update_notification: true
   })
 }
 
@@ -330,6 +333,26 @@ const sendNotificationPostPendingFeed = async (post, post_owner, receivers) => {
     icon: parseInt(post_owner?.id)
   })
 }
+
+const sendNotificationRepliedCommentPost = async (
+  post,
+  user,
+  comment,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    user.full_name +
+    "</b> {{modules.network.notification.replied_on_your_comment}}"
+  const link = "posts/" + post._id
+  const body = compactContent(comment)
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id)
+  })
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -345,5 +368,6 @@ export {
   sendNotificationTagInPost,
   sendNotificationEndorsement,
   sendNotificationEndorsementAll,
-  sendNotificationPostPendingFeed
+  sendNotificationPostPendingFeed,
+  sendNotificationRepliedCommentPost
 }

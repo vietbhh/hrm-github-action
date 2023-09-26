@@ -48,7 +48,7 @@
     "mysql2": "^3.0.0-rc.1",
     "node-cache": "^5.1.2",
     "php-serialize": "^4.0.2",
-    "sequelize": "^6.25.3",
+    "sequelize": "^6.33.0",
     "sharp": "^0.31.3",
     "socket.io": "^4.5.3",
     "walkdir": "^0.4.1",

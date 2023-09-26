@@ -338,6 +338,7 @@ const WorkspaceHeader = (props) => {
           )
         )
       }
+
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({

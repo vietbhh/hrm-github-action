@@ -31,6 +31,10 @@ const notificationsModelMysql = appModelMysql("notifications", {
   read_by: {
     type: DataTypes.TEXT("long"),
     defaultValue: "[]"
+  },
+  custom_fields: {
+    type: DataTypes.TEXT("long"),
+    defaultValue: "[]"
   }
 })
 export { notificationsModelMysql }
