@@ -31,12 +31,17 @@ const PageHeader = (props) => {
   }
 
   const handleClickMessenge = () => {
-    const toPage = parseInt(employeeData.id) === parseInt(userAuth.id) ? "/chat" : `/chat/${employeeData.username}`
+    const toPage =
+      parseInt(employeeData.id) === parseInt(userAuth.id)
+        ? "/chat"
+        : `/chat/${employeeData.username}`
     navigate(toPage)
   }
 
   const toggleProfileSetting = () => {
-    const toPage = isSettingPage ? `/u/${employeeData.username}` : `/u/${employeeData.username}/setting`
+    const toPage = isSettingPage
+      ? `/u/${employeeData.username}`
+      : `/u/${employeeData.username}/setting`
     navigate(toPage)
   }
 
@@ -81,7 +86,10 @@ const PageHeader = (props) => {
     }
   ]
 
-  if (parseInt(employeeData.id) !== parseInt(userAuth.id) && !employeeData.is_admin_group) {
+  if (
+    parseInt(employeeData.id) !== parseInt(userAuth.id) &&
+    !employeeData.is_admin_group
+  ) {
     items = []
   }
 
@@ -160,15 +168,17 @@ const PageHeader = (props) => {
               <i className="fab fa-facebook-messenger me-50" />
               {useFormatMessage("modules.workspace.buttons.messenge")}
             </Button.Ripple>
-            <Dropdown
-              menu={{ items }}
-              placement="bottomRight"
-              trigger={["click"]}
-              overlayClassName="workspace-dropdown-common">
-              <Button className="btn-sm custom-button custom-secondary">
-                <i className="fas fa-ellipsis"></i>
-              </Button>
-            </Dropdown>
+            {parseInt(employeeData.id) === parseInt(userAuth.id) && (
+              <Dropdown
+                menu={{ items }}
+                placement="bottomRight"
+                trigger={["click"]}
+                overlayClassName="workspace-dropdown-common">
+                <Button className="btn-sm custom-button custom-secondary">
+                  <i className="fas fa-ellipsis"></i>
+                </Button>
+              </Dropdown>
+            )}
           </Space>
         </div>
       </div>

@@ -7,6 +7,8 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManaged"
 import WorkspaceFilter from "../components/detail/ListWorkSpace/WorkspaceFilter"
 import CreateWorkgroupModal from "../components/modals/CreateWorkgroupModal/CreateWorkgroupModal"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const ListWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -61,10 +63,11 @@ const ListWorkspace = (props) => {
         })
       })
   }
-
+  const dispatch = useDispatch()
   // ** effect
   useEffect(() => {
     loadData()
+    dispatch(setAppTitle("Workgroups"))
   }, [])
 
   useEffect(() => {

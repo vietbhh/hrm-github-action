@@ -4,6 +4,8 @@ import React, { Fragment, useEffect } from "react"
 import { Card, CardBody, CardHeader } from "reactstrap"
 import { settingMemberApi } from "../common/api"
 import FormSetting from "../components/SettingMember/FormSetting"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const SettingMember = () => {
   const [state, setState] = useMergedState({
@@ -115,6 +117,11 @@ const SettingMember = () => {
       .catch((err) => {
         setState({ loadPage: false })
       })
+  }, [])
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle("User profile information setting"))
   }, [])
 
   return (

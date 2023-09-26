@@ -97,6 +97,7 @@
     "quick_access": "Quick access",
     "navigation": "Navigation",
     "nav": "Nav",
+    "other": "Other",
     "quick": "Quick",
     "notification": {
       "title": "Notification",
@@ -272,7 +273,8 @@
           "to": "To"
         }
       }
-    }
+    },
+    "approvepost" : "Approve post"
   },
   "manage": {
     "module": {

@@ -8,6 +8,8 @@ import moment from "moment"
 import HeaderComponent from "../components/detail/WorkspaceManagement/HeaderComponent"
 import WorkspaceOverview from "../components/detail/WorkspaceManagement/Overview/WorkspaceOverview"
 import ListWorkspace from "../components/detail/WorkspaceManagement/List/ListWorkspace"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const WorkspaceManagement = () => {
   const [state, setState] = useMergedState({
@@ -111,6 +113,11 @@ const WorkspaceManagement = () => {
       data: data
     })
   }
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle(useFormatMessage("Workgroups Management")))
+  }, [])
 
   // ** effect
   useEffect(() => {

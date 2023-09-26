@@ -99,6 +99,9 @@ const workspaceSchema = baseSchema("m_workspace", {
     default: false
   },
   system: { type: Boolean, default: false },
+  introduction: {
+    type: String
+  }
 })
 
 const workspaceMongoModel = model("workspaceMongoModel", workspaceSchema)

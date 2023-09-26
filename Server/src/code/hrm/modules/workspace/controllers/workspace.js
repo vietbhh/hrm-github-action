@@ -57,7 +57,6 @@ const _saveWorkspace = async (
       )
       dataSave["group_chat_id"] = groupChatId
     }
-
     const workspace = new workspaceMongoModel(dataSave)
     await workspace.save()
     return workspace
@@ -87,17 +86,15 @@ const saveWorkspace = async (req, res, next) => {
   try {
     const workspace = await _saveWorkspace(
       dataSave,
-      workspace_crate_group_chat,
-      [req.__user],
+      req.body.workspace_crate_group_chat,
+      [],
       [req.__user],
       req.__user
     )
-
-    const saveData = await workspace.save()
     if (req.body?.image !== undefined && req.body.image !== "") {
-      await _handleUploadImage(req.body.image, saved._id)
+      await _handleUploadImage(req.body.image, workspace._id)
     }
-    return res.respond(saveData)
+    return res.respond(workspace)
   } catch (err) {
     return res.fail(err.message)
   }
@@ -174,7 +171,8 @@ const getPostWorkspace = async (req, res) => {
     const filter = {
       permission_ids: req.query.id,
       permission: "workspace",
-      approve_status: "pending"
+      approve_status: "pending",
+      content: { $ne: ''},
     }
     if (req.query?.search) {
       filter.content = { $regex: new RegExp(req.query?.search) }
@@ -448,6 +446,7 @@ const updateWorkspace = async (req, res, next) => {
       workSpaceUpdate = _handleUpdateGroupRule(workspaceInfo, requestData)
       returnCurrentPageForPagination = ""
     } else if (requestData.hasOwnProperty("update_administrator")) {
+      requestData.data = JSON.parse(requestData.data)
       workSpaceUpdate = _handleUpdateAdministrator(workspaceInfo, requestData)
       returnCurrentPageForPagination = requestData.type === "members"
     } else if (requestData.hasOwnProperty("remove_member")) {
@@ -639,7 +638,7 @@ const loadDataMember = async (req, res, next) => {
     if (text.trim().length > 0) {
       condition = {
         full_name: {
-          [Op.like]: `${text}%`
+          [Op.like]: `%${text}%`
         }
       }
     }
@@ -710,6 +709,7 @@ const loadDataMember = async (req, res, next) => {
         workspace?.members === undefined || workspace?.members === null
           ? []
           : workspace?.members
+
       const listMember = workspaceMember.reverse().map((item) => {
         return item.id_user
       })
@@ -1396,8 +1396,12 @@ const createGroupChat = async (req, res) => {
 }
 
 const updateWorkspaceMemberAndChatGroup = async (req, res) => {
-  const workspaceIdAdd = isEmpty(req.body.workspace_add) ? null : req.body.workspace_add
-  const workspaceIdRemove = isEmpty(req.body.workspace_remove) ? null : req.body.workspace_remove
+  const workspaceIdAdd = isEmpty(req.body.workspace_add)
+    ? null
+    : req.body.workspace_add
+  const workspaceIdRemove = isEmpty(req.body.workspace_remove)
+    ? null
+    : req.body.workspace_remove
   const memberId = req.body.employee_id
   try {
     if (workspaceIdAdd !== null) {
@@ -1421,7 +1425,12 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
         },
         { ...workspace._doc, members: members }
       )
-      await handleAddMemberToFireStoreGroup(req.__user, workspace.group_chat_id, arrMemberId, false)
+      await handleAddMemberToFireStoreGroup(
+        req.__user,
+        workspace.group_chat_id,
+        arrMemberId,
+        false
+      )
     }
 
     if (workspaceIdRemove !== null) {
@@ -1429,9 +1438,12 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       const dataUpdateWorkspace = _handleRemoveMember(workspace, {
         member_id: memberId
       })
-      const arrMemberId = workspace?.members === undefined ? [] : workspace.members.map((item) => {
-        return item.id_user
-      })
+      const arrMemberId =
+        workspace?.members === undefined
+          ? []
+          : workspace.members.map((item) => {
+              return item.id_user
+            })
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceIdRemove
@@ -1439,7 +1451,12 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
         { ...dataUpdateWorkspace }
       )
 
-      await handleRemoveMemberFromFireStoreGroup(req.__user, workspace.group_chat_id, arrMemberId, false)
+      await handleRemoveMemberFromFireStoreGroup(
+        req.__user,
+        workspace.group_chat_id,
+        arrMemberId,
+        false
+      )
     }
 
     return res.respond({

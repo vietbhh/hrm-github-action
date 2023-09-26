@@ -8,6 +8,8 @@ import { Row } from "antd"
 // ** Components
 import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManaged"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const WorkspaceManagedPage = (props) => {
   const [state, setState] = useMergedState({
@@ -60,6 +62,11 @@ const WorkspaceManagedPage = (props) => {
       }
     })
   }
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle(useFormatMessage("modules.workspace.title.workgroup_manage")))
+  }, [])
 
   // ** effect
   useEffect(() => {

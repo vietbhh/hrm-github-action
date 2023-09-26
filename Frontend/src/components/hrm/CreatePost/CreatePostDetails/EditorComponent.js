@@ -21,15 +21,19 @@ import "@draft-js-plugins/mention/lib/plugin.css"
 import "@draft-js-plugins/static-toolbar/lib/plugin.css"
 import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/hashtag/lib/plugin.css"
+import { ContentState, EditorState } from "draft-js"
+import htmlToDraft from "html-to-draftjs"
 
 const EditorComponent = (props) => {
   const {
+    dataPost,
     dataMention,
     editorState,
     onEditorStateChange,
     backgroundImage,
     showChooseBackgroundImage,
-    placeholder = null
+    placeholder = null,
+    setEditorState
   } = props
   const [state, setState] = useMergedState({
     // mention
@@ -44,6 +48,21 @@ const EditorComponent = (props) => {
   }
 
   // ** useEffect
+
+  useEffect(() => {
+    if (!_.isEmpty(dataPost)) {
+      const content_html = dataPost.content
+      const contentBlock = htmlToDraft(content_html)
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        )
+        const editorState = EditorState.createWithContent(contentState)
+        setEditorState(editorState)
+      }
+    }
+  }, [dataPost])
+
   useEffect(() => {
     setState({ mentions: dataMention, suggestions: dataMention })
   }, [dataMention])

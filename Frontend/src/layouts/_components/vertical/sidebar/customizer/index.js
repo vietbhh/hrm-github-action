@@ -241,7 +241,7 @@ const Customizer = (props) => {
           </div>
         </div>
 
-        <hr />
+        {/* <hr />
 
         <div className="px-2">
           <div className="mb-2">
@@ -261,7 +261,7 @@ const Customizer = (props) => {
             </p>
             <div className="d-flex">{renderFooterTypeRadio()}</div>
           </div>
-        </div>
+        </div> */}
       </PerfectScrollbar>
     </div>
   )

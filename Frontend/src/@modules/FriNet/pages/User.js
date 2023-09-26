@@ -1,16 +1,15 @@
 import AppSpinner from "@apps/components/spinner/AppSpinner"
 import { useMergedState } from "@apps/utility/common"
-import { getTabId } from "@modules/FriNet/common/common"
+import "@modules/FriNet/assets/scss/timeline.scss"
 import { Skeleton } from "antd"
 import { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import "../assets/scss/user.scss"
-import "@modules/FriNet/assets/scss/timeline.scss"
 import { userApi } from "../common/api"
-import PageHeader from "../components/User/PageHeader/PageHeader"
 import PageBody from "../components/User/PageBody/PageBody"
-import Introduction from "../components/User/Introduction/Introduction"
+import PageHeader from "../components/User/PageHeader/PageHeader"
+import { setAppTitle } from "../../../redux/app/app"
 
 const User = () => {
   const [state, setState] = useMergedState({
@@ -34,6 +33,8 @@ const User = () => {
     )
   }
 
+
+  const dispatch = useDispatch()
   const loadData = async () => {
     setState({
       loading: true
@@ -45,6 +46,7 @@ const User = () => {
           employeeData: res.data,
           loading: false
         })
+        dispatch(setAppTitle(`${res.data?.full_name}'s profile`))
       })
       .catch((err) => {
         setState({

@@ -5,11 +5,13 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { Fragment, useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, Col, Row, Spinner } from "reactstrap"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { workspaceApi } from "../../Workspace/common/api"
 import PostApprovalSettingModal from "./modals/PostApprovalSettingModal"
+import { useSelector } from "react-redux"
+import { handleLoadAttachmentThumb } from "../common/common"
+
 const workspace_type = [
   {
     value: "desc",
@@ -21,6 +23,8 @@ const workspace_type = [
   }
 ]
 const PendingPost = (props) => {
+  const userData = useSelector((state) => state.auth.userData)
+  const cover = userData?.cover || ""
   const { loadPost, idWorkspace } = props
   const [state, setState] = useMergedState({
     prevScrollY: 0,
@@ -49,13 +53,24 @@ const PendingPost = (props) => {
       ...props
     }
     setState({ loading: true })
-    loadPost(paramsSend).then((res) => {
-      setState({
-        listPost: res.data.results,
-        loading: false,
-        page: paramsSend.page,
-        sort: paramsSend.sort,
-        recordsTotal: res.data.recordsTotal
+    loadPost(paramsSend).then(async (res) => {
+      const data_attachment = res.data.results.map(async (item) => {
+        let newProperties = await handleLoadAttachmentThumb(item, cover)
+
+        return {
+          ...item,
+          ...newProperties
+        }
+      })
+
+      Promise.all(data_attachment).then((values) => {
+        setState({
+          listPost: values,
+          loading: false,
+          page: paramsSend.page,
+          sort: paramsSend.sort,
+          recordsTotal: res.data.recordsTotal
+        })
       })
     })
   }
