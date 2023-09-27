@@ -199,6 +199,7 @@ const submitPostController = async (req, res, next) => {
     if (!is_edit && body.approveStatus === "approved") {
       const receivers = union(mention, tag)
       if (receivers) {
+        console.log("sendNotificationTagInPost ", receivers)
         sendNotificationTagInPost(
           { _id: _id_parent },
           body.data_user,

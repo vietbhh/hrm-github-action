@@ -1,6 +1,8 @@
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { getUser } from "#app/models/users.mysql.js"
+import { Op, Sequelize } from "sequelize"
 import workspaceMongoModel from "../models/workspace.mongo.js"
+import { notificationsModelMysql } from "#app/models/notifications.mysql.js"
 
 const compactContent = (content = "") => {
   const contentPost = content
@@ -14,6 +16,10 @@ const compactContent = (content = "") => {
   return body
 }
 
+const handleJsonQueryString = (column, key, value) => {
+  const query = "JSON_EXTRACT(" + column + ",'$." + key + "') = '" + value + "'"
+  return query
+}
 const sendNotificationApproveJoin = async (
   infoWorkspace,
   hanlde,
@@ -171,22 +177,57 @@ const sendNotificationReactionPost = async (
   reaction,
   receivers
 ) => {
-  const title =
+  let title =
     "<b>" +
     userReaction.full_name +
     "</b> " +
     reaction +
     " {{modules.network.notification.reaction_post}}"
+
   const link = "posts/" + post._id
   const body = compactContent(post.content)
+
+  let update_notification = false
+
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_type", "reaction_post")
+        )
+      ]
+    }
+  })
+  //handleJsonQueryString
+  if (infoNotification) {
+    update_notification = true
+    const reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+    title =
+      "<b>" +
+      userReaction.full_name +
+      "</b> to " +
+      reaction +
+      " and " +
+      (numberReaction - 1) +
+      " of other people who have interacted with your post"
+  }
 
   await sendNotification(userReaction?.id, receivers, {
     title: title,
     body: body,
     link: link,
     icon: parseInt(userReaction?.id),
-    custom_fields: { source_id: post._id, source_type: "reaction" },
-    update_notification: true
+    custom_fields: { source_id: post._id, source_type: "reaction_post" },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
   })
 }
 
@@ -204,25 +245,96 @@ const sendNotificationReactionPostTag = async (
     " {{modules.network.notification.reaction_post_tag}}"
   const link = "posts/" + post._id
   const body = compactContent(post.content)
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "reaction_post_tag"
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    update_notification = true
+    const reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+    title =
+      "<b>" +
+      userReaction.full_name +
+      "</b> to " +
+      reaction +
+      " and " +
+      (numberReaction - 1) +
+      " of other people who have interacted post you're tagged"
+  }
+
   await sendNotification(userReaction?.id, receivers, {
     title: title,
     body: body,
     link: link,
-    icon: parseInt(userReaction?.id)
+    icon: parseInt(userReaction?.id),
+    custom_fields: { source_id: post._id, source_type: "reaction_post_tag" },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
   })
 }
 const sendNotificationCommentPost = async (post, user, comment, receivers) => {
-  const title =
+  let title =
     "<b>" +
     user.full_name +
     "</b> {{modules.network.notification.commented_on_your_post}}"
   const link = "posts/" + post._id
   const body = compactContent(comment)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_type", "comment_post")
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    update_notification = true
+    let reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+    title =
+      "<b>" +
+      user.full_name +
+      "</b> and " +
+      (numberReaction - 1) +
+      " of other people who have comment your post"
+  }
+
   await sendNotification(user?.id, receivers, {
     title: title,
     body: body,
     link: link,
-    icon: parseInt(user?.id)
+    icon: parseInt(user?.id),
+    custom_fields: { source_id: post._id, source_type: "comment_post" },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
   })
 }
 
@@ -232,17 +344,54 @@ const sendNotificationCommentPostTag = async (
   comment,
   receivers
 ) => {
-  const title =
+  let title =
     "<b>" +
     userReaction.full_name +
     "</b> {{modules.network.notification.comment_post_tag}}"
   const link = "posts/" + post._id
   const body = compactContent(comment)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "comment_post_tag"
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    update_notification = true
+    const reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+    title =
+      "<b>" +
+      userReaction.full_name +
+      "</b> and " +
+      (numberReaction - 1) +
+      " of other people who have comment post you're tagged"
+  }
+
   await sendNotification(userReaction?.id, receivers, {
     title: title,
     body: body,
     link: link,
-    icon: parseInt(userReaction?.id)
+    icon: parseInt(userReaction?.id),
+    custom_fields: { source_id: post._id, source_type: "comment_post_tag" },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
   })
 }
 
@@ -340,19 +489,125 @@ const sendNotificationRepliedCommentPost = async (
   comment,
   receivers
 ) => {
-  const title =
+  let title =
     "<b>" +
     user.full_name +
     "</b> {{modules.network.notification.replied_on_your_comment}}"
-  const link = "posts/" + post._id
+  const link = "posts/" + post.post_id
   const body = compactContent(comment)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "replied_comment_post"
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    update_notification = true
+    let sub_comment = post.sub_comment
+    let userComment = []
+    sub_comment.map((item) => {
+      if (
+        !userComment.includes(item?.created_by) &&
+        item?.created_by !== post.created_by
+      ) {
+        userComment.push(item?.created_by)
+      }
+    })
+    title =
+      "<b>" +
+      user.full_name +
+      "</b> and " +
+      (userComment.length - 1) +
+      " of other people who have replied your comment"
+  }
   await sendNotification(user?.id, receivers, {
     title: title,
     body: body,
     link: link,
-    icon: parseInt(user?.id)
+    icon: parseInt(user?.id),
+    custom_fields: { source_id: post._id, source_type: "replied_comment_post" },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
   })
 }
+
+const sendNotificationReactionCommentPost = async (
+  post,
+  userReaction,
+  reaction,
+  receivers
+) => {
+  let title =
+    "<b>" +
+    userReaction.full_name +
+    "</b> " +
+    reaction +
+    " {{modules.network.notification.your_comment_post}}"
+
+  const link = "posts/" + post.post_id
+  const body = compactContent(post.content)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "reaction_comment_post"
+          )
+        )
+      ]
+    }
+  })
+  //handleJsonQueryString
+  if (infoNotification) {
+    update_notification = true
+    const reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+    title =
+      "<b>" +
+      userReaction.full_name +
+      "</b> to " +
+      reaction +
+      " and " +
+      (numberReaction - 1) +
+      " of other people who have interacted with your comment"
+  }
+  await sendNotification(userReaction?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(userReaction?.id),
+    custom_fields: {
+      source_id: post._id,
+      source_type: "reaction_comment_post"
+    },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
+  })
+}
+
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -369,5 +624,6 @@ export {
   sendNotificationEndorsement,
   sendNotificationEndorsementAll,
   sendNotificationPostPendingFeed,
-  sendNotificationRepliedCommentPost
+  sendNotificationRepliedCommentPost,
+  sendNotificationReactionCommentPost
 }

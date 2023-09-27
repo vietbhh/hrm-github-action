@@ -4311,7 +4311,8 @@
         "has_posted_workgroup": "has posted in workgroup",
         "sent_request_join_workgroup": "sent a request to join workgroup",
         "requested_approval_post": "requested approval for his post on the shared wall",
-        "reaction_post" : "your post"
+        "reaction_post" : "your post",
+        "your_comment_post" : "your comment"
       }
     },
     "timeline": {
