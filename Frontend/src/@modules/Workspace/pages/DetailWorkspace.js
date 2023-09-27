@@ -2,10 +2,12 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { map } from "lodash-es"
 import { useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useParams, useSearchParams } from "react-router-dom"
 import { TabContent, TabPane } from "reactstrap"
+import { setAppTitle } from "../../../redux/app/app"
 import { workspaceApi } from "../common/api"
+import { getTabByNameOrId } from "../common/common"
 import TabFeed from "../components/detail/TabFeed/TabFeed"
 import TabIntroduction from "../components/detail/TabIntroduction/TabIntroduction"
 import TabMedia from "../components/detail/TabMedia/TabMedia"
@@ -13,7 +15,6 @@ import TabMember from "../components/detail/TabMember/TabMember"
 import TabPinned from "../components/detail/TabPinned/TabPinned"
 import TabPrivate from "../components/detail/TabPrivate"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
-import { getTabByNameOrId } from "../common/common"
 
 const DetailWorkspace = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -79,6 +80,9 @@ const DetailWorkspace = () => {
       }
     }
   }
+
+  const dispatch = useDispatch()
+
   const loadData = () => {
     setState({
       loading: true
@@ -87,7 +91,7 @@ const DetailWorkspace = () => {
       .getDetailWorkspace(params.id)
       .then((res) => {
         setState({ detailWorkspace: res.data })
-
+        dispatch(setAppTitle(res.data.name))
         setTimeout(() => {
           setState({
             loading: false

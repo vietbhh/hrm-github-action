@@ -5,6 +5,8 @@ import { workspaceApi } from "@modules/Workspace/common/api"
 // ** Styles
 // ** Components
 import WorkspaceManaged from "../components/detail/ListWorkSpace/WorkspaceManaged"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const WorkspaceJoinedPage = (props) => {
   const [state, setState] = useMergedState({
@@ -58,6 +60,11 @@ const WorkspaceJoinedPage = (props) => {
     })
   }
 
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle(useFormatMessage("modules.workspace.title.workgroup_joined")))
+  }, [])
+  
   // ** effect
   useEffect(() => {
     loadData()

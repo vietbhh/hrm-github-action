@@ -376,6 +376,20 @@
             "employee_groups_des": "View, create, and update employee groups",
             "employee_level": "Employee Level",
             "employee_level_des": "View, create, and update employee level"
+          },
+          "post": {
+            "post": "Post",
+            "create_post": "CreatePost",
+            "create_announcement": "Create Announcement",
+            "create_endorsement": "Create Endorsement",
+            "post_without_approval": "PostWithoutApproval",
+            "approval_post": "ApprovalPost",
+            "manage_post": "ManagePost"
+          },
+          "workgroup": {
+            "workgroup": "Workgroup",
+            "create_workgroup": "CreateWorkgroup",
+            "manage_workgroup": "ManageWorkgroup"
           }
         },
         "other": {
@@ -461,11 +475,26 @@
       "modals": {
         "title": {
           "create_event": "Create Event",
-          "update_event": "Update Event"
+          "update_event": "Update Event",
+          "event_details": "Event Details"
         },
         "buttons": {
           "add_attachment": "Add Attachments"
         }
+      }
+    },
+    "meeting_room": {
+      "title": {
+        "index": "Meeting rooms",
+        "manage": "Room Management"
+      },
+      "fields": {
+        "name": "Room name",
+        "location": "Location",
+        "status": "Status"
+      },
+      "buttons": {
+        "create": "Create Room"
       }
     },
     "calendar_tags": {
@@ -484,7 +513,9 @@
           "holiday": "Holiday",
           "etc": "ETC",
           "birthday": "Birthday",
-          "time_off": "Time Off"
+          "time_off": "Time Off",
+          "meetings": "Meetings",
+          "interviews": "Interviews"
         }
       }
     },
@@ -492,9 +523,9 @@
       "title": "Departments",
       "text": {
         "title_org_chart": "Department Organizational Chart",
-        "new_department": "New Department",
+        "new_department": "Add Department",
         "edit_department": "Edit Department",
-        "new_department_sub": "New subordinate department",
+        "new_department_sub": "Add child department",
         "error_line_manager": "Can't move Line manager to child department",
         "delete_department": "Delete Department",
         "delete_all_department": "Delete all child department",
@@ -568,12 +599,15 @@
       "buttons": {
         "add": "New Profile",
         "invite": "Invite",
+        "invite_member": "Invite {number} members",
+        "onboarding_member": "Offboarding {number} members",
         "reinvite": "Re-Invite",
         "onboarding": "Onboarding",
         "offboarding": "Offboarding",
         "cancel_offboarding": "Cancel Offboarding",
         "rehire": "Rehire",
-        "delete": "Delete employee"
+        "delete": "Delete employee",
+        "copy": "Copy"
       },
       "org_chart": {
         "title": "Organizational Chart"
@@ -793,7 +827,9 @@
         "probationary_salary_percent": "Probationary salary percent",
         "salary_paid_for_social_insurance": "Salary paid for social insurance",
         "level": "Level",
-        "id_time_machine": "ID attendance"
+        "id_time_machine": "ID attendance",
+        "about": "About me",
+        "skill": "Skill"
       },
       "app_options": {
         "account_status": {
@@ -911,7 +947,20 @@
         }
       },
       "text": {
-        "additional_information": "Additional Information"
+        "additional_information": "Additional Information",
+        "about_me_description": "Write something about you!",
+        "empty_about_me": "No about content!",
+        "employment_history": "Employment history",
+        "location": "Location",
+        "social": "Social",
+        "create_skill": "Create skill",
+        "few_while_ago": "Few while ago",
+        "profile_setting": "Profile setting",
+        "profile": "Profile",
+        "empty_skill": "No skill found!",
+        "empty_endorsement": "No endorsement found!",
+        "empty_workspace": "No workspace found!",
+        "empty_employment": "No employment found!"
       },
       "list_employee": {
         "overview": {
@@ -3612,7 +3661,7 @@
           "add_photo_video": "Add Photo/Video",
           "add_description": "Add description...",
           "choose_a_background": "Choose a background",
-          "create_poll": "Add Poll",
+          "create_poll": "Create poll",
           "question": "Question?",
           "enter_question": "Enter question",
           "add_options": "Add options",
@@ -3637,15 +3686,33 @@
           "member": "member",
           "members": "members",
           "poll_setting": "Poll setting",
-          "close_poll_vote": "Close poll vote"
+          "close_poll_vote": "Close poll vote",
+          "member_invited": "{number} members invited",
+          "invited_you_to": "invited you to",
+          "select_all": "All users",
+          "is": "is",
+          "to_join_event": "to join event",
+          "accepted": "accepted",
+          "declined": "declined",
+          "maybe": "maybe",
+          "detail_event_error": "Sorry!... This event is not availabel.",
+          "less_than_start_time_date": "End time date must be greater than Start time date",
+          "less_than_start_time_time": "End time time must be greater than Start time time",
+          "important_text": "All attendees are required to attend this event",
+          "important": "Important",
+          "mandatory": "Mandatory",
+          "action_important_text": "All member invited are required to attend this event",
+          "no_employee_reaction_text": "There is no one has responded to the event invitation yet"
         },
         "endorsement": {
           "title": "Endorsement",
-          "appreciation": "Appreciation",
+          "appreciation": "Endorsement",
           "select_member_for_endorsing": "Select member for endorsing",
           "add_cover_photo": "Add cover photo",
           "list_badges": "List badges",
-          "editor_placeholder": "Write something about this..."
+          "editor_placeholder": "Write something about this...",
+          "empty_member": "Please chose members.",
+          "empty_badge": "Please chose a badge."
         }
       },
       "post": {
@@ -3665,7 +3732,7 @@
           "delete_post": "Delete post",
           "delete_image_video": "Delete image/video",
           "reply": "Reply",
-          "placeholder_input": "Write your comment...",
+          "placeholder_input": "Write something...",
           "you": "You",
           "other": "other",
           "and": "and",
@@ -3699,7 +3766,8 @@
           "send_in_messenger": "Send in messenger",
           "share_to_a_group": "Share to a group",
           "this_post_has_been_edited": "This post has been edited",
-          "approve_setting" : "Post Approval Setting"
+          "post_pending": "Your article has been posted and is in the review process, please wait for moderation!",
+          "approve_setting": "Post Approval Setting"
         },
         "react": {
           "like": "Like",
@@ -3712,10 +3780,11 @@
         "event": {
           "created_an": "created an",
           "event": "Event",
-          "yes": "Yes",
-          "no": "No",
+          "yes": "Accept",
+          "no": "Decline",
           "maybe": "Maybe",
-          "people_invited": "people invited"
+          "people_invited": "people invited",
+          "respond": "Respond"
         },
         "endorsement": {
           "endorsed": "endorsed",
@@ -3736,7 +3805,8 @@
       "manage_post": {
         "title": {
           "index": "Manage Posts",
-          "featured_post": "Featured posts"
+          "featured_post": "Featured posts",
+          "user_post": "{label}'s post"
         },
         "text": {
           "description": "Track activities and view reports about posts in your organization.",
@@ -3796,14 +3866,61 @@
           "no_remind": "No remind",
           "no_repeat": "No repeat",
           "repeat_every_day": "Repeat every day",
-          "repeat_weekday": "Repeat weekday",
-          "repeat_week_on_monday": "Repeat week on Monday"
+          "repeat_every_weekday_on": "Repeat every week on {week_day}",
+          "repeat_every_weekday": "Repeat every weekday",
+          "repeat_every_month_on": "Repeat every month on {date}",
+          "repeat_on_week_day_num_every_month": "Repeat on the {order} {week_day} every month",
+          "repeat_week_on_monday": "Repeat week on Monday",
+          "tracking": "Tracking",
+          "remove_event": "\"{name}\" will be deleted!",
+          "remove_event_success": "Event has been deleted!",
+          "no_meeting_room": "No meeting room",
+          "no_reminder": "No reminder",
+          "no_description": "No details",
+          "no_attachment": "no attachment",
+          "customize": "Customize...",
+          "ordinal_number": {
+            "1": "first",
+            "2": "second",
+            "3": "third",
+            "4": "fouth",
+            "5": "fifth",
+            "6": "sixth"
+          },
+          "custom_repeat": {
+            "title": "Custom repeat",
+            "repeat_every": "Repeat Every",
+            "repeat_at": "Repeat at",
+            "day": "Day",
+            "week": "Week",
+            "month": "Month",
+            "end_time": {
+              "never": "Nerver",
+              "on_date": "On date",
+              "after": "After",
+              "times": "times"
+            },
+            "repeat_at_option": {
+              "1": "mo",
+              "2": "tu",
+              "3": "we",
+              "4": "th",
+              "5": "fr",
+              "6": "sa",
+              "0": "su"
+            },
+            "repeat_at_month_option": {
+              "date": "On {date} every month",
+              "order_week_date_in_month": "On {order} {week_day} every month"
+            }
+          }
         }
       },
       "announcement": {
         "title": "Announcement",
         "text": {
           "create_announcement": "Create Announcement",
+          "update_announcement": "Update Announcement",
           "announcement_title": "Announcement title",
           "announcement_title_placeholder": "Enter annoucement title",
           "pin_to_top": "Pin to top",
@@ -3811,6 +3928,13 @@
           "one_week": "One week",
           "send_to": "Send to",
           "send_to_placeholder": "Enter workgroup, email or username"
+        }
+      },
+      "post_saved": {
+        "action": {
+          "access": "Go to post",
+          "remove": "Remove saved",
+          "loadCompleted": "Yay! You have seen it all"
         }
       }
     },
@@ -3852,11 +3976,12 @@
         "workspace_in_the_organization": "{number} workspace in the organization"
       },
       "buttons": {
+        "see_more": "See more",
         "create": "Create Workspace",
         "view_all": "View All",
         "see_all": "See All",
         "back_to_workgroup": "Back to workgroup",
-        "load_more": "Load More",
+        "load_more": "Load more",
         "add_description": "Add description",
         "edit": "Edit",
         "save": "Save",
@@ -3866,15 +3991,18 @@
         "edit_rule": "Edit rule",
         "remove_rule": "Remove rule",
         "set_as_administrator": "Set as administrator",
+        "invite_as_admin": "Invite as admin",
+        "remove_member": "Remove member",
         "remove_this_member_from_this_workspace": "Remove this member from this workspace",
         "view_profile": "View profile",
         "remove_from_administrator": "Remove from administrator",
         "approve": "Approve",
-        "approve_all": "Approve all request",
+        "approve_all": "Approve all",
+        "decline_all": "Decline all",
         "download": "Download",
         "view_post": "View post",
         "approve_all_posts": "Approve all",
-        "reject_all_posts": "Reject all",
+        "decline_all_posts": "Decline all",
         "invite": "Invite",
         "join_workspace": "Join workspace",
         "upload": "Upload",
@@ -3885,7 +4013,12 @@
         "leave_admin_workspace": "Leave Admin of the workspace",
         "export_excel_file": "Export excel file",
         "view_group": "View Group",
-        "create_group": "Create Group"
+        "create_group": "Create Group",
+        "decline": "Decline",
+        "copy": "Copy",
+        "add_cover": "Add Cover",
+        "messenge": "Messenge",
+        "get_started": "Get started"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -3894,18 +4027,21 @@
         "feed": "Feed",
         "pinned": "Pinned",
         "introduction": "Introduction",
+        "information": "Information",
+        "about_group": "About Group",
         "group_rules": "Group rules",
         "member": "Member",
         "members": "Members",
-        "media": "Media",
+        "media": "Media & Files",
         "request_to_join": "Request to join",
+        "member_request_to_join": "{number} Member request to join",
         "tab_media": {
           "files": "Files",
           "photos": "Photos",
           "videos": "Videos",
           "links": "Links"
         },
-        "workspace_infomation": "Workspace infomation",
+        "group_information": "Group infomation",
         "workspace_settings": "Workspace settings",
         "waiting_for_approval": "Waiting for approval",
         "setup_notification": "Setup notification",
@@ -3925,10 +4061,58 @@
         "all_member_workspaces": "All-members workspaces",
         "private_workspaces": "Private workspaces",
         "post_created": "Post crated",
-        "create_workgroup": "Create workgroup"
+        "create_workgroup": "Create workgroup",
+        "group_chat": "Group chat",
+        "group_chat_description": "Automatically create a linked group chat via message",
+        "workgroup_privacy": "Workgroup privacy",
+        "filter_request_join": {
+          "select": {
+            "newest_first": "Newest first",
+            "oldest_first": "Oldest first"
+          }
+        },
+        "empty_group_rule": {
+          "title": "No Rules Set Up",
+          "description": "Use rules to help set the tone for your group and help prevent member conflict. Write up to 10 rules about your group"
+        },
+        "empty_pinned": {
+          "title": "Create a pinned for your group",
+          "description": "Pinned a post. anyone who joins will be able to see it and comment"
+        },
+        "empty_post": {
+          "title": "Create a post for your group",
+          "description": "Get the conversation started with a welcome post. Anyone who joins will be able to see it and comment."
+        },
+        "empty_member": {
+          "title": "No members",
+          "description": "Get the conversation started with a welcome post. Anyone who joins will be able to see it and comment."
+        },
+        "manage_notification": "Manage notifications",
+        "member_request": "Member request",
+        "workgroup_setting": "Workgroup setting",
+        "leave_workgroup": "Leave workgroup",
+        "search_post": "Search post",
+        "result_search": "Results search for \"{text}\"",
+        "group_setting": "Group setting",
+        "nav_menu_setting_layout": {
+          "feed": "Group feed",
+          "setting": "Group setting",
+          "approvals": "Pending approvals",
+          "request": "Member requests"
+        },
+        "member_selected": "{number} member selected",
+        "derpartment_selected": "{number} derpartment selected",
+        "waring_create_groupchat": {
+          "title": "Create Group chat?",
+          "text": "Create a linked group chat via message"
+        },
+        "wait_approval_member"  : "Invitation sent, please wait for admin approval",
+        "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!"
       },
       "fields": {
         "workspace_name": "Workspace name",
+        "workgroup_name": "Workgroup name",
+        "description": "Description",
         "workspace_type": "Workspace type",
         "workspace_mode": "Workspace mode",
         "membership_approval": "Membership approval",
@@ -3958,7 +4142,7 @@
           "type": {
             "public": {
               "title": "Pulbic Workspace",
-              "description": "Anyone can see post and activites in workspace"
+              "description": "Anyone can see who's in the group and what they post"
             },
             "private": {
               "title": "Private Workspace",
@@ -3968,7 +4152,7 @@
           "mode": {
             "visible": {
               "title": "Visible Workspace",
-              "description": "Anyone can see your workspace and request to join"
+              "description": "Anyone can see find this group"
             },
             "hidden": {
               "title": "Hidden",
@@ -3981,8 +4165,13 @@
           }
         },
         "search_member": "Search member",
+        "search_post": "Search post...",
+        "search_post_error": {
+          "empty": "Please type something to search box!"
+        },
         "admin": "Admin",
         "member_list": "Member List",
+        "admin_and_moderators": "Admin & moderators",
         "confirm_set_as_administrator": {
           "title": "Are you sure?",
           "content_add": "{name} will be the administrator of the workspace.",
@@ -3993,7 +4182,7 @@
           "content": "{name} will be removed form this workspace."
         },
         "approved": "Approved",
-        "no_pending_posts": "The workspace has no pending posts",
+        "no_pending_posts": "No posts to review",
         "view_other_posts": "View other posts",
         "pending_posts": "Pending posts",
         "sub_review_post": "All member posts must be approved by administrator",
@@ -4015,7 +4204,18 @@
           "joined": "Collaborate with your team"
         },
         "no_member": "No member",
-        "joined_date": "You joined in"
+        "joined_date": "You joined in",
+        "joined_on": "Joined on {date}",
+        "enter_group_name": "Enter group name",
+        "find_a_member": "Find a member",
+        "handled_approve_join_request": "Approved",
+        "handled_decline_join_request": "Declined",
+        "write_something_about_your_group": "Write something about your group",
+        "requested_on": "Requested on {date}",
+        "suggested": "Suggested",
+        "derpartment": "Derpartment",
+        "users": "Users",
+        "new_today": "new today"
       },
       "app_options": {
         "workspace_type": {
@@ -4087,8 +4287,10 @@
         "request_workspace": "sent a request to join the workspace",
         "need_approval": "needs approval",
         "you_have_a_new_event": "You have a new event",
+        "invite_to_the_event": "You have an invitation to the ",
+        "event": "event",
         "you_have_a_new_announcement": "You have a new announcement",
-        "you_have_a_new_endorse": "You have a new endorse",
+        "you_have_a_new_endorse": "has endorsed you with badget",
         "liked_your_post": "liked your post",
         "commented_on_your_post": "commented on your post",
         "liked_your_comment": "liked your comment",

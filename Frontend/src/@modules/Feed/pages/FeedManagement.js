@@ -6,6 +6,8 @@ import moment from "moment"
 // ** Styles
 // ** Components
 import FeaturedPost from "../components/FeedManagement/FeaturedPost/FeaturedPost"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const FeedManagement = (props) => {
   const [state, setState] = useMergedState({
@@ -82,6 +84,11 @@ const FeedManagement = (props) => {
   useEffect(() => {
     loadData()
   }, [state.filter])
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle("Posts Management"))
+  }, [])
 
   // ** render
   return (

@@ -335,3 +335,12 @@ export const getPublicDownloadUrl = (path, type = "image") => {
     import.meta.env.VITE_APP_API_URL + `/download/public/${type}?name=` + path
   )
 }
+
+export const stripHTML = (str) => {
+  return str.replace(/(<([^>]+)>)/gi, "")
+}
+
+export const truncateString = (string = '', maxLength = 50) => 
+  string.length > maxLength 
+    ? `${string.substring(0, maxLength)}…`
+    : string

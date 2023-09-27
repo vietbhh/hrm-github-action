@@ -164,7 +164,7 @@ const menuConfig = [
   },
   {
     id: "approvepost",
-    title: "layout.approvepost",
+    title: "menu.approve_post",
     type: "dropdown",
     action: "ApprovalPost",
     resource: "feed",
