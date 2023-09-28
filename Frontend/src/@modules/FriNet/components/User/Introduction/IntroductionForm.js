@@ -110,6 +110,17 @@ const IntroductionForm = (props) => {
   return (
     <Row>
       {_.map(arrField, (field, key) => {
+        if (
+          field.field_options.settingMember !== undefined &&
+          field.field_options.settingMember === false
+        ) {
+          return ""
+        }
+
+        const isDisabled =
+          field.field_options.updatable !== undefined &&
+          field.field_options.updatable === false
+
         const fieldProps = {
           module: "employees",
           fieldData: { ...field },
@@ -120,7 +131,7 @@ const IntroductionForm = (props) => {
           labelInline: true,
           inlineClassLabel: "col-md-3",
           inlineClassInput: "col-md-9",
-          readOnly: !isEdit
+          readOnly: !isEdit || isDisabled
         }
 
         if (field.field === "temp_address" || field.field === "per_address") {
@@ -211,6 +222,7 @@ const IntroductionForm = (props) => {
             }
           }
         }
+
         return (
           <Fragment key={key}>
             <Col

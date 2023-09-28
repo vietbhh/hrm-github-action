@@ -1402,7 +1402,10 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
   const workspaceIdRemove = isEmpty(req.body.workspace_remove)
     ? null
     : req.body.workspace_remove
+
   const memberId = req.body.employee_id
+  const commonChatGroup = req.body.common_chat_group
+  const isRemoveCommonChatGroup = req.body.is_remove_common_chat_group
   try {
     if (workspaceIdAdd !== null) {
       const workspace = await workspaceMongoModel.findById(workspaceIdAdd)
@@ -1459,11 +1462,28 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       )
     }
 
+    if (commonChatGroup !== null) {
+      if (isRemoveCommonChatGroup) {
+        await handleRemoveMemberFromFireStoreGroup(
+          req.__user,
+          commonChatGroup,
+          [memberId],
+          false
+        )
+      } else {
+        await handleAddMemberToFireStoreGroup(
+          req.__user,
+          commonChatGroup,
+          [memberId],
+          false
+        )
+      }
+    }
+
     return res.respond({
       success: true
     })
   } catch (err) {
-    console.log(err)
     return res.respond({
       success: false,
       err: err

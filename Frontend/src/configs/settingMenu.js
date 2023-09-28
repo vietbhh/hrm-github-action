@@ -249,7 +249,7 @@ const settingMenu = {
     navLink: "/settings/permissions",
     order: 7
   },
-  "other": {
+  other: {
     id: "other",
     type: "header",
     action: "manage",
@@ -351,6 +351,18 @@ const settingMenu = {
     icon: "fa-thin fa-medal",
     navLink: "/meeting-room/manage",
     order: 13,
+    hideOnSetting: false,
+    dividerBefore: false
+  },
+  "post-setting": {
+    id: "post-setting",
+    title: "Post Setting ",
+    type: "item",
+    action: "manage",
+    resource: "fri_net",
+    icon: "fa-regular fa-bars-progress",
+    navLink: "/posts/setting",
+    order: 14,
     hideOnSetting: false,
     dividerBefore: false
   }
