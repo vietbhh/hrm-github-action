@@ -10,3 +10,4 @@ if(!isset($routes))
 
 	/*** Route for Feed ***/
 $routes->get('feed/get-initial-event', 'Feed::get_initial_event_get',['namespace' => 'HRM\Modules\Feed\Controllers']);
+$routes->post('feed/posts-setting', 'Feed::posts_setting_post',['namespace' => 'HRM\Modules\Feed\Controllers']);
