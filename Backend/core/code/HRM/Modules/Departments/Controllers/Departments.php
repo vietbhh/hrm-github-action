@@ -389,6 +389,13 @@ class Departments extends ErpController
 		}
 	}
 
+	public function saveCompanyChatGroup_post()
+	{
+		$post = $this->request->getPost();
+		preference('company_chat_group', $post['id'], true);
+		return $this->respond('action_success');
+	}
+
 	private function getLineManager($data)
 	{
 

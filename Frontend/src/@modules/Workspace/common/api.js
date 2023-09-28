@@ -127,5 +127,18 @@ export const workspaceApi = {
       `/workspace/create-group-chat/${id}`,
       serialize(_.cloneDeep(data))
     )
+  },
+  async createCompanyChat(data) {
+    return await axiosNodeApi.post(
+      `/workspace/create-company-chat`,
+      serialize(_.cloneDeep(data))
+    )
+  },
+  async saveCompanyChatGroup(data) {
+    //departments/save-company-chat-group
+    return await axiosApi.post(
+      `/departments/save-company-chat-group`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

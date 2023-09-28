@@ -1490,6 +1490,19 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
     })
   }
 }
+const createGroupChatCompany = async (req, res) => {
+  const groupChatName = req.body?.name
+  const owner = req.body?.owner
+  const member = JSON.parse(req.body?.member)
+  const groupChatId = await handleAddNewGroupToFireStore(
+    owner,
+    groupChatName,
+    member,
+    true
+  )
+
+  return res.respond({ groupChatId: groupChatId })
+}
 
 export {
   getWorkspace,
@@ -1514,5 +1527,6 @@ export {
   saveAvatar,
   deleteWorkspace,
   createGroupChat,
-  updateWorkspaceMemberAndChatGroup
+  updateWorkspaceMemberAndChatGroup,
+  createGroupChatCompany
 }

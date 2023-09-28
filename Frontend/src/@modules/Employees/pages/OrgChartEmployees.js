@@ -20,15 +20,17 @@ import { useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import "../assets/scss/departmentsSetting.scss"
-import { departmentApi } from "../common/api"
+import { departmentApi, employeesApi } from "../common/api"
 import DeleteDepartmentModal from "../components/modals/DeleteDepartmentModal"
 import NewDepartmentModal from "../components/modals/NewDepartmentModal"
+import { workspaceApi } from "../../Workspace/common/api"
 const OrgChartEmployees = (props) => {
   const params = useParams()
   const action = params.action
   const moduleData = useSelector((state) => state.app.modules.employees)
   const optionsModules = useSelector((state) => state.app.optionsModules)
   const Setting = useSelector((state) => state.auth.settings)
+  const memberActive = useSelector((state) => state.users.list)
   const module = moduleData.config
   const metas = moduleData.metas
   const options = moduleData.options
@@ -47,7 +49,8 @@ const OrgChartEmployees = (props) => {
     name: Setting.app_name,
     line_manager: state.app_owner,
     id: 0,
-    updateOwner: true
+    updateOwner: true,
+    groupChatId: Setting?.company_chat_group
   }
   const allowAction = ["page", "add", "update", "detail", "import"]
   if (action !== undefined && !allowAction.includes(action)) {
@@ -215,7 +218,33 @@ const OrgChartEmployees = (props) => {
       )
     })
   }
+  const createCompanyChat = (info) => {
+    employeesApi
+      .getList({ perPage: 1000, filters: { status: 13 } })
+      .then((res) => {
+        if (res.data) {
+          const arrMember = res.data.results
+          const member = arrMember.map((item) => item.id)
+          const data = {
+            name: info.name,
+            owner: info.line_manager.id,
+            member: JSON.stringify(member)
+          }
 
+          workspaceApi.createCompanyChat(data).then((res) => {
+            if (res.data?.groupChatId) {
+              workspaceApi
+                .saveCompanyChatGroup({ id: res.data.groupChatId })
+                .then((res) => {
+                  notification.showSuccess({
+                    text: useFormatMessage("notification.save.success")
+                  })
+                })
+            }
+          })
+        }
+      })
+  }
   const Organization = ({ org, onCollapse, collapsed }) => {
     const [{ isDragging }, drag] = useDrag({
       type: "department",
@@ -311,8 +340,30 @@ const OrgChartEmployees = (props) => {
               navigate("/workspace/" + org.custom_fields?.workgroup_id)
             },
             disabled: !org.id
+          },
+      _.isEmpty(org.id) && _.isEmpty(org?.groupChatId)
+        ? {
+            label: (
+              <div>
+                {useFormatMessage("modules.departments.text.new_group_chat")}
+              </div>
+            ),
+            key: "new_group_chat",
+            onClick: () => createCompanyChat(org)
+          }
+        : {
+            label: (
+              <div>
+                {useFormatMessage("modules.departments.text.view_group_chat")}
+              </div>
+            ),
+            key: "new_group_chat",
+            onClick: () => {
+              navigate("/chat/" + org?.groupChatId)
+            }
           }
     ]
+
     return (
       <div ref={drop}>
         <StyledNode variant="outlined" ref={drag} style={{ backgroundColor }}>
