@@ -530,7 +530,9 @@
         "delete_department": "Delete Department",
         "delete_all_department": "Delete all child department",
         "profile": "Profile",
-        "note_delete_deparment": "* All employees must be transferred to another department"
+        "note_delete_deparment": "* All employees must be transferred to another department",
+        "new_group_chat" : "Create Company Chat",
+        "view_group_chat" : "View group chat"
       },
       "buttons": {
         "new_employee": "New Employee"
