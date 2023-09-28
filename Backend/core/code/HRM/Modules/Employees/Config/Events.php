@@ -300,12 +300,12 @@ class Events
 		$departmentAdd = !$isRemove ? $infoEmployee['department_id'] : null;
 		$departmentRemove = $isRemove ? $infoEmployee['department_id'] : null;
 
-		$result = $this->_updateWorkgroupAndChatGroup($userInfo->id, $departmentAdd, $departmentRemove);
+		$result = $this->_updateWorkgroupAndChatGroup($userInfo->id, $departmentAdd, $departmentRemove, true, $isRemove);
 
 		return $result;
 	}
 
-	private function _updateWorkgroupAndChatGroup($employeeId, $departmentAdd, $departmentRemove)
+	private function _updateWorkgroupAndChatGroup($employeeId, $departmentAdd, $departmentRemove, $isAccountStatusChange = false, $isRemove = false)
 	{
 		$modulesDepartment = \Config\Services::modules('departments');
 		$modelDepartment = $modulesDepartment->model;
@@ -334,11 +334,19 @@ class Events
 		}
 
 		$nodeServer = \Config\Services::nodeServer();
+
+		$commonChat = null;
+		if ($isAccountStatusChange == true) {
+			$commonChat = preference('company_chat_group');
+		}
+
 		$result = $nodeServer->node->post('/workspace/update-workspace-member-and-chat-group', [
 			'json' => [
 				'employee_id' => $employeeId,
 				'workspace_add' => $workspaceAdd,
 				'workspace_remove' => $workspaceRemove,
+				'common_chat_group' => $commonChat,
+				'is_remove_common_chat_group' => $isRemove
 			]
 		]);
 
