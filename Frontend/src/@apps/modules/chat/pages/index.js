@@ -425,7 +425,12 @@ const AppChat = (props) => {
     setEmptyDataScrollBottom()
   }
 
-  const updateMessage = (groupId, timestamp, dataUpdate) => {
+  const updateMessage = (
+    groupId,
+    timestamp,
+    dataUpdate,
+    sendUpdateGroupNotification = false
+  ) => {
     if (!_.isEmpty(groupId)) {
       const q = query(
         collection(db, `${firestoreDb}/chat_messages/${groupId}`),
@@ -434,8 +439,10 @@ const AppChat = (props) => {
       getDocs(q).then((res) => {
         let dem = 0
         let docId = ""
+        let senderId = ""
         res.forEach((docData) => {
           dem++
+          senderId = docData.data().sender_id
           docId = docData.id
         })
         if (dem > 0) {
@@ -452,6 +459,28 @@ const AppChat = (props) => {
             if (!_.isEmpty(file_count)) {
               handleUpdateGroup(groupId, {
                 file_count: file_count
+              })
+            }
+          }
+
+          if (sendUpdateGroupNotification === true) {
+            const index = store.groups.findIndex((item) => item.id === groupId)
+            if (index !== -1) {
+              const unseen_detail = store.groups[index].chat.unseen_detail
+              handleUpdateGroup(groupId, {
+                last_message: useFormatMessage(
+                  "modules.chat.text.reacts_about_message"
+                ),
+                last_user: settingUser.id,
+                timestamp: Date.now(),
+                unseen: [senderId],
+                unseen_detail: setDataUnseenDetail(
+                  "update",
+                  settingUser.id,
+                  Date.now(),
+                  unseen_detail,
+                  []
+                )
               })
             }
           }

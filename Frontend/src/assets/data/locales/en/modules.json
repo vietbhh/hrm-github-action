@@ -77,7 +77,8 @@
         "change_group_avatar": "changed the group avatar",
         "add_member_to_group_chat": "added {name} to the group",
         "remove_member_from_group_chat": "removed {name} from the group",
-        "left_group_chat": "has left the group"
+        "left_group_chat": "has left the group",
+        "assign_member_as_admin": "assign {name} as admin group"
 
       },
       "notification": {

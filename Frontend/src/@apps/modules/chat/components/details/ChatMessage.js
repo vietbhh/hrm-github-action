@@ -612,10 +612,19 @@ const ChatMessage = (props) => {
     }
 
     return formattedChatData().map((item, index) => {
-      const renderChatContent = (chat, className, index_message) => {
+      const renderChatContent = (
+        chat,
+        className,
+        index_message,
+        hasAvatar = false
+      ) => {
         if (chat.type === "notification") {
           return (
-            <div className="chat chat-line-break w-100">
+            <div
+              className="chat chat-line-break w-100"
+              style={{
+                paddingRight: hasAvatar ? "40px" : "0"
+              }}>
               <div className="chat-body">
                 <span className="time-line">{chat.msg}</span>
               </div>
@@ -714,6 +723,7 @@ const ChatMessage = (props) => {
             (item_react) => !_.isUndefined(item_react[userId])
           )
         }
+
         const items_react = [
           {
             key: "1",
@@ -734,34 +744,53 @@ const ChatMessage = (props) => {
                       key={index_react}
                       className={`react_icon ${key_react > -1 ? "active" : ""}`}
                       onClick={(e) => {
+                        console.log("xzzz")
                         if (key_react > -1) {
-                          updateMessage(selectedUser.chat.id, chat.time, {
-                            react: arrayRemove({ [userId]: val_react.value })
-                          })
+                          console.log(1)
+                          updateMessage(
+                            selectedUser.chat.id,
+                            chat.time,
+                            {
+                              react: arrayRemove({ [userId]: val_react.value })
+                            }
+                          )
                         } else {
                           if (key_react_user > -1) {
-                            updateMessage(selectedUser.chat.id, chat.time, {
-                              react: arrayRemove(
-                                ..._.map(
-                                  _.filter(
-                                    reaction,
-                                    (val_react_remove_filter) => {
-                                      return (
-                                        val_react.value !==
-                                        val_react_remove_filter.value
-                                      )
+                            updateMessage(
+                              selectedUser.chat.id,
+                              chat.time,
+                              {
+                                react: arrayRemove(
+                                  ..._.map(
+                                    _.filter(
+                                      reaction,
+                                      (val_react_remove_filter) => {
+                                        return (
+                                          val_react.value !==
+                                          val_react_remove_filter.value
+                                        )
+                                      }
+                                    ),
+                                    (val_react_remove) => {
+                                      return {
+                                        [userId]: val_react_remove.value
+                                      }
                                     }
-                                  ),
-                                  (val_react_remove) => {
-                                    return { [userId]: val_react_remove.value }
-                                  }
+                                  )
                                 )
-                              )
-                            })
+                              },
+                              true
+                            )
                           }
-                          updateMessage(selectedUser.chat.id, chat.time, {
-                            react: arrayUnion({ [userId]: val_react.value })
-                          })
+                          console.log(3)
+                          updateMessage(
+                            selectedUser.chat.id,
+                            chat.time,
+                            {
+                              react: arrayUnion({ [userId]: val_react.value })
+                            },
+                            true
+                          )
                         }
                       }}>
                       {val_react.label}
@@ -1159,12 +1188,13 @@ const ChatMessage = (props) => {
         canRenderAvatar = true
       }
 
-      if (
-        item.messages.length === 1 &&
-        item.messages.some((itemChat) => {
-          return itemChat.type === "notification"
-        })
-      ) {
+      const arrNotification = item.messages.filter((itemChat) => {
+        if (itemChat.type === "notification") {
+          return itemChat
+        }
+      })
+
+      if (arrNotification.length === item.messages.length) {
         canRenderAvatar = false
       }
 
@@ -1223,7 +1253,8 @@ const ChatMessage = (props) => {
                               ? "chat-content-last"
                               : "chat-content-middle"
                             : "chat-content-one",
-                          index
+                          index,
+                          canRenderAvatar
                         )}
                         {item.senderId !== userId &&
                           chat.status !== "loading" &&
