@@ -9,7 +9,6 @@ import { Card, CardBody, CardHeader, Col, Row, Spinner } from "reactstrap"
 
 const FormSetting = (props) => {
   const { data, setData, title } = props
-  console.log(data)
   const [state, setState] = useMergedState({
     loadingSubmit: false
   })
@@ -60,7 +59,6 @@ const FormSetting = (props) => {
           </Col>
         </Row>
         {_.map(data, (value, index) => {
-          console.log(value)
           return (
             <Fragment key={index}>
               <Row>
