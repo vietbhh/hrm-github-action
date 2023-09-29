@@ -340,7 +340,7 @@ class Events
 		if ($isAccountStatusChange == true) {
 			$settingModel = new SettingModel();
 			$infoSetting = $settingModel->asArray()->where('key', 'company_chat_group')->first();
-			if ($infoSetting && $infoSetting['value'] !== null) {
+			if ($infoSetting && isset($infoSetting['value']) && $infoSetting['value'] !== null) {
 				$commonChat = $infoSetting['value'];
 			}
 		}
