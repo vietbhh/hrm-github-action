@@ -10,6 +10,7 @@
 namespace HRM\Modules\Dashboard\Controllers;
 
 use App\Controllers\ErpController;
+use HRM\Modules\Employees\Models\EmployeesModel;
 use HRM\Modules\WorkSchedule\Models\WorkScheduleModel;
 use stdClass;
 
@@ -326,10 +327,9 @@ class Dashboard extends ErpController
 	 */
 	private function getDob($modules)
 	{
-		$modules->setModule("employees");
-		$employeeModel = $modules->model;
+		$employeeModel = new EmployeesModel();
 		$month = date('m');
-		return $employeeModel->where("Month(dob) = '$month'")->select("id, full_name, dob, username, email, avatar, Day(dob) as day")->orderBy('day', 'asc')->asArray()->findAll();
+		return $employeeModel->where("Month(dob) = '$month'")->select("id, full_name, dob, username, email, avatar, Day(dob) as day")->orderBy('day', 'asc')->exceptResigned()->asArray()->findAll();
 	}
 
 	private function _getRate($number1, $number2)
