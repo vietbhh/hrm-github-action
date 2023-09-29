@@ -537,7 +537,9 @@
         "delete_department": "Delete Department",
         "delete_all_department": "Delete all child department",
         "profile": "Profile",
-        "note_delete_deparment": "* All employees must be transferred to another department"
+        "note_delete_deparment": "* All employees must be transferred to another department",
+        "new_group_chat" : "Create Company Chat",
+        "view_group_chat" : "View group chat"
       },
       "buttons": {
         "new_employee": "New Employee"
@@ -4282,6 +4284,7 @@
     "setting_member": {
       "field_name": "Field name",
       "show_hide_info": "Show/hide info",
+      "updatable": "Updatable",
       "show_information_title": "Show information",
       "show_information_text": "Would you like to show {field} information on the profile",
       "hide_information_title": "Hide information",

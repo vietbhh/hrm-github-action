@@ -11,7 +11,6 @@ import noAvatar from "@src/assets/images/erp/noavt.png"
 import CoverImage from "@modules/Workspace/components/detail/CoverImage"
 import AvatarBox from "@modules/Employees/components/detail/AvatarBox"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import Photo from "@apps/modules/download/pages/Photo"
 
 const PageHeader = (props) => {
   const {
@@ -41,7 +40,7 @@ const PageHeader = (props) => {
   const toggleProfileSetting = () => {
     const toPage = isSettingPage
       ? `/u/${employeeData.username}`
-      : `/u/${employeeData.username}/setting`
+      : `/profile/setting`
     navigate(toPage)
   }
 

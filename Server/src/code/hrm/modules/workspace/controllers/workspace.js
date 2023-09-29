@@ -3,7 +3,12 @@ import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { isEmpty, forEach, map, isArray, isObject } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
-import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
+import {
+  getUsers,
+  usersModel,
+  getUser,
+  getUserActivated
+} from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
@@ -172,7 +177,7 @@ const getPostWorkspace = async (req, res) => {
       permission_ids: req.query.id,
       permission: "workspace",
       approve_status: "pending",
-      content: { $ne: ''},
+      content: { $ne: "" }
     }
     if (req.query?.search) {
       filter.content = { $regex: new RegExp(req.query?.search) }
@@ -1402,7 +1407,10 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
   const workspaceIdRemove = isEmpty(req.body.workspace_remove)
     ? null
     : req.body.workspace_remove
+
   const memberId = req.body.employee_id
+  const commonChatGroup = req.body.common_chat_group
+  const isRemoveCommonChatGroup = req.body.is_remove_common_chat_group
   try {
     if (workspaceIdAdd !== null) {
       const workspace = await workspaceMongoModel.findById(workspaceIdAdd)
@@ -1450,6 +1458,24 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       )
     }
 
+    if (commonChatGroup !== null) {
+      if (isRemoveCommonChatGroup) {
+        await handleRemoveMemberFromFireStoreGroup(
+          req.__user,
+          commonChatGroup,
+          [memberId],
+          false
+        )
+      } else {
+        await handleAddMemberToFireStoreGroup(
+          req.__user,
+          commonChatGroup,
+          [memberId],
+          false
+        )
+      }
+    }
+
     return res.respond({
       success: true
     })
@@ -1459,6 +1485,21 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       err: err
     })
   }
+}
+const createGroupChatCompany = async (req, res) => {
+  const groupChatName = req.body?.name
+  const admin = req.body?.owner ? [req.body?.owner.toString()] : []
+  const arrMember = await getUserActivated()
+  const member = arrMember.map((item) => item.id)
+  const groupChatId = await handleAddNewGroupToFireStore(
+    req.__user.toString(),
+    groupChatName,
+    member,
+    true,
+    admin
+  )
+
+  return res.respond({ groupChatId: groupChatId })
 }
 
 export {
@@ -1484,5 +1525,6 @@ export {
   saveAvatar,
   deleteWorkspace,
   createGroupChat,
-  updateWorkspaceMemberAndChatGroup
+  updateWorkspaceMemberAndChatGroup,
+  createGroupChatCompany
 }

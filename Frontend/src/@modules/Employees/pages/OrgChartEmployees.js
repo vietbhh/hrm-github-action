@@ -20,19 +20,23 @@ import { useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader } from "reactstrap"
 import "../assets/scss/departmentsSetting.scss"
-import { departmentApi } from "../common/api"
+import { departmentApi, employeesApi } from "../common/api"
 import DeleteDepartmentModal from "../components/modals/DeleteDepartmentModal"
 import NewDepartmentModal from "../components/modals/NewDepartmentModal"
+import { workspaceApi } from "../../Workspace/common/api"
 const OrgChartEmployees = (props) => {
   const params = useParams()
   const action = params.action
   const moduleData = useSelector((state) => state.app.modules.employees)
   const optionsModules = useSelector((state) => state.app.optionsModules)
   const Setting = useSelector((state) => state.auth.settings)
+  const memberActive = useSelector((state) => state.users.list)
   const module = moduleData.config
   const metas = moduleData.metas
   const options = moduleData.options
   const moduleName = module.name
+  const navigate = useNavigate()
+
   const [state, setState] = useMergedState({
     listDepartment: [],
     modalAdd: false,
@@ -41,13 +45,15 @@ const OrgChartEmployees = (props) => {
     idParent: 0,
     dataDetail: {},
     params: {},
-    app_owner: ""
+    app_owner: "",
+    groupChatId: Setting?.company_chat_group
   })
   const head = {
     name: Setting.app_name,
     line_manager: state.app_owner,
     id: 0,
-    updateOwner: true
+    updateOwner: true,
+    groupChatId: Setting?.company_chat_group
   }
   const allowAction = ["page", "add", "update", "detail", "import"]
   if (action !== undefined && !allowAction.includes(action)) {
@@ -215,7 +221,26 @@ const OrgChartEmployees = (props) => {
       )
     })
   }
+  const createCompanyChat = (info) => {
+    const data = {
+      name: info.name,
+      owner: info.line_manager?.id
+    }
 
+    workspaceApi.createCompanyChat(data).then((res) => {
+      if (res.data?.groupChatId) {
+        const groupChatId = res.data?.groupChatId
+        workspaceApi
+          .saveCompanyChatGroup({ id: res.data.groupChatId })
+          .then((res) => {
+            notification.showSuccess({
+              text: useFormatMessage("notification.save.success")
+            })
+            navigate("/chat/" + groupChatId)
+          })
+      }
+    })
+  }
   const Organization = ({ org, onCollapse, collapsed }) => {
     const [{ isDragging }, drag] = useDrag({
       type: "department",
@@ -249,7 +274,6 @@ const OrgChartEmployees = (props) => {
         canDrop: monitor.canDrop()
       })
     })
-    const navigate = useNavigate()
     const isActive = canDrop && isOver
     let backgroundColor = "white"
     if (isActive) {
@@ -313,6 +337,31 @@ const OrgChartEmployees = (props) => {
             disabled: !org.id
           }
     ]
+    if (org.id === 0) {
+      if (org?.groupChatId) {
+        items.push({
+          label: (
+            <div>
+              {useFormatMessage("modules.departments.text.view_group_chat")}
+            </div>
+          ),
+          key: "new_group_chat",
+          onClick: () => {
+            navigate("/chat/" + org?.groupChatId)
+          }
+        })
+      } else {
+        items.push({
+          label: (
+            <div>
+              {useFormatMessage("modules.departments.text.new_group_chat")}
+            </div>
+          ),
+          key: "new_group_chat",
+          onClick: () => createCompanyChat(org)
+        })
+      }
+    }
     return (
       <div ref={drop}>
         <StyledNode variant="outlined" ref={drag} style={{ backgroundColor }}>

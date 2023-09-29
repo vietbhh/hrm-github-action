@@ -46,7 +46,7 @@ const menuConfig = [
         id: "org-chart",
         title: "menu.organizationalChart",
         type: "item",
-        action: "login",
+        action: "manage",
         resource: "app",
         icon: <Icon.Circle size={6} />,
         navLink: "/employees/org-chart"

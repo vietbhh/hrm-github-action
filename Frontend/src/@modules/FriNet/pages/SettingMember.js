@@ -43,7 +43,10 @@ const SettingMember = () => {
               field_enable: value.field_enable,
               setting_member:
                 value.field_options.settingMember === undefined ||
-                value.field_options.settingMember
+                value.field_options.settingMember,
+              updatable:
+                value.field_options.updatable === undefined ||
+                value.field_options.updatable
             }
             if (
               value.field_options &&
