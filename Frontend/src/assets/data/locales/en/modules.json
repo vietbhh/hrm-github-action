@@ -4308,6 +4308,7 @@
         "notification_unseen": "There's a post you haven't seen yet, check it out",
         "sent_notification": "Sent notification",
         "reaction_post_tag": "posts you're tagged in",
+        "reaction_post": "your post",
         "comment_post_tag": "commented  posts you're tagged in",
         "asked_to_see_this_post": "asked you to see this post",
         "has_endorsed_post": "has endorsed you with badget",
