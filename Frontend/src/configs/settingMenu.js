@@ -361,7 +361,7 @@ const settingMenu = {
     action: "manage",
     resource: "fri_net",
     icon: "fa-regular fa-bars-progress",
-    navLink: "/posts/setting",
+    navLink: "/settings/posts",
     order: 14,
     hideOnSetting: false,
     dividerBefore: false
