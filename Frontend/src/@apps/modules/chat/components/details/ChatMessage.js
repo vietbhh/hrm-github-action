@@ -744,9 +744,7 @@ const ChatMessage = (props) => {
                       key={index_react}
                       className={`react_icon ${key_react > -1 ? "active" : ""}`}
                       onClick={(e) => {
-                        console.log("xzzz")
                         if (key_react > -1) {
-                          console.log(1)
                           updateMessage(
                             selectedUser.chat.id,
                             chat.time,
@@ -782,7 +780,6 @@ const ChatMessage = (props) => {
                               true
                             )
                           }
-                          console.log(3)
                           updateMessage(
                             selectedUser.chat.id,
                             chat.time,

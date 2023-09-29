@@ -1429,8 +1429,6 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       )
     }
 
-    console.log(workspaceIdRemove, "sdf")
-
     if (workspaceIdRemove !== null) {
       const workspace = await workspaceMongoModel.findById(workspaceIdRemove)
       const dataUpdateWorkspace = _handleRemoveMember(workspace, {
@@ -1456,7 +1454,6 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       success: true
     })
   } catch (err) {
-    console.log(err)
     return res.respond({
       success: false,
       err: err
