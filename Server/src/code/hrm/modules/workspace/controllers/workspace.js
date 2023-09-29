@@ -3,7 +3,12 @@ import feedMongoModel from "../../feed/models/feed.mongo.js"
 import { isEmpty, forEach, map, isArray, isObject } from "lodash-es"
 import path, { dirname } from "path"
 import { _uploadServices } from "#app/services/upload.js"
-import { getUsers, usersModel, getUser } from "#app/models/users.mysql.js"
+import {
+  getUsers,
+  usersModel,
+  getUser,
+  getUserActivated
+} from "#app/models/users.mysql.js"
 import { Op } from "sequelize"
 import { handleDataBeforeReturn } from "#app/utility/common.js"
 import { Storage } from "@google-cloud/storage"
@@ -1492,13 +1497,18 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
 }
 const createGroupChatCompany = async (req, res) => {
   const groupChatName = req.body?.name
+  const admin = [req.__user.toString()]
   const owner = req.body?.owner
-  const member = JSON.parse(req.body?.member)
+  if (owner) admin.push(owner.toString())
+  const arrMember = await getUserActivated()
+  const member = arrMember.map((item) => item.id)
+
   const groupChatId = await handleAddNewGroupToFireStore(
-    owner,
+    req.__user.toString(),
     groupChatName,
     member,
-    true
+    true,
+    [owner]
   )
 
   return res.respond({ groupChatId: groupChatId })
