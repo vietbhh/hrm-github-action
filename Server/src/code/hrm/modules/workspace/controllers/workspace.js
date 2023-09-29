@@ -1423,10 +1423,6 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
           ? [pushData]
           : [...workspace.members, pushData]
 
-      const arrMemberId = members.map((item) => {
-        return item.id_user
-      })
-
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceIdAdd
@@ -1436,7 +1432,7 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       await handleAddMemberToFireStoreGroup(
         req.__user,
         workspace.group_chat_id,
-        arrMemberId,
+        [memberId],
         false
       )
     }
@@ -1446,12 +1442,7 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       const dataUpdateWorkspace = _handleRemoveMember(workspace, {
         member_id: memberId
       })
-      const arrMemberId =
-        workspace?.members === undefined
-          ? []
-          : workspace.members.map((item) => {
-              return item.id_user
-            })
+
       await workspaceMongoModel.updateOne(
         {
           _id: workspaceIdRemove
@@ -1462,7 +1453,7 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       await handleRemoveMemberFromFireStoreGroup(
         req.__user,
         workspace.group_chat_id,
-        arrMemberId,
+        [memberId],
         false
       )
     }

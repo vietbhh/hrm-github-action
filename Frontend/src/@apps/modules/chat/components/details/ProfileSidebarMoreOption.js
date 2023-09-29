@@ -10,10 +10,12 @@ const ProfileSidebarMoreOption = (props) => {
     selectedGroup,
     handleUpdateGroup,
     userId,
+    settingUser,
     setActive,
     setActiveFullName,
     setDataUnseenDetail,
-    isAdminSystem
+    isAdminSystem,
+    sendMessage
   } = props
 
   const handleUpdateLeaveChat = (props) => {
@@ -39,6 +41,15 @@ const ProfileSidebarMoreOption = (props) => {
       ...props
     }
     handleUpdateGroup(selectedGroup.id, docData)
+    sendMessage(
+      selectedGroup.id,
+      `${settingUser.full_name} ${useFormatMessage(
+        "modules.chat.text.left_group_chat"
+      )}`,
+      {
+        type: "notification"
+      }
+    )
     window.history.replaceState(null, "", `/chat`)
     setActive(0)
     setActiveFullName("")

@@ -18,9 +18,12 @@ const ModalAddMember = (props) => {
     toggleModal,
     handleUpdateGroup,
     userId,
+    settingUser,
     setDataUnseenDetail,
-    selectedGroup
+    selectedGroup,
+    sendMessage
   } = props
+
   const [state, setState] = useMergedState({
     loading: false
   })
@@ -35,10 +38,12 @@ const ModalAddMember = (props) => {
     const member = selectedGroup.user
     const unseen = selectedGroup.chat.unseen
     const member_add = []
+    const memberName = []
     _.forEach(values.group_member, (val) => {
       member.push(val.id)
       unseen.push(val.id)
       member_add.push(val.id)
+      memberName.push(val.full_name)
     })
     const timestamp = Date.now()
     const docData = {
@@ -57,6 +62,17 @@ const ModalAddMember = (props) => {
       )
     }
     await handleUpdateGroup(selectedGroup.id, docData).then((res) => {
+      sendMessage(
+        selectedGroup.id,
+        `${settingUser.full_name} ${useFormatMessage(
+          "modules.chat.text.add_member_to_group_chat", {
+            name: memberName.join(", ")
+          }
+        )}`,
+        {
+          type: "notification"
+        }
+      )
       setTimeout(() => {
         toggleModal()
         setState({ loading: false })
