@@ -6,6 +6,7 @@ use App\Models\AppAutoNumberModel;
 use Exception;
 use HRM\Controllers\Search;
 use ReflectionException;
+use App\Models\SettingModel;
 
 class Events
 {
@@ -337,7 +338,11 @@ class Events
 
 		$commonChat = null;
 		if ($isAccountStatusChange == true) {
-			$commonChat = preference('company_chat_group');
+			$settingModel = new SettingModel();
+			$infoSetting = $settingModel->asArray()->where('key', 'company_chat_group')->first();
+			if ($infoSetting && $infoSetting['value'] !== null) {
+				$commonChat = $infoSetting['value'];
+			}
 		}
 
 		$result = $nodeServer->node->post('/workspace/update-workspace-member-and-chat-group', [
