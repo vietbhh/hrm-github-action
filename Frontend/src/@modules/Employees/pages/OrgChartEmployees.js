@@ -35,6 +35,8 @@ const OrgChartEmployees = (props) => {
   const metas = moduleData.metas
   const options = moduleData.options
   const moduleName = module.name
+  const navigate = useNavigate()
+
   const [state, setState] = useMergedState({
     listDepartment: [],
     modalAdd: false,
@@ -43,7 +45,8 @@ const OrgChartEmployees = (props) => {
     idParent: 0,
     dataDetail: {},
     params: {},
-    app_owner: ""
+    app_owner: "",
+    groupChatId: Setting?.company_chat_group
   })
   const head = {
     name: Setting.app_name,
@@ -219,31 +222,24 @@ const OrgChartEmployees = (props) => {
     })
   }
   const createCompanyChat = (info) => {
-    employeesApi
-      .getList({ perPage: 1000, filters: { status: 13 } })
-      .then((res) => {
-        if (res.data) {
-          const arrMember = res.data.results
-          const member = arrMember.map((item) => item.id)
-          const data = {
-            name: info.name,
-            owner: info.line_manager.id,
-            member: JSON.stringify(member)
-          }
+    const data = {
+      name: info.name,
+      owner: info.line_manager.id
+    }
 
-          workspaceApi.createCompanyChat(data).then((res) => {
-            if (res.data?.groupChatId) {
-              workspaceApi
-                .saveCompanyChatGroup({ id: res.data.groupChatId })
-                .then((res) => {
-                  notification.showSuccess({
-                    text: useFormatMessage("notification.save.success")
-                  })
-                })
-            }
+    workspaceApi.createCompanyChat(data).then((res) => {
+      if (res.data?.groupChatId) {
+        const groupChatId = res.data?.groupChatId
+        workspaceApi
+          .saveCompanyChatGroup({ id: res.data.groupChatId })
+          .then((res) => {
+            notification.showSuccess({
+              text: useFormatMessage("notification.save.success")
+            })
+            navigate("/chat/" + groupChatId)
           })
-        }
-      })
+      }
+    })
   }
   const Organization = ({ org, onCollapse, collapsed }) => {
     const [{ isDragging }, drag] = useDrag({
@@ -278,7 +274,6 @@ const OrgChartEmployees = (props) => {
         canDrop: monitor.canDrop()
       })
     })
-    const navigate = useNavigate()
     const isActive = canDrop && isOver
     let backgroundColor = "white"
     if (isActive) {
@@ -340,30 +335,33 @@ const OrgChartEmployees = (props) => {
               navigate("/workspace/" + org.custom_fields?.workgroup_id)
             },
             disabled: !org.id
-          },
-      _.isEmpty(org.id) && _.isEmpty(org?.groupChatId)
-        ? {
-            label: (
-              <div>
-                {useFormatMessage("modules.departments.text.new_group_chat")}
-              </div>
-            ),
-            key: "new_group_chat",
-            onClick: () => createCompanyChat(org)
-          }
-        : {
-            label: (
-              <div>
-                {useFormatMessage("modules.departments.text.view_group_chat")}
-              </div>
-            ),
-            key: "new_group_chat",
-            onClick: () => {
-              navigate("/chat/" + org?.groupChatId)
-            }
           }
     ]
-
+    if (org.id === 0) {
+      if (org?.groupChatId) {
+        items.push({
+          label: (
+            <div>
+              {useFormatMessage("modules.departments.text.view_group_chat")}
+            </div>
+          ),
+          key: "new_group_chat",
+          onClick: () => {
+            navigate("/chat/" + org?.groupChatId)
+          }
+        })
+      } else {
+        items.push({
+          label: (
+            <div>
+              {useFormatMessage("modules.departments.text.new_group_chat")}
+            </div>
+          ),
+          key: "new_group_chat",
+          onClick: () => createCompanyChat(org)
+        })
+      }
+    }
     return (
       <div ref={drop}>
         <StyledNode variant="outlined" ref={drag} style={{ backgroundColor }}>
