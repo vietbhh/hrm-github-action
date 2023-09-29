@@ -1497,18 +1497,15 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
 }
 const createGroupChatCompany = async (req, res) => {
   const groupChatName = req.body?.name
-  const admin = [req.__user.toString()]
-  const owner = req.body?.owner
-  if (owner) admin.push(owner.toString())
+  const admin = req.body?.owner ? [req.body?.owner.toString()] : []
   const arrMember = await getUserActivated()
   const member = arrMember.map((item) => item.id)
-
   const groupChatId = await handleAddNewGroupToFireStore(
     req.__user.toString(),
     groupChatName,
     member,
     true,
-    [owner]
+    admin
   )
 
   return res.respond({ groupChatId: groupChatId })
