@@ -224,7 +224,7 @@ const OrgChartEmployees = (props) => {
   const createCompanyChat = (info) => {
     const data = {
       name: info.name,
-      owner: info.line_manager.id
+      owner: info.line_manager?.id
     }
 
     workspaceApi.createCompanyChat(data).then((res) => {
