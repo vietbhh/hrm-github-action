@@ -89,12 +89,13 @@ const saveWorkspace = async (req, res, next) => {
   }
 
   try {
+    const userString = req.__user.toString()
     const workspace = await _saveWorkspace(
       dataSave,
       req.body.workspace_crate_group_chat,
       [],
-      [req.__user],
-      req.__user
+      [userString],
+      userString
     )
     if (req.body?.image !== undefined && req.body.image !== "") {
       await _handleUploadImage(req.body.image, workspace._id)
@@ -1379,9 +1380,9 @@ const createGroupChat = async (req, res) => {
 
   try {
     const groupChatId = await handleAddNewGroupToFireStore(
-      req.__user,
+      req.__user.toString(),
       workspaceName,
-      [req.__user],
+      [],
       true
     )
 
@@ -1458,7 +1459,7 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       )
     }
 
-    if (commonChatGroup !== null) { 
+    if (commonChatGroup !== null) {
       if (isRemoveCommonChatGroup) {
         await handleRemoveMemberFromFireStoreGroup(
           req.__user,
@@ -1502,6 +1503,26 @@ const createGroupChatCompany = async (req, res) => {
   return res.respond({ groupChatId: groupChatId })
 }
 
+const removeGroupChatId = async (req, res) => {
+  const groupChatId = req.body?.group_chat_id
+
+  try {
+    await workspaceMongoModel.updateMany(
+      { group_chat_id: groupChatId },
+      { group_chat_id: "" }
+    )
+
+    return res.respond({
+      success: true
+    })
+  } catch (err) {
+    return res.respond({
+      success: false,
+      err: err
+    })
+  }
+}
+
 export {
   getWorkspace,
   getWorkspaceOverview,
@@ -1526,5 +1547,6 @@ export {
   deleteWorkspace,
   createGroupChat,
   updateWorkspaceMemberAndChatGroup,
-  createGroupChatCompany
+  createGroupChatCompany,
+  removeGroupChatId
 }

@@ -356,7 +356,7 @@ export const handleInsertEditorState = (
 // ** end editor
 
 export const detectHashtag = (txt) => {
-  const arr_hashtag = txt.match(/#\w+/g)
+  const arr_hashtag = txt.match(/#[\p{L}\p{N}_]*/gu)
   const uniqueChars = [...new Set(arr_hashtag)]
   return uniqueChars
 }

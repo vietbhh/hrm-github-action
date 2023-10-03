@@ -986,6 +986,9 @@ const ChatMessage = (props) => {
                         updateMessage(selectedUser.chat.id, chat.time, {
                           unsent: 1
                         })
+                        handleUpdateGroup(selectedUser.chat.id, {
+                          last_message: useFormatMessage("modules.chat.text.unsent_message")
+                        })
                         const file_count = handleCountFile(
                           groups,
                           selectedUser.chat.id,
