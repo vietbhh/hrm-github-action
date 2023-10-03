@@ -37,6 +37,12 @@ const DetailWorkspace = () => {
     workspacePublic: false
   })
 
+  const setDetailWorkspace = (data) => {
+    setState({
+      detailWorkspace: data
+    })
+  }
+
   const tabToggle = (tab) => {
     if (state.tabActive !== tab) {
       setState({
@@ -238,6 +244,7 @@ const DetailWorkspace = () => {
                 tabActive={state.tabActive}
                 tabId={4}
                 detailWorkspace={state.detailWorkspace}
+                setDetailWorkspace={setDetailWorkspace}
               />
             )}
           </TabPane>

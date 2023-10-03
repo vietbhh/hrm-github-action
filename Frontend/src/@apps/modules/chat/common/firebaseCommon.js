@@ -236,6 +236,8 @@ const setDataUnseenDetail = (
   if (action === "update") {
     const _unseen_detail = []
     _.forEach(unseen_detail, (item) => {
+      console.log(typeof user_id)
+      console.log(typeof item.user_id)
       if (user_id === item.user_id) {
         _unseen_detail.push({
           user_id: item.user_id,

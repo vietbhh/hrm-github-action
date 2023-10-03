@@ -1458,7 +1458,7 @@ const updateWorkspaceMemberAndChatGroup = async (req, res) => {
       )
     }
 
-    if (commonChatGroup !== null) {
+    if (commonChatGroup !== null) { 
       if (isRemoveCommonChatGroup) {
         await handleRemoveMemberFromFireStoreGroup(
           req.__user,

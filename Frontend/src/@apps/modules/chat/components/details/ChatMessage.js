@@ -745,13 +745,9 @@ const ChatMessage = (props) => {
                       className={`react_icon ${key_react > -1 ? "active" : ""}`}
                       onClick={(e) => {
                         if (key_react > -1) {
-                          updateMessage(
-                            selectedUser.chat.id,
-                            chat.time,
-                            {
-                              react: arrayRemove({ [userId]: val_react.value })
-                            }
-                          )
+                          updateMessage(selectedUser.chat.id, chat.time, {
+                            react: arrayRemove({ [userId]: val_react.value })
+                          })
                         } else {
                           if (key_react_user > -1) {
                             updateMessage(
@@ -777,7 +773,8 @@ const ChatMessage = (props) => {
                                   )
                                 )
                               },
-                              true
+                              true,
+                              userId
                             )
                           }
                           updateMessage(
@@ -786,7 +783,8 @@ const ChatMessage = (props) => {
                             {
                               react: arrayUnion({ [userId]: val_react.value })
                             },
-                            true
+                            true,
+                            userId
                           )
                         }
                       }}>

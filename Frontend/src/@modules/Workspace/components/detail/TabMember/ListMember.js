@@ -13,6 +13,7 @@ const ListMember = (props) => {
     id,
     userState,
     isAdmin,
+    detailWorkspace,
     loadingWorkgroup,
     totalListData,
     listData,
@@ -21,10 +22,10 @@ const ListMember = (props) => {
     perPage,
     disableLoadMore,
     // ** methods
-    setPagination,
     handleClickLoadMore,
     loadData,
-    setIsReloadAdmin
+    setIsReloadAdmin,
+    setDetailWorkspace
   } = props
 
   // ** render
@@ -59,15 +60,16 @@ const ListMember = (props) => {
                 key={`list-member-item-${index}`}>
                 <MemberItem
                   id={id}
+                  detailWorkspace={detailWorkspace}
                   member={item}
                   isAdmin={isAdmin}
                   userState={userState}
                   isAdminGroup={isAdminGroup}
                   currentPage={currentPage}
                   perPage={perPage}
-                  setFilter={setPagination}
                   loadData={loadData}
                   setIsReloadAdmin={setIsReloadAdmin}
+                  setDetailWorkspace={setDetailWorkspace}
                 />
               </Col>
             )
