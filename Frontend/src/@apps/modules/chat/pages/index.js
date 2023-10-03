@@ -468,13 +468,6 @@ const AppChat = (props) => {
             const index = store.groups.findIndex((item) => item.id === groupId)
             if (index !== -1) {
               const unseen_detail = store.groups[index].chat.unseen_detail
-              console.log(setDataUnseenDetail(
-                "update",
-                receiver,
-                Date.now(),
-                unseen_detail,
-                []
-              ))
               handleUpdateGroup(groupId, {
                 last_message: useFormatMessage(
                   "modules.chat.text.reacts_about_message"
