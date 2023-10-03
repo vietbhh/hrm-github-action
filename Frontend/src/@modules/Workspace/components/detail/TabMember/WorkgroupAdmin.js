@@ -18,7 +18,8 @@ const WorkgroupAdmin = (props) => {
     detailWorkspace,
     isLoadable,
     // ** methods
-    setIsReloadAdmin
+    setIsReloadAdmin,
+    setDetailWorkspace
   } = props
 
   const [state, setState] = useMergedState({
@@ -151,9 +152,9 @@ const WorkgroupAdmin = (props) => {
           currentPage={state.filter.page}
           perPage={state.filter.limit}
           disableLoadMore={state.disableLoadMore}
-          setPagination={setFilter}
           handleClickLoadMore={handleClickLoadMore}
           loadData={loadData}
+          setDetailWorkspace={setDetailWorkspace}
         />
       </div>
     )

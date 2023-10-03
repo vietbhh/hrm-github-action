@@ -1,17 +1,18 @@
 // ** React Imports
-import { Fragment, useEffect } from "react"
-import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { useMergedState } from "@apps/utility/common"
-import { useSelector } from "react-redux"
+import { Fragment, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { userApi } from "../common/api"
 // ** Styles
+import "@modules/FriNet/assets/scss/timeline.scss"
 import { Skeleton } from "antd"
 import "../assets/scss/user.scss"
-import "@modules/FriNet/assets/scss/timeline.scss"
 // ** Components
-import PageHeader from "../components/User/PageHeader/PageHeader"
-import Introduction from "../components/User/Introduction/Introduction"
 import AppSpinner from "@apps/components/spinner/AppSpinner"
+import { setAppTitle } from "../../../redux/app/app"
+import Introduction from "../components/User/Introduction/Introduction"
+import PageHeader from "../components/User/PageHeader/PageHeader"
 
 const UserSetting = (props) => {
   const {} = props
@@ -42,7 +43,10 @@ const UserSetting = (props) => {
     await userApi
       .getUser(identity)
       .then((res) => {
-        if (parseInt(res.data.id) !== parseInt(userAuth.id) && !res.data.is_admin_group) {
+        if (
+          parseInt(res.data.id) !== parseInt(userAuth.id) &&
+          !res.data.is_admin_group
+        ) {
           navigate("/not-found")
         }
 
@@ -60,9 +64,11 @@ const UserSetting = (props) => {
       })
   }
 
+  const dispatch = useDispatch()
   // ** effect
   useEffect(() => {
     loadData()
+    dispatch(setAppTitle("Profile setting"))
   }, [])
 
   // ** render

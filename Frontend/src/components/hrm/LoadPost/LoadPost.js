@@ -48,7 +48,8 @@ const LoadPost = (props) => {
     // only view edit history
     isViewEditHistory = false,
     setDataCreateNew,
-    isInWorkspace = false
+    isInWorkspace = false,
+    workspace
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -92,7 +93,6 @@ const LoadPost = (props) => {
   const setDataUserOtherWith = (value) => setState({ dataUserOtherWith: value })
 
   // ** useEffect
-
   // ** render
   const renderBody = () => {
     if (data.type === "link" && data.link[0]) {
@@ -252,12 +252,10 @@ const LoadPost = (props) => {
               isViewEditHistory={isViewEditHistory}
             />
           </div>
-
           {renderBody()}
           {data?.permission === "workspace" && !isInWorkspace && (
             <Fragment>{renderWithTag(true)}</Fragment>
           )}
-
           {data.has_poll_vote === true && (
             <RenderPollVote
               data={data}
@@ -340,6 +338,8 @@ const LoadPost = (props) => {
               optionsMeetingRoom={optionsMeetingRoom}
               createEventApi={eventApi.postSubmitEvent}
               getDetailApi={eventApi.getGetEventById}
+              workspace={workspace ? workspace[0] : ""}
+              setDataCreateNew={setDataCreateNew}
             />
           )}
 

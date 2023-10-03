@@ -17,7 +17,9 @@ const ProfileSidebarGroup = (props) => {
     setDataUnseenDetail,
     handleUpdateGroup,
     userId,
-    isAdminSystem
+    settingUser,
+    isAdminSystem,
+    sendMessage
   } = props
 
   // ** render
@@ -104,8 +106,10 @@ const ProfileSidebarGroup = (props) => {
           {renderAddMember()}
 
           {_.map(
-            _.filter(selectedGroup?.user, (value) =>
-              dataEmployees.findIndex((item) => item.id === value) > -1
+            _.filter(
+              selectedGroup?.user,
+              (value) =>
+                dataEmployees.findIndex((item) => item.id === value) > -1
             ),
             (value, index) => {
               const indexEmployee = dataEmployees.findIndex(
@@ -199,7 +203,24 @@ const ProfileSidebarGroup = (props) => {
                                   value
                                 )
                               }
-                              handleUpdateGroup(selectedGroup.id, docData)
+                              handleUpdateGroup(selectedGroup.id, docData).then(
+                                (resUpdateGroup) => {
+                                  sendMessage(
+                                    selectedGroup.id,
+                                    `${
+                                      settingUser.full_name
+                                    } ${useFormatMessage(
+                                      "modules.chat.text.remove_member_from_group_chat",
+                                      {
+                                        name: name
+                                      }
+                                    )}`,
+                                    {
+                                      type: "notification"
+                                    }
+                                  )
+                                }
+                              )
                             }
                           })
                         }}>
@@ -241,7 +262,24 @@ const ProfileSidebarGroup = (props) => {
                                 timestamp: timestamp,
                                 admin: arrayUnion(value)
                               }
-                              handleUpdateGroup(selectedGroup.id, docData)
+                              handleUpdateGroup(selectedGroup.id, docData).then(
+                                (resUpdate) => {
+                                  sendMessage(
+                                    selectedGroup.id,
+                                    `${
+                                      settingUser.full_name
+                                    } ${useFormatMessage(
+                                      "modules.chat.text.assign_member_as_admin",
+                                      {
+                                        name: name
+                                      }
+                                    )}`,
+                                    {
+                                      type: "notification"
+                                    }
+                                  )
+                                }
+                              )
                             }
                           })
                         }}>

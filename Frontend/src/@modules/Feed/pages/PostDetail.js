@@ -4,14 +4,16 @@ import { feedApi } from "@modules/Feed/common/api"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
-import { useParams, useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate, useParams } from "react-router-dom"
+import { stripHTML, truncateString } from "../../../@apps/utility/common"
+import { setAppTitle } from "../../../redux/app/app"
+import EventDetailsModal from "../../Calendar/components/modal/EventDetails/EventDetailsModal"
 import {
   handleDataMention,
   handleLoadAttachmentThumb,
   loadUrlDataLink
 } from "../common/common"
-import EventDetailsModal from "../../Calendar/components/modal/EventDetails/EventDetailsModal"
 
 const PostDetail = (props) => {
   const {
@@ -29,7 +31,7 @@ const PostDetail = (props) => {
     optionsMeetingRoom: []
   })
   const { idPost, idMedia } = useParams()
-  console.log(idMedia)
+
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const cover = userData?.cover || ""
@@ -61,7 +63,7 @@ const PostDetail = (props) => {
     newDataPost["dataLink"] = newDataLink
     setState({ dataPost: newDataPost })
   }
-
+  const dispatch = useDispatch()
   // ** useEffect
   useEffect(() => {
     setState({ loadingPost: true })
@@ -78,7 +80,7 @@ const PostDetail = (props) => {
               window.history.replaceState(null, "", current_url)
             }
           }
-
+          //dispatch(setAppTitle(useFormatMessage("menu:menu.approve_post")))
           const data_attachment = await handleLoadAttachmentThumb(data, cover)
           data["url_thumb"] = data_attachment["url_thumb"]
           data["url_cover"] = data_attachment["url_cover"]
@@ -111,11 +113,18 @@ const PostDetail = (props) => {
           data["dataLink"].cover_url = dataUrl.cover_url
           data["dataLink"].badge_url = dataUrl.badge_url
           setState({ loadingPost: false, dataPost: data })
+          dispatch(setAppTitle(truncateString(stripHTML(data.content))))
         } else {
+          dispatch(
+            setAppTitle(useFormatMessage("modules.feed.post.post_not_found"))
+          )
           setState({ loadingPost: false, dataPost: {} })
         }
       })
       .catch((err) => {
+        dispatch(
+          setAppTitle(useFormatMessage("modules.feed.post.post_not_found"))
+        )
         setState({ loadingPost: false, dataPost: {} })
       })
   }, [idPost, idMedia])

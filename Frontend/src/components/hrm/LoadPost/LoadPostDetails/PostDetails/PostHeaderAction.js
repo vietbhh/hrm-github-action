@@ -5,8 +5,9 @@ import notification from "@apps/utility/notification"
 import { feedApi, savedApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
 import React, { Fragment } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ModalViewEditHistory from "../modals/ModalViewEditHistory"
+import { showAddEventCalendarModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
 
 const PostHeaderAction = (props) => {
   const {
@@ -52,6 +53,7 @@ const PostHeaderAction = (props) => {
     _rest = { ..._rest, ...{ [key]: _item } }
   })
 
+  const dispatch = useDispatch()
   const actions = {
     save_post: {
       onClick: () => {},
@@ -245,7 +247,11 @@ const PostHeaderAction = (props) => {
           }
         } else {
           if (data?.type === "event") {
-            toggleModalCreateEvent()
+            dispatch(
+              showAddEventCalendarModal({
+                idEvent: data.link_id
+              })
+            )
           } else if (data?.type === "announcement") {
             toggleModalAnnouncement()
           } else {

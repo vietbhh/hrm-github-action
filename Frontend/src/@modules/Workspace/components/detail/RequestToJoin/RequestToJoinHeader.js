@@ -8,6 +8,7 @@ import { Button, Card, CardBody, Col, Row } from "reactstrap"
 import { Pagination, Space } from "antd"
 // ** Components
 import { ErpSelect, ErpInput } from "@apps/components/common/ErpField"
+import notification from "@apps/utility/notification"
 
 const RequestToJoinHeader = (props) => {
   const {
@@ -17,7 +18,8 @@ const RequestToJoinHeader = (props) => {
     totalRequestJoin,
     // ** methods
     setFilter,
-    setRequestJoins
+    setRequestJoins,
+    setState
   } = props
 
   const [loading, setLoading] = useState(false)
@@ -38,9 +40,16 @@ const RequestToJoinHeader = (props) => {
       .then((res) => {
         setLoading(false)
         setRequestJoins([])
+        setState({
+          totalRequestJoin: 0
+        })
+        notification.showSuccess({
+          text: useFormatMessage("notification.save.success")
+        })
       })
       .catch((err) => {
         setLoading(false)
+        notification.showError("notification.save.error")
       })
   }
 

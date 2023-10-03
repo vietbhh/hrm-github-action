@@ -5,6 +5,8 @@ import { Tabs } from "antd"
 import "../assets/scss/manage_endorsement.scss"
 import BadgeSetting from "../components/ManageEndorsement/BadgeSetting"
 import Leaderboard from "../components/ManageEndorsement/Leaderboard"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const ManageEndorsement = () => {
   const items = [
@@ -19,6 +21,11 @@ const ManageEndorsement = () => {
       children: <Leaderboard />
     }
   ]
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle("Endorsements Management"))
+  }, [])
 
   return (
     <div className="setting-member medal-management">

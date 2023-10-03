@@ -130,7 +130,8 @@ const TabFeed = (props) => {
   }
 
   const handleClickRemoveSearch = () => {
-    window.history.replaceState(null, "", "?tab=feed")
+    setSearchTextFeed("")
+    //window.history.replaceState(null, "", "?tab=feed")
   }
 
   const handleClickLoadMorePinned = () => {
@@ -333,6 +334,7 @@ const TabFeed = (props) => {
             workspace={workspaceID}
             approveStatus={state.approveStatus}
             allowPostType={["event", "poll"]}
+            detailWorkspace={detailWorkspace}
           />
         )}
         <Fragment>
@@ -354,7 +356,7 @@ const TabFeed = (props) => {
           <AboutWorkgroup
             loading={state.loading}
             workspaceInfo={detailWorkspace}
-            introduction={detailWorkspace.introduction}
+            introduction={detailWorkspace.description}
             tabActive={tabActive}
             tabToggle={tabToggle}
           />

@@ -4,6 +4,8 @@ import React, { Fragment, useEffect } from "react"
 import { Card, CardBody, CardHeader } from "reactstrap"
 import { settingMemberApi } from "../common/api"
 import FormSetting from "../components/SettingMember/FormSetting"
+import { useDispatch } from "react-redux"
+import { setAppTitle } from "../../../redux/app/app"
 
 const SettingMember = () => {
   const [state, setState] = useMergedState({
@@ -41,7 +43,10 @@ const SettingMember = () => {
               field_enable: value.field_enable,
               setting_member:
                 value.field_options.settingMember === undefined ||
-                value.field_options.settingMember
+                value.field_options.settingMember,
+              updatable:
+                value.field_options.updatable === undefined ||
+                value.field_options.updatable
             }
             if (
               value.field_options &&
@@ -115,6 +120,11 @@ const SettingMember = () => {
       .catch((err) => {
         setState({ loadPage: false })
       })
+  }, [])
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(setAppTitle("User profile information setting"))
   }, [])
 
   return (

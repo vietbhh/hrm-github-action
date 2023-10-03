@@ -21,7 +21,7 @@ const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
 const arrSplice = (arr = [], IDrm) => {
-  const index = arr.findIndex((v) => v.id_user === IDrm)
+  const index = arr.findIndex((v) => parseInt(v.id_user) === parseInt(IDrm))
   arr.splice(index, 1)
   return arr
 }
@@ -323,9 +323,13 @@ const WorkspaceHeader = (props) => {
           id_user: x["id"] * 1
         }))
       )
+      let textNotifi = useFormatMessage("notification.save.success")
       if (data?.membership_approval === "auto" || isAdmin) {
         infoWorkspace.members = JSON.stringify(arrID)
       } else {
+        textNotifi = useFormatMessage(
+          "modules.workspace.display.wait_approval_member"
+        )
         infoWorkspace.request_joins = JSON.stringify(
           infoWorkspace.request_joins.concat(
             dataUpdate.map((x) => ({
@@ -337,7 +341,7 @@ const WorkspaceHeader = (props) => {
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({
-            text: useFormatMessage("notification.save.success")
+            text: textNotifi
           })
           onClickInvite()
           setState({ loading: false })
@@ -379,8 +383,7 @@ const WorkspaceHeader = (props) => {
   }
 
   const handleLeaveWorkspace = (data) => {
-    const infoWorkspace = data
-
+    const infoWorkspace = { ...data }
     const adminArr = infoWorkspace?.administrators
       ? [...infoWorkspace.administrators]
       : []
@@ -400,6 +403,7 @@ const WorkspaceHeader = (props) => {
       return parseInt(itemFilter.id_user) !== parseInt(userId)
     })
     infoWorkspace.members = JSON.stringify(memberArr)
+
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {
         notification.showSuccess({
@@ -424,7 +428,11 @@ const WorkspaceHeader = (props) => {
     const arrID = dataUpdate.map((x) => parseInt(x["id"]))
     infoWorkspace.administrators = JSON.stringify(arrID)
     // arrSplice members
-    infoWorkspace.members = arrSplice(infoWorkspace.members, userId)
+    const memberArr = [...infoWorkspace.members].filter((itemFilter) => {
+      return parseInt(itemFilter.id_user) !== parseInt(userId)
+    })
+
+    infoWorkspace.members = JSON.stringify(memberArr)
 
     workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
       if (res.statusText) {

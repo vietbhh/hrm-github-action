@@ -11,21 +11,15 @@ import { collection, onSnapshot, query, where } from "firebase/firestore"
 import { useSelector, useDispatch } from "react-redux"
 import { handleTitleChat, handleUnseen } from "@store/chat"
 
-export const BlinkingTitle = () => {
-  const chat = useSelector((state) => state.chat)
-  const chatTitle = chat.titleChat
-  const defaultTitle = useSelector((state) => state.layout.app_name)
+export const BlinkingTitle = ({ chatTitle, defaultTitle }) => {
   const interval = 1500
+  const appName = useSelector((state) => state.layout.app_name)
 
   const changeTitle = () => {
-    if (chatTitle === "") {
-      document.title = defaultTitle
+    if (chatTitle === "" || chatTitle === null || chatTitle === undefined) {
+      document.title = defaultTitle ? `${defaultTitle} | ${appName}` : "Friday"
     } else {
-      if (document.title === defaultTitle) {
-        document.title = chatTitle
-      } else {
-        document.title = defaultTitle
-      }
+      document.title = `${chatTitle} | ${appName}`
     }
   }
 
@@ -35,7 +29,7 @@ export const BlinkingTitle = () => {
     return () => {
       clearInterval(myInterval)
     }
-  }, [chatTitle])
+  }, [chatTitle, defaultTitle])
 
   return null
 }
@@ -53,6 +47,10 @@ const NavbarChat = () => {
   // ** env
   const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
 
+  const chat = useSelector((state) => state.chat)
+  const chatTitle = chat.titleChat
+  const appState = useSelector((state) => state.app)
+  const defaultTitle = appState.title
   useEffect(() => {
     let unseen = 0
 
@@ -160,7 +158,7 @@ const NavbarChat = () => {
         </Link>
       </li>
 
-      <BlinkingTitle />
+      <BlinkingTitle chatTitle={chatTitle} defaultTitle={defaultTitle} />
     </>
   )
 }

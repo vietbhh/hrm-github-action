@@ -176,3 +176,33 @@
         }
     }
 }
+.post-setting{
+    .card{
+        border-radius: 15px;
+    }
+    .title-setting{
+        color: #32434F;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 40px; /* 250% */
+    }
+    .item-post-setting{
+        margin-bottom: 1rem;
+        .title{
+        color: #32434F;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px; /* 142.857% */
+        }
+
+        .description{
+            color: #32434F;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: 15px; /* 150% */
+        }
+    }
+}

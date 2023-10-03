@@ -14,8 +14,9 @@ const TabMember = (props) => {
     loadingDetailWorkspace,
     tabActive,
     tabId,
-    detailWorkspace
+    detailWorkspace,
     // ** methods
+    setDetailWorkspace
   } = props
 
   const isLoadable = parseInt(tabActive) === parseInt(tabId)
@@ -46,6 +47,7 @@ const TabMember = (props) => {
             loadingDetailWorkspace={loadingDetailWorkspace}
             isLoadable={isLoadable}
             setIsReloadAdmin={setIsReloadAdmin}
+            setDetailWorkspace={setDetailWorkspace}
           />
         </Col>
         <Col md={4} lg={4}>
@@ -59,6 +61,7 @@ const TabMember = (props) => {
             loadingDetailWorkspace={loadingDetailWorkspace}
             isLoadable={isLoadable}
             setIsReloadAdmin={setIsReloadAdmin}
+            setDetailWorkspace={setDetailWorkspace}
           />
         </Col>
       </Row>
