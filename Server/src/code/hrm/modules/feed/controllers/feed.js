@@ -415,9 +415,21 @@ const loadFeedController = async (req, res, next) => {
 
   if (!isEmpty(type)) {
     if (type === "personal") {
-      filter["permission"] = {
-        $in: ["only_me", "default"]
-      }
+      filter["$or"] = [
+        {
+          permission: "default"
+        },
+        {
+          $and: [
+            {
+              permission: "only_me"
+            },
+            {
+              owner: req.__user
+            }
+          ]
+        }
+      ]
     } else if (type === "workspace") {
       filter["permission"] = "workspace"
     }
@@ -434,9 +446,21 @@ const loadFeedController = async (req, res, next) => {
         ]
       },
       {
-        permission: {
-          $in: ["only_me", "default"]
-        }
+        $or: [
+          {
+            permission: "default"
+          },
+          {
+            $and: [
+              {
+                permission: "only_me"
+              },
+              {
+                owner: req.__user
+              }
+            ]
+          }
+        ]
       }
     ]
   }
