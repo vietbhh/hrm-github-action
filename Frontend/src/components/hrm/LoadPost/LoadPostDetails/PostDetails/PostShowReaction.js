@@ -10,7 +10,14 @@ import { useSelector } from "react-redux"
 import ReactionDetailModal from "../modals/ReactionDetailModal"
 
 const PostShowReaction = (props) => {
-  const { short, data, toggleModalWith, setDataUserOtherWith } = props
+  const {
+    short,
+    data,
+    isFocusCommentOnclick,
+    toggleModalWith,
+    setDataUserOtherWith,
+    togglePostCommentModal
+  } = props
   const [state, setState] = useMergedState({
     dataReaction: {},
     modal_reaction: false
@@ -22,6 +29,14 @@ const PostShowReaction = (props) => {
   // ** function
   const toggleModalReaction = () => {
     setState({ modal_reaction: !state.modal_reaction })
+  }
+
+  const handleClickCommentButton = () => {
+    if (isFocusCommentOnclick) {
+      return false
+    } else {
+      togglePostCommentModal()
+    }
   }
 
   // ** useEffect
@@ -112,7 +127,10 @@ const PostShowReaction = (props) => {
         </div>
         <div className="reaction-right">
           {data.comment_count > 0 && (
-            <div className="div-comment">
+            <div
+              className="div-comment"
+              style={{ cursor: "pointer" }}
+              onClick={() => handleClickCommentButton()}>
               {data.comment_count}{" "}
               {useFormatMessage(
                 `modules.feed.post.text.${

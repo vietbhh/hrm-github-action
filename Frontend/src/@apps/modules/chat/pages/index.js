@@ -152,6 +152,8 @@ const AppChat = (props) => {
           }
         }
       }, 500)
+    } else {
+
     }
   }, [id, store.groups, state.checkLoadUrlActiveId])
 
@@ -215,6 +217,12 @@ const AppChat = (props) => {
   }
 
   // ** function
+  const setSelectedGroup = (data) => {
+    setState({
+      selectedGroup: data
+    })
+  }
+
   const setUnread = (num) => {
     setState({ unread: num })
   }
@@ -1335,6 +1343,7 @@ const AppChat = (props) => {
                 setActiveFullName={setActiveFullName}
                 selectedGroup={state.selectedGroup}
                 sendMessage={sendMessage}
+                setSelectedGroup={setSelectedGroup}
               />
             </div>
           </div>

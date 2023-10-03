@@ -14,12 +14,13 @@ import CoverImage from "./CoverImage"
 import SearchPostModal from "../modals/SearchPostModal"
 import { getTabByNameOrId } from "../../common/common"
 import SwAlert from "@apps/utility/SwAlert"
-
-import { ErpDate, ErpSelect } from "@apps/components/common/ErpField"
+import { ErpSelect } from "@apps/components/common/ErpField"
 import InfoWorkgroupModal from "../modals/InfoWorkgroupModal"
+
 const unique = (arr) => {
   return Array.from(new Set(arr)) //
 }
+
 const arrSplice = (arr = [], IDrm) => {
   const index = arr.findIndex((v) => parseInt(v.id_user) === parseInt(IDrm))
   arr.splice(index, 1)

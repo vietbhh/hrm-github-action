@@ -21,7 +21,8 @@ import {
   deleteWorkspace,
   createGroupChat,
   updateWorkspaceMemberAndChatGroup,
-  createGroupChatCompany
+  createGroupChatCompany,
+  removeGroupChatId
 } from "../controllers/workspace.js"
 const router = express.Router()
 
@@ -50,4 +51,5 @@ router.post(
   updateWorkspaceMemberAndChatGroup
 )
 router.post("/create-company-chat", createGroupChatCompany)
+router.post("/remove-group-chat-id", removeGroupChatId)
 export default router

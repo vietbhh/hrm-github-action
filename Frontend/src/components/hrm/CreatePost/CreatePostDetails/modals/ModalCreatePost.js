@@ -152,6 +152,7 @@ const ModalCreatePost = (props) => {
       const editorStateRaw = convertToRaw(state.editorState.getCurrentContent())
       const content = draftToHtml(editorStateRaw)
       const _content = detectUrl(content)
+
       const result_tag_user = handleTagUserAndReplaceContent(
         dataMention,
         _content
