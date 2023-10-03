@@ -306,7 +306,7 @@ const UserProfileSidebar = (props) => {
       if (
         selectedGroup?.is_system === true &&
         selectedGroup?.admin &&
-        selectedGroup?.admin.indexOf(userId) === -1
+        selectedGroup?.admin.indexOf(parseInt(userId)) === -1
       ) {
         isAdminSystem = false
       }

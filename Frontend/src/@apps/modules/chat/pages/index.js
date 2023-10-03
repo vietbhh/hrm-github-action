@@ -429,7 +429,8 @@ const AppChat = (props) => {
     groupId,
     timestamp,
     dataUpdate,
-    sendUpdateGroupNotification = false
+    sendUpdateGroupNotification = false,
+    receiver
   ) => {
     if (!_.isEmpty(groupId)) {
       const q = query(
@@ -476,7 +477,7 @@ const AppChat = (props) => {
                 unseen: [senderId],
                 unseen_detail: setDataUnseenDetail(
                   "update",
-                  settingUser.id,
+                  receiver,
                   Date.now(),
                   unseen_detail,
                   []

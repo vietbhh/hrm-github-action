@@ -187,11 +187,12 @@ const ModalForward = (props) => {
 
   // ** Handles Filter
   const handleFilter = (e) => {
-    setState({ query: e.target.value })
+    const searchString = e.target.value
+    setState({ query:  searchString})
     const searchFilterFunction = (contact) => {
       return contact.fullName
         .toLowerCase()
-        .includes(e.target.value.toLowerCase())
+        .includes(searchString.trim().toLowerCase())
     }
     
     const filteredChatsArr = groups.filter(searchFilterFunction)
