@@ -53,6 +53,22 @@ const MentionSuggestion = (props) => {
   )
 }
 
+const defaultSuggestionsFilterFix = (
+  valueSearch,
+  mentions = [],
+  maxRows = 5
+) => {
+  const value = valueSearch.toLowerCase()
+  const data = mentions.filter(function (suggestion) {
+    return (
+      !value ||
+      suggestion.name.toLowerCase().indexOf(value) > -1 ||
+      suggestion.username.toLowerCase().indexOf(value) > -1
+    )
+  })
+
+  return data.slice(0, maxRows)
+}
 const PostCommentForm = (props) => {
   const {
     data,
@@ -81,7 +97,6 @@ const PostCommentForm = (props) => {
     mentions: dataMention,
     suggestions: dataMention === undefined ? [] : dataMention
   })
-
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
   const userId = userData.id
@@ -268,10 +283,11 @@ const PostCommentForm = (props) => {
       setState({ open: _open })
     }, 100)
   }, [])
+
   const onSearchChange = useCallback(
     (propsData) => {
       const { value } = propsData
-      setSuggestions(defaultSuggestionsFilter(value, state.mentions))
+      setSuggestions(defaultSuggestionsFilterFix(value, state.mentions))
     },
     [state.mentions]
   )

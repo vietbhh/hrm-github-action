@@ -20,7 +20,8 @@ const ButtonReaction = (props) => {
     comment_more_count_original,
     isFocusCommentOnclick,
     setCommentMoreCountOriginal,
-    setFocusCommentForm
+    setFocusCommentForm,
+    dataMention
   } = props
 
   const [state, setState] = useMergedState({
@@ -404,6 +405,7 @@ const ButtonReaction = (props) => {
         <ModalPostComment
           modal={state.postCommentModal}
           dataPreview={data}
+          dataMention={dataMention}
           handleModal={togglePostCommentModal}
           setData={setData}
         />

@@ -282,6 +282,7 @@ const LoadPost = (props) => {
                   comment_more_count_original={
                     state.comment_more_count_original
                   }
+                  dataMention={dataMention}
                   isFocusCommentOnclick={isFocusCommentOnclick}
                   setCommentMoreCountOriginal={setCommentMoreCountOriginal}
                   setFocusCommentForm={setFocusCommentForm}
