@@ -4033,7 +4033,7 @@
         "add_cover": "Add Cover",
         "messenge": "Messenge",
         "get_started": "Get started",
-        "send_invite" : "Send invites"
+        "send_invites" : "Send invites"
       },
       "display": {
         "create_workspace_title": "Create Workspace",
@@ -4121,8 +4121,12 @@
           "title": "Create Group chat?",
           "text": "Create a linked group chat via message"
         },
-        "wait_approval_member": "Invitation sent, please wait for admin approval",
-        "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!"
+        "wait_approval_member"  : "Invitation sent, please wait for admin approval",
+        "warning_delete_system_workgroup": "This is a system group created by HRM, you cannot delete the group!",
+        "member_already" : "{full_name} is already a member of the group. Please select again",
+        "no_data_selected" : "No data has been selected yet",
+        "invite_memvers_to_group" : "Invite members to this group",
+        "filter_member_category" : "Filter members to invite by category"
       },
       "fields": {
         "workspace_name": "Workspace name",
@@ -4332,10 +4336,11 @@
         "has_posted_workgroup": "has posted in workgroup",
         "requested_approval_post_in_group": "has requested approval of their new post in the group",
         "sent_request_join_workgroup": "sent a request to join workgroup",
+        "requested_approval_post": "requested approval for his post on the shared wall",
+        "your_comment_post" : "your comment",
         "request_to_join": "There was a request to join group",
         "requests_to_join": "There was requests to join group",
-        "from": "from",
-        "requested_approval_post": "requested approval for his post on the shared wall"
+        "from": "from"
       }
     },
     "timeline": {

@@ -18,7 +18,9 @@ const sendNotification = async (
   const icon = payload?.icon
   const type = payload?.type || "other"
   const actions = payload?.actions || ""
-
+  const custom_fields = payload?.custom_fields || "" // source_id , source_type ,
+  const update_notification = payload?.update_notification || false
+  const idUpdate = payload?.idUpdate || false
   if (isUndefined(receivers) || isUndefined(title) || isUndefined(body))
     return false
 
@@ -29,26 +31,44 @@ const sendNotification = async (
   payload.icon = notificationIcon
   let notificationId = 0
   if (saveToDb) {
-    try {
-      const saveNotification = await notificationsModelMysql.create(
+    if (update_notification) {
+      await notificationsModelMysql.update(
         {
           sender_id: sender,
           recipient_id: JSON.stringify(receivers),
-          type: type,
           title: title,
-          body: body,
           link: link,
-          actions: JSON.stringify(actions),
           icon: notificationIcon
         },
         {
-          __user: sender,
-          userId: sender
+          where: {
+            id: idUpdate
+          }
         }
       )
-      notificationId = saveNotification.id
-    } catch (error) {
-      return false
+    } else {
+      try {
+        const saveNotification = await notificationsModelMysql.create(
+          {
+            sender_id: sender,
+            recipient_id: JSON.stringify(receivers),
+            type: type,
+            title: title,
+            body: body,
+            link: link,
+            actions: JSON.stringify(actions),
+            icon: notificationIcon,
+            custom_fields: JSON.stringify(custom_fields)
+          },
+          {
+            __user: sender,
+            userId: sender
+          }
+        )
+        notificationId = saveNotification.id
+      } catch (error) {
+        return false
+      }
     }
   }
 
