@@ -242,7 +242,8 @@ export const handleDataMention = (dataEmployee, userId) => {
         link: "/u/" + value.username,
         avatar: getAvatarUrl(value.id * 1),
         full_name: value.full_name,
-        title: `@${value.username}`
+        title: `@${value.username}`,
+        username: value.username
       })
     }
   })

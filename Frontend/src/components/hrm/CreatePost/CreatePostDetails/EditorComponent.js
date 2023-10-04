@@ -24,6 +24,22 @@ import "@draft-js-plugins/hashtag/lib/plugin.css"
 import { ContentState, EditorState } from "draft-js"
 import htmlToDraft from "html-to-draftjs"
 
+const defaultSuggestionsFilterFix = (
+  valueSearch,
+  mentions = [],
+  maxRows = 5
+) => {
+  const value = valueSearch.toLowerCase()
+  const data = mentions.filter(function (suggestion) {
+    return (
+      !value ||
+      suggestion.name.toLowerCase().indexOf(value) > -1 ||
+      suggestion.username.toLowerCase().indexOf(value) > -1
+    )
+  })
+
+  return data.slice(0, maxRows)
+}
 const EditorComponent = (props) => {
   const {
     dataPost,
@@ -113,7 +129,7 @@ const EditorComponent = (props) => {
   }, [])
   const onSearchChange = useCallback(
     ({ value }) => {
-      setSuggestions(defaultSuggestionsFilter(value, state.mentions))
+      setSuggestions(defaultSuggestionsFilterFix(value, state.mentions))
     },
     [state.mentions]
   )

@@ -39,7 +39,6 @@ const TagYourColleagues = (props) => {
       setState({ data_tag: tag_your_colleagues })
     }
   }, [modal, tag_your_colleagues])
-
   return (
     <Fragment>
       <Tooltip
@@ -121,7 +120,7 @@ const TagYourColleagues = (props) => {
                           <div
                             className="d-flex align-items-center list-user-react"
                             onClick={() => handleCheckedUser(item.id)}>
-                            <Avatar className="img me-1" src={item?.avatar} />
+                            <Avatar className="img me-1" userId={item.id} />
                             <span className="name">{item?.full_name}</span>
                             <div className="ms-auto">
                               <ErpCheckbox
@@ -188,7 +187,9 @@ const TagYourColleagues = (props) => {
                               className="img me-1"
                               src={data_user?.avatar}
                             />
-                            <span className="name">{data_user?.full_name}</span>
+                            <span className="name">
+                              xxx {data_user?.full_name}
+                            </span>
                             <div
                               className="ms-auto text-center"
                               style={{ width: "20px" }}

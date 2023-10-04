@@ -58,7 +58,6 @@ const CreatePost = (props) => {
   })
   const dataEmployee = useSelector((state) => state.users.list)
   const userData = useSelector((state) => state.auth.userData)
-
   const avatar = userData.avatar
   const fullName = userData.full_name
   const userId = userData.id

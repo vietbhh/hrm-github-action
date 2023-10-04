@@ -23,7 +23,6 @@ const PostComment = (props) => {
     dataShowFormReply: {},
     dataEditComment: {}
   })
-
   // ** function
   const toggleModalReaction = () => {
     setState({ modal_reaction: !state.modal_reaction })

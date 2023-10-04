@@ -13,7 +13,8 @@ const ModalPostComment = (props) => {
     dataPreview,
     // ** methods
     handleModal,
-    setData
+    setData,
+    dataMention
   } = props
 
   // ** render
@@ -45,6 +46,7 @@ const ModalPostComment = (props) => {
           offPostHeaderAction={false}
           isFocusCommentOnclick={true}
           setData={setData}
+          dataMention={dataMention}
         />
       </ModalBody>
     </Modal>
