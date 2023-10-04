@@ -23,6 +23,7 @@ import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 
+import PerfectScrollbar from "react-perfect-scrollbar"
 const LoadPost = (props) => {
   const {
     data, // data post
@@ -49,7 +50,8 @@ const LoadPost = (props) => {
     isViewEditHistory = false,
     setDataCreateNew,
     isInWorkspace = false,
-    workspace
+    workspace,
+    isLoadComment = false
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -296,6 +298,7 @@ const LoadPost = (props) => {
               setCommentMoreCountOriginal={setCommentMoreCountOriginal}
               focusCommentForm={state.focusCommentForm}
               setFocusCommentForm={setFocusCommentForm}
+              isLoadComment={isLoadComment}
             />
           </>
         )}

@@ -208,7 +208,6 @@ const PostDetail = (props) => {
                 <Skeleton avatar active paragraph={{ rows: 2 }} />
               </div>
             )}
-
             {!state.loadingPost && _.isEmpty(state.dataPost) && (
               <div className="load-post">
                 <EmptyContent
@@ -218,7 +217,6 @@ const PostDetail = (props) => {
                 />
               </div>
             )}
-
             {!state.loadingPost && !_.isEmpty(state.dataPost) && (
               <LoadPost
                 data={state.dataPost}

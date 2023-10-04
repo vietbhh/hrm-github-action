@@ -59,9 +59,7 @@ const Drive = (props) => {
       })
   }
 
-  const handleAfterUpload = () => {
-    console.log("zsdaf")
-  }
+  const handleAfterUpload = () => {}
 
   const handleAfterUpdateFavorite = (data) => {
     const newData = {

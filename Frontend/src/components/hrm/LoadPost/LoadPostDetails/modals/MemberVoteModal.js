@@ -8,7 +8,7 @@ import { Modal, ModalBody } from "reactstrap"
 const MemberVoteModal = (props) => {
   const { modal, toggleModal, dataUserVote, title = "" } = props
   const redux_list_user = useSelector((state) => state.users.list)
-
+  const maxHeightScreen = screen.height - (screen.height * 50) / 100
   return (
     <Modal
       isOpen={modal}
@@ -43,7 +43,11 @@ const MemberVoteModal = (props) => {
         </div>
 
         <div className="div-member-vote">
-          <PerfectScrollbar options={{ wheelPropagation: false }}>
+          <PerfectScrollbar
+            style={{
+              maxHeight: maxHeightScreen
+            }}
+            options={{ wheelPropagation: false }}>
             {_.map(dataUserVote, (item, key) => {
               return (
                 <div
