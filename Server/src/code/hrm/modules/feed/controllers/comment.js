@@ -17,8 +17,11 @@ import { isFile } from "#app/utility/handleData.js"
 import {
   sendNotificationCommentPost,
   sendNotificationCommentPostTag,
+  sendNotificationReactionCommentPost,
+  sendNotificationRepliedCommentPost,
   sendNotificationTagInCommentPost
 } from "../../workspace/controllers/notification.js"
+import { getUser } from "#app/models/users.mysql.js"
 
 // ** comment
 const submitComment = async (req, res, next) => {
@@ -161,18 +164,15 @@ const submitCommentReply = async (req, res, next) => {
 
       // ** send notification
       if (req.__user.toString() !== created_by.toString()) {
-        const userId = req.__user
         const receivers = [created_by]
-        const body_noti =
-          data_user.full_name +
-          " {{modules.network.notification.replied_on_your_comment}}"
-        const link = `/posts/${id_post}`
-        await handleSendNotification(
-          userId,
-          receivers,
-          body_noti,
-          link,
-          id_post
+        const infoComment = await commentMongoModel.findOne({
+          _id: id_comment_parent
+        })
+        sendNotificationRepliedCommentPost(
+          infoComment,
+          data_user,
+          "",
+          receivers
         )
       }
     } else {
@@ -261,15 +261,14 @@ const updateCommentReaction = async (req, res, next) => {
       if (req.__user.toString() !== created_by.toString()) {
         const userId = req.__user
         const receivers = [created_by]
-        const body_noti =
-          full_name + " {{modules.network.notification.liked_your_comment}}"
-        const link = `/posts/${_id_post}`
-        await handleSendNotification(
-          userId,
-          receivers,
-          body_noti,
-          link,
-          _id_post
+        const infoComment = await commentMongoModel.findOne({
+          _id: _id_comment
+        })
+        sendNotificationReactionCommentPost(
+          infoComment,
+          { id: userId, full_name: full_name },
+          react_type,
+          receivers
         )
       }
     }

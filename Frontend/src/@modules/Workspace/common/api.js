@@ -140,5 +140,11 @@ export const workspaceApi = {
       `/departments/save-company-chat-group`,
       serialize(_.cloneDeep(data))
     )
+  },
+  async removeGroupChatId(data) {
+    return await axiosNodeApi.post(
+      `/workspace/remove-group-chat-id`,
+      serialize(_.cloneDeep(data))
+    )
   }
 }

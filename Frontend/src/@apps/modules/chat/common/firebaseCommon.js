@@ -11,7 +11,8 @@ import {
   query,
   setDoc,
   updateDoc,
-  where
+  where,
+  deleteDoc
 } from "firebase/firestore"
 import moment from "moment"
 import { imageGroup, replaceHtmlMessage, triGram } from "./common"
@@ -318,6 +319,10 @@ const handleUpdateGroup = async (groupId, dataUpdate) => {
   )
 }
 
+const handleDeleteGroup = async (groupId) => {
+  await deleteDoc(doc(db, `${firestoreDb}/chat_groups/groups`, groupId))
+}
+
 const handleAddNewGroup = async (docData) => {
   docData = {
     mute: [],
@@ -558,5 +563,6 @@ export {
   setDataUnseenDetail,
   handleUpdateGroup,
   handleAddNewGroup,
-  handleSendMessage
+  handleSendMessage,
+  handleDeleteGroup
 }
