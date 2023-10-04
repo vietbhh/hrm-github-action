@@ -8,7 +8,7 @@ import { Modal, ModalBody } from "reactstrap"
 const MemberVoteModal = (props) => {
   const { modal, toggleModal, dataUserVote, title = "" } = props
   const redux_list_user = useSelector((state) => state.users.list)
-  const maxHeightScreen = screen.height - (screen.height * 50) / 100
+  const maxHeightScreen = "50vh" //screen.height - (screen.height * 50) / 100
   return (
     <Modal
       isOpen={modal}

@@ -14,7 +14,7 @@ const ReactionDetailModal = (props) => {
   })
   const redux_list_user = useSelector((state) => state.users.list)
   const listReaction = ["like", "love", "care", "smile", "sad", "wow"]
-  const maxHeightScreen = screen.height - (screen.height * 40) / 100
+  const maxHeightScreen = "50vh" //screen.height - (screen.height * 40) / 100
   // ** function
   const renderListUserReact = (value, image) => {
     return _.map(
