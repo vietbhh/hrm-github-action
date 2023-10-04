@@ -359,7 +359,7 @@ export const handleInsertEditorState = (
 export const detectHashtag = (txt) => {
   const arr_hashtag = txt.match(/#[\p{L}\p{N}_<>/]*/gu)
   const uniqueChars = [...new Set(arr_hashtag)].map((item) => {
-    return item.replace(/(<p[^>]+?>|<p>|<\/p>)/img, "")
+    return item.replace(/(<p[^>]+?>|<p>|<\/p>)/gim, "")
   })
   return uniqueChars
 }

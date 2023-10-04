@@ -376,6 +376,7 @@ const LoadPost = (props) => {
               dataPreview={data}
               handleModal={togglePostCommentModal}
               setData={setData}
+              dataMention={dataMention}
             />
           )}
         </Fragment>

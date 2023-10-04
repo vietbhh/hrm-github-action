@@ -20,7 +20,7 @@ const ModalPostComment = (props) => {
   } = props
   // ** render
   const maxHeightScreen = screen.height - (screen.height * 40) / 100
-
+  console.log("ModalPostComment dataMention", dataMention)
   return (
     <Modal
       isOpen={modal}
@@ -54,6 +54,7 @@ const ModalPostComment = (props) => {
             isFocusCommentOnclick={true}
             setData={setData}
             isLoadComment={true}
+            dataMention={dataMention}
           />
         </PerfectScrollbar>
       </ModalBody>
