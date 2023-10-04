@@ -46,14 +46,24 @@ const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
     infoWorkspace.request_joins[infoWorkspace.request_joins.length - 1].id_user
   )
 
-  let body = "<strong>" + memberInfo?.dataValues?.full_name + "</strong>"
-  if (infoWorkspace.request_joins.length >= 2) {
-    body += " and " + (infoWorkspace.request_joins.length - 1) + " others"
-  }
-  body +=
-    " {{modules.network.notification.sent_request_join_workgroup}} <strong>" +
+  let body =
+    "{{modules.network.notification.request_to_join}} <strong>" +
     infoWorkspace?.name +
+    "</strong> {{modules.network.notification.from}} <strong>" +
+    memberInfo?.dataValues?.full_name +
     "</strong>"
+
+  if (infoWorkspace.request_joins.length >= 2) {
+    body =
+      "{{modules.network.notification.requests_to_join}} <strong>" +
+      infoWorkspace?.name +
+      "</strong> {{modules.network.notification.from}} <strong>" +
+      memberInfo?.dataValues?.full_name +
+      " and " +
+      (infoWorkspace.request_joins.length - 1) +
+      " others"
+    ;("</strong>")
+  }
 
   await sendNotification(
     memberInfo?.dataValues?.id,
@@ -103,7 +113,7 @@ const sendNotificationPostPending = async (feed, sender) => {
   const body =
     "<strong>" +
     sender?.full_name +
-    "</strong> {{modules.network.notification.has_posted_workgroup}} <strong>" +
+    "</strong> {{modules.network.notification.requested_approval_post_in_group}} <strong>" +
     workspaceInfo?.name +
     "</strong>"
 
@@ -330,6 +340,161 @@ const sendNotificationPostPendingFeed = async (post, post_owner, receivers) => {
     icon: parseInt(post_owner?.id)
   })
 }
+
+const sendCommonWorkgroupNotification = async (
+  type,
+  userInfo,
+  workgroup,
+  receivers
+) => {
+  let title = ""
+  if (type === "send_to_users_added_by_admin") {
+    title =
+      "{{modules.workspace.text.notification.added_to_the_group}} <b>" +
+      groupName +
+      "</b> {{modules.workspace.text.notification.by}} <b>" +
+      userInfo.full_name +
+      "</b>"
+  } else if (type === "send_to_users_added_by_member") {
+    title =
+      "<b>" +
+      userInfo.full_name +
+      "</b> {{modules.workspace.text.notification.added_you_to_the_group}} <b>" +
+      workgroup.name +
+      "</b>. {{modules.workspace.text.notification.wait_admin_approval}}"
+  } else if (type === "send_to_admin_on_member_join_group") {
+    title =
+      "<b>" +
+      userInfo.full_name +
+      "</b> {{modules.workspace.text.notification.has_joined_group}}} <b>" +
+      workgroup.name +
+      "</b>"
+  } else if (type === "send_to_member_assigned_admin_permission") {
+    title =
+      "<b>" +
+      userInfo.full_name +
+      "</b> {{modules.workspace.text.notification.has_joined_group}}} <b>" +
+      workgroup.name +
+      "</b>"
+  } else if (type === "send_to_kicked_members") {
+    title =
+      "<b>" +
+      userInfo.full_name +
+      "</b> {{modules.workspace.text.notification.remove_from_group}}} <b>" +
+      workgroup.name +
+      "</b>"
+  }
+
+  await sendNotification(userInfo?.id, receivers, {
+    title: title,
+    body: "",
+    link: "",
+    icon: parseInt(userInfo?.id)
+  })
+}
+
+const sendNotificationAddMember = async (workgroup, sender, receivers) => {
+  const title =
+    "You have been added to the group <b>" +
+    workgroup?.name +
+    "</b> by <b>" +
+    sender?.full_name +
+    "</b>"
+  const link = "workspace/" + workgroup.id
+  await sendNotification(sender?.id, receivers, {
+    title: "",
+    body: title,
+    link: link,
+    icon: parseInt(sender?.id)
+  })
+}
+
+const sendNotificationHasNewMember = async (
+  workgroup,
+  member,
+  receiversAdmin,
+  sender
+) => {
+  let title = ""
+  const receivers = [...receiversAdmin]
+  const memberFullname = member[0].full_name
+  if (member.length <= 1) {
+    title =
+      "<b>" +
+      memberFullname +
+      "</b> has joined the group <b>" +
+      workgroup?.name +
+      "</b>"
+  } else {
+    title =
+      "<b>" +
+      memberFullname +
+      "</b> and " +
+      (member.length - 1) +
+      " others has joined the group <b>" +
+      workgroup?.name +
+      "</b>"
+  }
+  const link = "workspace/" + workgroup.id + "/member"
+  await sendNotification(sender?.id, receivers, {
+    title: "",
+    body: title,
+    link: link,
+    icon: ""
+  })
+}
+
+const sendNotificationAddMemberWaitApproval = async (
+  workgroup,
+  sender,
+  receivers
+) => {
+  const title =
+    "<b>" +
+    sender?.full_name +
+    "</b> has added you to the group <b>" +
+    sender?.full_name +
+    "</b>. Please wait for the administrator's approval"
+  const link = "workspace/" + workgroup.id
+  await sendNotification(sender?.id, receivers, {
+    title: "",
+    body: title,
+    link: link,
+    icon: parseInt(sender?.id)
+  })
+}
+const sendNotificationAssignedAdmin = async (workgroup, sender, receivers) => {
+  const title =
+    "<b>" +
+    sender.full_name +
+    "</b> added you as admin of group <b>" +
+    workgroup?.name +
+    "</b>"
+  const link = "workspace/" + workgroup.id
+  await sendNotification(sender?.id, receivers, {
+    title: "",
+    body: title,
+    link: link,
+    icon: parseInt(sender?.id)
+  })
+}
+
+const sendNotificationKickMember = async (workgroup, sender, receivers) => {
+  const title =
+    "<b>" +
+    sender.full_name +
+    "</b> has removed you from the group <b>" +
+    workgroup?.name +
+    "</b>"
+  const link = "workgroup/" + workgroup.id
+  await sendNotification(sender?.id, receivers, {
+    title: "",
+    body: title,
+    link: link,
+    icon: parseInt(sender?.id)
+  })
+}
+
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -345,5 +510,11 @@ export {
   sendNotificationTagInPost,
   sendNotificationEndorsement,
   sendNotificationEndorsementAll,
-  sendNotificationPostPendingFeed
+  sendNotificationPostPendingFeed,
+  sendCommonWorkgroupNotification,
+  sendNotificationAddMember,
+  sendNotificationHasNewMember,
+  sendNotificationAddMemberWaitApproval,
+  sendNotificationAssignedAdmin,
+  sendNotificationKickMember
 }
