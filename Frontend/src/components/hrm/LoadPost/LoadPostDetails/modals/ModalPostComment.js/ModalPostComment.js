@@ -6,6 +6,8 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
 // ** Components
 import LoadPost from "@/components/hrm/LoadPost/LoadPost"
 
+import PerfectScrollbar from "react-perfect-scrollbar"
+
 const ModalPostComment = (props) => {
   const {
     // ** props
@@ -16,8 +18,9 @@ const ModalPostComment = (props) => {
     setData,
     dataMention
   } = props
-
   // ** render
+  const maxHeightScreen = screen.height - (screen.height * 40) / 100
+  console.log("ModalPostComment dataMention", dataMention)
   return (
     <Modal
       isOpen={modal}
@@ -38,16 +41,22 @@ const ModalPostComment = (props) => {
         </div>
       </ModalHeader>
       <ModalBody>
-        <LoadPost
-          data={dataPreview}
-          avatarHeight={20}
-          avatarWidth={20}
-          offReactionAndComment={false}
-          offPostHeaderAction={false}
-          isFocusCommentOnclick={true}
-          setData={setData}
-          dataMention={dataMention}
-        />
+        <PerfectScrollbar
+          style={{
+            maxHeight: maxHeightScreen
+          }}>
+          <LoadPost
+            data={dataPreview}
+            avatarHeight={20}
+            avatarWidth={20}
+            offReactionAndComment={false}
+            offPostHeaderAction={false}
+            isFocusCommentOnclick={true}
+            setData={setData}
+            isLoadComment={true}
+            dataMention={dataMention}
+          />
+        </PerfectScrollbar>
       </ModalBody>
     </Modal>
   )

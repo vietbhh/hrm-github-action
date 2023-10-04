@@ -35,7 +35,6 @@ const sendNotificationApprovePost = async (
 }
 
 const sendNotificationRequestJoin = async (infoWorkspace, receivers) => {
-  console.log("sendNotificationRequestJoin infoWorkspace", infoWorkspace)
   const memberInfo = await getUser(
     infoWorkspace.request_joins[infoWorkspace.request_joins.length - 1].id_user
   )

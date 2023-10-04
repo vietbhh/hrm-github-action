@@ -32,7 +32,7 @@ const EventTitle = (props) => {
         modalDetail: "pending"
       })
     )
-    console.log("infoEvent", infoEvent)
+
     dispatch(
       showAddEventCalendarModal({
         idEvent: infoEvent._id

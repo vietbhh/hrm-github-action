@@ -86,7 +86,6 @@ const PostCommentForm = (props) => {
     setFocusCommentForm,
     created_by_comment_parent = null
   } = props
-
   const [state, setState] = useMergedState({
     editorState: EditorState.createEmpty(),
     image: null,
@@ -283,7 +282,6 @@ const PostCommentForm = (props) => {
       setState({ open: _open })
     }, 100)
   }, [])
-
   const onSearchChange = useCallback(
     (propsData) => {
       const { value } = propsData
