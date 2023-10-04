@@ -84,7 +84,7 @@ const ModalCreatePost = (props) => {
 
   const userData = useSelector((state) => state.auth.userData)
   const cover = userData?.cover || ""
-  const maxHeightScreen = screen.height - (screen.height * 50) / 100
+  const maxHeightScreen = "50vh" //screen.height - (screen.height * 50) / 100
   // ** function
   const setLoadingUploadAttachment = (value) =>
     setState({ loadingUploadAttachment: value })

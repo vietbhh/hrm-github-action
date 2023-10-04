@@ -19,8 +19,7 @@ const ModalPostComment = (props) => {
     dataMention
   } = props
   // ** render
-  const maxHeightScreen = screen.height - (screen.height * 40) / 100
-  console.log("ModalPostComment dataMention", dataMention)
+  const maxHeightScreen = "50vh" //screen.height - (screen.height * 40) / 100
   return (
     <Modal
       isOpen={modal}
