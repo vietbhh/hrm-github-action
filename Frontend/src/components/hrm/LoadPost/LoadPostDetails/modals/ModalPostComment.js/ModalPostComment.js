@@ -15,7 +15,8 @@ const ModalPostComment = (props) => {
     dataPreview,
     // ** methods
     handleModal,
-    setData
+    setData,
+    dataMention
   } = props
   // ** render
   const maxHeightScreen = screen.height - (screen.height * 40) / 100
@@ -40,7 +41,6 @@ const ModalPostComment = (props) => {
         </div>
       </ModalHeader>
       <ModalBody>
-        xxxxxxxxxxxx
         <PerfectScrollbar
           style={{
             maxHeight: maxHeightScreen

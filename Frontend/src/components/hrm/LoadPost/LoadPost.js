@@ -18,6 +18,7 @@ import RenderPollVote from "./LoadPostDetails/PostDetails/RenderPollVote"
 import RenderPostEndorsement from "./LoadPostDetails/PostDetails/RenderPostEndorsement"
 import RenderPostEvent from "./LoadPostDetails/PostDetails/RenderPostEvent"
 import MemberVoteModal from "./LoadPostDetails/modals/MemberVoteModal"
+import ModalPostComment from "./LoadPostDetails/modals/ModalPostComment.js/ModalPostComment"
 // ** redux
 import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
 import { useDispatch, useSelector } from "react-redux"
@@ -62,6 +63,7 @@ const LoadPost = (props) => {
 
     //
     modalAnnouncement: false,
+    postCommentModal: false,
 
     // with tag
     modalWith: false,
@@ -71,6 +73,12 @@ const LoadPost = (props) => {
   const dispatch = useDispatch()
 
   // ** function
+  const togglePostCommentModal = () => {
+    setState({
+      postCommentModal: !state.postCommentModal
+    })
+  }
+
   const setCommentMoreCountOriginal = (value = 0) => {
     setState({ comment_more_count_original: value })
   }
@@ -274,8 +282,10 @@ const LoadPost = (props) => {
             <div className="post-footer">
               <PostShowReaction
                 data={data}
+                isFocusCommentOnclick={isFocusCommentOnclick}
                 toggleModalWith={toggleModalWith}
                 setDataUserOtherWith={setDataUserOtherWith}
+                togglePostCommentModal={togglePostCommentModal}
               />
               <div className="post-footer-button">
                 <ButtonReaction
@@ -284,9 +294,11 @@ const LoadPost = (props) => {
                   comment_more_count_original={
                     state.comment_more_count_original
                   }
+                  dataMention={dataMention}
                   isFocusCommentOnclick={isFocusCommentOnclick}
                   setCommentMoreCountOriginal={setCommentMoreCountOriginal}
                   setFocusCommentForm={setFocusCommentForm}
+                  togglePostCommentModal={togglePostCommentModal}
                 />
               </div>
             </div>
@@ -355,6 +367,15 @@ const LoadPost = (props) => {
               setData={setData}
               setDataLink={setDataLink}
               idPost={data?._id}
+            />
+          )}
+
+          {state.postCommentModal && (
+            <ModalPostComment
+              modal={state.postCommentModal}
+              dataPreview={data}
+              handleModal={togglePostCommentModal}
+              setData={setData}
             />
           )}
         </Fragment>

@@ -20,26 +20,22 @@ const ButtonReaction = (props) => {
     comment_more_count_original,
     isFocusCommentOnclick,
     setCommentMoreCountOriginal,
-    setFocusCommentForm
+    setFocusCommentForm,
+    dataMention,
+    togglePostCommentModal
   } = props
 
   const [state, setState] = useMergedState({
     checkLike: "",
     modalSendInMessenger: false,
     titleModalInMessenger: "",
-    typeChat: "",
-    postCommentModal: false
+    typeChat: ""
   })
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
   const full_name = userData.full_name
 
   // ** function
-  const togglePostCommentModal = () => {
-    setState({
-      postCommentModal: !state.postCommentModal
-    })
-  }
 
   const updateReaction = (react_type) => {
     const _data = { ...data }
@@ -404,6 +400,7 @@ const ButtonReaction = (props) => {
         <ModalPostComment
           modal={state.postCommentModal}
           dataPreview={data}
+          dataMention={dataMention}
           handleModal={togglePostCommentModal}
           setData={setData}
         />
