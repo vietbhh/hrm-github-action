@@ -69,15 +69,27 @@
         "empty_link": "Empty link",
         "leave_chat": "Leave chat",
         "delete_chat": "Delete chat",
+        "delete_conversation": "Delete conversation",
         "delete": "Delete",
         "unsent": "Unsent",
         "unsent_message": "Unsent message",
-        "is_system": "Is system"
+        "is_system": "Is system",
+        "change_group_cover": "has changed the cover image",
+        "change_group_avatar": "changed the group avatar",
+        "add_member_to_group_chat": "added {name} to the group",
+        "remove_member_from_group_chat": "removed {name} from the group",
+        "left_group_chat": "has left the group",
+        "assign_member_as_admin": "assign {name} as admin group",
+        "warning_delete_conversation": {
+          "title": "Delete conversation",
+          "text": "This is administrator function - when deleting a conversation, the conversation will be deleted for all members in the chat group"
+        }
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",
         "user_is_not_active": "User is not active",
-        "leave_group_error": "Please add another admin before leaving the group"
+        "leave_group_error": "Please add another admin before leaving the group",
+        "delete_conversation_error": "Delete conversation failed"
       }
     },
     "dashboard": {
@@ -530,7 +542,9 @@
         "delete_department": "Delete Department",
         "delete_all_department": "Delete all child department",
         "profile": "Profile",
-        "note_delete_deparment": "* All employees must be transferred to another department"
+        "note_delete_deparment": "* All employees must be transferred to another department",
+        "new_group_chat": "Create Company Chat",
+        "view_group_chat": "View group chat"
       },
       "buttons": {
         "new_employee": "New Employee"
@@ -4220,7 +4234,16 @@
         "suggested": "Suggested",
         "derpartment": "Derpartment",
         "users": "Users",
-        "new_today": "new today"
+        "new_today": "new today",
+        "notification": {
+          "added_to_the_group": "You have been added to the group",
+          "added_you_to_the_group": "has added you to the group",
+          "wait_admin_approval": "Please wait for the administrator's approval",
+          "has_joined_group": "has joined the group",
+          "added_as_admin_group": "added you as admin of group",
+          "remove_from_group": "has removed you from the group",
+          "by": "by"
+        }
       },
       "app_options": {
         "workspace_type": {
@@ -4280,6 +4303,7 @@
     "setting_member": {
       "field_name": "Field name",
       "show_hide_info": "Show/hide info",
+      "updatable": "Updatable",
       "show_information_title": "Show information",
       "show_information_text": "Would you like to show {field} information on the profile",
       "hide_information_title": "Hide information",
@@ -4303,16 +4327,20 @@
         "notification_unseen": "There's a post you haven't seen yet, check it out",
         "sent_notification": "Sent notification",
         "reaction_post_tag": "posts you're tagged in",
+        "reaction_post": "your post",
         "comment_post_tag": "commented  posts you're tagged in",
         "asked_to_see_this_post": "asked you to see this post",
         "has_endorsed_post": "has endorsed you with badget",
         "was_endorsed_post": "was endorsed with badget",
         "posted_new_post_workgroup": "posted a new post in workgroup",
         "has_posted_workgroup": "has posted in workgroup",
+        "requested_approval_post_in_group": "has requested approval of their new post in the group",
         "sent_request_join_workgroup": "sent a request to join workgroup",
         "requested_approval_post": "requested approval for his post on the shared wall",
-        "reaction_post" : "your post",
-        "your_comment_post" : "your comment"
+        "your_comment_post" : "your comment",
+        "request_to_join": "There was a request to join group",
+        "requests_to_join": "There was requests to join group",
+        "from": "from"
       }
     },
     "timeline": {

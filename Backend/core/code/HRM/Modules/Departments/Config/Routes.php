@@ -16,3 +16,4 @@ $routes->post('departments/add', 'Departments::add_post',['namespace' => 'HRM\Mo
 $routes->post('departments/update-employee', 'Departments::update_employee_post',['namespace' => 'HRM\Modules\Departments\Controllers']);
 $routes->post('departments/update-parent', 'Departments::update_parent_post',['namespace' => 'HRM\Modules\Departments\Controllers']);
 $routes->post('departments/delete-department', 'Departments::delete_department_post',['namespace' => 'HRM\Modules\Departments\Controllers']);
+$routes->post('departments/save-company-chat-group', 'Departments::saveCompanyChatGroup_post',['namespace' => 'HRM\Modules\Departments\Controllers']);

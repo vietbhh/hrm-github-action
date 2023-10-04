@@ -11,6 +11,7 @@ import {
   Row
 } from "reactstrap"
 import { renderAvatar } from "../../common/common"
+import { useEffect } from "react"
 
 const ModalForward = (props) => {
   const {
@@ -47,8 +48,13 @@ const ModalForward = (props) => {
   }
 
   const renderInfo = (item) => {
+    if (item.type === "notification") {
+      return ""
+    }
+
+    const key = item.type === "group" ? item.id : item.idEmployee
     return (
-      <li key={`${item.type === "group" ? item.id : item.idEmployee}`}>
+      <li key={`${key}`}>
         {renderAvatar(item, "", "42", "42")}
         <div
           className="chat-info flex-grow-1"
@@ -95,6 +101,7 @@ const ModalForward = (props) => {
         (item) =>
           (pin === true && item.pin === 1) || (pin === false && item.pin === 0)
       )
+
       if (state.query.length && index_search === -1) {
         return (
           <>
@@ -180,14 +187,28 @@ const ModalForward = (props) => {
 
   // ** Handles Filter
   const handleFilter = (e) => {
-    setState({ query: e.target.value })
-    const searchFilterFunction = (contact) =>
-      contact.fullName.toLowerCase().includes(e.target.value.toLowerCase())
+    const searchString = e.target.value
+    setState({ query:  searchString})
+    const searchFilterFunction = (contact) => {
+      return contact.fullName
+        .toLowerCase()
+        .includes(searchString.trim().toLowerCase())
+    }
+    
     const filteredChatsArr = groups.filter(searchFilterFunction)
-    const filteredContactssArr = contacts.filter(searchFilterFunction)
+    const filteredContactsArr = contacts.filter(searchFilterFunction)
     setState({ filteredChat: [...filteredChatsArr] })
-    setState({ filteredContacts: [...filteredContactssArr] })
+    setState({ filteredContacts: [...filteredContactsArr] })
   }
+
+  // ** effect
+  useEffect(() => {
+    if (modal === true) {
+      setState({
+        query: ""
+      })
+    }
+  }, [modal])
 
   return (
     <Modal

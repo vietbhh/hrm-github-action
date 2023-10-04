@@ -93,6 +93,7 @@ $background-color-checkbox: #139ff8;
 
       .btn-see-more {
         font-size: 18px;
+        color: inherit !important;
       }
     }
 
@@ -209,7 +210,7 @@ $background-color-checkbox: #139ff8;
     }
 
     .post-body__event.body-bg-f066b9 {
-      background-color: #8b5cf6;
+      background-color: rgb(240, 102, 185);
       .event-content {
         .event-content__title,
         .event-content__meeting-room,
@@ -219,13 +220,16 @@ $background-color-checkbox: #139ff8;
       }
     }
     .post-body__event.body-bg-ffc66f {
-      background-color: #f59e0b;
+      background-color: rgb(255, 198, 111);
     }
     .post-body__event.body-bg-ff6f2c {
-      background-color: #f43f5e;
+      background-color: rgb(255, 111, 44);
     }
     .post-body__event.body-bg-44d38a {
       background-color: #10b981;
+    }
+    .post-body__event.body-bg-ffe658 {
+      background-color: rgb(255, 230, 88);
     }
     .post-body__event.body-bg-66e0f0 {
       background-color: rgb(102, 224, 240);
@@ -4777,15 +4781,19 @@ $background-color-checkbox: #139ff8;
             }
 
             .bg-color-f066b9 {
-              background-color: #8b5cf6;
+              background-color: rgb(240, 102, 185);
+            }
+
+            .bg-color-ffe658 {
+              background-color: rgb(255, 230, 88);
             }
 
             .bg-color-ffc66f {
-              background-color: #f59e0b;
+              background-color: rgb(255, 198, 111);
             }
 
             .bg-color-ff6f2c {
-              background-color: #f43f5e;
+              background-color: rgb(255, 111, 44);
             }
 
             .bg-color-44d38a {

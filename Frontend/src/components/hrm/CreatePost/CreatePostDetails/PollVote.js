@@ -6,10 +6,10 @@ import {
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { Tooltip } from "antd"
 import classNames from "classnames"
-import moment from "moment"
 import React, { Fragment, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Modal, ModalBody } from "reactstrap"
+import dayjs from "dayjs"
 
 const PollVote = (props) => {
   const { setPollVoteDetail, poll_vote_detail, toggleModalPollVote } = props
@@ -257,10 +257,12 @@ const PollVote = (props) => {
                   placement="topRight"
                   value={
                     poll_vote_detail.time_end
-                      ? moment(poll_vote_detail.time_end)
+                      ? dayjs(poll_vote_detail.time_end)
                       : poll_vote_detail.time_end
                   }
-                  onChange={(e) => setPollVoteDetail({ time_end: e })}
+                  onChange={(e) => {
+                    setPollVoteDetail({ time_end: e })
+                  }}
                 />
               </div>
             )}

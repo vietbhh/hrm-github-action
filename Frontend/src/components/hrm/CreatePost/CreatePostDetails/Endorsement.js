@@ -44,7 +44,6 @@ const Endorsement = (props) => {
   const {
     modal,
     toggleModal,
-    toggleModalCreatePost,
     dataMention,
     setDataCreateNew,
     showTooltip = true,
@@ -193,7 +192,6 @@ const Endorsement = (props) => {
 
   const resetAfterSubmit = () => {
     toggleModal()
-    toggleModalCreatePost()
     setEmptyEditorState()
     setState({
       valueSelectMember: [],
@@ -390,7 +388,6 @@ const Endorsement = (props) => {
         isOpen={modal}
         toggle={() => {
           toggleModal()
-          //toggleModalCreatePost()
         }}
         className="feed modal-dialog-centered modal-create-post modal-create-event modal-create-endorsement"
         modalTransition={{ timeout: 100 }}
@@ -405,7 +402,6 @@ const Endorsement = (props) => {
             className="div-btn-close"
             onClick={() => {
               toggleModal()
-              //toggleModalCreatePost()
             }}>
             <i className="fa-solid fa-xmark"></i>
           </div>

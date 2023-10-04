@@ -19,11 +19,12 @@ class SettingMember extends ErpController
 		$postData = $this->request->getPost();
 		$checked = $postData['checked'];
 		$field_id = $postData['id'];
+		$key = $postData['key'];
 		$metaModel = new MetaModel();
 		try {
 			$data = $metaModel->where('id', $field_id)->asArray()->first();
 			$field_options = json_decode($data['field_options'], true);
-			$field_options['settingMember'] = filter_var($checked, FILTER_VALIDATE_BOOLEAN);;
+			$field_options[$key] = filter_var($checked, FILTER_VALIDATE_BOOLEAN);;
 			$metaModel->where('id', $field_id)->set(['field_options' => json_encode($field_options)])->update();
 			$moduleManager = \Config\Services::modules();
 			$moduleManager->getAllMetas(true);

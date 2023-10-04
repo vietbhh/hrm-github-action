@@ -3,6 +3,8 @@ import notification from "@apps/utility/notification"
 import SwAlert from "@apps/utility/SwAlert"
 import { arrayRemove } from "firebase/firestore"
 import { Fragment } from "react"
+import { handleDeleteGroup } from "../../common/firebaseCommon"
+import { workspaceApi } from "../../../../../@modules/Workspace/common/api"
 
 const ProfileSidebarMoreOption = (props) => {
   const {
@@ -10,10 +12,13 @@ const ProfileSidebarMoreOption = (props) => {
     selectedGroup,
     handleUpdateGroup,
     userId,
+    settingUser,
     setActive,
     setActiveFullName,
     setDataUnseenDetail,
-    isAdminSystem
+    isAdminSystem,
+    sendMessage,
+    setSelectedGroup
   } = props
 
   const handleUpdateLeaveChat = (props) => {
@@ -39,6 +44,15 @@ const ProfileSidebarMoreOption = (props) => {
       ...props
     }
     handleUpdateGroup(selectedGroup.id, docData)
+    sendMessage(
+      selectedGroup.id,
+      `${settingUser.full_name} ${useFormatMessage(
+        "modules.chat.text.left_group_chat"
+      )}`,
+      {
+        type: "notification"
+      }
+    )
     window.history.replaceState(null, "", `/chat`)
     setActive(0)
     setActiveFullName("")
@@ -70,19 +84,64 @@ const ProfileSidebarMoreOption = (props) => {
     })
   }
 
+  const handleDeleteConversation = () => {
+    SwAlert.showWarning({
+      title: useFormatMessage(
+        "modules.chat.text.warning_delete_conversation.title"
+      ),
+      text: useFormatMessage(
+        "modules.chat.text.warning_delete_conversation.text"
+      ),
+      confirmButtonText: useFormatMessage("button.confirm"),
+      html: ""
+    }).then((res) => {
+      if (res.isConfirmed) {
+        handleDeleteGroup(selectedGroup.id).then((resDelete) => {
+          workspaceApi
+            .removeGroupChatId({
+              group_chat_id: selectedGroup.id
+            })
+            .then((resUpdate) => {
+              window.history.replaceState(null, "", "/chat")
+              setActive(0)
+              setActiveFullName("")
+            })
+            .catch((err) => {
+              notification.showWarning({
+                text: useFormatMessage(
+                  "modules.chat.notification.delete_conversation_error"
+                )
+              })
+            })
+        })
+      }
+    })
+  }
+
   // ** render
   const renderLeaveChat = () => {
     if (isAdminSystem) {
       return (
-        <div className="more-option-body-div-child more-option-body-div-bg">
-          <div
-            className="more-option-body-div-content"
-            onClick={() => handleLeaveChat()}>
-            <span className="text-left text-color-red">
-              {useFormatMessage("modules.chat.text.leave_chat")}
-            </span>
+        <Fragment>
+          <div className="more-option-body-div-child more-option-body-div-bg">
+            <div
+              className="more-option-body-div-content"
+              onClick={() => handleLeaveChat()}>
+              <span className="text-left text-color-red">
+                {useFormatMessage("modules.chat.text.leave_chat")}
+              </span>
+            </div>
           </div>
-        </div>
+          <div className="more-option-body-div-child more-option-body-div-bg">
+            <div
+              className="more-option-body-div-content"
+              onClick={() => handleDeleteConversation()}>
+              <span className="text-left text-color-red">
+                {useFormatMessage("modules.chat.text.delete_conversation")}
+              </span>
+            </div>
+          </div>
+        </Fragment>
       )
     }
 

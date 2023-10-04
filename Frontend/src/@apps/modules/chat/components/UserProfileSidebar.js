@@ -24,6 +24,7 @@ const UserProfileSidebar = (props) => {
   // ** Props
   const {
     user,
+    settingUser,
     handleUserSidebarRight,
     userSidebarRight,
     dataEmployees,
@@ -34,7 +35,9 @@ const UserProfileSidebar = (props) => {
     setDataUnseenDetail,
     setActive,
     setActiveFullName,
-    selectedGroup
+    selectedGroup,
+    sendMessage,
+    setSelectedGroup
   } = props
 
   const [state, setState] = useMergedState({
@@ -161,9 +164,19 @@ const UserProfileSidebar = (props) => {
             last_user: userId,
             timestamp: Date.now(),
             background: res.data
+          }).then((res) => {
+            sendMessage(
+              selectedGroup.id,
+              `${settingUser.full_name} ${useFormatMessage(
+                "modules.chat.text.change_group_cover"
+              )}`,
+              {
+                type: "notification"
+              }
+            )
+            toggleBackgroundPreviewModal()
+            setState({ backgroundPreviewLoading: false })
           })
-          toggleBackgroundPreviewModal()
-          setState({ backgroundPreviewLoading: false })
         })
         .catch((err) => {
           document.getElementById("input-background").value = null
@@ -209,9 +222,19 @@ const UserProfileSidebar = (props) => {
             last_user: userId,
             timestamp: Date.now(),
             avatar: res.data
+          }).then((res) => {
+            sendMessage(
+              selectedGroup.id,
+              `${settingUser.full_name} ${useFormatMessage(
+                "modules.chat.text.change_group_avatar"
+              )}`,
+              {
+                type: "notification"
+              }
+            )
+            toggleAvatarPreviewModal()
+            setState({ avatarPreviewLoading: false })
           })
-          toggleAvatarPreviewModal()
-          setState({ avatarPreviewLoading: false })
         })
         .catch((err) => {
           document.getElementById("input-avatar").value = null
@@ -559,7 +582,9 @@ const UserProfileSidebar = (props) => {
               setDataUnseenDetail={setDataUnseenDetail}
               handleUpdateGroup={handleUpdateGroup}
               userId={userId}
+              settingUser={settingUser}
               isAdminSystem={state.isAdminSystem}
+              sendMessage={sendMessage}
             />
           )}
         </PerfectScrollbar>
@@ -581,10 +606,13 @@ const UserProfileSidebar = (props) => {
             selectedGroup={selectedGroup}
             handleUpdateGroup={handleUpdateGroup}
             userId={userId}
+            settingUser={settingUser}
             setActive={setActive}
             setActiveFullName={setActiveFullName}
             setDataUnseenDetail={setDataUnseenDetail}
             isAdminSystem={state.isAdminSystem}
+            sendMessage={sendMessage}
+            setSelectedGroup={setSelectedGroup}
           />
         </div>
       </div>
@@ -594,8 +622,10 @@ const UserProfileSidebar = (props) => {
         toggleModal={toggleModalAddMember}
         handleUpdateGroup={handleUpdateGroup}
         userId={userId}
+        settingUser={settingUser}
         setDataUnseenDetail={setDataUnseenDetail}
         selectedGroup={selectedGroup}
+        sendMessage={sendMessage}
       />
 
       <ModalAvatarPreview

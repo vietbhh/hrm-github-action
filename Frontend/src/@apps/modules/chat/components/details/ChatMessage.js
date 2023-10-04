@@ -612,8 +612,25 @@ const ChatMessage = (props) => {
     }
 
     return formattedChatData().map((item, index) => {
-      const renderChatContent = (chat, className, index_message) => {
-        if (
+      const renderChatContent = (
+        chat,
+        className,
+        index_message,
+        hasAvatar = false
+      ) => {
+        if (chat.type === "notification") {
+          return (
+            <div
+              className="chat chat-line-break w-100"
+              style={{
+                paddingRight: hasAvatar ? "40px" : "0"
+              }}>
+              <div className="chat-body">
+                <span className="time-line">{chat.msg}</span>
+              </div>
+            </div>
+          )
+        } else if (
           chat.type === "text" ||
           chat.type === "link" ||
           chat.status === "loading" ||
@@ -696,12 +713,17 @@ const ChatMessage = (props) => {
       }
 
       const renderReaction = (chat) => {
+        if (chat.type === "notification") {
+          return ""
+        }
+
         let key_react_user = -1
         if (chat.react) {
           key_react_user = chat.react.findIndex(
             (item_react) => !_.isUndefined(item_react[userId])
           )
         }
+
         const items_react = [
           {
             key: "1",
@@ -728,28 +750,42 @@ const ChatMessage = (props) => {
                           })
                         } else {
                           if (key_react_user > -1) {
-                            updateMessage(selectedUser.chat.id, chat.time, {
-                              react: arrayRemove(
-                                ..._.map(
-                                  _.filter(
-                                    reaction,
-                                    (val_react_remove_filter) => {
-                                      return (
-                                        val_react.value !==
-                                        val_react_remove_filter.value
-                                      )
+                            updateMessage(
+                              selectedUser.chat.id,
+                              chat.time,
+                              {
+                                react: arrayRemove(
+                                  ..._.map(
+                                    _.filter(
+                                      reaction,
+                                      (val_react_remove_filter) => {
+                                        return (
+                                          val_react.value !==
+                                          val_react_remove_filter.value
+                                        )
+                                      }
+                                    ),
+                                    (val_react_remove) => {
+                                      return {
+                                        [userId]: val_react_remove.value
+                                      }
                                     }
-                                  ),
-                                  (val_react_remove) => {
-                                    return { [userId]: val_react_remove.value }
-                                  }
+                                  )
                                 )
-                              )
-                            })
+                              },
+                              true,
+                              userId
+                            )
                           }
-                          updateMessage(selectedUser.chat.id, chat.time, {
-                            react: arrayUnion({ [userId]: val_react.value })
-                          })
+                          updateMessage(
+                            selectedUser.chat.id,
+                            chat.time,
+                            {
+                              react: arrayUnion({ [userId]: val_react.value })
+                            },
+                            true,
+                            userId
+                          )
                         }
                       }}>
                       {val_react.label}
@@ -849,76 +885,84 @@ const ChatMessage = (props) => {
                 </a>
               </>
             )
-          },
-          {
-            key: "2",
-            label: (
-              <>
-                <a
-                  href=""
-                  className="react_more"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    navigator.clipboard.writeText(
-                      replaceHtmlMessage(replaceMessageBreakLine(chat.msg))
-                    )
-                    focusInputMsg()
-                  }}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none">
-                    <path
-                      d="M13.5077 10.05V12.3C13.5077 15.3 12.3077 16.5 9.30769 16.5H6.45769C3.45769 16.5 2.25769 15.3 2.25769 12.3V9.45C2.25769 6.45 3.45769 5.25 6.45769 5.25H8.70769"
-                      stroke="#292D32"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M13.5076 10.05H11.1076C9.30764 10.05 8.70764 9.45 8.70764 7.65V5.25L13.5076 10.05Z"
-                      stroke="#292D32"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M9.45764 1.5H12.4576"
-                      stroke="#292D32"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.00769 3.75C6.00769 2.505 7.01269 1.5 8.25769 1.5H10.2227"
-                      stroke="#292D32"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M17.2576 6V10.6425C17.2576 11.805 16.3126 12.75 15.1501 12.75"
-                      stroke="#292D32"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M17.2577 6H15.0077C13.3202 6 12.7577 5.4375 12.7577 3.75V1.5L17.2577 6Z"
-                      stroke="#292D32"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>{useFormatMessage("modules.chat.text.copy_text")}</span>
-                </a>
-              </>
-            )
           }
         ]
+
+        if (chat.type === "text") {
+          items_more = [
+            ...items_more,
+            {
+              key: "2",
+              label: (
+                <>
+                  <a
+                    href=""
+                    className="react_more"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      navigator.clipboard.writeText(
+                        replaceHtmlMessage(replaceMessageBreakLine(chat.msg))
+                      )
+                      focusInputMsg()
+                    }}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17"
+                      height="17"
+                      viewBox="0 0 17 17"
+                      fill="none">
+                      <path
+                        d="M13.5077 10.05V12.3C13.5077 15.3 12.3077 16.5 9.30769 16.5H6.45769C3.45769 16.5 2.25769 15.3 2.25769 12.3V9.45C2.25769 6.45 3.45769 5.25 6.45769 5.25H8.70769"
+                        stroke="#292D32"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M13.5076 10.05H11.1076C9.30764 10.05 8.70764 9.45 8.70764 7.65V5.25L13.5076 10.05Z"
+                        stroke="#292D32"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M9.45764 1.5H12.4576"
+                        stroke="#292D32"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M6.00769 3.75C6.00769 2.505 7.01269 1.5 8.25769 1.5H10.2227"
+                        stroke="#292D32"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M17.2576 6V10.6425C17.2576 11.805 16.3126 12.75 15.1501 12.75"
+                        stroke="#292D32"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M17.2577 6H15.0077C13.3202 6 12.7577 5.4375 12.7577 3.75V1.5L17.2577 6Z"
+                        stroke="#292D32"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <span>
+                      {useFormatMessage("modules.chat.text.copy_text")}
+                    </span>
+                  </a>
+                </>
+              )
+            }
+          ]
+        }
 
         if (chat.senderId === userId) {
           items_more = [
@@ -941,6 +985,9 @@ const ChatMessage = (props) => {
                       if (res.value) {
                         updateMessage(selectedUser.chat.id, chat.time, {
                           unsent: 1
+                        })
+                        handleUpdateGroup(selectedUser.chat.id, {
+                          last_message: useFormatMessage("modules.chat.text.unsent_message")
                         })
                         const file_count = handleCountFile(
                           groups,
@@ -1134,6 +1181,21 @@ const ChatMessage = (props) => {
         _avatar = dataEmployees[index_avatar].avatar
       }
 
+      let canRenderAvatar = false
+      if (item.senderId !== userId) {
+        canRenderAvatar = true
+      }
+
+      const arrNotification = item.messages.filter((itemChat) => {
+        if (itemChat.type === "notification") {
+          return itemChat
+        }
+      })
+
+      if (arrNotification.length === item.messages.length) {
+        canRenderAvatar = false
+      }
+
       return (
         <div
           key={index}
@@ -1148,16 +1210,18 @@ const ChatMessage = (props) => {
             </div>
           ) : (
             <>
-            {item.senderId !== userId && (
-              <div className="chat-avatar">
-                <Avatar
-                  imgWidth={36}
-                  imgHeight={36}
-                  className="box-shadow-1 cursor-pointer"
-                  src={_avatar}
-                />
-              </div>
-            )}
+              {canRenderAvatar ? (
+                <div className="chat-avatar">
+                  <Avatar
+                    imgWidth={36}
+                    imgHeight={36}
+                    className="box-shadow-1 cursor-pointer"
+                    src={_avatar}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
 
               <div className="chat-body">
                 {item.messages.map((chat, index) => {
@@ -1187,7 +1251,8 @@ const ChatMessage = (props) => {
                               ? "chat-content-last"
                               : "chat-content-middle"
                             : "chat-content-one",
-                          index
+                          index,
+                          canRenderAvatar
                         )}
                         {item.senderId !== userId &&
                           chat.status !== "loading" &&
