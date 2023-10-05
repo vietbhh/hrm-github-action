@@ -78,6 +78,7 @@
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-avatar-editor": "^13.0.0",
+    "react-cache-buster": "^0.1.8",
     "react-chartjs-2": "^5.0.1",
     "react-circular-progressbar": "^2.1.0",
     "react-content-loader": "^6.2.1",
@@ -146,10 +147,11 @@
     "yup": "^0.32.11"
   },
   "scripts": {
+    "generate-meta-tag": "node ./node_modules/react-cache-buster/dist/generate-meta-tag.js",
     "build-css": "sh ./style.sh&&echo 'Compile style completed!'",
     "build-modules": "sh ./build_modules.sh",
     "start": "yarn run build-css&&vite",
-    "build": "yarn run build-css&&yarn run build-modules&&vite build",
+    "build": "yarn generate-meta-tag&&yarn run build-css&&yarn run build-modules&&vite build",
     "preview": "yarn run vite preview",
     "format": "prettier --write \"src/**/*.js\"",
     "lint": "eslint src/**/*.js src/**/*.js",

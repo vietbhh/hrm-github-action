@@ -3,7 +3,7 @@
   "author": "longth",
   "license": "MIT",
   "scripts": {
-    "update-lang" : "./update-lang.sh",
+    "update-lang": "./update-lang.sh",
     "install-fe-dep": "cd Frontend && yarn install",
     "install-sv-dep": "cd Server && yarn install",
     "install-be-dep": "cd Backend && composer install",
@@ -15,7 +15,7 @@
     "start-backend": "cd Backend/applications/default && php spark start",
     "start": "npm-run-all -p start-backend start-server start-fe",
     "init-env": "./init-env.sh",
-    "init-app-env" : "./init-app.sh",
+    "init-app-env": "./init-app.sh",
     "init-app": "npm-run-all -s \"init-app-env {1} {2} {3} {4} {5} {6} {7}\" init-env --",
     "build-app": "export NODE_OPTIONS=--max-old-space-size=8192 && cd Frontend && yarn run build",
     "build-app-win": "cd Frontend && yarn run build",
