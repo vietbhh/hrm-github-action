@@ -242,7 +242,8 @@ export const handleDataMention = (dataEmployee, userId) => {
         link: "/u/" + value.username,
         avatar: getAvatarUrl(value.id * 1),
         full_name: value.full_name,
-        title: `@${value.username}`
+        title: `@${value.username}`,
+        username: value.username
       })
     }
   })
@@ -358,7 +359,7 @@ export const handleInsertEditorState = (
 export const detectHashtag = (txt) => {
   const arr_hashtag = txt.match(/#[\p{L}\p{N}_<>/]*/gu)
   const uniqueChars = [...new Set(arr_hashtag)].map((item) => {
-    return item.replace(/(<p[^>]+?>|<p>|<\/p>)/img, "")
+    return item.replace(/(<p[^>]+?>|<p>|<\/p>)/gim, "")
   })
   return uniqueChars
 }

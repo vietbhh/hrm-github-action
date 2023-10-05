@@ -7,7 +7,6 @@ import PerfectScrollbar from "react-perfect-scrollbar"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { Modal, ModalBody } from "reactstrap"
-
 const ReactionDetailModal = (props) => {
   const { modal, toggleModal, dataReaction } = props
   const [state, setState] = useMergedState({
@@ -15,7 +14,7 @@ const ReactionDetailModal = (props) => {
   })
   const redux_list_user = useSelector((state) => state.users.list)
   const listReaction = ["like", "love", "care", "smile", "sad", "wow"]
-
+  const maxHeightScreen = "50vh" //screen.height - (screen.height * 40) / 100
   // ** function
   const renderListUserReact = (value, image) => {
     return _.map(
@@ -105,7 +104,11 @@ const ReactionDetailModal = (props) => {
         key: "all",
         label: useFormatMessage("modules.feed.post.text.all"),
         children: (
-          <PerfectScrollbar options={{ wheelPropagation: false }}>
+          <PerfectScrollbar
+            style={{
+              maxHeight: maxHeightScreen
+            }}
+            options={{ wheelPropagation: false }}>
             {_.map(
               _.filter(listReaction, (item_filter) => {
                 return dataReaction[item_filter]
@@ -132,7 +135,11 @@ const ReactionDetailModal = (props) => {
             </div>
           ),
           children: (
-            <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <PerfectScrollbar
+              style={{
+                maxHeight: maxHeightScreen
+              }}
+              options={{ wheelPropagation: false }}>
               {renderListUserReact(dataReaction[value_react], value_react)}
               {renderOtherReact(dataReaction[value_react])}
             </PerfectScrollbar>

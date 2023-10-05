@@ -1,6 +1,6 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { feedApi } from "@modules/Feed/common/api"
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect } from "react"
 import ReactionDetailModal from "../modals/ReactionDetailModal"
 import Comment from "./Comment"
 import CommentReply from "./CommentReply"
@@ -15,7 +15,8 @@ const PostComment = (props) => {
     setCommentMoreCountOriginal,
     scrollToBottom,
     focusCommentForm,
-    setFocusCommentForm
+    setFocusCommentForm,
+    isLoadComment
   } = props
   const [state, setState] = useMergedState({
     modal_reaction: false,
@@ -23,7 +24,6 @@ const PostComment = (props) => {
     dataShowFormReply: {},
     dataEditComment: {}
   })
-
   // ** function
   const toggleModalReaction = () => {
     setState({ modal_reaction: !state.modal_reaction })
@@ -41,6 +41,18 @@ const PostComment = (props) => {
   }
 
   // ** useEffect
+  useEffect(() => {
+    if (isLoadComment) {
+      if (_.isFunction(setData)) {
+        feedApi
+          .getGetFeedAndComment(data._id)
+          .then((res) => {
+            setData(res.data)
+          })
+          .catch((err) => {})
+      }
+    }
+  }, [isLoadComment])
 
   return (
     <Fragment>

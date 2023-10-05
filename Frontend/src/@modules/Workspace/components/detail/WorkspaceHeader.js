@@ -339,6 +339,10 @@ const WorkspaceHeader = (props) => {
           )
         )
       }
+      infoWorkspace["sen_notification_after_update"] = {
+        type: "add_new_member",
+        new_member: dataUpdate
+      }
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
           notification.showSuccess({
@@ -588,7 +592,6 @@ const WorkspaceHeader = (props) => {
       })
     }
   }, [data])
-
   const renderChatButton = () => {
     if (
       !_.isEmpty(data.group_chat_id) ||

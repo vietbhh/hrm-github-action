@@ -27,6 +27,7 @@ import PollVote from "../PollVote"
 import PreviewAttachment from "../PreviewAttachment"
 import TagYourColleagues from "../TagYourColleagues"
 import SwAlert from "@apps/utility/SwAlert"
+import PerfectScrollbar from "react-perfect-scrollbar"
 const ModalCreatePost = (props) => {
   const {
     modal,
@@ -83,7 +84,7 @@ const ModalCreatePost = (props) => {
 
   const userData = useSelector((state) => state.auth.userData)
   const cover = userData?.cover || ""
-
+  const maxHeightScreen = "50vh" //screen.height - (screen.height * 50) / 100
   // ** function
   const setLoadingUploadAttachment = (value) =>
     setState({ loadingUploadAttachment: value })
@@ -472,18 +473,21 @@ const ModalCreatePost = (props) => {
         />
       </ModalHeader>
       <ModalBody>
-        <EditorComponent
-          dataPost={dataPost}
-          editorState={state.editorState}
-          onEditorStateChange={onEditorStateChange}
-          dataMention={dataMention}
-          backgroundImage={state.backgroundImage}
-          showChooseBackgroundImage={state.showChooseBackgroundImage}
-          setEditorState={setEditorState}
-        />
-
+        <PerfectScrollbar
+          style={{
+            maxHeight: maxHeightScreen
+          }}>
+          <EditorComponent
+            dataPost={dataPost}
+            editorState={state.editorState}
+            onEditorStateChange={onEditorStateChange}
+            dataMention={dataMention}
+            backgroundImage={state.backgroundImage}
+            showChooseBackgroundImage={state.showChooseBackgroundImage}
+            setEditorState={setEditorState}
+          />
+        </PerfectScrollbar>
         {renderPreviewAttachment}
-
         {_.isEmpty(file) && !_.isEmpty(state.arrLink) && (
           <LinkPreview
             url={state.arrLink[0]}
@@ -495,7 +499,6 @@ const ModalCreatePost = (props) => {
             }/assets/images/link.png`}
           />
         )}
-
         {state.showChooseBackgroundImage && (
           <ChooseBackground
             backgroundImage={state.backgroundImage}
@@ -503,7 +506,6 @@ const ModalCreatePost = (props) => {
             showChooseBackgroundImage={state.showChooseBackgroundImage}
           />
         )}
-
         {state.poll_vote && (
           <PollVote
             setPollVoteDetail={setPollVoteDetail}
@@ -511,7 +513,6 @@ const ModalCreatePost = (props) => {
             toggleModalPollVote={toggleModalPollVote}
           />
         )}
-
         <ul className="create_post_footer">
           <Tooltip
             title={useFormatMessage(

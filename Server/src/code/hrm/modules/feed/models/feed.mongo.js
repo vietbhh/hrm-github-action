@@ -21,7 +21,6 @@ export const feedSchema = baseSchema("m_feed", {
         type: String,
         default: "",
         get: (v) => {
-            console.log('v: ', v);
             return v.toLowerCase()
         }
     },

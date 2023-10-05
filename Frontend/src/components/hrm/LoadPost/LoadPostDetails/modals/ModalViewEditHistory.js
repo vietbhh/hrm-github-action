@@ -13,6 +13,7 @@ import { Link } from "react-router-dom"
 import { Modal, ModalBody } from "reactstrap"
 import LoadPost from "../../LoadPost"
 
+import PerfectScrollbar from "react-perfect-scrollbar"
 const ModalViewEditHistory = (props) => {
   const { modal, toggleModal, post_id } = props
   const [state, setState] = useMergedState({
@@ -20,7 +21,7 @@ const ModalViewEditHistory = (props) => {
     dataFeed: {},
     dataHistory: []
   })
-
+  const maxHeightScreen = "50vh" // screen.height - (screen.height * 50) / 100
   // ** useEffect
   useEffect(() => {
     if (modal && post_id) {
@@ -33,7 +34,7 @@ const ModalViewEditHistory = (props) => {
             const promise = new Promise(async (resolve, reject) => {
               const _dataPost = { ...item }
               if (_dataPost["thum"] === undefined) {
-                _dataPost['thumb'] = res.data.dataFeed?.thumb
+                _dataPost["thumb"] = res.data.dataFeed?.thumb
               }
               const data_attachment = await handleLoadAttachmentThumb(
                 _dataPost,
@@ -144,24 +145,28 @@ const ModalViewEditHistory = (props) => {
         </div>
 
         {state.loading && <DefaultSpinner />}
-
-        {!state.loading && (
-          <div className="div-body">
-            {_.map(state.dataHistory, (item, index) => {
-              return (
-                <div key={index} className="div-history">
-                  <div className="text-time">
-                    {useFormatMessage("modules.feed.post.text.edited_at")}:{" "}
-                    {timeDifference(item.edited_at)}
+        <PerfectScrollbar
+          style={{
+            maxHeight: maxHeightScreen
+          }}>
+          {!state.loading && (
+            <div className="div-body">
+              {_.map(state.dataHistory, (item, index) => {
+                return (
+                  <div key={index} className="div-history">
+                    <div className="text-time">
+                      {useFormatMessage("modules.feed.post.text.edited_at")}:{" "}
+                      {timeDifference(item.edited_at)}
+                    </div>
+                    <div className="div-history-item">
+                      <div className="load-feed">{renderHistory(item)}</div>
+                    </div>
                   </div>
-                  <div className="div-history-item">
-                    <div className="load-feed">{renderHistory(item)}</div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
+                )
+              })}
+            </div>
+          )}
+        </PerfectScrollbar>
       </ModalBody>
     </Modal>
   )

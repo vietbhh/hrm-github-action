@@ -21,6 +21,7 @@ const ButtonReaction = (props) => {
     isFocusCommentOnclick,
     setCommentMoreCountOriginal,
     setFocusCommentForm,
+    dataMention,
     togglePostCommentModal
   } = props
 
@@ -35,7 +36,6 @@ const ButtonReaction = (props) => {
   const full_name = userData.full_name
 
   // ** function
-  
 
   const updateReaction = (react_type) => {
     const _data = { ...data }
@@ -395,6 +395,16 @@ const ButtonReaction = (props) => {
         title={state.titleModalInMessenger}
         typeChat={state.typeChat}
       />
+
+      {state.postCommentModal && (
+        <ModalPostComment
+          modal={state.postCommentModal}
+          dataPreview={data}
+          dataMention={dataMention}
+          handleModal={togglePostCommentModal}
+          setData={setData}
+        />
+      )}
     </Fragment>
   )
 }
