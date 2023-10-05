@@ -4,7 +4,6 @@ import { Skeleton } from "antd"
 import React, { Fragment, useEffect } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
-import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
 import {
   handleDataMention,
@@ -13,6 +12,9 @@ import {
 } from "../common/common"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import EventDetailsModal from "../../Calendar/components/modal/EventDetails/EventDetailsModal"
+// ** redux
+import { useSelector, useDispatch } from "react-redux"
+import { setDataPost, appendDataPost } from "../common/reducer/feed"
 
 const LoadFeed = (props) => {
   const {
@@ -51,6 +53,10 @@ const LoadFeed = (props) => {
   const dataEmployee = useSelector((state) => state.users.list)
   const current_url = window.location.pathname
   const calendarState = useSelector((state) => state.calendar)
+  const feedState = useSelector((state) => state.feed)
+  const { dataPostState } = feedState
+
+  const dispatch = useDispatch()
 
   // ** function
   const loadData = (isSearch = false) => {
@@ -79,12 +85,12 @@ const LoadFeed = (props) => {
         if (isSearch) {
           if (res.data.dataPost.length === 0) {
             setState({
-              dataPost: [],
               totalPost: 0,
               page: res.data.page,
               hasMore: res.data.hasMore,
               arrPostIdSeen: arrPostIdSeen
             })
+            dispatch(setDataPost([]))
           } else {
             setState({
               totalPost: res.data.totalPost,
@@ -99,12 +105,12 @@ const LoadFeed = (props) => {
           }
         } else {
           setState({
-            dataPost: [...state.dataPost, ...res.data.dataPost],
             totalPost: res.data.totalPost,
             page: res.data.page,
             hasMore: res.data.hasMore,
             arrPostIdSeen: arrPostIdSeen
           })
+          dispatch(appendDataPost(res.data.dataPost))
         }
 
         setTimeout(() => {
@@ -144,19 +150,26 @@ const LoadFeed = (props) => {
 
     // load media
     const data_attachment = await handleLoadAttachmentThumb(value, cover)
-    const dataPost =
-      dataPostParam === undefined ? [...state.dataPost] : dataPostParam
+    let dataPost =
+      dataPostParam === undefined ? [...dataPostState] : dataPostParam
+    const cloneDataPost = [...dataPost]
     if (dataPost[index] !== undefined) {
-      dataPost[index]["url_thumb"] = data_attachment["url_thumb"]
-      dataPost[index]["url_cover"] = data_attachment["url_cover"]
-      dataPost[index]["medias"] = data_attachment["medias"]
+      const cloneDataPostIndex = {...dataPost[index]}
+      cloneDataPostIndex["url_thumb"] = data_attachment["url_thumb"]
+      cloneDataPostIndex["url_cover"] = data_attachment["url_cover"]
+      cloneDataPostIndex["medias"] = data_attachment["medias"]
 
       // check data link
       const dataUrl = await loadUrlDataLink(dataPost[index])
-      dataPost[index].dataLink.cover_url = dataUrl.cover_url
-      dataPost[index].dataLink.badge_url = dataUrl.badge_url
+      const cloneDataLink = {...cloneDataPostIndex["dataLink"]}
+      cloneDataLink["cover_url"] = dataUrl.cover_url
+      cloneDataLink["badge_url"] = dataUrl.badge_url
+      cloneDataPostIndex["dataLink"] = cloneDataLink
+
+      cloneDataPost[index] = cloneDataPostIndex
     }
-    setState({ dataPost: dataPost })
+
+    dispatch(setDataPost(cloneDataPost))
   }
 
   // load data create new
@@ -206,7 +219,7 @@ const LoadFeed = (props) => {
 
   const handleAfterUpdateStatus = (status) => {
     const { indexEvent } = calendarState
-    const allDataPost = [...state.dataPost]
+    const allDataPost = [...dataPostState]
     const newDataPost = { ...allDataPost[indexEvent] }
     const newDataLink = { ...newDataPost["dataLink"] }
     const newEmployee = _.isArray(newDataLink["employee"])
@@ -228,11 +241,15 @@ const LoadFeed = (props) => {
 
   // ** useEffect
   useEffect(() => {
-    loadData()
+    if (dataPostState.length === 0) {
+      loadData()
+    }
   }, [])
 
   useEffect(() => {
-    loadData(true)
+    if (searchTextFeed !== undefined) {
+      loadData(true)
+    }
   }, [searchTextFeed])
 
   useEffect(() => {
@@ -292,12 +309,17 @@ const LoadFeed = (props) => {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
+
+  console.log(state.hasMoreLazy)
+
   return (
     <Fragment>
       <div className="load-feed">
         <InfiniteScroll
-          dataLength={state.dataPost.length}
-          next={loadData}
+          dataLength={dataPostState.length}
+          next={() => {
+            loadData()
+          }}
           hasMore={state.hasMoreLazy}>
           {state.loadingPostCreateNew && (
             <div className="div-loading">
@@ -351,7 +373,7 @@ const LoadFeed = (props) => {
             )
           })}
 
-          {_.map(state.dataPost, (value, index) => {
+          {_.map(dataPostState, (value, index) => {
             return (
               <LazyLoadComponent
                 key={index}
@@ -366,12 +388,12 @@ const LoadFeed = (props) => {
                   dataMention={state.dataMention}
                   setData={(data, empty = false, dataCustom = {}) => {
                     if (empty) {
-                      const _data = state.dataPost.filter(
+                      const _data = dataPostState.filter(
                         (item, key) => key !== index
                       )
                       setState({ dataPost: _data })
                     } else {
-                      const _data = [...state.dataPost]
+                      const _data = [...dataPostState]
                       _data[index] = {
                         ...data,
                         url_thumb: _data[index].url_thumb,
@@ -388,7 +410,7 @@ const LoadFeed = (props) => {
                     }
                   }}
                   setDataLink={(data) => {
-                    const _data = [...state.dataPost]
+                    const _data = [...dataPostState]
                     _data[index]["dataLink"] = data
                     setState({ dataPost: _data })
                   }}
@@ -411,7 +433,7 @@ const LoadFeed = (props) => {
 
           {!state.loadingPost &&
             state.dataCreateNewTemp.length === 0 &&
-            state.dataPost.length === 0 && (
+            dataPostState.length === 0 && (
               <div className="empty-pinned pt-1">
                 <div className="w-100 d-flex flex-column justify-content-center align-items-center mb-2">
                   <EmptyContent
