@@ -24,7 +24,7 @@ class LinkPreview extends ErpController
 
         $code = urlencode(preg_replace('/[^A-Za-z0-9\-]/', '', $url));
         $results = [];
-        $host = parse_url($url)['host'];
+        $host = isset(parse_url($url)['host']) ? parse_url($url)['host'] : "";
         $sourceUrl = (!$this->_checkValidUrl($host)) ? parse_url($url)['scheme'] . '://' . $host : $host;
 
         $client = new Client();

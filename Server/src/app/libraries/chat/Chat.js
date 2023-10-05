@@ -147,11 +147,11 @@ const handleAddMemberToFireStoreGroup = async (
 
   const listNewMemberInfo = await getUsers(arrMember)
   const arrNameNewMember = listNewMemberInfo.map((item) => {
-    return item.full_name
+    return item?.full_name
   })
-
+  
   await handleSendMessageGroup(
-    userId,
+    userId.toString(),
     groupId,
     arrNameNewMember.join(", ") + " has joined the chat",
     "",
@@ -234,7 +234,7 @@ const handleRemoveMemberFromFireStoreGroup = async (
   })
 
   await handleSendMessageGroup(
-    userId,
+    userId.toString(),
     groupId,
     arrNameNewMember.join(", ") + " has left the chat",
     "",
