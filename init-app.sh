@@ -8,7 +8,7 @@ if [[ -z $3 || -z $4 ]]; then
 printf "Initialing app by friday build server...\n"
 
 BUILD_SV=$2
-declare -A build=( [app_port]="3000" [app_url]="app.build.friday.vn:86:86" [php_port]="3001" [php_url]="be.build.friday.vn:86" [node_port]="3002" [node_url]="sv.build.friday.vn:86")
+declare -A build=( [app_port]="3000" [app_url]="app.build.friday.vn:86" [php_port]="3001" [php_url]="be.build.friday.vn:86" [node_port]="3002" [node_url]="sv.build.friday.vn:86")
 declare -A build1=( [app_port]="3010" [app_url]="app1.build.friday.vn:86" [php_port]="3011" [php_url]="be1.build.friday.vn:86" [node_port]="3012" [node_url]="sv1.build.friday.vn:86")
 declare -A build2=( [app_port]="3020" [app_url]="app2.build.friday.vn:86" [php_port]="3021" [php_url]="be2.build.friday.vn:86" [node_port]="3022" [node_url]="sv2.build.friday.vn:86")
 declare -A build3=( [app_port]="3030" [app_url]="app3.build.friday.vn:86" [php_port]="3031" [php_url]="be3.build.friday.vn:86" [node_port]="3032" [node_url]="sv3.build.friday.vn:86")
