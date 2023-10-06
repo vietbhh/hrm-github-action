@@ -154,14 +154,14 @@ const LoadFeed = (props) => {
       dataPostParam === undefined ? [...dataPostState] : dataPostParam
     const cloneDataPost = [...dataPost]
     if (dataPost[index] !== undefined) {
-      const cloneDataPostIndex = {...dataPost[index]}
+      const cloneDataPostIndex = { ...dataPost[index] }
       cloneDataPostIndex["url_thumb"] = data_attachment["url_thumb"]
       cloneDataPostIndex["url_cover"] = data_attachment["url_cover"]
       cloneDataPostIndex["medias"] = data_attachment["medias"]
 
       // check data link
       const dataUrl = await loadUrlDataLink(dataPost[index])
-      const cloneDataLink = {...cloneDataPostIndex["dataLink"]}
+      const cloneDataLink = { ...cloneDataPostIndex["dataLink"] }
       cloneDataLink["cover_url"] = dataUrl.cover_url
       cloneDataLink["badge_url"] = dataUrl.badge_url
       cloneDataPostIndex["dataLink"] = cloneDataLink
@@ -175,7 +175,11 @@ const LoadFeed = (props) => {
   // load data create new
   const loadDataCreateNew = async () => {
     // ** user data post
-    setState({ loadingPostCreateNew: true })
+    const isEditPost = [...dataPostState].some(
+      (itemSome) => itemSome._id === dataCreateNew._id
+    )
+
+    setState({ loadingPostCreateNew: !isEditPost })
 
     // load media
     const data_attachment = await handleLoadAttachmentThumb(
@@ -190,6 +194,21 @@ const LoadFeed = (props) => {
     const dataUrl = await loadUrlDataLink(dataCreateNew)
     dataCreateNew["dataLink"].cover_url = dataUrl.cover_url
     dataCreateNew["dataLink"].badge_url = dataUrl.badge_url
+
+    if (isEditPost) {
+      const currentDataPost = [...dataPostState].map((item) => {
+        if (item._id === dataCreateNew._id) {
+          return {
+            ...dataCreateNew
+          }
+        }
+
+        return { ...item }
+      })
+
+      dispatch(setDataPost(currentDataPost))
+      return
+    }
 
     setState({
       dataCreateNewTemp: [...[dataCreateNew], ...state.dataCreateNewTemp],

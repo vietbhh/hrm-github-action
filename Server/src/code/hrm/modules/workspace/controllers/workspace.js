@@ -1164,7 +1164,6 @@ const loadFeed = async (req, res) => {
   const textFilter = request?.text === undefined ? "" : request.text
   const filter = {
     permission_ids: req.query.workspace,
-    permission: "workspace",
     approve_status: "approved",
     ref: null
   }

@@ -47,6 +47,7 @@ const ModalCreatePost = (props) => {
     setOptionCreate,
     setDataLink
   } = props
+
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
@@ -384,7 +385,16 @@ const ModalCreatePost = (props) => {
         if (!_.isEmpty(dataPost.tag_user)) {
           setState({ tag_your_colleagues: dataPost.tag_user.tag })
         }
+
+        // ** privacy
+        setState({
+          privacy_type: dataPost.permission
+        })
       }
+    } else {
+      setState({
+        privacy_type: "workspace"
+      })
     }
   }, [dataPost, modal])
 

@@ -9,18 +9,20 @@
     Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-@import '../../../bootstrap-extended/include'; // Bootstrap includes
-@import '../../../components/include'; // Components includes
+@import "../../../bootstrap-extended/include"; // Bootstrap includes
+@import "../../../components/include"; // Components includes
 
 // Import first main menu mixin
-@import '../../mixins/main-menu-mixin';
+@import "../../mixins/main-menu-mixin";
 
 //  Vertical menu
 //=========================
 .vertical-layout {
   &.vertical-menu-modern {
     .main-menu {
-      transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0s;
+      transition:
+        0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+        background 0s;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
       .navigation {
@@ -293,4 +295,4 @@
   }
 }
 // Import vertical-overlay-menu.scss for small screen support
-@import 'vertical-overlay-menu.scss';
+@import "vertical-overlay-menu.scss";
