@@ -365,6 +365,59 @@ const settingMenu = {
     order: 14,
     hideOnSetting: false,
     dividerBefore: false
+  },
+  stickers: {
+    id: "stickers",
+    title: "modules.sticker.menu.title",
+    type: "item",
+    action: "manage",
+    resource: "sticker_store",
+    menuIcon: (
+      <svg
+        width={36}
+        height={36}
+        viewBox="0 0 36 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          opacity="0.8"
+          d="M18 0C4.62856 0 0 6.48672 0 17.9095C0 31.3482 6.63427 36 18 36C31.3714 36 35.9999 29.5133 35.9999 18.0905C36.0256 4.65183 29.3914 0 18 0Z"
+          fill="#0082FF"
+        />
+        <path
+          d="M15 29H21C26 29 28 27 28 22V16C28 11 26 9 21 9H15C10 9 8 11 8 16V22C8 27 10 29 15 29Z"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M21.5 16.75C22.3284 16.75 23 16.0784 23 15.25C23 14.4216 22.3284 13.75 21.5 13.75C20.6716 13.75 20 14.4216 20 15.25C20 16.0784 20.6716 16.75 21.5 16.75Z"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeMiterlimit={10}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M14.5 16.75C15.3284 16.75 16 16.0784 16 15.25C16 14.4216 15.3284 13.75 14.5 13.75C13.6716 13.75 13 14.4216 13 15.25C13 16.0784 13.6716 16.75 14.5 16.75Z"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeMiterlimit={10}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M21.5 22C20.3333 23 17.3 24.4 14.5 22"
+          stroke="white"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+    navLink: "/sticker-store",
+    order: 14,
+    hideOnSetting: false,
+    dividerBefore: false
   }
 }
 

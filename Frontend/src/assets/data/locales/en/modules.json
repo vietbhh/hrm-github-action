@@ -4372,6 +4372,42 @@
     "hashtag": {
       "post": "post",
       "posts": "posts"
+    },
+    "sticker": {
+      "menu": {
+        "title": "Stickers Store"
+      },
+      "list": {
+        "button": {
+          "create": "Create"
+        },
+        "placeholder": {
+          "sticker_find": "Find stickers"
+        }
+      },
+      "modal": {
+        "title": {
+          "create": "Create Sticker",
+          "update": "Update Sticker",
+          "switch": {
+            "default": "Default",
+            "title": "Default for all user"
+          },
+          "upload": "Upload"
+        },
+        "messages": {
+          "error_type_file": "You can only upload JPG/PNG/GIF file!",
+          "error_empty_file": "You do not upload any image file!"
+        },
+        "placeholder": {
+          "name": "Enter sticker name"
+        },
+        "button": {
+          "create": "Create",
+          "update": "Update",
+          "delete": "Delete"
+        }
+      }
     }
   }
 }
