@@ -39,8 +39,10 @@ import { handleGetEventById } from "./event.js"
 import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
+  sendNotificationCommentImagePost,
   sendNotificationPostPending,
   sendNotificationPostPendingFeed,
+  sendNotificationReactionImagePost,
   sendNotificationReactionPost,
   sendNotificationReactionPostTag,
   sendNotificationTagInPost,
@@ -667,13 +669,23 @@ const updatePostReaction = async (req, res, next) => {
         req.__user.toString() !== created_by.toString() &&
         !arrUserNotReceivedNotification.includes(created_by)
       ) {
+        console.log("infoPost", infoPost)
         const receivers = [created_by]
-        sendNotificationReactionPost(
-          infoPost,
-          { id: req.__user, full_name: full_name },
-          react_type,
-          receivers
-        )
+        if (infoPost.ref && (infoPost.type === "image" || "video")) {
+          sendNotificationReactionImagePost(
+            infoPost,
+            { id: req.__user, full_name: full_name },
+            react_type,
+            receivers
+          )
+        } else {
+          sendNotificationReactionPost(
+            infoPost,
+            { id: req.__user, full_name: full_name },
+            react_type,
+            receivers
+          )
+        }
       }
     }
 

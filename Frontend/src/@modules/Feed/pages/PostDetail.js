@@ -253,6 +253,7 @@ const PostDetail = (props) => {
                 customAction={customAction}
                 options_employee_department={state.options_employee_department}
                 optionsMeetingRoom={state.optionsMeetingRoom}
+                isLoadComment={true}
               />
             )}
           </div>

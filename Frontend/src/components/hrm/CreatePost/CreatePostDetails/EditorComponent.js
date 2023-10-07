@@ -23,7 +23,6 @@ import "@styles/react/libs/editor/editor.scss"
 import "@draft-js-plugins/hashtag/lib/plugin.css"
 import { ContentState, EditorState } from "draft-js"
 import htmlToDraft from "html-to-draftjs"
-
 const defaultSuggestionsFilterFix = (
   valueSearch,
   mentions = [],
@@ -37,7 +36,6 @@ const defaultSuggestionsFilterFix = (
       suggestion.username.toLowerCase().indexOf(value) > -1
     )
   })
-
   return data.slice(0, maxRows)
 }
 const EditorComponent = (props) => {
@@ -122,11 +120,11 @@ const EditorComponent = (props) => {
         linkPlugin
       }
     }, [])
+
   const onOpenChange = useCallback((_open) => {
-    setTimeout(() => {
-      setState({ open: _open })
-    }, 100)
+    setState({ open: _open })
   }, [])
+
   const onSearchChange = useCallback(
     ({ value }) => {
       setSuggestions(defaultSuggestionsFilterFix(value, state.mentions))

@@ -8,11 +8,12 @@ import { feedApi } from "@modules/Feed/common/api"
 import { handleReaction, renderImageReact } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
 import classNames from "classnames"
-import React, { Fragment, useEffect, useState } from "react"
+import React, { Fragment, useContext, useEffect, useState } from "react"
 import ReactHtmlParser from "react-html-parser"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import DropdownReaction from "./DropdownReaction"
+import { AbilityContext } from "utility/context/Can"
 
 export const handleImageCommentUrl = (image) => {
   if (image) {
@@ -49,9 +50,10 @@ const Comment = (props) => {
   const userId = userData.id
   const full_name = userData.full_name
 
+  const ability = useContext(AbilityContext)
+  const ManagePost = ability.can("ManagePost", "feed")
   const [showSeeMore, setShowSeeMore] = useState(false)
   const [seeMore, setSeeMore] = useState(false)
-
   const actions = {
     edit_comment: {
       label: (
@@ -79,7 +81,10 @@ const Comment = (props) => {
           </span>
         </a>
       ),
-      condition: parseInt(dataComment?.created_by?.id) === parseInt(userId)
+      condition:
+        parseInt(dataComment?.created_by?.id) === parseInt(userId) ||
+        parseInt(userId) === data?.owner?.id ||
+        ManagePost
     }
   }
 

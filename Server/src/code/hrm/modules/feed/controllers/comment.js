@@ -15,6 +15,7 @@ import {
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { isFile } from "#app/utility/handleData.js"
 import {
+  sendNotificationCommentImagePost,
   sendNotificationCommentPost,
   sendNotificationCommentPostTag,
   sendNotificationReactionCommentPost,
@@ -51,7 +52,6 @@ const submitComment = async (req, res, next) => {
       if (req.body?.image) {
         dataInsert["image_source"] = req.body?.image
       }
-
       const commentModel = new commentMongoModel(dataInsert)
       const saveComment = await commentModel.save()
       await feedMongoModel.updateOne(
@@ -71,7 +71,17 @@ const submitComment = async (req, res, next) => {
         !arrUserNotReceivedNotification.includes(created_by)
       ) {
         const receivers = [created_by]
-        sendNotificationCommentPost(infoPost, data_user, content, receivers)
+
+        if (infoPost.ref && (infoPost.type === "image" || "video")) {
+          sendNotificationCommentImagePost(
+            infoPost,
+            data_user,
+            content,
+            receivers
+          )
+        } else {
+          sendNotificationCommentPost(infoPost, data_user, content, receivers)
+        }
       }
 
       // send notification tag
@@ -307,6 +317,7 @@ const updateSubCommentReaction = async (req, res, next) => {
       )
       if (index_sub_comment !== -1) {
         const data_sub_comment = data_comment["sub_comment"][index_sub_comment]
+        console.log("data_sub_comment", data_sub_comment)
         const index_reaction = data_sub_comment.reaction.findIndex(
           (val) => val.react_type === react_type
         )
@@ -340,29 +351,19 @@ const updateSubCommentReaction = async (req, res, next) => {
             }
           )
         }
-      }
 
-      // ** send notification
-      if (req.__user.toString() !== created_by.toString()) {
-        const userId = req.__user
-        const receivers = created_by
-        const body =
-          full_name + " {{modules.network.notification.liked_your_comment}}"
-        const link = `/posts/${_id_post}`
-        sendNotification(
-          userId,
-          receivers,
-          {
-            title: "",
-            body: body,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
-        )
+        // ** send notification
+        if (req.__user.toString() !== created_by.toString()) {
+          const userId = req.__user
+          const receivers = created_by
+
+          sendNotificationReactionCommentPost(
+            data_sub_comment,
+            { id: userId, full_name: full_name },
+            react_type,
+            receivers
+          )
+        }
       }
     }
 
