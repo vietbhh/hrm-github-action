@@ -4340,7 +4340,16 @@
         "your_comment_post" : "your comment",
         "request_to_join": "There was a request to join group",
         "requests_to_join": "There was requests to join group",
-        "from": "from"
+        "from": "from",
+        "commented_on_your_image": "commented on your image",
+        "other_comment_on_your_image" : "of other people who have comment your image",
+        "commented_on_your_video": "commented on your video",
+        "other_comment_on_your_video" : "of other people who have comment your video",
+        "reaction_on_your_image" : "your image",
+        "reaction_on_your_video" : "your video",
+        "other_reaction_on_your_video" : "of other people who have reaction your video",
+        "other_reaction_on_your_image" : "of other people who have reaction your image",
+        "other_reaction_post" : "of other people who have interacted with your post"
       }
     },
     "timeline": {

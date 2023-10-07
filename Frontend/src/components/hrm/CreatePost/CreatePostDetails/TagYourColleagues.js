@@ -185,11 +185,9 @@ const TagYourColleagues = (props) => {
                           <div className="d-flex align-items-center list-user-react">
                             <Avatar
                               className="img me-1"
-                              src={data_user?.avatar}
+                              userId={data_user?.id}
                             />
-                            <span className="name">
-                              xxx {data_user?.full_name}
-                            </span>
+                            <span className="name">{data_user?.full_name}</span>
                             <div
                               className="ms-auto text-center"
                               style={{ width: "20px" }}
@@ -197,7 +195,6 @@ const TagYourColleagues = (props) => {
                               <i className="fa-solid fa-xmark"></i>
                             </div>
                           </div>
-
                           <hr />
                         </Fragment>
                       )

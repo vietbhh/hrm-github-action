@@ -3,6 +3,7 @@ import { getUser } from "#app/models/users.mysql.js"
 import { Op, Sequelize } from "sequelize"
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import { notificationsModelMysql } from "#app/models/notifications.mysql.js"
+import commentMongoModel from "../../feed/models/comment.mongo.js"
 
 const compactContent = (content = "") => {
   const contentPost = content
@@ -220,14 +221,16 @@ const sendNotificationReactionPost = async (
       const count = reaction.react_user.length
       numberReaction += count
     })
-    title =
-      "<b>" +
-      userReaction.full_name +
-      "</b> to " +
-      reaction +
-      " and " +
-      (numberReaction - 1) +
-      " of other people who have interacted with your post"
+    if (numberReaction > 0) {
+      title =
+        "<b>" +
+        userReaction.full_name +
+        "</b> to " +
+        reaction +
+        " and " +
+        numberReaction +
+        " {{modules.network.notification.other_reaction_post}}"
+    }
   }
 
   await sendNotification(userReaction?.id, receivers, {
@@ -322,19 +325,21 @@ const sendNotificationCommentPost = async (post, user, comment, receivers) => {
     }
   })
   if (infoNotification) {
-    update_notification = true
-    let reactionPost = post.reaction
-    let numberReaction = 0
-    reactionPost.map((reaction) => {
-      const count = reaction.react_user.length
-      numberReaction += count
+    const data_comment = await commentMongoModel.find({
+      post_id: { $in: post._id }
     })
-    title =
-      "<b>" +
-      user.full_name +
-      "</b> and " +
-      (numberReaction - 1) +
-      " of other people who have comment your post"
+    const arrCmt = data_comment.map((x) => x.created_by)
+    const checkExist = [...new Set(arrCmt)]
+    update_notification = true
+
+    if (checkExist.length > 1) {
+      title =
+        "<b>" +
+        user.full_name +
+        "</b> and " +
+        (checkExist.length - 1) +
+        " of other people who have comment your post"
+    }
   }
 
   await sendNotification(user?.id, receivers, {
@@ -379,19 +384,21 @@ const sendNotificationCommentPostTag = async (
     }
   })
   if (infoNotification) {
-    update_notification = true
-    const reactionPost = post.reaction
-    let numberReaction = 0
-    reactionPost.map((reaction) => {
-      const count = reaction.react_user.length
-      numberReaction += count
+    const data_comment = await commentMongoModel.find({
+      post_id: { $in: post._id }
     })
-    title =
-      "<b>" +
-      userReaction.full_name +
-      "</b> and " +
-      (numberReaction - 1) +
-      " of other people who have comment post you're tagged"
+    const arrCmt = data_comment.map((x) => x.created_by)
+    const checkExist = [...new Set(arrCmt)]
+
+    update_notification = true
+    if (checkExist.length > 1) {
+      title =
+        "<b>" +
+        userReaction.full_name +
+        "</b> and " +
+        (checkExist.length - 1) +
+        " of other people who have comment post you're tagged"
+    }
   }
 
   await sendNotification(userReaction?.id, receivers, {
@@ -601,7 +608,7 @@ const sendNotificationReactionCommentPost = async (
       "</b> to " +
       reaction +
       " and " +
-      (numberReaction - 1) +
+      numberReaction +
       " of other people who have interacted with your comment"
   }
   await sendNotification(userReaction?.id, receivers, {
@@ -771,6 +778,139 @@ const sendNotificationKickMember = async (workgroup, sender, receivers) => {
   })
 }
 
+const sendNotificationCommentImagePost = async (
+  post,
+  user,
+  comment,
+  receivers
+) => {
+  const type = post?.type
+  let typePost = "{{modules.network.notification.commented_on_your_image}}"
+  if (type === "video")
+    typePost = "{{modules.network.notification.commented_on_your_video}}"
+  let title = "<b>" + user.full_name + "</b> " + typePost
+  const link = "posts/" + post._id + "/" + post._id
+  const body = compactContent(comment)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "comment_post_" + type
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    const data_comment = await commentMongoModel.find({
+      post_id: { $in: post._id }
+    })
+    const arrCmt = data_comment.map((x) => x.created_by)
+    const checkExist = [...new Set(arrCmt)]
+    update_notification = true
+
+    if (checkExist.length > 1) {
+      let typePost =
+        " {{modules.network.notification.other_comment_on_your_image}}"
+      if (type === "video")
+        typePost =
+          " {{modules.network.notification.other_comment_on_your_video}}"
+      title =
+        "<b>" +
+        user.full_name +
+        "</b> and " +
+        (checkExist.length - 1) +
+        typePost
+    }
+  }
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id),
+    custom_fields: { source_id: post._id, source_type: "comment_post_" + type },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
+  })
+}
+
+const sendNotificationReactionImagePost = async (
+  post,
+  user,
+  reaction,
+  receivers
+) => {
+  const type = post?.type
+  let typePost = " {{modules.network.notification.reaction_on_your_image}}"
+  if (type === "video")
+    typePost = " {{modules.network.notification.reaction_on_your_video}}"
+  let title = "<b>" + user.full_name + "</b> " + reaction + typePost
+  const link = "posts/" + post._id + "/" + post._id
+  const body = compactContent(post.content)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "reaction_post_" + type
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    const reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+
+    update_notification = true
+    if (numberReaction > 0) {
+      let typePost =
+        " {{modules.network.notification.other_reaction_on_your_image}}"
+      if (type === "video")
+        typePost =
+          " {{modules.network.notification.other_reaction_on_your_video}}"
+      title =
+        "<b>" +
+        user.full_name +
+        "</b> " +
+        reaction +
+        " and " +
+        numberReaction +
+        typePost
+    }
+  }
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id),
+    custom_fields: {
+      source_id: post._id,
+      source_type: "reaction_post_" + type
+    },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
+  })
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -794,5 +934,7 @@ export {
   sendNotificationHasNewMember,
   sendNotificationAddMemberWaitApproval,
   sendNotificationAssignedAdmin,
-  sendNotificationKickMember
+  sendNotificationKickMember,
+  sendNotificationCommentImagePost,
+  sendNotificationReactionImagePost
 }
