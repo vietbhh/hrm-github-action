@@ -28,7 +28,6 @@ const LoadPostMedia = (props) => {
     postType: "",
     dataMedias: []
   })
-
   const isMounted = useRef(false)
 
   // ** function

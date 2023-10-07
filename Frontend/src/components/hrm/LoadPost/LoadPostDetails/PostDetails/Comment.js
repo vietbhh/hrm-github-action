@@ -347,7 +347,6 @@ const Comment = (props) => {
         )
     }
   }
-
   return (
     <Fragment>
       <div
@@ -437,7 +436,10 @@ const Comment = (props) => {
             </span>
           </div>
         </div>
-        <div className="comment__right-button">
+        <div
+          className={`comment__right-button ${
+            items.length > 0 ? "" : "hidden"
+          }`}>
           <Dropdown
             menu={{ items }}
             placement="bottom"

@@ -278,10 +278,9 @@ const PostCommentForm = (props) => {
     return { plugins, MentionSuggestions }
   }, [])
   const onOpenChange = useCallback((_open) => {
-    setTimeout(() => {
-      setState({ open: _open })
-    }, 100)
+    setState({ open: _open })
   }, [])
+
   const onSearchChange = useCallback(
     (propsData) => {
       const { value } = propsData
