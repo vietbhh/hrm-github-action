@@ -33,20 +33,20 @@ const sendNotification = async (
   let notificationId = 0
   if (saveToDb) {
     if (update_notification) {
-      await notificationsModelMysql.update(
-        {
-          sender_id: sender,
-          recipient_id: JSON.stringify(receivers),
-          title: title,
-          link: link,
-          icon: notificationIcon
-        },
-        {
-          where: {
-            id: idUpdate
-          }
+      const dataUpdate = {
+        sender_id: sender,
+        recipient_id: JSON.stringify(receivers),
+        title: title,
+        link: link,
+        icon: notificationIcon
+      }
+      if (popup) dataUpdate.read_by = "[]"
+
+      await notificationsModelMysql.update(dataUpdate, {
+        where: {
+          id: idUpdate
         }
-      )
+      })
     } else {
       try {
         const saveNotification = await notificationsModelMysql.create(
@@ -72,7 +72,6 @@ const sendNotification = async (
       }
     }
   }
-
   //for case when user online,push notification via socket
   if (popup) {
     emitDataToOnlineUsers(receivers, emitKey, {
