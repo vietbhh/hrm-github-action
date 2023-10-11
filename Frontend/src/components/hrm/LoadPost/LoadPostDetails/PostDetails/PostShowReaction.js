@@ -22,7 +22,7 @@ const PostShowReaction = (props) => {
     dataReaction: {},
     modal_reaction: false
   })
-
+  console.log("data , data", data)
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
 

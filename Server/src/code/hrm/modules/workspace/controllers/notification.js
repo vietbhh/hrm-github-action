@@ -184,10 +184,14 @@ const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
 
 const sendNotificationReactionPost = async (
   post,
-  userReaction,
+  user,
   reaction,
-  receivers
+  receivers,
+  isUpdate = false
 ) => {
+  let userReaction = user
+  let popup = true
+  if (isUpdate) popup = false
   let title =
     "<b>" +
     userReaction.full_name +
@@ -221,14 +225,15 @@ const sendNotificationReactionPost = async (
       const count = reaction.react_user.length
       numberReaction += count
     })
-    if (numberReaction > 0) {
+
+    if (numberReaction > 1) {
       title =
         "<b>" +
         userReaction.full_name +
         "</b> to " +
         reaction +
         " and " +
-        numberReaction +
+        (numberReaction - 1) +
         " {{modules.network.notification.other_reaction_post}}"
     }
   }
@@ -240,7 +245,8 @@ const sendNotificationReactionPost = async (
     icon: parseInt(userReaction?.id),
     custom_fields: { source_id: post._id, source_type: "reaction_post" },
     update_notification: update_notification,
-    idUpdate: infoNotification?.id
+    idUpdate: infoNotification?.id,
+    popup: popup
   })
 }
 
@@ -303,7 +309,15 @@ const sendNotificationReactionPostTag = async (
     idUpdate: infoNotification?.id
   })
 }
-const sendNotificationCommentPost = async (post, user, comment, receivers) => {
+const sendNotificationCommentPost = async (
+  post,
+  user,
+  comment,
+  receivers,
+  isUpdate = false
+) => {
+  let popup = true
+  if (isUpdate) popup = false
   let title =
     "<b>" +
     user.full_name +
@@ -341,7 +355,6 @@ const sendNotificationCommentPost = async (post, user, comment, receivers) => {
         " of other people who have comment your post"
     }
   }
-
   await sendNotification(user?.id, receivers, {
     title: title,
     body: body,
@@ -349,7 +362,8 @@ const sendNotificationCommentPost = async (post, user, comment, receivers) => {
     icon: parseInt(user?.id),
     custom_fields: { source_id: post._id, source_type: "comment_post" },
     update_notification: update_notification,
-    idUpdate: infoNotification?.id
+    idUpdate: infoNotification?.id,
+    popup: popup
   })
 }
 
@@ -911,6 +925,52 @@ const sendNotificationReactionImagePost = async (
     idUpdate: infoNotification?.id
   })
 }
+const deleteNotification = async (source_id, source_type) => {
+  const deleteNoti = await notificationsModelMysql.destroy({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", source_id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_type", source_type)
+        )
+      ]
+    }
+  })
+}
+const updateNotification = async (source_id, source_type, title) => {
+  const infoNoti = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", source_id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_type", source_type)
+        )
+      ]
+    }
+  })
+
+  await notificationsModelMysql.update(
+    {
+      title: title
+    },
+    {
+      where: {
+        [Op.and]: [
+          Sequelize.literal(
+            handleJsonQueryString("custom_fields", "source_id", source_id)
+          ),
+          Sequelize.literal(
+            handleJsonQueryString("custom_fields", "source_type", source_type)
+          )
+        ]
+      }
+    }
+  )
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -936,5 +996,7 @@ export {
   sendNotificationAssignedAdmin,
   sendNotificationKickMember,
   sendNotificationCommentImagePost,
-  sendNotificationReactionImagePost
+  sendNotificationReactionImagePost,
+  deleteNotification,
+  updateNotification
 }
