@@ -3,7 +3,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { eventApi } from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import React, { Fragment } from "react"
+import React, { Fragment, useMemo } from "react"
 import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
 import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreatePost"
@@ -228,8 +228,8 @@ const LoadPost = (props) => {
     return ""
   }
 
-  return (
-    <Fragment>
+  const renderComponent = useMemo(() => {
+    return (
       <div className="load-post" id={`post_id_${data?._id}`}>
         <PostHeader
           data={data}
@@ -315,6 +315,12 @@ const LoadPost = (props) => {
           </>
         )}
       </div>
+    )
+  }, [data])
+
+  return (
+    <Fragment>
+      <Fragment>{renderComponent}</Fragment>
 
       {/* render modal */}
       {!isViewEditHistory && (

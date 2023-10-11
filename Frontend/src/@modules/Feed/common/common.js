@@ -76,12 +76,13 @@ export const renderIconVideo = () => {
 export const handleLoadAttachmentMedias = (value) => {
   const promises = []
   _.forEach(value.medias, (item) => {
+    const cloneItem = {...item}
     const promise = new Promise(async (resolve, reject) => {
       await downloadApi.getPhoto(item.thumb).then((response) => {
-        item["url_thumb"] = URL.createObjectURL(response.data)
+        cloneItem["url_thumb"] = URL.createObjectURL(response.data)
       })
 
-      resolve(item)
+      resolve(cloneItem)
     })
 
     promises.push(promise)

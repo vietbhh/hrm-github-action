@@ -11,11 +11,12 @@ import { stripHTML } from "layouts/_components/vertical/common/common"
 import { map } from "lodash-es"
 import moment from "moment"
 import { Fragment, useEffect } from "react"
-import { useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
 import { getTabByNameOrId } from "../../../common/common"
 import AboutWorkgroup from "./AboutWorkgroup"
+// ** redux
+import { useSelector } from "react-redux"
 
 const TabFeed = (props) => {
   const {
@@ -26,13 +27,14 @@ const TabFeed = (props) => {
     setSearchTextFeed,
     tabToggle
   } = props
+
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
     approveStatus: "pending",
     dataPinned: [],
     joined: false,
-    loading: false
+    loading: false``
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -57,6 +59,7 @@ const TabFeed = (props) => {
   }
   useEffect(() => {
     loadData()
+    
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
       : []
@@ -342,6 +345,7 @@ const TabFeed = (props) => {
         </Fragment>
         <Fragment>{renderSearchText()}</Fragment>
         <LoadFeed
+          isWorkspace={true}
           searchTextFeed={searchTextFeed}
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}
