@@ -8,6 +8,7 @@ import { Button } from "reactstrap"
 import defaultWorkSpaceCover from "@modules/Workspace/assets/images/default_workspace_cover.webp"
 import ListMember from "./ListMember"
 import Photo from "@apps/modules/download/pages/Photo"
+import { Tooltip } from "antd"
 
 const WorkspaceItem = (props) => {
   const {
@@ -62,11 +63,11 @@ const WorkspaceItem = (props) => {
           </div>
           <div className="p-1 content-container">
             <div className="mb-1">
-              <p
-                className="mb-50 text-color-title"
-                onClick={() => handleClickViewGroup()}>
-                {infoWorkspace.name}
-              </p>
+              <Tooltip placement="top" title={infoWorkspace.name} style={{backgroundColor:"yellow"}}>
+                  <p className="mb-0 text-color-title" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} onClick={() => handleClickViewGroup()}>
+                    {infoWorkspace.name}
+                  </p>
+              </Tooltip>
               <small>
                 {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
                 {infoWorkspace.member_number === 1
@@ -92,9 +93,13 @@ const WorkspaceItem = (props) => {
             <Fragment>{renderCoverImage()}</Fragment>
           </div>
           <div className="p-75 d-flex align-items-center justify-content-between gap-1 content-container common-border">
-            <div>
+            <div style={{ flex: "3", overflow: "hidden" }}>
               <div className="mb-25">
-                <p className="mb-0 text-color-title">{infoWorkspace.name}</p>
+                <Tooltip placement="top" title={infoWorkspace.name} style={{backgroundColor:"yellow"}}>
+                  <p className="mb-0 text-color-title" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {infoWorkspace.name}
+                  </p>
+                </Tooltip>
                 <small>
                   {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
                   {infoWorkspace.member_number === 1
@@ -119,7 +124,8 @@ const WorkspaceItem = (props) => {
               <Button.Ripple
                 color="secondary"
                 className="custom-secondary common-border"
-                onClick={() => handleClickViewGroup()}>
+                onClick={() => handleClickViewGroup()}
+              >
                 {useFormatMessage("modules.workspace.buttons.view_group")}
               </Button.Ripple>
             </div>
