@@ -119,6 +119,16 @@ const getWorkspace = async (req, res, next) => {
       (item) => parseInt(item) === parseInt(req.__user)
     )
 
+    // count total member in workspace
+    const user = await usersModel.findAll(); 
+
+    const membersWithIdUser = workspace.members.filter(member => {
+      return user.some(u => u.id == member.id_user);
+    });
+
+    const memberCountWithIdUser = membersWithIdUser.length;
+    // End count total member in workspace
+
     const postList = await feedMongoModel
       .find({
         permission_ids: workspaceId,
@@ -130,7 +140,8 @@ const getWorkspace = async (req, res, next) => {
     return res.respond({
       ...workspace._doc,
       is_admin_group: isAdmin,
-      pending_post: postList
+      pending_post: postList,
+      total_member: memberCountWithIdUser
     })
   } catch (err) {
     return res.fail(err.message)
