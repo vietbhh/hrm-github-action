@@ -15,6 +15,7 @@ import {
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { isFile } from "#app/utility/handleData.js"
 import {
+  deleteNotification,
   sendNotificationCommentImagePost,
   sendNotificationCommentPost,
   sendNotificationCommentPostTag,
@@ -126,12 +127,14 @@ const submitComment = async (req, res, next) => {
       }
 
       const infoPost = { _id: id_post }
-      sendNotificationTagInCommentPost(
-        infoPost,
-        data_user,
-        content,
-        body.tag_user
-      )
+      if (body.tag_user.length > 0) {
+        sendNotificationTagInCommentPost(
+          infoPost,
+          data_user,
+          content,
+          body.tag_user
+        )
+      }
     }
 
     return res.respond(dataFeed)
@@ -317,7 +320,6 @@ const updateSubCommentReaction = async (req, res, next) => {
       )
       if (index_sub_comment !== -1) {
         const data_sub_comment = data_comment["sub_comment"][index_sub_comment]
-        console.log("data_sub_comment", data_sub_comment)
         const index_reaction = data_sub_comment.reaction.findIndex(
           (val) => val.react_type === react_type
         )
@@ -399,6 +401,33 @@ const deleteComment = async (req, res, next) => {
       )
       // xoa file
     }
+
+    // update notification
+    const infoPost = await feedMongoModel.findById(_id_post)
+    if (infoPost.comment_ids.length > 0) {
+      const data_comment = await commentMongoModel.find({
+        post_id: { $in: _id_post }
+      })
+      const arrCmt = data_comment.map((x) => x.created_by)
+      const checkExist = [...new Set(arrCmt)]
+      const resultOtherOwner = checkExist.filter((id) => id != infoPost?.owner)
+      const receivers = [infoPost?.owner]
+      const userOld = await getUser(
+        resultOtherOwner[parseInt(resultOtherOwner.length - 1)]
+      )
+      const comment_userOld = data_comment.filter(
+        (data) => parseInt(data.owner) === parseInt(userOld.id)
+      )
+      sendNotificationCommentPost(
+        infoPost,
+        userOld,
+        comment_userOld[0]["content"],
+        receivers,
+        true
+      )
+    } else {
+      deleteNotification(_id_post, "comment_post")
+    }
     const data = await handleDataFeedById(_id_post, comment_more_count_original)
     return res.respond(data)
   } catch (err) {
@@ -458,11 +487,14 @@ const handleDataComment = async (feed, loadComment = -1) => {
   if (!isEmpty(comment_ids)) {
     if (loadComment === -1) {
       const id_comment_last = comment_ids[comment_ids.length - 1]
-      const data_comment = await commentMongoModel.findById(id_comment_last)
-      const _data_comment = await handleDataBeforeReturn(data_comment)
-      const __data_comment = await handleDataSubComment(_data_comment)
+      //const data_comment = await commentMongoModel.findById(id_comment_last)
+      const data_comment = await commentMongoModel.find({
+        _id: { $in: comment_ids }
+      })
+      const _data_comment = await handleDataBeforeReturn(data_comment, true)
+      const __data_comment = await handleDataSubComment(_data_comment, true)
       comment_more_count = comment_ids.length - 1
-      comment_list.push(__data_comment)
+      comment_list = __data_comment
     } else if (loadComment === 0) {
       const data_comment = await commentMongoModel.find({
         _id: { $in: comment_ids }
@@ -489,10 +521,13 @@ const handleDataComment = async (feed, loadComment = -1) => {
     sub_comment_count += item.sub_comment.length
   })
   const _feed = { ...feed }
+
   _feed["_doc"]["comment_more_count"] = comment_more_count
   _feed["_doc"]["comment_count"] = comment_ids.length + sub_comment_count
-  _feed["_doc"]["comment_list"] = comment_list
-
+  _feed["_doc"]["comment_list"] =
+    loadComment === -1 && comment_list.length > 0
+      ? [comment_list[comment_list.length - 1]]
+      : comment_list
   return _feed["_doc"]
 }
 
