@@ -669,7 +669,6 @@ const updatePostReaction = async (req, res, next) => {
         req.__user.toString() !== created_by.toString() &&
         !arrUserNotReceivedNotification.includes(created_by)
       ) {
-        console.log("infoPost", infoPost)
         const receivers = [created_by]
         if (infoPost.ref && (infoPost.type === "image" || "video")) {
           sendNotificationReactionImagePost(
