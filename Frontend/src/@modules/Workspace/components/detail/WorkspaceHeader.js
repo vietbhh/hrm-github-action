@@ -657,7 +657,7 @@ const WorkspaceHeader = (props) => {
                     }}>
                     {data?.type}
                   </span>{" "}
-                  · {data?.members ? data?.members.length : 0}{" "}
+                  · {data?.total_member ? data?.total_member : 0}{" "}
                   {useFormatMessage("modules.workspace.display.members")}
                   {/*{data?.pinPosts && data?.pinPosts.length}{" "}
                 {useFormatMessage("modules.workspace.text.posts")}*/}
