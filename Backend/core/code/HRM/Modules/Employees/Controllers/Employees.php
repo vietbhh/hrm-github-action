@@ -2646,7 +2646,7 @@ class Employees extends Employee
 
 		$employees = new EmployeesModel();
 
-		$result = $employees->where("department_id",$departmentId)->findAll();
+		$result = $employees->select("m_employees.*")->join("users", " users.id = m_employees.users_id "  )->where("m_employees.department_id",$departmentId)->where("users.active",1)->findAll();
 
 		return $this->respond([
 			'results' => $result
