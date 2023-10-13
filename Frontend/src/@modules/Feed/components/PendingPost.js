@@ -200,18 +200,18 @@ const PendingPost = (props) => {
                     color="primary"
                     className="btn-action-primary me-1 ms-auto"
                     onClick={() => handleApproveAll(idWorkspace, "approved")}
-                    disabled={state.loading}>
+                    disabled={state.listPost.length === 0}>
                     {state.loading && <Spinner size="sm" className="me-50" />}
                     {useFormatMessage(
                       "modules.workspace.buttons.approve_all_posts"
-                    )}
+                    )} 
                   </Button>
                   <Button
                     type="submit"
                     color="secondary"
                     className="btn-action-secondary "
                     onClick={() => handleApproveAll(idWorkspace, "rejected")}
-                    disabled={state.loading}>
+                    disabled={state.listPost.length === 0}>
                     {state.loading && <Spinner size="sm" className="me-50" />}
                     {useFormatMessage(
                       "modules.workspace.buttons.decline_all_posts"
