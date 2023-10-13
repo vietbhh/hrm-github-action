@@ -124,7 +124,6 @@ const EmployeesSelect = (props) => {
     return data.map((item, key) => {
       const uniqueUpdatedBy = [...new Set(state.dataSelected.map(item => item.department_id))];
 
-      console.log()
       const department_selected = uniqueUpdatedBy
       const checked = department_selected.some((x) => x === item.id)
       return (
@@ -274,7 +273,6 @@ const EmployeesSelect = (props) => {
       }
     }
   }
-console.log(state)
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.typeAdd === "members") {
