@@ -122,8 +122,11 @@ const EmployeesSelect = (props) => {
 
   const renderDepartment = (data = []) => {
     return data.map((item, key) => {
-      const department_selected = [...state.department_selected]
-      const checked = department_selected.some((x) => x["id"] === item.id)
+      const uniqueUpdatedBy = [...new Set(state.dataSelected.map(item => item.department_id))];
+
+      console.log()
+      const department_selected = uniqueUpdatedBy
+      const checked = department_selected.some((x) => x === item.id)
       return (
         <Col sm={12} key={key}>
           <div
