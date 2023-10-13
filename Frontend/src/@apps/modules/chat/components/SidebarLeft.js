@@ -323,7 +323,7 @@ const SidebarLeft = (props) => {
   // ** Handles Filter
   const handleFilter = (e) => {
     const queryStr = removeAccents(e.target.value)
-    setQuery(queryStr)
+    setQuery(e.target.value)
     const searchFilterFunction = (contact) =>
       removeAccents(contact.fullName)
         .toLowerCase()

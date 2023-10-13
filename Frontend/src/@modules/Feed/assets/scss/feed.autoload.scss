@@ -5285,6 +5285,16 @@ $background-color-checkbox: #139ff8;
   }
 
   .modal-body {
+    .div-content-post.has-bg {
+      .content-header {
+        .name-title, .name-time {
+          color: inherit !important;
+        }
+      }
+      .content-body {
+        color: inherit !important;
+      }
+    }
     .div-content-post {
       padding: 15px;
       background: #f5f5f8;

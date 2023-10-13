@@ -8,7 +8,7 @@ import {
 import { Modal, ModalBody, ModalHeader, Spinner } from "reactstrap"
 import { useSelector } from "react-redux"
 import ReactHtmlParser from "react-html-parser"
-import { useContext, useEffect, useRef } from "react"
+import { Fragment, useContext, useEffect, useRef } from "react"
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
 import { db } from "@/firebase"
 import { renderAvatar, detectUrl } from "@apps/modules/chat/common/common"
@@ -17,6 +17,9 @@ import { EmptyContent } from "@apps/components/common/EmptyContent"
 import SocketContext from "utility/context/Socket"
 import { handleSendMessage } from "@apps/modules/chat/common/firebaseCommon"
 import notification from "@apps/utility/notification"
+import Video from "@apps/modules/chat/components/details/Video"
+import { arrImage } from "@modules/Feed/common/common"
+import classNames from "classnames"
 
 const ModalSendInMessenger = (props) => {
   const { modal, toggleModal, data, title = "", typeChat = "" } = props
@@ -148,6 +151,11 @@ const ModalSendInMessenger = (props) => {
   }
 
   const renderImage = () => {
+    console.log(data)
+    if (data.type === "video") {
+      return <Video src={data.source} width="200" height="100" />
+    }
+
     if (data?.url_thumb) {
       return (
         <div className="div-content-post__image">
@@ -237,6 +245,47 @@ const ModalSendInMessenger = (props) => {
     })
   }
 
+  const renderContentPost = () => {
+    let style = {}
+    
+    if (data.type === "background_image") {
+      const backgroundImage = data.background_image
+      if (backgroundImage && arrImage[backgroundImage - 1]) {
+        style = {
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundImage: `url("${arrImage[backgroundImage - 1].image}")`,
+          color: `${arrImage[backgroundImage - 1].color}`
+        }
+      }
+    }
+
+    return (
+      <div
+          className={classNames("div-content-post", {
+            "has-bg": data.type === "background_image"
+          })}
+          style={style}>
+          <div className="div-content-post__content">
+            <div className="content-header">
+              <Avatar className="img" src={data?.created_by?.avatar} />
+              <div className="content-header__name">
+                <span className="name-title">
+                  {data?.created_by?.full_name}
+                </span>
+                <span className="name-time">
+                  {timeDifference(data.created_at)}
+                </span>
+              </div>
+            </div>
+            <div className="content-body">{renderContent()}</div>
+          </div>
+
+          {renderImage()}
+        </div>
+    )
+  }
+
   return (
     <Modal
       isOpen={modal}
@@ -255,24 +304,7 @@ const ModalSendInMessenger = (props) => {
         </div>
       </ModalHeader>
       <ModalBody>
-        <div className="div-content-post">
-          <div className="div-content-post__content">
-            <div className="content-header">
-              <Avatar className="img" src={data?.created_by?.avatar} />
-              <div className="content-header__name">
-                <span className="name-title">
-                  {data?.created_by?.full_name}
-                </span>
-                <span className="name-time">
-                  {timeDifference(data.created_at)}
-                </span>
-              </div>
-            </div>
-            <div className="content-body">{renderContent()}</div>
-          </div>
-
-          {renderImage()}
-        </div>
+        <Fragment>{renderContentPost()}</Fragment>
         <div className="div-input-editor">
           <Avatar className="img" src={avatar} />
           <ErpInput
