@@ -69,8 +69,8 @@ const WorkspaceItem = (props) => {
                   </p>
               </Tooltip>
               <small>
-                {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
-                {infoWorkspace.member_number === 1
+                {infoWorkspace.type} • {addComma(infoWorkspace.total_member)}{" "}
+                {infoWorkspace.total_member === 1
                   ? useFormatMessage("modules.workspace.display.member")
                   : useFormatMessage("modules.workspace.display.members")}
               </small>
@@ -101,8 +101,8 @@ const WorkspaceItem = (props) => {
                   </p>
                 </Tooltip>
                 <small>
-                  {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
-                  {infoWorkspace.member_number === 1
+                  {infoWorkspace.type} • {addComma(infoWorkspace.total_member)}{" "}
+                  {infoWorkspace.total_member === 1
                     ? useFormatMessage("modules.workspace.display.member")
                     : useFormatMessage("modules.workspace.display.members")}
                 </small>
@@ -112,7 +112,7 @@ const WorkspaceItem = (props) => {
                   <ListMember
                     workspaceId={infoWorkspace.id}
                     listMember={infoWorkspace.members}
-                    memberNumber={infoWorkspace.member_number}
+                    memberNumber={infoWorkspace.total_member}
                   />
                   <p className="mb-0 mt-0 joined-time">
                     <Fragment>{renderJoinDate()}</Fragment>

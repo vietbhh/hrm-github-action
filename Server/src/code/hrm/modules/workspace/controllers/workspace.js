@@ -1343,9 +1343,9 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
           .map((itemLimit) => {
             if (isObject(itemLimit)) {
               currentMember =
-                parseInt(itemLimit?.id) === userId ? itemLimit : {}
+                parseInt(itemLimit?.id_user) === userId ? itemLimit : {}
 
-              return itemLimit?.id
+              return itemLimit?.id_user
             }
 
             return itemLimit
@@ -1353,6 +1353,9 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
           .filter((itemFilter) => {
             return itemFilter !== undefined
           })
+
+        const listMember = await getUsers(limitMember)
+        const totalMember = listMember.length
 
         if (limitMember.length > 3) {
           limitMember = limitMember.slice(0, 3)
@@ -1376,7 +1379,8 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
             cover_image: item.cover_image,
             member_number: isArray(item.members) ? item.members.length : 0,
             members: dataMember,
-            current_member_join: currentMember
+            current_member_join: currentMember,
+            total_member: totalMember
           })
         } catch (err) {
           resolve({
@@ -1386,7 +1390,8 @@ const _handleWorkspaceData = async (listWorkspace, userId = 0) => {
             cover_image: item.cover_image,
             member_number: isArray(item.members) ? item.members.length : 0,
             members: [],
-            current_member_join: {}
+            current_member_join: {},
+            total_member: totalMember
           })
         }
       })
