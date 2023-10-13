@@ -158,9 +158,9 @@ const UserProfileSidebar = (props) => {
         .then((res) => {
           document.getElementById("input-background").value = null
           handleUpdateGroup(selectedGroup.id, {
-            last_message: useFormatMessage(
-              "modules.chat.text.change_background_image"
-            ),
+            last_message: `${settingUser.full_name} ${useFormatMessage(
+              "modules.chat.text.change_group_cover"
+            )}`,
             last_user: userId,
             timestamp: Date.now(),
             background: res.data
@@ -216,9 +216,9 @@ const UserProfileSidebar = (props) => {
         .then((res) => {
           document.getElementById("input-avatar").value = null
           handleUpdateGroup(selectedGroup.id, {
-            last_message: useFormatMessage(
-              "modules.chat.text.change_avatar_image"
-            ),
+            last_message: `${settingUser.full_name} ${useFormatMessage(
+              "modules.chat.text.change_group_avatar"
+            )}`,
             last_user: userId,
             timestamp: Date.now(),
             avatar: res.data

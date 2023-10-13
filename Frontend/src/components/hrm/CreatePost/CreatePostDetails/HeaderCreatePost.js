@@ -17,7 +17,7 @@ const HeaderCreatePost = (props) => {
     toggleModalCreatePost,
     is_poll
   } = props
-  console.log(privacy_type)
+
   // ** render
   const items = [
     {
