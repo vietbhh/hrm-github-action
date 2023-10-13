@@ -334,7 +334,7 @@ const MemberItem = (props) => {
         className=" d-flex align-items-center custom-button custom-primary"
         disabled={loading}
         onClick={() => handleClickMessenge()}>
-        <i className="fab fa-facebook-messenger me-50" />``
+        <i className="fab fa-facebook-messenger me-50" />
         {useFormatMessage("modules.workspace.buttons.messenge")}
       </Button.Ripple>
     )
