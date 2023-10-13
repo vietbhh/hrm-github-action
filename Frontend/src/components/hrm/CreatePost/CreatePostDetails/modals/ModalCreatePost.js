@@ -186,7 +186,9 @@ const ModalCreatePost = (props) => {
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             if (approveStatus !== "pending") {
-              setDataCreateNew(res.data)
+              const dataCreatedNew = res.data
+              dataCreatedNew["is_edit"] = dataPost?._id ? true : false
+              setDataCreateNew(dataCreatedNew)
             } else {
               SwAlert.showSuccess({
                 title: "",
