@@ -384,7 +384,16 @@ const ModalCreatePost = (props) => {
         if (!_.isEmpty(dataPost.tag_user)) {
           setState({ tag_your_colleagues: dataPost.tag_user.tag })
         }
+
+        // ** privacy
+        setState({
+          privacy_type: dataPost.permission
+        })
       }
+    } else {
+      setState({
+        privacy_type: "workspace"
+      })
     }
   }, [dataPost, modal])
 

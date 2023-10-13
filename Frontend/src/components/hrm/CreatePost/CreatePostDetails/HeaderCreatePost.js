@@ -17,6 +17,7 @@ const HeaderCreatePost = (props) => {
     toggleModalCreatePost,
     is_poll
   } = props
+
   // ** render
   const items = [
     {
@@ -28,7 +29,7 @@ const HeaderCreatePost = (props) => {
             setPrivacyType("workspace")
           }}>
           <ErpRadio
-            checked={privacy_type === "workspace"}
+            checked={privacy_type === "workspace" || privacy_type === "default"}
             onChange={() => {}}
           />
           <svg
@@ -73,7 +74,7 @@ const HeaderCreatePost = (props) => {
     }
   ]
   const renderTextDropdown = (privacy) => {
-    if (privacy === "workspace") {
+    if (privacy === "workspace" || privacy === "default") {
       return (
         <>
           <svg

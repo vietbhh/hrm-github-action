@@ -46,8 +46,15 @@ const ModalAddMember = (props) => {
       memberName.push(val.full_name)
     })
     const timestamp = Date.now()
+    const messageAddMember = `${settingUser.full_name} ${useFormatMessage(
+      "modules.chat.text.add_member_to_group_chat",
+      {
+        name: memberName.join(", ")
+      }
+    )}`
+    
     const docData = {
-      last_message: useFormatMessage("modules.chat.text.add_new_member"),
+      last_message: messageAddMember,
       last_user: userId,
       timestamp: timestamp,
       user: member,
@@ -62,17 +69,9 @@ const ModalAddMember = (props) => {
       )
     }
     await handleUpdateGroup(selectedGroup.id, docData).then((res) => {
-      sendMessage(
-        selectedGroup.id,
-        `${settingUser.full_name} ${useFormatMessage(
-          "modules.chat.text.add_member_to_group_chat", {
-            name: memberName.join(", ")
-          }
-        )}`,
-        {
-          type: "notification"
-        }
-      )
+      sendMessage(selectedGroup.id, messageAddMember, {
+        type: "notification"
+      })
       setTimeout(() => {
         toggleModal()
         setState({ loading: false })

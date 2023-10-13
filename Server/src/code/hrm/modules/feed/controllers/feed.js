@@ -97,7 +97,7 @@ const submitPostController = async (req, res, next) => {
       ? "default"
       : body.privacy_type
   const link = body.arrLink
-
+  
   // ** check type feed parent
   let type_feed_parent = "post"
   if (link.length > 0) {
@@ -141,8 +141,8 @@ const submitPostController = async (req, res, next) => {
 
     const dataInsert = {
       __user: req.__user,
-      // permission_ids: body.workspace,
-      // permission: workspace_type,
+      permission_ids: body.workspace,
+      permission: workspace_type,
       content: body.content,
       type: type_feed_parent,
       medias: [],
@@ -159,10 +159,7 @@ const submitPostController = async (req, res, next) => {
       poll_vote_detail: save_poll_vote_detail,
       hashtag: body.arrHashtag
     }
-    if (!body?._id_post_edit) {
-      dataInsert.permission_ids = body.workspace
-      dataInsert.permission = workspace_type
-    }
+
     if (!is_edit) {
       const feedModelParent = new feedMongoModel({
         ...dataInsert,
