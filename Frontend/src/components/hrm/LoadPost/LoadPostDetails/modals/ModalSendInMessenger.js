@@ -151,7 +151,6 @@ const ModalSendInMessenger = (props) => {
   }
 
   const renderImage = () => {
-    console.log(data)
     if (data.type === "video") {
       return <Video src={data.source} width="200" height="100" />
     }
