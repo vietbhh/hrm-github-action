@@ -30,3 +30,7 @@ $routes->add('attendances-time-machine/(:any)', 'TimeMachine::index/$1',['namesp
 
 /*** Route for HeaderAssistant ***/
 $routes->get('header-assistant/get-header-assistant', 'HeaderAssistant::get_header_assistant_get',['namespace' => 'HRM\Modules\HeaderAssistant\Controllers']);
+
+
+/*** Route for Chat */
+$routes->get('chat/get-employees', 'Employees::get_list_employees_get', ['namespace' => 'HRM\Modules\Employees\Controllers']);

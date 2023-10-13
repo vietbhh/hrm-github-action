@@ -749,6 +749,7 @@ const AppChat = (props) => {
               : state.dataEmployees[
                   state.dataEmployees.findIndex((item) => item.id === userId)
                 ]
+
             dataGroupEmployee = {
               id: id,
               idEmployee: employee.id ? employee.id : "",
@@ -764,7 +765,7 @@ const AppChat = (props) => {
               file_count: data.file_count,
               mute: data.mute,
               admin: data.admin,
-              background: data.background,
+              background: employee.cover_image,
               avatar: data.avatar,
               is_system: data.is_system,
               personalInfo: {

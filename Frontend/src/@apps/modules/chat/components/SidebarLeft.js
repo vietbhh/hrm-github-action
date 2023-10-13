@@ -24,6 +24,7 @@ import {
   InputGroupText,
   Label
 } from "reactstrap"
+import { removeAccents } from "../common/common"
 
 const SidebarLeft = (props) => {
   // ** Props & Store
@@ -321,9 +322,12 @@ const SidebarLeft = (props) => {
 
   // ** Handles Filter
   const handleFilter = (e) => {
+    const queryStr = removeAccents(e.target.value)
     setQuery(e.target.value)
     const searchFilterFunction = (contact) =>
-      contact.fullName.toLowerCase().includes(e.target.value.toLowerCase())
+      removeAccents(contact.fullName)
+        .toLowerCase()
+        .includes(queryStr.toLowerCase())
     const filteredChatsArr = groups.filter(searchFilterFunction)
     const filteredContactssArr = contacts.filter(searchFilterFunction)
     setFilteredChat([...filteredChatsArr])
