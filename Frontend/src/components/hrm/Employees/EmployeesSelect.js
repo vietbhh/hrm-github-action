@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
+import { departmentApi } from "../../../@modules/Employees/common/api"
 
 const findKeyByID = (arr = [], id) => {
   const index = arr.findIndex((p) => p.id === id)
@@ -82,7 +83,7 @@ const EmployeesSelect = (props) => {
               <span className="sub-email">{item?.username}</span>
             </div>
             <div className="ms-auto">
-              <i class="fa-regular fa-xmark"></i>
+              <i className="fa-regular fa-xmark"></i>
             </div>
           </div>
         </Col>
@@ -254,8 +255,8 @@ const EmployeesSelect = (props) => {
           dataSelected: dataSelected
         })
       } else {
-        defaultModuleApi
-          .getUsers({ perPage: 1000, filters: { department_id: idDepartment } })
+        departmentApi
+          .getUserByDepartmentId({ department: idDepartment })
           .then((res) => {
             const dataSelected = [...state.dataSelected]
             const concat = dataSelected.concat(res.data.results)
@@ -270,6 +271,7 @@ const EmployeesSelect = (props) => {
       }
     }
   }
+console.log(state)
   const endScrollLoad = () => {
     const page = state.page + 1
     if (state.typeAdd === "members") {

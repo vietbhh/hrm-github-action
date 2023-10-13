@@ -2640,4 +2640,16 @@ class Employees extends Employee
 
 		return $info;
 	}
+
+	public function getUserByDepartmentId() {
+		$departmentId = $this->request->getVar("department");
+
+		$employees = new EmployeesModel();
+
+		$result = $employees->where("department_id",$departmentId)->findAll();
+
+		return $this->respond([
+			'results' => $result
+		]);
+	}
 }
