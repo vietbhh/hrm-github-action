@@ -1603,6 +1603,8 @@ $background-color-checkbox: #139ff8;
 
   .post-body-content,
   .right-content {
+    overflow-wrap: break-word;
+
     .hide {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1972,6 +1974,12 @@ $background-color-checkbox: #139ff8;
 
         .DraftEditor-editorContainer {
           min-height: 100px;
+
+          .public-DraftEditor-content {
+            width: 100% !important;
+            overflow-y: auto;
+            max-height: 250px;
+          }
 
           .public-DraftStyleDefault-block {
             margin: 0.25em 0;
@@ -5287,7 +5295,8 @@ $background-color-checkbox: #139ff8;
   .modal-body {
     .div-content-post.has-bg {
       .content-header {
-        .name-title, .name-time {
+        .name-title,
+        .name-time {
           color: inherit !important;
         }
       }
