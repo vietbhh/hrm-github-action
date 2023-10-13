@@ -4160,7 +4160,7 @@
         "work_space_description": {
           "type": {
             "public": {
-              "title": "Pulbic Workspace",
+              "title": "Public Workspace",
               "description": "Anyone can see who's in the group and what they post"
             },
             "private": {
@@ -4270,7 +4270,7 @@
             "description": "Workspaces include all member of the organization"
           },
           "public": {
-            "title": "Pulbic workspaces",
+            "title": "Public workspaces",
             "description": "Workspaces can be searched and viewed by all members of the organizaton"
           },
           "private": {
