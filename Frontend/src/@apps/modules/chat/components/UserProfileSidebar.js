@@ -254,6 +254,13 @@ const UserProfileSidebar = (props) => {
           src={`/modules/chat/${selectedGroup.id}/background/${selectedGroup.background}`}
         />
       )
+    } else if (user.type && user.type === "employee" && selectedGroup.background) {
+      return (
+        <Photo
+          tag="img"
+          src={selectedGroup.background}
+        />
+      )
     }
 
     return <img src={BackgroundProfile} />

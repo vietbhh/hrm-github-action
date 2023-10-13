@@ -11,7 +11,7 @@ import ReactHtmlParser from "react-html-parser"
 import { useContext, useEffect, useRef } from "react"
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
 import { db } from "@/firebase"
-import { renderAvatar } from "@apps/modules/chat/common/common"
+import { renderAvatar, detectUrl } from "@apps/modules/chat/common/common"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { EmptyContent } from "@apps/components/common/EmptyContent"
 import SocketContext from "utility/context/Socket"
@@ -201,10 +201,15 @@ const ModalSendInMessenger = (props) => {
                   data.ref ? data.ref : data._id
                 }`
                 const msg = state.textSaySomething + " <br />" + link_post
+                const arr_link = detectUrl(msg, true)
+                let dataAddLink = {}
+                if (!_.isEmpty(arr_link)) {
+                  dataAddLink = { type: "link", file: arr_link }
+                }
                 await handleSendMessage(
                   item.idChat ? item.idChat : "",
                   msg,
-                  { type: "link" },
+                  dataAddLink,
                   userId,
                   userFullName,
                   [],

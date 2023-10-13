@@ -34,14 +34,14 @@ const handleCountFile = (groups, groupId, type, action = "plus") => {
             : group_file_count?.link - 1
           : 1
         file_count = { ...group_file_count, link: count_link }
-      } else if (type === "image" || type === "image_gif") {
+      } else if (type === "image" || type === "image_gif" || type === "video") {
         const count_image = group_file_count?.image
           ? action === "plus"
             ? group_file_count?.image + 1
             : group_file_count?.image - 1
           : 1
         file_count = { ...group_file_count, image: count_image }
-      } else if (type === "file" || type === "audio" || type === "video") {
+      } else if (type === "file" || type === "audio") {
         const count_file = group_file_count?.file
           ? action === "plus"
             ? group_file_count?.file + 1
@@ -118,23 +118,23 @@ const handleBreakType = async (groupId, timestamp, data, chats, userId) => {
 
 const handleTimestampFile = (data) => {
   let timestamp_link = 0
-  let timestamp_image = 0
+  let timestamp_media = 0
   let timestamp_file = 0
   if (data.status && (data.status === "loading" || data.status === "error")) {
-    return { timestamp_link, timestamp_image, timestamp_file }
+    return { timestamp_link, timestamp_media, timestamp_file }
   }
 
   if (data.type === "link") {
     timestamp_link = data.timestamp
   }
-  if (data.type === "image" || data.type === "image_gif") {
-    timestamp_image = data.timestamp
+  if (data.type === "image" || data.type === "image_gif" || data.type === "video") {
+    timestamp_media = data.timestamp
   }
-  if (data.type === "file" || data.type === "video" || data.type === "audio") {
+  if (data.type === "file" || data.type === "audio") {
     timestamp_file = data.timestamp
   }
 
-  return { timestamp_link, timestamp_image, timestamp_file }
+  return { timestamp_link, timestamp_media, timestamp_file }
 }
 
 const handleSendNotification = (
