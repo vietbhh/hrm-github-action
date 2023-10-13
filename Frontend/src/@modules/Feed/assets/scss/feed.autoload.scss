@@ -1976,8 +1976,7 @@ $background-color-checkbox: #139ff8;
           min-height: 100px;
 
           .public-DraftEditor-content {
-            width: 100% !important;
-            overflow-y: auto;
+            max-width: 100% !important;
             max-height: 250px;
           }
 
