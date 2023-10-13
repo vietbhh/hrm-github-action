@@ -39,6 +39,7 @@ import { handleGetEventById } from "./event.js"
 import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
+  deleteNotification,
   sendNotificationCommentImagePost,
   sendNotificationPostPending,
   sendNotificationPostPendingFeed,
@@ -617,7 +618,7 @@ const updatePostReaction = async (req, res, next) => {
   const react_action = body.react_action
   const full_name = body.full_name
   const created_by = body.created_by
-  const infoPost = await feedMongoModel.findById(id)
+  let infoPost = await feedMongoModel.findById(id)
   const turn_off_notification = infoPost.turn_off_notification
   turn_off_notification.push(req.__user)
   const arrTag = infoPost.tag_user.tag
@@ -633,6 +634,30 @@ const updatePostReaction = async (req, res, next) => {
       { _id: id, "reaction.react_user": req.__user },
       { $pull: { "reaction.$.react_user": req.__user } }
     )
+    if (react_action === "remove") {
+      const postUpdate = await feedMongoModel.findById(id)
+      let reactionOld = ""
+      let idUser = 0
+      postUpdate.reaction.map((reaction) => {
+        if (reaction.react_user.length > 0) {
+          idUser = reaction.react_user[reaction.react_user.length - 1] * 1
+          reactionOld = reaction.react_type
+        }
+      })
+      if (idUser) {
+        const infoUserOld = await getUser(idUser)
+        const receivers = [created_by]
+        sendNotificationReactionPost(
+          postUpdate,
+          infoUserOld,
+          reactionOld,
+          receivers,
+          true
+        )
+      } else {
+        deleteNotification(id, "reaction_post")
+      }
+    }
     if (react_action === "add") {
       const update = await feedMongoModel.updateOne(
         { _id: id, "reaction.react_type": react_type },
@@ -648,6 +673,7 @@ const updatePostReaction = async (req, res, next) => {
           }
         )
       }
+      infoPost = await feedMongoModel.findById(id)
       if (allTagSend.length > 0) {
         sendNotificationReactionPostTag(
           infoPost,
@@ -666,7 +692,6 @@ const updatePostReaction = async (req, res, next) => {
         req.__user.toString() !== created_by.toString() &&
         !arrUserNotReceivedNotification.includes(created_by)
       ) {
-        console.log("infoPost", infoPost)
         const receivers = [created_by]
         if (infoPost.ref && (infoPost.type === "image" || "video")) {
           sendNotificationReactionImagePost(
