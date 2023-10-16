@@ -131,6 +131,8 @@ const LoadPost = (props) => {
           setCommentMoreCountOriginal={setCommentMoreCountOriginal}
           customAction={customAction}
           isViewEditHistory={isViewEditHistory}
+          toggleModalWith={toggleModalWith}
+          setDataUserOtherWith={setDataUserOtherWith}
         />
       )
     }

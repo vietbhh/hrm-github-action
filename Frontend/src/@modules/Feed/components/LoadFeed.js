@@ -352,7 +352,6 @@ const LoadFeed = (props) => {
           })}
 
           {_.map(state.dataPost, (value, index) => {
-            console.log("state.dataPost ", value)
             return (
               <LazyLoadComponent
                 key={index}

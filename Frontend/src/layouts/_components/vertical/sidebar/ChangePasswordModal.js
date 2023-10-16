@@ -40,10 +40,12 @@ const ChangePasswordModal = (props) => {
     checkPassword: false,
     checkRePassword: false,
     checkRePasswordMatch: false,
+    checkSameCurrentPassword: false,
     dataUser: {}
   })
 
-  const stringUpperRegExp = /^(?=.*[A-Z])[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{1,}$/
+  const stringUpperRegExp = /(?=.*[a-z])(?=.*[A-Z])/
+  //const stringUpperRegExp = /^(?=.*[A-Z])[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{1,}$/
   const numberRegExp = /^(?=.*\d)[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{1,}$/
 
   const validateSchema = yup.object().shape({
@@ -58,7 +60,11 @@ const ChangePasswordModal = (props) => {
         numberRegExp,
         useFormatMessage("auth.at_least_1_number_validate")
       )
-      .min(8, useFormatMessage("validate.min", { num: 8 })),
+      .min(8, useFormatMessage("validate.min", { num: 8 }))
+      .notOneOf(
+        [yup.ref("currentPassword"), null],
+        "auth.password_same_currentPassword"
+      ),
     repassword: yup
       .string()
       .oneOf(
@@ -66,7 +72,6 @@ const ChangePasswordModal = (props) => {
         useFormatMessage("validate.passwordNotMatch")
       )
   })
-
   const methods = useForm({
     mode: "onChange",
     resolver: yupResolver(validateSchema)
@@ -160,6 +165,12 @@ const ChangePasswordModal = (props) => {
     } else {
       setState({ checkCharacters: false })
     }
+    if (getValues("currentPassword") === values) {
+      setState({ checkSameCurrentPassword: true })
+    } else {
+      setState({ checkSameCurrentPassword: false })
+    }
+
     setState({ checkPassword: true })
   }
 
@@ -167,6 +178,9 @@ const ChangePasswordModal = (props) => {
     const subscription = watch((value, { name, type }) => {
       if (name === "password") {
         handleValidatePassword(value.password)
+      }
+      if (name === "currentPassword") {
+        handleValidatePassword(getValues("password"))
       }
     })
     return () => subscription.unsubscribe()
@@ -286,7 +300,11 @@ const ChangePasswordModal = (props) => {
             <Button
               type="submit"
               color="primary"
-              disabled={state.submitting || formState.isValidating}>
+              disabled={
+                state.submitting ||
+                formState.isValidating ||
+                state.checkSameCurrentPassword
+              }>
               {state.submitting && <Spinner size="sm" className="me-50" />}
               {useFormatMessage("auth.changePasswordModal")}
             </Button>

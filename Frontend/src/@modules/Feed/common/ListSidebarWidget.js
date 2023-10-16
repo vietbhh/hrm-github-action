@@ -26,7 +26,7 @@ export const ListSidebarWidget = (props) => {
         isDraggable: true
       },
       background: <BackgroundWidget />,
-      show: true,
+      show: false,
       action: "login",
       resource: "app"
     },
@@ -47,7 +47,7 @@ export const ListSidebarWidget = (props) => {
         isDraggable: true
       },
       background: <BackgroundWidget />,
-      show: true,
+      show: false,
       action: "login",
       resource: "app"
     }

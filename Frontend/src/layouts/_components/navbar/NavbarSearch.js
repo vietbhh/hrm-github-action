@@ -40,10 +40,13 @@ const NavbarSearch = ({
   // ** States
   const [suggestions, setSuggestions] = useState([])
   const [navbarSearch, setNavbarSearch] = useState(false)
-
+  console.log("dataSearch", dataSearch)
+  console.log("suggestions", suggestions)
   // ** render dataSearch
   const renderDataSearch = async () => {
     if (_.isArray(dataSearch)) {
+      console.log("runnn if", dataSearch)
+
       setSuggestions(dataSearch)
     } else {
       const dataPage_menu = []
@@ -117,6 +120,8 @@ const NavbarSearch = ({
         })
       }
       setSuggestions(_dataSearch)
+
+      console.log("runnn else", _dataSearch)
     }
   }
 
@@ -196,7 +201,6 @@ const NavbarSearch = ({
           </svg>
         )}
 
-
         {iconRight && <span className="ms-auto">{iconRight}</span>}
       </NavLink>
       <div
@@ -221,7 +225,12 @@ const NavbarSearch = ({
               handleClearInput(setUserInput)
             }
             onKeyDown={onKeyDown}
-            onChange={(e) => dispatch(handleSearchQuery(e.target.value))}
+            onChange={(e) =>
+              console.log(
+                "handleSearchQuery",
+                handleSearchQuery(e.target.value)
+              )
+            }
             customRender={(
               item,
               i,
