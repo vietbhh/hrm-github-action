@@ -52,7 +52,8 @@ const LoadPost = (props) => {
     setDataCreateNew,
     isInWorkspace = false,
     workspace,
-    isLoadComment = false
+    isLoadComment = false,
+    handleUnPinPost
   } = props
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
@@ -246,6 +247,7 @@ const LoadPost = (props) => {
           isViewEditHistory={isViewEditHistory}
           isInWorkspace={isInWorkspace}
           renderWithTag={renderWithTag}
+          handleUnPinPost = {handleUnPinPost}
         />
         <div
           className={classNames("post-body", {

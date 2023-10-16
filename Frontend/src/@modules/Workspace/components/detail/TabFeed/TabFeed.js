@@ -349,6 +349,7 @@ const TabFeed = (props) => {
           apiLoadFeed={apiLoadFeed}
           customAction={customActionPost}
           setSearchTextFeed={setSearchTextFeed}
+          handleUnPinPost = {handleUnPinPost}
         />
       </div>
       <div className="div-right">
