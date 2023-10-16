@@ -1,0 +1,280 @@
+$colorText: #32434f;
+
+#sticker {
+  width: 100%;
+  margin: 8px 0px 0px 36px;
+  .header {
+    width: 100%;
+    height: 84px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding-left: 20px;
+    padding-right: 30px;
+    text-align: center;
+    .search {
+      .form-group {
+        width: 100%;
+        height: 40px;
+        margin: 0;
+      }
+    }
+    .col-btn {
+      .sticker-btn-create {
+        width: 150px;
+        height: 40px;
+        border-radius: 12px;
+        margin-top: 1.3em;
+        background-color: #ffe658;
+        .text {
+          color: $colorText;
+          font-weight: 600;
+          font-size: 14px;
+          margin-left: 6px;
+        }
+      }
+    }
+  }
+  .sticker-content {
+    margin-top: 36px;
+    .sticker-collection {
+      background-color: #ffffff;
+      width: 32%;
+      border-radius: 12px;
+      padding: 8px;
+      margin-right: 15px;
+      padding-bottom: 12px;
+      cursor: pointer;
+      .sticker-collection-header {
+        padding-left: 8px;
+        padding-top: 8px;
+        .icon-success {
+          position: absolute;
+          right: 8px;
+        }
+        .icon-set-default {
+          position: absolute;
+          right: 10px;
+          color: #52c41a;
+          visibility: hidden;
+          font-size: 16px;
+        }
+      }
+    }
+    .sticker-collection:hover {
+      .icon-set-default {
+        visibility: visible;
+      }
+    }
+    .sticker-images {
+      text-align: center;
+      #img-sticker-default {
+        width: 85px;
+        height: 55px;
+        margin: 2px;
+      }
+      .img-sticker {
+        width: 55px;
+        height: 55px;
+        margin: 1px;
+      }
+    }
+  }
+  .sticker-collection {
+    min-height: 178.25px;
+  }
+  .sticker-collection:nth-child(3n + 0) {
+    margin-right: 0px;
+  }
+  .sticker-collection:nth-child(3n-1) {
+    margin-right: 20px;
+    margin-left: 5px;
+  }
+  .sticker-collection:nth-child(n + 4) {
+    margin-top: 16px;
+  }
+  .ant-pagination {
+    text-align: center;
+    margin-top: 22px;
+  }
+}
+
+.sticker-modal {
+  .ant-modal-content {
+    border-radius: 12px;
+    .ant-modal-close {
+      .ant-modal-close-x span {
+        color: #171721;
+        font-size: 15px;
+      }
+    }
+    .ant-modal-body {
+      border-top: 1px solid rgba(228, 230, 232, 0.85);
+      padding: 8px;
+    }
+  }
+  .ant-modal-header {
+    .ant-modal-title {
+      text-align: center;
+      color: $colorText;
+      font-weight: 600;
+      font-size: 16px;
+      font-style: normal;
+    }
+  }
+  .ant-btn-primary {
+    width: 100%;
+    height: 46px;
+    border-radius: 10px;
+    background-color: #ffe658;
+    span {
+      color: $colorText;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+  .row-switch-default {
+    display: flex;
+    justify-content: space-between;
+    #label-switch-default {
+    }
+    #label-switch-default > p:first-child {
+      color: $colorText;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+    #label-switch-default > p:last-child {
+      color: $colorText;
+      font-size: 12px;
+      font-weight: 300;
+      margin-top: 0px;
+    }
+
+    #switch-default {
+      padding-top: 2px;
+    }
+  }
+  .form-group {
+    label[title="Name"] {
+      color: $colorText;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+    }
+    input[name="name"] {
+      background-color: #f0f3f6;
+      border-radius: 12px;
+    }
+  }
+  .row-upload {
+    margin-top: 4px;
+    margin-bottom: 36px;
+    .ant-btn-default {
+      border: 1px solid rgba(228, 230, 232, 0.85);
+      border-radius: 10px;
+    }
+  }
+  .sticker-row-submit {
+    display: flex;
+    .ant-btn-primary {
+      margin: 4px;
+    }
+    .sticker-btn-delete {
+      background-color: #ff7875 !important;
+      span {
+        color: #fff;
+      }
+    }
+  }
+  .sticker-images {
+    text-align: center;
+    .img-sticker {
+      width: 150px;
+      height: 150px;
+      margin: 4px;
+    }
+  }
+  .sticker-icon-detail {
+    position: absolute;
+    right: 0;
+    top: 10px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  #sticker {
+    overflow: hidden;
+    margin-left: 24px;
+    .header {
+      overflow: hidden;
+      width: 300px;
+      height: 110px;
+      .search {
+        .form-group {
+          width: 260px;
+          height: 40px;
+          margin: 0;
+        }
+      }
+      .col-btn {
+        .sticker-btn-create {
+          width: 100px;
+          height: 30px;
+          border-radius: 8px;
+          margin-top: 2em;
+          background-color: #ffe658;
+          .text {
+            color: $colorText;
+            font-weight: 600;
+            font-size: 13px;
+            margin-left: 6px;
+          }
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+    }
+    .sticker-content {
+      .sticker-collection {
+        width: 300px;
+        margin-bottom: 12px;
+      }
+      .sticker-collection:nth-child(3n + 0) {
+        margin-right: 0px;
+      }
+      .sticker-collection:nth-child(3n-1) {
+        margin-right: 0px;
+        margin-left: 0px;
+      }
+      .sticker-collection:nth-child(n + 4) {
+        margin-top: 0px;
+      }
+    }
+    .ant-pagination {
+      text-align: left;
+    }
+  }
+}
+.ant-image-preview-root {
+  display: none;
+}
+.ant-image-preview-operations-operation:not(:first-child) {
+  display: none;
+}
+.ant-image-preview-operations-wrapper {
+  display: none;
+}
+
+.ant-modal-content {
+  .row-upload {
+    max-height: 360px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-padding-left: 8px;
+  }
+  .ant-upload-list {
+    width: 98%;
+  }
+}
