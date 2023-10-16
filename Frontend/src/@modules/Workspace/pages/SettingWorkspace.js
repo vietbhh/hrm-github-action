@@ -196,7 +196,7 @@ const SettingWorkspace = () => {
                       {state.detailWorkspace?.name}
                     </div>
                     <div className="workspace_introduction">
-                      {state.detailWorkspace?.introduction}
+                      {state.detailWorkspace?.description}
                     </div>
                   </div>
                   <div
