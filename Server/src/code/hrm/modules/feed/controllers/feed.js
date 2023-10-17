@@ -138,7 +138,6 @@ const submitPostController = async (req, res, next) => {
     let out = {}
     let _id_parent = ""
     let data_feed_old = {}
-
     const dataInsert = {
       __user: req.__user,
       permission_ids: body.workspace,
