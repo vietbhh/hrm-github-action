@@ -40,13 +40,9 @@ const NavbarSearch = ({
   // ** States
   const [suggestions, setSuggestions] = useState([])
   const [navbarSearch, setNavbarSearch] = useState(false)
-  console.log("dataSearch", dataSearch)
-  console.log("suggestions", suggestions)
   // ** render dataSearch
   const renderDataSearch = async () => {
     if (_.isArray(dataSearch)) {
-      console.log("runnn if", dataSearch)
-
       setSuggestions(dataSearch)
     } else {
       const dataPage_menu = []
@@ -120,8 +116,6 @@ const NavbarSearch = ({
         })
       }
       setSuggestions(_dataSearch)
-
-      console.log("runnn else", _dataSearch)
     }
   }
 
