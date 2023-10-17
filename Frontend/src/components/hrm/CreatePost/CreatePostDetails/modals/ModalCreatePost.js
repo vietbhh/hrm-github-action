@@ -159,11 +159,14 @@ const ModalCreatePost = (props) => {
         _content
       )
       const __content = result_tag_user.content
+
+      const ___content = __content.replace(/&nbsp;/g, "").trim()
+
       const mention = result_tag_user.tag_user
       const arrHashtag = detectHashtag(__content)
 
       const params = {
-        content: __content,
+        content: ___content,
         workspace: workspace,
         privacy_type: state.privacy_type,
         file: file,
