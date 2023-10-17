@@ -368,6 +368,7 @@ const LoadFeed = (props) => {
                 setDataCreateNew={setDataCreateNew}
                 isInWorkspace={!_.isEmpty(workspace)}
                 workspace={workspace}
+                handleUnPinPost = {handleUnPinPost}
               />
             )
           })}

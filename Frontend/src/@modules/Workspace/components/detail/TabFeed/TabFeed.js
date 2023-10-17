@@ -214,11 +214,11 @@ const TabFeed = (props) => {
               <Col sm={12} key={`item-pinned-${key}`}>
                 <div className="post-pinned">
                   <div className="content-post d-flex align-items-center mb-50">
-                    <div>
+                    <div className="ellipsis">
                       <Link
                         className="text-primary-color text-truncate"
                         to={`/posts/${item._id}`}>
-                        {stripHTML(item?.content)}
+                        {stripHTML(item?.content)} 
                       </Link>
                       <div
                         className="post-info d-flex align-items-center mt-50"
