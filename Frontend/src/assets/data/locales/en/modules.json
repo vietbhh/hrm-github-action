@@ -52,6 +52,7 @@
         "file": "File",
         "image": "Image",
         "link": "Link",
+        "media": "Media",
         "load_more": "Load more",
         "change_background_image": "Change background image",
         "change_avatar_image": "Change avatar image",
@@ -3683,7 +3684,7 @@
           "allow_multiple_selection": "Allow multiple selection",
           "allow_adding_more_options": "Allow adding more options",
           "allow_incognito": "Allow incognito",
-          "limit_time_for_poll": "Litmit time for poll",
+          "limit_time_for_poll": "Limit time for poll",
           "continue": "Continue",
           "end_at": "End at",
           "vote": "vote",
@@ -4381,6 +4382,42 @@
     "hashtag": {
       "post": "post",
       "posts": "posts"
+    },
+    "sticker": {
+      "menu": {
+        "title": "Stickers Store"
+      },
+      "list": {
+        "button": {
+          "create": "Create"
+        },
+        "placeholder": {
+          "sticker_find": "Find stickers"
+        }
+      },
+      "modal": {
+        "title": {
+          "create": "Create Sticker",
+          "update": "Update Sticker",
+          "switch": {
+            "default": "Default",
+            "title": "Default for all user"
+          },
+          "upload": "Upload"
+        },
+        "messages": {
+          "error_type_file": "You can only upload JPG/PNG/GIF file!",
+          "error_empty_file": "You do not upload any image file!"
+        },
+        "placeholder": {
+          "name": "Enter sticker name"
+        },
+        "button": {
+          "create": "Create",
+          "update": "Update",
+          "delete": "Delete"
+        }
+      }
     }
   }
 }

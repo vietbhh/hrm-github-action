@@ -8,13 +8,13 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { Modal, ModalBody } from "reactstrap"
 const ReactionDetailModal = (props) => {
-  const { modal, toggleModal, dataReaction } = props
+  const { modal, toggleModal, dataReaction, defaultActiveKey } = props
   const [state, setState] = useMergedState({
     items: []
   })
   const redux_list_user = useSelector((state) => state.users.list)
   const listReaction = ["like", "love", "care", "smile", "sad", "wow"]
-  const maxHeightScreen = "50vh" //screen.height - (screen.height * 40) / 100
+  const maxHeightScreen = "50vh" //screen.height
   // ** function
   const renderListUserReact = (value, image) => {
     return _.map(
@@ -52,7 +52,7 @@ const ReactionDetailModal = (props) => {
   const renderOtherAll = () => {
     let other = 0
     _.forEach(dataReaction, (value) => {
-      _.forEach(value, (item) => {
+      _.forEach(value.reaction, (item) => {
         if (!redux_list_user[item]) {
           other++
         }
@@ -96,7 +96,6 @@ const ReactionDetailModal = (props) => {
       </div>
     )
   }
-
   // ** useEffect
   useEffect(() => {
     const items = [
@@ -109,45 +108,39 @@ const ReactionDetailModal = (props) => {
               maxHeight: maxHeightScreen
             }}
             options={{ wheelPropagation: false }}>
-            {_.map(
-              _.filter(listReaction, (item_filter) => {
-                return dataReaction[item_filter]
-              }),
-              (value) => {
-                return renderListUserReact(dataReaction[value], value)
-              }
-            )}
-
+            {_.map(dataReaction, (value_react) => {
+              return renderListUserReact(
+                value_react?.reaction,
+                value_react?.type
+              )
+            })}
             {renderOtherAll()}
           </PerfectScrollbar>
         )
       }
     ]
 
-    _.forEach(listReaction, (value_react) => {
-      if (dataReaction[value_react]) {
-        items.push({
-          key: value_react,
-          label: (
-            <div className="d-flex align-items-center">
-              <img src={renderImageReact(value_react)} />
-              <span className="ms-50">{dataReaction[value_react].length}</span>
-            </div>
-          ),
-          children: (
-            <PerfectScrollbar
-              style={{
-                maxHeight: maxHeightScreen
-              }}
-              options={{ wheelPropagation: false }}>
-              {renderListUserReact(dataReaction[value_react], value_react)}
-              {renderOtherReact(dataReaction[value_react])}
-            </PerfectScrollbar>
-          )
-        })
-      }
+    _.forEach(dataReaction, (value_react) => {
+      items.push({
+        key: value_react?.type,
+        label: (
+          <div className="d-flex align-items-center">
+            <img src={renderImageReact(value_react?.type)} />
+            <span className="ms-50">{value_react?.reaction.length}</span>
+          </div>
+        ),
+        children: (
+          <PerfectScrollbar
+            style={{
+              maxHeight: maxHeightScreen
+            }}
+            options={{ wheelPropagation: false }}>
+            {renderListUserReact(value_react?.reaction, value_react?.type)}
+            {renderOtherReact(value_react?.reaction)}
+          </PerfectScrollbar>
+        )
+      })
     })
-
     setState({ items: items })
   }, [dataReaction])
 
@@ -167,7 +160,7 @@ const ReactionDetailModal = (props) => {
           onClick={() => toggleModal()}>
           <i className="fa-sharp fa-solid fa-xmark"></i>
         </button>
-        <Tabs defaultActiveKey="1" items={state.items} />
+        <Tabs defaultActiveKey={defaultActiveKey} items={state.items} />
       </ModalBody>
     </Modal>
   )

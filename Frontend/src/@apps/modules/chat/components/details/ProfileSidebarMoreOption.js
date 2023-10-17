@@ -24,7 +24,9 @@ const ProfileSidebarMoreOption = (props) => {
   const handleUpdateLeaveChat = (props) => {
     const timestamp = Date.now()
     const docData = {
-      last_message: useFormatMessage("modules.chat.text.leave_chat"),
+      last_message: `${settingUser.full_name} ${useFormatMessage(
+        "modules.chat.text.left_group_chat"
+      )}`,
       last_user: userId,
       timestamp: timestamp,
       user: arrayRemove(userId),

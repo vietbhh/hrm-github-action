@@ -20,15 +20,19 @@ const PostShowReaction = (props) => {
   } = props
   const [state, setState] = useMergedState({
     dataReaction: {},
-    modal_reaction: false
+    modal_reaction: false,
+    defaultActiveKey: "all"
   })
-
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
 
   // ** function
-  const toggleModalReaction = () => {
-    setState({ modal_reaction: !state.modal_reaction })
+  const toggleModalReaction = (defaultActive = "all") => {
+    console.log("toggleModalReaction skeyActive", defaultActive)
+    setState({
+      modal_reaction: !state.modal_reaction,
+      defaultActiveKey: defaultActive
+    })
   }
 
   const handleClickCommentButton = () => {
@@ -81,49 +85,79 @@ const PostShowReaction = (props) => {
 
     return text
   }
-
+  const renderIconReaction = (reactType) => {
+    if (reactType === "like") {
+      return (
+        <div
+          className="avatar pull-up rounded-circle"
+          onClick={() => toggleModalReaction(reactType)}>
+          <img src={img_like} />
+        </div>
+      )
+    } else if (reactType === "love") {
+      return (
+        <div
+          className="avatar pull-up rounded-circle"
+          onClick={() => toggleModalReaction(reactType)}>
+          <img src={img_love} />
+        </div>
+      )
+    } else if (reactType === "care") {
+      return (
+        <div
+          className="avatar pull-up rounded-circle"
+          onClick={() => toggleModalReaction(reactType)}>
+          <img src={img_care} />
+        </div>
+      )
+    } else if (reactType === "smile") {
+      return (
+        <div
+          className="avatar pull-up rounded-circle"
+          onClick={() => toggleModalReaction(reactType)}>
+          <img src={img_smile} />
+        </div>
+      )
+    } else if (reactType === "sad") {
+      return (
+        <div
+          className="avatar pull-up rounded-circle"
+          onClick={() => toggleModalReaction(reactType)}>
+          <img src={img_sad} />
+        </div>
+      )
+    } else if (reactType === "wow") {
+      return (
+        <div
+          className="avatar pull-up rounded-circle"
+          onClick={() => toggleModalReaction(reactType)}>
+          <img src={img_wow} />
+        </div>
+      )
+    }
+  }
+  const arrayDataReaction = Object.keys(state.dataReaction).map((key) => {
+    return { type: key, reaction: state.dataReaction[key] }
+  })
+  const sortReaction = arrayDataReaction.sort(
+    (a, b) => b.reaction.length - a.reaction.length
+  )
+  let numOfReaction = 0
   return (
     <Fragment>
       <div className="post-reaction">
-        <div className="reaction-left" onClick={() => toggleModalReaction()}>
+        <div className="reaction-left">
           <div className="div-img">
-            {state.dataReaction["like"] && (
-              <div className="avatar pull-up rounded-circle">
-                <img src={img_like} />
-              </div>
-            )}
-
-            {state.dataReaction["love"] && (
-              <div className="avatar pull-up rounded-circle">
-                <img src={img_love} />
-              </div>
-            )}
-
-            {state.dataReaction["care"] && (
-              <div className="avatar pull-up rounded-circle">
-                <img src={img_care} />
-              </div>
-            )}
-
-            {state.dataReaction["smile"] && (
-              <div className="avatar pull-up rounded-circle">
-                <img src={img_smile} />
-              </div>
-            )}
-
-            {state.dataReaction["sad"] && (
-              <div className="avatar pull-up rounded-circle">
-                <img src={img_sad} />
-              </div>
-            )}
-
-            {state.dataReaction["wow"] && (
-              <div className="avatar pull-up rounded-circle">
-                <img src={img_wow} />
-              </div>
-            )}
+            {sortReaction.map((data) => {
+              if (numOfReaction < 3) {
+                numOfReaction += 1
+                return renderIconReaction(data.type)
+              }
+            })}
           </div>
-          <div className="div-text">{renderTextReaction()}</div>
+          <div className="div-text" onClick={() => toggleModalReaction()}>
+            {renderTextReaction()}
+          </div>
         </div>
         <div className="reaction-right">
           {data.comment_count > 0 && (
@@ -157,7 +191,8 @@ const PostShowReaction = (props) => {
       <ReactionDetailModal
         modal={state.modal_reaction}
         toggleModal={toggleModalReaction}
-        dataReaction={state.dataReaction}
+        dataReaction={sortReaction}
+        defaultActiveKey={state.defaultActiveKey}
       />
     </Fragment>
   )

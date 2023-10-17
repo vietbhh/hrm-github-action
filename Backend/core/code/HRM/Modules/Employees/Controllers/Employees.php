@@ -2457,6 +2457,29 @@ class Employees extends Employee
 		return $this->respond($result);
 	}
 
+	public function get_list_employees_get()
+	{
+		$userModel = new UserModel();
+		$publicField = $userModel->getPublicField();
+		$select = [];
+		foreach ($publicField as $item) {
+			$select[] = "users." . $item;
+		}
+		$select[] = "job_titles.name as job_title";
+		$select[] = "m_employees.cover_image";
+
+		$employeeModel = new EmployeesModel();
+		$dataUser = $userModel
+		->asArray()
+		->select($select)
+		->join('job_titles', 'job_titles.id = users.job_title_id', 'left')
+		->join('m_employees', 'm_employees.id = users.id', 'both')
+		->onlyActived()
+		->findAll();
+
+		return $this->respond($dataUser);
+	}
+
 	private function _handleDataCustomField($data, $modulesId)
 	{
 		$result = [

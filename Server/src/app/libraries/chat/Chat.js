@@ -316,7 +316,7 @@ const handleSendMessageGroup = async (
     type: type,
     break_type: "line_time",
     timestamp_link: 0,
-    timestamp_image: 0,
+    timestamp_media: 0,
     timestamp_file: 0,
     _smeta: triGram(msg)
   }

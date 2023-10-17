@@ -183,9 +183,14 @@ const ProfileSidebarGroup = (props) => {
                             if (res.value) {
                               const timestamp = Date.now()
                               const docData = {
-                                last_message: useFormatMessage(
-                                  "modules.chat.text.delete_member"
-                                ),
+                                last_message: `${
+                                  settingUser.full_name
+                                } ${useFormatMessage(
+                                  "modules.chat.text.remove_member_from_group_chat",
+                                  {
+                                    name: name
+                                  }
+                                )}`,
                                 last_user: userId,
                                 timestamp: timestamp,
                                 user: arrayRemove(value),
@@ -255,9 +260,14 @@ const ProfileSidebarGroup = (props) => {
                             if (res.value) {
                               const timestamp = Date.now()
                               const docData = {
-                                last_message: useFormatMessage(
-                                  "modules.chat.text.assign_a_new_admin"
-                                ),
+                                last_message: `${
+                                  settingUser.full_name
+                                } ${useFormatMessage(
+                                  "modules.chat.text.assign_member_as_admin",
+                                  {
+                                    name: name
+                                  }
+                                )}`,
                                 last_user: userId,
                                 timestamp: timestamp,
                                 admin: arrayUnion(value)

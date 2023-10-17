@@ -53,7 +53,12 @@ const PostComment = (props) => {
       }
     }
   }, [isLoadComment])
-
+  const arrayDataReaction = Object.keys(state.dataReaction).map((key) => {
+    return { type: key, reaction: state.dataReaction[key] }
+  })
+  const sortReaction = arrayDataReaction.sort(
+    (a, b) => b.reaction.length - a.reaction.length
+  )
   return (
     <Fragment>
       <div className="post-comment">
@@ -150,7 +155,7 @@ const PostComment = (props) => {
       <ReactionDetailModal
         modal={state.modal_reaction}
         toggleModal={toggleModalReaction}
-        dataReaction={state.dataReaction}
+        dataReaction={sortReaction}
       />
     </Fragment>
   )
