@@ -21,6 +21,7 @@ const sendNotification = async (
   const custom_fields = payload?.custom_fields || "" // source_id , source_type ,
   const update_notification = payload?.update_notification || false
   const idUpdate = payload?.idUpdate || false
+  const popup = payload?.popup ?? true
   if (isUndefined(receivers) || isUndefined(title) || isUndefined(body))
     return false
 
@@ -32,20 +33,20 @@ const sendNotification = async (
   let notificationId = 0
   if (saveToDb) {
     if (update_notification) {
-      await notificationsModelMysql.update(
-        {
-          sender_id: sender,
-          recipient_id: JSON.stringify(receivers),
-          title: title,
-          link: link,
-          icon: notificationIcon
-        },
-        {
-          where: {
-            id: idUpdate
-          }
+      const dataUpdate = {
+        sender_id: sender,
+        recipient_id: JSON.stringify(receivers),
+        title: title,
+        link: link,
+        icon: notificationIcon
+      }
+      if (popup) dataUpdate.read_by = "[]"
+
+      await notificationsModelMysql.update(dataUpdate, {
+        where: {
+          id: idUpdate
         }
-      )
+      })
     } else {
       try {
         const saveNotification = await notificationsModelMysql.create(
@@ -71,13 +72,14 @@ const sendNotification = async (
       }
     }
   }
-
   //for case when user online,push notification via socket
-  emitDataToOnlineUsers(receivers, emitKey, {
-    data,
-    isSave: saveToDb,
-    payload: { ...payload, sender_id: sender, id: notificationId }
-  })
+  if (popup) {
+    emitDataToOnlineUsers(receivers, emitKey, {
+      data,
+      isSave: saveToDb,
+      payload: { ...payload, sender_id: sender, id: notificationId }
+    })
+  }
 
   //for case when user is not focus on the app or user offline,push notification via firebase
   sendFirebaseNotification(receivers, payload, {

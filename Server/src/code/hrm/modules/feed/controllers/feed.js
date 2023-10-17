@@ -39,6 +39,7 @@ import { handleGetEventById } from "./event.js"
 import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
+  deleteNotification,
   sendNotificationCommentImagePost,
   sendNotificationPostPending,
   sendNotificationPostPendingFeed,
@@ -96,7 +97,7 @@ const submitPostController = async (req, res, next) => {
       ? "default"
       : body.privacy_type
   const link = body.arrLink
-
+  
   // ** check type feed parent
   let type_feed_parent = "post"
   if (link.length > 0) {
@@ -139,8 +140,8 @@ const submitPostController = async (req, res, next) => {
     let data_feed_old = {}
     const dataInsert = {
       __user: req.__user,
-      // permission_ids: body.workspace,
-      // permission: workspace_type,
+      permission_ids: body.workspace,
+      permission: workspace_type,
       content: body.content,
       type: type_feed_parent,
       medias: [],
@@ -157,10 +158,7 @@ const submitPostController = async (req, res, next) => {
       poll_vote_detail: save_poll_vote_detail,
       hashtag: body.arrHashtag
     }
-    if (!body?._id_post_edit) {
-      dataInsert.permission_ids = body.workspace
-      dataInsert.permission = workspace_type
-    }
+
     if (!is_edit) {
       const feedModelParent = new feedMongoModel({
         ...dataInsert,
@@ -619,7 +617,7 @@ const updatePostReaction = async (req, res, next) => {
   const react_action = body.react_action
   const full_name = body.full_name
   const created_by = body.created_by
-  const infoPost = await feedMongoModel.findById(id)
+  let infoPost = await feedMongoModel.findById(id)
   const turn_off_notification = infoPost.turn_off_notification
   turn_off_notification.push(req.__user)
   const arrTag = infoPost.tag_user.tag
@@ -635,6 +633,30 @@ const updatePostReaction = async (req, res, next) => {
       { _id: id, "reaction.react_user": req.__user },
       { $pull: { "reaction.$.react_user": req.__user } }
     )
+    if (react_action === "remove") {
+      const postUpdate = await feedMongoModel.findById(id)
+      let reactionOld = ""
+      let idUser = 0
+      postUpdate.reaction.map((reaction) => {
+        if (reaction.react_user.length > 0) {
+          idUser = reaction.react_user[reaction.react_user.length - 1] * 1
+          reactionOld = reaction.react_type
+        }
+      })
+      if (idUser) {
+        const infoUserOld = await getUser(idUser)
+        const receivers = [created_by]
+        sendNotificationReactionPost(
+          postUpdate,
+          infoUserOld,
+          reactionOld,
+          receivers,
+          true
+        )
+      } else {
+        deleteNotification(id, "reaction_post")
+      }
+    }
     if (react_action === "add") {
       const update = await feedMongoModel.updateOne(
         { _id: id, "reaction.react_type": react_type },
@@ -650,6 +672,7 @@ const updatePostReaction = async (req, res, next) => {
           }
         )
       }
+      infoPost = await feedMongoModel.findById(id)
       if (allTagSend.length > 0) {
         sendNotificationReactionPostTag(
           infoPost,

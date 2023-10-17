@@ -189,7 +189,9 @@ const ModalCreatePost = (props) => {
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             if (approveStatus !== "pending") {
-              setDataCreateNew(res.data)
+              const dataCreatedNew = res.data
+              dataCreatedNew["is_edit"] = dataPost?._id ? true : false
+              setDataCreateNew(dataCreatedNew)
             } else {
               SwAlert.showSuccess({
                 title: "",
@@ -387,7 +389,16 @@ const ModalCreatePost = (props) => {
         if (!_.isEmpty(dataPost.tag_user)) {
           setState({ tag_your_colleagues: dataPost.tag_user.tag })
         }
+
+        // ** privacy
+        setState({
+          privacy_type: dataPost.permission
+        })
       }
+    } else {
+      setState({
+        privacy_type: "workspace"
+      })
     }
   }, [dataPost, modal])
 
