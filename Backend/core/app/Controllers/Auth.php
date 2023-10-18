@@ -381,8 +381,24 @@ class Auth extends ResourceController
 			}
 		} catch (\Exception $e) {
 		}
-		
+
 		$user->password = $this->request->getPost('password');
+
+		$settingModel = new SettingModel();
+		$listSettings = $settingModel->getDefaultSettings();
+		$isForceOnboard = false;
+		foreach ($listSettings as $rowSetting) {
+			if ($rowSetting->key === 'force_onboard') {
+				$isForceOnboard = true;
+			}
+		}
+		
+		if ($isForceOnboard) {
+			$user->custom_fields = json_encode([
+				'onboard' => true
+			]);
+		}
+
 		$users->save($user);
 
 		\CodeIgniter\Events\Events::trigger('on_after_update_account_status_user', $user);

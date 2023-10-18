@@ -3,6 +3,7 @@
 namespace App\Controllers\Settings;
 
 use App\Controllers\ErpController;
+use App\Models\SettingModel;
 use App\Models\UserModel;
 
 class Users extends ErpController
@@ -117,7 +118,22 @@ class Users extends ErpController
 		if (!$user) {
 			return $this->failNotFound(NOT_FOUND);
 		}
-		if ($type === 'activate') $user->activate();
+		if ($type === 'activate') {
+			$settingModel = new SettingModel();
+			$listSettings = $settingModel->getDefaultSettings();
+			$isForceOnboard = false;
+			foreach ($listSettings as $rowSetting) {
+				if ($rowSetting->key === 'force_onboard') {
+					$isForceOnboard = $rowSetting->value;
+				}
+			}
+			$user->activate();
+			if ($isForceOnboard === true) {
+				$user->custom_fields = json_encode([
+					'onboard' => true
+				]);
+			}
+		}
 		if ($type === 'deactivate') $user->deactivate();
 		try {
 			$model->save($user);
@@ -161,8 +177,4 @@ class Users extends ErpController
 		deleteUser($ids);
 		return $this->respondDeleted(json_encode($ids));
 	}
-
-
 }
-
-?>
