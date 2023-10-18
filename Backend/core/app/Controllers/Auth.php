@@ -71,8 +71,9 @@ class Auth extends ResourceController
 		$response = [];
 		$response['accessToken'] = $this->auth->token();
 		$response['refreshToken'] = $this->auth->getRefreshToken();
-		$response['userData'] = $this->auth->user();
-		$userPermits = $this->auth->user()->permissions;
+		$authUser = $this->auth->user();
+		$response['userData'] = $authUser;
+		$userPermits = $authUser->permissions;
 
 		$permits = [];
 		if (in_array('sys.superpower', $userPermits)) {

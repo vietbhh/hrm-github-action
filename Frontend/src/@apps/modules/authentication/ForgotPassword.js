@@ -17,18 +17,13 @@ import { Link } from "react-router-dom"
 import {
   Alert,
   Button,
-  Card,
-  CardBody,
-  CardText,
-  CardTitle,
   Form,
   Spinner
 } from "reactstrap"
 import Header from "./Header"
-import { useTranslation } from "react-i18next"
+import ImageSlider from "./ImageSlider"
 
 const ForgotPassword = () => {
-  const { i18n } = useTranslation()
   const methods = useForm({
     mode: "onChange"
   })
@@ -84,20 +79,20 @@ const ForgotPassword = () => {
       <Helmet>
         <title>{useFormatMessage("auth.authentication")}</title>
       </Helmet>
-      <Header />
-      <div className="auth-wrapper auth-basic auth-v1 px-2">
-        <img src={password3D} className="img3D" />
-        <div className="auth-inner py-2">
-          <Card className="mb-0">
-            <CardBody>
-              <CardTitle
-                tag="h4"
-                className="mb-1 text-title text-forgot-password">
-                {useFormatMessage("auth.forgotPassword")}
-              </CardTitle>
-              <CardText className="mb-2">
+      <div className="auth-wrapper auth-basic d-flex align-item-center justify-content-between">
+        <ImageSlider logo={password3D}/>
+        <div className="control-auth-section">
+          <Header />
+          <div className="login-section">
+            <div className="header-form">
+              <h1 className="title mb-75">
+                {useFormatMessage("auth.resetPassword")}
+              </h1>
+              <p className="sub-title">
                 {useFormatMessage("auth.forgotPasswordIntructions")}
-              </CardText>
+              </p>
+            </div>
+            <div className="error-section">
               {state.error && (
                 <Alert color="danger">
                   <div className="alert-body">
@@ -112,24 +107,29 @@ const ForgotPassword = () => {
                   </div>
                 </Alert>
               )}
+            </div>
+            <div className="form-section form-reset-password">
               <Form
                 className="auth-forgot-password-form mt-2"
                 onSubmit={handleSubmit(onSubmit)}>
-                <ErpInput
-                  type="text"
-                  placeholder={useFormatMessage(
-                    "auth.emailPlaceholder",
-                    "Enter your account email"
-                  )}
-                  name="email"
-                  label={useFormatMessage("auth.email")}
-                  nolabel
-                  className="mb-0"
-                  prepend={<i className="fa-solid fa-at"></i>}
-                  required
-                  useForm={methods}
-                  autoFocus
-                />
+                <div className="div-login-info">
+                  <label>{useFormatMessage("auth.email")}</label>
+                  <ErpInput
+                    type="text"
+                    placeholder={useFormatMessage(
+                      "auth.emailPlaceholder",
+                      "Enter your account email"
+                    )}
+                    name="email"
+                    label={useFormatMessage("auth.email")}
+                    nolabel
+                    className="mb-0"
+                    prepend={<i className="fa-solid fa-at"></i>}
+                    required
+                    useForm={methods}
+                    autoFocus
+                  />
+                </div>
 
                 <Button.Ripple
                   type="submit"
@@ -141,16 +141,14 @@ const ForgotPassword = () => {
                   {useFormatMessage("auth.sendResetLink")}
                 </Button.Ripple>
               </Form>
-              <p className="text-center mt-2">
-                <Link to="/login">
-                  <ChevronLeft className="me-25" size={14} />
-                  <span className="align-middle">
-                    {useFormatMessage("auth.backToLogin")}
-                  </span>
-                </Link>
+              <p className="text-left mt-2">
+                <span className="text-forgot">
+                  {useFormatMessage("auth.remember_your_password")}{" "}
+                  <Link to="/login">{useFormatMessage("auth.loginBtn")}</Link>
+                </span>
               </p>
-            </CardBody>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </Fragment>
