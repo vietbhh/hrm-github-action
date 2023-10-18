@@ -1980,7 +1980,7 @@ class Employees extends Employee
 	{
 		$authorize = \Config\Services::authorization();
 		$employeeModel = new EmployeesModel();
-		$builder = $employeeModel->asArray()->exceptResigned();
+		$builder = $employeeModel->asArray()->selectBasicFields()->exceptResigned();
 		$data = $builder->findAll();
 		$arrHasPer = [];
 		foreach ($data as $user) :
