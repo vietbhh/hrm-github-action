@@ -747,10 +747,8 @@ const sendNotificationAddMemberWaitApproval = async (
   receivers
 ) => {
   const title =
-    "<b>" +
-    sender?.full_name +
-    "</b> has added you to the group <b>" +
-    sender?.full_name +
+    "</b>You have sent a request to join the group <b>" +
+    workgroup?.name +
     "</b>. Please wait for the administrator's approval"
   const link = "workspace/" + workgroup.id
   await sendNotification(sender?.id, receivers, {
