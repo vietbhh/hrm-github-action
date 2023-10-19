@@ -208,8 +208,21 @@ const EmployeesSelect = (props) => {
       const concat = !props.search
         ? departments.concat(res.data.results)
         : res.data.results
+
+        const uniqueIds = {};
+
+        const uniqueArray = concat.filter((item) => {
+          if (!uniqueIds[item.id]) {
+            uniqueIds[item.id] = true;
+            return true;
+          }
+            return false;
+        });
+        
+        uniqueArray.sort((a, b) => b.id - a.id);
+
       setState({
-        departments: concat,
+        departments: uniqueArray,
         page: res.data.page,
         recordsTotal: res.data.recordsTotal,
         perPage: res.data.recordsFiltered,
@@ -290,7 +303,12 @@ const EmployeesSelect = (props) => {
     const page = state.page + 1
     if (state.typeAdd === "departments") {
       if (state.recordsTotal > state.departments.length) {
-        loadDepartment({ page: page, search: state.search })
+        if(!state.search)
+        {
+          loadDepartment({ page: page, search: state.search })
+        }else{
+          loadDepartment({ page: page})
+        }
       }
     }
   }
@@ -303,7 +321,11 @@ const EmployeesSelect = (props) => {
     }
 
     typingTimeoutRef.current = setTimeout(() => {
-      loadData({ search: e, page: 1 })
+      if (state.typeAdd === "members") {
+        loadData({ search: e, page: 1 })
+      }else if (state.typeAdd === "departments") {
+        loadDepartment({ search: e, page: 1 })
+      }
     }, 500)
   }
 
