@@ -116,7 +116,6 @@ const MemberSelect = (props) => {
   useEffect(() => {
     loadData()
   }, [options])
-  console.log(options)
 
   // ** render
   const Option = (props) => {

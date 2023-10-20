@@ -296,7 +296,7 @@ const sendNotificationReactionPostTag = async (
       reaction +
       " and " +
       (numberReaction - 1) +
-      " of other people who have interacted post you're tagged"
+      " {{modules.network.notification.people_reaction_post_tag}}"
   }
 
   await sendNotification(userReaction?.id, receivers, {
@@ -352,7 +352,7 @@ const sendNotificationCommentPost = async (
         user.full_name +
         "</b> and " +
         (checkExist.length - 1) +
-        " of other people who have comment your post"
+        " {{modules.network.notification.people_comment_in_the_post}}"
     }
   }
   await sendNotification(user?.id, receivers, {
@@ -411,7 +411,7 @@ const sendNotificationCommentPostTag = async (
         userReaction.full_name +
         "</b> and " +
         (checkExist.length - 1) +
-        " of other people who have comment post you're tagged"
+        "{{modules.network.notification.people_comment_post_tagged}}"
     }
   }
 
@@ -561,7 +561,7 @@ const sendNotificationRepliedCommentPost = async (
       user.full_name +
       "</b> and " +
       (userComment.length - 1) +
-      " of other people who have replied your comment"
+      "{{modules.network.notification.people_repplied_your_comment}} "
   }
   await sendNotification(user?.id, receivers, {
     title: title,
@@ -623,7 +623,7 @@ const sendNotificationReactionCommentPost = async (
       reaction +
       " and " +
       numberReaction +
-      " of other people who have interacted with your comment"
+      " {{modules.network.notification.people_reaction_your_comment}}"
   }
   await sendNotification(userReaction?.id, receivers, {
     title: title,
@@ -692,7 +692,7 @@ const sendCommonWorkgroupNotification = async (
 
 const sendNotificationAddMember = async (workgroup, sender, receivers) => {
   const title =
-    "You have been added to the group <b>" +
+    "{{modules.workspace.text.notification.add_you_to_group}} <b>" +
     workgroup?.name +
     "</b> by <b>" +
     sender?.full_name +
@@ -719,7 +719,7 @@ const sendNotificationHasNewMember = async (
     title =
       "<b>" +
       memberFullname +
-      "</b> has joined the group <b>" +
+      "</b> {{modules.workspace.text.notification.join_group}} <b>" +
       workgroup?.name +
       "</b>"
   } else {
@@ -728,7 +728,7 @@ const sendNotificationHasNewMember = async (
       memberFullname +
       "</b> and " +
       (member.length - 1) +
-      " others has joined the group <b>" +
+      " {{modules.workspace.text.notification.many_join_group}} <b>" +
       workgroup?.name +
       "</b>"
   }
@@ -747,9 +747,9 @@ const sendNotificationAddMemberWaitApproval = async (
   receivers
 ) => {
   const title =
-    "</b>You have sent a request to join the group <b>" +
+    "</b> {{modules.workspace.text.notification.user_request_join_workspace}} <b>" +
     workgroup?.name +
-    "</b>. Please wait for the administrator's approval"
+    "</b>. {{modules.workspace.text.notification.wait_approval}}"
   const link = "workspace/" + workgroup.id
   await sendNotification(sender?.id, receivers, {
     title: "",
@@ -762,7 +762,7 @@ const sendNotificationAssignedAdmin = async (workgroup, sender, receivers) => {
   const title =
     "<b>" +
     sender.full_name +
-    "</b> added you as admin of group <b>" +
+    "</b> {{modules.workspace.text.notification.add_to_role_admin_workspace}} <b>" +
     workgroup?.name +
     "</b>"
   const link = "workspace/" + workgroup.id
@@ -778,7 +778,7 @@ const sendNotificationKickMember = async (workgroup, sender, receivers) => {
   const title =
     "<b>" +
     sender.full_name +
-    "</b> has removed you from the group <b>" +
+    "</b> {{modules.workspace.text.notification.remove_to_workspace}} <b>" +
     workgroup?.name +
     "</b>"
   const link = "workgroup/" + workgroup.id

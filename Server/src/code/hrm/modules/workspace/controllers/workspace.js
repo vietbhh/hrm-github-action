@@ -120,7 +120,7 @@ const getWorkspace = async (req, res, next) => {
     )
 
     // count total member in workspace
-    const user = await usersModel.findAll(); 
+    const user = await getUserActivated(); 
 
     const membersWithIdUser = workspace.members.filter(member => {
       return user.some(u => u.id == member.id_user);

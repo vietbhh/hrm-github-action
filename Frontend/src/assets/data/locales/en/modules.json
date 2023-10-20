@@ -4243,7 +4243,14 @@
           "has_joined_group": "has joined the group",
           "added_as_admin_group": "added you as admin of group",
           "remove_from_group": "has removed you from the group",
-          "by": "by"
+          "by": "by",
+          "add_you_to_group" : "You have been added to the group",
+          "join_group" : "has joined the group",
+          "many_join_group" : "others has joined the group",
+          "user_request_join_workspace" : "You have sent a request to join the group",
+          "wait_approval" : "Please wait for the administrator's approval",
+          "add_to_role_admin_workspace" : "added you as admin of group",
+          "remove_to_workspace" : "has removed you from the group"
         }
       },
       "app_options": {
@@ -4350,7 +4357,12 @@
         "reaction_on_your_video" : "your video",
         "other_reaction_on_your_video" : "of other people who have reaction your video",
         "other_reaction_on_your_image" : "of other people who have reaction your image",
-        "other_reaction_post" : "of other people who have interacted with your post"
+        "other_reaction_post" : "of other people who have interacted with your post",
+        "people_reaction_post_tag" : "of other people who have interacted post you're tagged",
+        "people_comment_in_the_post" : "of other people who have comment your post fdfs",
+        "people_comment_post_tagged" : "of other people who have comment post you're tagged",
+        "people_repplied_your_comment" : "of other people who have replied your comment",
+        "people_reaction_your_comment" : "of other people who have interacted with your comment"
       }
     },
     "timeline": {
