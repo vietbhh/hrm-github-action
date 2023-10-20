@@ -235,7 +235,6 @@ const EmployeesSelect = (props) => {
     const idDepartment = item?.id
     const department_selected = [...state.department_selected]
     const arrDeparment_selected = department_selected.map((e) => e["id"])
-
     if (select_department) {
       if (arrDeparment_selected.includes(idDepartment)) {
         const index = department_selected.findIndex(
@@ -274,9 +273,18 @@ const EmployeesSelect = (props) => {
           .getUserByDepartmentId({ department: idDepartment })
           .then((res) => {
             const dataSelected = [...state.dataSelected]
-            const concat = dataSelected.concat(res.data.results)
+            const dataUniqueItem = [];
+            res.data.results.forEach(data => {
+                const hasDuplicate = dataSelected.some(dataSelect => dataSelect.id == data.id);
+                
+                if (!hasDuplicate) {
+                    dataUniqueItem.push(data);
+                }
+            });
+            dataUniqueItem.push(...dataSelected);
+            
             setState({
-              dataSelected: concat,
+              dataSelected: dataUniqueItem,
               department_selected: [
                 ...department_selected,
                 { id: idDepartment, users: res.data.results }
