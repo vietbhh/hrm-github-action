@@ -112,7 +112,7 @@ export default function Sticker() {
   }
 
   const renderStickerIcon = useCallback((item, name) => {
-    return name !== "sticker_default" ? (
+    return name !== stickerDefault.name ? (
       <PhotoPublic className="img-sticker" src={item.url} defaultPhoto="/" />
     ) : (
       <img className="img-sticker" src={item.url} />
@@ -129,7 +129,7 @@ export default function Sticker() {
           twoToneColor="#52c41a"
           className="icon-success"
           onClick={
-            item.name !== "sticker_default"
+            item.name !== stickerDefault.name
               ? () => handleSetStickerDefault(item)
               : () => {}
           }
@@ -143,19 +143,22 @@ export default function Sticker() {
 
     return (
       <Col className="sticker-collection" key={"collection-" + index} xs={24}>
-        <div>
+        <div className="sticker-collection-header position-absolute top-0 end-0">
+          <p className="text">{iconDefault}</p>
+        </div>
+        <div onClick={() => onDetail(item)}>
           <div className="sticker-collection-header">
             <p className="text">
               <span>
-                {item.name !== "sticker_default" ? item.name : item.label}
+                {item.name !== stickerDefault.name ? item.name : item.label}
               </span>
-              {iconDefault}
+              {/* {iconDefault} */}
             </p>
           </div>
-          <div className="sticker-images" onClick={() => onDetail(item)}>
+          <div className="sticker-images">
             <Row>
               <Col lg={8}>
-                {item.name !== "sticker_default" ? (
+                {item.name !== stickerDefault.name ? (
                   <PhotoPublic
                     src={stickerIconDefault.url}
                     width={96.8}

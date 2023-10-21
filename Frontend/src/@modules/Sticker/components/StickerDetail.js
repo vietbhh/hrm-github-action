@@ -7,6 +7,7 @@ import StickerModalFooter from "./modals/StickerModalFooter"
 import { stickerApi } from "../common/api"
 import notification from "@apps/utility/notification"
 import { useFormatMessage } from "@apps/utility/common"
+import stickerDefault from "../common/stickerDefault"
 
 export default function StickerDetail({ state, setState, onDelete }) {
   const handleChangeStickerDefault = (stickerId, id) => {
@@ -29,6 +30,7 @@ export default function StickerDetail({ state, setState, onDelete }) {
       })
     })
   }
+
   return (
     <Fragment>
       <div className="sticker-images" id={state.stickerDetail.id}>
@@ -44,7 +46,7 @@ export default function StickerDetail({ state, setState, onDelete }) {
                       style={{ zIndex: 1 }}
                     />
                   )}
-                  {state.stickerDetail.name !== "sticker_default" ? (
+                  {state.stickerDetail.name !== stickerDefault.name ? (
                     <PhotoPublic
                       className="img-sticker"
                       src={item.url}

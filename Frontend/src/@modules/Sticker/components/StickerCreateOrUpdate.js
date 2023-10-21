@@ -38,7 +38,8 @@ export default function StickerCreateOrUpdate({
       const isJpgOrPng =
         item.type === "image/jpeg" ||
         item.type === "image/png" ||
-        item.type === "image/gif"
+        item.type === "image/gif" ||
+        item.type === "image/webp"
       if (!isJpgOrPng) {
         return false
       }
@@ -77,7 +78,8 @@ export default function StickerCreateOrUpdate({
     const isImageType =
       file.type === "image/jpeg" ||
       file.type === "image/png" ||
-      file.type === "image/gif"
+      file.type === "image/gif" ||
+      item.type === "image/webp"
     if (!isImageType) {
       message.error(
         useFormatMessage("modules.sticker.modal.messages.error_type_file")

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Smile } from "react-feather"
 import EmojiComponent from "./Emoji"
 import GifComponent from "./Gif"
-import Sticker from "./Sticker"
+import Sticker from "./stickers/Sticker"
 
 const index = (props) => {
   const {
@@ -13,7 +13,8 @@ const index = (props) => {
     setReplyingDefault,
     handleInsertEditorState,
     showEmotion,
-    setShowEmotion
+    setShowEmotion,
+    ...rest
   } = props
 
   const emotionRef = useRef(null)
@@ -51,7 +52,16 @@ const index = (props) => {
     {
       key: "2",
       label: "Stickers",
-      children: <Sticker />
+      children: (
+        <Sticker
+          sendMessage={sendMessage}
+          selectedUser={selectedUser}
+          focusInputMsg={focusInputMsg}
+          setReplyingDefault={setReplyingDefault}
+          setShowEmotion={setShowEmotion}
+          setStatePostComment={rest.setStatePostComment}
+        />
+      )
     },
     {
       key: "3",
@@ -63,6 +73,7 @@ const index = (props) => {
           focusInputMsg={focusInputMsg}
           setReplyingDefault={setReplyingDefault}
           setShowEmotion={setShowEmotion}
+          setStatePostComment={rest.setStatePostComment}
         />
       )
     }
@@ -70,12 +81,14 @@ const index = (props) => {
 
   return (
     <>
-      <div
-        className={`emotions-dropdown-menu ${showEmotion ? "show" : ""}`}
-        ref={emotionRef}>
-        <div className="emotions-dropdown-arrow"></div>
-        <Tabs defaultActiveKey="1" tabPosition={"bottom"} items={items} />
-      </div>
+      {showEmotion === true && (
+        <div
+          className={`emotions-dropdown-menu ${showEmotion ? "show" : ""}`}
+          ref={emotionRef}>
+          <div className="emotions-dropdown-arrow"></div>
+          <Tabs defaultActiveKey="1" tabPosition={"bottom"} items={items} />
+        </div>
+      )}
       <div
         ref={emotionIconRef}
         className="cursor-pointer text-secondary"
@@ -90,6 +103,7 @@ const index = (props) => {
           width="20"
           height="21"
           viewBox="0 0 20 21"
+          id="sticker-icon"
           fill="none">
           <path
             d="M7.5 18.8332H12.5C16.6667 18.8332 18.3333 17.1665 18.3333 12.9998V7.99984C18.3333 3.83317 16.6667 2.1665 12.5 2.1665H7.5C3.33333 2.1665 1.66667 3.83317 1.66667 7.99984V12.9998C1.66667 17.1665 3.33333 18.8332 7.5 18.8332Z"

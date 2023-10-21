@@ -44,7 +44,7 @@ const removeDirInUpload = (pathDir) => {
         return
     }
 
-    fs.rmdir(
+    fs.rmSync(
         path.join(localSavePath, pathDir),
         {
             recursive: true
