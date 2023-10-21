@@ -271,7 +271,7 @@ const ModalAnnouncement = (props) => {
       }
     })
   ]
-
+  console.log("state.dataEdit", state.dataEdit)
   return (
     <Fragment>
       <Modal
@@ -562,6 +562,7 @@ const ModalAnnouncement = (props) => {
                           {size_type}
                         </span>
                       </div>
+                      xxxx
                       <div
                         className="div-close"
                         onClick={() => handleRemoveAttachment(index)}>

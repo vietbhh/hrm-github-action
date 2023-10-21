@@ -49,7 +49,7 @@ const RenderPostEndorsement = (props) => {
         <span>
           {useFormatMessage("modules.feed.post.endorsement.congratulate")}
         </span>{" "}
-        <span className="text-bold">
+        <span>
           {_.map(member, (item, key) => {
             return (
               <Fragment key={key}>
@@ -61,11 +61,12 @@ const RenderPostEndorsement = (props) => {
               </Fragment>
             )
           })}
-        </span>{" "}
+        </span>
+        <br />
         <span>
           {useFormatMessage("modules.feed.post.endorsement.is_endorsed")}
         </span>{" "}
-        <span className="text-bold">“{dataLink?.badge_name}”</span>
+        <span>“{dataLink?.badge_name}”</span>
       </Fragment>
     )
   }

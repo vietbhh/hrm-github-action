@@ -151,10 +151,14 @@ const addEvent = async (req, insertFeed = true) => {
         }
         let permission = "default"
         let permission_id = []
-        if (workspace) {
+        console.log("workspace", workspace)
+        console.log("const body", body)
+
+        if (workspace && workspace.length > 0) {
           permission = "workspace"
           permission_id = [workspace]
         }
+
         const feedModel = new feedMongoModel({
           __user: req.__user,
           type: "event",

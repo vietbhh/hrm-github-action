@@ -52,7 +52,8 @@ const RenderPostEvent = (props) => {
     if (!_.isEmpty(employee) && employee !== "[]") {
       const index = employee.findIndex((val) => val.id === userId)
       if (index !== -1) {
-        const status = employee[index].status === "" ? "respond" : employee[index].status
+        const status =
+          employee[index].status === "" ? "respond" : employee[index].status
         setState({ valueStatus: status })
       }
     }
@@ -80,7 +81,7 @@ const RenderPostEvent = (props) => {
       key: "maybe",
       label: (
         <div onClick={() => handleUpdateStatus("maybe")}>
-          {useFormatMessage("modules.feed.post.event.maybe")}
+          {useFormatMessage("modules.feed.post.event.maybesss")}
         </div>
       )
     }
@@ -109,7 +110,7 @@ const RenderPostEvent = (props) => {
           className="event-content"
           onClick={() => handleClick()}
           style={{ cursor: "pointer" }}>
-          <div className="event-content__title">{dataLink?.name}</div>
+          <div className="event-content__title">{dataLink?.name} xxxx</div>
           <div className="event-content__meeting-room">
             {dataLink?.meeting_room?.label}
           </div>
@@ -133,38 +134,49 @@ const RenderPostEvent = (props) => {
 
   const renderIcon = (status) => {
     if (isImportant || state.valueStatus === "respond") {
-      return ""
+      return (
+        <svg
+          width="25"
+          height="24"
+          viewBox="0 0 25 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12.5 22C18 22 22.5 17.5 22.5 12C22.5 6.5 18 2 12.5 2C7 2 2.5 6.5 2.5 12C2.5 17.5 7 22 12.5 22Z"
+            stroke="#696760"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M12.5 8V13"
+            stroke="#292D32"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M12.4946 16H12.5036"
+            stroke="#292D32"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      )
     }
 
     if (state.valueStatus === "maybe") {
       return (
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
-          viewBox="0 0 20 20"
-          fill="none">
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M14.1667 15.3583H10.8334L7.12501 17.8249C6.57501 18.1916 5.83335 17.8 5.83335 17.1333V15.3583C3.33335 15.3583 1.66669 13.6916 1.66669 11.1916V6.19157C1.66669 3.69157 3.33335 2.0249 5.83335 2.0249H14.1667C16.6667 2.0249 18.3334 3.69157 18.3334 6.19157V11.1916C18.3334 13.6916 16.6667 15.3583 14.1667 15.3583Z"
-            stroke="#292D32"
-            strokeWidth="1.5"
-            strokeMiterlimit="10"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M10 9.46655V9.29159C10 8.72492 10.35 8.4249 10.7 8.18324C11.0417 7.9499 11.3833 7.64991 11.3833 7.09991C11.3833 6.33325 10.7667 5.71655 10 5.71655C9.23334 5.71655 8.6167 6.33325 8.6167 7.09991"
-            stroke="#292D32"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M9.99623 11.4584H10.0037"
-            stroke="#292D32"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM15.92 12.75H7.92C7.51 12.75 7.17 12.41 7.17 12C7.17 11.59 7.51 11.25 7.92 11.25H15.92C16.33 11.25 16.67 11.59 16.67 12C16.67 12.41 16.34 12.75 15.92 12.75Z"
+            fill="#696760"
           />
         </svg>
       )
@@ -185,20 +197,19 @@ const RenderPostEvent = (props) => {
     } else {
       return (
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
-          viewBox="0 0 20 20"
-          fill="none">
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
           <path
-            d="M10 1.66675C5.40835 1.66675 1.66669 5.40841 1.66669 10.0001C1.66669 14.5917 5.40835 18.3334 10 18.3334C14.5917 18.3334 18.3334 14.5917 18.3334 10.0001C18.3334 5.40841 14.5917 1.66675 10 1.66675ZM12.8 11.9167C13.0417 12.1584 13.0417 12.5584 12.8 12.8001C12.675 12.9251 12.5167 12.9834 12.3584 12.9834C12.2 12.9834 12.0417 12.9251 11.9167 12.8001L10 10.8834L8.08335 12.8001C7.95835 12.9251 7.80002 12.9834 7.64169 12.9834C7.48335 12.9834 7.32502 12.9251 7.20002 12.8001C6.95835 12.5584 6.95835 12.1584 7.20002 11.9167L9.11669 10.0001L7.20002 8.08341C6.95835 7.84175 6.95835 7.44175 7.20002 7.20008C7.44169 6.95842 7.84169 6.95842 8.08335 7.20008L10 9.11675L11.9167 7.20008C12.1584 6.95842 12.5584 6.95842 12.8 7.20008C13.0417 7.44175 13.0417 7.84175 12.8 8.08341L10.8834 10.0001L12.8 11.9167Z"
-            fill="#4F4D55"
+            d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+            fill="#E52717"
           />
         </svg>
       )
     }
   }
-
   return (
     <Fragment>
       <div className={`post-body__event body-bg-${colorEvent}`}>
@@ -212,7 +223,8 @@ const RenderPostEvent = (props) => {
             disabled={isImportant}>
             <div
               className={classNames("event-status__dropdown", {
-                "not-accept-event": isImportant || state.valueStatus !== "yes"
+                "not-accept-event": isImportant || state.valueStatus === "no",
+                "accept-event": state.valueStatus === "yes"
               })}>
               <Fragment>{renderIcon()}</Fragment>
               {isImportant
