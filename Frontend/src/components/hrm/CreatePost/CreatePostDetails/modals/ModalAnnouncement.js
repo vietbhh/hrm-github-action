@@ -271,7 +271,6 @@ const ModalAnnouncement = (props) => {
       }
     })
   ]
-  console.log("state.dataEdit", state.dataEdit)
   return (
     <Fragment>
       <Modal

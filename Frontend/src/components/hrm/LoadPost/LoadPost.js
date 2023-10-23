@@ -55,7 +55,7 @@ const LoadPost = (props) => {
     isLoadComment = false
   } = props
   const [state, setState] = useMergedState({
-    comment_more_count_original: data.comment_more_count,
+    comment_more_count_original: data?.comment_more_count,
     focusCommentForm: false,
 
     //
@@ -78,7 +78,7 @@ const LoadPost = (props) => {
       postCommentModal: !state.postCommentModal
     })
   }
-
+  console.log("datadatadatadatadatadatadata", data)
   const setCommentMoreCountOriginal = (value = 0) => {
     setState({ comment_more_count_original: value })
   }

@@ -6,6 +6,8 @@ import { feedApi } from "../common/api"
 import { useEffect } from "react"
 import { Card, CardBody, CardTitle } from "reactstrap"
 import { Collapse } from "antd"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
+import RenderAnnouncement from "../../../components/hrm/LoadPost/LoadPostDetails/PostDetails/RenderAnnouncement"
 const FeedCreateAndLoad = (props) => {
   const {
     workspace = [], // arr workspace: []
@@ -19,7 +21,8 @@ const FeedCreateAndLoad = (props) => {
 
     // ** event
     options_employee_department: [],
-    optionsMeetingRoom: []
+    optionsMeetingRoom: [],
+    listAnnouncement: []
   })
 
   const dataEmployee = useSelector((state) => state.users.list)
@@ -64,6 +67,14 @@ const FeedCreateAndLoad = (props) => {
         })
       })
   }, [])
+  const renderAnnouncement = (data = []) => {
+    console.log("renderAnnouncement sdata", data)
+    return data.map((item) => {
+      console.log("renderAnnouncement item", item)
+      return <LoadPost data={item} />
+    })
+  }
+
   const items = [
     {
       key: "1",
@@ -101,9 +112,27 @@ const FeedCreateAndLoad = (props) => {
           Announcements Were Pinned
         </>
       ),
-      children: 123
+      children: renderAnnouncement(state.listAnnouncement)
     }
   ]
+  //<LoadPost data={state.listAnnouncement[0]} />
+
+  // RenderAnnouncement dataLink={data.dataLink}
+  const loadAnnouncementPost = () => {
+    feedApi
+      .loadAnnouncementPost()
+      .then((res) => {
+        setState({ listAnnouncement: res?.data.results })
+        console.log("listAnnouncement", res?.data.results)
+      })
+      .catch((err) => {
+        console.log("error loadAnnouncementPost", err)
+      })
+  }
+
+  useEffect(() => {
+    loadAnnouncementPost()
+  }, [])
   return (
     <div className="feed">
       <CreatePost

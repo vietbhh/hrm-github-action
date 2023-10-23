@@ -97,7 +97,7 @@ const submitPostController = async (req, res, next) => {
       ? "default"
       : body.privacy_type
   const link = body.arrLink
-  
+
   // ** check type feed parent
   let type_feed_parent = "post"
   if (link.length > 0) {
@@ -1587,6 +1587,47 @@ const getPostPending = async (req, res) => {
     return res.fail(err.message)
   }
 }
+const loadAnnouncementPost = async (req, res) => {
+  try {
+    const filter = {
+      type: "announcement"
+    }
+    const postList = await feedMongoModel.find(filter).sort({
+      _id: req.query.sort
+    })
+    const beforeReturn = await handleDataBeforeReturn(postList, true)
+    let dataReturn = []
+    const promises = []
+    beforeReturn.map((value) => {
+      const promise = new Promise(async (resolve, reject) => {
+        const dataLink = await handleGetAnnouncementById(value.link_id)
+        value.dataLink = dataLink
+        resolve(value)
+      })
+
+      promises.push(promise)
+    })
+
+    const _data = await Promise.all(promises).then((res_promise) => {
+      return res_promise
+    })
+
+    _data.map((value) => {
+      if (value.dataLink?.pin === 1 || value.dataLink?.pin === "1") {
+        dataReturn.push(value)
+      }
+    })
+
+    const feedCount = await feedMongoModel.find(filter).count()
+    return res.respond({
+      results: dataReturn,
+      recordsTotal: feedCount
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1612,5 +1653,6 @@ export {
   turnOffCommenting,
   handleDataHistory,
   getDataEditHistory,
-  getPostPending
+  getPostPending,
+  loadAnnouncementPost
 }
