@@ -1822,6 +1822,58 @@ $background-color-checkbox: #139ff8;
         }
       }
     }
+    .announcements{
+      position: relative;
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      
+      .announcement-item{
+        display: inline-block;
+        width: 324px;
+        border-radius: 16px;
+        border: 1px solid var(--neutral-shade-6, #C4C3BB);
+        background: var(--other-white, #FFF);
+        .load-post{
+          padding: 12px 24px;
+          .post-comment{
+            display: none;
+          }
+          .post-footer{
+            .post-footer-button{
+              .div-button-reaction{
+                gap: 0px;
+                button{
+                  span{
+                    display: none;;
+                  }
+                }
+              }
+            }
+          }
+          .post-body{
+            .post-body__announcement{
+              .announcement__div-cover{
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .next-arrow-right{
+      position: absolute;
+      cursor: pointer;
+      border-radius: 16px;
+      background: var(--neutral-shade-3, #696760);
+      padding: 8px;
+      justify-content: center;
+      align-items: flex-start;
+      top: 40%;
+      right: 10px;
+      z-index: 1;
+    }
   }
 }
 

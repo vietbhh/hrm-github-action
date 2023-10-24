@@ -50,6 +50,7 @@ import {
   sendNotificationUnseenPost
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
+import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -1614,6 +1615,22 @@ const loadAnnouncementPost = async (req, res) => {
 
     _data.map((value) => {
       if (value.dataLink?.pin === 1 || value.dataLink?.pin === "1") {
+        console.log("value", value.dataLink)
+        const createDdate = moment(value.dataLink.created_at).format("Y-m-d")
+        const dateToday = new Date()
+        let numberDate = 1
+        if (
+          value.dataLink.show_announcements ===
+          getOptionValue("m_news", "show_announcements", "one_week")
+        ) {
+          numberDate = 7
+        } else if (
+          value.dataLink.show_announcements ===
+          getOptionValue("m_news", "show_announcements", "one_month")
+        ) {
+          numberDate = 30
+        }
+        console.log("timeeee", 1)
         dataReturn.push(value)
       }
     })

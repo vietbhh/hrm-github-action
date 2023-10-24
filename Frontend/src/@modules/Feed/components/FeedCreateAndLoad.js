@@ -3,11 +3,12 @@ import CreatePost from "@src/components/hrm/CreatePost/CreatePost"
 import LoadFeed from "./LoadFeed"
 import { useSelector } from "react-redux"
 import { feedApi } from "../common/api"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { Card, CardBody, CardTitle } from "reactstrap"
 import { Collapse } from "antd"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
-import RenderAnnouncement from "../../../components/hrm/LoadPost/LoadPostDetails/PostDetails/RenderAnnouncement"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import "react-perfect-scrollbar/dist/css/styles.css"
 const FeedCreateAndLoad = (props) => {
   const {
     workspace = [], // arr workspace: []
@@ -24,6 +25,7 @@ const FeedCreateAndLoad = (props) => {
     optionsMeetingRoom: [],
     listAnnouncement: []
   })
+  const ref = useRef(null)
 
   const dataEmployee = useSelector((state) => state.users.list)
 
@@ -68,13 +70,17 @@ const FeedCreateAndLoad = (props) => {
       })
   }, [])
   const renderAnnouncement = (data = []) => {
-    console.log("renderAnnouncement sdata", data)
     return data.map((item) => {
-      console.log("renderAnnouncement item", item)
-      return <LoadPost data={item} />
+      return (
+        <div className="announcement-item">
+          <LoadPost data={item} />
+        </div>
+      )
     })
   }
-
+  const scroll = (scrollOffset) => {
+    ref.current.scrollLeft += scrollOffset
+  }
   const items = [
     {
       key: "1",
@@ -112,7 +118,31 @@ const FeedCreateAndLoad = (props) => {
           Announcements Were Pinned
         </>
       ),
-      children: renderAnnouncement(state.listAnnouncement)
+
+      children: (
+        <PerfectScrollbar>
+          <div className="announcements">
+            {renderAnnouncement(state.listAnnouncement)}
+          </div>
+          <div className="next-arrow-right" onClick={() => scroll(20)}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M8.91016 19.9201L15.4302 13.4001C16.2002 12.6301 16.2002 11.3701 15.4302 10.6001L8.91016 4.08008"
+                stroke="#F2F1ED"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </PerfectScrollbar>
+      )
     }
   ]
   //<LoadPost data={state.listAnnouncement[0]} />
@@ -123,7 +153,6 @@ const FeedCreateAndLoad = (props) => {
       .loadAnnouncementPost()
       .then((res) => {
         setState({ listAnnouncement: res?.data.results })
-        console.log("listAnnouncement", res?.data.results)
       })
       .catch((err) => {
         console.log("error loadAnnouncementPost", err)
@@ -142,7 +171,7 @@ const FeedCreateAndLoad = (props) => {
         options_employee_department={state.options_employee_department}
         optionsMeetingRoom={state.optionsMeetingRoom}
       />
-      <Card className="card-announcemernt mb-1 rounded">
+      <Card className="card-announcement mb-1 rounded">
         <CardTitle className="mb-0">
           <Collapse
             defaultActiveKey={["1"]}
