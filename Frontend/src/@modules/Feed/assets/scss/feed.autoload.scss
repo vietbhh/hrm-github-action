@@ -1810,6 +1810,25 @@ $background-color-checkbox: #139ff8;
     background-color: #5398ff;
   }
   .card-announcement{
+     .swiper-button-next:after{
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-right'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: var(--neutral-shade-3, #696760);
+      border-radius: 16px;
+      padding: 23px;
+      width: 40px;
+      height: 40px;
+     }
+     .swiper-button-prev:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-left'%3E%3Cpolyline points='15 18 9 12 15 6'%3E%3C/polyline%3E%3C/svg%3E");
+      background-color: var(--neutral-shade-3, #696760);
+      border-radius: 16px;
+      padding: 23px; 
+      width: 40px;
+      height: 40px;
+    }
+
     .ant-collapse{
       .ant-collapse-item{
         .ant-collapse-header{
@@ -1823,14 +1842,10 @@ $background-color-checkbox: #139ff8;
       }
     }
     .announcements{
-      position: relative;
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      
       .announcement-item{
         display: inline-block;
         width: 324px;
+        height: 374px;
         border-radius: 16px;
         border: 1px solid var(--neutral-shade-6, #C4C3BB);
         background: var(--other-white, #FFF);
@@ -1854,6 +1869,9 @@ $background-color-checkbox: #139ff8;
           .post-body{
             .post-body__announcement{
               .announcement__div-cover{
+                display: none;
+              }
+              .div-attachment__div-show{
                 display: none;
               }
             }
@@ -3942,7 +3960,6 @@ $background-color-checkbox: #139ff8;
         display: flex;
         gap: 15px;
         margin-bottom: 15px;
-
         .form-group {
           width: 100%;
           margin-bottom: 0;

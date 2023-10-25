@@ -78,7 +78,6 @@ const LoadPost = (props) => {
       postCommentModal: !state.postCommentModal
     })
   }
-  console.log("datadatadatadatadatadatadata", data)
   const setCommentMoreCountOriginal = (value = 0) => {
     setState({ comment_more_count_original: value })
   }

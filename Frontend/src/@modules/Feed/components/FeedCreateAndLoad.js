@@ -9,6 +9,9 @@ import { Collapse } from "antd"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
+
+import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper"
+import { Swiper, SwiperSlide } from "swiper/react"
 const FeedCreateAndLoad = (props) => {
   const {
     workspace = [], // arr workspace: []
@@ -70,11 +73,13 @@ const FeedCreateAndLoad = (props) => {
       })
   }, [])
   const renderAnnouncement = (data = []) => {
-    return data.map((item) => {
+    return data.map((item, key) => {
       return (
-        <div className="announcement-item">
-          <LoadPost data={item} />
-        </div>
+        <SwiperSlide>
+          <div className="announcement-item">
+            <LoadPost data={item} />
+          </div>
+        </SwiperSlide>
       )
     })
   }
@@ -120,34 +125,36 @@ const FeedCreateAndLoad = (props) => {
       ),
 
       children: (
-        <PerfectScrollbar>
-          <div className="announcements">
+        <>
+          <Swiper
+            slidesPerView={1}
+            spaceBetween={10}
+            pagination={{
+              clickable: true
+            }}
+            navigation={true}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20
+              },
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 40
+              },
+              1024: {
+                slidesPerView: 2,
+                spaceBetween: 22
+              }
+            }}
+            className="mySwiper announcements">
             {renderAnnouncement(state.listAnnouncement)}
-          </div>
-          <div className="next-arrow-right" onClick={() => scroll(20)}>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M8.91016 19.9201L15.4302 13.4001C16.2002 12.6301 16.2002 11.3701 15.4302 10.6001L8.91016 4.08008"
-                stroke="#F2F1ED"
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </PerfectScrollbar>
+          </Swiper>
+        </>
       )
     }
   ]
-  //<LoadPost data={state.listAnnouncement[0]} />
 
-  // RenderAnnouncement dataLink={data.dataLink}
   const loadAnnouncementPost = () => {
     feedApi
       .loadAnnouncementPost()

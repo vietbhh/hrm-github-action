@@ -22,9 +22,8 @@ const RenderAnnouncement = (props) => {
       }
     }
   }, [dataLink])
-  console.log("dataLink", dataLink)
   return (
-    <div className="post-body__announcement div-event-name">
+    <div className="post-body__announcement ">
       <div className="announcement__div-cover">
         <img
           src={

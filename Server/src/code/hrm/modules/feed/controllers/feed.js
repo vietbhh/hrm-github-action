@@ -51,6 +51,7 @@ import {
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
 import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
+import moment from "moment"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -1612,33 +1613,36 @@ const loadAnnouncementPost = async (req, res) => {
     const _data = await Promise.all(promises).then((res_promise) => {
       return res_promise
     })
-
+    const one_week = await getOptionValue(
+      "news",
+      "show_announcements",
+      "one_week"
+    )
+    const one_month = await getOptionValue(
+      "news",
+      "show_announcements",
+      "one_month"
+    )
     _data.map((value) => {
       if (value.dataLink?.pin === 1 || value.dataLink?.pin === "1") {
-        console.log("value", value.dataLink)
-        const createDdate = moment(value.dataLink.created_at).format("Y-m-d")
-        const dateToday = new Date()
+        const createDdate = moment(value.dataLink.created_at)
+        const dateToday = moment()
+
         let numberDate = 1
-        if (
-          value.dataLink.show_announcements ===
-          getOptionValue("m_news", "show_announcements", "one_week")
-        ) {
+        if (value.dataLink.show_announcements * 1 === one_week * 1) {
           numberDate = 7
-        } else if (
-          value.dataLink.show_announcements ===
-          getOptionValue("m_news", "show_announcements", "one_month")
-        ) {
+        } else if (value.dataLink.show_announcements * 1 === one_month * 1) {
           numberDate = 30
         }
-        console.log("timeeee", 1)
-        dataReturn.push(value)
+        if (createDdate.add(numberDate, "days").isSameOrAfter(dateToday)) {
+          dataReturn.push(value)
+        }
       }
     })
 
-    const feedCount = await feedMongoModel.find(filter).count()
     return res.respond({
       results: dataReturn,
-      recordsTotal: feedCount
+      recordsTotal: dataReturn.length
     })
   } catch (err) {
     return res.fail(err.message)
