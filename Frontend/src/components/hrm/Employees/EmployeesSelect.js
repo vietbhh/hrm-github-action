@@ -170,6 +170,7 @@ const EmployeesSelect = (props) => {
     setState({
       loading: true
     })
+    console.log(props_send)
     const members = state.members
     const selected = member_selected.map((e) => e["id_user"])
     defaultModuleApi.getUsers(props_send).then((res) => {
@@ -503,7 +504,9 @@ const EmployeesSelect = (props) => {
                 <PerfectScrollbar
                   style={{
                     maxHeight: "440px",
-                    minHeight: "440px"
+                    minHeight: "440px",
+                    borderRadius: "12px",
+                    backgroundColor: "#F0F3F6"
                   }}>
                   <Row>
                     {renderMemberSelected(state.dataSelected)}

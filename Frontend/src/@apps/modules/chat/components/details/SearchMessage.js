@@ -270,14 +270,14 @@ const SearchMessage = (props) => {
                         fill="none">
                         <path
                           d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M17.4167 17.4167L15.8334 15.8334"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -417,14 +417,14 @@ const SearchMessage = (props) => {
               fill="none">
               <path
                 d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                stroke="#377DFF"
+                stroke="#696760"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M17.4167 17.4167L15.8334 15.8334"
-                stroke="#377DFF"
+                stroke="#696760"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -452,14 +452,14 @@ const SearchMessage = (props) => {
                         fill="none">
                         <path
                           d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M17.4167 17.4167L15.8334 15.8334"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"

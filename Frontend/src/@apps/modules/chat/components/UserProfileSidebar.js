@@ -19,6 +19,9 @@ import ProfileSidebarMoreOption from "./details/ProfileSidebarMoreOption"
 import ModalAddMember from "./modals/ModalAddMember"
 import ModalAvatarPreview from "./modals/ModalAvatarPreview"
 import ModalBackgroundPreview from "./modals/ModalBackgroundPreview"
+import { ErpSwitch } from "@apps/components/common/ErpField"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
+import { checkIsResponse } from "react-select-async-paginate"
 
 const UserProfileSidebar = (props) => {
   // ** Props
@@ -74,6 +77,18 @@ const UserProfileSidebar = (props) => {
     mode: "onSubmit"
   })
   const { handleSubmit, setValue } = methods
+
+  const checkMediaWidth = (x) => {
+    if (x.matches) {
+      return true
+    }
+  
+    return false
+  }
+
+  const checkMobile = checkMediaWidth(
+    window.matchMedia("(max-width: 767.98px)")
+  )
 
   const submitEdit = (values) => {
     setState({ loadingEdit: true })
@@ -563,36 +578,110 @@ const UserProfileSidebar = (props) => {
             state.showFileView || state.showMoreOption ? "hide" : ""
           }`}
           options={{ wheelPropagation: false }}>
-          {user?.type === "employee" && <ProfileSidebarEmployee user={user} />}
+          {user?.type === "employee" && 
+              <Fragment>
+                <ProfileSidebarEmployee 
+                user={user}  
+                checkedNotification={state.checkedNotification}
+                setCheckedNotification={(value) =>
+                    setState({ checkedNotification: value })
+                }
+                handleUpdateGroup={handleUpdateGroup}
+                selectedGroup={selectedGroup}
+                userId={userId} />
 
-          <ProfileSidebarGeneral
-            checkedNotification={state.checkedNotification}
-            setCheckedNotification={(value) =>
-              setState({ checkedNotification: value })
-            }
-            handleUpdateGroup={handleUpdateGroup}
-            handleShowFileView={handleShowFileView}
-            selectedGroup={selectedGroup}
-            userId={userId}
-            handleShowMoreOption={handleShowMoreOption}
-          />
+                <ProfileSidebarGeneral
+                  checkedNotification={state.checkedNotification}
+                  setCheckedNotification={(value) =>
+                    setState({ checkedNotification: value })
+                  }
+                  handleUpdateGroup={handleUpdateGroup}
+                  handleShowFileView={handleShowFileView}
+                  selectedGroup={selectedGroup}
+                  userId={userId}
+                  handleShowMoreOption={handleShowMoreOption}
+                  active = {active}
+                />
+              </Fragment>
+          }
+
+          
 
           {user?.type === "group" && (
-            <ProfileSidebarGroup
-              setShowMember={() => setState({ showMember: !state.showMember })}
-              selectedGroup={selectedGroup}
-              toggleModalAddMember={toggleModalAddMember}
-              dataEmployees={dataEmployees}
-              groups={groups}
-              setActive={setActive}
-              setActiveFullName={setActiveFullName}
-              setDataUnseenDetail={setDataUnseenDetail}
-              handleUpdateGroup={handleUpdateGroup}
-              userId={userId}
-              settingUser={settingUser}
-              isAdminSystem={state.isAdminSystem}
-              sendMessage={sendMessage}
-            />
+            <Fragment>
+              {checkMobile && 
+                <>
+                  <ProfileSidebarGeneral
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                      setState({ checkedNotification: value })
+                    }
+                    handleUpdateGroup={handleUpdateGroup}
+                    handleShowFileView={handleShowFileView}
+                    selectedGroup={selectedGroup}
+                    userId={userId}
+                    handleShowMoreOption={handleShowMoreOption}
+                    active = {active}
+                    type = {user?.type}
+                  />
+                  <ProfileSidebarGroup
+                    setShowMember={() => setState({ showMember: !state.showMember })}
+                    selectedGroup={selectedGroup}
+                    toggleModalAddMember={toggleModalAddMember}
+                    dataEmployees={dataEmployees}
+                    groups={groups}
+                    setActive={setActive}
+                    setActiveFullName={setActiveFullName}
+                    setDataUnseenDetail={setDataUnseenDetail}
+                    handleUpdateGroup={handleUpdateGroup}
+                    userId={userId}
+                    settingUser={settingUser}
+                    isAdminSystem={state.isAdminSystem}
+                    sendMessage={sendMessage}
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                        setState({ checkedNotification: value })
+                    }
+                  />
+                </>
+              }
+
+              {!checkMobile && 
+                <>
+                  <ProfileSidebarGroup
+                    setShowMember={() => setState({ showMember: !state.showMember })}
+                    selectedGroup={selectedGroup}
+                    toggleModalAddMember={toggleModalAddMember}
+                    dataEmployees={dataEmployees}
+                    groups={groups}
+                    setActive={setActive}
+                    setActiveFullName={setActiveFullName}
+                    setDataUnseenDetail={setDataUnseenDetail}
+                    handleUpdateGroup={handleUpdateGroup}
+                    userId={userId}
+                    settingUser={settingUser}
+                    isAdminSystem={state.isAdminSystem}
+                    sendMessage={sendMessage}
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                        setState({ checkedNotification: value })
+                    }
+                  />
+                  <ProfileSidebarGeneral
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                      setState({ checkedNotification: value })
+                    }
+                    handleUpdateGroup={handleUpdateGroup}
+                    handleShowFileView={handleShowFileView}
+                    selectedGroup={selectedGroup}
+                    userId={userId}
+                    handleShowMoreOption={handleShowMoreOption}
+                    active = {active}
+                  />
+                </>
+              }
+            </Fragment>
           )}
         </PerfectScrollbar>
 

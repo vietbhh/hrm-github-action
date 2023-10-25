@@ -1,9 +1,34 @@
 import { useFormatMessage } from "@apps/utility/common"
 import facebookIcon from "../../assets/images/facebook.png"
+import { ErpSwitch } from "@apps/components/common/ErpField"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 
-const ProfileSidebarEmployee = ({ user }) => {
+const ProfileSidebarEmployee = (props) => {
+  const {user ,  checkedNotification, setCheckedNotification,handleUpdateGroup ,selectedGroup, userId} = props
   return (
     <>
+      <div className="profile-div" style={{ cursor: "unset" }}>
+        <span className="title">
+          {useFormatMessage("modules.chat.text.notification")}
+        </span>
+        <ErpSwitch
+          nolabel
+          checked={checkedNotification}
+          onChange={(e) => {
+            setCheckedNotification(e.target.checked)
+            if (e.target.checked === true) {
+              handleUpdateGroup(selectedGroup.id, {
+                mute: arrayRemove(userId)
+              })
+            } else {
+              handleUpdateGroup(selectedGroup.id, {
+                mute: arrayUnion(userId)
+              })
+            }
+          }}
+        />
+      </div>
+
       <div className="personal-info">
         <h6 className="section-label mb-50">
           {useFormatMessage("modules.chat.text.email")}
