@@ -286,11 +286,12 @@ $font-family: Helvetica;
       .sidebar-content {
         border-width: 0;
         width: $width-sidebar;
+        padding: 24px;
 
         .chat-fixed-search {
           border-bottom: none;
           height: 45px;
-          width: $width-sidebar;
+          width: 100%;
           padding:0;
 
           > div {
@@ -336,7 +337,7 @@ $font-family: Helvetica;
         }
 
         .list-group {
-          width: $width-sidebar;
+          max-width: 100%;
           height: calc(100% - 50px);
           padding: 10px 0 0 0;
 
@@ -1287,6 +1288,9 @@ $font-family: Helvetica;
 
             .chat-app-form {
               background: unset;
+              @media all and (max-width: 768px) {
+                padding: 20px 25px;
+              }
               padding: 56px 24px 25px 30px;
               height: auto;
               border-top: unset;
@@ -1583,6 +1587,11 @@ $font-family: Helvetica;
                 svg {
                   position: relative;
                   left: -1px;
+                }
+                @media all and (max-width: 768px) {
+                  #Vector {
+                    fill: #FFFFFF
+                  }
                 }
               }
             }
@@ -2100,6 +2109,12 @@ $font-family: Helvetica;
                   .div-tab {
                     cursor: pointer;
                     padding: 7px;
+                    color: var(--neutral-shade-2, #403F3A);
+                    font-family: Be Vietnam;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 20px
                   }
 
                   .div-tab.active {
@@ -2717,14 +2732,16 @@ $font-family: Helvetica;
     margin: 0!important;
     display: block!important;
     text-align: center;
-    padding: 0;
+    padding: 8px;
   }
   .ant-tabs-tab-btn {
-    font-weight: 500;
+    color: var(--neutral-shade-2, #403F3A);
+    text-align: center;
+    font-family: Be Vietnam;
     font-size: 15px;
-    line-height: 20px;
-    color: #000000;
-    padding: 8px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px
   }
   
 } 
