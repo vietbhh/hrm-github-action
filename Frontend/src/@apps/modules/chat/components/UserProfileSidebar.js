@@ -418,7 +418,7 @@ const UserProfileSidebar = (props) => {
             </div>
             <div className="header-profile-avatar">
               <div className="div-avatar">
-                {renderAvatar(selectedGroup, "", "70", "70")}
+                {renderAvatar(selectedGroup, "", "102", "102")}
                 {state.isAdminSystem && (
                   <>
                     <input

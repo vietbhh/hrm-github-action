@@ -86,7 +86,7 @@ const ProfileSidebarGroup = (props) => {
           />
         </div>
       }
-      <hr />
+      {/* <hr /> */}
       <Collapse defaultActiveKey={["1"]} className="collapse-member">
         <Panel
           header={

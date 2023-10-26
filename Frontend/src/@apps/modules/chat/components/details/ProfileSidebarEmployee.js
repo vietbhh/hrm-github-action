@@ -231,7 +231,6 @@ const ProfileSidebarEmployee = (props) => {
         </ul>
       </div>
 
-      <hr />
     </>
   )
 }

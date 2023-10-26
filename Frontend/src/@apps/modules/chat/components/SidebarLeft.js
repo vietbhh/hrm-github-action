@@ -102,7 +102,7 @@ const SidebarLeft = (props) => {
         return (
           index > -1 && (
             <>
-              <h4 className="chat-list-title">
+              <h4 className={`chat-list-title ${pin ? "pinned" : "recent"}`}>
                 {useFormatMessage(
                   `modules.chat.text.${pin ? "pinned" : "recent"}`
                 )}
@@ -147,17 +147,27 @@ const SidebarLeft = (props) => {
                             }}>
                             {
                               pin === false ? 
-                              <i className="fa-regular fa-thumbtack icon"></i> : 
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                              <path d="M12 11V23" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
+                              <path d="M6 2L18 2" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
+                              <path d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z" stroke="#696760" stroke-width="1.5"/>
+                            </svg> : 
                               <>
-                                <svg xmlns="http://www.w3.org/2000/svg" id="mdil-pin-off" height={24} width={24} viewBox="0 0 24 24"><path d="M2.79,4.46L3.5,3.75L20.25,20.5L19.54,21.21L14.33,16H12V20.5L11.5,22L11,20.5V16H6V14H6L8,12V9.66L2.79,4.46M14,12.41V5H15V4H8V5H9V7.84L8,6.84V6H7.16L7,5.84V3H16V6H15V12L17,14V14H17V14H17V15.83L16,14.84V14.41L14,12.41M9,12.41L7,14.41V15H13.34L9,10.66V12.41Z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                  <path d="M12 11V23" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
+                                  <path d="M6 2L18 2" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
+                                  <path d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z" stroke="#696760" stroke-width="1.5"/>
+                                  <path d="M21 4L3 19" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
                               </>
                             }
-                            {useFormatMessage(
-                              `modules.chat.text.${
-                                pin === true ? "un_pin" : "pin"
-                              }`
-                            )}
+                            <span>
+                              {useFormatMessage(
+                                `modules.chat.text.${
+                                  pin === true ? "un_pin" : "pin"
+                                }`
+                              )}
+                            </span>
                           </a>
                         )
                       },
@@ -179,16 +189,34 @@ const SidebarLeft = (props) => {
                               handleUpdateGroup(item.id, dataUPdate)
                             }}>
                             {mute === true ? (
-                              <i className="fa-regular fa-bell-slash icon"></i>
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="vuesax/linear/notification">
+                                <g id="notification">
+                                <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M12.5 17.2629C17.4758 17.2629 19.7777 16.6118 20 13.9985C20 11.3869 18.3951 11.5549 18.3951 8.35062C18.3951 5.84774 16.0693 3 12.5 3C8.93068 3 6.60487 5.84774 6.60487 8.35062C6.60487 11.5549 5 11.3869 5 13.9985C5.22319 16.6217 7.52509 17.2629 12.5 17.2629Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path id="Stroke 3" d="M14.608 19.9714C13.4043 21.3347 11.5267 21.3508 10.3115 19.9714" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path id="Line 1" d="M21 4L3 19" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                </g>
+                              </svg>
                             ) : (
-                              <i className="fa-regular fa-bell icon"></i>
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="vuesax/linear/notification">
+                                <g id="notification">
+                                <g id="Notification">
+                                <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M12.5 19C18.8027 19 21.7184 18.1783 22 14.8802C22 11.5844 19.9672 11.7964 19.9672 7.75255C19.9672 4.59388 17.0211 1 12.5 1C7.97886 1 5.03283 4.59388 5.03283 7.75255C5.03283 11.7964 3 11.5844 3 14.8802C3.28271 18.1908 6.19845 19 12.5 19Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path id="Stroke 3" d="M14.608 21.9717C13.4043 23.3349 11.5267 23.3511 10.3115 21.9717" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </g>
+                                </g>
+                                </g>
+                              </svg>
                             )}
-
-                            {useFormatMessage(
-                              `modules.chat.text.${
-                                mute === true ? "un_mute" : "mute"
-                              }`
-                            )}
+                            <span>
+                              {useFormatMessage(
+                                `modules.chat.text.${
+                                  mute === true ? "un_mute" : "mute"
+                                }`
+                              )}
+                            </span>
                           </a>
                         )
                       }

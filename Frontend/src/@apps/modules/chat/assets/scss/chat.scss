@@ -1,6 +1,6 @@
 @import "@scss/friday";
 
-$width-sidebar: 370px;
+$width-sidebar: 371px;
 $btn-background-color: #377dff;
 $font-family: Helvetica;
 
@@ -276,6 +276,12 @@ $font-family: Helvetica;
 
     .sidebar-left {
       z-index: 11;
+      display: flex;
+      // padding: 24px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      flex-shrink: 0;
 
       .sidebar-content {
         border-width: 0;
@@ -285,7 +291,7 @@ $font-family: Helvetica;
           border-bottom: none;
           height: 45px;
           width: $width-sidebar;
-          padding-left: 30px;
+          padding:0;
 
           > div {
             gap: 5px;
@@ -311,16 +317,17 @@ $font-family: Helvetica;
           }
 
           .btn-new-group {
-            min-width: 45px;
-            width: 45px;
-            height: 45px;
+            min-width: 48px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 16px;
             font-size: 18px;
             background: unset;
-            background: #F2F1ED;
+            background: var(--neutral-shade-9, #F2F1ED);
+            padding: 12px;
 
             &:hover {
               background: #f9f9fb;
@@ -331,34 +338,37 @@ $font-family: Helvetica;
         .list-group {
           width: $width-sidebar;
           height: calc(100% - 50px);
+          padding: 10px 0 0 0;
 
           .ps__rail-y {
             z-index: 99;
+            margin-top: 10px;
           }
 
           .chat-list {
             .div-li-chat {
               position: relative;
-              margin-left: 15px;
-              margin-right: 15px;
+              margin: 12px 0 0 0!important;
+              height: 60px;
 
               .group-option {
                 cursor: pointer;
-                width: 36px;
-                height: 36px;
+                width: 32px;
+                height: 32px;
                 border-radius: 8px;
-                background-color: #FFFFFF;
-                border: 1px solid #D9D7D0;
+                background: var(--other-white, #FFF);
+                border: 1px solid var(--neutral-shade-7, #D9D7D0);
                 position: absolute;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.05);
                 align-items: center;
                 justify-content: center;
                 color: #65676b;
                 font-size: 24px;
                 right: 18px;
-                top: 20px;
+                top: 3px;
                 display: none;
                 border: 1px solid #ccc;
+                padding: 4px;
 
                 &:hover {
                   background-color: #f5f5f5;
@@ -376,7 +386,7 @@ $font-family: Helvetica;
               }
 
               li {
-                padding: 0.8rem 1rem;
+                padding: 8px 12px;
                 border-radius: 10px;
 
                 &.active {
@@ -384,7 +394,7 @@ $font-family: Helvetica;
                 }
 
                 .avatar {
-                  height: 50px;
+                  height: 40px;
 
                   span {
                     border: 2px solid #ffffff;
@@ -402,11 +412,15 @@ $font-family: Helvetica;
                   white-space: nowrap;
                   margin-top: 0;
                   font-family: $font-family;
+                  padding:  0 0 0 12px;
 
                   h5 {
-                    font-size: 16px;
-                    font-weight: 400;
-                    color: #212121;
+                    color: var(--neutral-shade-2, #403F3A);
+                    font-family: Be Vietnam;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 20px;
                   }
 
                   p {
@@ -438,9 +452,9 @@ $font-family: Helvetica;
                     flex-direction: row;
                     justify-content: center;
                     align-items: center;
-                    width: 20px;
-                    height: 20px;
-                    background: linear-gradient(286.17deg, #246bfd 0%, #5089ff 100%);
+                    width: 24px;
+                    height: 24px;
+                    background: #2F9BFA!important;
                     border-radius: 50%;
                     font-weight: 400;
                     font-size: 10px;
@@ -452,7 +466,12 @@ $font-family: Helvetica;
                   small {
                     position: relative;
                     top: 7px;
-                    color: #616161;
+                    color: var(--neutral-shade-3, #696760);
+                    font-family: Be Vietnam;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 16px;
                   }
                 }
 
@@ -480,13 +499,17 @@ $font-family: Helvetica;
           }
 
           .chat-list-title {
-            font-weight: 600;
+            color: var(--neutral-shade-4, #8C8A82);
+            font-family: Be Vietnam;
             font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
             line-height: 16px;
-            letter-spacing: 0.2px;
-            color: #8C8A82;
-            margin: 2rem 1.286rem 0.5rem;
-            opacity: 80%;
+            text-transform: uppercase;
+            margin: 0!important;
+          }
+          .recent {
+            margin-top: 24px!important;
           }
         }
       }
@@ -496,7 +519,6 @@ $font-family: Helvetica;
       .content-wrapper {
         padding: 0;
         background: #ffffff;
-        padding-bottom: 30px;
 
         .content-body:not(.sidebar-right-show) {
           grid-template-columns: auto 0;
@@ -519,6 +541,10 @@ $font-family: Helvetica;
           }
 
           .chat-app-window {
+            @media all and (max-width: 768px) {
+              padding: 0;
+            }
+            padding: 21px 0px;
             .highlight-text {
               background-color: $primary-bg;
               color: #fff;
@@ -529,12 +555,17 @@ $font-family: Helvetica;
             }
 
             .chat-navbar {
+              @media all and (max-width: 768px) {
+                padding: 0;
+              }
+              padding: 0 28px;
               .chat-header {
                 background: #ffffff;
                 box-shadow: 0px 2px 24px rgba(153, 155, 168, 0.12);
                 border-radius: 12px;
-                margin: 10px 25px;
-                padding: 10px;
+                margin: 0;
+                padding: 8px 12px!important;
+
 
                 .avatar img {
                   width: 45px;
@@ -801,6 +832,7 @@ $font-family: Helvetica;
             #form-chat {
               position: relative;
               height: calc(100% - 85px - 40px - 55px);
+              padding: 0 18px 0 0;
               .chat {
                 .chat-avatar {
                   .avatar {
@@ -868,7 +900,6 @@ $font-family: Helvetica;
               height: 100%;
               background: unset;
               padding: 0 25px;
-
               .class-default-spinner {
                 height: 100%;
                 align-items: center;
@@ -1038,10 +1069,12 @@ $font-family: Helvetica;
 
                     p.text {
                       word-break: break-word;
-                      font-family: $font-family;
+                      color: var(--neutral-shade-9, #F2F1ED);
+                      font-family: Be Vietnam;
                       font-size: 15px;
-                      font-weight: unset;
-                      margin-top: 2px;
+                      font-style: normal;
+                      font-weight: 400;
+                      line-height: 20px;
                     }
 
                     p.text.has-seen {
@@ -1254,7 +1287,7 @@ $font-family: Helvetica;
 
             .chat-app-form {
               background: unset;
-              padding: 20px 25px;
+              padding: 56px 24px 25px 30px;
               height: auto;
               border-top: unset;
               gap: 25px;
@@ -1263,15 +1296,17 @@ $font-family: Helvetica;
               #label-file-upload {
                 height: auto;
                 border-top: unset;
-                gap: 25px;
+                gap: 12px;
                 width: 100%;
                 display: flex;
                 align-items: center;
               }
 
               .form-send-message {
-                height: 55px;
-                border-radius: 16px;
+                height: 68px;
+                margin: 0px;
+                padding: 0px;
+                border-radius: 12px;
 
                 .form-group {
                   margin: 0;
@@ -1671,7 +1706,7 @@ $font-family: Helvetica;
             border-width: 0;
 
             .user-profile-header {
-              margin-bottom: 20px;
+              margin-bottom: 0px;
 
               .close-icon {
                 color: #fff;
@@ -1685,19 +1720,23 @@ $font-family: Helvetica;
                 justify-content: unset;
 
                 .chat-user-name {
-                  font-weight: 600;
-                  font-size: 16px;
-                  line-height: 27px;
-                  color: #171721;
-                  margin-bottom: 0;
-                  margin-top: 50px;
+                  color: var(--171721-primary, #171721);
+                  text-align: center;
+                  font-family: Be Vietnam Pro;
+                  font-size: 18px;
+                  font-style: normal;
+                  font-weight: 500;
+                  line-height: 28px
                 }
 
                 .user-post {
-                  font-weight: 300;
-                  font-size: 12px;
-                  line-height: 21px;
-                  color: #8083a3;
+                  color: var(--8083-a-3, #8083A3);
+                  text-align: center;
+                  font-family: Be Vietnam;
+                  font-size: 15px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 20px
                 }
 
                 .header-profile-image-background {
@@ -1732,9 +1771,11 @@ $font-family: Helvetica;
                   top: 87px;
 
                   .avatar {
-                    box-shadow: unset;
-                    margin-bottom: 0.5rem;
-
+                    width: 108px;
+                    height: 108px;
+                    fill: var(--primary-500, #FFE658)!important;
+                    background-color: transparent!important;
+                   
                     img {
                       width: 96px;
                       height: 96px;
@@ -1759,6 +1800,7 @@ $font-family: Helvetica;
 
                   .div-avatar {
                     position: relative;
+                    margin: 0 0 12px 0 ;
 
                     [class*="avatar-status-"] {
                       right: 10px;
@@ -1802,22 +1844,30 @@ $font-family: Helvetica;
 
             .user-profile-sidebar-area {
               height: calc(100% - 250px);
+              padding: 24px;
 
               .personal-info {
-                margin-bottom: 1.5rem;
+                margin-bottom: 24px;
 
                 .section-label {
-                  font-weight: 600;
+                  color: var(--neutral-shade-3, #696760);
+                  font-family: Be Vietnam;
                   font-size: 12px;
-                  line-height: 18px;
-                  color: #32434f;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 16px;
+                  text-transform: uppercase;
+                  margin-bottom: 0px!important;
+                  padding-bottom: 4px;
                 }
 
                 .section-text {
-                  font-weight: 300;
-                  font-size: 12px;
-                  line-height: 21px;
-                  color: #171721;
+                  color: var(--neutral-shade-2, #403F3A);
+                  font-family: Be Vietnam;
+                  font-size: 15px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 20px
                 }
 
                 .social-icon {
@@ -1848,9 +1898,12 @@ $font-family: Helvetica;
                 }
 
                 .title {
-                  font-weight: 400;
+                  color: var(--neutral-shade-2, #403F3A);
+                  font-family: Be Vietnam;
                   font-size: 14px;
-                  color: #212121;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 20px; 
                 }
 
                 .profile-div-right {
@@ -2612,7 +2665,19 @@ $font-family: Helvetica;
   padding-top: 7px;
 
   .ant-dropdown-arrow {
-    top: 1px;
+    top: 8px;
+  }
+
+  .ant-dropdown-menu {
+    padding: 12px!important;
+    li {
+      padding: 8px;
+      a {
+        svg {
+          margin-right: 16px;
+        }
+      }
+    }
   }
 
   li {
@@ -2626,6 +2691,7 @@ $font-family: Helvetica;
     }
   }
 }
+
 
 
 .modal-play-video {
@@ -2651,12 +2717,14 @@ $font-family: Helvetica;
     margin: 0!important;
     display: block!important;
     text-align: center;
+    padding: 0;
   }
   .ant-tabs-tab-btn {
     font-weight: 500;
     font-size: 15px;
     line-height: 20px;
     color: #000000;
+    padding: 8px;
   }
   
 } 
