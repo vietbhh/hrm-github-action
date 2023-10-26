@@ -1980,7 +1980,7 @@ class Employees extends Employee
 	{
 		$authorize = \Config\Services::authorization();
 		$employeeModel = new EmployeesModel();
-		$builder = $employeeModel->asArray()->exceptResigned();
+		$builder = $employeeModel->asArray()->selectBasicFields()->exceptResigned();
 		$data = $builder->findAll();
 		$arrHasPer = [];
 		foreach ($data as $user) :
@@ -2662,5 +2662,17 @@ class Employees extends Employee
 		}
 
 		return $info;
+	}
+
+	public function getUserByDepartmentId() {
+		$departmentId = $this->request->getVar("department");
+
+		$employees = new EmployeesModel();
+
+		$result = $employees->select("m_employees.*")->join("users", " users.id = m_employees.users_id "  )->where("m_employees.department_id",$departmentId)->where("users.active",1)->findAll();
+
+		return $this->respond([
+			'results' => $result
+		]);
 	}
 }

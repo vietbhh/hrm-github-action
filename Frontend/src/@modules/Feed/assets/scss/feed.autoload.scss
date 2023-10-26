@@ -1042,6 +1042,12 @@ $background-color-checkbox: #139ff8;
       border-radius: 12px;
       font-weight: 400 !important;
     }
+
+    .ellipsis {
+      overflow: hidden;
+      white-space: nowrap; 
+      text-overflow: ellipsis;
+    }
   }
 
   .div-create-post {

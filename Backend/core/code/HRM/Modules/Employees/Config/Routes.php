@@ -90,3 +90,5 @@ $routes->post('employees-settings/create-contract-type', 'Settings::create_contr
 $routes->get('employees-settings/load-contract-type', 'Settings::load_contract_type_get',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees-settings/update-contract-type/(:any)', 'Settings::update_contract_type_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
 $routes->post('employees-settings/delete-contract-type/(:any)', 'Settings::delete_contract_type_post/$1',['namespace' => 'HRM\Modules\Employees\Controllers']);
+
+$routes->post('employees-by-department-id', 'Employees::getUserByDepartmentId',['namespace' => 'HRM\Modules\Employees\Controllers']);

@@ -17,7 +17,7 @@ const MemberSelect = (props) => {
     placeholder,
     classNameProps,
     isMulti = true,
-    options = [],
+    options,
     value,
     selectDepartment = false,
     selectAll = false,
@@ -38,7 +38,7 @@ const MemberSelect = (props) => {
       loading: true
     })
 
-    if (options.length > 0) {
+    if (!_.isUndefined(options)) {
       setState({
         currentOption:
           selectAll === true
@@ -115,7 +115,7 @@ const MemberSelect = (props) => {
   // ** effect
   useEffect(() => {
     loadData()
-  }, [])
+  }, [options])
 
   // ** render
   const Option = (props) => {
@@ -180,7 +180,7 @@ const MemberSelect = (props) => {
         {...addOnOption}
       />
     )
-  }, [value, state.loading])
+  }, [value, state.loading,state.currentOption])
 
   return <Fragment>{renderComponent}</Fragment>
 }

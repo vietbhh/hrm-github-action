@@ -36,7 +36,8 @@ const PendingPost = (props) => {
     page: 1,
     recordsTotal: 0,
     pageLength: 10,
-    settingModal: false
+    settingModal: false,
+    statusButtonModal: true
   })
 
   const current_url = window.location.pathname
@@ -183,6 +184,10 @@ const PendingPost = (props) => {
     setState({ settingModal: !state.settingModal })
   }
 
+  const statusButtonSettingModal = () => {
+    setState({ statusButtonModal: !state.statusButtonModal })
+  }
+
   return (
     <Fragment>
       <div className="workspace-pending-post row">
@@ -200,18 +205,18 @@ const PendingPost = (props) => {
                     color="primary"
                     className="btn-action-primary me-1 ms-auto"
                     onClick={() => handleApproveAll(idWorkspace, "approved")}
-                    disabled={state.loading}>
+                    disabled={state.listPost.length === 0}>
                     {state.loading && <Spinner size="sm" className="me-50" />}
                     {useFormatMessage(
                       "modules.workspace.buttons.approve_all_posts"
-                    )}
+                    )} 
                   </Button>
                   <Button
                     type="submit"
                     color="secondary"
                     className="btn-action-secondary "
                     onClick={() => handleApproveAll(idWorkspace, "rejected")}
-                    disabled={state.loading}>
+                    disabled={state.listPost.length === 0}>
                     {state.loading && <Spinner size="sm" className="me-50" />}
                     {useFormatMessage(
                       "modules.workspace.buttons.decline_all_posts"
@@ -223,7 +228,7 @@ const PendingPost = (props) => {
                       color="secondary"
                       className="ms-1 btn-action-secondary "
                       onClick={() => handleSettingModal()}
-                      disabled={state.loading}>
+                      disabled={state.statusButtonModal}>
                       <i className="fa-light fa-gear"></i>
                     </Button>
                   )}
@@ -973,6 +978,7 @@ const PendingPost = (props) => {
       <PostApprovalSettingModal
         modal={state.settingModal}
         handleModal={handleSettingModal}
+        statusButtonSettingModal = {statusButtonSettingModal}
       />
     </Fragment>
   )
