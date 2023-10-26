@@ -1,13 +1,13 @@
 import { Row, Col, Grid } from "rsuite"
 import { CheckCircleTwoTone } from "@ant-design/icons"
 import PhotoPublic from "@apps/modules/download/pages/PhotoPublic"
-import { Fragment, useEffect } from "react"
+import { Fragment } from "react"
 import classNames from "classnames"
 import StickerModalFooter from "./modals/StickerModalFooter"
 import { stickerApi } from "../common/api"
 import notification from "@apps/utility/notification"
 import { useFormatMessage } from "@apps/utility/common"
-import stickerDefault from "../common/stickerDefault"
+import { stickerDefaultName } from "../common/constant"
 
 export default function StickerDetail({ state, setState, onDelete }) {
   const handleChangeStickerDefault = (stickerId, id) => {
@@ -46,7 +46,7 @@ export default function StickerDetail({ state, setState, onDelete }) {
                       style={{ zIndex: 1 }}
                     />
                   )}
-                  {state.stickerDetail.name !== stickerDefault.name ? (
+                  {state.stickerDetail.name !== stickerDefaultName ? (
                     <PhotoPublic
                       className="img-sticker"
                       src={item.url}

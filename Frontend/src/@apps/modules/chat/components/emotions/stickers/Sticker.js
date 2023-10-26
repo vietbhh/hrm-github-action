@@ -1,5 +1,5 @@
 import "./assets/sticker.scss"
-import stickerDefault from "@modules/Sticker/common/stickerDefault"
+import stickersDefault from "@modules/Sticker/common/stickersDefault/default"
 import StickerCollection from "./StickerCollection"
 import { useMergedState } from "@apps/utility/common"
 import { Tabs } from "antd"
@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react"
 import { stickerApi } from "@modules/Sticker/common/api"
 import PhotoPublic from "@apps/modules/download/pages/PhotoPublic"
 import { LeftOutlined, RightOutlined } from "@ant-design/icons"
+import { stickerDefaultName } from "@modules/Sticker/common/constant"
 
 const Sticker = ({
   sendMessage,
@@ -19,16 +20,16 @@ const Sticker = ({
   const [state, setState] = useMergedState({
     list: [],
     page: 1,
-    perPage: 7,
+    perPage: 8,
     default: true,
     total: 0,
     activeTabKey: 0
   })
 
-  const stickerTabsRef = useRef(null)
+  const markStickersDefault = useRef(null)
 
   const handleSend = (url, stickerName) => {
-    if (stickerName !== stickerDefault.name) {
+    if (stickerName !== stickerDefaultName) {
       url =
         import.meta.env.VITE_APP_API_URL + `/download/public/image?name=${url}`
     } else {
@@ -60,10 +61,28 @@ const Sticker = ({
       state.default
     )
     let stickerList = dataList.data.data
+    const total = dataList.data.total + stickersDefault.length
+    const isLastPage = Math.ceil(total / state.perPage) === state.page
 
-    if (state.page === 1) {
-      stickerList = [stickerDefault].concat(stickerList)
+    if (!isLastPage && state.perPage - stickerList.length > 0) {
+      const getStickerDefaultCount = state.perPage - stickerList.length
+      stickerList = stickerList.concat(
+        stickersDefault.slice(0, getStickerDefaultCount)
+      )
+
+      markStickersDefault.default = getStickerDefaultCount
     }
+
+    if (isLastPage) {
+      stickerList = stickerList.concat(
+        stickersDefault.slice(
+          markStickersDefault.default,
+          stickersDefault.length
+        )
+      )
+    }
+
+    console.log("stickerList: ", stickerList)
 
     const stickerTabs = stickerList.map((item, index) => {
       let stickerIconDefault = item.list.find((subItem) => subItem.default)
@@ -73,7 +92,7 @@ const Sticker = ({
         key: index
       }
 
-      if (item.name !== stickerDefault.name) {
+      if (item.name !== stickerDefaultName) {
         stickerTab.label = (
           <PhotoPublic
             src={stickerIconDefault.url}
@@ -97,7 +116,7 @@ const Sticker = ({
     })
     setState({
       list: stickerTabs,
-      total: dataList.data.total,
+      total,
       activeTabKey: 0
     })
   }
@@ -132,7 +151,7 @@ const Sticker = ({
             <LeftOutlined />
           </div>
         )}
-        <DefaultTabBar {...props} ref={stickerTabsRef} />
+        <DefaultTabBar {...props} />
         {state.page * state.perPage < state.total && (
           <div className="right-tab" onClick={nextSticker}>
             <RightOutlined />

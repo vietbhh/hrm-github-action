@@ -5,15 +5,16 @@ import SwAlert from "@apps/utility/SwAlert"
 import notification from "@apps/utility/notification"
 import { useFormatMessage } from "@apps/utility/common"
 import { stickerApi } from "../../common/api"
+import { stickerDefaultName } from "../../common/constant"
 
 export default function StickerModal({
   open,
   handleOk,
-  confirmLoading,
   handleCancel,
   state,
   setState,
-  getData
+  getData,
+  markStickersDefault
 }) {
   const onDelete = (stickerId) => {
     SwAlert.showWarning({
@@ -33,6 +34,7 @@ export default function StickerModal({
             })
           } else {
             getData()
+            markStickersDefault.default = null
           }
 
           handleCancel()
@@ -41,15 +43,25 @@ export default function StickerModal({
     })
   }
 
+  const generateTitle = () => {
+    if (state.modalMode === "createOrUpdate") {
+      if (!state.stickerEdit) {
+        return useFormatMessage("modules.sticker.modal.title.create")
+      }
+
+      return useFormatMessage("modules.sticker.modal.title.update")
+    } else {
+      if (state.stickerDetail.name !== stickerDefaultName) {
+        return state.stickerDetail.name
+      }
+
+      return state.stickerDetail.label
+    }
+  }
+
   return (
     <Modal
-      title={
-        state.modalMode === "createOrUpdate"
-          ? !state.stickerEdit
-            ? useFormatMessage("modules.sticker.modal.title.create")
-            : useFormatMessage("modules.sticker.modal.title.update")
-          : state.stickerDetail.name
-      }
+      title={generateTitle()}
       className="sticker-modal"
       open={open}
       onOk={handleOk}

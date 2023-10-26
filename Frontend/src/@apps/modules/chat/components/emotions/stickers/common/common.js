@@ -1,5 +1,11 @@
 import axios from "axios"
 
+/**
+ *
+ * @param {*} imageUrl
+ * @param {*} maxWidth
+ * @returns
+ */
 export const handleResize = async (imageUrl, maxWidth) => {
   try {
     let result
