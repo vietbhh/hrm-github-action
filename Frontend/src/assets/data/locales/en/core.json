@@ -1108,7 +1108,14 @@
       }
     },
     "notification": {
-      "title": "Notification"
+      "title": "Notification",
+      "text": {
+        "mark_all_as_read": "Mark all as read"
+      },
+      "buttons": {
+        "mark_as_read": "Mark as read",
+        "remove_this_notification": "Remove this notification"
+      }
     },
     "drive": {
       "title": {

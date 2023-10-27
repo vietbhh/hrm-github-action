@@ -40,7 +40,7 @@ const NotificationDropdown = () => {
 
   const handleClick = (e) => {
     defaultModuleApi
-      .get("/notification/read")
+      .get("/notification/seen")
       .then((res) => {
         const listNotificationSeen = Object.values(
           res.data.list_notification_seen
@@ -84,6 +84,7 @@ const NotificationDropdown = () => {
             }}>
             <ListNotification
               listNotification={listNotificationStore}
+              showDropdownAction={false}
               toggleOpen={toggleOpen}
             />
           </PerfectScrollbar>

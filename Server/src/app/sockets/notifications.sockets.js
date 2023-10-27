@@ -4,6 +4,7 @@ const notificationsSocket = () => {
   global._io.on("connection", (socket) => {
     //Handle App Notification
     socket.on("app_notification", async (socketData) => {
+      console.log("zz")
       const { receivers, data, payload, save_notification } = socketData
       sendNotification(
         socket.user.id,

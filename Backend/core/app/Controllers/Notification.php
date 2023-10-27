@@ -12,10 +12,12 @@ use App\Libraries\Notifications\Models\NotificationModel;
 class Notification extends ErpController
 {
 	private $notification;
+	protected $notificationDB;
 
 	public function __construct()
 	{
 		$this->notification = \Config\Services::notifications();
+		$this->notificationDB = 'mongo';
 	}
 
 	public function load_get()
@@ -30,7 +32,7 @@ class Notification extends ErpController
 		]);
 	}
 
-	public function read_get()
+	public function seen_get()
 	{
 		$dataGet = $this->request->getGet();
 		$page = $dataGet['page'] ?? 1;
@@ -39,19 +41,48 @@ class Notification extends ErpController
 		$arrId = [];
 		$userId = user_id();
 
+		$keyId = $this->notificationDB == 'mongo' ? '_id' : 'id';
 		foreach ($listNotification as $key => $rowNotification) {
 			if (!$rowNotification['seen']) {
-				$arrId[] = $rowNotification['id'];
+				$arrId[] = $rowNotification[$keyId];
 			}
 		}
 
 		if (count($arrId) > 0) {
-			$this->notification->read($arrId, false);
+			$this->notification->seen($arrId, false);
 		}
 
 		return $this->respond([
 			'list_notification_seen' => $arrId,
 			'number_notification_seen' => count($arrId)
+		]);
+	}
+
+	public function read_post($id)
+	{
+		if ($id == 'all') {
+			$result = $this->notification->readAllNotification();
+		} else {
+			$result = $this->notification->readNotificationById($id);
+		}
+
+		if (!$result) {
+			return $this->fail('fail_read');
+		}
+
+		return $this->respond($result);
+	}
+
+	public function remove_post($id)
+	{
+		$result = $this->notification->removeNotificationById($id);
+
+		if (!$result) {
+			return $this->fail('fail_remove');
+		}
+
+		return $this->respond([
+			'notification_remove' => $id
 		]);
 	}
 
