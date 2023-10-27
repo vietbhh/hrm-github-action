@@ -1,18 +1,19 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Row, Col, Button, Grid } from "rsuite"
 import { ErpInput } from "@apps/components/common/ErpField"
 import "../assets/scss/sticker.scss"
-import stickerDefault from "../common/stickerDefault"
+import stickersDefault from "../common/stickersDefault/default"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import PhotoPublic from "@apps/modules/download/pages/PhotoPublic"
 import { stickerApi } from "../common/api"
 import StickerModal from "../components/modals/StickerModal"
 import { CheckCircleTwoTone, CheckOutlined } from "@ant-design/icons"
 import { Empty, Pagination } from "antd"
+import { stickerDefaultName } from "../common/constant"
 
 export default function Sticker() {
   const [state, setState] = useMergedState({
-    stickerList: [stickerDefault],
+    stickerList: [],
     stickerEdit: null,
     stickerDetail: null,
     search: null,
@@ -21,6 +22,8 @@ export default function Sticker() {
     total: 0,
     modalMode: "" // createOrUpdate, detail
   })
+  const markStickersDefault = useRef(null)
+
   const [openModal, setOpenModal] = useState(false)
 
   const handleModalOk = () => {
@@ -89,20 +92,41 @@ export default function Sticker() {
     setState({ search })
   }
 
+  const searchStickersDefault = (search) => {
+    return stickersDefault.filter((item) => item.label.includes(search))
+  }
+
   const getData = async () => {
     const result = await stickerApi.list(state.search, state.page)
     let newStickers = result.data.data
     let newTotal = result.data.total
 
     if (!state.search) {
-      newTotal++
+      newTotal += stickersDefault.length
+    } else {
+      const stickersDefaultSearch = searchStickersDefault(state.search)
+      newStickers = newStickers.concat(stickersDefaultSearch)
+      newTotal += stickersDefaultSearch.length
     }
 
-    if (
-      (Math.ceil(newTotal / state.perPage) === state.page && !state.search) ||
-      stickerDefault.label.includes(state?.search)
-    ) {
-      newStickers = newStickers.concat([stickerDefault])
+    const isLastPage = Math.ceil(newTotal / state.perPage) === state.page
+
+    if (!isLastPage && state.perPage - newStickers.length > 0) {
+      const getStickerDefaultCount = state.perPage - newStickers.length
+      newStickers = newStickers.concat(
+        stickersDefault.slice(0, getStickerDefaultCount)
+      )
+
+      markStickersDefault.default = getStickerDefaultCount
+    }
+
+    if (isLastPage && !state.search) {
+      newStickers = newStickers.concat(
+        stickersDefault.slice(
+          markStickersDefault.default,
+          stickersDefault.length
+        )
+      )
     }
 
     setState({
@@ -112,7 +136,7 @@ export default function Sticker() {
   }
 
   const renderStickerIcon = useCallback((item, name) => {
-    return name !== "sticker_default" ? (
+    return name !== stickerDefaultName ? (
       <PhotoPublic className="img-sticker" src={item.url} defaultPhoto="/" />
     ) : (
       <img className="img-sticker" src={item.url} />
@@ -129,7 +153,7 @@ export default function Sticker() {
           twoToneColor="#52c41a"
           className="icon-success"
           onClick={
-            item.name !== "sticker_default"
+            item.name !== stickerDefaultName
               ? () => handleSetStickerDefault(item)
               : () => {}
           }
@@ -143,19 +167,22 @@ export default function Sticker() {
 
     return (
       <Col className="sticker-collection" key={"collection-" + index} xs={24}>
-        <div>
+        <div className="sticker-collection-header position-absolute top-0 end-0">
+          <p className="text">{iconDefault}</p>
+        </div>
+        <div onClick={() => onDetail(item)}>
           <div className="sticker-collection-header">
             <p className="text">
               <span>
-                {item.name !== "sticker_default" ? item.name : item.label}
+                {item.name !== stickerDefaultName ? item.name : item.label}
               </span>
-              {iconDefault}
+              {/* {iconDefault} */}
             </p>
           </div>
-          <div className="sticker-images" onClick={() => onDetail(item)}>
+          <div className="sticker-images">
             <Row>
               <Col lg={8}>
-                {item.name !== "sticker_default" ? (
+                {item.name !== stickerDefaultName ? (
                   <PhotoPublic
                     src={stickerIconDefault.url}
                     width={96.8}
@@ -206,6 +233,7 @@ export default function Sticker() {
           state={state}
           setState={setState}
           getData={getData}
+          markStickersDefault={markStickersDefault}
         />
       )}
       <section className="header">

@@ -374,7 +374,11 @@ $font-family: Helvetica;
                     align-items: center;
                     width: 20px;
                     height: 20px;
-                    background: linear-gradient(286.17deg, #246bfd 0%, #5089ff 100%);
+                    background: linear-gradient(
+                      286.17deg,
+                      #246bfd 0%,
+                      #5089ff 100%
+                    );
                     border-radius: 50%;
                     font-weight: 400;
                     font-size: 10px;
@@ -631,16 +635,12 @@ $font-family: Helvetica;
                     padding: 10px;
                     visibility: hidden;
                     opacity: 0;
-                    transition:
-                      all 0.3s ease,
-                      background 0s,
-                      border 0s,
+                    transition: all 0.3s ease, background 0s, border 0s,
                       color 0s;
                     width: auto;
                     z-index: 999;
                     width: calc(100% - 1.5rem);
-                    box-shadow:
-                      0 6px 16px 0 rgb(0 0 0 / 8%),
+                    box-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%),
                       0 3px 6px -4px rgb(0 0 0 / 12%),
                       0 9px 28px 8px rgb(0 0 0 / 5%);
                     margin-top: 12px;
@@ -831,7 +831,10 @@ $font-family: Helvetica;
                 }
 
                 .chat-content-parent.highlight {
-                  background-color: lighten($color: $btn-background-color, $amount: 32);
+                  background-color: lighten(
+                    $color: $btn-background-color,
+                    $amount: 32
+                  );
                   padding: 5px;
                   border-radius: 12px;
                 }
@@ -844,9 +847,7 @@ $font-family: Helvetica;
                     display: flex;
                     flex-direction: column;
                     position: relative;
-                    transition:
-                      padding 0.5s ease,
-                      background 0.5s ease;
+                    transition: padding 0.5s ease, background 0.5s ease;
 
                     &:hover {
                       .chat-content-reaction {
@@ -1260,11 +1261,7 @@ $font-family: Helvetica;
                   padding: 10px;
                   visibility: hidden;
                   opacity: 0;
-                  transition:
-                    all 0.3s ease,
-                    background 0s,
-                    border 0s,
-                    color 0s;
+                  transition: all 0.3s ease, background 0s, border 0s, color 0s;
 
                   .emotions-dropdown-arrow {
                     left: 16px;
@@ -1336,34 +1333,56 @@ $font-family: Helvetica;
                         --epr-picker-border-radius: 8px;
                         --epr-search-border-color: var(--epr-highlight-color);
                         --epr-header-padding: 15px var(--epr-horizontal-padding);
-                        --epr-active-skin-tone-indicator-border-color: var(--epr-highlight-color);
-                        --epr-active-skin-hover-color: var(--epr-hover-bg-color);
-                        --epr-search-input-bg-color-active: var(--epr-search-input-bg-color);
+                        --epr-active-skin-tone-indicator-border-color: var(
+                          --epr-highlight-color
+                        );
+                        --epr-active-skin-hover-color: var(
+                          --epr-hover-bg-color
+                        );
+                        --epr-search-input-bg-color-active: var(
+                          --epr-search-input-bg-color
+                        );
                         --epr-search-input-padding: 0 30px;
                         --epr-search-input-border-radius: 8px;
                         --epr-search-input-height: 40px;
                         --epr-search-input-text-color: var(--epr-text-color);
-                        --epr-search-input-placeholder-color: var(--epr-text-color);
-                        --epr-search-bar-inner-padding: var(--epr-horizontal-padding);
+                        --epr-search-input-placeholder-color: var(
+                          --epr-text-color
+                        );
+                        --epr-search-bar-inner-padding: var(
+                          --epr-horizontal-padding
+                        );
                         --epr-category-navigation-button-size: 30px;
                         --epr-emoji-variation-picker-height: 45px;
-                        --epr-emoji-variation-picker-bg-color: var(--epr-bg-color);
+                        --epr-emoji-variation-picker-bg-color: var(
+                          --epr-bg-color
+                        );
                         --epr-preview-height: 70px;
                         --epr-preview-text-size: 14px;
-                        --epr-preview-text-padding: 0 var(--epr-horizontal-padding);
-                        --epr-preview-border-color: var(--epr-picker-border-color);
+                        --epr-preview-text-padding: 0
+                          var(--epr-horizontal-padding);
+                        --epr-preview-border-color: var(
+                          --epr-picker-border-color
+                        );
                         --epr-preview-text-color: var(--epr-text-color);
                         --epr-category-padding: 0 var(--epr-horizontal-padding);
                         --epr-category-label-bg-color: #ffffffe6;
                         --epr-category-label-text-color: var(--epr-text-color);
-                        --epr-category-label-padding: 0 var(--epr-horizontal-padding);
+                        --epr-category-label-padding: 0
+                          var(--epr-horizontal-padding);
                         --epr-category-label-height: 40px;
                         --epr-emoji-size: 30px;
                         --epr-emoji-padding: 5px;
-                        --epr-emoji-fullsize: calc(var(--epr-emoji-size) + var(--epr-emoji-padding) * 2);
+                        --epr-emoji-fullsize: calc(
+                          var(--epr-emoji-size) + var(--epr-emoji-padding) * 2
+                        );
                         --epr-emoji-hover-color: var(--epr-hover-bg-color);
-                        --epr-emoji-variation-indicator-color: var(--epr-picker-border-color);
-                        --epr-emoji-variation-indicator-color-hover: var(--epr-text-color);
+                        --epr-emoji-variation-indicator-color: var(
+                          --epr-picker-border-color
+                        );
+                        --epr-emoji-variation-indicator-color-hover: var(
+                          --epr-text-color
+                        );
                         --epr-header-overlay-z-index: 3;
                         --epr-emoji-variations-indictator-z-index: 1;
                         --epr-category-label-z-index: 2;
@@ -1494,8 +1513,7 @@ $font-family: Helvetica;
               margin: 0;
               border-radius: 0;
               z-index: 9;
-              transition:
-                border-color 0.15s ease-in-out,
+              transition: border-color 0.15s ease-in-out,
                 box-shadow 0.15s ease-in-out;
 
               .editor-message {
@@ -1544,8 +1562,7 @@ $font-family: Helvetica;
               cursor: auto;
               margin: 0;
               border-radius: 0;
-              transition:
-                border-color 0.15s ease-in-out,
+              transition: border-color 0.15s ease-in-out,
                 box-shadow 0.15s ease-in-out;
               font-family: $font-family;
               font-size: 15px;
@@ -2063,7 +2080,6 @@ $font-family: Helvetica;
 
                       .rs-placeholder {
                         padding: 2px;
-                        
 
                         .rs-placeholder-paragraph-graph {
                           border-radius: 6px;
@@ -2544,7 +2560,6 @@ $font-family: Helvetica;
     }
   }
 }
-
 
 .modal-play-video {
   max-width: 1200px !important;

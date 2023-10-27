@@ -6,16 +6,26 @@ const Gif = (props) => {
     selectedUser,
     focusInputMsg,
     setReplyingDefault,
-    setShowEmotion
+    setShowEmotion,
+    ...rest
   } = props
 
   return (
     <ReactGiphySearchBox
       apiKey="rvUhAQyj80vEsaA4laeRiB6Fx5WDM4Bk"
       onSelect={(item) => {
+        if (rest.setStatePostComment) {
+          rest.setStatePostComment({
+            image: item.images.fixed_width.url
+          })
+          setShowEmotion(false)
+          return
+        }
+
         sendMessage(selectedUser.chat.id, item.images.fixed_width.url, {
           type: "gif"
         })
+
         focusInputMsg()
         setReplyingDefault()
         setShowEmotion(false)
