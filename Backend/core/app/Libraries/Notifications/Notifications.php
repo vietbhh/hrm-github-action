@@ -18,7 +18,7 @@ class Notifications
 	{
 		$this->model = new NotificationModel();
 		$this->mongoModel = new NotificationMongoModel();
-		$this->notificationDB = 'mongo';
+		$this->notificationDB = preference('notification_db');
 	}
 
 	/**
