@@ -198,6 +198,17 @@ $font-family: Helvetica;
         justify-content: center;
         color: #121210;
       }
+
+      h5{
+        color: var(--neutral-shade-1, #121210);
+        text-align: center;
+
+        font-family: Be Vietnam Pro;
+        font-size: 20px!important;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 32px;
+      }
       
 
       .btn-close {
@@ -241,6 +252,28 @@ $font-family: Helvetica;
           background-color: #F0F3F6;
           border-radius: 12px;
           position: relative;
+          .avatar {
+            img {
+              width: 40px;
+              height: 40px;
+            }
+          }
+          .title {
+            color: var(--neutral-shade-2, #403F3A);
+            font-family: Be Vietnam Pro;
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+          }
+          .sub-email {
+            color: var(--neutral-shade-3, #696760);
+            font-family: Be Vietnam Pro;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 16px;
+          }
         }
         .p-1 {
           position: absolute;
@@ -248,6 +281,35 @@ $font-family: Helvetica;
           left: 50%;
           transform: translate(-50%, -50%);
         }
+      }
+
+        .select_member {
+          .scrollbar-container {
+            border-radius: 12px;
+            position: relative;
+            .avatar {
+              img {
+                width: 40px;
+                height: 40px;
+              }
+            }
+            .title {
+              color: var(--neutral-shade-2, #403F3A);
+              font-family: Be Vietnam Pro;
+              font-size: 15px;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 20px;
+            }
+            .sub-email {
+              color: var(--neutral-shade-3, #696760);
+              font-family: Be Vietnam Pro;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 16px;
+            }
+          }
       }
     }
 
@@ -1268,11 +1330,7 @@ $font-family: Helvetica;
                 }
 
                 .chat-line-break {
-                  text-align: center;
-                  height: 20px;
-                  .chat-body {
-                    height: 20px;
-                  }
+                  text-align: center;         
 
                   .line-time {
                     font-size: 12px;
