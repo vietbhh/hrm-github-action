@@ -515,7 +515,7 @@ const SidebarLeft = (props) => {
                 </div> */}
                 <InputGroup className="input-group-merge w-100 chat-input-search">
                   <InputGroupText className="round">
-                    <Search className="text-muted" size={16} />
+                    <Search className="text-muted" size={24} />
                   </InputGroupText>
                   <Input
                     value={query}

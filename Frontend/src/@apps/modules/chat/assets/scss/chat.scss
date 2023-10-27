@@ -299,7 +299,7 @@ $font-family: Helvetica;
           }
 
           .chat-input-search {
-            height: 45px;
+            height: 48px;
 
             .input-group-text {
               border-color: #f9f9fb;
@@ -350,7 +350,6 @@ $font-family: Helvetica;
             .div-li-chat {
               position: relative;
               margin: 12px 0 0 0!important;
-              height: 60px;
 
               .group-option {
                 cursor: pointer;
@@ -425,9 +424,12 @@ $font-family: Helvetica;
                   }
 
                   p {
-                    font-weight: 500;
-                    font-size: 13px;
-                    color: #616161;
+                    color: var(--neutral-shade-3, #696760);
+                    font-family: Be Vietnam Pro;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 16px;
                   }
                 }
 
@@ -852,8 +854,8 @@ $font-family: Helvetica;
                   .avatar {
                     img {
                       border: none !important;
-                      height: 40px !important;
-                      width: 40px !important;
+                      height: 48px !important;
+                      width: 48px !important;
                     }
                   }
                 }
@@ -1083,7 +1085,7 @@ $font-family: Helvetica;
 
                     p.text {
                       word-break: break-word;
-                      color: var(--neutral-shade-9, #F2F1ED);
+                      color: var(--neutral-shade-2, #403F3A);
                       font-family: Be Vietnam Pro;
                       font-size: 15px;
                       font-style: normal;
@@ -1267,6 +1269,10 @@ $font-family: Helvetica;
 
                 .chat-line-break {
                   text-align: center;
+                  height: 20px;
+                  .chat-body {
+                    height: 20px;
+                  }
 
                   .line-time {
                     font-size: 12px;
@@ -1589,10 +1595,10 @@ $font-family: Helvetica;
                 border-radius: 50%;
                 background: none !important;
                 color: #ffffff;
-                min-width: 40px;
-                min-height: 40px;
-                max-width: 40px;
-                max-height: 40px;
+                min-width: 44px;
+                min-height: 44px;
+                max-width: 44px;
+                max-height: 44px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1728,7 +1734,7 @@ $font-family: Helvetica;
             border-width: 0;
 
             .user-profile-header {
-              margin-bottom: 0px;
+              margin-bottom: 12px;
 
               .close-icon {
                 color: #fff;
@@ -1799,8 +1805,8 @@ $font-family: Helvetica;
                     background-color: transparent!important;
                    
                     img {
-                      width: 96px;
-                      height: 96px;
+                      width: 102px;
+                      height: 102px;
                       border: 3px solid #ffe658;
                     }
                   }
@@ -1904,11 +1910,13 @@ $font-family: Helvetica;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 20px;
+                margin-bottom: 24px;
                 cursor: pointer;
 
                 .form-group {
                   margin-bottom: 0;
+                  height: 20px;
+                  width: 32px;
 
                   .form-check-input {
                     cursor: pointer;
@@ -1941,7 +1949,7 @@ $font-family: Helvetica;
               }
 
               .profile-div.member {
-                margin-bottom: 10px;
+                margin-bottom: 0px;
               }
 
               .profile-add-member {
@@ -1974,11 +1982,13 @@ $font-family: Helvetica;
                   color: #000000;
                   
                   .text-add-member {
+                    color: var(--neutral-shade-2, #403F3A);
+                    font-family: Be Vietnam Pro;
+                    font-size: 15px;
+                    font-style: normal;
                     font-weight: 600;
-                    size: 15px;
                     line-height: 20px;
-                    color: #403F3A;
-                    margin-left: 5px;
+                    margin-left: 12px;
                   }
                 }
               }
@@ -1986,10 +1996,10 @@ $font-family: Helvetica;
               .profile-member {
                 display: flex;
                 align-items: center;
-                margin-bottom: 13px;
+                margin-bottom: 12px;
 
                 .div-left {
-                  margin-right: 15px;
+                  margin-right: 16px;
 
                   .avatar {
                     box-shadow: unset;
@@ -2016,8 +2026,8 @@ $font-family: Helvetica;
 
                 .div-right {
                   margin-left: auto;
-                  width: 30px;
-                  height: 30px;
+                  width: 24px;
+                  height: 24px;
                   display: flex;
                   justify-content: center;
                   align-items: center;
@@ -2042,7 +2052,7 @@ $font-family: Helvetica;
                   .ant-collapse-header {
                     padding: 0;
                     border-radius: 0;
-                    padding-bottom: 5px;
+                    padding-bottom: 16px;
                     flex-direction: row-reverse;
 
                     .ant-collapse-expand-icon {
@@ -2578,10 +2588,10 @@ $font-family: Helvetica;
 
   .chat-fixed-search {
     border-bottom: none;
-    height: 45px;
+    height: 48px;
 
     .chat-input-search {
-      height: 45px;
+      height: 48px;
 
       .input-group-text {
         border-color: #F7F7F5;
