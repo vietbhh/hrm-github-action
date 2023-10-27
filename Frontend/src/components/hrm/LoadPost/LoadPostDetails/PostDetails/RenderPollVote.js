@@ -251,29 +251,34 @@ const RenderPollVote = (props) => {
                       }
                     }}>
                     <span className="title">{value.option_name}</span>
-                    <span className="vote">
-                      {value.user_vote.length}{" "}
-                      {useFormatMessage(
-                        `modules.feed.create_post.text.vote${
-                          value.user_vote.length > 1 ? "s" : ""
-                        }`
-                      )}
-                    </span>
                   </div>
                   {data.poll_vote_detail.setting.incognito === false && (
                     <div
-                      className="content-options__user-vote"
+                      className="content-options__user-vote d-flex align-items-center"
                       onClick={() => {
                         if (!isViewEditHistory) {
                           setDataUserOtherWith(value.user_vote)
                           toggleModalWith()
                         }
                       }}>
-                      <AvatarList
-                        data={dataUserVote}
-                        avatarKey="avatar"
-                        titleKey="full_name"
-                      />
+                      <div className="vote me-50">
+                        {value.user_vote.length} (
+                        <>
+                          {useFormatMessage(
+                            `modules.feed.create_post.text.vote${
+                              value.user_vote.length > 1 ? "s" : ""
+                            }`
+                          )}
+                        </>
+                        )
+                      </div>
+                      <div>
+                        <AvatarList
+                          data={dataUserVote}
+                          avatarKey="avatar"
+                          titleKey="full_name"
+                        />
+                      </div>
                     </div>
                   )}
 
@@ -282,7 +287,6 @@ const RenderPollVote = (props) => {
               )
             })}
         </div>
-
         {!isViewEditHistory && (
           <Fragment>
             {data.poll_vote_detail.setting.adding_more_options === true &&

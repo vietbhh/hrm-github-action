@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react"
 import { Placeholder } from "rsuite"
 import { downloadApi } from "@apps/modules/download/common/api"
+import classNames from "classnames"
+import {
+  Button,
+  Col,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row
+} from "reactstrap"
 const CACHE = {}
 
 function hashArgs(...args) {
@@ -13,6 +24,16 @@ function stringify(val) {
 
 const Video = (props) => {
   const [video, setVideo] = useState(false)
+  const [modal, setModal] = useState(false)
+
+  const handleClickPlay = () => {
+    toggleModal()
+  }
+
+  const toggleModal = () => {
+    setModal(!modal)
+  }
+
   useEffect(() => {
     let imgUrl = ""
     const cacheID = hashArgs(props.src)
@@ -37,9 +58,38 @@ const Video = (props) => {
     delete newProps.src
     delete newProps.alt
     return (
-      <video width="300" height="150" controls loop muted>
-        <source src={video}></source>
-      </video>
+      <div
+        className={classNames("video-container", {
+          "min-size": !props.controls
+        })}>
+        <video
+          width={props.width ? props.width : "300"}
+          height={props.height ? props.height : "150"}
+          controls={props.controls !== undefined ? props.controls : true}
+          loop
+          muted>
+          <source src={video}></source>
+        </video>
+        {!props.controls ? (
+          <i
+            className="far fa-play-circle icon-play"
+            onClick={() => handleClickPlay()}
+          />
+        ) : (
+          ""
+        )}
+
+        <Modal
+          isOpen={modal}
+          toggle={toggleModal}
+          className="modal-dialog-centered chat-application modal-play-video">
+          <ModalBody>
+            <video width="1200" height="675" controls autoPlay >
+              <source src={video}></source>
+            </video>
+          </ModalBody>
+        </Modal>
+      </div>
     )
   }
 }

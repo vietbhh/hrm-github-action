@@ -60,7 +60,9 @@
     "at_least_1_number_validate": "Password at least 1 number",
     "congratulations": "Congratulations",
     "congratulationsText": "Your password has been updated successfully!",
-    "password_required": "Password is a required field"
+    "password_required": "Password is a required field",
+    "password_same_currentPassword" : "New password is the same as current password",
+    "current_password_incorrect" : "Current password incorrect"
   },
   "themeCustomizer": {
     "title": "Theme Customizer",

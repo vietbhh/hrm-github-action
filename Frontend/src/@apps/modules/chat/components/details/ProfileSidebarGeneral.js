@@ -65,9 +65,9 @@ const ProfileSidebarGeneral = (props) => {
 
       <div
         className="profile-div"
-        onClick={() => handleShowFileView(true, "image")}>
+        onClick={() => handleShowFileView(true, "media")}>
         <span className="title">
-          {useFormatMessage("modules.chat.text.images")}
+          {useFormatMessage("modules.chat.text.media")}
         </span>
         <div className="profile-div-right">
           <span className="number">

@@ -20,7 +20,8 @@ const PostHeaderAction = (props) => {
     setEditDescription,
     toggleModalCreatePost,
     toggleModalCreateEvent,
-    toggleModalAnnouncement
+    toggleModalAnnouncement,
+    handleUnPinPost,
   } = props
 
   const [state, setState] = useMergedState({
@@ -558,6 +559,7 @@ const PostHeaderAction = (props) => {
           type: data.type,
           link_id: data.link_id
         }
+        handleUnPinPost != undefined ? handleUnPinPost(data._id) : ""
 
         feedApi
           .postDeletePost(params)

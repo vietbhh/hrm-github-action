@@ -1,51 +1,52 @@
 import express from "express"
 import {
-    getAnnouncementById,
-    submitAnnouncement
+  getAnnouncementById,
+  submitAnnouncement
 } from "../controllers/announcement.js"
 import {
-    deleteComment,
-    submitComment,
-    submitCommentReply,
-    updateCommentReaction,
-    updateSubCommentReaction
+  deleteComment,
+  submitComment,
+  submitCommentReply,
+  updateCommentReaction,
+  updateSubCommentReaction
 } from "../controllers/comment.js"
 import {
-    getEndorsementById,
-    submitEndorsement
+  getEndorsementById,
+  submitEndorsement
 } from "../controllers/endorsement.js"
 import {
-    getEventById,
-    submitEvent,
-    updateEventStatus,
-    removeEvent,
-    removeFile
+  getEventById,
+  submitEvent,
+  updateEventStatus,
+  removeEvent,
+  removeFile
 } from "../controllers/event.js"
 import {
-    deletePost,
-    getDataEditHistory,
-    getFeedById,
-    getFeedByIdAndViewAllComment,
-    getFeedChild,
-    loadFeedController,
-    loadFeedProfile,
-    sendNotificationUnseen,
-    submitPostController,
-    turnOffCommenting,
-    turnOffNotification,
-    updateContentMedia,
-    updatePostReaction,
-    updateSeenPost,
-    uploadTempAttachmentController,
-    getPostPending
+  deletePost,
+  getDataEditHistory,
+  getFeedById,
+  getFeedByIdAndViewAllComment,
+  getFeedChild,
+  loadFeedController,
+  loadFeedProfile,
+  sendNotificationUnseen,
+  submitPostController,
+  turnOffCommenting,
+  turnOffNotification,
+  updateContentMedia,
+  updatePostReaction,
+  updateSeenPost,
+  uploadTempAttachmentController,
+  getPostPending,
+  loadAnnouncementPost
 } from "../controllers/feed.js"
-import {getDataHashtag, loadFeedHashtag} from "../controllers/hashtag.js"
-import {getPostInteractiveMember} from "../controllers/management.js"
+import { getDataHashtag, loadFeedHashtag } from "../controllers/hashtag.js"
+import { getPostInteractiveMember } from "../controllers/management.js"
 import {
-    updatePostPollVote,
-    updatePostPollVoteAddMoreOption
+  updatePostPollVote,
+  updatePostPollVoteAddMoreOption
 } from "../controllers/poll_vote.js"
-import {saveSaved, listPostSaved} from "../controllers/saved.js"
+import { saveSaved, listPostSaved } from "../controllers/saved.js"
 
 const router = express.Router()
 
@@ -60,8 +61,8 @@ router.post("/update-content-media", updateContentMedia)
 router.post("/delete-post", deletePost)
 router.post("/update-post-poll-vote", updatePostPollVote)
 router.post(
-    "/update-post-poll-vote-add-more-option",
-    updatePostPollVoteAddMoreOption
+  "/update-post-poll-vote-add-more-option",
+  updatePostPollVoteAddMoreOption
 )
 router.post("/submit-comment", submitComment)
 router.post("/submit-comment-reply", submitCommentReply)
@@ -96,4 +97,6 @@ router.post("/save-saved", saveSaved)
 
 router.get("/pending-posts", getPostPending)
 router.get("/post-saved", listPostSaved)
+
+router.get("/announcement-posts", loadAnnouncementPost)
 export default router

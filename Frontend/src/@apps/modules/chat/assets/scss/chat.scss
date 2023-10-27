@@ -2057,6 +2057,9 @@ $font-family: Helvetica;
                     }
 
                     .div-content-image {
+                      display: flex;
+                      flex-wrap: wrap;
+
                       .ant-image {
                         padding: 2px;
                         border-radius: 6px;
@@ -2072,6 +2075,49 @@ $font-family: Helvetica;
 
                         .ant-image-mask {
                           border-radius: 6px;
+                        }
+                      }
+
+                      .rs-placeholder {
+                        padding: 2px;
+
+                        .rs-placeholder-paragraph-graph {
+                          border-radius: 6px;
+                          width: 66px;
+                          height: 66px;
+                          margin-right: 0 !important;
+                        }
+                      }
+
+                      .video-container {
+                        video {
+                          padding: 2px;
+                          border-radius: 6px;
+                          object-fit: cover;
+                        }
+
+                        .icon-play {
+                          display: none;
+                        }
+                      }
+
+                      .video-container.min-size {
+                        position: relative;
+
+                        .icon-play {
+                          display: block;
+                          position: absolute;
+                          top: calc(50% - 18px);
+                          left: calc(50% - 18px);
+                          font-size: 30px;
+                          color: #ffffff;
+                          cursor: pointer;
+                          padding: 3px;
+                          border-radius: 50%;
+
+                          &:hover {
+                            background-color: rgba(0, 0, 0, 0.3);
+                          }
                         }
                       }
                     }
@@ -2497,7 +2543,7 @@ $font-family: Helvetica;
 }
 
 .group-option-dropdown-menu {
-  padding-top: 7px ;
+  padding-top: 7px;
 
   .ant-dropdown-arrow {
     top: 1px;
@@ -2512,5 +2558,16 @@ $font-family: Helvetica;
       width: 20px;
       margin-right: 10px;
     }
+  }
+}
+
+.modal-play-video {
+  max-width: 1200px !important;
+  width: 1200px !important;
+
+  .modal-content {
+    width: 1200px !important;
+    background-color: inherit !important;
+    box-shadow: unset !important;
   }
 }

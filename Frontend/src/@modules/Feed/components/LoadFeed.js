@@ -27,7 +27,8 @@ const LoadFeed = (props) => {
     // create event / announcement
     options_employee_department = [],
     optionsMeetingRoom = [],
-    setSearchTextFeed
+    setSearchTextFeed,
+    handleUnPinPost
   } = props
   const [state, setState] = useMergedState({
     dataPost: [],
@@ -162,7 +163,9 @@ const LoadFeed = (props) => {
   // load data create new
   const loadDataCreateNew = async () => {
     // ** user data post
-    setState({ loadingPostCreateNew: true })
+    const isUpdatePost = dataCreateNew?.is_edit === undefined ? false : dataCreateNew.is_edit
+
+    setState({ loadingPostCreateNew: !isUpdatePost })
 
     // load media
     const data_attachment = await handleLoadAttachmentThumb(
@@ -177,6 +180,24 @@ const LoadFeed = (props) => {
     const dataUrl = await loadUrlDataLink(dataCreateNew)
     dataCreateNew["dataLink"].cover_url = dataUrl.cover_url
     dataCreateNew["dataLink"].badge_url = dataUrl.badge_url
+
+
+    if (isUpdatePost) {
+      const newDataPost = [...state.dataPost].map((item) => {
+        if (item._id === dataCreateNew._id) {
+          return {...dataCreateNew}
+        }
+
+        return item
+      })
+
+      setState({
+        dataPost: newDataPost,
+        loadingPostCreateNew: false
+      })
+
+      return
+    }
 
     setState({
       dataCreateNewTemp: [...[dataCreateNew], ...state.dataCreateNewTemp],
@@ -347,6 +368,7 @@ const LoadFeed = (props) => {
                 setDataCreateNew={setDataCreateNew}
                 isInWorkspace={!_.isEmpty(workspace)}
                 workspace={workspace}
+                handleUnPinPost = {handleUnPinPost}
               />
             )
           })}
@@ -398,6 +420,7 @@ const LoadFeed = (props) => {
                   isInWorkspace={!_.isEmpty(workspace)}
                   workspace={workspace}
                   setDataCreateNew={setDataCreateNew}
+                  handleUnPinPost = {handleUnPinPost}
                 />
               </LazyLoadComponent>
             )

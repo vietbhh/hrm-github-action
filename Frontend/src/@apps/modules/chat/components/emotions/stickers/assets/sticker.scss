@@ -1,0 +1,75 @@
+#sticker-chat {
+  text-align: left;
+  .ant-col {
+    cursor: pointer;
+  }
+  .sticker-chat-collection {
+    margin-bottom: 12px;
+    height: 300px;
+    overflow-y: auto;
+    .header {
+      p {
+        color: gray;
+        margin-bottom: 10px;
+      }
+    }
+    .content {
+      margin: 0;
+      .image {
+        padding: 4px 6px 4px 0;
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .sticker-chat-collection:last-child {
+    margin-bottom: 0;
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: transparent;
+  }
+  .ant-tabs-nav-wrap {
+    border-bottom: 1px solid white;
+  }
+  .ant-tabs-nav-wrap {
+    justify-content: flex-start;
+  }
+
+  .ant-tabs {
+    margin-bottom: 0;
+    .ant-tabs-tab {
+      padding: 6px 4px;
+    }
+    .ant-tabs-tab-active {
+      .ant-tabs-tab-btn {
+        background-color: rgb(219, 218, 218);
+        padding: 4px;
+        border-radius: 5px;
+      }
+    }
+  }
+  .ant-tabs-nav-more {
+    display: none;
+  }
+
+  #sticker-tab-custom {
+    .left-tab {
+      display: inline-block;
+      position: absolute;
+      z-index: 10;
+      left: -4px;
+      top: 25px;
+      cursor: pointer;
+    }
+    .right-tab {
+      display: inline-block;
+      position: absolute;
+      z-index: 10;
+      right: -8px;
+      top: 26px;
+      cursor: pointer;
+    }
+  }
+}

@@ -105,7 +105,7 @@ const InviteWorkspaceModal = (props) => {
               disabled={state.loading}
               className="btn-send-invite ms-auto me-auto w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              {useFormatMessage("modules.workspace.buttons.send_invite")}
+              {useFormatMessage("modules.workspace.buttons.send_invites")}
             </Button>
           </ModalFooter>
         </form>

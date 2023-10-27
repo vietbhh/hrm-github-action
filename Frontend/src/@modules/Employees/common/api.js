@@ -474,6 +474,16 @@ export const departmentApi = {
         }
       }
     )
+  },
+
+  async getUserByDepartmentId(data) {
+    return await axiosApi.post("/employees-by-department-id",
+        serialize(_.cloneDeep(data)),
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
   }
 }
 

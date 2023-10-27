@@ -658,7 +658,10 @@ const ChatMessage = (props) => {
               <div key={index} className="chat-content-sender-name">
                 {renderSenderName(chat, index_message)}
                 <div className={`chat-content chat-content-gif`}>
-                  <img src={chat.msg} />
+                  <img
+                    src={chat.msg}
+                    width={chat.break_type !== "sticker" ? "" : 120}
+                  />
                   {renderHasReaction(chat)}
                 </div>
               </div>
@@ -987,7 +990,9 @@ const ChatMessage = (props) => {
                           unsent: 1
                         })
                         handleUpdateGroup(selectedUser.chat.id, {
-                          last_message: useFormatMessage("modules.chat.text.unsent_message")
+                          last_message: useFormatMessage(
+                            "modules.chat.text.unsent_message"
+                          )
                         })
                         const file_count = handleCountFile(
                           groups,
