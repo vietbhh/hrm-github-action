@@ -3671,7 +3671,7 @@
           "add_description": "Add description...",
           "choose_a_background": "Choose a background",
           "create_poll": "Create poll",
-          "question": "Question?",
+          "question": "Question",
           "enter_question": "Enter question",
           "add_options": "Add options",
           "option": "Option {number}",

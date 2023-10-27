@@ -50,6 +50,8 @@ import {
   sendNotificationUnseenPost
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
+import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
+import moment from "moment"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -97,7 +99,7 @@ const submitPostController = async (req, res, next) => {
       ? "default"
       : body.privacy_type
   const link = body.arrLink
-  
+
   // ** check type feed parent
   let type_feed_parent = "post"
   if (link.length > 0) {
@@ -1587,6 +1589,66 @@ const getPostPending = async (req, res) => {
     return res.fail(err.message)
   }
 }
+const loadAnnouncementPost = async (req, res) => {
+  try {
+    const filter = {
+      type: "announcement"
+    }
+    const postList = await feedMongoModel.find(filter).sort({
+      _id: req.query.sort
+    })
+    const beforeReturn = await handleDataBeforeReturn(postList, true)
+    let dataReturn = []
+    const promises = []
+    beforeReturn.map((value) => {
+      const promise = new Promise(async (resolve, reject) => {
+        const dataLink = await handleGetAnnouncementById(value.link_id)
+        value.dataLink = dataLink
+        resolve(value)
+      })
+
+      promises.push(promise)
+    })
+
+    const _data = await Promise.all(promises).then((res_promise) => {
+      return res_promise
+    })
+    const one_week = await getOptionValue(
+      "news",
+      "show_announcements",
+      "one_week"
+    )
+    const one_month = await getOptionValue(
+      "news",
+      "show_announcements",
+      "one_month"
+    )
+    _data.map((value) => {
+      if (value.dataLink?.pin === 1 || value.dataLink?.pin === "1") {
+        const createDdate = moment(value.dataLink.created_at)
+        const dateToday = moment()
+
+        let numberDate = 1
+        if (value.dataLink.show_announcements * 1 === one_week * 1) {
+          numberDate = 7
+        } else if (value.dataLink.show_announcements * 1 === one_month * 1) {
+          numberDate = 30
+        }
+        if (createDdate.add(numberDate, "days").isSameOrAfter(dateToday)) {
+          dataReturn.push(value)
+        }
+      }
+    })
+
+    return res.respond({
+      results: dataReturn,
+      recordsTotal: dataReturn.length
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1612,5 +1674,6 @@ export {
   turnOffCommenting,
   handleDataHistory,
   getDataEditHistory,
-  getPostPending
+  getPostPending,
+  loadAnnouncementPost
 }

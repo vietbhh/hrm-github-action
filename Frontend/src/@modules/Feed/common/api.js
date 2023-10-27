@@ -159,6 +159,10 @@ export const feedApi = {
       "/employees/save-setting-approve-feed",
       serialize(_.cloneDeep(data))
     )
+  },
+  async loadAnnouncementPost(params) {
+    const strParams = object2QueryString(params)
+    return await axiosNodeApi.get(`/feed/announcement-posts?${strParams}`)
   }
   // /feedApi
 }
