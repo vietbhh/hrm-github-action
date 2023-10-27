@@ -101,11 +101,11 @@ $background-color-checkbox: #139ff8;
       position: relative;
       display: flex;
       flex-wrap: wrap;
-      min-height: 160px;
+     /* min-height: 160px;*/
       background-color: #ffe2ac;
       border-radius: 15px;
       gap: 20px;
-      padding: 20px;
+      padding: 24px;
       align-items: center;
 
       .event-date {
@@ -1542,7 +1542,7 @@ $background-color-checkbox: #139ff8;
 
       .after-name {
         font-weight: 400;
-        font-size: 15px;
+        font-size: 14px;
         color: #8f969b;
       }
 
@@ -1830,6 +1830,7 @@ $background-color-checkbox: #139ff8;
     .ant-collapse{
       .ant-collapse-item{
         .ant-collapse-header{
+          align-items: center;
           .ant-collapse-header-text{
             display: flex;
             align-items: center;
@@ -1843,7 +1844,6 @@ $background-color-checkbox: #139ff8;
       .announcement-item{
         display: inline-block;
         width: 324px;
-        height: 374px;
         border-radius: 16px;
         border: 1px solid var(--neutral-shade-6, #C4C3BB);
         background: var(--other-white, #FFF);
@@ -1946,10 +1946,10 @@ $background-color-checkbox: #139ff8;
     }
 
     .text-title {
-      color: $primary-text-color;
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 23px;
+      color: var(--neutral-shade-1, #121210);
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 32px;
     }
 
     .div-btn-close {
@@ -2010,19 +2010,19 @@ $background-color-checkbox: #139ff8;
 
           .modal-header-privacy-choose-dropdown-a {
             border-radius: 10px;
-            background: #f0f3ff;
-            padding: 2px 0 4px 0;
+            background: var(--other-azure-100, #DBE7FF);
+            padding: 2px 0 6px 0;
 
             button {
               padding: 7px 10px;
               border: none !important;
-
+              color: var(--other-azure-500, #4986FF) !important;
               .fa-solid {
                 font-weight: 900 !important;
               }
 
               &:hover {
-                color: #6e6b7b !important;
+               /* color: #6e6b7b !important;*/
               }
             }
           }
@@ -3074,14 +3074,15 @@ $background-color-checkbox: #139ff8;
 
       input[type="text"] {
         height: 50px;
-        background-color: rgb(241, 241, 245, 0.7);
+        background-color: var(--neutral-shade-10, #F7F7F5);
       }
     }
 
     .form-label {
-      color: $primary-text-color !important;
+      color: var(--neutral-shade-4, #8C8A82) !important;
       font-weight: 600 !important;
-      font-size: 15px !important;
+      font-size: 12px !important;
+      text-transform: uppercase;
     }
 
     .div-btn-close-poll-vote {
@@ -3204,9 +3205,9 @@ $background-color-checkbox: #139ff8;
     .div-add-options {
       display: flex;
       align-items: center;
-      gap: 15px;
+     /*gap: 15px;*/
       margin-bottom: 0.5rem;
-
+   
       .form-group {
         width: 100%;
         margin-bottom: 0;
@@ -3229,7 +3230,6 @@ $background-color-checkbox: #139ff8;
           justify-content: center;
           padding: 0;
           border-radius: 50%;
-          background-color: #ffe658;
           position: relative;
           color: #171721;
 
@@ -3240,7 +3240,6 @@ $background-color-checkbox: #139ff8;
           }
 
           &:hover {
-            background-color: darken($color: #ffe658, $amount: 10);
           }
 
           &.visibility-hidden {
@@ -3778,10 +3777,11 @@ $background-color-checkbox: #139ff8;
     }
 
     .clock-time {
+      color: var(--neutral-shade-2, #403F3A);
       margin: auto;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.03);
+      padding: 8px 24px;
       border-radius: 12px;
+      border: 1px solid var(--neutral-shade-8, #E8E7E1);
       .int-out-info {
         display: flex;
       }
@@ -3815,24 +3815,25 @@ $background-color-checkbox: #139ff8;
   .attendance-progress {
     .attendance-working-time {
       .attendance-time {
-        text-align: right;
+        text-align: left;
         margin-left: 14px;
         h4 {
           color: $primary-text-color;
-          font-size: 16px;
+          font-size: 18px;
           font-weight: bold;
           margin-bottom: 0 !important;
         }
 
         small {
-          font-size: 11px;
+          font-size: 12px;
         }
       }
 
       .attendance-status {
         height: 40px;
         width: 40px;
-        background: #69dca1;
+        background: var(--other-azure-500, #4986FF);
+
         border-radius: 15px;
 
         i {
@@ -3854,9 +3855,9 @@ $background-color-checkbox: #139ff8;
         }
 
         .clock-time-item {
-          color: #6c5dd3;
-          font-weight: 500;
-          font-size: 14px;
+          color: var(--neutral-shade-2, #403F3A);
+          font-weight: 400;
+          font-size: 15px;
         }
 
         .clock-time-type {
@@ -3908,6 +3909,7 @@ $background-color-checkbox: #139ff8;
         background: #ffe658 !important;
         border: none !important;
         color: #32434f !important;
+        border-radius: 16px !important;
       }
 
       .form-group {
@@ -3917,8 +3919,8 @@ $background-color-checkbox: #139ff8;
         input.input {
           border-radius: 12px;
           height: 50px;
-          background-color: rgb(245, 245, 248, 0.7);
-          border-color: rgb(245, 245, 248, 0.7);
+          background-color: var(--neutral-shade-10, #F7F7F5);
+          border-color: var(--neutral-shade-10, #F7F7F5);
 
           &:hover,
           &:focus {
@@ -3930,8 +3932,8 @@ $background-color-checkbox: #139ff8;
           .select__control {
             border-radius: 12px;
             min-height: 50px;
-            background-color: rgb(245, 245, 248, 0.7);
-            border-color: rgb(245, 245, 248, 0.7);
+            background-color: var(--neutral-shade-10, #F7F7F5);
+            border-color: var(--neutral-shade-10, #F7F7F5);
 
             &:hover {
               border-color: $primary-bg;
@@ -3948,10 +3950,12 @@ $background-color-checkbox: #139ff8;
       }
 
       .form-label {
-        color: $primary-text-color;
+        color: var(--neutral-shade-4, #8C8A82);
         font-weight: 600;
-        font-size: 15px;
+        font-size: 12px !important;
         line-height: 20px;
+        text-transform: uppercase;
+
       }
 
       .div-event-name {
@@ -3965,7 +3969,8 @@ $background-color-checkbox: #139ff8;
           input.input {
             border-radius: 12px;
             height: 50px;
-            background-color: rgb(245, 245, 248, 0.7);
+            background: var(--neutral-shade-10, #F7F7F5);
+
           }
         }
 
@@ -3996,7 +4001,6 @@ $background-color-checkbox: #139ff8;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 15px;
-        background-color: #eef5ff;
         padding: 14px;
         border-radius: 12px;
 
@@ -4034,8 +4038,8 @@ $background-color-checkbox: #139ff8;
 
           .div-select-time__div-box {
             min-height: 90px;
-            background-color: rgb(241, 241, 245, 0.7);
             border-radius: 12px;
+            background: var(--other-bg-screen, #F0F3F6);
             width: 50%;
             display: flex;
             gap: 10px;
@@ -4195,12 +4199,12 @@ $background-color-checkbox: #139ff8;
       }
 
       .div-input-btn-select {
-        background-color: rgb(245, 245, 248, 0.7);
+        background: var(--neutral-shade-10, #F7F7F5);
         border-radius: 12px;
 
         .form-group {
-          background-color: rgb(245, 245, 248, 0.7);
-          border: 1px solid rgb(245, 245, 248, 0.7);
+          background-color: var(--neutral-shade-10, #F7F7F5);
+          border: 1px solid var(--neutral-shade-10, #F7F7F5);
           border-radius: 12px;
 
           &:hover {
@@ -4214,7 +4218,7 @@ $background-color-checkbox: #139ff8;
           width: calc(100% - 100px);
 
           &:hover {
-            border-color: rgb(245, 245, 248, 0.7) !important;
+            border-color: var(--neutral-shade-10, #F7F7F5) !important;
           }
         }
 
@@ -4264,6 +4268,7 @@ $background-color-checkbox: #139ff8;
 
         textarea {
           min-height: 100px !important;
+          background-color: var(--neutral-shade-10, #F7F7F5);
         }
       }
 
@@ -4272,12 +4277,12 @@ $background-color-checkbox: #139ff8;
 
         .div-add-attachment__choose {
           display: inline-flex;
-          gap: 10px;
+          gap: 8px;
           cursor: pointer;
-
+          align-items: center;
           .text {
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 500;
+            font-size: 15px;
             line-height: 20px;
             color: #139ff8;
           }
@@ -4671,12 +4676,12 @@ $background-color-checkbox: #139ff8;
       justify-content: center;
       width: 100px;
       height: 30px;
-      background: rgba(50, 67, 79, 0.6);
-      border-radius: 6px;
-      font-weight: 500;
-      font-size: 10px;
+      border-radius: 8px;
+      background: rgba(242, 241, 237, 0.64);
+      font-weight: 400;
+      font-size: 12px;
       line-height: 20px;
-      color: #ece9e9;
+      color: var(--neutral-shade-2, #403F3A);
       position: absolute;
       bottom: 10px;
       right: 10px;
@@ -4831,6 +4836,17 @@ $background-color-checkbox: #139ff8;
         .ant-picker-suffix {
           margin: auto;
         }
+      }
+    }
+  }
+  .modal-content{
+    .modal-body {
+      .form-label{
+        color: var(--neutral-shade-4, #8C8A82);
+        font-size: 12px !important;
+        font-style: normal;
+        font-weight: 600;
+        text-transform: uppercase;  
       }
     }
   }
@@ -5252,7 +5268,7 @@ $background-color-checkbox: #139ff8;
       }
 
       .text-title {
-        font-size: 16px;
+        font-size: 20px;
       }
 
       .div-header-avatar
@@ -5277,8 +5293,9 @@ $background-color-checkbox: #139ff8;
 
     .body-content {
       .form-label {
-        font-weight: 500 !important;
-        font-size: 14px !important;
+        color: var(--neutral-shade-4, #8C8A82);
+        font-weight:600 !important;
+        font-size: 12px !important;
       }
 
       .form-group input[type="text"] {
@@ -5297,7 +5314,8 @@ $background-color-checkbox: #139ff8;
       .btn-add-option {
         height: 46px;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 14px; 
+        width: 100%;
       }
     }
   }

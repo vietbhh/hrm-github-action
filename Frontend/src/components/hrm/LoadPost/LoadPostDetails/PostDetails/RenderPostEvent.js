@@ -81,7 +81,7 @@ const RenderPostEvent = (props) => {
       key: "maybe",
       label: (
         <div onClick={() => handleUpdateStatus("maybe")}>
-          {useFormatMessage("modules.feed.post.event.maybesss")}
+          {useFormatMessage("modules.feed.post.event.maybe")}
         </div>
       )
     }
@@ -110,7 +110,7 @@ const RenderPostEvent = (props) => {
           className="event-content"
           onClick={() => handleClick()}
           style={{ cursor: "pointer" }}>
-          <div className="event-content__title">{dataLink?.name} xxxx</div>
+          <div className="event-content__title">{dataLink?.name}</div>
           <div className="event-content__meeting-room">
             {dataLink?.meeting_room?.label}
           </div>

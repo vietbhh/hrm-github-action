@@ -69,7 +69,6 @@ const LoadPost = (props) => {
     modalWith: false,
     dataUserOtherWith: []
   })
-
   const dispatch = useDispatch()
 
   // ** function

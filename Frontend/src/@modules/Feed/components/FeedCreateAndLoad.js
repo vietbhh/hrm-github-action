@@ -7,11 +7,17 @@ import { useEffect, useRef } from "react"
 import { Card, CardBody, CardTitle } from "reactstrap"
 import { Collapse } from "antd"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
-import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 
-import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper"
+import SwiperCore, {
+  Autoplay,
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y
+} from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { handleDataMention } from "../common/common"
 const FeedCreateAndLoad = (props) => {
   const {
     workspace = [], // arr workspace: []
@@ -26,10 +32,11 @@ const FeedCreateAndLoad = (props) => {
     // ** event
     options_employee_department: [],
     optionsMeetingRoom: [],
-    listAnnouncement: []
+    listAnnouncement: [],
+    dataMention: []
   })
-  const ref = useRef(null)
-
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
   const dataEmployee = useSelector((state) => state.users.list)
 
   // ** function
@@ -72,19 +79,25 @@ const FeedCreateAndLoad = (props) => {
         })
       })
   }, [])
+
+  useEffect(() => {
+    const data_mention = handleDataMention(dataEmployee, userId)
+    setState({ dataMention: data_mention })
+  }, [dataEmployee])
   const renderAnnouncement = (data = []) => {
     return data.map((item, key) => {
       return (
         <SwiperSlide>
           <div className="announcement-item">
-            <LoadPost data={item} />
+            <LoadPost
+              data={item}
+              dataMention={state.dataMention}
+              dataLink={item.dataLink}
+            />
           </div>
         </SwiperSlide>
       )
     })
-  }
-  const scroll = (scrollOffset) => {
-    ref.current.scrollLeft += scrollOffset
   }
   const items = [
     {
@@ -100,38 +113,36 @@ const FeedCreateAndLoad = (props) => {
             <path
               d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
               stroke="#696760"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M12 8V13"
               stroke="#696760"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M11.9941 16H12.0031"
               stroke="#696760"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
           {"  "}
           Announcements Were Pinned
         </>
       ),
-
       children: (
         <>
           <Swiper
-            slidesPerView={1}
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            slidesPerView={3}
             spaceBetween={10}
-            pagination={{
-              clickable: true
-            }}
+            Autoplay
             navigation={true}
             breakpoints={{
               640: {
@@ -147,14 +158,13 @@ const FeedCreateAndLoad = (props) => {
                 spaceBetween: 22
               }
             }}
-            className="mySwiper announcements">
+            className="announcements">
             {renderAnnouncement(state.listAnnouncement)}
           </Swiper>
         </>
       )
     }
   ]
-
   const loadAnnouncementPost = () => {
     feedApi
       .loadAnnouncementPost()
@@ -203,7 +213,21 @@ const FeedCreateAndLoad = (props) => {
                   />
                 </svg>
               ) : (
-                <i className="fa-light fa-chevron-right"></i>
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeMiterlimit="10"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               )
             }}
           />

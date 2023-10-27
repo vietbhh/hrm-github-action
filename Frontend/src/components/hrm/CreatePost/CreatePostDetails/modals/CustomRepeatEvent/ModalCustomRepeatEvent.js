@@ -6,14 +6,7 @@ import { useForm } from "react-hook-form"
 import { getAffix } from "../CreateEventDetail/RepeatEventDropDown"
 import classNames from "classnames"
 // ** Styles
-import {
-  Button,
-  Col,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Row
-} from "reactstrap"
+import { Button, Col, Modal, ModalBody, ModalHeader, Row } from "reactstrap"
 import { Dropdown } from "antd"
 // ** Components
 import {
@@ -170,7 +163,10 @@ const ModalCustomRepeatEvent = (props) => {
           weekDay: valueRepeat?.repeat_at?.week_day,
           order: valueRepeat?.repeat_at?.order_week_date_in_month
         },
-        endTimeTypeOption: valueRepeat?.end_time?.type_option === undefined ? "never" : valueRepeat.end_time.type_option,
+        endTimeTypeOption:
+          valueRepeat?.end_time?.type_option === undefined
+            ? "never"
+            : valueRepeat.end_time.type_option,
         endTimeOnDate: dayjs(valueRepeat?.end_time?.on_date),
         endTimeAfter: valueRepeat?.end_time?.after,
         chosenRepeatAtWeek: currentDate.day(),
@@ -346,14 +342,12 @@ const ModalCustomRepeatEvent = (props) => {
       <ModalBody>
         <div className="repeat-body">
           <Row className="mb-2">
-            <Col sm={5}>
+            <Col sm={12}>
               <span className="col-label">
                 {useFormatMessage(
                   "modules.feed.create_event.text.custom_repeat.repeat_every"
                 )}
               </span>
-            </Col>
-            <Col sm={7}>
               <div className="d-flex align-items-center justify-content-between">
                 <div className="me-50">
                   <ErpInput

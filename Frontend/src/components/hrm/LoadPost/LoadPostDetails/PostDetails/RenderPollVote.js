@@ -287,7 +287,6 @@ const RenderPollVote = (props) => {
               )
             })}
         </div>
-        xxxxedit
         {!isViewEditHistory && (
           <Fragment>
             {data.poll_vote_detail.setting.adding_more_options === true &&

@@ -80,7 +80,6 @@ const ClockInOutProgress = (props) => {
           workScheduleToday={state.workScheduleToday}
           {...props}
         />
-
         <div className="mt-2">
           <AttendanceClock attendanceToday={state.attendanceToday} />
         </div>
