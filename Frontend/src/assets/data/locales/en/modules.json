@@ -3782,7 +3782,9 @@
           "share_to_a_group": "Share to a group",
           "this_post_has_been_edited": "This post has been edited",
           "post_pending": "Your article has been posted and is in the review process, please wait for moderation!",
-          "approve_setting": "Post Approval Setting"
+          "approve_setting": "Post Approval Setting",
+          "successfully_copied" : "Successfully Copied",
+          "unsaved" : "Unsaved"
         },
         "react": {
           "like": "Like",
