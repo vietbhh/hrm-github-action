@@ -1,11 +1,15 @@
 import { axiosNodeApi } from "@apps/utility/api"
 
 export const stickerApi = {
-  async list(search, page) {
+  async list(search, page, perPage, stickerDefault) {
     const searchQuery = search ? search : ""
     const pageQuery = page ? `&page=${page}` : ""
+    const perPageQuery = perPage ? `&perPage=${perPage}` : ""
+    const defaultQuery = stickerDefault ? `&default=${stickerDefault}` : ""
 
-    return await axiosNodeApi.get(`sticker?search=${searchQuery}${pageQuery}`)
+    return await axiosNodeApi.get(
+      `sticker?search=${searchQuery}${pageQuery}${perPageQuery}${defaultQuery}`
+    )
   },
   async uploads(formData, id) {
     return await axiosNodeApi.post("sticker/upload", formData, {

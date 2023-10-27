@@ -21,10 +21,17 @@ class Departments extends ErpController
 	{
 		$get = $this->request->getGet();
 
+		$search = $get['search'] ?? "";
+
 		$parent = isset($get['parent']) ? $get['parent'] : [];
 
 		$modules = \Config\Services::modules('departments');
 		$model = $modules->model;
+
+		if(!empty($search)) {
+			$model->like('name',$search);
+		}
+		
 		$listDepartment = $model->asArray()->orderBy('id ASC')->findAll();
 		$dataHandle = handleDataBeforeReturn('departments', $listDepartment, true);
 		$modules->setModule('employees');

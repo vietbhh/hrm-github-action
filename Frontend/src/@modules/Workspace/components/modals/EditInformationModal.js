@@ -113,9 +113,9 @@ const EditInformationModal = (props) => {
               <ErpInput
                 type="textarea"
                 nolabel
-                defaultValue={infoWorkspace?.introduction}
+                defaultValue={infoWorkspace?.description}
                 rows={4}
-                name="introduction"
+                name="description"
                 useForm={methods}
               />
             </div>

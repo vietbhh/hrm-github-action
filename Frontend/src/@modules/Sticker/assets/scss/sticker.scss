@@ -176,6 +176,7 @@ $colorText: #32434f;
   }
   .sticker-row-submit {
     display: flex;
+    // padding-top: 8px;
     .ant-btn-primary {
       margin: 4px;
     }
@@ -188,16 +189,22 @@ $colorText: #32434f;
   }
   .sticker-images {
     text-align: center;
+    height: 550px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    scroll-padding-right: 8px;
     .img-sticker {
-      width: 150px;
-      height: 150px;
+      width: 125px;
+      height: 125px;
       margin: 4px;
     }
   }
   .sticker-icon-detail {
     position: absolute;
     right: 0;
-    top: 10px;
+    top: 6px;
+    right: 14px;
   }
 }
 
@@ -256,7 +263,19 @@ $colorText: #32434f;
       text-align: left;
     }
   }
+  .sticker-modal {
+    .sticker-icon-detail {
+      right: 68px;
+    }
+    .sticker-images {
+      .img-sticker {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  }
 }
+
 .ant-image-preview-root {
   display: none;
 }

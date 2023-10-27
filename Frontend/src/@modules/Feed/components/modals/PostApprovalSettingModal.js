@@ -9,7 +9,7 @@ import { useEffect } from "react"
 import MemberSelect from "../../../../components/hrm/MemberSelect/MemberSelect"
 import Avatar from "@apps/modules/download/pages/Avatar"
 const PostApprovalSettingModal = (props) => {
-  const { modal, handleModal } = props
+  const { modal, handleModal, statusButtonSettingModal } = props
 
   const [state, setState] = useMergedState({
     loading: false,
@@ -26,6 +26,7 @@ const PostApprovalSettingModal = (props) => {
           dataAttendees: res.data.userSelected,
           loading: false
         })
+        statusButtonSettingModal()
       })
       .catch((err) => {
         setState({
@@ -34,6 +35,10 @@ const PostApprovalSettingModal = (props) => {
         })
       })
   }
+  const uniqueElements = state.dataUser.filter((item2) => {
+    return !state.dataAttendees.some((item1) => item1.id === item2.id && item1.users_id === item2.users_id);
+  });
+
   const handleSave = () => {
     const dataAttendees = [...state.dataAttendees]
     const arrID = dataAttendees.map((e) => e.id)
@@ -43,6 +48,7 @@ const PostApprovalSettingModal = (props) => {
         notification.showSuccess({
           text: useFormatMessage("notification.save.success")
         })
+        handleModal()
       })
       .catch((err) => {
         console.log("error", err)
@@ -92,15 +98,15 @@ const PostApprovalSettingModal = (props) => {
         <div className="div-attendees">
           <div className="div-attendees-input div-input-btn">
             <label title="Attendees" className="form-label"></label>
-            <div className="div-input-btn-select">
-              <MemberSelect
+            <div className="div-input-btn-select">  
+            <MemberSelect
                 noLabel={true}
                 placeholder={useFormatMessage(
                   "modules.feed.create_event.text.attendees_placeholder"
                 )}
                 classNameProps="select-attendees"
                 isMulti={true}
-                options={state.dataUser}
+                options={uniqueElements}
                 value={state.valueAttendees}
                 selectDepartment={false}
                 selectAll={false}

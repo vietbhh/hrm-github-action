@@ -16,12 +16,21 @@ import htmlToDraft from "html-to-draftjs"
 import { Fragment, useCallback, useEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { Label, Spinner } from "reactstrap"
-import Emoji from "./Emoji"
+// import Emoji from "./Emoji"
 
-import GifBoxButton from "@apps/components/common/GifBoxButton"
+// import GifBoxButton from "@apps/components/common/GifBoxButton"
+import EmotionsComponent from "@apps/modules/chat/components/emotions/index"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@styles/react/libs/editor/editor.scss"
 import { handleImageCommentUrl } from "./Comment"
+
+const focusInputMsg = () => {
+  if (msgRef.current) {
+    msgRef.current.focus()
+    localStorage.setItem("chatAppFocus", true)
+    localStorage.setItem("formChatFocus", true)
+  }
+}
 
 const MentionSuggestion = (props) => {
   const {
@@ -94,7 +103,10 @@ const PostCommentForm = (props) => {
     // mention
     open: false,
     mentions: dataMention,
-    suggestions: dataMention === undefined ? [] : dataMention
+    suggestions: dataMention === undefined ? [] : dataMention,
+    showEmotion: false,
+    selectedUser: {},
+    groups: []
   })
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
@@ -168,6 +180,13 @@ const PostCommentForm = (props) => {
       )
       const _content = result_tag_user.content
       const tag_user = result_tag_user.tag_user
+
+      if (
+        Object.keys(dataEditComment).length !== 0 &&
+        !dataEditComment?.image
+      ) {
+        dataEditComment.image = state.image
+      }
 
       const params = {
         body: JSON.stringify({
@@ -295,6 +314,7 @@ const PostCommentForm = (props) => {
       setFocusCommentForm(false)
     }
   }, [focusCommentForm])
+
   return (
     <Fragment>
       <div className="post-comment__div-form">
@@ -333,7 +353,7 @@ const PostCommentForm = (props) => {
                 <Spinner size="sm" />
               ) : (
                 <>
-                  <GifBoxButton
+                  {/* <GifBoxButton
                     onSelect={(item) => {
                       setState({ image: item.images.fixed_width.url })
                       if (
@@ -345,7 +365,17 @@ const PostCommentForm = (props) => {
                         setDataEditComment(_dataEditComment)
                       }
                     }}></GifBoxButton>
-                  <Emoji handleInsertEditorState={handleInsertEditorState} />
+                  <Emoji handleInsertEditorState={handleInsertEditorState} /> */}
+                  <EmotionsComponent
+                    selectedUser={state.selectedUser}
+                    focusInputMsg={focusInputMsg}
+                    setStatePostComment={setState}
+                    handleInsertEditorState={handleInsertEditorState}
+                    showEmotion={state.showEmotion}
+                    setShowEmotion={(value) => {
+                      setState({ showEmotion: value })
+                    }}
+                  />
                   <Label
                     className={`mb-0 cursor-pointer`}
                     for={`attach-image${currentTime}`}>
@@ -387,6 +417,10 @@ const PostCommentForm = (props) => {
                 className="btn-close-image"
                 onClick={() => {
                   setState({ image: null })
+                  if (_.isEmpty(dataEditComment._id_post)) {
+                    return
+                  }
+
                   if (_.isFunction(setDataEditComment)) {
                     const editorStateRaw = convertToRaw(
                       state.editorState.getCurrentContent()

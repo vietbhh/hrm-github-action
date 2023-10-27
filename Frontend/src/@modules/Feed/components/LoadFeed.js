@@ -27,7 +27,8 @@ const LoadFeed = (props) => {
     // create event / announcement
     options_employee_department = [],
     optionsMeetingRoom = [],
-    setSearchTextFeed
+    setSearchTextFeed,
+    handleUnPinPost
   } = props
   const [state, setState] = useMergedState({
     dataPost: [],
@@ -367,6 +368,7 @@ const LoadFeed = (props) => {
                 setDataCreateNew={setDataCreateNew}
                 isInWorkspace={!_.isEmpty(workspace)}
                 workspace={workspace}
+                handleUnPinPost = {handleUnPinPost}
               />
             )
           })}
@@ -418,6 +420,7 @@ const LoadFeed = (props) => {
                   isInWorkspace={!_.isEmpty(workspace)}
                   workspace={workspace}
                   setDataCreateNew={setDataCreateNew}
+                  handleUnPinPost = {handleUnPinPost}
                 />
               </LazyLoadComponent>
             )

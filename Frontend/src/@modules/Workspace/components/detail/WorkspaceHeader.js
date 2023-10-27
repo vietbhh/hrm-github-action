@@ -455,24 +455,27 @@ const WorkspaceHeader = (props) => {
     const infoWorkspace = { ...data }
     if (data?.membership_approval === "auto") {
       const members = [...infoWorkspace.members]
-      members.push(userId)
+      members.push( { "id_user": userId } )
       infoWorkspace.members = JSON.stringify(unique(members))
+      workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+        if (res.statusText) {
+          setState({ loading: false })
+          loadData()
+        }
+      })
     } else {
       const request_joins = [...infoWorkspace.request_joins]
       request_joins.push({
         id_user: userId
       })
       infoWorkspace.request_joins = JSON.stringify(unique(request_joins))
+      workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
+        if (res.statusText) {
+          setState({ loading: false })
+          loadData()
+        }
+      })
     }
-    workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
-      if (res.statusText) {
-        notification.showSuccess({
-          text: useFormatMessage("notification.save.success")
-        })
-        setState({ loading: false })
-        loadData()
-      }
-    })
   }
 
   const handleCancelJoin = () => {
@@ -657,7 +660,7 @@ const WorkspaceHeader = (props) => {
                     }}>
                     {data?.type}
                   </span>{" "}
-                  · {data?.members ? data?.members.length : 0}{" "}
+                  · {data?.total_member ? data?.total_member : 0}{" "}
                   {useFormatMessage("modules.workspace.display.members")}
                   {/*{data?.pinPosts && data?.pinPosts.length}{" "}
                 {useFormatMessage("modules.workspace.text.posts")}*/}
