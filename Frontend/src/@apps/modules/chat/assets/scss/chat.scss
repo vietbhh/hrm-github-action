@@ -417,7 +417,7 @@ $font-family: Helvetica;
 
                   h5 {
                     color: var(--neutral-shade-2, #403F3A);
-                    font-family: Be Vietnam;
+                    font-family: Be Vietnam Pro;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 500;
@@ -468,7 +468,7 @@ $font-family: Helvetica;
                     position: relative;
                     top: 7px;
                     color: var(--neutral-shade-3, #696760);
-                    font-family: Be Vietnam;
+                    font-family: Be Vietnam Pro;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
@@ -501,7 +501,7 @@ $font-family: Helvetica;
 
           .chat-list-title {
             color: var(--neutral-shade-4, #8C8A82);
-            font-family: Be Vietnam;
+            font-family: Be Vietnam Pro;
             font-size: 12px;
             font-style: normal;
             font-weight: 600;
@@ -569,14 +569,22 @@ $font-family: Helvetica;
 
 
                 .avatar img {
-                  width: 45px;
-                  height: 45px;
+                  width: 48px;
+                  height: 48px;
+                }
+
+                .search-icon {
+                  padding: 4px;
                 }
 
                 .chat-header-name {
                   display: flex;
                   flex-direction: column;
                   justify-content: space-around;
+                  font-size: 15px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 20px;
 
                   h6 {
                     font-weight: 400;
@@ -585,9 +593,12 @@ $font-family: Helvetica;
                   }
 
                   .chat-header-name-status {
-                    font-weight: 300;
+                    font-family: Be Vietnam Pro;
                     font-size: 12px;
-                    color: #00e16c;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 16px;
+                    color: var(--success-500, #56E293);
                   }
 
                   .chat-header-name-status.status-offline {
@@ -600,8 +611,8 @@ $font-family: Helvetica;
                 }
 
                 .chat-header-btn-border {
-                  width: 35px;
-                  height: 30px;
+                  width: 36px;
+                  height: 28px;
                   background: #377dff;
                   display: flex;
                   justify-content: center;
@@ -610,11 +621,13 @@ $font-family: Helvetica;
 
                 .chat-header-btn-border.left {
                   border-radius: 10px 0px 0px 10px;
+                  padding: 4px 8px;
                 }
 
                 .chat-header-btn-border.right {
                   border-radius: 0px 10px 10px 0px;
                   margin-left: 1px;
+                  padding: 4px 8px;
                 }
 
                 .btn-icon-more {
@@ -1071,7 +1084,7 @@ $font-family: Helvetica;
                     p.text {
                       word-break: break-word;
                       color: var(--neutral-shade-9, #F2F1ED);
-                      font-family: Be Vietnam;
+                      font-family: Be Vietnam Pro;
                       font-size: 15px;
                       font-style: normal;
                       font-weight: 400;
@@ -1741,7 +1754,7 @@ $font-family: Helvetica;
                 .user-post {
                   color: var(--8083-a-3, #8083A3);
                   text-align: center;
-                  font-family: Be Vietnam;
+                  font-family: Be Vietnam Pro;
                   font-size: 15px;
                   font-style: normal;
                   font-weight: 400;
@@ -1860,7 +1873,7 @@ $font-family: Helvetica;
 
                 .section-label {
                   color: var(--neutral-shade-3, #696760);
-                  font-family: Be Vietnam;
+                  font-family: Be Vietnam Pro;
                   font-size: 12px;
                   font-style: normal;
                   font-weight: 600;
@@ -1872,7 +1885,7 @@ $font-family: Helvetica;
 
                 .section-text {
                   color: var(--neutral-shade-2, #403F3A);
-                  font-family: Be Vietnam;
+                  font-family: Be Vietnam Pro;
                   font-size: 15px;
                   font-style: normal;
                   font-weight: 400;
@@ -1880,7 +1893,7 @@ $font-family: Helvetica;
                 }
 
                 .social-icon {
-                  margin-right: 2rem;
+                  margin-right: 32px;
                   &:last-child {
                     margin-right: 0;
                   }
@@ -1908,7 +1921,7 @@ $font-family: Helvetica;
 
                 .title {
                   color: var(--neutral-shade-2, #403F3A);
-                  font-family: Be Vietnam;
+                  font-family: Be Vietnam Pro;
                   font-size: 14px;
                   font-style: normal;
                   font-weight: 400;
@@ -2110,7 +2123,7 @@ $font-family: Helvetica;
                     cursor: pointer;
                     padding: 7px;
                     color: var(--neutral-shade-2, #403F3A);
-                    font-family: Be Vietnam;
+                    font-family: Be Vietnam Pro;
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 500;
@@ -2737,7 +2750,7 @@ $font-family: Helvetica;
   .ant-tabs-tab-btn {
     color: var(--neutral-shade-2, #403F3A);
     text-align: center;
-    font-family: Be Vietnam;
+    font-family: Be Vietnam Pro;
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
