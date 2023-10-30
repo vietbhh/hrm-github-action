@@ -290,7 +290,7 @@ const SearchMessage = (props) => {
                     innerRef={refInputSearchMessage}
                     name="_searchMessage"
                     defaultValue=""
-                    placeholder="Search"
+                    placeholder="Search In Chat"
                     nolabel
                     autoComplete="off"
                     onClick={() => {
@@ -376,9 +376,9 @@ const SearchMessage = (props) => {
                                 getValues("_searchMessage")
                               )}
                             </span>
-                            <span className="time">
+                            {/* <span className="time">
                               {formatTime(value.timestamp)}
-                            </span>
+                            </span> */}
                           </li>
                         )
                       }
