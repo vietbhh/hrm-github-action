@@ -160,15 +160,22 @@ const ModalNewGroup = (props) => {
             <Avatar
               src={item.avatar}
               className="me-75"
-              imgHeight="36"
-              imgWidth="36"
+              imgHeight="40"
+              imgWidth="40"
             />
             <div className="d-flex flex-column justify-content-center">
               <p className="mb-0 title">{item.full_name}</p>
               <span className="sub-email">{item?.username}</span>
             </div>
             <div className="ms-auto">
-              <i className="fa-regular fa-xmark"></i>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="vuesax/linear/close-circle">
+              <g id="close-circle">
+              <path id="Vector" d="M6 18L18 6" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path id="Vector_2" d="M18 18L6 6" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              </g>
+            </svg>
             </div>
           </div>
         </Col>
@@ -187,8 +194,8 @@ const ModalNewGroup = (props) => {
             <Avatar
               src={item.avatar}
               className="me-75"
-              imgHeight="36"
-              imgWidth="36"
+              imgHeight="40"
+              imgWidth="40"
             />
             <div className="d-flex flex-column justify-content-center">
               <p className="mb-0 title">{item.full_name}</p>
@@ -264,7 +271,7 @@ const ModalNewGroup = (props) => {
                         
                     <Row className="w-100">
                         {state.dataSelected.length > 0 &&
-                          <Col sm = {12} style={{"padding": "1rem 2rem"}}>
+                          <Col sm = {12} style={{"padding": "1rem 2rem",}} className="total_member_selected">
                               {useFormatMessage(
                                 "modules.chat.text.user_selected",
                                 {

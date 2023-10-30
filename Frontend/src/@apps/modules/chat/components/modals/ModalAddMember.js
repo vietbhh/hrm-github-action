@@ -166,8 +166,8 @@ const ModalAddMember = (props) => {
             <Avatar
               src={item.avatar}
               className="me-75"
-              imgHeight="36"
-              imgWidth="36"
+              imgHeight="40"
+              imgWidth="40"
             />
             <div className="d-flex flex-column justify-content-center">
               <p className="mb-0 title">{item.full_name}</p>
@@ -258,7 +258,7 @@ const ModalAddMember = (props) => {
                         
                     <Row className="w-100">
                         {state.dataSelected.length > 0 &&
-                          <Col sm = {12} style={{"padding": "1rem 2rem"}}>
+                          <Col sm = {12} style={{"padding": "1rem 2rem"}} className="total_member_selected">
                               {useFormatMessage(
                                 "modules.chat.text.user_selected",
                                 {

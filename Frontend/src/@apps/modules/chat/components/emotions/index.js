@@ -110,41 +110,12 @@ const index = (props) => {
           
         }
         {!checkMobile &&
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none">
-            <path
-              d="M7.5 18.8332H12.5C16.6667 18.8332 18.3333 17.1665 18.3333 12.9998V7.99984C18.3333 3.83317 16.6667 2.1665 12.5 2.1665H7.5C3.33333 2.1665 1.66667 3.83317 1.66667 7.99984V12.9998C1.66667 17.1665 3.33333 18.8332 7.5 18.8332Z"
-              stroke="#696760"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M12.9167 8.625C13.607 8.625 14.1667 8.06536 14.1667 7.375C14.1667 6.68464 13.607 6.125 12.9167 6.125C12.2263 6.125 11.6667 6.68464 11.6667 7.375C11.6667 8.06536 12.2263 8.625 12.9167 8.625Z"
-              stroke="#696760"
-              strokeWidth="1.5"
-              strokeMiterlimit="10"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7.08333 8.625C7.77369 8.625 8.33333 8.06536 8.33333 7.375C8.33333 6.68464 7.77369 6.125 7.08333 6.125C6.39298 6.125 5.83333 6.68464 5.83333 7.375C5.83333 8.06536 6.39298 8.625 7.08333 8.625Z"
-              stroke="#696760"
-              strokeWidth="1.5"
-              strokeMiterlimit="10"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M12.9167 13C11.9444 13.8333 9.41667 15 7.08333 13"
-              stroke="#696760"
-              strokeLinecap="round"
-            />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15.5 9.75C16.3284 9.75 17 9.07843 17 8.25C17 7.42157 16.3284 6.75 15.5 6.75C14.6716 6.75 14 7.42157 14 8.25C14 9.07843 14.6716 9.75 15.5 9.75Z" stroke="#696760" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8.5 9.75C9.32843 9.75 10 9.07843 10 8.25C10 7.42157 9.32843 6.75 8.5 6.75C7.67157 6.75 7 7.42157 7 8.25C7 9.07843 7.67157 9.75 8.5 9.75Z" stroke="#696760" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15.5 15C14.3333 16 11.3 17.4 8.5 15" stroke="#696760" stroke-linecap="round"/>
+        </svg>
         }
       </div>
     </>
