@@ -12,16 +12,16 @@ body {
   align-items: center;
 
   .brand-logo {
-    width: 132px;
-    height: 40px;
+    width: auto;
+    height: auto;
     margin-left: 40px;
     display: flex;
     align-items: center;
   }
 
   .logo {
-    width: 100%;
-    max-height: 40px;
+    height: 54px !important;
+    width: 200px !important;
   }
 
   .div-select {
@@ -46,14 +46,10 @@ body {
           padding: unset !important;
 
           .select__single-value {
-            .text-label {
-              p {
-                font-size: 15px;
-                font-weight: 400 !important;
-                color: #696760 !important;
-                line-height: 20px;
-              }
-            }
+            font-size: 15px !important;
+            font-weight: 400 !important;
+            color: #696760 !important;
+            line-height: 20px;
           }
 
           .select__input-container {
@@ -355,9 +351,10 @@ body {
 
     .footer-section {
       position: absolute;
-      bottom: 18px;
+      bottom: 24px;
       width: 100%;
       padding-right: 174px;
+      line-height: 20px;
       p {
         margin-bottom: 0 !important;
       }
