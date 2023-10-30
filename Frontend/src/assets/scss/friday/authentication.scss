@@ -64,7 +64,8 @@ body {
 }
 
 .auth-wrapper {
-  display: flex;
+  display: flex !important;
+  flex: 1;
   flex-basis: 100%;
   min-height: 100vh;
   //height: 100vh;
@@ -73,9 +74,16 @@ body {
   background-color: #ffffff;
   font-family: Be Vietnam Pro !important;
 
+  .row {
+    margin: unset !important;
+  }
+  .col-sm-6 {
+    padding: unset !important;
+  }
+
   .slide-image-section {
     padding: 24px;
-    width: 50%;
+    width: 100%;
     min-height: 100vh;
 
     .swiper-content {
@@ -109,211 +117,213 @@ body {
   }
 
   .control-auth-section {
-    padding: 80px 116px;
-
+    padding: 24px;
     padding-right: 256px;
-    width: 50%;
-    min-height: inherit;
-
-    //height: calc((var(--vh, 1vh) * 100) - 48px);
+    width: 100%;
+    min-height: 100% !important;
     position: relative;
 
-    .btn-login {
-      height: 48px;
-      border-radius: 16px;
-      background-color: #ffe658 !important;
-      font-weight: 600;
-      font-size: 15px;
-      border: none !important;
-      font-family: Be Vietnam Pro !important;
-      margin-top: 32px;
-    }
+    .control-auth-container {
+      padding-top: 56px;
+      padding-left: 92px;
+      min-height: calc(100vh - 48px - 56px);
 
-    .activation-section {
-      .header-form {
-        .title {
-          font-size: 38px !important;
+      .btn-login {
+        height: 48px;
+        border-radius: 16px;
+        background-color: #ffe658 !important;
+        font-weight: 600;
+        font-size: 15px;
+        border: none !important;
+        font-family: Be Vietnam Pro !important;
+        margin-top: 32px;
+      }
+
+      .activation-section {
+        .header-form {
+          .title {
+            font-size: 38px !important;
+          }
+        }
+
+        .form-group {
+          width: 100%;
         }
       }
 
-      .form-group {
-        width: 100%;
-      }
-    }
+      .profile-setting-section {
+        margin-top: -20px !important;
 
-    .profile-setting-section {
-      margin-top: -20px !important;
+        .form-section {
+          margin-top: 0px !important;
 
-      .form-section {
-        margin-top: 0px !important;
+          .avatar-section {
+            margin-top: 20px;
+            margin-bottom: 25px;
 
-        .avatar-section {
-          margin-top: 20px;
-          margin-bottom: 25px;
+            .employeeAvatar {
+              display: flex;
+              align-items: center;
 
-          .employeeAvatar {
-            display: flex;
-            align-items: center;
+              .img-fluid {
+                width: 120px !important;
+                height: 120px !important;
+                margin-right: 2rem;
+                border-radius: 50%;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                object-fit: cover;
+              }
+            }
 
-            .img-fluid {
-              width: 120px !important;
-              height: 120px !important;
-              margin-right: 2rem;
-              border-radius: 50%;
-              border: 1px solid rgba(0, 0, 0, 0.1);
-              object-fit: cover;
+            .btn-change-avatar {
+              background-color: #ffffff !important;
+              border-color: #2f9bfa !important;
+              height: 40px !important;
+              border-radius: 12px !important;
+              color: #2f9bfa !important;
+              padding: 8px 16px;
+              font-size: 15px;
+              font-weight: 400;
             }
           }
-
-          .btn-change-avatar {
-            background-color: #ffffff !important;
-            border-color: #2f9bfa !important;
-            height: 40px !important;
-            border-radius: 12px !important;
-            color: #2f9bfa !important;
-            padding: 8px 16px;
-            font-size: 15px;
-            font-weight: 400;
-          }
-        }
-      }
-    }
-
-    .login-section {
-      //height: calc((var(--vh, 1vh) * 100) - 280px);
-      margin-top: 165px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      .div-congratulations {
-        .title {
-          font-size: 32px;
-          font-weight: 600;
-          color: #121210;
-        }
-
-        .sub-title {
-          font-size: 15px;
-          font-weight: 400;
-          color: #403f3a;
-        }
-
-        .svg-content {
-          margin-top: -60px;
-          margin-bottom: -40px;
         }
       }
 
-      .header-form {
-        .title {
-          font-size: 64px;
-          font-weight: 700;
-          font-family: Be Vietnam Pro;
-          color: #121210;
-          margin-bottom: 8px !important;
-        }
+      .login-section {
+        min-height: calc(100vh - 48px - 112px - 120px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-        .sub-title {
-          font-size: 15px;
-          font-weight: 400;
-          color: #403f3a;
-          margin-bottom: 0 !important;
-        }
-      }
-
-      .header-reset {
-        .title {
-          font-size: 32px;
-        }
-      }
-
-      .form-section {
-        margin-top: 40px;
-
-        .div-login-info {
-          label {
-            color: #8c8a82;
-            font-size: 11px !important;
-            font-style: normal;
+        .div-congratulations {
+          .title {
+            font-size: 32px;
             font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 0.25rem;
+            color: #121210;
           }
 
-          .form-group {
-            margin-bottom: 16px !important;
-            .input-group-text {
-              background-color: inherit;
-              border: none !important;
-              height: 52px;
-              background-color: #f2f1ed;
-            }
-
-            input {
-              font-family: Be Vietnam Pro !important;
-              font-size: 15px !important;
-              border: none !important;
-              font-weight: 400;
-              height: 52px;
-              background-color: #d1d1d1;
-              -webkit-box-shadow: 0 0 0 1000px #f2f1ed inset !important;
-            }
-
-            .ant-picker {
-              border: none !important;
-              height: fit-content;
-              padding-top: 0 !important;
-              padding-bottom: 0 !important;
-              background-color: #f2f1ed;
-            }
-          }
-
-          .form-check {
-            margin-top: 8px;
-            label {
-              text-transform: capitalize;
-              font-size: 15px !important;
-              font-weight: 400;
-              padding-left: 5px;
-            }
-          }
-        }
-
-        .div-forgot {
-          margin-top: 16px;
-          .text-forgot {
+          .sub-title {
             font-size: 15px;
             font-weight: 400;
+            color: #403f3a;
+          }
 
-            a {
-              color: #2f9bfa;
+          .svg-content {
+            margin-top: -60px;
+            margin-bottom: -40px;
+          }
+        }
+
+        .header-form {
+          .title {
+            font-size: 64px;
+            font-weight: 700;
+            font-family: Be Vietnam Pro;
+            color: #121210;
+            margin-bottom: 8px !important;
+          }
+
+          .sub-title {
+            font-size: 15px;
+            font-weight: 400;
+            color: #403f3a;
+            margin-bottom: 0 !important;
+          }
+        }
+
+        .header-reset {
+          .title {
+            font-size: 32px;
+          }
+        }
+
+        .form-section {
+          margin-top: 40px;
+
+          .div-login-info {
+            label {
+              color: #8c8a82;
+              font-size: 11px !important;
+              font-style: normal;
               font-weight: 600;
+              text-transform: uppercase;
+              margin-bottom: 0.25rem;
+            }
+
+            .form-group {
+              margin-bottom: 16px !important;
+              .input-group-text {
+                background-color: inherit;
+                border: none !important;
+                height: 52px;
+                background-color: #f2f1ed;
+              }
+
+              input {
+                font-family: Be Vietnam Pro !important;
+                font-size: 15px !important;
+                border: none !important;
+                font-weight: 400;
+                height: 52px;
+                background-color: #d1d1d1;
+                -webkit-box-shadow: 0 0 0 1000px #f2f1ed inset !important;
+              }
+
+              .ant-picker {
+                border: none !important;
+                height: fit-content;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                background-color: #f2f1ed;
+              }
+            }
+
+            .form-check {
+              margin-top: 8px;
+              label {
+                text-transform: capitalize;
+                font-size: 15px !important;
+                font-weight: 400;
+                padding-left: 5px;
+              }
+            }
+          }
+
+          .div-forgot {
+            margin-top: 16px;
+            .text-forgot {
+              font-size: 15px;
+              font-weight: 400;
+
+              a {
+                color: #2f9bfa;
+                font-weight: 600;
+              }
+            }
+          }
+
+          .div-rule {
+            margin-top: 24px !important;
+
+            .text-title-ul {
+              margin-bottom: 4px !important;
+            }
+
+            .text-li {
+              margin-top: 12px;
             }
           }
         }
 
-        .div-rule {
-          margin-top: 24px !important;
-
-          .text-title-ul {
-            margin-bottom: 4px !important;
-          }
-
-          .text-li {
-            margin-top: 12px;
-          }
+        .form-reset-password {
+          margin-top: unset !important;
         }
-      }
-
-      .form-reset-password {
-        margin-top: unset !important;
       }
     }
 
     .footer-section {
       position: absolute;
-      bottom: 0;
+      bottom: 18px;
       width: 100%;
       padding-right: 312px;
       p {
@@ -592,64 +602,68 @@ body {
     .control-auth-section {
       padding: 80px 26px;
       padding-right: 120px;
-      width: 50%;
+      width: 100%;
       min-height: inherit;
 
-      .login-section {
-        //height: calc((var(--vh, 1vh) * 100) - 70px) !important;
-        margin-top: 60px !important;
-        .header-form {
-          .title {
-            font-size: 48px !important;
+      .control-auth-container {
+        padding-top: unset;
+        padding-left: 0px;
+        .login-section {
+          //height: calc((var(--vh, 1vh) * 100) - 70px) !important;
+          margin-top: 60px !important;
+          .header-form {
+            .title {
+              font-size: 48px !important;
+            }
+            .sub-title {
+              font-size: 12px !important;
+            }
           }
-          .sub-title {
-            font-size: 12px !important;
+        }
+
+        .profile-setting-section {
+          .header-form {
+            .title {
+              font-size: 36px !important;
+            }
+          }
+          .btn-login {
+            height: 48px !important;
+          }
+          .mt-3 {
+            margin-top: 2rem !important;
+          }
+          .form-section {
+            .avatar-section {
+              margin-top: 10px !important;
+              margin-bottom: 15px !important;
+              .employeeAvatar {
+                img {
+                  height: 100px !important;
+                  width: 100px !important;
+                }
+              }
+            }
+
+            .div-login-info {
+              .form-group {
+                .input-group-text {
+                  height: 50px !important;
+                }
+
+                input {
+                  height: 50px !important;
+                }
+              }
+            }
           }
         }
       }
 
       .footer-section {
-      margin-bottom: 20px;
-      padding-right: 120px;
+        bottom: unset !important;
+        padding-right: 120px;
         //width: calc(100% - (56px)) !important;
-      }
-
-      .profile-setting-section {
-        .header-form {
-          .title {
-            font-size: 36px !important;
-          }
-        }
-        .btn-login {
-          height: 48px !important;
-        }
-        .mt-3 {
-          margin-top: 2rem !important;
-        }
-        .form-section {
-          .avatar-section {
-            margin-top: 10px !important;
-            margin-bottom: 15px !important;
-            .employeeAvatar {
-              img {
-                height: 100px !important;
-                width: 100px !important;
-              }
-            }
-          }
-
-          .div-login-info {
-            .form-group {
-              .input-group-text {
-                height: 50px !important;
-              }
-
-              input {
-                height: 50px !important;
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -688,7 +702,7 @@ body {
   .control-auth-section {
     padding: 30px !important;
     //height: calc((var(--vh, 1vh) * 100) - 88px) !important;
-    margin: 10px !important;
+    margin: 0px !important;
     .btn-login {
       height: 40px !important;
     }
@@ -742,7 +756,7 @@ body {
     }
 
     .footer-section {
-      padding-right: 30px !important;
+      padding-right: 48px !important;
     }
   }
 
@@ -789,6 +803,10 @@ body {
             }
           }
         }
+      }
+
+      .footer-section {
+        padding-right: 48px !important;
       }
     }
   }

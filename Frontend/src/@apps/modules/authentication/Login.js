@@ -101,100 +101,114 @@ const Login = (props) => {
       <Helmet>
         <title>{useFormatMessage("auth.authentication")}</title>
       </Helmet>
-      <div className="auth-wrapper auth-basic d-flex align-item-center justify-content-between">
-        <ImageSlider logo={login3D} />
-        <div className="control-auth-section">
-          <Header />
-          <div className="login-section">
-            <div className="header-form">
-              <h1 className="title mb-75">
-                {useFormatMessage("auth.loginBtn")}
-              </h1>
-              <p className="sub-title">
-                {useFormatMessage("auth.welcome_to")}{" "}
-                <span style={{ color: "#F95050" }}>{appName}</span>,{" "}
-                {useFormatMessage("auth.have_a_nice_day")} 🤗
-              </p>
-            </div>
-            {error !== "" && (
-              <Alert color="danger">
-                <div className="alert-body">
-                  <AlertCircle size={15} /> &nbsp;
-                  <span>{useFormatMessage("auth.loginFailed")}</span>
-                </div>
-              </Alert>
-            )}
-            <div className="form-section">
-              <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="div-login-info div-email div-input-prepend">
-                    <label>{useFormatMessage("auth.loginPlaceholder")}</label>
-                    <ErpInput
-                      type="text"
-                      placeholder={useFormatMessage("auth.loginPlaceholder")}
-                      name="login"
-                      label={useFormatMessage("auth.loginLabel")}
-                      nolabel
-                      prepend={<i className="fa-solid fa-at"></i>}
-                      required
-                      useForm={methods}
-                      autoFocus
-                    />
+      <div className="auth-wrapper auth-basic d-flex align-items-start justify-content-between">
+        <Row className="w-100 h-100">
+          <Col sm="6">
+            <ImageSlider logo={login3D} />
+          </Col>
+          <Col sm="6">
+            <div className="control-auth-section">
+              <div className="control-auth-container">
+                <Header />
+                <div className="login-section">
+                  <div className="header-form">
+                    <h1 className="title mb-75">
+                      {useFormatMessage("auth.loginBtn")}
+                    </h1>
+                    <p className="sub-title">
+                      {useFormatMessage("auth.welcome_to")}{" "}
+                      <span style={{ color: "#F95050" }}>{appName}</span>,{" "}
+                      {useFormatMessage("auth.have_a_nice_day")} 🤗
+                    </p>
                   </div>
-                  <div className="div-login-info div-input-prepend-append">
-                    <label>
-                      {useFormatMessage("auth.passwordPlaceholder")}
-                    </label>
-                    <ErpPassword
-                      type="password"
-                      placeholder={useFormatMessage("auth.passwordPlaceholder")}
-                      name="password"
-                      label={useFormatMessage("auth.passwordLabel")}
-                      nolabel
-                      className="input-password"
-                      prepend={<i className="fa-solid fa-lock"></i>}
-                      useForm={methods}
-                      required
-                      defaultValue=""
-                    />
-                  </div>
-                  <div className="div-login-info form-group d-flex justify-content-between align-items-center">
-                    <ErpCheckbox
-                      color="primary"
-                      icon={<Check className="vx-icon" size={16} />}
-                      label={useFormatMessage("auth.remember")}
-                      name="remember"
-                      useForm={methods}
-                      className="checkbox login-checkbox"
-                    />
-                  </div>
+                  {error !== "" && (
+                    <Alert color="danger">
+                      <div className="alert-body">
+                        <AlertCircle size={15} /> &nbsp;
+                        <span>{useFormatMessage("auth.loginFailed")}</span>
+                      </div>
+                    </Alert>
+                  )}
+                  <div className="form-section">
+                    <FormProvider {...methods}>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="div-login-info div-email div-input-prepend">
+                          <label>
+                            {useFormatMessage("auth.loginPlaceholder")}
+                          </label>
+                          <ErpInput
+                            type="text"
+                            placeholder={useFormatMessage(
+                              "auth.enter_your_email_or_username"
+                            )}
+                            name="login"
+                            label={useFormatMessage("auth.loginLabel")}
+                            nolabel
+                            prepend={<i className="fa-solid fa-at"></i>}
+                            required
+                            useForm={methods}
+                            autoFocus
+                          />
+                        </div>
+                        <div className="div-login-info div-input-prepend-append">
+                          <label>
+                            {useFormatMessage("auth.passwordPlaceholder")}
+                          </label>
+                          <ErpPassword
+                            type="password"
+                            placeholder={useFormatMessage(
+                              "auth.enter_password"
+                            )}
+                            name="password"
+                            label={useFormatMessage("auth.passwordLabel")}
+                            nolabel
+                            className="input-password"
+                            prepend={<i className="fa-solid fa-lock"></i>}
+                            useForm={methods}
+                            required
+                            defaultValue=""
+                          />
+                        </div>
+                        <div className="div-login-info form-group d-flex justify-content-between align-items-center">
+                          <ErpCheckbox
+                            color="primary"
+                            icon={<Check className="vx-icon" size={16} />}
+                            label={useFormatMessage("auth.remember")}
+                            name="remember"
+                            useForm={methods}
+                            className="checkbox login-checkbox"
+                          />
+                        </div>
 
-                  <Button.Ripple
-                    color="primary"
-                    type="submit"
-                    className="btn-login"
-                    block
-                    disabled={loading}>
-                    {loading && <Spinner size="sm" className="me-50" />}
-                    {useFormatMessage("auth.loginBtn")}
-                  </Button.Ripple>
-                </form>
-              </FormProvider>
-              <div className="div-forgot">
-                <span className="text-forgot">
-                  {useFormatMessage("auth.forgotPassword")}
-                  <Link to="/forgot-password">
-                    &nbsp;
-                    {useFormatMessage("auth.reset_it")}
-                  </Link>
-                </span>
+                        <Button.Ripple
+                          color="primary"
+                          type="submit"
+                          className="btn-login"
+                          block
+                          disabled={loading}>
+                          {loading && <Spinner size="sm" className="me-50" />}
+                          {useFormatMessage("auth.loginBtn")}
+                        </Button.Ripple>
+                      </form>
+                    </FormProvider>
+                    <div className="div-forgot">
+                      <span className="text-forgot">
+                        {useFormatMessage("auth.forgotPassword")}
+                        <Link to="/forgot-password">
+                          &nbsp;
+                          {useFormatMessage("auth.reset_it")}
+                        </Link>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="footer-section text-center">
+                <p>2023 Life Stud.io</p>
               </div>
             </div>
-          </div>
-          <div className="footer-section text-center">
-            <p>2023 Life Stud.io</p>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </div>
     </Fragment>
   )
