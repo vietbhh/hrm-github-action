@@ -2214,7 +2214,7 @@ $background-color-checkbox: #139ff8;
 
         &.cursor-not-allowed {
           svg path {
-            fill: #c3c7cc;
+           /* fill: #c3c7cc;*/
           }
 
           span {
@@ -3330,7 +3330,13 @@ $background-color-checkbox: #139ff8;
 
     .div-setting {
       margin-top: 15px;
+      .div-setting-label{
+        color: var(--neutral-shade-2, #403F3A);
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
 
+      }
       .form-check {
         input,
         label {
@@ -4165,13 +4171,13 @@ $background-color-checkbox: #139ff8;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 15px;
-        padding: 14px;
+        padding: 14px 0px;
         border-radius: 12px;
 
         .div-switch {
           .form-check-input:checked {
-            border-color: #f5bb63 !important;
-            background-color: #f5bb63 !important;
+            border-color: #2F9BFA !important;
+            background-color: #2F9BFA !important;
           }
         }
 
@@ -4213,8 +4219,9 @@ $background-color-checkbox: #139ff8;
             .form-label {
               font-weight: 500;
               font-size: 12px !important;
+              font-weight: 600;
               line-height: 20px;
-              color: #6d7880;
+              color: var(--neutral-shade-4, #8C8A82);
             }
 
             .div-box__date {
@@ -4244,8 +4251,8 @@ $background-color-checkbox: #139ff8;
 
           .div-switch {
             .form-check-input:checked {
-              border-color: #f5bb63 !important;
-              background-color: #f5bb63 !important;
+              border-color: #2F9BFA !important;
+              background-color: #2F9BFA !important;
             }
           }
 
@@ -4293,9 +4300,10 @@ $background-color-checkbox: #139ff8;
           position: relative;
 
           .div-attendees-show__item {
-            border: 0.5px solid rgb(245, 176, 41, 0.5);
-            border-radius: 20px;
-            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-500, #FFE658);
+            background: var(--other-white, #FFF);
+            padding: 4px 8px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -4313,7 +4321,7 @@ $background-color-checkbox: #139ff8;
             }
 
             .item__text {
-              font-family: "Poppins";
+              font-family: "Be Vietnam Pro";
               font-weight: 400;
               font-size: 12px;
               line-height: 20px;
@@ -4324,15 +4332,14 @@ $background-color-checkbox: #139ff8;
               width: 30px;
               min-width: 30px;
               height: 30px;
-              background: #f5f5f8;
               border-radius: 50%;
               display: flex;
               align-items: center;
               justify-content: center;
               cursor: pointer;
-
+              background : transparent !important;
               &:hover {
-                background: darken($color: #f5f5f8, $amount: 5);
+               /* background: darken($color: #f5f5f8, $amount: 5);  background : none !imp;*/
               }
             }
           }
@@ -4374,6 +4381,14 @@ $background-color-checkbox: #139ff8;
           &:hover {
             border-color: #f9d324;
           }
+          .select-member-select{
+            .select_menu{
+              border-radius: 12px;
+              background: var(--other-bg-screen, #F0F3F6) !important;
+              /* Shadow/Soft */
+              box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.05);
+            }
+          }
         }
 
         .select__control {
@@ -4389,6 +4404,9 @@ $background-color-checkbox: #139ff8;
         .select__multi-value,
         .react-select__multi-value {
           margin-bottom: 3px;
+          border-radius: 8px !important;
+          border: 1px solid var(--primary-500, #FFE658) !important;
+          background: var(--other-white, #FFF) !important;
         }
 
         .select__indicators {
@@ -4562,9 +4580,20 @@ $background-color-checkbox: #139ff8;
     }
 
     .col-label {
-      font-weight: 500;
+      color: var(--neutral-shade-4, #8C8A82);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 16px; /* 133.333% */
+      text-transform: uppercase;
     }
-
+.col-label-option{
+  color: var(--neutral-shade-2, #403F3A);
+font-size: 15px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px; /* 133.333% */
+}
     .form-group {
       width: fit-content !important;
 
@@ -4587,6 +4616,8 @@ $background-color-checkbox: #139ff8;
         text-transform: uppercase;
         cursor: pointer;
         font-size: 11px;
+        color: var(--neutral-shade-2, #403F3A);
+        font-weight: 600;
       }
 
       .repeat-at-option-item.active {
@@ -4603,6 +4634,15 @@ $background-color-checkbox: #139ff8;
       .form-check-input:checked {
         background-color: #ffe658 !important;
         border: none !important;
+      }
+    }
+    .div-repeat-every{
+      border-radius: 12px;
+      background: var(--neutral-shade-10, #F7F7F5);
+      padding: 8px 16px;
+      .input-every-number,.input-after-times{
+        border-radius: 12px;
+        background: var(--neutral-shade-10, #F7F7F5);
       }
     }
   }
@@ -4769,7 +4809,7 @@ $background-color-checkbox: #139ff8;
 
     .btn-arrows {
       background: #c9c7c7;
-      border-radius: 50%;
+      border-radius: 8px;
       width: 30px;
       height: 30px;
       position: absolute;

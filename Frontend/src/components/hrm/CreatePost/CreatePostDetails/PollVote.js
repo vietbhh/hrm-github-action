@@ -224,42 +224,62 @@ const PollVote = (props) => {
           </div>
           <div className="body-content">
             <div className="div-setting">
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_multiple_selection"
-                )}
-                checked={poll_vote_detail.setting.multiple_selection}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "multiple_selection")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_adding_more_options"
-                )}
-                checked={poll_vote_detail.setting.adding_more_options}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "adding_more_options")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_incognito"
-                )}
-                checked={poll_vote_detail.setting.incognito}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "incognito")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.limit_time_for_poll"
-                )}
-                checked={poll_vote_detail.setting.limit_time}
-                onChange={(e) => {
-                  handleChangeSetting(e.target.checked, "limit_time")
-                }}
-              />
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_multiple_selection"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.multiple_selection}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "multiple_selection")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_adding_more_options"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.adding_more_options}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "adding_more_options")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_incognito"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.incognito}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "incognito")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.limit_time_for_poll"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.limit_time}
+                  onChange={(e) => {
+                    handleChangeSetting(e.target.checked, "limit_time")
+                  }}
+                />
+              </div>
             </div>
 
             {poll_vote_detail.setting.limit_time && (
