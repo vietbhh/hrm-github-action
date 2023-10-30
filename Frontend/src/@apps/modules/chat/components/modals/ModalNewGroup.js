@@ -187,7 +187,7 @@ const ModalNewGroup = (props) => {
     return data.map((item, key) => {
       const checked = checkExistSelected(item.id) >= 0 ?? true
       return (
-        <Col sm={12} key={key}>
+        <Col sm={12} key={key} style={{"paddingRight": "0"}}>
           <div
             className="box-member d-flex align-items-center"
             onClick={() => handleSelected(key)}>

@@ -286,6 +286,10 @@ $font-family: Helvetica;
         }
       }
 
+      .scrollbar-container {
+
+      }
+
       .box-member {
         .form-check {
           .form-check-input {
@@ -1083,7 +1087,7 @@ $font-family: Helvetica;
             #div-chats {
               height: 100%;
               background: unset;
-              padding: 0 25px;
+              padding: 0 18px 0 25px;
               .class-default-spinner {
                 height: 100%;
                 align-items: center;
@@ -1118,7 +1122,7 @@ $font-family: Helvetica;
                       background: var(--secondary-500, #2F9BFA);
 
                       .text {
-                        color: var(--neutral-shade-9, #F2F1ED);
+                        color: var(--neutral-shade-9, #F7F7F5);
                         font-family: Be Vietnam Pro;
                         font-size: 15px;
                         font-style: normal;
