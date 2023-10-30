@@ -188,51 +188,54 @@ const FeedCreateAndLoad = (props) => {
         options_employee_department={state.options_employee_department}
         optionsMeetingRoom={state.optionsMeetingRoom}
       />
-      <Card className="card-announcement mb-1 rounded">
-        <CardTitle className="mb-0">
-          <Collapse
-            defaultActiveKey={["1"]}
-            ghost
-            items={items}
-            expandIconPosition={"end"}
-            expandIcon={(panelProps) => {
-              return panelProps.isActive ? (
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
-                    stroke="#696760"
-                    strokeWidth="1.5"
-                    strokeMiterlimit="10"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
-                    stroke="#696760"
-                    strokeWidth="1.5"
-                    strokeMiterlimit="10"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )
-            }}
-          />
-        </CardTitle>
-      </Card>
+      {state.listAnnouncement.length > 0 && (
+        <Card className="card-announcement mb-1 rounded">
+          <CardTitle className="mb-0">
+            <Collapse
+              defaultActiveKey={["1"]}
+              ghost
+              items={items}
+              expandIconPosition={"end"}
+              expandIcon={(panelProps) => {
+                return panelProps.isActive ? (
+                  <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 40 40"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
+                      stroke="#696760"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 40 40"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
+                      stroke="#696760"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )
+              }}
+            />
+          </CardTitle>
+        </Card>
+      )}
+
       <LoadFeed
         dataCreateNew={state.dataCreateNew}
         setDataCreateNew={setDataCreateNew}
