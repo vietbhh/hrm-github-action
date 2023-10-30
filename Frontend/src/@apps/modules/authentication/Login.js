@@ -141,7 +141,7 @@ const Login = (props) => {
                       autoFocus
                     />
                   </div>
-                  <div className="div-login-info mt-2 div-input-prepend-append">
+                  <div className="div-login-info div-input-prepend-append">
                     <label>
                       {useFormatMessage("auth.passwordPlaceholder")}
                     </label>
@@ -158,7 +158,7 @@ const Login = (props) => {
                       defaultValue=""
                     />
                   </div>
-                  <div className="div-login-info form-group d-flex justify-content-between align-items-center mt-2">
+                  <div className="div-login-info form-group d-flex justify-content-between align-items-center">
                     <ErpCheckbox
                       color="primary"
                       icon={<Check className="vx-icon" size={16} />}
@@ -172,7 +172,7 @@ const Login = (props) => {
                   <Button.Ripple
                     color="primary"
                     type="submit"
-                    className="mt-3 btn-login"
+                    className="btn-login"
                     block
                     disabled={loading}>
                     {loading && <Spinner size="sm" className="me-50" />}
@@ -180,7 +180,7 @@ const Login = (props) => {
                   </Button.Ripple>
                 </form>
               </FormProvider>
-              <div className="mt-2">
+              <div className="div-forgot">
                 <span className="text-forgot">
                   {useFormatMessage("auth.forgotPassword")}
                   <Link to="/forgot-password">

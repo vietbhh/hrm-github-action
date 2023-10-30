@@ -446,6 +446,9 @@ const Activation = () => {
               </Form>
             </div>
           </div>
+          <div className="footer-section text-center">
+            <p>2023 Life Stud.io</p>
+          </div>
         </div>
       </div>
     </Fragment>

@@ -27,19 +27,19 @@ const ImageSlider = (props) => {
     breakpoints: {
       1024: {
         slidesPerView: 1,
-        spaceBetween: 20
+        spaceBetween: 0
       },
       768: {
         slidesPerView: 1,
-        spaceBetween: 20
+        spaceBetween: 0
       },
       640: {
         slidesPerView: 1,
-        spaceBetween: 20
+        spaceBetween: 0
       },
       320: {
         slidesPerView: 1,
-        spaceBetween: 10
+        spaceBetween: 0
       }
     }
   }
@@ -49,7 +49,7 @@ const ImageSlider = (props) => {
     <div className="slide-image-section">
       <Swiper {...params} dir={isRtl ? "rtl" : "ltr"}>
         <SwiperSlide>
-          <div>
+          <div className="w-100 d-flex flex-column align-items-center ">
             <img src={logo} className="img3D" />
             <div className="text-center text-description">
                 <h4>{useFormatMessage("auth.swipe_auth.connect_with_your_company")}</h4>

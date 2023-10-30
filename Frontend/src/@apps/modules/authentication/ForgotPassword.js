@@ -14,12 +14,7 @@ import { AlertCircle, ChevronLeft, Info } from "react-feather"
 import Helmet from "react-helmet"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
-import {
-  Alert,
-  Button,
-  Form,
-  Spinner
-} from "reactstrap"
+import { Alert, Button, Form, Spinner } from "reactstrap"
 import Header from "./Header"
 import ImageSlider from "./ImageSlider"
 
@@ -80,7 +75,7 @@ const ForgotPassword = () => {
         <title>{useFormatMessage("auth.authentication")}</title>
       </Helmet>
       <div className="auth-wrapper auth-basic d-flex align-item-center justify-content-between">
-        <ImageSlider logo={password3D}/>
+        <ImageSlider logo={password3D} />
         <div className="control-auth-section">
           <Header />
           <div className="login-section">
@@ -141,13 +136,18 @@ const ForgotPassword = () => {
                   {useFormatMessage("auth.sendResetLink")}
                 </Button.Ripple>
               </Form>
-              <p className="text-left mt-2">
-                <span className="text-forgot">
-                  {useFormatMessage("auth.remember_your_password")}{" "}
-                  <Link to="/login">{useFormatMessage("auth.loginBtn")}</Link>
-                </span>
-              </p>
+              <div className="div-forgot">
+                <p className="text-left mt-2">
+                  <span className="text-forgot">
+                    {useFormatMessage("auth.remember_your_password")}{" "}
+                    <Link to="/login">{useFormatMessage("auth.loginBtn")}</Link>
+                  </span>
+                </p>
+              </div>
             </div>
+          </div>
+          <div className="footer-section text-center">
+            <p>2023 Life Stud.io</p>
           </div>
         </div>
       </div>

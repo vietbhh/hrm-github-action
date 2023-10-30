@@ -730,7 +730,7 @@ const ResetPassword = () => {
                             )}
                           </div>
 
-                          <div className="mt-3">
+                          <div className="div-rule">
                             <p className="text-title-ul">
                               {useFormatMessage("auth.password_must_contain")}
                             </p>
@@ -761,7 +761,7 @@ const ResetPassword = () => {
                           <Button.Ripple
                             type="submit"
                             color="primary"
-                            className="mt-3 mb-1 btn-login"
+                            className="btn-login"
                             block
                             disabled={state.submitting}>
                             {state.submitting && (
@@ -776,6 +776,9 @@ const ResetPassword = () => {
                 )}
               </Fragment>
             )}
+          </div>
+          <div className="footer-section text-center">
+            <p>2023 Life Stud.io</p>
           </div>
         </div>
       </div>
