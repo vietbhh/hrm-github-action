@@ -221,61 +221,68 @@ const ModalCustomRepeatEvent = (props) => {
       )
     } else if (state.repeatEveryTypeOption.value === "month") {
       return (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: "repeat_at_month_option_date",
-                label: (
-                  <div
-                    onClick={() =>
-                      handleChangeRepeatAtMonth({
-                        type: "date",
-                        date: state.init.repeatAtDate
-                      })
-                    }>
-                    {useFormatMessage(
-                      "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.date",
-                      {
-                        date: `${state.init.repeatAtDate.format(
-                          "DD"
-                        )}${getAffix(state.init.repeatAtDate.format("DD"))}`
-                      }
-                    )}
-                  </div>
-                )
-              },
-              {
-                label: (
-                  <div
-                    onClick={() =>
-                      handleChangeRepeatAtMonth({
-                        type: "order_week_date_in_month",
-                        order: state.init.repeatAtOrderWeekDateInMonth,
-                        weekDay: state.init.repeatAtWeekday
-                      })
-                    }>
-                    {useFormatMessage(
-                      "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.order_week_date_in_month",
-                      {
-                        order: useFormatMessage(
-                          `modules.feed.create_event.text.ordinal_number.${state.init.repeatAtOrderWeekDateInMonth}`
-                        ),
-                        week_day: useFormatMessage(
-                          `common.day_in_week.${state.init.repeatAtWeekday}`
-                        )
-                      }
-                    )}
-                  </div>
-                )
-              }
-            ]
-          }}
-          placement="bottom"
-          trigger={["click"]}
-          overlayClassName="feed dropdown-div-repeat">
-          <Row className="mb-2">
-            <Col sm="12">
+        <Row className="mb-2">
+          <Col sm={5}>
+            <span className="col-label">
+              {useFormatMessage(
+                "modules.feed.create_event.text.custom_repeat.repeat_at"
+              )}
+            </span>
+          </Col>
+          <Col sm={7}>
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "repeat_at_month_option_date",
+                    label: (
+                      <div
+                        onClick={() =>
+                          handleChangeRepeatAtMonth({
+                            type: "date",
+                            date: state.init.repeatAtDate
+                          })
+                        }>
+                        {useFormatMessage(
+                          "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.date",
+                          {
+                            date: `${state.init.repeatAtDate.format(
+                              "DD"
+                            )}${getAffix(state.init.repeatAtDate.format("DD"))}`
+                          }
+                        )}
+                      </div>
+                    )
+                  },
+                  {
+                    label: (
+                      <div
+                        onClick={() =>
+                          handleChangeRepeatAtMonth({
+                            type: "order_week_date_in_month",
+                            order: state.init.repeatAtOrderWeekDateInMonth,
+                            weekDay: state.init.repeatAtWeekday
+                          })
+                        }>
+                        {useFormatMessage(
+                          "modules.feed.create_event.text.custom_repeat.repeat_at_month_option.order_week_date_in_month",
+                          {
+                            order: useFormatMessage(
+                              `modules.feed.create_event.text.ordinal_number.${state.init.repeatAtOrderWeekDateInMonth}`
+                            ),
+                            week_day: useFormatMessage(
+                              `common.day_in_week.${state.init.repeatAtWeekday}`
+                            )
+                          }
+                        )}
+                      </div>
+                    )
+                  }
+                ]
+              }}
+              placement="bottom"
+              trigger={["click"]}
+              overlayClassName="feed dropdown-div-repeat">
               <div className="div-repeat">
                 <span className="me-50 text-repeat">
                   {state.chosenRepeatAtMonth?.date !== undefined
@@ -313,9 +320,9 @@ const ModalCustomRepeatEvent = (props) => {
                   />
                 </svg>
               </div>
-            </Col>
-          </Row>
-        </Dropdown>
+            </Dropdown>
+          </Col>
+        </Row>
       )
     }
 
@@ -348,11 +355,12 @@ const ModalCustomRepeatEvent = (props) => {
                   "modules.feed.create_event.text.custom_repeat.repeat_every"
                 )}
               </span>
-              <div className="d-flex align-items-center justify-content-between">
+              <div className="div-repeat-every d-flex align-items-center justify-content-between">
                 <div className="me-50">
                   <ErpInput
                     name="repeat-every-after"
                     type="number"
+                    placeholder="Time"
                     nolabel={true}
                     className=" common-input input-every-number"
                     value={state.repeatEveryAfter}
@@ -390,6 +398,11 @@ const ModalCustomRepeatEvent = (props) => {
           <Row className="mb-1">
             <Col sm={12}>
               <div className="d-flex align-items-center">
+                <span className="col-label-option me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_event.text.custom_repeat.end_time.never"
+                  )}
+                </span>
                 <ErpRadio
                   name="end-time-type-option"
                   checked={state.endTimeTypeOption === "never"}
@@ -399,17 +412,17 @@ const ModalCustomRepeatEvent = (props) => {
                   }
                   useForm={methods}
                 />
-                <span className="col-label">
-                  {useFormatMessage(
-                    "modules.feed.create_event.text.custom_repeat.end_time.never"
-                  )}
-                </span>
               </div>
             </Col>
           </Row>
           <Row className="mb-1">
-            <Col sm={5}>
+            <Col sm={12}>
               <div className="d-flex align-items-center">
+                <span className="col-label-option me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_event.text.custom_repeat.end_time.on_date"
+                  )}
+                </span>
                 <ErpRadio
                   name="end-time-type-option"
                   checked={state.endTimeTypeOption === "on_date"}
@@ -419,28 +432,30 @@ const ModalCustomRepeatEvent = (props) => {
                   }
                   useForm={methods}
                 />
-                <span className="col-label">
-                  {useFormatMessage(
-                    "modules.feed.create_event.text.custom_repeat.end_time.on_date"
-                  )}
-                </span>
               </div>
             </Col>
-            <Col sm={7} className="pick-date">
-              <ErpDate
-                checked={state.endTime === ""}
-                nolabel={true}
-                name="end-time-on-date"
-                value={state.endTimeOnDate}
-                onChange={(e) => handleChangeState(e, "endTimeOnDate")}
-                disabled={state.endTimeTypeOption !== "on_date"}
-                useForm={methods}
-              />
-            </Col>
+            {state.endTimeTypeOption === "on_date" && (
+              <Col sm={12} className="pick-date mt-1">
+                <ErpDate
+                  checked={state.endTime === ""}
+                  nolabel={true}
+                  name="end-time-on-date"
+                  value={state.endTimeOnDate}
+                  onChange={(e) => handleChangeState(e, "endTimeOnDate")}
+                  disabled={state.endTimeTypeOption !== "on_date"}
+                  useForm={methods}
+                />
+              </Col>
+            )}
           </Row>
           <Row className="mb-1">
-            <Col sm={5}>
+            <Col sm={12}>
               <div className="d-flex align-items-center">
+                <span className="col-label-option me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_event.text.custom_repeat.end_time.after"
+                  )}
+                </span>
                 <ErpRadio
                   name="end-time-type-option"
                   checked={state.endTimeTypeOption === "after"}
@@ -450,34 +465,32 @@ const ModalCustomRepeatEvent = (props) => {
                   }
                   useForm={methods}
                 />
-                <span className="col-label">
-                  {useFormatMessage(
-                    "modules.feed.create_event.text.custom_repeat.end_time.after"
-                  )}
-                </span>
               </div>
             </Col>
-            <Col sm={7}>
-              <div className="d-flex align-items-center justify-content-start">
-                <ErpInput
-                  name="end-time-after"
-                  type="number"
-                  nolabel={true}
-                  className="me-50 common-input input-after-times"
-                  value={state.endTimeAfter}
-                  onChange={(e) =>
-                    handleChangeState(e.target.value, "endTimeAfter")
-                  }
-                  disabled={state.endTimeTypeOption !== "after"}
-                  useForm={methods}
-                />
-                <span>
-                  {useFormatMessage(
-                    "modules.feed.create_event.text.custom_repeat.end_time.times"
-                  )}
-                </span>
-              </div>
-            </Col>
+            {state.endTimeTypeOption === "after" && (
+              <Col sm={12} className="mt-1">
+                <div className="div-repeat-every d-flex align-items-center justify-content-start">
+                  <ErpInput
+                    name="end-time-after"
+                    type="number"
+                    placeholder="Time"
+                    nolabel={true}
+                    className="me-50 common-input input-after-times"
+                    value={state.endTimeAfter}
+                    onChange={(e) =>
+                      handleChangeState(e.target.value, "endTimeAfter")
+                    }
+                    disabled={state.endTimeTypeOption !== "after"}
+                    useForm={methods}
+                  />
+                  <span className="ms-auto">
+                    {useFormatMessage(
+                      "modules.feed.create_event.text.custom_repeat.end_time.times"
+                    )}
+                  </span>
+                </div>
+              </Col>
+            )}
           </Row>
         </div>
         <div className="w-100 d-flex justify-content-center">

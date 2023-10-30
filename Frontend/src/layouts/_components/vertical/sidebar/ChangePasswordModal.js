@@ -64,7 +64,7 @@ const ChangePasswordModal = (props) => {
       .min(8, useFormatMessage("validate.min", { num: 8 }))
       .notOneOf(
         [yup.ref("currentPassword"), null],
-        "auth.password_same_currentPassword"
+        useFormatMessage("auth.password_same_currentPassword")
       ),
     repassword: yup
       .string()
@@ -77,7 +77,8 @@ const ChangePasswordModal = (props) => {
     mode: "onChange",
     resolver: yupResolver(validateSchema)
   })
-  const { handleSubmit, reset, watch, formState, getValues } = methods
+  const { handleSubmit, reset, watch, formState, getValues, resetField } =
+    methods
 
   const onSubmit = (values) => {
     setState({
@@ -213,6 +214,14 @@ const ChangePasswordModal = (props) => {
     }
   }, [formState])
 
+  useEffect(() => {
+    setState({
+      checkStringUpper: false,
+      checkCharacters: false,
+      checkNumber: false
+    })
+    //resetField("currentPassword")
+  }, [modal])
   return (
     <React.Fragment>
       <Modal
@@ -245,7 +254,7 @@ const ChangePasswordModal = (props) => {
               validateRules={{
                 validate: {
                   checkCurrentPwd: async (v) =>
-                    (await validateCurrentPwd(v)) ||
+                    ((await validateCurrentPwd(v)) && modal) ||
                     useFormatMessage("validate.currentPwdIncorrect")
                 }
               }}
