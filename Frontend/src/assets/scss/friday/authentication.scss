@@ -28,7 +28,8 @@ body {
     margin-left: auto;
     margin-right: 40px;
     width: 140px;
-    height: 40px;
+    height: 24px;
+    width: 125px;
 
     .form-group {
       margin-bottom: 0;
@@ -36,6 +37,37 @@ body {
       .react-select .select__control {
         background: inherit !important;
         border: none;
+      }
+
+      .select__control {
+        min-height: 24px !important;
+
+        .select__value-container {
+          padding: unset !important;
+
+          .select__single-value {
+            .text-label {
+              p {
+                font-size: 15px;
+                font-weight: 400 !important;
+                color: #696760 !important;
+                line-height: 20px;
+              }
+            }
+          }
+
+          .select__input-container {
+            padding-bottom: unset !important;
+            padding-top: unset !important;
+            margin: unset !important;
+          }
+        }
+
+        .select__indicators {
+          .select__indicator {
+            padding: unset !important;
+          }
+        }
       }
     }
   }
@@ -97,7 +129,7 @@ body {
       justify-content: center;
 
       .swiper {
-        height: 100% !important;
+        min-height: inherit;
       }
 
       .text-description {
@@ -118,14 +150,14 @@ body {
 
   .control-auth-section {
     padding: 24px;
-    padding-right: 256px;
+    padding-right: 280px;
     width: 100%;
     min-height: 100% !important;
     position: relative;
 
     .control-auth-container {
       padding-top: 56px;
-      padding-left: 92px;
+      padding-left: 68px;
       min-height: calc(100vh - 48px - 56px);
 
       .btn-login {
@@ -243,7 +275,7 @@ body {
           .div-login-info {
             label {
               color: #8c8a82;
-              font-size: 11px !important;
+              font-size: 12px !important;
               font-style: normal;
               font-weight: 600;
               text-transform: uppercase;
@@ -325,7 +357,7 @@ body {
       position: absolute;
       bottom: 18px;
       width: 100%;
-      padding-right: 312px;
+      padding-right: 174px;
       p {
         margin-bottom: 0 !important;
       }
