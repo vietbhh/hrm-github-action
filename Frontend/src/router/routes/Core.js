@@ -37,6 +37,7 @@ const ForgotPassword = lazy(() =>
 const ResetPassword = lazy(() =>
   import("@apps/modules/authentication/ResetPassword")
 )
+const Onboard = lazy(() => import("@apps/modules/authentication/Onboard"))
 const Activation = lazy(() => import("@apps/modules/authentication/Activation"))
 const Maintenance = lazy(() => import("@apps/modules/misc/Maintenance"))
 const NotAuthorized = lazy(() => import("@apps/modules/misc/NotAuthorized"))
@@ -190,6 +191,15 @@ const CoreRoutes = [
       layout: "blank",
       publicRoute: true,
       restricted: true
+    }
+  },
+  {
+    path: "/onboard",
+    element: <Onboard />,
+    meta: {
+      layout: "blank",
+      action: "login",
+      resource: "app"
     }
   },
   {
