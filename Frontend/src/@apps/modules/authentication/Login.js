@@ -20,7 +20,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Alert, Button, Spinner } from "reactstrap"
+import { Alert, Button, Col, Row, Spinner } from "reactstrap"
 import Header from "./Header"
 import ImageSlider from "./ImageSlider"
 
@@ -102,7 +102,7 @@ const Login = (props) => {
         <title>{useFormatMessage("auth.authentication")}</title>
       </Helmet>
       <div className="auth-wrapper auth-basic d-flex align-item-center justify-content-between">
-        <ImageSlider logo={login3D}/>
+        <ImageSlider logo={login3D} />
         <div className="control-auth-section">
           <Header />
           <div className="login-section">
