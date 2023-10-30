@@ -381,7 +381,7 @@ const ProfileSidebarGeneral = (props) => {
   const items = [
     {
       key: 'media',
-      label: "Images",
+      label: "Media",
       children:( <div
         className={`div-content ${
           tabView === "media" ? "show" : "hide"
@@ -1095,7 +1095,9 @@ const ProfileSidebarGeneral = (props) => {
                       return (
                         <div
                           key={`${index}${key}`}
-                          className="div-content-file">
+                          className="div-content-file chat-send-file"
+                          style={{"display" : "flex", "justifyContent": "spaceAround"}}
+                          >
                           <DownloadFileComponent
                             src={`/modules/chat/${
                               value?.forward?.forward_id_from
@@ -1108,7 +1110,9 @@ const ProfileSidebarGeneral = (props) => {
                             fileSizeType={
                               item.size_type
                             }></DownloadFileComponent>
-                          <p className="time">{formatTime(value.timestamp)}</p>
+                          <div>
+                            <p className="time">{formatTime(value.timestamp)}</p>
+                          </div>
                         </div>
                       )
                     })
@@ -1119,7 +1123,9 @@ const ProfileSidebarGeneral = (props) => {
                       return (
                         <div
                           key={`${index}${key}`}
-                          className="div-content-file">
+                          className="div-content-file chat-send-file"
+                          style={{"display" : "flex", "justifyContent": "space-between","padding": "12px","marginBottom": "8px"}}
+                          >
                           <DownloadFileComponent
                             src={`/modules/chat/${
                               value?.forward?.forward_id_from
@@ -1132,7 +1138,9 @@ const ProfileSidebarGeneral = (props) => {
                             fileSizeType={
                               item.size_type
                             }></DownloadFileComponent>
-                          <p className="time">{formatTime(value.timestamp)}</p>
+                          <div>
+                            <p className="time">{formatTime(value.timestamp)}</p>
+                          </div>
                         </div>
                       )
                     })

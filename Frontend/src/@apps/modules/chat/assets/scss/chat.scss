@@ -4,6 +4,16 @@ $width-sidebar: 371px;
 $btn-background-color: #377dff;
 $font-family: Helvetica;
 
+.header-navbar {
+  .navbar-container {
+    padding: 11px 30px 11px 29px!important;
+    .div-chat-logo {
+      margin:  0!important;
+    }
+  }
+  
+}
+
 .navbar-2 {
   .chat-application .content-area-wrapper {
     padding: 0 !important;
@@ -21,14 +31,21 @@ $font-family: Helvetica;
     margin-bottom: -35px;
 
     .chat-title {
+      color: var(--neutral-shade-1, #121210);
+      font-family: Be Vietnam Pro;
+      font-size: 48px;
+      font-style: normal;
       font-weight: 600;
-      font-size: 35px;
-      line-height: 16px;
-      color: #32434f;
+      line-height: normal;
     }
 
     .chat-dot {
-      color: #fd3b4c;
+      color: var(--other-chili-500, #E52717);
+      font-family: Be Vietnam Pro;
+      font-size: 48px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
     }
   }
 
@@ -85,6 +102,7 @@ $font-family: Helvetica;
 
 .chat-application {
   padding-left: 0 !important;
+  padding-right: 0!important;
 
   .file-component {
     margin-right: 0;
@@ -371,7 +389,13 @@ $font-family: Helvetica;
               border-color: #f9f9fb;
               background: #f9f9fb;
               height: auto;
-              font-size: 14px;
+              font-family: Be Vietnam Pro;
+              color: var(--neutral-shade-3, #696760);
+              font-feature-settings: 'clig' off, 'liga' off;
+              font-size: 14px!important;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 20px; /* 142.857% */
 
               &:focus {
                 background: #f9f9fb !important;
@@ -457,11 +481,13 @@ $font-family: Helvetica;
 
                 .avatar {
                   height: 40px;
+                  img{
+                    border: none;
+                  }
 
                   span {
-                    border: 2px solid #ffffff;
-                    width: 15px;
-                    height: 15px;
+                    width: 12px;
+                    height: 12px;
                   }
                 }
 
@@ -651,9 +677,12 @@ $font-family: Helvetica;
                   line-height: 20px;
 
                   h6 {
-                    font-weight: 400;
-                    font-size: 16px;
-                    color: #000000;
+                    color: var(--neutral-shade-1, #121210);
+                    font-family: Be Vietnam Pro;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 20px;
                   }
 
                   .chat-header-name-status {
@@ -702,6 +731,7 @@ $font-family: Helvetica;
                   display: flex;
                   align-items: center;
                   margin-left: 0.5rem;
+                  padding: 4px;
 
                   .icon-more {
                     color: #696760;
@@ -1006,6 +1036,21 @@ $font-family: Helvetica;
                   }
                 }
 
+                .chat.chat-right {
+                  .chat-body {
+                    .chat-content {
+                      .text {
+                        color: var(--neutral-shade-9, #F2F1ED);
+                        font-family: Be Vietnam Pro;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px;
+                      }
+                    }
+                  }
+                }
+
                 .chat-content-parent.highlight {
                   background-color: lighten($color: $btn-background-color, $amount: 32);
                   padding: 5px;
@@ -1037,7 +1082,7 @@ $font-family: Helvetica;
 
                       .reaction {
                         cursor: pointer;
-                        width: 22px;
+                        width: 20px;
                       }
                     }
 
@@ -1266,6 +1311,7 @@ $font-family: Helvetica;
                 }
 
                 .chat-left {
+                  padding-left: 3px;
                   .chat-body {
                     .chat-content-reply {
                       justify-content: flex-start;
@@ -1285,6 +1331,11 @@ $font-family: Helvetica;
 
                     .chat-content-message {
                       justify-content: flex-start;
+                      
+                      .chat-content {
+                        margin-left: 12px;
+                        padding: 8px 12px;
+                      }
                     }
 
                     .chat-content {
@@ -1630,7 +1681,7 @@ $font-family: Helvetica;
                     }
 
                     .form-reply-content {
-                      margin: 5px 0 0 10px;
+                      margin: 5px 0 10px 10px;
                       font-size: 14px;
                       overflow: hidden;
                       text-overflow: ellipsis;
@@ -1717,6 +1768,14 @@ $font-family: Helvetica;
 
                   .public-DraftStyleDefault-block {
                     margin: 0;
+                    span {
+                      color: var(--neutral-shade-3, #696760);
+                      font-family: Be Vietnam Pro;
+                      font-size: 15px;
+                      font-style: normal;
+                      font-weight: 400;
+                      line-height: 20px;
+                    }
                   }
                 }
               }
@@ -1762,6 +1821,14 @@ $font-family: Helvetica;
 
               .public-DraftStyleDefault-block {
                 margin: 0;
+                span {
+                  color: var(--neutral-shade-3, #696760);
+                  font-family: Be Vietnam Pro;
+                  font-size: 15px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 20px;
+                }
               }
             }
 
@@ -1870,8 +1937,8 @@ $font-family: Helvetica;
                   }
 
                   #label-avatar {
-                    width: 96px;
-                    height: 96px;
+                    width: 102px;
+                    height: 102px;
                     background: rgba(105, 98, 98, 0.74);
                     border-radius: 50%;
                     display: flex;
@@ -1947,6 +2014,10 @@ $font-family: Helvetica;
                   padding-bottom: 4px;
                 }
 
+                .social {
+                  padding-bottom: 12px!important;
+                }
+
                 .section-text {
                   color: var(--neutral-shade-2, #403F3A);
                   font-family: Be Vietnam Pro;
@@ -1978,6 +2049,8 @@ $font-family: Helvetica;
 
                   .form-check-input {
                     cursor: pointer;
+                    width: 32px;
+                    height: 20px;
                   }
 
                   .form-check-input:checked {
@@ -2471,23 +2544,23 @@ $font-family: Helvetica;
   }
 
   .link-preview-profile-sidebar {
-    border: 1px solid rgb(225, 232, 237);
     height: 60px !important;
     min-height: 60px !important;
-    padding: 0 5px;
+    padding: 12px;
     margin-top: 5px;
+    border: none;
 
     .medium-preview-card {
       .detail-link {
         .image-link-container {
-          min-width: 50px;
-          min-height: 50px;
-          width: 50px;
-          height: 50px;
+          min-width: 40px;
+          min-height: 40px;
+          width: 40px;
+          height: 40px;
 
           .image-link {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
           }
         }
 
@@ -2801,6 +2874,8 @@ $font-family: Helvetica;
   }
 }
 .ant-tabs-nav {
+  margin-bottom: 0px;
+
   .ant-tabs-nav-list {
     width: 100%;
   }
@@ -2826,6 +2901,10 @@ $font-family: Helvetica;
   }
   
 } 
+
+.ant-tabs-content-holder {
+  margin-top: 32px!important;
+}
 
 .file-view-body {
   .div-content-image {

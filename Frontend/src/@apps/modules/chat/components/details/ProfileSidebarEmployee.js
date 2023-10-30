@@ -61,7 +61,7 @@ const ProfileSidebarEmployee = (props) => {
       </div>
 
       <div className="personal-info">
-        <h6 className="section-label mb-1">
+        <h6 className="section-label mb-1 social">
           {useFormatMessage("modules.chat.text.social")}
         </h6>
         <ul className="list-unstyled">
