@@ -1116,6 +1116,10 @@
         "pin": "Pin",
         "un_pin": "Un pin",
         "my_notes": "My notes"
+      },
+      "setting_widgets": {
+        "title": "Setting Widgets",
+        "save_setting": "Save Setting"
       }
     },
     "notification": {
