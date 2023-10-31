@@ -240,7 +240,7 @@ const Onboard = (props) => {
                 </div>
               </div>
               <div className="footer-section text-center">
-                <p>2023 Life Stud.io</p>
+                <p>2023 Friday Co., Ltd</p>
               </div>
             </div>
           </Col>
