@@ -270,14 +270,14 @@ const SearchMessage = (props) => {
                         fill="none">
                         <path
                           d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M17.4167 17.4167L15.8334 15.8334"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -290,7 +290,7 @@ const SearchMessage = (props) => {
                     innerRef={refInputSearchMessage}
                     name="_searchMessage"
                     defaultValue=""
-                    placeholder="Search"
+                    placeholder="Search In Chat"
                     nolabel
                     autoComplete="off"
                     onClick={() => {
@@ -376,9 +376,9 @@ const SearchMessage = (props) => {
                                 getValues("_searchMessage")
                               )}
                             </span>
-                            <span className="time">
+                            {/* <span className="time">
                               {formatTime(value.timestamp)}
-                            </span>
+                            </span> */}
                           </li>
                         )
                       }
@@ -399,37 +399,31 @@ const SearchMessage = (props) => {
       return (
         <Fragment>
           {!state.show_search_message && (
-            <svg
-              onClick={() => {
-                setState({
-                  show_search_message: true,
-                  search_message_groupId: selectedUser.chat.id
-                })
-                setTimeout(() => {
-                  refInputSearchMessage.current.focus()
-                }, 200)
-              }}
-              className="cursor-pointer"
-              xmlns="http://www.w3.org/2000/svg"
-              width="19"
-              height="19"
-              viewBox="0 0 19 19"
-              fill="none">
-              <path
-                d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                stroke="#377DFF"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M17.4167 17.4167L15.8334 15.8334"
-                stroke="#377DFF"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <div className="search-icon">
+              <svg
+                onClick={() => {
+                  setState({
+                    show_search_message: true,
+                    search_message_groupId: selectedUser.chat.id
+                  })
+                  setTimeout(() => {
+                    refInputSearchMessage.current.focus()
+                  }, 200)
+                }}
+                className="cursor-pointer"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none">
+                <g id="vuesax/linear/search-normal">
+                <g id="search-normal">
+                <path id="Vector" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path id="Vector_2" d="M22 22L20 20" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </g>
+                </g>
+              </svg>
+            </div>
           )}
           <div className="div-message-search">
             <FormProvider {...methods}>
@@ -452,14 +446,14 @@ const SearchMessage = (props) => {
                         fill="none">
                         <path
                           d="M9.10421 16.625C13.2578 16.625 16.625 13.2578 16.625 9.10421C16.625 4.95057 13.2578 1.58337 9.10421 1.58337C4.95057 1.58337 1.58337 4.95057 1.58337 9.10421C1.58337 13.2578 4.95057 16.625 9.10421 16.625Z"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M17.4167 17.4167L15.8334 15.8334"
-                          stroke="#377DFF"
+                          stroke="#696760"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"

@@ -84,7 +84,11 @@
         "warning_delete_conversation": {
           "title": "Delete conversation",
           "text": "This is administrator function - when deleting a conversation, the conversation will be deleted for all members in the chat group"
-        }
+        },
+        "user_selected" : "{number} user selected"
+      },
+      "button" : {
+        "new_group": "Create Group"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",

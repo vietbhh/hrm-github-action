@@ -48,9 +48,9 @@ const NotificationItem = (props) => {
       return checkHTMLTag(newStr) ? (
         <p
           dangerouslySetInnerHTML={{ __html: newStr }}
-          className="div-content"></p>
+          className="div-content div-text-notification"></p>
       ) : (
-        <p className="div-content">{newStr}</p>
+        <p className="div-content div-text-notification">{newStr}</p>
       )
     }
   }
@@ -62,7 +62,6 @@ const NotificationItem = (props) => {
 
     return <Fragment>{renderContent(item.title, "title")}</Fragment>
   }
-
   return (
     <div
       className={classnames(" div-noti app-notifications", {

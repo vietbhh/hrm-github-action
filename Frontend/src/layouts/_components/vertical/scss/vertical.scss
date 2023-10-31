@@ -974,7 +974,11 @@ $margin-navigation-a: 22px !default;
 
   .vertical-layout {
     .app-content {
-      padding-top: 70px !important;
+      padding-top: 70px !important; 
+      
+      .div-text-notification {
+        display: block!important;
+      }
     }
 
     .header-navbar {

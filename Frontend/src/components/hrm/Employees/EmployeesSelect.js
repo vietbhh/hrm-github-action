@@ -503,7 +503,9 @@ const EmployeesSelect = (props) => {
                 <PerfectScrollbar
                   style={{
                     maxHeight: "440px",
-                    minHeight: "440px"
+                    minHeight: "440px",
+                    borderRadius: "12px",
+                    backgroundColor: "#F0F3F6"
                   }}>
                   <Row>
                     {renderMemberSelected(state.dataSelected)}
