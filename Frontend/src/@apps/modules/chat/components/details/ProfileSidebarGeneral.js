@@ -23,6 +23,7 @@ import Video from "./Video"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { formatTime } from "@apps/modules/chat/common/common"
 import { Image } from "antd"
+import classnames from 'classnames'
 
 const ProfileSidebarGeneral = (props) => {
   const {
@@ -37,17 +38,7 @@ const ProfileSidebarGeneral = (props) => {
     type
   } = props
 
-  const checkMediaWidth = (x) => {
-    if (x.matches) {
-      return true
-    }
-  
-    return false
-  }
-
-  const checkMobile = checkMediaWidth(
-    window.matchMedia("(max-width: 767.98px)")
-  )
+  const windowWidth = window.innerWidth
 
   const firestoreDb = import.meta.env.VITE_APP_FIRESTORE_DB
   const queryLimit = 20
@@ -1560,16 +1551,12 @@ const ProfileSidebarGeneral = (props) => {
 
   return (
     <>
-      {!checkMobile &&
-        <div className="file-view-body">
-          <div className="body-content">
+      <div className= "file-view-body">
+          <div className={classnames(`body-content` , {'tabs-item-hidden' : windowWidth<767.68 })}>
             <Tabs defaultActiveKey= {tabView}  items={items} onChange={(key) => setTabView(key)} />
           </div>
-        </div>
-      }
 
-      {checkMobile &&
-        <>
+        <div className={classnames({'tabs-item-mobile-hidden' : windowWidth> 767.68})}>
           {type == "group" && 
             <div className="profile-div" style={{ cursor: "unset" }}>
               <span className="title">
@@ -1691,8 +1678,8 @@ const ProfileSidebarGeneral = (props) => {
               </svg>
             </div>
           </div>
-        </>
-      }
+        </div>
+      </div>
     </>
   )
 }

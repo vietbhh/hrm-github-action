@@ -48,7 +48,6 @@ const ModalAddMember = (props) => {
   }
 
   const onSubmit = async (values) => {
-    console.log(values)
     setState({ loading: true })
     const member = selectedGroup.user
     const unseen = selectedGroup.chat.unseen

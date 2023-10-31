@@ -5,6 +5,7 @@ import { Collapse, Dropdown } from "antd"
 import { arrayRemove, arrayUnion } from "firebase/firestore"
 const { Panel } = Collapse
 import { ErpSwitch } from "@apps/components/common/ErpField"
+import classNames from "classnames"
 
 const ProfileSidebarGroup = (props) => {
   const {
@@ -25,17 +26,8 @@ const ProfileSidebarGroup = (props) => {
     setCheckedNotification,
   } = props
 
-  const checkMediaWidth = (x) => {
-    if (x.matches) {
-      return true
-    }
-  
-    return false
-  }
-
-  const checkMobile = checkMediaWidth(
-    window.matchMedia("(max-width: 767.98px)")
-  )
+  const windowWidth = window.innerWidth
+  const isMinWidth = windowWidth < 767.98;
 
   // ** render
   const renderAddMember = () => {
@@ -63,8 +55,8 @@ const ProfileSidebarGroup = (props) => {
 
   return (
     <>
-      {!checkMobile &&
-        <div className="profile-div" style={{ cursor: "unset" }}>
+      
+        <div className= {classNames(`profile-div`,{"hidden-noti": windowWidth < 767.68})} style={{ cursor: "unset" }}>
           <span className="title">
             {useFormatMessage("modules.chat.text.notification")}
           </span>
@@ -85,7 +77,6 @@ const ProfileSidebarGroup = (props) => {
             }}
           />
         </div>
-      }
       {/* <hr /> */}
       <Collapse defaultActiveKey={["1"]} className="collapse-member">
         <Panel

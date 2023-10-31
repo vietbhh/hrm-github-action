@@ -58,16 +58,6 @@ const ChatLog = (props) => {
     handleUpdateGroup
   } = props
 
-  const checkMediaWidth = (x) => {
-    if (x.matches) {
-      return true
-    }
-  
-    return false
-  }
-  const checkMobile = checkMediaWidth(
-    window.matchMedia("(max-width: 767.98px)")
-  )
 
   const { selectedUser, groups } = store
 
@@ -767,26 +757,23 @@ const ChatLog = (props) => {
                         )
                       })
                     }>
-                    {!checkMobile &&
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 20C14 18.8954 13.1046 18 12 18C10.8954 18 10 18.8954 10 20C10 21.1046 10.8954 22 12 22C13.1046 22 14 21.1046 14 20Z" fill="#292D32"/>
-                        <path d="M14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12Z" fill="#292D32"/>
-                        <path d="M14 4C14 2.89543 13.1046 2 12 2C10.8954 2 10 2.89543 10 4C10 5.10457 10.8954 6 12 6C13.1046 6 14 5.10457 14 4Z" fill="#292D32"/>
-                      </svg> 
-                    }
-                    {checkMobile && (
+                    {!isMinWidth ? (
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M14 20C14 18.8954 13.1046 18 12 18C10.8954 18 10 18.8954 10 20C10 21.1046 10.8954 22 12 22C13.1046 22 14 21.1046 14 20Z" fill="#292D32"/>
+                          <path d="M14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12Z" fill="#292D32"/>
+                          <path d="M14 4C14 2.89543 13.1046 2 12 2C10.8954 2 10 2.89543 10 4C10 5.10457 10.8954 6 12 6C13.1046 6 14 5.10457 14 4Z" fill="#292D32"/>
+                        </svg> 
+                     ) : (
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="vuesax/linear/info-circle">
                         <g id="info-circle">
-                        <path id="Vector" d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path id="Vector_2" d="M12 8V13" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path id="Vector_3" d="M11.9945 16H12.0035" stroke="#292D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path id="Vector" d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path id="Vector_2" d="M12 8V13" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path id="Vector_3" d="M11.9945 16H12.0035" stroke="#292D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </g>
                         </g>
                       </svg>
-                      
-                    )}
-                    
+                     )}
                   </button>
                 </div>
               </header>

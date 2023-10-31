@@ -2,7 +2,7 @@ import { ErpInput } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import classnames from "classnames"
-import { Fragment, useEffect, useRef } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { X } from "react-feather"
 import { FormProvider, useForm } from "react-hook-form"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -78,17 +78,8 @@ const UserProfileSidebar = (props) => {
   })
   const { handleSubmit, setValue } = methods
 
-  const checkMediaWidth = (x) => {
-    if (x.matches) {
-      return true
-    }
-  
-    return false
-  }
-
-  const checkMobile = checkMediaWidth(
-    window.matchMedia("(max-width: 767.98px)")
-  )
+  const windowWidth = window.innerWidth
+  const isMinWidth = windowWidth < 767.98;
 
   const submitEdit = (values) => {
     setState({ loadingEdit: true })
@@ -391,8 +382,8 @@ const UserProfileSidebar = (props) => {
                   <label id="label-background" htmlFor="input-background">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M10.5 8H13.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M10.5 8H13.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </label>
                 </>
@@ -417,8 +408,8 @@ const UserProfileSidebar = (props) => {
                     <label id="label-avatar" htmlFor="input-avatar">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M10.5 8H13.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M10.5 8H13.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     </label>
                   </>
@@ -573,8 +564,7 @@ const UserProfileSidebar = (props) => {
 
           {user?.type === "group" && (
             <Fragment>
-              {checkMobile && 
-                <>
+              {isMinWidth ? (<>
                   <ProfileSidebarGeneral
                     checkedNotification={state.checkedNotification}
                     setCheckedNotification={(value) =>
@@ -607,11 +597,8 @@ const UserProfileSidebar = (props) => {
                         setState({ checkedNotification: value })
                     }
                   />
-                </>
-              }
-
-              {!checkMobile && 
-                <>
+                </>) : (
+                  <>
                   <ProfileSidebarGroup
                     setShowMember={() => setState({ showMember: !state.showMember })}
                     selectedGroup={selectedGroup}
@@ -644,7 +631,9 @@ const UserProfileSidebar = (props) => {
                     active = {active}
                   />
                 </>
-              }
+                )}
+
+             
             </Fragment>
           )}
         </PerfectScrollbar>

@@ -148,16 +148,16 @@ const SidebarLeft = (props) => {
                             {
                               pin === false ? 
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 11V23" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
-                              <path d="M6 2L18 2" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
-                              <path d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z" stroke="#696760" stroke-width="1.5"/>
+                              <path d="M12 11V23" stroke="#696760" strokeWidth="1.5" strokeLinecap="round"/>
+                              <path d="M6 2L18 2" stroke="#696760" strokeWidth="1.5" strokeLinecap="round"/>
+                              <path d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z" stroke="#696760" strokeWidth="1.5"/>
                             </svg> : 
                               <>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                  <path d="M12 11V23" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
-                                  <path d="M6 2L18 2" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
-                                  <path d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z" stroke="#696760" stroke-width="1.5"/>
-                                  <path d="M21 4L3 19" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
+                                  <path d="M12 11V23" stroke="#696760" strokeWidth="1.5" strokeLinecap="round"/>
+                                  <path d="M6 2L18 2" stroke="#696760" strokeWidth="1.5" strokeLinecap="round"/>
+                                  <path d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z" stroke="#696760" strokeWidth="1.5"/>
+                                  <path d="M21 4L3 19" stroke="#696760" strokeWidth="1.5" strokeLinecap="round"/>
                                 </svg>
                               </>
                             }
@@ -192,9 +192,9 @@ const SidebarLeft = (props) => {
                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="vuesax/linear/notification">
                                 <g id="notification">
-                                <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M12.5 17.2629C17.4758 17.2629 19.7777 16.6118 20 13.9985C20 11.3869 18.3951 11.5549 18.3951 8.35062C18.3951 5.84774 16.0693 3 12.5 3C8.93068 3 6.60487 5.84774 6.60487 8.35062C6.60487 11.5549 5 11.3869 5 13.9985C5.22319 16.6217 7.52509 17.2629 12.5 17.2629Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path id="Stroke 3" d="M14.608 19.9714C13.4043 21.3347 11.5267 21.3508 10.3115 19.9714" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path id="Line 1" d="M21 4L3 19" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"/>
+                                <path id="Stroke 1" fillRule="evenodd" clipRule="evenodd" d="M12.5 17.2629C17.4758 17.2629 19.7777 16.6118 20 13.9985C20 11.3869 18.3951 11.5549 18.3951 8.35062C18.3951 5.84774 16.0693 3 12.5 3C8.93068 3 6.60487 5.84774 6.60487 8.35062C6.60487 11.5549 5 11.3869 5 13.9985C5.22319 16.6217 7.52509 17.2629 12.5 17.2629Z" stroke="#292D32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path id="Stroke 3" d="M14.608 19.9714C13.4043 21.3347 11.5267 21.3508 10.3115 19.9714" stroke="#292D32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path id="Line 1" d="M21 4L3 19" stroke="#292D32" strokeWidth="1.5" strokeLinecap="round"/>
                                 </g>
                                 </g>
                               </svg>
@@ -203,8 +203,8 @@ const SidebarLeft = (props) => {
                                 <g id="vuesax/linear/notification">
                                 <g id="notification">
                                 <g id="Notification">
-                                <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M12.5 19C18.8027 19 21.7184 18.1783 22 14.8802C22 11.5844 19.9672 11.7964 19.9672 7.75255C19.9672 4.59388 17.0211 1 12.5 1C7.97886 1 5.03283 4.59388 5.03283 7.75255C5.03283 11.7964 3 11.5844 3 14.8802C3.28271 18.1908 6.19845 19 12.5 19Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path id="Stroke 3" d="M14.608 21.9717C13.4043 23.3349 11.5267 23.3511 10.3115 21.9717" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path id="Stroke 1" fillRule="evenodd" clipRule="evenodd" d="M12.5 19C18.8027 19 21.7184 18.1783 22 14.8802C22 11.5844 19.9672 11.7964 19.9672 7.75255C19.9672 4.59388 17.0211 1 12.5 1C7.97886 1 5.03283 4.59388 5.03283 7.75255C5.03283 11.7964 3 11.5844 3 14.8802C3.28271 18.1908 6.19845 19 12.5 19Z" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path id="Stroke 3" d="M14.608 21.9717C13.4043 23.3349 11.5267 23.3511 10.3115 21.9717" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 </g>
                                 </g>
                                 </g>
@@ -531,8 +531,8 @@ const SidebarLeft = (props) => {
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <g id="vuesax/linear/add">
                       <g id="add">
-                      <path id="Vector" d="M6 12H18" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path id="Vector_2" d="M12 18V6" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path id="Vector" d="M6 12H18" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path id="Vector_2" d="M12 18V6" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </g>
                       </g>
                     </svg>

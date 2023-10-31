@@ -106,14 +106,7 @@ class DownloadFile extends Component {
             {this._renderIcon(this.props.fileType)}
           </div>
           <div className="file-content">
-            <span className="file-text" 
-              style={{
-                "width": "150px",
-                "overflow":"hidden",
-                "whiteSpace": "nowrap",
-                "textOverflow": "ellipsis"
-                }}
-            >
+            <span className="file-text" >
               {this.props.fileName}</span>
             <span className="file-size">
               {this.props.fileSize} {this.props.fileSizeType}

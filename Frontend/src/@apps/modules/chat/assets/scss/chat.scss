@@ -130,6 +130,11 @@ $font-family: Helvetica;
 
       .file-text {
         font-size: 14px;
+        width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
       }
 
       .file-size {
@@ -724,6 +729,13 @@ $font-family: Helvetica;
                 .avatar img {
                   width: 48px;
                   height: 48px;
+                }
+
+                .avatar-status-online {
+                  background-color: var(--success-500, #56E293)!important;
+                }
+                .avatar-status-away {
+                  background-color: var(--success-500, #FFED2D)!important;
                 }
 
                 .search-icon {
@@ -1809,6 +1821,13 @@ $font-family: Helvetica;
 
                 }
               }
+
+              .emoji-web-hidden {
+                display: none;
+              }
+              .emoji-mobile-hidden {
+                display: none;
+              }
             }
 
             .wrapper-message {
@@ -2184,6 +2203,9 @@ $font-family: Helvetica;
                   }
                 }
               }
+              .hidden-noti {
+                display: none;
+              }
 
               .profile-div.member {
                 margin-bottom: 0px;
@@ -2411,6 +2433,7 @@ $font-family: Helvetica;
                           text-align: left;
 
                           .file-text {
+                            width: 150px;
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
@@ -2520,6 +2543,9 @@ $font-family: Helvetica;
                     display: none;
                   }
                 }
+              }
+              .tabs-item-show {
+                display: none;
               }
             }
 
@@ -3066,5 +3092,13 @@ $font-family: Helvetica;
       }
     }
   }
+  .tabs-item-hidden {
+    display: none;
+  }
+  .tabs-item-mobile-hidden {
+    display: none;
+  }
 }
+
+
 
