@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react"
 import { Smile } from "react-feather"
 import EmojiComponent from "./Emoji"
 import GifComponent from "./Gif"
-import Sticker from "./Sticker"
 import classNames from "classnames"
+import Sticker from "./stickers/Sticker"
 
 const index = (props) => {
   const {
@@ -14,7 +14,8 @@ const index = (props) => {
     setReplyingDefault,
     handleInsertEditorState,
     showEmotion,
-    setShowEmotion
+    setShowEmotion,
+    ...rest
   } = props
 
   const windowWidth = window.innerWidth
@@ -65,7 +66,16 @@ const index = (props) => {
     {
       key: "2",
       label: "Stickers",
-      children: <Sticker />
+      children: (
+        <Sticker
+          sendMessage={sendMessage}
+          selectedUser={selectedUser}
+          focusInputMsg={focusInputMsg}
+          setReplyingDefault={setReplyingDefault}
+          setShowEmotion={setShowEmotion}
+          setStatePostComment={rest.setStatePostComment}
+        />
+      )
     },
     {
       key: "3",
@@ -77,6 +87,7 @@ const index = (props) => {
           focusInputMsg={focusInputMsg}
           setReplyingDefault={setReplyingDefault}
           setShowEmotion={setShowEmotion}
+          setStatePostComment={rest.setStatePostComment}
         />
       )
     }
@@ -84,12 +95,14 @@ const index = (props) => {
 
   return (
     <>
-      <div
-        className={`emotions-dropdown-menu ${showEmotion ? "show" : ""}`}
-        ref={emotionRef}>
-        <div className="emotions-dropdown-arrow"></div>
-        <Tabs defaultActiveKey="1" tabPosition={"bottom"} items={items} />
-      </div>
+      {showEmotion === true && (
+        <div
+          className={`emotions-dropdown-menu ${showEmotion ? "show" : ""}`}
+          ref={emotionRef}>
+          <div className="emotions-dropdown-arrow"></div>
+          <Tabs defaultActiveKey="1" tabPosition={"bottom"} items={items} />
+        </div>
+      )}
       <div
         ref={emotionIconRef}
         className="cursor-pointer text-secondary"

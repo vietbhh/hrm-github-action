@@ -56,7 +56,7 @@ const LoadPost = (props) => {
     handleUnPinPost
   } = props
   const [state, setState] = useMergedState({
-    comment_more_count_original: data.comment_more_count,
+    comment_more_count_original: data?.comment_more_count,
     focusCommentForm: false,
 
     //
@@ -70,7 +70,6 @@ const LoadPost = (props) => {
     modalWith: false,
     dataUserOtherWith: []
   })
-
   const dispatch = useDispatch()
 
   // ** function
@@ -79,7 +78,6 @@ const LoadPost = (props) => {
       postCommentModal: !state.postCommentModal
     })
   }
-
   const setCommentMoreCountOriginal = (value = 0) => {
     setState({ comment_more_count_original: value })
   }
@@ -132,6 +130,8 @@ const LoadPost = (props) => {
           setCommentMoreCountOriginal={setCommentMoreCountOriginal}
           customAction={customAction}
           isViewEditHistory={isViewEditHistory}
+          toggleModalWith={toggleModalWith}
+          setDataUserOtherWith={setDataUserOtherWith}
         />
       )
     }

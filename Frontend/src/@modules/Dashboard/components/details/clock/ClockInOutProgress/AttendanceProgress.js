@@ -17,9 +17,10 @@ const AttendanceProgress = (props) => {
       <Progress
         type="circle"
         percent={progress}
-        strokeWidth={8}
+        strokeWidth={20}
+        strokeColor="#4986FF"
         size={progressWidth ?? "default"}
-        strokeColor="#69dca1"
+        trailColor={"#DBE7FF"}
       />
     </Fragment>
   )

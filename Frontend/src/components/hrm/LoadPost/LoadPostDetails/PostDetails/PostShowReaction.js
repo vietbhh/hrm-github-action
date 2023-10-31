@@ -162,7 +162,7 @@ const PostShowReaction = (props) => {
         <div className="reaction-right">
           {data.comment_count > 0 && (
             <div
-              className="div-comment"
+              className="div-comment me-2"
               style={{ cursor: "pointer" }}
               onClick={() => handleClickCommentButton()}>
               {data.comment_count}{" "}

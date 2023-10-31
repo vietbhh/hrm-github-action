@@ -3681,7 +3681,7 @@
           "add_description": "Add description...",
           "choose_a_background": "Choose a background",
           "create_poll": "Create poll",
-          "question": "Question?",
+          "question": "Question",
           "enter_question": "Enter question",
           "add_options": "Add options",
           "option": "Option {number}",
@@ -3727,7 +3727,7 @@
           "title": "Endorsement",
           "appreciation": "Endorsement",
           "select_member_for_endorsing": "Select member for endorsing",
-          "add_cover_photo": "Add cover photo",
+          "add_cover_photo": "Edit cover",
           "list_badges": "List badges",
           "editor_placeholder": "Write something about this...",
           "empty_member": "Please chose members.",
@@ -3786,7 +3786,9 @@
           "share_to_a_group": "Share to a group",
           "this_post_has_been_edited": "This post has been edited",
           "post_pending": "Your article has been posted and is in the review process, please wait for moderation!",
-          "approve_setting": "Post Approval Setting"
+          "approve_setting": "Post Approval Setting",
+          "successfully_copied" : "Successfully Copied",
+          "unsaved" : "Unsaved"
         },
         "react": {
           "like": "Like",

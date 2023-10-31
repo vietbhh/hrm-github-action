@@ -1,5 +1,6 @@
 import { useFormatMessage } from "@apps/utility/common"
 import { Button } from "antd"
+import { stickerDefaultName } from "../../common/constant"
 
 export default function StickerModalFooter({ ...rest }) {
   let Footer = <></>
@@ -24,7 +25,7 @@ export default function StickerModalFooter({ ...rest }) {
     )
   } else if (
     rest.state?.modalMode === "detail" &&
-    rest.state?.stickerDetail.name !== "sticker_default"
+    rest.state?.stickerDetail.name !== stickerDefaultName
   ) {
     // detail
 
@@ -56,7 +57,7 @@ export default function StickerModalFooter({ ...rest }) {
   } else {
     // create
     Footer =
-      rest.state?.stickerDetail?.name !== "sticker_default" ? (
+      rest.state?.stickerDetail?.name !== stickerDefaultName ? (
         <Button type="primary" htmlType="submit" loading={rest?.loading}>
           {!rest.state?.stickerEdit
             ? useFormatMessage("modules.sticker.modal.button.create")

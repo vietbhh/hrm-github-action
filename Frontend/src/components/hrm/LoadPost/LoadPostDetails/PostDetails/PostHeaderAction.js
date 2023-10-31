@@ -96,7 +96,7 @@ const PostHeaderAction = (props) => {
             <span className="div-text__title">
               {!_.isEmpty(data.user_saved) &&
               data.user_saved.indexOf(userId) !== -1
-                ? useFormatMessage("modules.feed.post.text.saved")
+                ? useFormatMessage("modules.feed.post.text.unsaved")
                 : useFormatMessage("modules.feed.post.text.save_post")}
             </span>
             <span className="div-text__des">
@@ -307,6 +307,9 @@ const PostHeaderAction = (props) => {
             data.ref ? data.ref : data._id
           }`
         )
+        notification.showSuccess({
+          text: useFormatMessage("modules.feed.post.text.successfully_copied")
+        })
       },
       label: (
         <a

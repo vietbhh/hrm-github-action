@@ -37,6 +37,7 @@ import * as yup from "yup"
 import Header from "./Header"
 import { useTranslation } from "react-i18next"
 import { updateListUsers } from "@store/app/users"
+import ImageSlider from "./ImageSlider"
 
 const Activation = () => {
   const { i18n } = useTranslation()
@@ -68,7 +69,9 @@ const Activation = () => {
     })
     axios
       .get(
-        `${import.meta.env.VITE_APP_API_URL}/auth/active/validate?token=${token}`
+        `${
+          import.meta.env.VITE_APP_API_URL
+        }/auth/active/validate?token=${token}`
       )
       .then((res) => {
         setState({
@@ -259,198 +262,193 @@ const Activation = () => {
       <Helmet>
         <title>{useFormatMessage("auth.authentication")}</title>
       </Helmet>
-      <Header />
-
-      <div className="auth-wrapper auth-basic page-reset px-2">
-        <img src={password3D} className="img3D" />
-        <div
-          className={classNames("auth-inner py-2", {
-            "auth-inner-custom":
-              state.checkPassword === true ||
-              state.checkCharacters === true ||
-              state.checkRePassword === true ||
-              state.checkRePasswordMatch,
-            "auth-inner-congratulations": state.success
-          })}>
-          <Card className="mb-0">
-            <CardBody>
-              {state.validating && <FormLoader />}
-              {!state.validating && !state.validate && (
-                <Fragment>
-                  <Alert color="danger">
-                    <div className="alert-body">
-                      <AlertCircle size={15} />{" "}
-                      <span className="ms-1">
-                        <strong>
-                          {useFormatMessage("auth.active_token_expired")}
-                        </strong>
-                      </span>
-                    </div>
-                  </Alert>
-                  <p>{useFormatMessage("auth.active_token_expired_text")}</p>
-                  <p className="text-center mt-2">
-                    <Link to="/">
-                      <ChevronLeft className="me-25" size={14} />
-                      <span className="align-middle">
-                        {useFormatMessage("button.back")}
-                      </span>
-                    </Link>
-                  </p>
-                </Fragment>
-              )}
-              {!state.validating && state.validate && (
-                <Fragment>
-                  <CardTitle tag="h4" className="mb-1 text-title">
-                    {useFormatMessage("auth.activeAccount")} 👋🏻
-                  </CardTitle>
-                  <CardText className="mb-2">
-                    {useFormatMessage("auth.activeAccountText")}
-                  </CardText>
-                  {state.error && (
-                    <Alert color="danger">
-                      <div className="alert-body">
-                        <AlertCircle size={15} /> {state.msg}
-                      </div>
-                    </Alert>
-                  )}
-                  {state.success && (
-                    <Alert color="success">
-                      <div className="alert-body">
-                        <Info size={15} /> {state.msg}
-                      </div>
-                    </Alert>
-                  )}
-                  <Form
-                    className="auth-reset-password-form"
-                    onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mt-2">
-                      <ErpInput
-                        type="text"
-                        placeholder={useFormatMessage("auth.usernameLabel")}
-                        name="login"
-                        label={useFormatMessage("auth.usernameLabel")}
-                        prepend={<i className="fa-solid fa-user"></i>}
-                        nolabel
-                        readOnly
-                        defaultValue={state.accountUsername}
-                      />
-                    </div>
-                    <div className="mt-2">
-                      <ErpInput
-                        type="text"
-                        placeholder={useFormatMessage("auth.emailLabel")}
-                        name="email"
-                        label={useFormatMessage("auth.emailLabel")}
-                        prepend={<i className="fa-solid fa-at"></i>}
-                        readOnly
-                        nolabel
-                        defaultValue={state.accountEmail}
-                      />
-                    </div>
-
-                    <div className="d-flex mt-2">
-                      <ErpPassword
-                        name="password"
-                        useForm={methods}
-                        autoFocus
-                        required
-                        label={useFormatMessage("auth.passwordLabel")}
-                        nolabel
-                        prepend={<i className="fa-solid fa-lock"></i>}
-                        placeholder={useFormatMessage("auth.passwordLabel")}
-                        defaultValue=""
-                      />
-                      {state.checkCharacters &&
-                        state.checkNumber &&
-                        state.checkStringUpper && (
-                          <div className="ms-auto">
-                            <div className="check check-primary">
-                              <i className="fa-solid fa-check"></i>
-                            </div>
-                          </div>
-                        )}
-                      {state.checkPassword && (
-                        <div className="ms-auto">
-                          <div className="check check-danger">
-                            <i className="fa-solid fa-exclamation"></i>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-2 d-flex">
-                      <ErpPassword
-                        name="repassword"
-                        useForm={methods}
-                        required
-                        label={useFormatMessage("auth.passwordLabelConfirm")}
-                        nolabel
-                        prepend={<i className="fa-solid fa-lock"></i>}
-                        placeholder={useFormatMessage(
-                          "auth.passwordLabelConfirm"
-                        )}
-                        className="input-password"
-                        defaultValue=""
-                      />
-                      {state.checkRePassword && (
-                        <div className="ms-auto">
-                          <div className="check check-danger">
-                            <i className="fa-solid fa-exclamation"></i>
-                          </div>
-                        </div>
-                      )}
-                      {state.checkRePasswordMatch && (
+      <div className="auth-wrapper auth-basic d-flex align-item-center justify-content-between">
+        <ImageSlider logo={password3D} />
+        <div className="control-auth-section">
+          <Header />
+          <div className="login-section activation-section">
+            {state.validating && <FormLoader />}
+            {!state.validating && !state.validate && (
+              <Fragment>
+                <Alert color="danger">
+                  <div className="alert-body">
+                    <AlertCircle size={15} />{" "}
+                    <span className="ms-1">
+                      <strong>
+                        {useFormatMessage("auth.active_token_expired")}
+                      </strong>
+                    </span>
+                  </div>
+                </Alert>
+                <p>{useFormatMessage("auth.active_token_expired_text")}</p>
+                <p className="text-center mt-2">
+                  <Link to="/">
+                    <ChevronLeft className="me-25" size={14} />
+                    <span className="align-middle">
+                      {useFormatMessage("button.back")}
+                    </span>
+                  </Link>
+                </p>
+              </Fragment>
+            )}
+            <div className="header-form">
+              <h1 className="title mb-75">
+                {useFormatMessage("auth.activeAccount")} 👋🏻
+              </h1>
+              <p className="sub-title">
+                {useFormatMessage("auth.activeAccountText")}
+              </p>
+            </div>
+            {state.error && (
+              <Alert color="danger">
+                <div className="alert-body">
+                  <AlertCircle size={15} /> {state.msg}
+                </div>
+              </Alert>
+            )}
+            {state.success && (
+              <Alert color="success">
+                <div className="alert-body">
+                  <Info size={15} /> {state.msg}
+                </div>
+              </Alert>
+            )}
+            <div className="form-section form-reset-password">
+              <Form
+                className="auth-reset-password-form"
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className="div-login-info">
+                  <label>{useFormatMessage("auth.usernameLabel")}</label>
+                  <ErpInput
+                    type="text"
+                    placeholder={useFormatMessage("auth.usernameLabel")}
+                    name="login"
+                    label={useFormatMessage("auth.usernameLabel")}
+                    prepend={<i className="fa-solid fa-user"></i>}
+                    nolabel
+                    readOnly
+                    defaultValue={state.accountUsername}
+                  />
+                </div>
+                <div className="div-login-info">
+                  <label>{useFormatMessage("auth.emailLabel")}</label>
+                  <ErpInput
+                    type="text"
+                    placeholder={useFormatMessage("auth.emailLabel")}
+                    name="email"
+                    label={useFormatMessage("auth.emailLabel")}
+                    prepend={<i className="fa-solid fa-at"></i>}
+                    readOnly
+                    nolabel
+                    defaultValue={state.accountEmail}
+                  />
+                </div>
+                <div className="div-login-info">
+                  <label>{useFormatMessage("auth.passwordLabel")}</label>
+                  <div className="d-flex">
+                    <ErpPassword
+                      name="password"
+                      useForm={methods}
+                      autoFocus
+                      required
+                      label={useFormatMessage("auth.passwordLabel")}
+                      nolabel
+                      prepend={<i className="fa-solid fa-lock"></i>}
+                      placeholder={useFormatMessage("auth.passwordLabel")}
+                      defaultValue=""
+                    />
+                    {state.checkCharacters &&
+                      state.checkNumber &&
+                      state.checkStringUpper && (
                         <div className="ms-auto">
                           <div className="check check-primary">
                             <i className="fa-solid fa-check"></i>
                           </div>
                         </div>
                       )}
-                    </div>
-
-                    <div className="mt-2">
-                      <p className="text-title-ul">
-                        {useFormatMessage("auth.password_must_contain")}
-                      </p>
-                      <ul>
-                        <li
-                          className={classNames("text-li", {
-                            "active-li": state.checkStringUpper
-                          })}>
-                          {useFormatMessage("auth.at_least_1_upper")}
-                        </li>
-                        <li
-                          className={classNames("text-li", {
-                            "active-li": state.checkNumber
-                          })}>
-                          {useFormatMessage("auth.at_least_1_number")}
-                        </li>
-                        <li
-                          className={classNames("text-li", {
-                            "active-li": state.checkCharacters
-                          })}>
-                          {useFormatMessage("auth.at_least_characters", {
-                            number_character_password: 8
-                          })}
-                        </li>
-                      </ul>
-                    </div>
-
-                    <Button.Ripple
-                      type="submit"
-                      color="primary"
-                      block
-                      className="mt-3 mb-1 btn-login"
-                      disabled={state.submitting}>
-                      {state.submitting && (
-                        <Spinner size="sm" className="me-50" />
-                      )}{" "}
-                      {useFormatMessage("auth.activeBtn")}
-                    </Button.Ripple>
-                  </Form>
-                </Fragment>
-              )}
-            </CardBody>
-          </Card>
+                    {state.checkPassword && (
+                      <div className="ms-auto">
+                        <div className="check check-danger">
+                          <i className="fa-solid fa-exclamation"></i>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="div-login-info">
+                  <label>{useFormatMessage("auth.passwordLabelConfirm")}</label>
+                  <div className="d-flex w-100">
+                    <ErpPassword
+                      name="repassword"
+                      useForm={methods}
+                      required
+                      label={useFormatMessage("auth.passwordLabelConfirm")}
+                      nolabel
+                      prepend={<i className="fa-solid fa-lock"></i>}
+                      placeholder={useFormatMessage(
+                        "auth.passwordLabelConfirm"
+                      )}
+                      className="input-password"
+                      defaultValue=""
+                    />
+                    {state.checkRePassword && (
+                      <div className="ms-auto">
+                        <div className="check check-danger">
+                          <i className="fa-solid fa-exclamation"></i>
+                        </div>
+                      </div>
+                    )}
+                    {state.checkRePasswordMatch && (
+                      <div className="ms-auto">
+                        <div className="check check-primary">
+                          <i className="fa-solid fa-check"></i>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <p className="text-title-ul">
+                    {useFormatMessage("auth.password_must_contain")}
+                  </p>
+                  <ul>
+                    <li
+                      className={classNames("text-li", {
+                        "active-li": state.checkStringUpper
+                      })}>
+                      {useFormatMessage("auth.at_least_1_upper")}
+                    </li>
+                    <li
+                      className={classNames("text-li", {
+                        "active-li": state.checkNumber
+                      })}>
+                      {useFormatMessage("auth.at_least_1_number")}
+                    </li>
+                    <li
+                      className={classNames("text-li", {
+                        "active-li": state.checkCharacters
+                      })}>
+                      {useFormatMessage("auth.at_least_characters", {
+                        number_character_password: 8
+                      })}
+                    </li>
+                  </ul>
+                </div>
+                <Button.Ripple
+                  type="submit"
+                  color="primary"
+                  block
+                  className="mt-3 mb-1 btn-login"
+                  disabled={state.submitting}>
+                  {state.submitting && <Spinner size="sm" className="me-50" />}{" "}
+                  {useFormatMessage("auth.activeBtn")}
+                </Button.Ripple>
+              </Form>
+            </div>
+          </div>
+          <div className="footer-section text-center">
+            <p>2023 Life Stud.io</p>
+          </div>
         </div>
       </div>
     </Fragment>

@@ -19,7 +19,9 @@ const LoadPostMedia = (props) => {
     setData,
     setCommentMoreCountOriginal,
     customAction = {}, // custom dropdown post header
-    isViewEditHistory = false // only view edit history
+    isViewEditHistory = false, // only view edit history,
+    toggleModalWith,
+    setDataUserOtherWith
   } = props
   const [state, setState] = useMergedState({
     modalPostImageDetail: false,
@@ -265,6 +267,8 @@ const LoadPostMedia = (props) => {
           dataMention={dataMention}
           customAction={customAction}
           setDataPost={setData}
+          toggleModalWith={toggleModalWith}
+          setDataUserOtherWith={setDataUserOtherWith}
         />
       )}
     </Fragment>

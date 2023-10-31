@@ -31,15 +31,19 @@ export const stickerList = async (req, res, next) => {
         const filters = {}
         let skip = 0
         let limit = 0
+        const perPage = req.query.perPage ? req.query.perPage:  9 // items in page
 
         if (req.query.search) {
             filters.name = {$regex: req.query.search.trim(), $options: "i"}
         }
 
         if (req.query.page) {
-            const perPage = 9 // items in page
             skip = (req.query.page - 1) * perPage
             limit = perPage
+        }
+
+        if (req.query.default) {
+            filters.default = req.query.default
         }
 
         const results = await StickerMongoModel.find(filters)

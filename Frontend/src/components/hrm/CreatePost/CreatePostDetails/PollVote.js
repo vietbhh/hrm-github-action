@@ -8,7 +8,7 @@ import { Tooltip } from "antd"
 import classNames from "classnames"
 import React, { Fragment, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { Modal, ModalBody } from "reactstrap"
+import { Button, Modal, ModalBody } from "reactstrap"
 import dayjs from "dayjs"
 
 const PollVote = (props) => {
@@ -69,7 +69,6 @@ const PollVote = (props) => {
   return (
     <Fragment>
       <div className="feed modal-create-post modal-poll-vote">
-        <div className="body-header"></div>
         <div className="body-content">
           <Tooltip
             title={useFormatMessage(
@@ -96,19 +95,31 @@ const PollVote = (props) => {
               className="div-btn-setting"
               onClick={() => toggleModalPollVoteSetting()}>
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="19"
-                viewBox="0 0 21 19"
-                fill="none">
+                width="52"
+                height="52"
+                viewBox="0 0 52 52"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="52" height="52" rx="16" fill="#F2F1ED" />
                 <path
-                  d="M18.1 6.6589C16.29 6.6589 15.55 5.3789 16.45 3.8089C16.97 2.8989 16.66 1.7389 15.75 1.2189L14.02 0.228901C13.23 -0.241099 12.21 0.0389014 11.74 0.828901L11.63 1.0189C10.73 2.5889 9.25 2.5889 8.34 1.0189L8.23 0.828901C7.78 0.0389014 6.76 -0.241099 5.97 0.228901L4.24 1.2189C3.33 1.7389 3.02 2.9089 3.54 3.8189C4.45 5.3789 3.71 6.6589 1.9 6.6589C0.86 6.6589 0 7.5089 0 8.5589V10.3189C0 11.3589 0.85 12.2189 1.9 12.2189C3.71 12.2189 4.45 13.4989 3.54 15.0689C3.02 15.9789 3.33 17.1389 4.24 17.6589L5.97 18.6489C6.76 19.1189 7.78 18.8389 8.25 18.0489L8.36 17.8589C9.26 16.2889 10.74 16.2889 11.65 17.8589L11.76 18.0489C12.23 18.8389 13.25 19.1189 14.04 18.6489L15.77 17.6589C16.68 17.1389 16.99 15.9689 16.47 15.0689C15.56 13.4989 16.3 12.2189 18.11 12.2189C19.15 12.2189 20.01 11.3689 20.01 10.3189V8.5589C20 7.5189 19.15 6.6589 18.1 6.6589ZM10 12.6889C8.21 12.6889 6.75 11.2289 6.75 9.4389C6.75 7.6489 8.21 6.1889 10 6.1889C11.79 6.1889 13.25 7.6489 13.25 9.4389C13.25 11.2289 11.79 12.6889 10 12.6889Z"
-                  fill="#32434F"
+                  d="M26 29C27.6569 29 29 27.6569 29 26C29 24.3431 27.6569 23 26 23C24.3431 23 23 24.3431 23 26C23 27.6569 24.3431 29 26 29Z"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16 26.8799V25.1199C16 24.0799 16.85 23.2199 17.9 23.2199C19.71 23.2199 20.45 21.9399 19.54 20.3699C19.02 19.4699 19.33 18.2999 20.24 17.7799L21.97 16.7899C22.76 16.3199 23.78 16.5999 24.25 17.3899L24.36 17.5799C25.26 19.1499 26.74 19.1499 27.65 17.5799L27.76 17.3899C28.23 16.5999 29.25 16.3199 30.04 16.7899L31.77 17.7799C32.68 18.2999 32.99 19.4699 32.47 20.3699C31.56 21.9399 32.3 23.2199 34.11 23.2199C35.15 23.2199 36.01 24.0699 36.01 25.1199V26.8799C36.01 27.9199 35.16 28.7799 34.11 28.7799C32.3 28.7799 31.56 30.0599 32.47 31.6299C32.99 32.5399 32.68 33.6999 31.77 34.2199L30.04 35.2099C29.25 35.6799 28.23 35.3999 27.76 34.6099L27.65 34.4199C26.75 32.8499 25.27 32.8499 24.36 34.4199L24.25 34.6099C23.78 35.3999 22.76 35.6799 21.97 35.2099L20.24 34.2199C19.33 33.6999 19.02 32.5299 19.54 31.6299C20.45 30.0599 19.71 28.7799 17.9 28.7799C16.85 28.7799 16 27.9199 16 26.8799Z"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeMiterlimit="10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
           </div>
-
           <label
             title={useFormatMessage(
               "modules.feed.create_post.text.add_options"
@@ -135,57 +146,58 @@ const PollVote = (props) => {
                         : null
                     }
                   />
-
                   <div className="div-btn-delete-options">
-                    <button
-                      color="danger"
+                    <Button
+                      color="flat"
                       className={classNames("btn-delete-options", {
                         "visibility-hidden":
                           poll_vote_detail.options.length <= 2
                       })}
                       onClick={() => handleDeleteOptions(index)}>
-                      <i className="fa-solid fa-xmark"></i>
-                    </button>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+                          fill="#696760"
+                        />
+                      </svg>
+                    </Button>
                   </div>
                 </div>
               )
             })}
           </PerfectScrollbar>
-
           <button
             type="button"
             className="btn-add-option"
             onClick={() => handleAddOptions()}
             disabled={poll_vote_detail.options.length >= 10}>
             <svg
-              className="me-50"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
+              width="25"
               height="24"
-              viewBox="0 0 24 24"
-              fill="none">
+              viewBox="0 0 25 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
               <path
-                d="M8 12H16"
-                stroke="#292D32"
+                d="M6.5 12H18.5"
+                stroke="#696760"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
-                d="M12 16V8"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
-                stroke="#292D32"
+                d="M12.5 18V6"
+                stroke="#696760"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
+
             {useFormatMessage("modules.feed.create_post.text.add_options")}
           </button>
         </div>
@@ -212,42 +224,62 @@ const PollVote = (props) => {
           </div>
           <div className="body-content">
             <div className="div-setting">
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_multiple_selection"
-                )}
-                checked={poll_vote_detail.setting.multiple_selection}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "multiple_selection")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_adding_more_options"
-                )}
-                checked={poll_vote_detail.setting.adding_more_options}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "adding_more_options")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_incognito"
-                )}
-                checked={poll_vote_detail.setting.incognito}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "incognito")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.limit_time_for_poll"
-                )}
-                checked={poll_vote_detail.setting.limit_time}
-                onChange={(e) => {
-                  handleChangeSetting(e.target.checked, "limit_time")
-                }}
-              />
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_multiple_selection"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.multiple_selection}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "multiple_selection")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_adding_more_options"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.adding_more_options}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "adding_more_options")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_incognito"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.incognito}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "incognito")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.limit_time_for_poll"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.limit_time}
+                  onChange={(e) => {
+                    handleChangeSetting(e.target.checked, "limit_time")
+                  }}
+                />
+              </div>
             </div>
 
             {poll_vote_detail.setting.limit_time && (

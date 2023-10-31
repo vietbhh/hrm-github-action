@@ -39,6 +39,11 @@ body,
       .menu-item {
         display: inline-block;
         vertical-align: middle;
+        color: var(--neutral-shade-2, #403F3A);
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
       }
     }
   }
