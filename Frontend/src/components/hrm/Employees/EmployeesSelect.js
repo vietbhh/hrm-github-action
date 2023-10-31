@@ -170,7 +170,6 @@ const EmployeesSelect = (props) => {
     setState({
       loading: true
     })
-    console.log(props_send)
     const members = state.members
     const selected = member_selected.map((e) => e["id_user"])
     defaultModuleApi.getUsers(props_send).then((res) => {
