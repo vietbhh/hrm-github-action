@@ -35,7 +35,7 @@ const NotificationItem = (props) => {
     setNotificationData
   } = props
 
-  const notificationLink = item.link.trim()
+  const notificationLink = item.link !== undefined ? item.link.trim() : ""
 
   const [isHover, setIsHover] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(false)
@@ -97,7 +97,6 @@ const NotificationItem = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err)
       })
   }
 

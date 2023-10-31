@@ -8,6 +8,7 @@ use App\Libraries\Calendars\Models\CalendarModel;
 use App\Libraries\Notifications\Notifications;
 use App\Models\UserModel;
 use App\Libraries\Notifications\Models\NotificationModel;
+use App\Models\SettingModel;
 
 class Notification extends ErpController
 {
@@ -17,7 +18,10 @@ class Notification extends ErpController
 	public function __construct()
 	{
 		$this->notification = \Config\Services::notifications();
-		$this->notificationDB = 'mongo';
+
+		$settingModel = new SettingModel();
+		$infoSetting = $settingModel->asArray()->where('key', 'notification_db')->first();
+		$this->notificationDB = isset($infoSetting['value'])  && $infoSetting['value'] !== null ? $infoSetting['value'] : 'mysql';
 	}
 
 	public function load_get()

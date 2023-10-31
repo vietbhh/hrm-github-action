@@ -7,6 +7,7 @@ use App\Libraries\Notifications\Models\NotificationModel;
 use App\Libraries\Notifications\Models\NotificationMongoModel;
 use App\Models\UserModel;
 use App\Config\MongoDatabaseConnector;
+use App\Models\SettingModel;
 
 class Notifications
 {
@@ -18,7 +19,10 @@ class Notifications
 	{
 		$this->model = new NotificationModel();
 		$this->mongoModel = new NotificationMongoModel();
-		$this->notificationDB = preference('notification_db');
+
+		$settingModel = new SettingModel();
+		$infoSetting = $settingModel->asArray()->where('key', 'notification_db')->first();
+		$this->notificationDB = isset($infoSetting['value'])  && $infoSetting['value'] !== null ? $infoSetting['value'] : 'mysql';
 	}
 
 	/**
@@ -205,7 +209,7 @@ class Notifications
 		}
 		return $this->_handleNotificationData($listNotification, $removeFields);
 	}
-	
+
 
 	/*
 	 * $receivers, $payload = ['title' => '', 'body' => '', 'link' => '', 'badge' => '', 'icon' => '', 'type' => 'other', 'data' => []], $data = [], $saveToDb = true
@@ -230,7 +234,7 @@ class Notifications
 	}
 
 	public function removeNotificationById($id)
-	{	
+	{
 		if (empty($id) || $id == 'undefined') {
 			return false;
 		}

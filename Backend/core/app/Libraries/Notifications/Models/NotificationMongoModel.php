@@ -3,6 +3,7 @@
 namespace App\Libraries\Notifications\Models;
 
 use App\Config\MongoDatabaseConnector;
+use DateTime;
 
 class NotificationMongoModel
 {
@@ -27,8 +28,11 @@ class NotificationMongoModel
 
     public function addNotification($content)
     {
-        $content['created_at'] = date('Y-m-d H:i:s');
-        $content['updated_at'] = date('Y-m-d H:i:s');
+        $content['created_at'] = new \MongoDB\BSON\UTCDateTime(date('U') * 1000);
+        $content['updated_at'] = new \MongoDB\BSON\UTCDateTime(date('U') * 1000);
+        $content['owner'] = (string)user_id();
+        $content['created_by'] = (string)user_id();
+
         $this->collection->insertOne($content);
         return true;
     }
@@ -46,7 +50,10 @@ class NotificationMongoModel
                 '$in' => $arrId
             ];
         }
-        $condition['recipient_id'] = $user;
+        $condition['$or'] = [
+            ['recipient_id' => (string)$user],
+            ['recipient_id' => $user],
+        ];
 
         if ($unseenOnly) {
             $condition['seen_by'] = [
@@ -66,10 +73,12 @@ class NotificationMongoModel
 
         $list = $this->collection->find($condition, $option);
         $result = [];
-
         foreach ($list as $row) {
             $arrPush = $row;
             $arrPush['_id'] = (string)$row['_id'];
+            $arrPush['created_at'] = $arrPush['created_at']->toDateTime()->format('Y-m-d H:i:s');
+            $arrPush['updated_at'] = $arrPush['updated_at']->toDateTime()->format('Y-m-d H:i:s');
+
             $result[] = $arrPush;
         }
 
@@ -80,7 +89,10 @@ class NotificationMongoModel
     {
         $user = user_id();
         $condition = [
-            'recipient_id' => $user,
+            '$or' =>  [
+                ['recipient_id' => (string)$user],
+                ['recipient_id' => $user],
+            ],
             'seen_by' => [
                 '$nin' => [(string)$user]
             ]
@@ -127,14 +139,14 @@ class NotificationMongoModel
 
 
     public function removeNotification($id)
-    {   
+    {
         $notificationInfo = $this->getNotificationById($id);
         if (count($notificationInfo) == 0) {
             return false;
         }
 
         $result = $this->collection->deleteOne(['_id' => new \MongoDB\BSON\ObjectId($id)]);
-        if($result->getDeletedCount() == 1) {
+        if ($result->getDeletedCount() == 1) {
             return true;
         }
 

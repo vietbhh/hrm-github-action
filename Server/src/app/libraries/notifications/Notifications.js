@@ -5,6 +5,7 @@ import { sendFirebaseNotification } from "#app/services/firebaseServices.js"
 import { emitDataToOnlineUsers } from "#app/sockets/core.socket.js"
 import { getAvatarUrl, getDefaultFridayLogo } from "#app/utility/common.js"
 import { isEmpty, isNumber, isUndefined } from "lodash-es"
+import dayjs from "dayjs"
 
 const saveNotificationMysql = async (
   updateNotification,
@@ -52,7 +53,8 @@ const saveNotificationMongo = async (
     return idUpdate
   } else {
     try {
-      const saveEvent = await notificationMongoModel.save()
+      const notificationModel = new notificationMongoModel(dataSave)
+      const saveEvent = await notificationModel.save()
 
       return saveEvent._id
     } catch (error) {
@@ -131,6 +133,7 @@ const sendNotification = async (
           custom_fields: custom_fields
         }
       )
+      
 
       if (!result) {
         return false
