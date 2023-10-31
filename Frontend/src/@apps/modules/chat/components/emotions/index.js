@@ -20,17 +20,6 @@ const index = (props) => {
 
   const windowWidth = window.innerWidth
 
-  const checkMediaWidth = (x) => {
-    if (x.matches) {
-      return true
-    }
-  
-    return false
-  }
-  const checkMobile = checkMediaWidth(
-    window.matchMedia("(max-width: 767.98px)")
-  )
-
   const emotionRef = useRef(null)
   const emotionIconRef = useRef(null)
   useEffect(() => {

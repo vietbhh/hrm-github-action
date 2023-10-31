@@ -418,8 +418,8 @@ const SearchMessage = (props) => {
                 fill="none">
                 <g id="vuesax/linear/search-normal">
                 <g id="search-normal">
-                <path id="Vector" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path id="Vector_2" d="M22 22L20 20" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector" d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path id="Vector_2" d="M22 22L20 20" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </g>
                 </g>
               </svg>
