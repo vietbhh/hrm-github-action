@@ -73,11 +73,12 @@ const ChangePasswordModal = (props) => {
         useFormatMessage("validate.passwordNotMatch")
       )
   })
+
   const methods = useForm({
     mode: "onChange",
     resolver: yupResolver(validateSchema)
   })
-  const { handleSubmit, reset, watch, formState, getValues, resetField } =
+  const { handleSubmit, reset, watch, formState, getValues, clearErrors } =
     methods
 
   const onSubmit = (values) => {
@@ -184,6 +185,9 @@ const ChangePasswordModal = (props) => {
       if (name === "currentPassword") {
         handleValidatePassword(getValues("password"))
       }
+      if (value.password === value.repassword) {
+        clearErrors("repassword")
+      }
     })
     return () => subscription.unsubscribe()
   }, [watch])
@@ -218,9 +222,10 @@ const ChangePasswordModal = (props) => {
     setState({
       checkStringUpper: false,
       checkCharacters: false,
-      checkNumber: false
+      checkNumber: false,
+      msg: "",
+      error: false
     })
-    //resetField("currentPassword")
   }, [modal])
   return (
     <React.Fragment>
