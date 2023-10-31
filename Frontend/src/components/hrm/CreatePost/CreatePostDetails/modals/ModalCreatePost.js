@@ -396,9 +396,7 @@ const ModalCreatePost = (props) => {
         })
       }
     } else {
-      setState({
-        privacy_type: "workspace"
-      })
+      //   setState({ privacy_type: "workspace"})
     }
   }, [dataPost, modal])
 
