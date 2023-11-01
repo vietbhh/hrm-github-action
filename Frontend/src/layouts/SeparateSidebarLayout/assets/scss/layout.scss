@@ -309,12 +309,16 @@
       }
 
       .div-sidebar-bottom {
-        margin-top: auto;
-        border-top: 1px #f1f1f5 solid;
-        margin-bottom: 0;
+        // margin-top: auto;
+        // border-top: 1px #f1f1f5 solid;
+        // margin-bottom: 0;
+        margin: 0;
+        hr {
+          margin-bottom: 16px;
+        }
 
         .div-user-dropdown {
-          padding: 20px 10px 10px 10px;
+          padding: 0;
           margin: 0;
 
           .dropdown-user {
@@ -553,12 +557,12 @@
     }
 
     .app-content {
-      padding-top: 95px !important;
+      padding-top: 94px !important;
       max-width: 1020px !important; // margin 40px
-      margin-left: 340px !important;
+      margin-left: 332px !important;
 
       .content-wrapper .div-content {
-        gap: 40px !important;
+        gap: 32px !important;
 
         .div-left {
           max-width: 680px !important;
@@ -567,6 +571,25 @@
         .div-right {
           min-width: 300px !important;
           max-width: 300px !important;
+          #div-sticky {
+           #dashboard-analytics {
+            .card {
+              padding: 24px!important;
+              .card-header {
+                padding: 0!important;
+              }
+              .card-body {
+                padding: 0px!important;
+              }
+
+              .card-notepad {
+                .card-header {
+                  margin-bottom: 24px;
+                }
+              }
+            }
+           }
+          }
         }
       }
     }
