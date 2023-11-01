@@ -461,7 +461,7 @@ const MainDashboard = ({
                       <div
                         key={value.id}
                         data-grid={value.data_grid}
-                        className={classNames("abc",{
+                        className={classNames({
                           "widget-full":
                             value.data_grid.x === 0 &&
                             (((state.breakPoints === "lg" ||
