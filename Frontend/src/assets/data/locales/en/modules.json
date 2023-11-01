@@ -3784,7 +3784,8 @@
           "post_pending": "Your article has been posted and is in the review process, please wait for moderation!",
           "approve_setting": "Post Approval Setting",
           "successfully_copied" : "Successfully Copied",
-          "unsaved" : "Unsaved"
+          "unsaved" : "Unsaved",
+          "messenger" : "Messenger"
         },
         "react": {
           "like": "Like",

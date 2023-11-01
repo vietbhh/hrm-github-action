@@ -677,13 +677,14 @@ $background-color-checkbox: #139ff8;
     display: flex;
     align-items: center;
     height: 40px;
-    font-weight: 400;
-    font-size: 14px;
-    color: #9d9fa4;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--neutral-shade-3, #696760);
     border-radius: 14px;
     background-color: #ffffff;
     gap: 10px;
     padding: 0 30px;
+    font-family: "Be Vietnam Pro";
   }
 }
 
