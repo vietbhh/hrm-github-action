@@ -582,11 +582,13 @@ const ModalCreatePost = (props) => {
           />
         </ul>
         {state.poll_vote && (
-          <PollVote
-            setPollVoteDetail={setPollVoteDetail}
-            poll_vote_detail={state.poll_vote_detail}
-            toggleModalPollVote={toggleModalPollVote}
-          />
+          <>
+            <PollVote
+              setPollVoteDetail={setPollVoteDetail}
+              poll_vote_detail={state.poll_vote_detail}
+              toggleModalPollVote={toggleModalPollVote}
+            />
+          </>
         )}
         <Button.Ripple
           color="primary"
@@ -597,7 +599,9 @@ const ModalCreatePost = (props) => {
             state.loadingSubmit || (state.poll_vote && state.disable_btn_post)
           }>
           {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
-          {useFormatMessage("modules.feed.create_post.text.post")}
+          {state.poll_vote
+            ? useFormatMessage("modules.feed.create_post.text.post_poll")
+            : useFormatMessage("modules.feed.create_post.text.post")}
         </Button.Ripple>
       </ModalBody>
     </Modal>

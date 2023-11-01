@@ -3717,7 +3717,9 @@
           "important": "Important",
           "mandatory": "Mandatory",
           "action_important_text": "All member invited are required to attend this event",
-          "no_employee_reaction_text": "There is no one has responded to the event invitation yet"
+          "no_employee_reaction_text": "There is no one has responded to the event invitation yet",
+          "post_endorsement" : "Post Endorsement",
+          "post_poll" :"Post Poll"
         },
         "endorsement": {
           "title": "Endorsement",
@@ -3733,8 +3735,8 @@
       "post": {
         "text": {
           "like": "Like",
-          "comment": "comment",
-          "comments": "comments",
+          "comment": "Comment",
+          "comments": "Comments",
           "send": "Send",
           "people_seen": "people seen",
           "others": "others",
@@ -3945,7 +3947,8 @@
           "show_announcement": "Show announcements",
           "one_week": "One week",
           "send_to": "Send to",
-          "send_to_placeholder": "Enter workgroup, email or username"
+          "send_to_placeholder": "Enter workgroup, email or username",
+          "post_announcement" : "Post Announcement"
         }
       },
       "post_saved": {

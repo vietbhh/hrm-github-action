@@ -183,7 +183,9 @@ const Endorsement = (props) => {
       const notificationText =
         checkSubmit.err === ""
           ? useFormatMessage("notification.something_went_wrong")
-          : useFormatMessage(`modules.feed.create_post.endorsement.${checkSubmit.err}`)
+          : useFormatMessage(
+              `modules.feed.create_post.endorsement.${checkSubmit.err}`
+            )
       notification.showError({
         text: notificationText
       })
@@ -617,7 +619,9 @@ const Endorsement = (props) => {
               {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
               {idEndorsement
                 ? useFormatMessage("button.update")
-                : useFormatMessage("modules.feed.create_post.text.post")}
+                : useFormatMessage(
+                    "modules.feed.create_post.text.post_endorsement"
+                  )}
             </Button.Ripple>
             <div className="div-icon-date">
               <div onClick={() => handleToggleOpenCalendar()}>

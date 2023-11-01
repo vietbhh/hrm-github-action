@@ -575,7 +575,6 @@ const ModalAnnouncement = (props) => {
                           {size_type}
                         </span>
                       </div>
-                      xxxx
                       <div
                         className="div-close"
                         onClick={() => handleRemoveAttachment(index)}>
@@ -600,7 +599,7 @@ const ModalAnnouncement = (props) => {
                 )}
                 {useFormatMessage(
                   _.isEmpty(state.dataEdit)
-                    ? "modules.feed.announcement.text.create_announcement"
+                    ? "modules.feed.announcement.text.post_announcement"
                     : "modules.feed.announcement.text.update_announcement"
                 )}
               </Button.Ripple>

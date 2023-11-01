@@ -1982,11 +1982,17 @@ $background-color-checkbox: #139ff8;
       .ant-collapse-item{
         .ant-collapse-header{
           align-items: center;
+          padding: 24px;
           .ant-collapse-header-text{
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 18px;
+          }
+        }
+        .ant-collapse-content{
+          .ant-collapse-content-box{
+            padding: 0 16px 16px 24px;
           }
         }
       }
