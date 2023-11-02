@@ -283,9 +283,25 @@ const HeaderCreatePost = (props) => {
               overlayClassName="modal-header-privacy-choose-dropdown">
               <a className="modal-header-privacy-choose-dropdown-a">
                 <Button.Ripple size="sm" color="flat-default" className="">
-                  <div className="privacy-workspace d-flex align-items-center">
+                  <div className="privacy-workspace d-flex align-items-baseline">
                     {renderTextDropdown(privacy_type)}
-                    <i className="fa-sharp fa-solid fa-caret-down ms-50"></i>
+                    <span className="ms-50">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M16.5984 7.45837L11.1651 12.8917C10.5234 13.5334 9.47344 13.5334 8.83177 12.8917L3.39844 7.45837"
+                          stroke="#4986FF"
+                          strokeWidth="1.5"
+                          strokeMiterlimit="10"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
                   </div>
                 </Button.Ripple>
               </a>

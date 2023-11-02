@@ -74,7 +74,6 @@ const ModalAnnouncement = (props) => {
       file: state.arrAttachment,
       coverImage: state.coverImage
     }
-
     setState({ loadingSubmit: true })
     announcementApi
       .postSubmitAnnouncement(params)

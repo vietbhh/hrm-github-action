@@ -3787,7 +3787,9 @@
           "approve_setting": "Post Approval Setting",
           "successfully_copied" : "Successfully Copied",
           "unsaved" : "Unsaved",
-          "messenger" : "Messenger"
+          "messenger" : "Messenger",
+          "unpin_announcement" : "Unpin Announcements"
+
         },
         "react": {
           "like": "Like",
