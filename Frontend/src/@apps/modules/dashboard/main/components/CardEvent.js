@@ -19,7 +19,6 @@ function CardEvent(props) {
         loading: true,
         modal: false,
         arrTick: [],
-        modal:false,
         idEvents:0,
         modalListBirthDay: false,
         options_employee_department: [],
