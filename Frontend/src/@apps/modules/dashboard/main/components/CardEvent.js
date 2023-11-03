@@ -12,6 +12,7 @@ import ModalListBirthday from './ModalListBirthday';
 import { useDispatch } from 'react-redux';
 import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
 import { useNavigate } from 'react-router-dom';
+import WidgetSetting from './WidgetSetting';
 
 function CardEvent(props) {
 
@@ -228,11 +229,17 @@ function CardEvent(props) {
                                         </div>
                                     </div>
 
-                                    <ModalListBirthday 
+                                    {/* <ModalListBirthday 
                                         modal={state.modalListBirthDay}
                                         handleModalBirthday = {handleModalBirthday}
                                         member = {state.birthday[0]?.employee_info}
-                                    />
+                                    /> */}
+
+                                    {/* <WidgetSetting 
+                                        modal={state.modalListBirthDay}
+                                        handleModalWidget = {handleModalBirthday}
+                                        member = {state.birthday[0]?.employee_info}
+                                    /> */}
                                 </>
                             )}
 

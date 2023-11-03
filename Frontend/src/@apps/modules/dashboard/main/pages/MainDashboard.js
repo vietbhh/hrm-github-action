@@ -18,6 +18,7 @@ import "../../assets/css/dnd.scss"
 import catGif from "../../assets/images/cat.gif"
 import { DashboardApi } from "../common/api"
 import { ListComponentConfig } from "../components/ListComponentConfig"
+import WidgetSetting from "../components/WidgetSetting"
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 const LoadingComponent = () => {
@@ -329,6 +330,9 @@ const MainDashboard = ({
       setState({ loadingOnChange: false, loadingRemove: false })
     })
   }
+  const closeModalWidget = () => {
+    setState({ visible: !state.visible })
+  }
 
   const onLayoutChange = (layout, layouts) => {
     if (
@@ -595,6 +599,8 @@ const MainDashboard = ({
             }
           )}
         </Drawer>
+
+        <WidgetSetting widget = {state.data} modal = {state.visible} hanleWidgetModal = {closeModalWidget} />
       </Fragment>
     )
   }
