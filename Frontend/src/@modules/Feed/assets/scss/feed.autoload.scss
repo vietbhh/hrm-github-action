@@ -39,7 +39,7 @@ $background-color-checkbox: #139ff8;
   background: #ffffff;
   border-radius: 14px;
   padding: 20px 40px;
-  margin-bottom: 10px !important;
+  margin-bottom: 12px !important;
 
   .post-footer {
     margin-top: 10px;
@@ -991,7 +991,7 @@ $background-color-checkbox: #139ff8;
   .post-comment__div-form {
     position: relative;
     display: flex;
-    margin-top: 20px;
+    margin-top: 24px;
 
     .avatar {
       width: 35px;
@@ -1163,7 +1163,7 @@ $background-color-checkbox: #139ff8;
   .div-create-post {
     background: #ffffff;
     padding: 20px 40px;
-    margin-bottom: 15px !important;
+    margin-bottom: 24px !important;
     border-radius: 14px;
 
     hr {
@@ -1960,6 +1960,8 @@ $background-color-checkbox: #139ff8;
     background-color: #5398ff;
   }
   .card-announcement{
+      margin-bottom:24px!important;
+
      .swiper-button-next:after{
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-right'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -1977,6 +1979,18 @@ $background-color-checkbox: #139ff8;
       height: 40px;
     }
 
+    .card-title {
+      padding: 12px 24px;
+
+      .ant-collapse-header {
+        padding: 0 0 24px 0;
+      }
+
+      .ant-collapse-content-box {
+        padding: 0;
+      }
+    }
+    
     .ant-collapse{
       .ant-collapse-item{
         .ant-collapse-header{
@@ -3607,7 +3621,7 @@ $background-color-checkbox: #139ff8;
       .load-post {
         background: #ffffff;
         border-radius: 14px;
-        margin-bottom: 10px !important;
+        margin-bottom: 12px !important;
 
         .post-footer {
           margin-top: 10px;
@@ -5383,7 +5397,7 @@ line-height: 20px; /* 133.333% */
 
   .feed {
     .div-create-post {
-      padding: 15px 20px 7px 20px;
+      padding: 12px 24px;
 
       .div-post {
         .div-post-input {
@@ -5392,8 +5406,8 @@ line-height: 20px; /* 133.333% */
       }
 
       hr {
-        margin-top: 12px;
-        margin-bottom: 8px;
+        margin-top: 16px;
+        margin-bottom: 16px;
       }
 
       .div-option .ul-option li span {
@@ -5403,7 +5417,7 @@ line-height: 20px; /* 133.333% */
 
     .load-feed {
       .load-post {
-        padding: 20px;
+        padding: 12px 24px;
       }
     }
 
@@ -5426,7 +5440,6 @@ line-height: 20px; /* 133.333% */
 
     .app-content {
       max-width: 1020px !important; // margin 40px
-      margin-left: 340px !important;
 
       .content-wrapper .div-content {
         gap: 40px !important;

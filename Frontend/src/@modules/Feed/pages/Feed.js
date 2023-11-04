@@ -5,6 +5,7 @@ import FeedCreateAndLoad from "../components/FeedCreateAndLoad"
 import { ListSidebarWidget } from "../common/ListSidebarWidget"
 import { useDispatch } from "react-redux"
 import { setAppTitle } from "../../../redux/app/app"
+import "../assets/scss/dashboard.scss"
 
 const Feed = (props) => {
   const {

@@ -157,7 +157,14 @@
           "turn_over": "Turn Over",
           "since_last_month": "Since last month"
         }
-      }
+      },
+      "events": {
+        "title" : "Events",
+        "total_event": "You have {number} events today",
+        "birthday" : "{member} and {number} more have birthday",
+        "one_birthday": "{member} has birthday",
+        "no_event_today": "No event today"
+      } 
     },
     "users": {
       "buttons": {
