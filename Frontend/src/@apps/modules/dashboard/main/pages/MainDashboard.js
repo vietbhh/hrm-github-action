@@ -329,9 +329,6 @@ const MainDashboard = ({
       setState({ loadingOnChange: false, loadingRemove: false })
     })
   }
-  const closeModalWidget = () => {
-    setState({ visible: !state.visible })
-  }
 
   const onLayoutChange = (layout, layouts) => {
     if (
@@ -598,7 +595,6 @@ const MainDashboard = ({
             }
           )}
         </Drawer>
-
       </Fragment>
     )
   }
