@@ -13,10 +13,14 @@ function ModalListBirthday(props) {
       window.open(`/chat/${member.username}`, "_blank", "noopener,noreferrer")
     }
 
+    const handleClickInfoUser = (member) => {
+      window.open(`/u/${member.username}`, "_blank", "noopener,noreferrer")
+    }
+
     const renderMember = (members) => {
         return members.map((member, index) => (
           <div className='list-member' key={index}>
-            <div className='info'>
+            <div className='info' onClick={() => handleClickInfoUser(member)}>
               <Avatar
                 src={member.avatar}
                 className="me-75"

@@ -149,6 +149,7 @@
                     gap: 10px;
                     border-radius: 12px;
                     background: var(--primary-500, #FFE658);
+                    cursor: pointer;
 
                     .title {
                         color: var(--neutral-shade-2, #403F3A);
@@ -161,6 +162,7 @@
                 }
 
                 .info {
+                    cursor: pointer;
                     .title {
                         color: var(--neutral-shade-2, #403F3A);
                         font-family: Be Vietnam Pro;
