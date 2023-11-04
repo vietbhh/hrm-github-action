@@ -1,5 +1,4 @@
 import { axiosApi } from "@apps/utility/api"
-import { axiosNodeApi } from "@apps/utility/api"
 import {
   erpSelectToValues,
   object2QueryString,
@@ -85,11 +84,5 @@ export const NotepadApi = {
         }
       }
     )
-  }
-}
-
-export const EventApi = {
-  async getListEvent(){
-    return await axiosNodeApi.get("/calendar/get-list-event");
   }
 }
