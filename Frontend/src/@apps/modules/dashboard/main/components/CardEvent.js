@@ -70,7 +70,6 @@ function CardEvent(props) {
       const navigateToCalender = () => {
         navigate("/calendar")
       }
-      console.log(state)
 
 
       useEffect( () => {
@@ -190,7 +189,6 @@ function CardEvent(props) {
                     )}
                     {!state.loading &&  (
                         <>
-                        {console.log(state.total_events)}
                         { state.total_events > 0 ?(
                             <>
                                 {state.number_event > 0 && (
