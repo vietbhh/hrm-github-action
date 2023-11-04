@@ -8,7 +8,6 @@ import messenger from "../../assets/images/messenger.svg"
 function ModalListBirthday(props) {
 
     const {modal,handleModalBirthday,member} = props;
-    console.log(member)
 
     const renderMember = (members) => {
         return members.map((member, index) => (
