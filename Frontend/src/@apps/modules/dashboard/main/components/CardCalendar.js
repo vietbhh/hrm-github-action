@@ -144,7 +144,6 @@ const CardCalendar = (props) => {
   const handleAfterCreateEvent = (dataNew = {}) => {
     loadCalendar()
   }
-  console.log(state)
 
   // ** effect
   useEffect(() => {

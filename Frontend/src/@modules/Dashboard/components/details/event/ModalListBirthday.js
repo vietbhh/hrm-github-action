@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import closeButton from "../../assets/images/close-circle.svg"
-import birthdayImage from "../../assets/images/birthday.png"
+import closeButton from "../../../assets/images/close-circle.svg"
+import birthdayImage from "../../../assets/images/birthday.png"
 import Avatar from "@apps/modules/download/pages/Avatar"
-import messenger from "../../assets/images/messenger.svg"
+import messenger from "../../../assets/images/messenger.svg"
 
 function ModalListBirthday(props) {
 

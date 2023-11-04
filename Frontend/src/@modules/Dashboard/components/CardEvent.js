@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { Card, CardBody, CardHeader, CardTitle } from "reactstrap";
 import { useFormatMessage } from "@apps/utility/common";
-import LayoutDashboard from "./LayoutDashboard";
-import { useMergedState } from '../../../../utility/common';
+import LayoutDashboard from "../../../@apps/modules/dashboard/main/components/LayoutDashboard";
+import { useMergedState } from '../../../@apps/utility/common';
 import { Tooltip } from "antd"
-import "../../assets/css/event.scss"
-import { EventApi } from '../common/api';
+import "../assets/scss/event.scss"
+import { EventApi } from '../../../@apps/modules/dashboard/main/common/api';
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
-import noEvent from "../../assets/images/Group.svg"
-import ModalListBirthday from './ModalListBirthday';
+import noEvent from "../assets/images/Group.svg"
+import ModalListBirthday from './details/event/ModalListBirthday';
 import { useDispatch } from 'react-redux';
 import { showAddEventCalendarModal } from "@apps/modules/calendar/common/reducer/calendar"
 import { useNavigate } from 'react-router-dom';

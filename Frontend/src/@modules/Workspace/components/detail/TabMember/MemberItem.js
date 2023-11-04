@@ -100,7 +100,6 @@ const MemberItem = (props) => {
   }
 
   const handleClickMessenge = () => {
-    console.log(member)
     window.open(`/chat/${member.username}`, "_blank", "noopener,noreferrer")
   }
 

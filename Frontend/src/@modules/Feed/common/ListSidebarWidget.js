@@ -3,7 +3,7 @@ import Notepad from "@apps/modules/dashboard/main/components/Notepad"
 import { useFormatMessage } from "@apps/utility/common"
 import ClockInOutWidget from "@modules/Dashboard/components/details/clock/ClockInOutWidget"
 import CardBirthday from "../../../@apps/modules/dashboard/main/components/CardBirthday"
-import CardEvent from "../../../@apps/modules/dashboard/main/components/CardEvent"
+import CardEvent from "../../Dashboard/components/CardEvent"
 
 const BackgroundWidget = () => {
   return <img className="img" src={WidgetPreview1} />

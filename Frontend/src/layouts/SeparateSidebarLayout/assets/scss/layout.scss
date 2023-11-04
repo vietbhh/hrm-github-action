@@ -309,16 +309,11 @@
       }
 
       .div-sidebar-bottom {
-        // margin-top: auto;
-        // border-top: 1px #f1f1f5 solid;
-        // margin-bottom: 0;
-        margin: 0;
-        hr {
-          margin: 15px 0 16px 0;
-        }
-
+        margin-top: auto;
+        border-top: 1px #f1f1f5 solid;
+        margin-bottom: 0;
         .div-user-dropdown {
-          padding: 0;
+          padding: 20px 10px 10px 10px;
           margin: 0;
 
           .dropdown-user {
@@ -384,7 +379,7 @@
         display: flex;
         gap: 40px;
         position: relative;
-        // justify-content: center;
+        justify-content: center;
 
         .div-left {
           width: 100%;
@@ -557,12 +552,12 @@
     }
 
     .app-content {
-      padding-top: 94px !important;
+      padding-top: 95px !important;
       max-width: 1020px !important; // margin 40px
-      margin-left: 332px !important;
+      margin-left: 340px !important;
 
       .content-wrapper .div-content {
-        gap:32px!important;
+        gap:40px!important;
         .div-left {
           max-width: 680px !important;
         }
@@ -570,25 +565,6 @@
         .div-right {
           min-width: 300px !important;
           max-width: 300px !important;
-          #div-sticky {
-           #dashboard-analytics {
-            .card {
-              padding: 24px!important;
-              .card-header {
-                padding: 0!important;
-              }
-              .card-body {
-                padding: 0px!important;
-              }
-
-              .card-notepad {
-                .card-header {
-                  margin-bottom: 24px;
-                }
-              }
-            }
-           }
-          }
         }
       }
     }
@@ -597,8 +573,4 @@
       font-size: 14px !important;
     }
   }
-}
-
-.emoji-web-hidden {
-  display: none;
 }
