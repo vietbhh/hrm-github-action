@@ -3,7 +3,11 @@ import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
 import SwAlert from "@apps/utility/SwAlert"
-import { formatDate, useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  formatDate,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { arrImage } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
@@ -13,14 +17,16 @@ import * as Icon from "react-feather"
 import ReactHtmlParser from "react-html-parser"
 import InfiniteScroll from "react-infinite-scroll-component"
 import "react-perfect-scrollbar/dist/css/styles.css"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { Card, CardBody } from "reactstrap"
-import { Col, Row } from "rsuite"
+import { Card, CardBody, Col, Row } from "reactstrap"
+import {} from "rsuite"
 import { setAppTitle } from "../../../redux/app/app"
 import "../assets/scss/postSaved.scss"
 import { postSavedApi, savedApi } from "../common/api"
 import UnavailableData from "../components/UnavailableData"
+import LoadPost from "../../../components/hrm/LoadPost/LoadPost"
+import { handleDataMention } from "../common/common"
 
 export default function PostSaved() {
   const [state, setState] = useMergedState({
@@ -29,8 +35,16 @@ export default function PostSaved() {
     loading: false,
     postsSaved: [],
     isSearch: false,
-    hasMoreLoad: true
+    hasMoreLoad: true,
+    dataMention: []
   })
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
+  const dataEmployee = useSelector((state) => state.users.list)
+  useEffect(() => {
+    const data_mention = handleDataMention(dataEmployee, userId)
+    setState({ dataMention: data_mention })
+  }, [dataEmployee])
 
   const getData = async () => {
     let postSavedList = []
@@ -163,7 +177,7 @@ export default function PostSaved() {
   useEffect(() => {
     dispatch(setAppTitle(useFormatMessage("menu:menu.posts_saved")))
   }, [])
-
+  console.log("postsSaved", state)
   return (
     <Fragment>
       <div className="div-left">
@@ -181,10 +195,7 @@ export default function PostSaved() {
                         <i className="fa-regular fa-magnifying-glass"></i>
                       }
                       onChange={(e) => {
-                        setState({ search: e.target.value })
-                        setState({
-                          page: 1
-                        })
+                        setState({ search: e.target.value, page: 1 })
                       }}
                     />
                   </Col>
@@ -211,6 +222,14 @@ export default function PostSaved() {
                     loader={state.loading ? <DefaultSpinner /> : ""}>
                     {state?.postsSaved?.map((item) => (
                       <section className="card" key={item._id}>
+                        {item?.type === ("post" || "background_image") && (
+                          <LoadPost
+                            data={item}
+                            dataMention={state.dataMention}
+                            dataLink={item?.dataLink}
+                          />
+                        )}
+
                         <Row>
                           <Col md={12} xs={22}>
                             <div className="info">
@@ -223,7 +242,7 @@ export default function PostSaved() {
                               </div>
                             </div>
                           </Col>
-                          <Col md={12} mdPush={11} xs={2}>
+                          <Col md={12} xs={2}>
                             {renderDropdown(item._id)}
                           </Col>
                         </Row>
@@ -239,7 +258,9 @@ export default function PostSaved() {
                                 ? setBackgroundImage(item.background_image)
                                 : {}
                             }>
-                            {ReactHtmlParser(item.content)}
+                            <div className="post-body-content">
+                              {ReactHtmlParser(item.content)}
+                            </div>
                             {item.source && <Photo src={item.source} />}
                           </Col>
                         </Row>

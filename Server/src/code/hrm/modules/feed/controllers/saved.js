@@ -82,10 +82,8 @@ const listPostSaved = async (req, res, next) => {
     const query = {
       _id: {
         $in: listPostSaved.shift().id
-      },
-      type: {
-        $nin: ["endorsement", "event"]
       }
+      //type: {$nin: ["endorsement", "event"]}
     }
 
     let feeds = await feedMongoModel
