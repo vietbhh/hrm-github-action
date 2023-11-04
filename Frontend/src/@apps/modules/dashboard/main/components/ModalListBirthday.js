@@ -9,6 +9,10 @@ function ModalListBirthday(props) {
 
     const {modal,handleModalBirthday,member} = props;
 
+    const handleClickMessenge = (member) => {
+      window.open(`/chat/${member.username}`, "_blank", "noopener,noreferrer")
+    }
+
     const renderMember = (members) => {
         return members.map((member, index) => (
           <div className='list-member' key={index}>
@@ -23,7 +27,7 @@ function ModalListBirthday(props) {
                 {member.full_name}
               </span>
             </div>
-            <div className='send-message'>
+            <div className='send-message' onClick={() => handleClickMessenge(member)}>
               <div className='icon-messenger'>
                 <img src={messenger} alt="messenger" />
               </div>
@@ -44,6 +48,7 @@ function ModalListBirthday(props) {
                 className="modal-lg modal-events"
                 modalTransition={{ timeout: 100 }}
                 backdropTransition={{ timeout: 100 }}
+                centered 
             >
                 <ModalHeader>
                     <div className='image-birthday'>
