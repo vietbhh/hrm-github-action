@@ -6,7 +6,10 @@ import {
 } from "#app/services/upload.js"
 import path from "path"
 import { send } from "#app/libraries/mail/MailManager.js"
-import { handleSaveTemplate, handleGetTemplates } from "#app/models/email_templates.mysql.js"
+import { getPendingMail } from "#app/models/email.mysql.js"
+import { handleGetTemplates } from "#app/models/email_templates.mysql.js"
+
+import { forEach, isEmpty } from "lodash-es"
 export const testFn = async (req, res, next) => {
   const row = new smartSheetModelMongo({
     title: "test",
@@ -36,7 +39,12 @@ export const homeController = (req, res, next) => {
 
 export const testSendNotification = async (req, res, next) => {
   try {
-    await send(req.__user, "test 111", "callmebaoxx@gmail.com", "<h2>Hello</h2>")
+    await send(
+      req.__user,
+      "test 111",
+      "callmebaoxx@gmail.com",
+      "<h2>Hello</h2>"
+    )
 
     return res.respond("Thanks god,it's Friday!!!")
   } catch (err) {
@@ -46,9 +54,34 @@ export const testSendNotification = async (req, res, next) => {
 
 export const testCreateTemplate = async (req, res, next) => {
   try {
-    const result = handleGetTemplates()
-    
+    const result = await handleGetTemplates()
+
     return res.respond(result)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const sendMailPending = async (req, res, next) => {
+  try {
+    const listPendingMail = await getPendingMail()
+
+    forEach(listPendingMail, async (item, index) => {
+      const cc = isEmpty(item["cc"]) ? null : item["cc"].split(";")
+      const bcc = isEmpty(item["bcc"]) ? null : item["bcc"].split(";")
+      await send(
+        req.__user,
+        item["subject"],
+        item["to"].split(";"),
+        item["content"],
+        cc,
+        bcc,
+        [],
+        {},
+        null,
+        item["id"]
+      )
+    })
   } catch (err) {
     console.log(err)
   }

@@ -20,7 +20,8 @@ const send = async (
   bcc = null,
   attachments = [],
   overrideConfig = {},
-  timer = null
+  timer = null,
+  idMail = null
 ) => {
   if (isEmpty(to)) {
     return false
@@ -63,7 +64,7 @@ const send = async (
 
   if (isEmpty(timer)) {
     timeExpected = dayjs().format("YYYY-MM-DD HH:mm:ss")
-    const sendInfo = transporter.sendMail({
+    const sendInfo = await transporter.sendMail({
       from: user,
       to: to,
       subject: subject,
@@ -84,26 +85,40 @@ const send = async (
     }
   }
 
-  const log = {
-    from: user,
-    config: JSON.stringify(config),
-    to: isArray(to) ? to.join(";", to) : to,
-    cc: isArray(cc) ? cc.join(";", cc) : cc,
-    bcc: isArray(to) ? bcc.join(";", bcc) : bcc,
-    subject: subject,
-    content: content,
-    attachments: isArray(attachments)
-      ? attachments.join(";", attachments)
-      : attachments,
-    status: status,
-    respond: isArray(respond) ? JSON.stringify(respond) : respond,
-    time_expected: timeExpected,
-    time_real: timeReal
-  }
+  
 
-  await emailModel.create(log, {
-    __user: userId
-  })
+  if (idMail === null) {
+    const log = {
+      from: user,
+      config: JSON.stringify(config),
+      to: isArray(to) ? to.join(";", to) : to,
+      cc: isArray(cc) ? cc.join(";", cc) : cc,
+      bcc: isArray(to) ? bcc.join(";", bcc) : bcc,
+      subject: subject,
+      content: content,
+      attachments: isArray(attachments)
+        ? attachments.join(";", attachments)
+        : attachments,
+      status: status,
+      respond: isArray(respond) ? JSON.stringify(respond) : respond,
+      time_expected: timeExpected,
+      time_real: timeReal
+    }
+    await emailModel.create(log, {
+      __user: userId
+    })
+  } else {
+    await emailModel.update({
+      status: status,
+      respond: isArray(respond) ? JSON.stringify(respond) : respond,
+      time_real: timeReal
+    }, {
+      where: {
+        id: idMail
+      }
+    })
+  }
+  
 
   return result
 }

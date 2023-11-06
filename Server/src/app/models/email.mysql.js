@@ -46,4 +46,14 @@ const emailModel = coreModelMysql(
   }
 )
 
-export { emailModel }
+const getPendingMail = async () => {
+  const list = await emailModel.findAll({
+    where: {
+      status: "pending"
+    }
+  })
+
+  return list
+}
+
+export { emailModel, getPendingMail }

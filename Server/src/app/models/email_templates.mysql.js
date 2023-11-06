@@ -34,15 +34,14 @@ const handleGetTemplates = async (where = {}, returnAsOption = false) => {
             ...where
           }
         }
-      : ""
-  const templates = await emailTemplatesModel.findAll()
-  console.log(templates)
+      : null
+  const templates = await emailTemplatesModel.findAll(condition)
   const result = []
 
   if (templates) {
     forEach(templates, (item, key) => {
-      const pushItem = { ...item._doc }
-      pushItem["isLock"] = item.isLock === "true"
+      const pushItem = { ...item.dataValues }
+      pushItem["isLock"] = parseInt(item.isLock) === 1
       if (returnAsOption) {
         pushItem = {
           ...pushItem,
@@ -61,14 +60,14 @@ const handleGetTemplates = async (where = {}, returnAsOption = false) => {
 const getTemplateDetail = async (id) => {
   const template = await emailTemplatesModel.findOne({
     where: {
-      _id: id
+      id: id
     }
   })
 
   if (template) {
     const newTemplate = {
-      ...template._doc,
-      isLock: item.isLock === "true"
+      ...template.dataValues,
+      isLock: parseInt(template.isLock) === 1
     }
 
     return newTemplate
@@ -85,7 +84,7 @@ const handleSaveTemplate = async (data) => {
 const handleDeleteTemplate = async (id) => {
   const deleteResult = await emailTemplatesModel.destroy({
     where: {
-      _id: id
+      id: id
     }
   })
 

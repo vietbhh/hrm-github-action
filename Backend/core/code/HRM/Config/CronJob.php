@@ -14,6 +14,10 @@ class CronJob
 	public function run(Scheduler $schedule)
 	{
 		//Write cronjob here
+		$schedule->call(function() {
+			$nodeServer = \Config\Services::nodeServer();
+			$nodeServer->node->get('/send-mail-pending');
+		})->everyMinute()->named('auto_send_mail_pending');
 	}
 }
 
