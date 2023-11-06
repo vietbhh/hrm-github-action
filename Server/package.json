@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=development nodemon index.js",
+    "start_supervisor": "NODE_ENV=development supervisor index.js",
     "prod": "NODE_ENV=production nodemon index.js"
   },
   "repository": "https://github.com/FridayOs/core",
@@ -42,6 +43,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.0.0-rc.1",
     "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.7",
     "php-serialize": "^4.0.2",
     "sequelize": "^6.25.3",
     "socket.io": "^4.5.3",

@@ -5,6 +5,8 @@ import {
   moveFileFromServerToGCS
 } from "#app/services/upload.js"
 import path from "path"
+import { send } from "#app/libraries/mail/MailManager.js"
+import { handleSaveTemplate, handleGetTemplates } from "#app/models/email_templates.mysql.js"
 export const testFn = async (req, res, next) => {
   const row = new smartSheetModelMongo({
     title: "test",
@@ -30,6 +32,26 @@ export const testFn = async (req, res, next) => {
 
 export const homeController = (req, res, next) => {
   return res.respond("Thanks god,it's Friday!!!")
+}
+
+export const testSendNotification = async (req, res, next) => {
+  try {
+    await send(req.__user, "test 111", "callmebaoxx@gmail.com", "<h2>Hello</h2>")
+
+    return res.respond("Thanks god,it's Friday!!!")
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const testCreateTemplate = async (req, res, next) => {
+  try {
+    const result = handleGetTemplates()
+    
+    return res.respond(result)
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const testUpload = async (req, res, next) => {
@@ -64,12 +86,7 @@ export const testCopyToGCS = async (req, res, next) => {
 export const testCopy = async (req, res, next) => {
   const pathFrom = path.join("modules", "feed2")
   const pathTo = path.join("modules", "feed7")
-  const result = await copyFilesServices(
-    pathFrom,
-    pathTo,
-    "",
-    "cloud_storage"
-  )
+  const result = await copyFilesServices(pathFrom, pathTo, "", "cloud_storage")
 
   return res.respond(result)
 }
