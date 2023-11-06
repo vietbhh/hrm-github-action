@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { Card, CardBody, CardHeader, CardTitle } from "reactstrap";
 import { useFormatMessage } from "@apps/utility/common";
 import LayoutDashboard from "../../../@apps/modules/dashboard/main/components/LayoutDashboard";
-import { useMergedState } from '../../../@apps/utility/common';
+import { useMergedState } from '@apps/utility/common';
 import { Tooltip } from "antd"
 import "../assets/scss/event.scss"
-import { EventApi } from '../../../@apps/modules/dashboard/main/common/api';
+import { EventApi } from '../common/api';
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import noEvent from "../assets/images/Group.svg"
 import ModalListBirthday from './details/event/ModalListBirthday';
@@ -29,19 +29,24 @@ function CardEvent(props) {
         setState( { loading:true } )
         EventApi.getListEvent().then(res => {
             const dataEvents = res.data.results.today
-            const events_allday = dataEvents.pop();
+            const dataEventAllDay = dataEvents?.filter(item => item.name == "All day")?.shift() || dataEvents?.filter(item => item.title == "birthday")?.shift()
+            const numberEventAllDay = dataEventAllDay?.list_event?.length ? dataEventAllDay?.list_event?.length : 0
+            const numberEventBirthday = dataEventAllDay?.employee_info?.length ? dataEventAllDay?.employee_info?.length : 0
+            
+            const numberEvent = dataEventAllDay ? dataEvents.length - 1 + numberEventAllDay : dataEvents.length
+            
             setState({
                 "events":res.data.results.today,
-                "event_allday":events_allday,
-                "birthday": events_allday.employee_info,
-                "number_event" : dataEvents.length + events_allday.list_event.length,
-                "total_events":  dataEvents.length + events_allday.list_event.length + events_allday.employee_info.length
+                "event_allday":dataEventAllDay!=undefined ? dataEventAllDay : [] ,
+                "birthday": dataEventAllDay?.employee_info,
+                "number_event" : numberEvent,
+                "total_events":  dataEvents?.length + numberEventAllDay + numberEventBirthday
             })
             
             if (_.isFunction(props.handleLayouts)) {
                 props.handleLayouts()
               }
-              setState({ loading: false })
+            setState( { loading:false } )
         }).catch((err) => {
             setState({ loading: false })
             if (_.isFunction(props.handleLayouts)) {
@@ -49,7 +54,6 @@ function CardEvent(props) {
             }
           });
       }
-
       const toggleModal = (id = 0) => {
         setState({ modal: !state.modal, idEvents: id })
       }
