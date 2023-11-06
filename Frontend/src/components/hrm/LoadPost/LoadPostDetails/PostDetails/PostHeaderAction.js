@@ -732,6 +732,7 @@ const PostHeaderAction = (props) => {
         })
       })
       .catch((err) => {
+        console.log("err", err)
         notification.showError({
           text: useFormatMessage("notification.something_went_wrong")
         })

@@ -1,6 +1,10 @@
 import feedMongoModel from "../models/feed.mongo.js"
 import savedMongoModel from "../models/saved.mongo.js"
 import { getUser } from "#app/models/users.mysql.js"
+import { handleGetAnnouncementById } from "./announcement.js"
+import { handleGetEventById } from "./event.js"
+import { handleGetEndorsementById } from "./endorsement.js"
+import { handleDataBeforeReturn } from "#app/utility/common.js"
 
 const saveSaved = async (req, res, next) => {
   try {
@@ -98,20 +102,32 @@ const listPostSaved = async (req, res, next) => {
         item.content.replace(/<[^>]+>/g, "").includes(searchTrim)
       )
     }
-
     const transformedFeeds = await Promise.all(
       feeds.map(async (item) => {
         let author = await getUser(item.created_by)
-        return {
+        let dataLink = {}
+        if (item.type === "announcement") {
+          dataLink = await handleGetAnnouncementById(item.link_id)
+        }
+        if (item.type === "event") {
+          dataLink = await handleGetEventById(item.link_id)
+        }
+        if (item.type === "endorsement") {
+          dataLink = await handleGetEndorsementById(item.link_id)
+        }
+        const dataAuth = {
           ...item.toObject(),
           author: {
             full_name: author.dataValues.full_name,
             avatar: author.dataValues.avatar
-          }
+          },
+          dataLink: dataLink
         }
+        const dataFeed = await handleDataBeforeReturn(dataAuth)
+
+        return dataFeed
       })
     )
-
     return res.respond(transformedFeeds, 200, "Successfully")
   } catch (err) {
     next(err)

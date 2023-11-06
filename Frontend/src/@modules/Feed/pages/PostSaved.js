@@ -45,15 +45,19 @@ export default function PostSaved() {
     const data_mention = handleDataMention(dataEmployee, userId)
     setState({ dataMention: data_mention })
   }, [dataEmployee])
-
-  const getData = async () => {
+  const getData = async (reload = false) => {
     let postSavedList = []
     setState({ loading: true })
 
     if (!state.search) {
       postSavedList = await postSavedApi.list(state.page)
       setState({ loading: false })
-      if (state.isSearch) {
+      if (reload) {
+        setState({
+          postsSaved: postSavedList.data,
+          isSearch: false
+        })
+      } else if (state.isSearch) {
         setState({
           postsSaved: postSavedList.data,
           isSearch: false
@@ -171,13 +175,12 @@ export default function PostSaved() {
 
   useEffect(() => {
     getData()
-  }, [state.page, state.search])
+  }, [state.page, state.search, state.isSearch])
 
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(setAppTitle(useFormatMessage("menu:menu.posts_saved")))
   }, [])
-  console.log("postsSaved", state)
   return (
     <Fragment>
       <div className="div-left">
@@ -222,48 +225,12 @@ export default function PostSaved() {
                     loader={state.loading ? <DefaultSpinner /> : ""}>
                     {state?.postsSaved?.map((item) => (
                       <section className="card" key={item._id}>
-                        {item?.type === ("post" || "background_image") && (
-                          <LoadPost
-                            data={item}
-                            dataMention={state.dataMention}
-                            dataLink={item?.dataLink}
-                          />
-                        )}
-
-                        <Row>
-                          <Col md={12} xs={22}>
-                            <div className="info">
-                              <Avatar src={item.author.avatar} />
-                              <div className="info-detail">
-                                <p id="full-name">{item.author.full_name}</p>
-                                <p id="created_at">
-                                  {formatDate(item.created_at, "D MMM, YYYY")}
-                                </p>
-                              </div>
-                            </div>
-                          </Col>
-                          <Col md={12} xs={2}>
-                            {renderDropdown(item._id)}
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col
-                            className={classNames("content", {
-                              "content-background-img": Boolean(
-                                item.background_image
-                              )
-                            })}
-                            style={
-                              item.background_image
-                                ? setBackgroundImage(item.background_image)
-                                : {}
-                            }>
-                            <div className="post-body-content">
-                              {ReactHtmlParser(item.content)}
-                            </div>
-                            {item.source && <Photo src={item.source} />}
-                          </Col>
-                        </Row>
+                        <LoadPost
+                          data={item}
+                          dataMention={state.dataMention}
+                          dataLink={item?.dataLink}
+                          setData={() => getData(true)}
+                        />
                       </section>
                     ))}
                   </InfiniteScroll>
