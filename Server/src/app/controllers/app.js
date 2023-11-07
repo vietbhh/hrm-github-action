@@ -10,6 +10,7 @@ import { getPendingMail } from "#app/models/email.mysql.js"
 import { handleGetTemplates } from "#app/models/email_templates.mysql.js"
 
 import { forEach, isEmpty } from "lodash-es"
+import dayjs from "dayjs"
 export const testFn = async (req, res, next) => {
   const row = new smartSheetModelMongo({
     title: "test",
@@ -67,20 +68,22 @@ export const sendMailPending = async (req, res, next) => {
     const listPendingMail = await getPendingMail()
 
     forEach(listPendingMail, async (item, index) => {
-      const cc = isEmpty(item["cc"]) ? null : item["cc"].split(";")
-      const bcc = isEmpty(item["bcc"]) ? null : item["bcc"].split(";")
-      await send(
-        req.__user,
-        item["subject"],
-        item["to"].split(";"),
-        item["content"],
-        cc,
-        bcc,
-        [],
-        {},
-        null,
-        item["id"]
-      )
+      if (dayjs(item.expected_time).format("YYYY-MM-DD HH:mm") === dayjs().format("YYYY-MM-DD HH:mm")) {
+        const cc = isEmpty(item["cc"]) ? null : item["cc"].split(";")
+        const bcc = isEmpty(item["bcc"]) ? null : item["bcc"].split(";")
+        await send(
+          req.__user,
+          item["subject"],
+          item["to"].split(";"),
+          item["content"],
+          cc,
+          bcc,
+          [],
+          {},
+          null,
+          item["id"]
+        )
+      }
     })
   } catch (err) {
     console.log(err)

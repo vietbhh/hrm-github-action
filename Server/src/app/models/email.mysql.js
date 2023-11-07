@@ -46,10 +46,11 @@ const emailModel = coreModelMysql(
   }
 )
 
-const getPendingMail = async () => {
+const getPendingMail = async (condition = {}) => {
   const list = await emailModel.findAll({
     where: {
-      status: "pending"
+      status: "pending",
+      ...condition
     }
   })
 
