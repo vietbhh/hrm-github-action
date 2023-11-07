@@ -141,22 +141,27 @@ const Test = (props) => {
         <CardHeader>Send mail</CardHeader>
         <CardBody>
           <div className="d-flex align-items-center justify-content-around">
-          <Button.Ripple
-            color="success"
-            className="mt-2"
-            onClick={() => {
-              axiosNodeApi.get("/test/send-mail")
-            }}>
-            Test send mail
-          </Button.Ripple>
-          <Button.Ripple
-            color="success"
-            className="mt-2"
-            onClick={() => {
-              axiosNodeApi.get("/test/create-template")
-            }}>
-            Test create template
-          </Button.Ripple>
+            <Button.Ripple
+              color="success"
+              className="mt-2"
+              onClick={() => {
+                axiosNodeApi
+                  .get("/test/send-mail")
+                  .then()
+                  .catch((err) => {
+                    console.log(err)
+                  })
+              }}>
+              Test send mail
+            </Button.Ripple>
+            <Button.Ripple
+              color="success"
+              className="mt-2"
+              onClick={() => {
+                axiosNodeApi.get("/test/create-template")
+              }}>
+              Test create template
+            </Button.Ripple>
           </div>
         </CardBody>
       </Card>
