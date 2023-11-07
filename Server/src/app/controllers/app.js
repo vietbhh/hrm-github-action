@@ -49,7 +49,7 @@ export const testSendNotification = async (req, res, next) => {
 
     return res.respond("Thanks god,it's Friday!!!")
   } catch (err) {
-    console.log(err)
+    return res.respond(err)
   }
 }
 
@@ -59,7 +59,7 @@ export const testCreateTemplate = async (req, res, next) => {
 
     return res.respond(result)
   } catch (err) {
-    console.log(err)
+    return res.respond(err)
   }
 }
 
