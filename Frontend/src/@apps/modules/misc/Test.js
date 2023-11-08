@@ -17,7 +17,7 @@ const Test = (props) => {
   const handleData = useCallback((data) => {
     console.log(data)
   }, [])
-  console.log('okkk');
+  console.log("okkk")
   useEffect(() => {
     //testNoti()
     //socketDoc.connect()
@@ -64,7 +64,7 @@ const Test = (props) => {
   }
 
   const testNoti = () => {
-    socket.emit("app_notification", {
+    /*socket.emit("app_notification", {
       receivers: [1],
       save_notification: true,
       payload: {
@@ -72,17 +72,19 @@ const Test = (props) => {
         body: "{{app.save}}",
         link: "/dashboard",
       }
-    })
-    /*axiosNodeApi
+    })*/
+    axiosNodeApi
       .post("/notification/send", {
         receivers: [1],
-        title: "<p>bold</p>",
-        body: "{{modules.auth.authentication}}",
-        test: "testOk"
+        payload: {
+          title: "<p>bold</p>",
+          body: "{{modules.auth.authentication}}",
+          test: "testOk"
+        }
       })
       .then((res) => {
         console.log(res)
-      })*/
+      })
 
     /* notification.show({
       title: "bạn nhận được thông báo",
@@ -129,14 +131,17 @@ const Test = (props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Button type="submit" color="primary">
           {useFormatMessage("app.save")} a
-        </Button>2
+        </Button>
+        2
       </form>
-      alo bloâs sad sđ sađá  sadsad  sđasad  sađâsd ádsad  sadá ? sdá ? ? sda sdá  sadsa
-      <button onClick={testNoti}>alo- blog 2 23ssadsd adsdsa sdsddsd  sađs42s</button>
+      alo bloâs sad sđ sađá sadsad sđasad sađâsd ádsad sadá ? sdá ? ? sda sdá
+      sadsa
+      <button onClick={testNoti}>
+        alo- blog 2 23ssadsd adsdsa sdsddsd sađs42s
+      </button>
     </Fragment>
   )
 }
-
 
 /*
 import Router from "./router/Router"
