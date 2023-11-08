@@ -10,8 +10,6 @@ body {
   mix-blend-mode: normal;
   display: flex;
   align-items: center;
-  margin-top: 24px;
-  margin-bottom: 16px;
 
   .brand-logo {
     width: auto;
@@ -93,42 +91,25 @@ body {
 
 .auth-wrapper {
   min-height: 100vh;
-  min-width: 100vw !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
   background-color: #ffffff;
-
+  display: flex;
   .auth-content {
-    display: flex !important;
-    flex: 1;
-    flex-basis: 100%;
-    max-height: 971px;
-    max-width: 1920px;
+    width: 100%;
+    background-color: #ffffff;
     //height: 100vh;
     //min-height: calc((var(--vh, 1vh) * 100) - 48px);
-    width: 100%;
-    font-family: Be Vietnam Pro !important;
-
-    .row {
-      margin: unset !important;
-    }
-    .col-sm-6 {
-      padding: unset !important;
-    }
-
     .slide-image-section {
-      padding: 24px;
       width: 100%;
-      max-width: 960px;
-      min-height: calc(923px + 48px);
 
       .swiper-content {
-        min-height: 923px;
         border-radius: 20px;
         width: 100%;
         //height: calc((var(--vh, 1vh) * 100) - 48px);
-        background: linear-gradient(144.96deg, #ffd6c6 27.82%, rgba(206, 231, 55, 0.33) 87.47%);
+        background: linear-gradient(
+          144.96deg,
+          #ffd6c6 27.82%,
+          rgba(206, 231, 55, 0.33) 87.47%
+        );
         display: flex;
         align-items: center;
         justify-content: center;
@@ -154,17 +135,11 @@ body {
     }
 
     .control-auth-section {
-      padding-right: 280px;
       width: 100%;
-      min-height: calc(923px);
       position: relative;
+      height: 100%;
 
       .control-auth-container {
-        padding-top: 56px;
-        padding-left: 68px;
-        min-height: calc(923px + 24px);
-        width: 656px;
-
         .btn-login {
           height: 48px;
           border-radius: 16px;
@@ -172,7 +147,6 @@ body {
           font-weight: 600;
           font-size: 15px;
           border: none !important;
-          font-family: Be Vietnam Pro !important;
           margin-top: 32px;
         }
 
@@ -227,7 +201,6 @@ body {
         }
 
         .login-section {
-          min-height: calc(923px - 48px - 112px - 120px);
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -331,8 +304,8 @@ body {
                 }
 
                 .form-check-input:checked {
-                  background-color: #FFE658 !important;
-                  border-color: #FFE658 !important;
+                  background-color: #ffe658 !important;
+                  border-color: #ffe658 !important;
                 }
 
                 input {
@@ -374,10 +347,10 @@ body {
       }
 
       .footer-section {
+        width: 100%;
         position: absolute;
+        text-align: center;
         bottom: 0px;
-        padding-left: 68px;
-        width: 656px !important;
         line-height: 20px;
         font-size: 15px;
         font-weight: 400;
@@ -393,7 +366,11 @@ body {
       margin-right: 100px;
 
       .card {
-        background: linear-gradient(137.27deg, #ffffff 10.43%, rgba(255, 255, 255, 0.75) 92.53%);
+        background: linear-gradient(
+          137.27deg,
+          #ffffff 10.43%,
+          rgba(255, 255, 255, 0.75) 92.53%
+        );
         border-radius: 20px;
 
         .card-body {
@@ -639,300 +616,55 @@ body {
   }
 }
 
-@media (max-width: 1430px) {
-  .auth-inner {
-    margin-right: 0 !important;
+@media (min-width: 1921px) {
+  .auth-content {
+    max-width: 1500px;
   }
-
-  .auth-wrapper {
-    min-width: unset !important;
-    min-height: unset !important;
-
-    .slide-image-section {
-      .swiper-content {
-        padding-top: 0px !important;
-      }
+  .login-section {
+    margin-top: 100px;
+  }
+}
+@media (max-width: 1920px) {
+  .auth-content {
+    padding: 24px;
+    .slide-image-section .swiper-content {
+      min-height: calc(100vh - 48px);
     }
-
-    .control-auth-section {
-      padding-top: unset !important;
-      padding-bottom: unset !important;
-      padding-right: 120px !important;
-      width: 100%;
-
-      .control-auth-container {
-        padding-top: 56px;
-        padding-left: 0px;
-        width: auto !important;
-        max-width: 656px;
-
-        .login-section {
-          //height: calc((var(--vh, 1vh) * 100) - 70px) !important;
-          .header-form {
-            .title {
-              //font-size: 48px !important;
-            }
-            .sub-title {
-              font-size: 12px !important;
-            }
-          }
-        }
-
-        .profile-setting-section {
-          .header-form {
-            .title {
-              font-size: 36px !important;
-            }
-          }
-          .btn-login {
-            height: 48px !important;
-          }
-          .mt-3 {
-            margin-top: 2rem !important;
-          }
-          .form-section {
-            .avatar-section {
-              margin-top: 10px !important;
-              margin-bottom: 15px !important;
-              .employeeAvatar {
-                img {
-                  height: 100px !important;
-                  width: 100px !important;
-                }
-              }
-            }
-
-            .div-login-info {
-              .form-group {
-                .input-group-text {
-                  height: 50px !important;
-                }
-
-                input {
-                  height: 50px !important;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .footer-section {
-        bottom: 0 !important;
-        width: auto !important;
-        max-width: 656px;
-        //width: calc(100% - (56px)) !important;
-      }
-    }
+  }
+  .login-section {
+    margin-top: 150px;
   }
 }
 
-@media (max-width: 1350px) {
+@include media-breakpoint-up(lg) {
+  .auth-content {
+    margin: auto;
+  }
   .auth-wrapper {
-    min-width: unset;
-    min-height: unset;
-    .auth-content {
-      .col-image {
-        display: none !important;
-      }
-
-      .col-info {
-        width: 100% !important;
-
-        .control-auth-section {
-          padding: unset !important;
-          margin: 0px !important;
-          width: 100% !important;
-          display: flex;
-          justify-content: center;
-
-          .control-auth-container,
-          .footer-section {
-            min-width: 656px;
-            padding-left: 0px;
-          }
-        }
-      }
-    }
+    align-items: center;
   }
-}
-
-@media (max-width: 1200px) {
-  .auth-wrapper {
-    &.auth-cover .auth-card {
-      width: $auth-1-inner-max-width;
-    }
-
-    .control-auth-section {
-      margin: 24px !important;
-
-      .control-auth-container,
-      .footer-section {
-        //min-width: unset !important;
-        width: auto !important;
-      }
-    }
-  }
-}
-
-@media (max-width: 820px) {
-  .auth-wrapper {
-    min-height: 100vh !important;
-    .control-auth-container {
-      .login-section,
-      .auth-header {
-        padding: 24px;
-        width: 656px !important;
-      }
-    }
-  }
-}
-
-@media (max-width: 700px) {
-  .auth-wrapper.auth-cover .brand-logo {
-    left: 1.5rem;
-    padding-left: 0;
-  }
-
   .control-auth-section {
-    padding: 30px !important;
-    min-height: 100vh !important;
-    //height: calc((var(--vh, 1vh) * 100) - 88px) !important;
-    margin: 0px !important;
-
+    max-width: 656px;
     .control-auth-container {
-      padding-top: 24px !important;
-      min-width: 90vw !important;
-      min-height: inherit !important;
-      .btn-login {
-        height: 40px !important;
-      }
-
-      .auth-header {
-        width: auto !important;
-
-        .brand-logo {
-          img {
-            height: 40px !important;
-          }
-        }
-      }
-
-      .login-section {
-        width: auto !important;
-        margin-top: unset !important;
-
-        //height: calc((var(--vh, 1vh) * 100) - 88px) !important;
-
-        .form-section {
-          .avatar-section {
-          }
-
-          .div-login-info {
-            label {
-              font-size: 10px !important;
-            }
-
-            .form-group {
-              .input-group-text {
-                height: 40px !important;
-              }
-
-              input {
-                height: 40px !important;
-              }
-            }
-
-            .form-check {
-              label {
-                text-transform: capitalize;
-                font-size: 15px !important;
-                font-weight: 400;
-                padding-left: 5px;
-              }
-            }
-          }
-        }
-
-        .text-forgot {
-          font-size: 12px !important;
-        }
-      }
+      padding-left: 68px;
+      padding-top: 56px;
     }
-
-    .footer-section {
-      min-width: 90vw !important;
-    }
-  }
-
-  .div-select {
-    margin-right: unset !important;
   }
 }
 
-@media (max-width: 575.98px) {
+@include media-breakpoint-down(lg) {
   .control-auth-section {
-    .control-auth-container {
-      .login-section {
-        .header-form {
-          .title {
-            font-size: 32px !important;
-          }
-
-          .sub-title {
-            font-size: 12px !important;
-          }
-        }
-      }
-    }
+    min-height: 90vh;
+  }
+  .auth-content {
+    margin: 0 auto;
+  }
+  .login-section {
+    margin-top: 80px;
   }
 }
 
-@media (max-width: 375px) {
-  .auth-wrapper {
-    .control-auth-section {
-      margin: unset !important;
-      padding: 24px !important;
-      //height: calc(var(--vh, 1vh) * 100 - 48px) !important;
-
-      .auth-header {
-        margin-bottom: 10px;
-        .brand-logo {
-          margin: 0 !important;
-        }
-      }
-
-      .login-section {
-        padding-top: unset !important;
-        min-height: 500px !important;
-      }
-
-      .profile-setting-section {
-        padding-top: 20px !important;
-
-        .form-section {
-          .avatar-section {
-            .employeeAvatar {
-              img {
-                width: 80px !important;
-                height: 80px !important;
-                margin-right: 1rem !important;
-              }
-
-              .btn-change-avatar {
-                svg {
-                  //display: none !important;
-                }
-                font-size: 12px;
-                padding: 4px 8px !important;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+//remove
 
 .auth-wrapper .auth-bg {
   background-color: $white;
@@ -949,18 +681,6 @@ body {
   .dark-layout {
     .auth-wrapper .auth-inner {
       //background-color: $theme-dark-card-bg;
-    }
-  }
-
-  .mt-3 {
-    margin-top: 1.5rem !important;
-  }
-
-  .login-section {
-    margin-top: 0px !important;
-
-    .form-section {
-      margin-top: 10px !important;
     }
   }
 

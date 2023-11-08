@@ -101,13 +101,13 @@ const Login = (props) => {
       <Helmet>
         <title>{useFormatMessage("auth.authentication")}</title>
       </Helmet>
-      <div className="auth-wrapper auth-basic d-flex align-items-start justify-content-between">
+      <div className="auth-wrapper auth-basic">
         <div className="auth-content">
-          <Row className="w-100 h-100">
-            <Col sm="6" className="col-image">
+          <Row className="">
+            <Col lg="6" className="d-none d-lg-block">
               <ImageSlider logo={login3D} />
             </Col>
-            <Col sm="6" className="col-info">
+            <Col lg="6" className="col-info">
               <div className="control-auth-section">
                 <div className="control-auth-container">
                   <Header />
@@ -122,14 +122,7 @@ const Login = (props) => {
                         {useFormatMessage("auth.have_a_nice_day")} 🤗
                       </p>
                     </div>
-                    {error !== "" && (
-                      <Alert color="danger">
-                        <div className="alert-body">
-                          <AlertCircle size={15} /> &nbsp;
-                          <span>{useFormatMessage("auth.loginFailed")}</span>
-                        </div>
-                      </Alert>
-                    )}
+
                     <div className="form-section">
                       <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(onSubmit)}>
@@ -314,6 +307,16 @@ const Login = (props) => {
                             {useFormatMessage("auth.loginBtn")}
                           </Button.Ripple>
                         </form>
+                        {error !== "" && (
+                          <Alert color="danger mt-1">
+                            <div className="alert-body">
+                              <AlertCircle size={15} /> &nbsp;
+                              <span>
+                                {useFormatMessage("auth.loginFailed")}
+                              </span>
+                            </div>
+                          </Alert>
+                        )}
                       </FormProvider>
                       <div className="div-forgot">
                         <span className="text-forgot">
@@ -328,7 +331,7 @@ const Login = (props) => {
                   </div>
                 </div>
                 <div className="footer-section text-center">
-                  <p>2023 Life Stud.io</p>
+                  <p>2023 {appName}</p>
                 </div>
               </div>
             </Col>
