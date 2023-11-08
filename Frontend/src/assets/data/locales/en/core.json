@@ -1116,10 +1116,21 @@
         "pin": "Pin",
         "un_pin": "Un pin",
         "my_notes": "My notes"
+      },
+      "setting_widgets": {
+        "title": "Setting Widgets",
+        "save_setting": "Save Setting"
       }
     },
     "notification": {
-      "title": "Notification"
+      "title": "Notification",
+      "text": {
+        "mark_all_as_read": "Mark all as read"
+      },
+      "buttons": {
+        "mark_as_read": "Mark as read",
+        "remove_this_notification": "Remove this notification"
+      }
     },
     "drive": {
       "title": {

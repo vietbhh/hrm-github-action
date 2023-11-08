@@ -64,7 +64,7 @@ const Test = (props) => {
   }
 
   const testNoti = () => {
-    socket.emit("app_notification", {
+    /*socket.emit("app_notification", {
       receivers: [1],
       save_notification: true,
       payload: {
@@ -72,17 +72,19 @@ const Test = (props) => {
         body: "{{app.save}}",
         link: "/dashboard"
       }
-    })
-    /*axiosNodeApi
+    })*/
+    axiosNodeApi
       .post("/notification/send", {
         receivers: [1],
-        title: "<p>bold</p>",
-        body: "{{modules.auth.authentication}}",
-        test: "testOk"
+        payload: {
+          title: "<p>bold</p>",
+          body: "{{modules.auth.authentication}}",
+          test: "testOk"
+        }
       })
       .then((res) => {
         console.log(res)
-      })*/
+      })
 
     /* notification.show({
       title: "bạn nhận được thông báo",

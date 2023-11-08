@@ -17,32 +17,37 @@ const NavbarChat = () => {
         <svg
           className="bell no-noti"
           xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
+          width="22"
+          height="23"
+          viewBox="0 0 22 23"
           fill="none">
           <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M22.2499 22.2482C18.6844 25.8141 13.4047 26.5845 9.08413 24.5863C8.4463 24.3295 7.92338 24.122 7.42625 24.122C6.04155 24.1302 4.31801 25.4728 3.42223 24.5781C2.52646 23.6823 3.87012 21.9573 3.87012 20.5643C3.87012 20.0671 3.6708 19.5535 3.41403 18.9144C1.41495 14.5945 2.18644 9.31312 5.75195 5.74839C10.3035 1.19515 17.6983 1.19515 22.2499 5.74721C26.8097 10.3075 26.8015 17.6961 22.2499 22.2482Z"
-            stroke="#32434F"
+            d="M14.9393 11.913H14.9483"
+            stroke="#696760"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
-            d="M9 17H16"
-            stroke="#32434F"
+            d="M10.9306 11.913H10.9396"
+            stroke="#696760"
             strokeWidth="2"
-            strokeMiterlimit="10"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
-            d="M9 12H19"
-            stroke="#32434F"
+            d="M6.92128 11.913H6.93028"
+            stroke="#696760"
             strokeWidth="2"
-            strokeMiterlimit="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M18.071 18.5698C15.0159 21.6263 10.4896 22.2867 6.78631 20.574C6.23961 20.3539 2.70113 21.3339 1.93334 20.567C1.16555 19.7991 2.14639 16.2601 1.92631 15.7134C0.212846 12.0106 0.874111 7.4826 3.9302 4.4271C7.83147 0.5243 14.1698 0.5243 18.071 4.4271C21.9803 8.33593 21.9723 14.668 18.071 18.5698Z"
+            stroke="#696760"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />

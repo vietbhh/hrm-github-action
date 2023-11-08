@@ -44,3 +44,6 @@ firebase_server_key="AAAAuvA35qk:APA91bHePnwFMmMOfc0MWVLAqB51CJs_mznuVZV_zFoazjS
 # google cloud storage
 gcs_project_id = 'friday-351410'
 gcs_bucket_name = 'friday-storage'
+
+#mongo
+MONGODB_URI="mongodb://friday:Friday%402023%21@123.24.142.175:27055/core?authSource=admin"
