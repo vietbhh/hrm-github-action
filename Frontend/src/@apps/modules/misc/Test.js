@@ -145,12 +145,12 @@ const Test = (props) => {
               color="success"
               className="mt-2"
               onClick={() => {
-                axiosNodeApi
+                /*axiosNodeApi
                   .get("/test/send-mail")
                   .then()
                   .catch((err) => {
                     console.log(err)
-                  })
+                  })*/
               }}>
               Test send mail
             </Button.Ripple>
@@ -158,7 +158,7 @@ const Test = (props) => {
               color="success"
               className="mt-2"
               onClick={() => {
-                axiosNodeApi.get("/test/create-template")
+                //axiosNodeApi.get("/test/create-template")
               }}>
               Test create template
             </Button.Ripple>

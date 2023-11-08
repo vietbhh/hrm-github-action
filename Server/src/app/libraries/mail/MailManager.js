@@ -11,7 +11,7 @@ import {
   handleDeleteTemplate
 } from "#app/models/email_templates.mysql.js"
 
-const send = async (
+const handleSendMail = async (
   userId,
   subject,
   to,
@@ -145,4 +145,4 @@ const deleteTemplate = async (id) => {
   return deleteResult
 }
 
-export { send, getTemplates, saveTemplate, deleteTemplate }
+export { handleSendMail, getTemplates, saveTemplate, deleteTemplate }

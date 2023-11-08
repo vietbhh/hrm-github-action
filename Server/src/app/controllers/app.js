@@ -5,7 +5,7 @@ import {
   moveFileFromServerToGCS
 } from "#app/services/upload.js"
 import path from "path"
-import { send } from "#app/libraries/mail/MailManager.js"
+import { handleSendMail } from "#app/libraries/mail/MailManager.js"
 import { getPendingMail } from "#app/models/email.mysql.js"
 import { handleGetTemplates } from "#app/models/email_templates.mysql.js"
 
@@ -38,9 +38,9 @@ export const homeController = (req, res, next) => {
   return res.respond("Thanks god,it's Friday!!!")
 }
 
-export const testSendNotification = async (req, res, next) => {
+export const testSendMail = async (req, res, next) => {
   try {
-    await send(
+    await handleSendMail(
       req.__user,
       "test 111",
       "callmebaoxx@gmail.com",
@@ -71,7 +71,7 @@ export const sendMailPending = async (req, res, next) => {
       if (dayjs(item.expected_time).format("YYYY-MM-DD HH:mm") === dayjs().format("YYYY-MM-DD HH:mm")) {
         const cc = isEmpty(item["cc"]) ? null : item["cc"].split(";")
         const bcc = isEmpty(item["bcc"]) ? null : item["bcc"].split(";")
-        await send(
+        await handleSendMail(
           req.__user,
           item["subject"],
           item["to"].split(";"),
