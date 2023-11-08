@@ -131,7 +131,6 @@ const NavbarSearch = ({
   // ** Function to handle external Input click
   const handleExternalClick = () => {
     if (navbarSearch === true) {
-      console.log(1)
       setNavbarSearch(false)
       handleClearQueryInStore()
     }
@@ -149,7 +148,6 @@ const NavbarSearch = ({
   const onKeyDown = (e) => {
     if (e.keyCode === 27 || e.keyCode === 13) {
       setTimeout(() => {
-        console.log(2)
         setNavbarSearch(false)
         handleClearQueryInStore()
       }, 1)
@@ -158,7 +156,6 @@ const NavbarSearch = ({
 
   // ** Function to handle search suggestion Click
   const handleSuggestionItemClick = () => {
-    console.log(3)
     setNavbarSearch(false)
     handleClearQueryInStore()
   }
@@ -167,7 +164,6 @@ const NavbarSearch = ({
   const handleListItemClick = (func, link, e) => {
     func(link, e)
     setTimeout(() => {
-      console.log(4)
       setNavbarSearch(false)
     }, 1)
     handleClearQueryInStore()
@@ -180,7 +176,6 @@ const NavbarSearch = ({
           "d-xl-none": removeSearch === true
         })}
         onClick={() => {
-          console.log(5)
           setNavbarSearch(true)
         }}>
         <NavLink className="nav-link-search">
@@ -216,7 +211,6 @@ const NavbarSearch = ({
       <Modal
         isOpen={navbarSearch}
         toggle={() => {
-          console.log(6)
           setNavbarSearch(!navbarSearch)
         }}
         className="modal-search-input">
@@ -304,7 +298,6 @@ const NavbarSearch = ({
               <Icon.X
                 className="ficon"
                 onClick={(e) => {
-                  console.log(7)
                   e.stopPropagation()
                   setNavbarSearch(false)
                   handleClearQueryInStore()
