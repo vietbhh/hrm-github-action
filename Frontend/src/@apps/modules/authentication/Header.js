@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { useSkin } from "utility/hooks/useSkin"
 import Logo from "../download/pages/Logo"
 import { useTranslation } from "react-i18next"
+import { components } from "react-select"
 
 const Header = () => {
   const { i18n } = useTranslation()
@@ -26,6 +27,28 @@ const Header = () => {
     i18n.changeLanguage(value)
   }
 
+  const DropdownIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none">
+          <path
+            d="M19.92 8.94922L13.4 15.4692C12.63 16.2392 11.37 16.2392 10.6 15.4692L4.08002 8.94922"
+            stroke="#696760"
+            strokeWidth="1.5"
+            strokeMiterlimit="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </components.DropdownIndicator>
+    )
+  }
+
   return (
     <div className="auth-header">
       <Link className="brand-logo" to="/" onClick={(e) => e.preventDefault()}>
@@ -35,6 +58,7 @@ const Header = () => {
         <ErpSelect
           className="select"
           options={options}
+          components={{ DropdownIndicator }}
           defaultValue={defaultValue}
           isClearable={false}
           nolabel

@@ -5,6 +5,12 @@ import {
   moveFileFromServerToGCS
 } from "#app/services/upload.js"
 import path from "path"
+import { handleSendMail } from "#app/libraries/mail/MailManager.js"
+import { getPendingMail } from "#app/models/email.mysql.js"
+import { handleGetTemplates } from "#app/models/email_templates.mysql.js"
+
+import { forEach, isEmpty } from "lodash-es"
+import dayjs from "dayjs"
 export const testFn = async (req, res, next) => {
   const row = new smartSheetModelMongo({
     title: "test",
@@ -30,6 +36,58 @@ export const testFn = async (req, res, next) => {
 
 export const homeController = (req, res, next) => {
   return res.respond("Thanks god,it's Friday!!!")
+}
+
+export const testSendMail = async (req, res, next) => {
+  try {
+    await handleSendMail(
+      req.__user,
+      "test 111",
+      "callmebaoxx@gmail.com",
+      "<h2>Hello</h2>"
+    )
+
+    return res.respond("Thanks god,it's Friday!!!")
+  } catch (err) {
+    return res.respond(err)
+  }
+}
+
+export const testCreateTemplate = async (req, res, next) => {
+  try {
+    const result = await handleGetTemplates()
+
+    return res.respond(result)
+  } catch (err) {
+    return res.respond(err)
+  }
+}
+
+export const sendMailPending = async (req, res, next) => {
+  try {
+    const listPendingMail = await getPendingMail()
+
+    forEach(listPendingMail, async (item, index) => {
+      if (dayjs(item.expected_time).format("YYYY-MM-DD HH:mm") === dayjs().format("YYYY-MM-DD HH:mm")) {
+        const cc = isEmpty(item["cc"]) ? null : item["cc"].split(";")
+        const bcc = isEmpty(item["bcc"]) ? null : item["bcc"].split(";")
+        await handleSendMail(
+          req.__user,
+          item["subject"],
+          item["to"].split(";"),
+          item["content"],
+          cc,
+          bcc,
+          [],
+          {},
+          null,
+          item["id"]
+        )
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const testUpload = async (req, res, next) => {
@@ -64,12 +122,7 @@ export const testCopyToGCS = async (req, res, next) => {
 export const testCopy = async (req, res, next) => {
   const pathFrom = path.join("modules", "feed2")
   const pathTo = path.join("modules", "feed7")
-  const result = await copyFilesServices(
-    pathFrom,
-    pathTo,
-    "",
-    "cloud_storage"
-  )
+  const result = await copyFilesServices(pathFrom, pathTo, "", "cloud_storage")
 
   return res.respond(result)
 }

@@ -11,8 +11,10 @@ const ListNotification = (props) => {
   const {
     // ** props
     listNotification,
+    showDropdownAction,
     // ** methods
-    toggleOpen
+    toggleOpen,
+    setNotificationData
   } = props
 
   // ** render
@@ -43,12 +45,14 @@ const ListNotification = (props) => {
       <Fragment>
         {listNotification.map((item, index) => {
           if (index < 10) {
-            const Wrap = item.link && item.link === "" ? Fragment : Link
-            const wrapProps = item.link && !item.link.trim() ? {} : { to: `/${item.link.trim()}` } 
             return (
-              <Wrap key={index} {...wrapProps}>
-                <NotificationItem item={item} key={`notification-${index}`} toggleOpen={toggleOpen}/>
-              </Wrap>
+              <NotificationItem
+                item={item}
+                key={`notification-${index}`}
+                showDropdownAction={showDropdownAction}
+                toggleOpen={toggleOpen}
+                setNotificationData={setNotificationData}
+              />
             )
           }
         })}

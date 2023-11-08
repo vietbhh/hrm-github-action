@@ -48,11 +48,7 @@ sed -i 's/.*database.default.username.*/database.default.username = '"$MYSQL_USE
 sed -i 's/.*database.default.password.*/database.default.password = '"$MYSQL_PASSWORD"'/' Backend/applications/default/.env
 sed -i 's/.*#database.default.port.*/database.default.port = '"$MYSQL_PORT"'/' Backend/applications/default/.env
 
-sed -i 's/.*db.mongodb.hostname.*/db.mongodb.hostname = '"$MONGO_HOST"'/' Backend/applications/default/.env
-sed -i 's/.*db.mongodb.port.*/db.mongodb.port = '"$MONGO_PORT"'/' Backend/applications/default/.env
-sed -i 's/.*db.mongodb.database.*/db.mongodb.database = '"$MONGO_DATABASE"'/' Backend/applications/default/.env
-sed -i 's/.*db.mongodb.username.*/db.mongodb.username = '"$MONGO_USERNAME"'/' Backend/applications/default/.env
-sed -i 's/.*db.mongodb.password.*/db.mongodb.password = '"$MONGO_PASSWORD"'/' Backend/applications/default/.env
+sed -i 's/.*MONGODB_URI.*/MONGODB_URI="'"$MONGO_DB_URI"'"/' Backend/applications/default/.env
 
 sed -i 's/.*app.baseURL.*/app.baseURL = "'"$PHP_API_URL"'"/' Backend/applications/default/.env
 sed -i 's/.*app.siteURL.*/app.siteURL = "'"$APP_URL"'"/' Backend/applications/default/.env

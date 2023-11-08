@@ -22,7 +22,8 @@
     "google/cloud": "^0.218.0",
     "phpoffice/phpspreadsheet": "^1.28",
     "fabpot/goutte": "^4.0.3",
-    "phpoffice/phpword": "^1.1.0"
+    "phpoffice/phpword": "^1.1.0",
+    "mongodb/mongodb": "v1.16.x-dev"
   },
   "require-dev": {
     "mikey179/vfsstream": "1.6.*",
