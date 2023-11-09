@@ -16,11 +16,12 @@ import { Fragment, useEffect } from "react"
 import { AlertCircle, ChevronLeft } from "react-feather"
 import Helmet from "react-helmet"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import { useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Alert, Button, Form, Row, Spinner } from "reactstrap"
+import { Alert, Button, Col, Form, Row, Spinner } from "reactstrap"
 import * as yup from "yup"
 import Header from "./Header"
-import { useTranslation } from "react-i18next"
 import ImageSlider from "./ImageSlider"
 
 const ResetPassword = () => {
@@ -208,7 +209,7 @@ const ResetPassword = () => {
       }
     }
   }, [formState])
-
+  const appName = useSelector((state) => state.layout.app_name)
   return (
     <Fragment>
       <Helmet>
@@ -801,7 +802,7 @@ const ResetPassword = () => {
                   </div>
                 </div>
                 <div className="footer-section text-center">
-                  <p>2023 Life Stud.io</p>
+                  <p>2023 {appName}</p>
                 </div>
               </div>
             </Col>

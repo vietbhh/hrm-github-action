@@ -91,7 +91,6 @@ const Login = (props) => {
         navigate(from)
       })
       .catch((err) => {
-        console.log(err)
         setLoading(false)
         setError(err)
       })

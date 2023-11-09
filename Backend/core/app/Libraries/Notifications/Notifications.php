@@ -22,7 +22,7 @@ class Notifications
 
 		$settingModel = new SettingModel();
 		$infoSetting = $settingModel->asArray()->where('key', 'notification_db')->first();
-		$this->notificationDB = isset($infoSetting['value'])  && $infoSetting['value'] !== null ? $infoSetting['value'] : 'mysql';
+		$this->notificationDB = isset($infoSetting['value']) && $infoSetting['value'] !== null ? $infoSetting['value'] : 'mysql';
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Notifications
 					return true;
 				}
 
-				$condition =  [
+				$condition = [
 					"_id" => [
 						'$in' => $id
 					]
@@ -255,14 +255,19 @@ class Notifications
 		$data['seen'] = false;
 		$data['read'] = false;
 		$userId = $this->notificationDB == 'mongodb' ? (string)user_id() : user_id();
-		if (!empty($data['seen_by']) || !empty($data['read_by'])) {
+
+		if (!empty($data['seen_by'])) {
 			$data['seen_by'] = is_array($data['seen_by']) ? $data['seen_by'] : json_decode($data['seen_by'], true);
-			$data['read_by'] = is_array($data['read_by']) ? $data['read_by'] : json_decode($data['read_by'], true);
 			if (in_array($userId, $data['seen_by'])) $data['seen'] = true;
+		} else {
+			$data['seen_by'] = [];
+		}
+
+		if (!empty($data['read_by'])) {
+			$data['read_by'] = is_array($data['read_by']) ? $data['read_by'] : json_decode($data['read_by'], true);
 			if (in_array($userId, $data['read_by'])) $data['read'] = true;
 		} else {
 			$data['read_by'] = [];
-			$data['seen_by'] = [];
 		}
 
 		foreach ($removeFields as $field) {
@@ -323,7 +328,6 @@ class Notifications
 
 				$id = $this->add($saveNotificationData);
 			}
-
 
 
 			$client = new FirebaseCM\Client();
