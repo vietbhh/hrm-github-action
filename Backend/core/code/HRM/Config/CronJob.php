@@ -81,7 +81,9 @@ class CronJob
 		})->daily()->named('handle_create_close_insurance');
 
 		//Write cronjob here
+		$schedule->call(function () {
+			$nodeServer = \Config\Services::nodeServer();
+			$nodeServer->node->get('/send-mail-pending');
+		})->named('auto_send_mail_pending');
 	}
 }
-
-?>

@@ -299,7 +299,8 @@ const _getListAllDayEvent = async (arrAllDay = {}, query = {}, userId = 1) => {
         email: item.email,
         avatar: item.avatar,
         start_time_date: currentDate,
-        end_time_date: currentDate
+        end_time_date: currentDate,
+        username: item.username
       }
       const currentDateTime = new Date(currentDate).getTime()
       if (currentDateTime <= dateTimeTo && currentDateTime >= dateTimeFrom) {

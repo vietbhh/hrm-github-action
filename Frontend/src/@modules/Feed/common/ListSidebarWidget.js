@@ -2,6 +2,8 @@ import WidgetPreview1 from "@apps/modules/dashboard/assets/images/WidgetPreview1
 import Notepad from "@apps/modules/dashboard/main/components/Notepad"
 import { useFormatMessage } from "@apps/utility/common"
 import ClockInOutWidget from "@modules/Dashboard/components/details/clock/ClockInOutWidget"
+import CardBirthday from "../../../@apps/modules/dashboard/main/components/CardBirthday"
+import CardEvent from "../../Dashboard/components/CardEvent"
 
 const BackgroundWidget = () => {
   return <img className="img" src={WidgetPreview1} />
@@ -50,13 +52,13 @@ export const ListSidebarWidget = (props) => {
       show: false,
       action: "login",
       resource: "app"
-    }
-    /* {
-      id: "announcement",
-      title: useFormatMessage("modules.dashboard.announcement.title"),
-      component: <CardAnnouncements {...props} noIcon />,
+    },
+    {
+      id: "events",
+      title: useFormatMessage("modules.dashboard.events.title"),
+      component: <CardEvent {...props} noIcon />,
       data_grid: {
-        i: "announcement",
+        i: "events",
         x: 2,
         y: 25,
         w: 1,
@@ -71,6 +73,6 @@ export const ListSidebarWidget = (props) => {
       show: false,
       action: "login",
       resource: "app"
-    } */
+    }
   ]
 }

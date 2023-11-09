@@ -3,6 +3,12 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { defaultModuleApi } from "@apps/utility/moduleApi"
 import { Fragment, useEffect } from "react"
 import { notificationApi } from "../common/api"
+// ** redux
+import { useDispatch, useSelector } from "react-redux"
+import {
+  handleSeenNotification,
+  handleReadNotification
+} from "@store/notification"
 // ** Styles
 import { Pagination } from "antd"
 import { Card, CardBody, CardHeader } from "reactstrap"
@@ -15,10 +21,48 @@ const NotificationIndex = (props) => {
     loading: "",
     page: 1,
     notifications: [],
-    numberNotification: 0
+    numberNotification: 0,
+    submitting: false
   })
 
+  const settingState = useSelector((state) => state.auth.settings)
+  const notificationDB =
+    settingState?.notification_db === undefined
+      ? "mysql"
+      : settingState.notification_db
+  const dispatch = useDispatch()
+
   const numberItemPerPage = 10
+
+  const setNotificationData = (data, type = "update") => {
+    const idField = notificationDB === "mongo" ? "_id" : "id"
+    if (type === "update") {
+      const newNotification = [...state.notifications].map((item) => {
+        if (item[idField] === data[idField]) {
+          return { ...data }
+        }
+
+        return item
+      })
+
+      setState({
+        notifications: newNotification
+      })
+    } else if (type === "remove") {
+      const newNotification = [...state.notifications].filter((item) => {
+        return item[idField] !== data[idField]
+      })
+
+      setState({
+        notifications: newNotification,
+        numberNotification: state.numberNotification - 1
+      })
+    } else if (type === "renew") {
+      setState({
+        notifications: data
+      })
+    }
+  }
 
   const loadNotification = () => {
     setState({
@@ -51,14 +95,53 @@ const NotificationIndex = (props) => {
     })
   }
 
-  const handleSeenNotification = () => {
+  const seenNotification = () => {
     defaultModuleApi
       .get(
-        `/notification/read?page=${state.page}&per_page=${numberItemPerPage}`
+        `/notification/seen?page=${state.page}&per_page=${numberItemPerPage}`
       )
-      .then((res) => {})
+      .then((res) => {
+        dispatch(
+          handleSeenNotification({
+            listNotificationSeen: res.data.list_notification_seen,
+            numberNotificationSeen: res.data.number_notification_seen
+          })
+        )
+      })
+      .catch((err) => {})
+  }
+
+  const handleClickReadAll = () => {
+    setState({
+      submitting: true
+    })
+
+    notificationApi
+      .readNotification("all")
+      .then((res) => {
+        dispatch(
+          handleReadNotification({
+            listNotificationRead: res.data.list_notification_read,
+            numberNotificationRead: res.data.number_notification_read
+          })
+        )
+
+        const newDataNotification = [...state.notifications].map((item) => {
+          return {
+            ...item,
+            read: true
+          }
+        })
+
+        setState({
+          notifications: newDataNotification,
+          submitting: false
+        })
+      })
       .catch((err) => {
-        console.log(err)
+        setState({
+          submitting: false
+        })
       })
   }
 
@@ -69,7 +152,7 @@ const NotificationIndex = (props) => {
 
   useEffect(() => {
     if (state.loading === false) {
-      handleSeenNotification()
+      seenNotification()
     }
   }, [state.loading])
 
@@ -78,8 +161,12 @@ const NotificationIndex = (props) => {
     if (state.notifications.length > 0) {
       return (
         <Fragment>
-          <div className="mb-4">
-            <ListNotification listNotification={state.notifications} />
+          <div className="">
+            <ListNotification
+              listNotification={state.notifications}
+              showDropdownAction={true}
+              setNotificationData={setNotificationData}
+            />
           </div>
           <div className="ms-2">
             <Pagination
@@ -93,7 +180,9 @@ const NotificationIndex = (props) => {
       )
     }
 
-    return <p className="ps-2">{useFormatMessage("notification.no_notification")}</p>
+    return (
+      <p className="ps-2">{useFormatMessage("notification.no_notification")}</p>
+    )
   }
 
   const renderComponent = () => {
@@ -102,17 +191,21 @@ const NotificationIndex = (props) => {
         <div className="notification-page">
           <Card>
             <CardHeader>
-              <h3 className="ms-2">
-                <span className="title-icon">
-                  <i className="far fa-bells" />
-                </span>
-                {useFormatMessage("modules.notification.title")}
-              </h3>
+              <div className="d-flex align-items-center justify-content-between w-100">
+                <h3 className="mb-0 page-title">
+                  {useFormatMessage("modules.notification.title")}
+                </h3>
+                <p
+                  className="mb-0 mt-0 read-all-text"
+                  onClick={() => handleClickReadAll()}>
+                  {useFormatMessage(
+                    "modules.notification.text.mark_all_as_read"
+                  )}
+                </p>
+              </div>
             </CardHeader>
             <CardBody>
-              <div className="mb-4">
-                <Fragment>{renderListNotification()}</Fragment>
-              </div>
+              <Fragment>{renderListNotification()}</Fragment>
             </CardBody>
           </Card>
         </div>

@@ -18,6 +18,8 @@ import "../../assets/css/dnd.scss"
 import catGif from "../../assets/images/cat.gif"
 import { DashboardApi } from "../common/api"
 import { ListComponentConfig } from "../components/ListComponentConfig"
+import SettingWidgetModal from "../components/modals/SettingWidgetModal"
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 const LoadingComponent = () => {
@@ -73,6 +75,7 @@ const MainDashboard = ({
     loadingOnChange: false,
     loadingRemove: false,
     breakPoints: "lg",
+    modalSettingWidget: false,
 
     // check handleWidget
     check_is_handleWidget: false
@@ -89,6 +92,12 @@ const MainDashboard = ({
   _.forEach(ListDataComponent, (val) => {
     global.widget["widget_" + val.id] = useRef(null)
   })
+
+  const toggleModalSettingWidget = () => {
+    setState({
+      modalSettingWidget: !state.modalSettingWidget
+    })
+  }
 
   const handleWidget = (id, action = "remove", params = {}) => {
     const data = listComponent
@@ -244,6 +253,7 @@ const MainDashboard = ({
   const handleDataLayout = (dataComponent, dataLayout) => {
     if (state.check_is_handleWidget === false) {
       const dataLayout_ = { ...dataLayout }
+      const exitLayout = []
       _.forEach(dataLayout_, (val, key_val) => {
         if (key_val === state.breakPoints) {
           const val_layout = [...val]
@@ -256,6 +266,7 @@ const MainDashboard = ({
                 dataComponent[index]["data_grid"]["minH"]
               )
 
+              exitLayout.push(index)
               dataComponent[index] = {
                 ...dataComponent[index],
                 data_grid: {
@@ -275,7 +286,19 @@ const MainDashboard = ({
           dataLayout_[key_val] = val_layout
         }
       })
-      setState({ data: dataComponent, layouts: dataLayout_ })
+
+      const newDataComponent = _.map(dataComponent, (item, index) => {
+        if (exitLayout.includes(index)) {
+          return item 
+        }
+
+        return {
+          ...item,
+          show: false
+        }
+      })
+
+      setState({ data: newDataComponent, layouts: dataLayout_ })
     }
   }
 
@@ -368,7 +391,8 @@ const MainDashboard = ({
           href="/"
           onClick={(e) => {
             e.preventDefault()
-            setState({ visible: !state.visible })
+            toggleModalSettingWidget()
+            //setState({ visible: !state.visible })
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -412,6 +436,22 @@ const MainDashboard = ({
         </Row>
       </div>
     )
+  }
+
+  const renderSettingWidgetModal = () => {
+    if (state.modalSettingWidget) {
+      return (
+        <SettingWidgetModal
+          modal={state.modalSettingWidget}
+          listWidget={state.data}
+          toggleModal={toggleModalSettingWidget}
+          handleWidget={handleWidget}
+          onLayoutChange={onLayoutChange}
+        />
+      )
+    }
+
+    return ""
   }
 
   if (!_.isEmpty(state.data) && !loadingDashboard) {
@@ -513,7 +553,7 @@ const MainDashboard = ({
 
           {customButtonPosition === "bottom" && renderButtonAddWidget()}
         </div>
-
+        <Fragment>{renderSettingWidgetModal()}</Fragment>
         <Drawer
           title={
             <>

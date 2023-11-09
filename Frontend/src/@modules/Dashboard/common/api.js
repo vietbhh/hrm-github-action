@@ -1,4 +1,4 @@
-import { axiosApi } from "@apps/utility/api"
+import { axiosApi, axiosNodeApi } from "@apps/utility/api"
 import { object2QueryString, serialize } from "@apps/utility/handleData"
 
 export const DashboardApi = {
@@ -88,5 +88,10 @@ export const DashboardApi = {
     return await axiosApi.get(`/dashboard/get-statistic-data?get${strParam}`, {
       disableLoading: true
     })
+  }
+}
+export const EventApi = {
+  async getListEvent() {
+    return await axiosNodeApi.get("/calendar/get-list-event")
   }
 }

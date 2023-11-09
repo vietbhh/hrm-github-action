@@ -3,7 +3,7 @@
   "auth": {
     "authentication": "Authentication",
     "login": "Enter credentials to access system",
-    "loginPlaceholder": "Your username or email",
+    "loginPlaceholder": "Your email or username",
     "loginLabel": "Username or email",
     "passwordPlaceholder": "Password",
     "passwordLabel": "Password",
@@ -13,18 +13,24 @@
     "forgotPasswordIntructions": "Enter your email and we'll send you instructions to reset your password",
     "remember": "Remember Me",
     "loginBtn": "Sign In",
+    "save_profile": "Save Profile",
+    "skip_now": "Skip now",
+    "profile_setting": "Profile Setting",
     "loginBtn2": "Login",
     "loginFailed": "Unable to login,please check your login information!",
     "logout": "Logout",
     "welcomeMessage": "Wish you joy and happiness,have a productive day with Life.",
     "sendResetLink": "Send reset link",
+    "remember_your_password": "Remember your password?",
     "backToLogin": "Back to login",
-    "email": "Email",
-    "emailPlaceholder": "Enter your account email",
+    "email": "Your email",
+    "enter_your_email_or_username": "Enter Your Email Or Username",
+    "enter_password": "Enter Password",
+    "emailPlaceholder": "Enter email",
     "resetPassword": "Reset Password",
     "resetPasswordText": "Please create your new password 👌",
     "newPasswordLabel": "New Password",
-    "confirmPasswordLabel": "Confirm New Password",
+    "confirmPasswordLabel": "Repeat new password",
     "setNewPasswordBtn": "Create New Password",
     "activeAccount": "Active your account",
     "activeAccountText": "Setup your password to finish activation.",
@@ -52,6 +58,7 @@
     "changePasswordSuccess": "Your password has been changed successfully!",
     "welcome_to": "Welcome to",
     "have_a_nice_day": "have a nice day",
+    "setting_your_profile": "Setting your profile",
     "password_must_contain": "Password must contain",
     "at_least_characters": "At least {number_character_password} characters",
     "at_least_1_upper": "At least 1 upper case letter (A-Z)",
@@ -62,7 +69,11 @@
     "congratulationsText": "Your password has been updated successfully!",
     "password_required": "Password is a required field",
     "password_same_currentPassword" : "New password is the same as current password",
-    "current_password_incorrect" : "Current password incorrect"
+    "current_password_incorrect" : "Current password incorrect",
+    "swipe_auth": {
+      "connect_with_your_company": "Connect with your company.",
+      "everything_you_need": "Everything you need in an easily customizable dashboard."
+    }
   },
   "themeCustomizer": {
     "title": "Theme Customizer",
@@ -1109,10 +1120,21 @@
         "pin": "Pin",
         "un_pin": "Un pin",
         "my_notes": "My notes"
+      },
+      "setting_widgets": {
+        "title": "Setting Widgets",
+        "save_setting": "Save Setting"
       }
     },
     "notification": {
-      "title": "Notification"
+      "title": "Notification",
+      "text": {
+        "mark_all_as_read": "Mark all as read"
+      },
+      "buttons": {
+        "mark_as_read": "Mark as read",
+        "remove_this_notification": "Remove this notification"
+      }
     },
     "drive": {
       "title": {
