@@ -1,18 +1,13 @@
 import { useFormatMessage } from "@apps/utility/common"
 import React from "react"
-
+import { NavLink as Link } from "react-router-dom"
 // ** Reactstrap Imports
 import { UncontrolledTooltip } from "reactstrap"
 
 const NavbarChat = () => {
   return (
     <li className="nav-item">
-      <a
-        href="/chat"
-        aria-haspopup="true"
-        className="nav-link"
-        aria-expanded="false"
-        id="chat">
+      <Link to="/chat" className="nav-link" id="chat">
         <svg
           className="bell no-noti"
           xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +50,7 @@ const NavbarChat = () => {
         <UncontrolledTooltip target="chat">
           {useFormatMessage("layout.chat")}
         </UncontrolledTooltip>
-      </a>
+      </Link>
     </li>
   )
 }
