@@ -277,7 +277,7 @@ const PostHeader = (props) => {
               toggleModalCreatePost={toggleModalCreatePost}
               toggleModalCreateEvent={toggleModalCreateEvent}
               toggleModalAnnouncement={toggleModalAnnouncement}
-              handleUnPinPost = {handleUnPinPost}
+              handleUnPinPost={handleUnPinPost}
             />
           </div>
         )}

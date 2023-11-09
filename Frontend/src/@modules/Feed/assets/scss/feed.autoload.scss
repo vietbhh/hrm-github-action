@@ -677,13 +677,14 @@ $background-color-checkbox: #139ff8;
     display: flex;
     align-items: center;
     height: 40px;
-    font-weight: 400;
-    font-size: 14px;
-    color: #9d9fa4;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--neutral-shade-3, #696760);
     border-radius: 14px;
     background-color: #ffffff;
     gap: 10px;
     padding: 0 30px;
+    font-family: "Be Vietnam Pro";
   }
 }
 
@@ -1983,7 +1984,7 @@ $background-color-checkbox: #139ff8;
       padding: 12px 24px;
 
       .ant-collapse-header {
-        padding: 0 0 24px 0;
+        padding: 12px 0 12px 0;
       }
 
       .ant-collapse-content-box {
@@ -2000,6 +2001,11 @@ $background-color-checkbox: #139ff8;
             align-items: center;
             gap: 10px;
             font-size: 18px;
+          }
+        }
+        .ant-collapse-content{
+          .ant-collapse-content-box{
+           /* padding: 0 16px 16px 24px;*/
           }
         }
       }
@@ -2181,6 +2187,7 @@ $background-color-checkbox: #139ff8;
               padding: 7px 10px;
               border: none !important;
               color: var(--other-azure-500, #4986FF) !important;
+              font-weight: 400;
               .fa-solid {
                 font-weight: 900 !important;
               }
@@ -4396,7 +4403,7 @@ $background-color-checkbox: #139ff8;
             border-color: #f9d324;
           }
           .select-member-select{
-            .select_menu{
+            .select__menu{
               border-radius: 12px;
               background: var(--other-bg-screen, #F0F3F6) !important;
               /* Shadow/Soft */

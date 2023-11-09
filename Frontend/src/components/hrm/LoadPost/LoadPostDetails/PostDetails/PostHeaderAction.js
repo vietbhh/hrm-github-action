@@ -2,13 +2,14 @@ import { downloadApi } from "@apps/modules/download/common/api"
 import SwAlert from "@apps/utility/SwAlert"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
-import { feedApi, savedApi } from "@modules/Feed/common/api"
+import { feedApi, savedApi, announcementApi } from "@modules/Feed/common/api"
 import { Dropdown } from "antd"
-import React, { Fragment } from "react"
+import React, { Fragment, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import ModalViewEditHistory from "../modals/ModalViewEditHistory"
 import { showAddEventCalendarModal } from "../../../../../@apps/modules/calendar/common/reducer/calendar"
 
+import { AbilityContext } from "utility/context/Can"
 const PostHeaderAction = (props) => {
   const {
     data,
@@ -21,7 +22,7 @@ const PostHeaderAction = (props) => {
     toggleModalCreatePost,
     toggleModalCreateEvent,
     toggleModalAnnouncement,
-    handleUnPinPost,
+    handleUnPinPost
   } = props
 
   const [state, setState] = useMergedState({
@@ -29,9 +30,10 @@ const PostHeaderAction = (props) => {
     modal_view_edit_history: false
   })
 
+  const ability = useContext(AbilityContext)
+  const ManagePost = ability.can("ManagePost", "feed")
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
-
   const {
     save_post,
     turn_off_notification,
@@ -515,8 +517,86 @@ const PostHeaderAction = (props) => {
       condition: true,
       ...view_edit_history
     },
-
     ..._rest
+  }
+  if (data?.type === "announcement") {
+    if (data?.dataLink?.pin) {
+      actions.unpin_post = {
+        onClick: () => {
+          handleUnpinAnnou()
+        },
+        label: (
+          <a
+            onClick={(e) => {
+              e.preventDefault()
+            }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none">
+              <path
+                d="M12 11V23"
+                stroke="#292D32"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M6 2L18 2"
+                stroke="#292D32"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M7.82143 9.64349V2H16.2589V9.65697C16.2589 10.3042 16.4682 10.934 16.8556 11.4525L19.8058 15.4015C20.2985 16.061 19.8279 17 19.0047 17H5.01561C4.1887 17 3.71911 16.0535 4.21935 15.395L7.21021 11.4584C7.60675 10.9364 7.82143 10.299 7.82143 9.64349Z"
+                stroke="#292D32"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M21 4L3 19"
+                stroke="#292D32"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="div-text">
+              <span className="div-text__title">
+                {useFormatMessage("modules.feed.post.text.unpin_announcement")}
+              </span>
+            </div>
+          </a>
+        ),
+        condition: true
+      }
+    }
+  }
+  const handleUnpinAnnou = () => {
+    const dataUpdate = {
+      announcement_title: data?.dataLink?.title,
+      dataAttendees: data?.dataLink?.send_to,
+      details: data?.dataLink?.content,
+      idAnnouncement: data?.dataLink?.id,
+      idPost: data?._id,
+      pin_to_top: false,
+      valueShowAnnouncement: data?.dataLink?.show_announcements,
+      coverImage: { src: data?.dataLink?.cover_image, image: null }
+    }
+    const params = {
+      body: JSON.stringify(dataUpdate)
+    }
+    announcementApi
+      .postSubmitAnnouncement(params)
+      .then(async (res) => {
+        notification.showSuccess({
+          text: useFormatMessage("notification.success")
+        })
+      })
+      .catch((err) => {
+        notification.showError({
+          text: useFormatMessage("notification.something_went_wrong")
+        })
+      })
   }
   const items = [
     ..._.map(
@@ -652,6 +732,7 @@ const PostHeaderAction = (props) => {
         })
       })
       .catch((err) => {
+        console.log("err", err)
         notification.showError({
           text: useFormatMessage("notification.something_went_wrong")
         })

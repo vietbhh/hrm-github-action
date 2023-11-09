@@ -247,7 +247,7 @@ const LoadPost = (props) => {
           isViewEditHistory={isViewEditHistory}
           isInWorkspace={isInWorkspace}
           renderWithTag={renderWithTag}
-          handleUnPinPost = {handleUnPinPost}
+          handleUnPinPost={handleUnPinPost}
         />
         <div
           className={classNames("post-body", {

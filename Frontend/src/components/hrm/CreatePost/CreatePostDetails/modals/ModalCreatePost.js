@@ -396,9 +396,7 @@ const ModalCreatePost = (props) => {
         })
       }
     } else {
-      setState({
-        privacy_type: "workspace"
-      })
+      //   setState({ privacy_type: "workspace"})
     }
   }, [dataPost, modal])
 
@@ -544,23 +542,9 @@ const ModalCreatePost = (props) => {
                   <i className="fa-solid fa-chevron-up"></i>
                 </span>
               ) : (
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M26 18V25" stroke="#696760" />
-                  <path
-                    d="M26 20.1744C25.8333 19.4673 24 18.5835 23 18.5835C22.5 18.5835 21 18.5835 21 21.235C21 21.7653 21 24.4168 23 24.4168C23.5 24.4168 26 24.4168 26 22.2956"
-                    stroke="#696760"
-                  />
-                  <path
-                    d="M6 25L12.0937 10.2541C12.8151 8.50849 15.3312 8.64347 15.8616 10.4562L20.1176 25"
-                    stroke="#696760"
-                  />
-                  <path d="M8.49219 19H18.3785" stroke="#696760" />
-                </svg>
+                <span className="icon toggle-background">
+                  <span>Aa</span>
+                </span>
               )}
             </li>
           </Tooltip>
@@ -584,11 +568,13 @@ const ModalCreatePost = (props) => {
           />
         </ul>
         {state.poll_vote && (
-          <PollVote
-            setPollVoteDetail={setPollVoteDetail}
-            poll_vote_detail={state.poll_vote_detail}
-            toggleModalPollVote={toggleModalPollVote}
-          />
+          <>
+            <PollVote
+              setPollVoteDetail={setPollVoteDetail}
+              poll_vote_detail={state.poll_vote_detail}
+              toggleModalPollVote={toggleModalPollVote}
+            />
+          </>
         )}
         <Button.Ripple
           color="primary"
@@ -599,7 +585,9 @@ const ModalCreatePost = (props) => {
             state.loadingSubmit || (state.poll_vote && state.disable_btn_post)
           }>
           {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
-          {useFormatMessage("modules.feed.create_post.text.post")}
+          {state.poll_vote
+            ? useFormatMessage("modules.feed.create_post.text.post_poll")
+            : useFormatMessage("modules.feed.create_post.text.post")}
         </Button.Ripple>
       </ModalBody>
     </Modal>

@@ -17,95 +17,127 @@ const HeaderCreatePost = (props) => {
     toggleModalCreatePost,
     is_poll
   } = props
-
   // ** render
   const items = [
     {
       label: (
-        <a
-          className=""
-          onClick={(e) => {
-            e.preventDefault()
-            setPrivacyType("workspace")
-          }}>
+        <a className="">
           <ErpRadio
             checked={privacy_type === "workspace" || privacy_type === "default"}
             onChange={() => {}}
           />
           <svg
-            style={{ marginRight: "0.4rem", marginLeft: "-0.1rem" }}
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none">
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <path
-              d="M13.3575 4.1175V4.6725L10.7025 3.135C9.69746 2.5575 8.29496 2.5575 7.29746 3.135L4.64246 4.68V4.1175C4.64246 2.43 5.56496 1.5 7.25246 1.5H10.7475C12.435 1.5 13.3575 2.43 13.3575 4.1175Z"
-              fill="#139FF8"
+              d="M4.25977 11.0199V15.9899C4.25977 17.8099 4.25977 17.8099 5.97977 18.9699L10.7098 21.6999C11.4198 22.1099 12.5798 22.1099 13.2898 21.6999L18.0198 18.9699C19.7398 17.8099 19.7398 17.8099 19.7398 15.9899V11.0199C19.7398 9.19994 19.7398 9.19994 18.0198 8.03994L13.2898 5.30994C12.5798 4.89994 11.4198 4.89994 10.7098 5.30994L5.97977 8.03994C4.25977 9.19994 4.25977 9.19994 4.25977 11.0199Z"
+              stroke="#292D32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
-              d="M13.38 5.97749L13.275 5.92499L12.255 5.33999L10.14 4.11749C9.495 3.74249 8.505 3.74249 7.86 4.11749L5.745 5.33249L4.725 5.93249L4.59 5.99999C3.2775 6.88499 3.1875 7.04999 3.1875 8.46749V11.8575C3.1875 13.275 3.2775 13.44 4.62 14.3475L7.86 16.215C8.1825 16.41 8.5875 16.4925 9 16.4925C9.405 16.4925 9.8175 16.4025 10.14 16.215L13.41 14.325C14.73 13.44 14.8125 13.2825 14.8125 11.8575V8.46749C14.8125 7.04999 14.7225 6.88499 13.38 5.97749ZM11.0925 10.125L10.635 10.6875C10.56 10.77 10.5075 10.9275 10.515 11.04L10.56 11.76C10.59 12.2025 10.275 12.4275 9.8625 12.27L9.195 12C9.09 11.9625 8.9175 11.9625 8.8125 12L8.145 12.2625C7.7325 12.4275 7.4175 12.195 7.4475 11.7525L7.4925 11.0325C7.5 10.92 7.4475 10.7625 7.3725 10.68L6.9075 10.125C6.6225 9.78749 6.75 9.41249 7.1775 9.29999L7.875 9.11999C7.9875 9.08999 8.115 8.98499 8.175 8.89499L8.565 8.29499C8.805 7.91999 9.1875 7.91999 9.435 8.29499L9.825 8.89499C9.885 8.99249 10.02 9.08999 10.125 9.11999L10.8225 9.29999C11.25 9.41249 11.3775 9.78749 11.0925 10.125Z"
-              fill="#139FF8"
+              d="M17.5 7.63V5C17.5 3 16.5 2 14.5 2H9.5C7.5 2 6.5 3 6.5 5V7.56"
+              stroke="#292D32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12.6298 10.99L13.1998 11.88C13.2898 12.02 13.4898 12.16 13.6398 12.2L14.6598 12.46C15.2898 12.62 15.4598 13.16 15.0498 13.66L14.3798 14.47C14.2798 14.6 14.1998 14.83 14.2098 14.99L14.2698 16.04C14.3098 16.69 13.8498 17.02 13.2498 16.78L12.2698 16.39C12.1198 16.33 11.8698 16.33 11.7198 16.39L10.7398 16.78C10.1398 17.02 9.67978 16.68 9.71978 16.04L9.77978 14.99C9.78978 14.83 9.70978 14.59 9.60978 14.47L8.93978 13.66C8.52978 13.16 8.69978 12.62 9.32978 12.46L10.3498 12.2C10.5098 12.16 10.7098 12.01 10.7898 11.88L11.3598 10.99C11.7198 10.45 12.2798 10.45 12.6298 10.99Z"
+              stroke="#292D32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
-          <span>
+
+          <span className="ms-50">
             {useFormatMessage("modules.feed.create_post.text.workspace")}
           </span>
         </a>
       ),
-      key: "1"
+      key: "1",
+      onClick: () => setPrivacyType("workspace")
     },
     {
       label: (
-        <a
-          className=""
-          onClick={(e) => {
-            e.preventDefault()
-            setPrivacyType("only_me")
-          }}>
+        <a className="">
           <ErpRadio checked={privacy_type === "only_me"} onChange={() => {}} />
-          <i className="fa-solid fa-lock-keyhole me-50"></i>
-          <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="M6 10V8C6 4.69 7 2 12 2C17 2 18 4.69 18 8V10"
+              stroke="#292D32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12 18.5C13.3807 18.5 14.5 17.3807 14.5 16C14.5 14.6193 13.3807 13.5 12 13.5C10.6193 13.5 9.5 14.6193 9.5 16C9.5 17.3807 10.6193 18.5 12 18.5Z"
+              stroke="#292D32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M17 22H7C3 22 2 21 2 17V15C2 11 3 10 7 10H17C21 10 22 11 22 15V17C22 21 21 22 17 22Z"
+              stroke="#292D32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="ms-50">
             {useFormatMessage("modules.feed.create_post.text.only_me")}
           </span>
         </a>
       ),
-      key: "2"
+      key: "2",
+      onClick: () => setPrivacyType("only_me")
     }
   ]
   const renderTextDropdown = (privacy) => {
     if (privacy === "workspace" || privacy === "default") {
       return (
         <>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M3.55078 9.18329V13.325C3.55078 14.8416 3.55078 14.8416 4.98411 15.8083L8.92578 18.0833C9.51745 18.425 10.4841 18.425 11.0758 18.0833L15.0174 15.8083C16.4508 14.8416 16.4508 14.8416 16.4508 13.325V9.18329C16.4508 7.66662 16.4508 7.66662 15.0174 6.69995L11.0758 4.42495C10.4841 4.08328 9.51745 4.08328 8.92578 4.42495L4.98411 6.69995C3.55078 7.66662 3.55078 7.66662 3.55078 9.18329Z"
-              stroke="#4986FF"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M14.5846 6.35829V4.16663C14.5846 2.49996 13.7513 1.66663 12.0846 1.66663H7.91797C6.2513 1.66663 5.41797 2.49996 5.41797 4.16663V6.29996"
-              stroke="#4986FF"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M10.5264 9.1583L11.0014 9.89997C11.0764 10.0166 11.2431 10.1333 11.3681 10.1666L12.2181 10.3833C12.7431 10.5166 12.8848 10.9666 12.5431 11.3833L11.9848 12.0583C11.9014 12.1666 11.8348 12.3583 11.8431 12.4916L11.8931 13.3666C11.9264 13.9083 11.5431 14.1833 11.0431 13.9833L10.2264 13.6583C10.1014 13.6083 9.89311 13.6083 9.76811 13.6583L8.95144 13.9833C8.45144 14.1833 8.06811 13.9 8.10144 13.3666L8.15144 12.4916C8.15978 12.3583 8.09311 12.1583 8.00978 12.0583L7.45144 11.3833C7.10978 10.9666 7.25144 10.5166 7.77644 10.3833L8.62644 10.1666C8.75978 10.1333 8.92644 10.0083 8.99311 9.89997L9.46811 9.1583C9.76811 8.7083 10.2348 8.7083 10.5264 9.1583Z"
-              stroke="#4986FF"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-
+          <span className="me-50">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M3.55078 9.18329V13.325C3.55078 14.8416 3.55078 14.8416 4.98411 15.8083L8.92578 18.0833C9.51745 18.425 10.4841 18.425 11.0758 18.0833L15.0174 15.8083C16.4508 14.8416 16.4508 14.8416 16.4508 13.325V9.18329C16.4508 7.66662 16.4508 7.66662 15.0174 6.69995L11.0758 4.42495C10.4841 4.08328 9.51745 4.08328 8.92578 4.42495L4.98411 6.69995C3.55078 7.66662 3.55078 7.66662 3.55078 9.18329Z"
+                stroke="#4986FF"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14.5846 6.35829V4.16663C14.5846 2.49996 13.7513 1.66663 12.0846 1.66663H7.91797C6.2513 1.66663 5.41797 2.49996 5.41797 4.16663V6.29996"
+                stroke="#4986FF"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M10.5264 9.1583L11.0014 9.89997C11.0764 10.0166 11.2431 10.1333 11.3681 10.1666L12.2181 10.3833C12.7431 10.5166 12.8848 10.9666 12.5431 11.3833L11.9848 12.0583C11.9014 12.1666 11.8348 12.3583 11.8431 12.4916L11.8931 13.3666C11.9264 13.9083 11.5431 14.1833 11.0431 13.9833L10.2264 13.6583C10.1014 13.6083 9.89311 13.6083 9.76811 13.6583L8.95144 13.9833C8.45144 14.1833 8.06811 13.9 8.10144 13.3666L8.15144 12.4916C8.15978 12.3583 8.09311 12.1583 8.00978 12.0583L7.45144 11.3833C7.10978 10.9666 7.25144 10.5166 7.77644 10.3833L8.62644 10.1666C8.75978 10.1333 8.92644 10.0083 8.99311 9.89997L9.46811 9.1583C9.76811 8.7083 10.2348 8.7083 10.5264 9.1583Z"
+                stroke="#4986FF"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
           {useFormatMessage("modules.feed.create_post.text.workspace")}
         </>
       )
@@ -114,7 +146,36 @@ const HeaderCreatePost = (props) => {
     if (privacy === "only_me") {
       return (
         <>
-          <i className="fa-solid fa-lock-keyhole me-50"></i>
+          <span className="me-50">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none">
+              <path
+                d="M6 10V8C6 4.69 7 2 12 2C17 2 18 4.69 18 8V10"
+                stroke="#4986FF"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 18.5C13.3807 18.5 14.5 17.3807 14.5 16C14.5 14.6193 13.3807 13.5 12 13.5C10.6193 13.5 9.5 14.6193 9.5 16C9.5 17.3807 10.6193 18.5 12 18.5Z"
+                stroke="#4986FF"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17 22H7C3 22 2 21 2 17V15C2 11 3 10 7 10H17C21 10 22 11 22 15V17C22 21 21 22 17 22Z"
+                stroke="#4986FF"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
           {useFormatMessage("modules.feed.create_post.text.only_me")}
         </>
       )
@@ -212,20 +273,36 @@ const HeaderCreatePost = (props) => {
                   <path
                     d="M16.5984 7.45837L11.1651 12.8917C10.5234 13.5334 9.47344 13.5334 8.83177 12.8917L3.39844 7.45837"
                     stroke="#4986FF"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               )}
               overlayClassName="modal-header-privacy-choose-dropdown">
-              <a
-                onClick={(e) => e.preventDefault()}
-                className="modal-header-privacy-choose-dropdown-a">
+              <a className="modal-header-privacy-choose-dropdown-a">
                 <Button.Ripple size="sm" color="flat-default" className="">
-                  {renderTextDropdown(privacy_type)}
-                  <i className="fa-sharp fa-solid fa-caret-down ms-50"></i>
+                  <div className="privacy-workspace d-flex align-items-baseline">
+                    {renderTextDropdown(privacy_type)}
+                    <span className="ms-50">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M16.5984 7.45837L11.1651 12.8917C10.5234 13.5334 9.47344 13.5334 8.83177 12.8917L3.39844 7.45837"
+                          stroke="#4986FF"
+                          strokeWidth="1.5"
+                          strokeMiterlimit="10"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
                 </Button.Ripple>
               </a>
             </Dropdown>
