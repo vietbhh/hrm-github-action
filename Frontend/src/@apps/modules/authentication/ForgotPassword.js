@@ -10,9 +10,10 @@ import password3D from "@src/assets/images/pages/login/password3D.png"
 import axios from "axios"
 import { cloneDeep } from "lodash-es"
 import { Fragment } from "react"
-import { AlertCircle, ChevronLeft, Info } from "react-feather"
+import { AlertCircle, Info } from "react-feather"
 import Helmet from "react-helmet"
 import { useForm } from "react-hook-form"
+import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { Alert, Button, Col, Form, Row, Spinner } from "reactstrap"
 import Header from "./Header"
@@ -23,7 +24,7 @@ const ForgotPassword = () => {
     mode: "onChange"
   })
   const { handleSubmit, reset } = methods
-
+  const appName = useSelector((state) => state.layout.app_name)
   const [state, setState] = useMergedState({
     error: false,
     success: false,
@@ -179,7 +180,7 @@ const ForgotPassword = () => {
                 </div>
 
                 <div className="footer-section text-center">
-                  <p>2023 Life Stud.io</p>
+                  <p>2023 {appName}</p>
                 </div>
               </div>
             </Col>

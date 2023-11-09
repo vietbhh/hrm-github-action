@@ -1,8 +1,6 @@
 // ** React Imports
 import { useFormatMessage } from "@apps/utility/common"
 import { AbilityContext } from "@src/utility/context/Can"
-import { updateListUsers } from "@store/app/users"
-import { handleLogin } from "@store/authentication"
 import { Fragment, useContext, useRef, useState } from "react"
 import Helmet from "react-helmet"
 import { FormProvider, useForm } from "react-hook-form"
@@ -11,15 +9,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { userApi } from "../users/common/api"
 // ** Styles
 import "@scss/friday/authentication.scss"
-import { Button, Col, Row, Spinner } from "reactstrap"
 import noAvatar from "@src/assets/images/erp/noavt.png"
 import login3D from "@src/assets/images/pages/login/login3D.png"
+import { Button, Col, Row, Spinner } from "reactstrap"
 // ** Components
+import AvatarBox from "@apps/components/common/AvatarBox"
 import { ErpDate, ErpInput } from "@apps/components/common/ErpField"
-import Header from "./Header"
 import dayjs from "dayjs"
 import notification from "../../utility/notification"
-import AvatarBox from "@apps/components/common/AvatarBox"
+import Header from "./Header"
 import ImageSlider from "./ImageSlider"
 
 const Onboard = (props) => {
@@ -245,7 +243,7 @@ const Onboard = (props) => {
                   </div>
                 </div>
                 <div className="footer-section text-center">
-                  <p>2023 Life Stud.io</p>
+                  <p>2023 {appName}</p>
                 </div>
               </div>
             </Col>

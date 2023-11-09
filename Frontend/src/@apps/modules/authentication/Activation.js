@@ -11,6 +11,10 @@ import "@scss/friday/authentication.scss"
 import password3D from "@src/assets/images/pages/login/password3D.png"
 import useJwt from "@src/auth/jwt/useJwt"
 import { AbilityContext } from "@src/utility/context/Can"
+import { initAppData } from "@store/app/app"
+import { updateListUsers } from "@store/app/users"
+import { handleLogin } from "@store/authentication"
+import { initialLayout } from "@store/layout"
 import axios from "axios"
 import classNames from "classnames"
 import { cloneDeep } from "lodash-es"
@@ -18,33 +22,26 @@ import { Fragment, useContext, useEffect } from "react"
 import { AlertCircle, ChevronLeft, Info } from "react-feather"
 import Helmet from "react-helmet"
 import { useForm } from "react-hook-form"
-import { useDispatch } from "react-redux"
+import { useTranslation } from "react-i18next"
+import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import {
   Alert,
   Button,
-  Card,
-  CardBody,
-  CardText,
-  CardTitle,
   Col,
   Form,
   Row,
   Spinner
 } from "reactstrap"
-import { initAppData } from "@store/app/app"
-import { handleLogin } from "@store/authentication"
-import { initialLayout } from "@store/layout"
 import * as yup from "yup"
 import Header from "./Header"
-import { useTranslation } from "react-i18next"
-import { updateListUsers } from "@store/app/users"
 import ImageSlider from "./ImageSlider"
 
 const Activation = () => {
   const { i18n } = useTranslation()
   const history = useNavigate()
   const dispatch = useDispatch()
+  const appName = useSelector((state) => state.layout.app_name)
   const ability = useContext(AbilityContext)
   const [state, setState] = useMergedState({
     error: false,
@@ -469,7 +466,7 @@ const Activation = () => {
                     </div>
                   </div>
                   <div className="footer-section text-center">
-                    <p>2023 Life Stud.io</p>
+                    <p>2023 {appName}</p>
                   </div>
                 </div>
               </div>
