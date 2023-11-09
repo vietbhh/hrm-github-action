@@ -141,20 +141,20 @@ const FeedCreateAndLoad = (props) => {
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             slidesPerView={3}
-            Autoplay
+            autoplay
             navigation={true}
             breakpoints={{
               640: {
-                slidesPerView: 2,
+                slidesPerView: 1,
                 spaceBetween: 30
               },
               768: {
                 slidesPerView: 2,
-                spaceBetween: 30
+                spaceBetween: 40
               },
               1024: {
                 slidesPerView: 2,
-                spaceBetween: 30
+                spaceBetween: 40
               }
             }}
             className="announcements">
