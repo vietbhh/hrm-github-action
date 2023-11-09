@@ -1,7 +1,7 @@
 import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
-import React, { Fragment, useEffect, useMemo } from "react"
+import React, { Fragment, useEffect, useMemo, useRef } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { feedApi } from "../common/api"
@@ -42,8 +42,10 @@ const LoadFeed = (props) => {
   } = props
 
   const [state, setState] = useMergedState({
+    scrollPosition: 0,
+    loading: true,
     hasMoreLazy: false,
-    loadingPost: false,
+    loadingPost: undefined,
     loadingPostCreateNew: false,
     idPostCreateNew: "",
     dataCreateNewTemp: [],
@@ -54,7 +56,6 @@ const LoadFeed = (props) => {
   })
 
   const pageLength = 7
-  const maxPageLength = 20
   const workspaceId = workspace[0]
 
   const handleSetStateRedux = isWorkspace ? setWorkspaceState : setFeedState
@@ -74,7 +75,7 @@ const LoadFeed = (props) => {
   const feedRedux = useSelector((state) => state.feed)
   const { feedState, workspaceState } = feedRedux
 
-  const { dataPost, hasMore, totalPost, page } = isWorkspace
+  const { dataPost, hasMore, totalPost, page, scrollPosition } = isWorkspace
     ? workspaceState[workspaceId] === undefined
       ? { dataPost: [], hasMore: false, totalPost: 0, page: 0 }
       : workspaceState[workspaceId]
@@ -85,19 +86,29 @@ const LoadFeed = (props) => {
   const dispatch = useDispatch()
 
   // ** function
-  const setScrollPosition = (position) => {
-    setState({
-      scrollPosition: position
-    })
-  }
+  const debounceSet = useRef(
+    _.debounce((nextValue) => {
+      dispatch(
+        handleSetStateRedux({
+          data: {
+            scrollPosition: nextValue
+          },
+          type: "update_state"
+        })
+      )
+    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
+  ).current
 
   const handleScroll = () => {
-    const position = window.scrollY
-    setScrollPosition(position)
+    debounceSet(window.scrollY)
   }
 
   const loadData = () => {
-    setState({ loadingPost: true, hasMore: false, hasMoreLazy: false })
+    setState({
+      loadingPost: true,
+      hasMore: false,
+      hasMoreLazy: false
+    })
     const params = {
       page: page,
       pageLength: pageLength,
@@ -121,11 +132,12 @@ const LoadFeed = (props) => {
 
         if (dataPost.length === 0) {
           if (res.data.dataPost.length === 0) {
+            console.log(2)
             setState({
               arrPostIdSeen: arrPostIdSeen
             })
 
-            console.log(1)
+            //console.log(1)
             dispatch(
               handleSetStateRedux({
                 type: "init",
@@ -138,11 +150,17 @@ const LoadFeed = (props) => {
                 workspaceId: workspaceId
               })
             )
+
+            setTimeout(() => {
+              setState({
+                loadingPost: false
+              })
+            }, 500)
           } else {
             setState({
               arrPostIdSeen: arrPostIdSeen
             })
-            console.log(2)
+
             dispatch(
               handleSetStateRedux({
                 type: "init",
@@ -158,10 +176,10 @@ const LoadFeed = (props) => {
           }
         } else {
           setState({
-            arrPostIdSeen: arrPostIdSeen
+            arrPostIdSeen: arrPostIdSeen,
+            loading: false
           })
 
-          console.log(3)
           dispatch(
             handleAppendDataRedux({
               dataPost: res.data.dataPost,
@@ -170,10 +188,6 @@ const LoadFeed = (props) => {
             })
           )
         }
-
-        setTimeout(() => {
-          setState({ loadingPost: false })
-        }, 1000)
       })
       .catch((err) => {
         setState({ loadingPost: false, hasMore: true })
@@ -206,7 +220,9 @@ const LoadFeed = (props) => {
     index,
     dataPostParam = undefined
   ) => {
-    setState({ loadingPost: false })
+    setTimeout(() => {
+      setState({ loadingPost: false })
+    }, 500)
 
     if (hasMore === true) {
       setState({ hasMoreLazy: true })
@@ -295,16 +311,21 @@ const LoadFeed = (props) => {
     setState({ dataPost: allDataPost })
   }
 
+  const restorationRef = useRef(null)
+
   // ** useEffect
   useEffect(() => {
-    console.log(dataPost)
-  }, [dataPost])
+    if (state.loading === false) {
+      const element = document.getElementById(
+        "post_id_654c4a299090bfeb1ff831bf"
+      )
 
-  useEffect(() => {
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual"
+      if (element !== null) {
+        //element.scrollIntoView({ behavior: "auto", block: "center" })
+      }
+      //window.scrollTo(0, scrollPosition)
     }
-  }, [state.loadingPost])
+  }, [state.loading])
 
   useEffect(() => {
     loadData()
@@ -373,15 +394,16 @@ const LoadFeed = (props) => {
   }, [dataEmployee])
 
   // ** render
-  const renderComponent = useMemo(() => {
-    return (
+  return (
+    <Fragment>
       <div className="load-feed">
         <InfiniteScroll
           dataLength={dataPost.length}
           next={() => {
             loadData()
           }}
-          hasMore={state.hasMoreLazy}>
+          hasMore={state.hasMoreLazy}
+          onScroll={() => handleScroll()}>
           {state.loadingPostCreateNew && (
             <div className="div-loading">
               <Skeleton avatar active paragraph={{ rows: 2 }} />
@@ -396,6 +418,9 @@ const LoadFeed = (props) => {
                   handleAfterLoadLazyLoadComponent(value, index)
                 }}>
                 <LoadPost
+                  restorationRef={
+                    value._id === "654a06cbab70ca49cced48d9" ? restorationRef : null
+                  }
                   data={value}
                   index={index}
                   dataLink={value.dataLink}
@@ -453,12 +478,6 @@ const LoadFeed = (props) => {
           )}
         </InfiniteScroll>
       </div>
-    )
-  }, [dataPost])
-
-  return (
-    <Fragment>
-      <Fragment>{renderComponent}</Fragment>
       <EventDetailsModal
         afterRemove={handleAfterRemove}
         afterUpdateStatus={handleAfterUpdateStatus}

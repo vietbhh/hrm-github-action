@@ -14,7 +14,9 @@ const feedSlice = createSlice({
         state.feedState = payload.data
       } else if (payload.type === "update") {
         const data = state.feedState.dataPost
-        if (data.some((itemSome) => itemSome._id === payload.data.dataPost._id)) {
+        if (
+          data.some((itemSome) => itemSome._id === payload.data.dataPost._id)
+        ) {
           const newData = data.map((item) => {
             if (item._id === payload.data.dataPost._id) {
               return { ...payload.data.dataPost }
@@ -24,6 +26,11 @@ const feedSlice = createSlice({
           })
 
           state.feedState.dataPost = newData
+        }
+      } else if (payload.type === "update_state") {
+        state.feedState = {
+          ...state.feedState,
+          ...payload.data
         }
       }
     },
@@ -36,8 +43,10 @@ const feedSlice = createSlice({
       }
     },
     appendDataFeedState: (state, action) => {
-      const newData = [...state.feedState.dataPost, ...action.payload.dataPost]
-      state.feedState.dataPost = newData
+      state.feedState.dataPost = [
+        ...state.feedState.dataPost,
+        ...action.payload.dataPost
+      ]
       state.feedState.hasMore = action.payload.hasMore
       state.feedState.page = action.payload.page
     },
@@ -49,7 +58,9 @@ const feedSlice = createSlice({
         state.workspaceState[workspaceId] = payload.data
       } else if (payload.type === "update") {
         const data = state.workspaceState[workspaceId]["dataPost"]
-        if (data.some((itemSome) => itemSome._id === payload.data.dataPost._id)) {
+        if (
+          data.some((itemSome) => itemSome._id === payload.data.dataPost._id)
+        ) {
           const newData = data.map((item) => {
             if (item._id === payload.data.dataPost._id) {
               return { ...payload.data.dataPost }
@@ -59,6 +70,11 @@ const feedSlice = createSlice({
           })
 
           state.workspaceState[workspaceId]["dataPost"] = newData
+        }
+      } else if (payload.type === "update_state") {
+        state.workspaceState[workspaceId] = {
+          ...state.workspaceState[workspaceId],
+          ...payload.data
         }
       }
     },

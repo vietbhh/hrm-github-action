@@ -75,6 +75,7 @@ const WorkspaceHeader = (props) => {
       label: useFormatMessage("modules.workspace.display.information")
     }
   ]
+  
   const renderDropMenu = (dataWorkspace) => {
     const items = [
       {

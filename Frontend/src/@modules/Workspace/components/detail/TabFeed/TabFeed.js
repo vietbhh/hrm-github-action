@@ -34,7 +34,7 @@ const TabFeed = (props) => {
     approveStatus: "pending",
     dataPinned: [],
     joined: false,
-    loading: false``
+    loading: false
   })
 
   const userId = parseInt(useSelector((state) => state.auth.userData.id)) || 0
@@ -346,6 +346,7 @@ const TabFeed = (props) => {
         <Fragment>{renderSearchText()}</Fragment>
         <LoadFeed
           isWorkspace={true}
+          maxPostQuantity={30}
           searchTextFeed={searchTextFeed}
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}

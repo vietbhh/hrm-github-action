@@ -20,6 +20,48 @@
   max-width: 1010px;
   margin: auto;
 
+  .loading-workspace {
+    .load-header {
+      height: 450px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      .ant-skeleton {
+        width: 100%;
+
+        .ant-skeleton-image {
+          width: 100% !important;
+          border-radius: unset;
+          border-top-left-radius: 12px !important;
+          border-top-right-radius: 12px !important;
+          height: 320px;
+        }
+      }
+    }
+
+    .tab-content {
+      .ant-skeleton {
+        width: 100%;
+
+        .ant-skeleton-input {
+          width: 100% !important;
+          border-radius: 12px;
+        }
+      }
+
+      .div-left {
+        .ant-skeleton-input {
+          height: 133px;
+        }
+      }
+
+      .div-right {
+        .ant-skeleton-input {
+          height: 316px;
+        }
+      }
+    }
+  }
+
   .page-loader {
     .app-loader {
       height: 50vh !important;
@@ -1904,4 +1946,4 @@
 .create-workspace-form .text-label {
   padding-left: 1rem;
 }
-@import "workspace-responsive.scss"
+@import "workspace-responsive.scss";

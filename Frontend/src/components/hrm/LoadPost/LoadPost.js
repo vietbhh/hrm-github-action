@@ -3,7 +3,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { eventApi } from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import React, { Fragment, useMemo } from "react"
+import React, { Fragment, useEffect, useMemo } from "react"
 import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
 import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreatePost"
@@ -27,6 +27,7 @@ import { Link } from "react-router-dom"
 import PerfectScrollbar from "react-perfect-scrollbar"
 const LoadPost = (props) => {
   const {
+    restorationRef,
     data, // data post
     index, // index post
     current_url, // current url (vd: /feed)
@@ -103,6 +104,14 @@ const LoadPost = (props) => {
   const setDataUserOtherWith = (value) => setState({ dataUserOtherWith: value })
 
   // ** useEffect
+  useEffect(() => {
+    if (restorationRef === null) {
+      return 
+    }
+    console.log(restorationRef)
+    restorationRef.current.scrollIntoView({ behavior: 'auto', block: 'center' });
+  }, [])
+
   // ** render
   const renderBody = () => {
     if (data.type === "link" && data.link[0]) {
@@ -230,7 +239,7 @@ const LoadPost = (props) => {
 
   const renderComponent = useMemo(() => {
     return (
-      <div className="load-post" id={`post_id_${data?._id}`}>
+      <div className="load-post" id={`post_id_${data?._id}`} ref={restorationRef}>
         <PostHeader
           data={data}
           customAction={customAction}
