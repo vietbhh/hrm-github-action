@@ -9,7 +9,6 @@ const NavbarChat = () => {
     <li className="nav-item">
       <a
         href="/chat"
-        onClick={(e) => e.preventDefault()}
         aria-haspopup="true"
         className="nav-link"
         aria-expanded="false"
