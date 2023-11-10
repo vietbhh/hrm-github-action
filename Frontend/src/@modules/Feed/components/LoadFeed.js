@@ -1,7 +1,13 @@
 import { useMergedState, useFormatMessage } from "@apps/utility/common"
 import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 import { Skeleton } from "antd"
-import React, { Fragment, useEffect, useMemo, useRef } from "react"
+import React, {
+  Fragment,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef
+} from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { feedApi } from "../common/api"
@@ -187,6 +193,12 @@ const LoadFeed = (props) => {
               hasMore: res.data.hasMore
             })
           )
+
+          //ref.current.scrollTop = 3500
+          /*const element = document.getElementById("post_id_6548900971a802fb8ac0132d")
+          console.log(element)
+          element.scrollIntoView()*/
+          window.scrollY = 400
         }
       })
       .catch((err) => {
@@ -311,23 +323,10 @@ const LoadFeed = (props) => {
     setState({ dataPost: allDataPost })
   }
 
-  const restorationRef = useRef(null)
+  const ref = useRef(null)
 
   // ** useEffect
-  useEffect(() => {
-    if (state.loading === false) {
-      const element = document.getElementById(
-        "post_id_654c4a299090bfeb1ff831bf"
-      )
-
-      if (element !== null) {
-        //element.scrollIntoView({ behavior: "auto", block: "center" })
-      }
-      //window.scrollTo(0, scrollPosition)
-    }
-  }, [state.loading])
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     loadData()
   }, [])
 
@@ -394,96 +393,99 @@ const LoadFeed = (props) => {
   }, [dataEmployee])
 
   // ** render
-  return (
-    <Fragment>
-      <div className="load-feed">
-        <InfiniteScroll
-          dataLength={dataPost.length}
-          next={() => {
-            loadData()
-          }}
-          hasMore={state.hasMoreLazy}
-          onScroll={() => handleScroll()}>
-          {state.loadingPostCreateNew && (
-            <div className="div-loading">
-              <Skeleton avatar active paragraph={{ rows: 2 }} />
-            </div>
-          )}
+  const renderComponent = () => {
+    return (
+      <Fragment>
+        <div
+          className="load-feed"
+          ref={ref}
+          style={{ height: "auto", overflow: "hidden" }}>
+          <InfiniteScroll
+            dataLength={dataPost.length}
+            next={() => {
+              loadData()
+            }}
+            hasMore={state.hasMoreLazy}
+            onScroll={() => handleScroll()}>
+            {state.loadingPostCreateNew && (
+              <div className="div-loading">
+                <Skeleton avatar active paragraph={{ rows: 2 }} />
+              </div>
+            )}
 
-          {_.map(dataPost, (value, index) => {
-            return (
-              <LazyLoadComponent
-                key={index}
-                beforeLoad={() => {
-                  handleAfterLoadLazyLoadComponent(value, index)
-                }}>
-                <LoadPost
-                  restorationRef={
-                    value._id === "654a06cbab70ca49cced48d9" ? restorationRef : null
-                  }
-                  data={value}
-                  index={index}
-                  dataLink={value.dataLink}
-                  current_url={current_url}
-                  dataMention={state.dataMention}
-                  setData={(data, empty = false, dataCustom = {}) => {
-                    if (empty) {
-                      const _data = dataPost.filter(
-                        (item, key) => key !== index
-                      )
-                      setState({ dataPost: _data })
-                    } else {
-                      const _data = [...dataPost]
-                      _data[index] = {
-                        ...data,
-                        url_thumb: _data[index].url_thumb,
-                        url_source: _data[index].url_source,
-                        medias: _data[index].medias,
-                        dataLink: {
-                          ...data.dataLink,
-                          cover_url: _data[index]["dataLink"].cover_url,
-                          badge_url: _data[index]["dataLink"].badge_url
-                        },
-                        ...dataCustom
+            {_.map(dataPost, (value, index) => {
+              return (
+                <LazyLoadComponent
+                  key={index}
+                  beforeLoad={() => {
+                    handleAfterLoadLazyLoadComponent(value, index)
+                  }}>
+                  <LoadPost
+                    data={value}
+                    index={index}
+                    dataLink={value.dataLink}
+                    current_url={current_url}
+                    dataMention={state.dataMention}
+                    setData={(data, empty = false, dataCustom = {}) => {
+                      if (empty) {
+                        const _data = dataPost.filter(
+                          (item, key) => key !== index
+                        )
+                        setState({ dataPost: _data })
+                      } else {
+                        const _data = [...dataPost]
+                        _data[index] = {
+                          ...data,
+                          url_thumb: _data[index].url_thumb,
+                          url_source: _data[index].url_source,
+                          medias: _data[index].medias,
+                          dataLink: {
+                            ...data.dataLink,
+                            cover_url: _data[index]["dataLink"].cover_url,
+                            badge_url: _data[index]["dataLink"].badge_url
+                          },
+                          ...dataCustom
+                        }
+                        setState({ dataPost: _data })
                       }
+                    }}
+                    setDataLink={(data) => {
+                      const _data = [...dataPost]
+                      _data[index]["dataLink"] = data
                       setState({ dataPost: _data })
-                    }
-                  }}
-                  setDataLink={(data) => {
-                    const _data = [...dataPost]
-                    _data[index]["dataLink"] = data
-                    setState({ dataPost: _data })
-                  }}
-                  customAction={customAction}
-                  options_employee_department={options_employee_department}
-                  optionsMeetingRoom={optionsMeetingRoom}
-                  isInWorkspace={!_.isEmpty(workspace)}
-                  workspace={workspace}
-                  setDataCreateNew={setDataCreateNew}
-                />
-              </LazyLoadComponent>
-            )
-          })}
+                    }}
+                    customAction={customAction}
+                    options_employee_department={options_employee_department}
+                    optionsMeetingRoom={optionsMeetingRoom}
+                    isInWorkspace={!_.isEmpty(workspace)}
+                    workspace={workspace}
+                    setDataCreateNew={setDataCreateNew}
+                  />
+                </LazyLoadComponent>
+              )
+            })}
 
-          {state.loadingPost && (
-            <div className="div-loading">
-              <Skeleton avatar active paragraph={{ rows: 2 }} />
-            </div>
-          )}
+            {state.loadingPost && (
+              <div className="div-loading">
+                <Skeleton avatar active paragraph={{ rows: 2 }} />
+              </div>
+            )}
 
-          {!state.loadingPost && dataPost.length === 0 && (
-            <div className="empty-pinned pt-1">
-              <div className="w-100 d-flex flex-column justify-content-center align-items-center mb-2"></div>
-            </div>
-          )}
-        </InfiniteScroll>
-      </div>
-      <EventDetailsModal
-        afterRemove={handleAfterRemove}
-        afterUpdateStatus={handleAfterUpdateStatus}
-      />
-    </Fragment>
-  )
+            {!state.loadingPost && dataPost.length === 0 && (
+              <div className="empty-pinned pt-1">
+                <div className="w-100 d-flex flex-column justify-content-center align-items-center mb-2"></div>
+              </div>
+            )}
+          </InfiniteScroll>
+        </div>
+        <EventDetailsModal
+          afterRemove={handleAfterRemove}
+          afterUpdateStatus={handleAfterUpdateStatus}
+        />
+      </Fragment>
+    )
+  }
+  return <Fragment>{renderComponent()}</Fragment>
 }
 
 export default LoadFeed
