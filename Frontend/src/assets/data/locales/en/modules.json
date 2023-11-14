@@ -2586,7 +2586,8 @@
         "paid_time": "Paid Time",
         "deficit": "Deficit",
         "overtime": "Overtime",
-        "clock_in_out": "Clock In/Out"
+        "clock_in_out": "Clock In/Out",
+        "working_time": "Working Time"
       },
       "modals": {
         "title": {
@@ -3670,7 +3671,7 @@
       "create_post": {
         "title": "Create post",
         "text": {
-          "placeholder_input": "What are you thinking?",
+          "placeholder_input": "Write something...",
           "task": "Task",
           "event": "Event",
           "poll": "Poll",

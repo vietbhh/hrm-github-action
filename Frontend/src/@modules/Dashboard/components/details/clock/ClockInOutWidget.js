@@ -55,7 +55,7 @@ const ClockInOutWidget = (props) => {
         className="card-user-timeline dashboard-clock-in-out"
         headerProps={{
           id: "clock_in_out",
-          title: useFormatMessage("modules.attendance.title.clock_in_out"),
+          title: useFormatMessage("modules.attendance.title.working_time"),
           isRemoveWidget: true,
           classIconBg: "new-clock-icon",
           icon: (

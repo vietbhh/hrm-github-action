@@ -10,6 +10,7 @@ import UserDropdown from "./sidebar/UserDropdown"
 import VerticalNavMenuItems from "./sidebar/VerticalNavMenuItems"
 import VerticalMenuHeader from "./VerticalMenuHeader"
 import NavbarUser from "./navbar/NavbarUser"
+import SwitchMode from "./sidebar/SwitchMode"
 
 const Sidebar = (props) => {
   // ** Props
@@ -174,6 +175,11 @@ const Sidebar = (props) => {
                   windowWidthMin={windowWidthMin}
                   userId={userId}
                   notMenuCollapsed={notMenuCollapsed}
+                />
+              </div>
+              <div className="switch-mode">
+                <SwitchMode
+                  
                 />
               </div>
             </div>

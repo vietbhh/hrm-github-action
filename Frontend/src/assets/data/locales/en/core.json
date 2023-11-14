@@ -120,7 +120,7 @@
     },
     "message": "Message",
     "read_all_message": "Read all Message",
-    "chat": "Chat",
+    "chat": "Chat & Calls",
     "calendar": "Calendar",
     "setting": "Setting",
     "collaboration": "Collaboration",
@@ -128,6 +128,7 @@
     "workgroup": "Workgroup",
     "your_projects": "Your Projects",
     "your_workgroup": "Your Workgroup",
+    "your_group": "Your Group",
     "header": {
       "welcome": {
         "morning": {
@@ -413,7 +414,8 @@
     "role": "Role",
     "members": "Members",
     "descriptions": "Descriptions",
-    "appearance": "Appearance"
+    "appearance": "Appearance",
+    "tags": "Tags"
   },
   "file": {
     "upload": "Upload",

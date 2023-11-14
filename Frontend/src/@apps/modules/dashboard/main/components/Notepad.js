@@ -398,19 +398,8 @@ const Notepad = (props) => {
                 <span className="text-my-note">
                   {useFormatMessage("modules.dashboard.notepad.my_notes")}
                 </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="9"
-                  height="5"
-                  viewBox="0 0 9 5"
-                  fill="none">
-                  <path
-                    opacity="0.6"
-                    d="M8 1L4.5 4.5L1 1"
-                    stroke="#32434F"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M11.6199 5.22095L7.81655 9.02428C7.36738 9.47345 6.63238 9.47345 6.18322 9.02428L2.37988 5.22095" stroke="#696760" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
               <div className="body-header-right">
@@ -422,30 +411,26 @@ const Notepad = (props) => {
                   </Tooltip>
                 )}
 
-                <Tooltip title={useFormatMessage(`app.add`)}>
-                  <svg
-                    onClick={() => toggleModal()}
-                    className="cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="35"
-                    height="35"
-                    viewBox="0 0 35 35"
-                    fill="none">
-                    <path
-                      d="M11.6666 17.5H23.3333"
-                      stroke="#32434F"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M17.5 23.3333V11.6667"
-                      stroke="#32434F"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                <Tooltip title={useFormatMessage(`app.tags`)}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="vuesax/linear/tag">
+                      <g id="tag">
+                        <path id="Vector" d="M4.17038 15.3L8.70038 19.83C10.5604 21.69 13.5804 21.69 15.4504 19.83L19.8404 15.44C21.7004 13.58 21.7004 10.56 19.8404 8.69005L15.3004 4.17005C14.3504 3.22005 13.0404 2.71005 11.7004 2.78005L6.70038 3.02005C4.70038 3.11005 3.11038 4.70005 3.01038 6.69005L2.77038 11.69C2.71038 13.04 3.22038 14.35 4.17038 15.3Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path id="Vector_2" d="M9.5 12C10.8807 12 12 10.8807 12 9.5C12 8.11929 10.8807 7 9.5 7C8.11929 7 7 8.11929 7 9.5C7 10.8807 8.11929 12 9.5 12Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round"/>
+                      </g>
+                    </g>
                   </svg>
+                </Tooltip>
+
+                <Tooltip title={useFormatMessage(`app.add`)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="vuesax/linear/add">
+                    <g id="add">
+                      <path id="Vector" d="M6 12H18" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path id="Vector_2" d="M12 18V6" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                  </g>
+                </svg>
                 </Tooltip>
               </div>
             </div>

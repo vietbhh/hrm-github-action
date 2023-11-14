@@ -65,34 +65,16 @@ const PostHeaderAction = (props) => {
           onClick={(e) => {
             handleSavePost()
           }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="23"
-            viewBox="0 0 22 23"
-            fill="none">
-            <path
-              d="M8.47925 8.79578C10.1109 9.39161 11.8892 9.39161 13.5209 8.79578"
-              stroke="#32434F"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M15.4182 2.33337H6.58155C4.62905 2.33337 3.04321 3.92837 3.04321 5.87171V18.7875C3.04321 20.4375 4.22571 21.1342 5.67405 20.3367L10.1474 17.8525C10.624 17.5867 11.394 17.5867 11.8615 17.8525L16.3349 20.3367C17.7832 21.1434 18.9657 20.4467 18.9657 18.7875V5.87171C18.9565 3.92837 17.3707 2.33337 15.4182 2.33337Z"
-              stroke="#32434F"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M15.4182 2.33337H6.58155C4.62905 2.33337 3.04321 3.92837 3.04321 5.87171V18.7875C3.04321 20.4375 4.22571 21.1342 5.67405 20.3367L10.1474 17.8525C10.624 17.5867 11.394 17.5867 11.8615 17.8525L16.3349 20.3367C17.7832 21.1434 18.9657 20.4467 18.9657 18.7875V5.87171C18.9565 3.92837 17.3707 2.33337 15.4182 2.33337Z"
-              stroke="#32434F"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="vuesax/linear/frame">
+              <g id="frame">
+                <path id="Vector" d="M9.25 9.05005C11.03 9.70005 12.97 9.70005 14.75 9.05005" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector_2" d="M16.8203 2H7.18031C5.05031 2 3.32031 3.74 3.32031 5.86V19.95C3.32031 21.75 4.61031 22.51 6.19031 21.64L11.0703 18.93C11.5903 18.64 12.4303 18.64 12.9403 18.93L17.8203 21.64C19.4003 22.52 20.6903 21.76 20.6903 19.95V5.86C20.6803 3.74 18.9503 2 16.8203 2Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector_3" d="M16.8203 2H7.18031C5.05031 2 3.32031 3.74 3.32031 5.86V19.95C3.32031 21.75 4.61031 22.51 6.19031 21.64L11.0703 18.93C11.5903 18.64 12.4303 18.64 12.9403 18.93L17.8203 21.64C19.4003 22.52 20.6903 21.76 20.6903 19.95V5.86C20.6803 3.74 18.9503 2 16.8203 2Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+            </g>
           </svg>
+
 
           <div className="div-text">
             <span className="div-text__title">
@@ -101,12 +83,12 @@ const PostHeaderAction = (props) => {
                 ? useFormatMessage("modules.feed.post.text.unsaved")
                 : useFormatMessage("modules.feed.post.text.save_post")}
             </span>
-            <span className="div-text__des">
+            {/* <span className="div-text__des">
               {!_.isEmpty(data.user_saved) &&
               data.user_saved.indexOf(userId) !== -1
                 ? useFormatMessage("modules.feed.post.text.saved_des")
                 : useFormatMessage("modules.feed.post.text.save_post_des")}
-            </span>
+            </span> */}
           </div>
         </a>
       ),
@@ -124,9 +106,9 @@ const PostHeaderAction = (props) => {
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="23"
-            viewBox="0 0 22 23"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none">
             <path
               d="M17.4167 7.83337C18.9355 7.83337 20.1667 6.60216 20.1667 5.08337C20.1667 3.56459 18.9355 2.33337 17.4167 2.33337C15.898 2.33337 14.6667 3.56459 14.6667 5.08337C14.6667 6.60216 15.898 7.83337 17.4167 7.83337Z"
@@ -147,9 +129,9 @@ const PostHeaderAction = (props) => {
             <span className="div-text__title">
               {useFormatMessage("modules.feed.post.text.send_notification")}
             </span>
-            <span className="div-text__des">
+            {/* <span className="div-text__des">
               {useFormatMessage("modules.feed.post.text.send_notification_des")}
-            </span>
+            </span> */}
           </div>
         </a>
       ),
@@ -169,9 +151,9 @@ const PostHeaderAction = (props) => {
           data.turn_off_notification.indexOf(userId) !== -1 ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none">
               <path
                 fillRule="evenodd"
@@ -193,9 +175,9 @@ const PostHeaderAction = (props) => {
           ) : (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none">
               <path
                 fillRule="evenodd"
@@ -269,9 +251,9 @@ const PostHeaderAction = (props) => {
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none">
             <path
               d="M12.1549 3.3L4.62907 11.2658C4.3449 11.5683 4.0699 12.1642 4.0149 12.5767L3.67574 15.5467C3.55657 16.6192 4.32657 17.3525 5.3899 17.1692L8.34157 16.665C8.75407 16.5917 9.33157 16.2892 9.61574 15.9775L17.1416 8.01166C18.4432 6.63666 19.0299 5.06916 17.0041 3.15333C14.9874 1.25583 13.4566 1.925 12.1549 3.3Z"
@@ -320,9 +302,9 @@ const PostHeaderAction = (props) => {
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none">
             <path
               d="M11.9718 10.0283C14.0343 12.0908 14.0343 15.4275 11.9718 17.4808C9.90927 19.5342 6.5726 19.5433 4.51927 17.4808C2.46594 15.4183 2.45677 12.0817 4.51927 10.0283"
@@ -362,9 +344,9 @@ const PostHeaderAction = (props) => {
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none">
             <path
               d="M13.6582 1.83337H8.34159C7.71826 1.83337 6.83825 2.20005 6.39825 2.64005L2.63992 6.39838C2.19992 6.83838 1.83325 7.71838 1.83325 8.34171V13.6584C1.83325 14.2817 2.19992 15.1617 2.63992 15.6017L6.39825 19.36C6.83825 19.8 7.71826 20.1667 8.34159 20.1667H13.6582C14.2816 20.1667 15.1616 19.8 15.6016 19.36L19.3599 15.6017C19.7999 15.1617 20.1666 14.2817 20.1666 13.6584V8.34171C20.1666 7.71838 19.7999 6.83838 19.3599 6.39838L15.6016 2.64005C15.1616 2.20005 14.2816 1.83337 13.6582 1.83337Z"
@@ -416,9 +398,9 @@ const PostHeaderAction = (props) => {
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none">
             <path
               d="M20.1666 6.81087V12.3109C20.1666 13.6859 19.7082 14.8317 18.9016 15.6384C18.1041 16.4359 16.9583 16.8942 15.5833 16.8942V18.8467C15.5833 19.58 14.7674 20.0201 14.1624 19.6167L10.0833 16.8942H8.13992C8.21326 16.6192 8.24992 16.335 8.24992 16.0417C8.24992 15.1067 7.89242 14.2451 7.30575 13.5942C6.64575 12.8426 5.66492 12.375 4.58325 12.375C3.55659 12.375 2.62159 12.7967 1.95242 13.4842C1.86992 13.1176 1.83325 12.7234 1.83325 12.3109V6.81087C1.83325 4.06087 3.66659 2.22754 6.41659 2.22754H15.5833C18.3333 2.22754 20.1666 4.06087 20.1666 6.81087Z"
@@ -486,9 +468,9 @@ const PostHeaderAction = (props) => {
           }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
             fill="none">
             <path
               d="M20.1666 11C20.1666 16.06 16.0599 20.1667 10.9999 20.1667C5.93992 20.1667 1.83325 16.06 1.83325 11C1.83325 5.94004 5.93992 1.83337 10.9999 1.83337C16.0599 1.83337 20.1666 5.94004 20.1666 11Z"
@@ -819,34 +801,12 @@ const PostHeaderAction = (props) => {
         overlayClassName="post-header-button-dot"
         trigger={["click"]}>
         <div className="button-dot cursor-pointer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="4"
-            viewBox="0 0 18 4"
-            fill="none">
-            <path
-              d="M9 3C9.5523 3 10 2.5523 10 2C10 1.4477 9.5523 1 9 1C8.4477 1 8 1.4477 8 2C8 2.5523 8.4477 3 9 3Z"
-              stroke="#B0B7C3"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M16 3C16.5523 3 17 2.5523 17 2C17 1.4477 16.5523 1 16 1C15.4477 1 15 1.4477 15 2C15 2.5523 15.4477 3 16 3Z"
-              stroke="#B0B7C3"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M2 3C2.55228 3 3 2.5523 3 2C3 1.4477 2.55228 1 2 1C1.44772 1 1 1.4477 1 2C1 2.5523 1.44772 3 2 3Z"
-              stroke="#B0B7C3"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5.5 12C5.5 12.8284 4.82843 13.5 4 13.5C3.17157 13.5 2.5 12.8284 2.5 12C2.5 11.1716 3.17157 10.5 4 10.5C4.82843 10.5 5.5 11.1716 5.5 12Z" fill="#696760" stroke="#696760"/>
+            <path d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z" fill="#696760"/>
+          <path d="M20 14C21.1046 14 22 13.1046 22 12C22 10.8954 21.1046 10 20 10C18.8954 10 18 10.8954 18 12C18 13.1046 18.8954 14 20 14Z" fill="#696760"/>
+        </svg>
+
         </div>
       </Dropdown>
     )

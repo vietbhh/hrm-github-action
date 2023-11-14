@@ -386,7 +386,7 @@ const ButtonReaction = (props) => {
               />
             </svg>
 
-            <span>{useFormatMessage("modules.feed.post.text.messenger")}</span>
+            <span>{useFormatMessage("modules.feed.post.text.send")}</span>
           </button>
         </Dropdown>
       </div>
