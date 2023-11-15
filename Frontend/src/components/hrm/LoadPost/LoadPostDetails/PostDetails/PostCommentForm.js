@@ -320,8 +320,7 @@ const PostCommentForm = (props) => {
       <div className="post-comment__div-form">
         <div className="div-border-reply div-form"></div>
         <Avatar className="img" src={avatar} />
-        <div className="post-comment-div-editor">
-          <div className="d-flex">
+        <div className="post-comment-div-editor d-flex">
             <div className="div-editor">
               <Editor
                 editorKey={"editorPost"}
@@ -423,7 +422,7 @@ const PostCommentForm = (props) => {
                 </>
               )}
             </div>
-          </div>
+          
           {state.image && (
             <div className="div-form__div-image">
               {handleImageCommentUrl(state.image)}

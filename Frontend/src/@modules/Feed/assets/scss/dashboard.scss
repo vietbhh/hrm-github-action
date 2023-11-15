@@ -1,5 +1,6 @@
 .separate-sidebar-layout {
     .main-menu {
+        padding: 0 24px 24px 24px !important;
         .div-sidebar-bottom {
             margin-top: auto!important;
             border-top: 1px #f1f1f5 solid !important;
@@ -34,15 +35,20 @@
                                 width: auto!important;
                                 height: auto!important;
                                 flex-shrink: 0;
-                                margin: 6px!important;
-
                             }
                         }
                         a.active {
                             border-radius: 16px;
                             background: var(--primary-500, #FFE658)!important;
                         }
-
+                        .svg-background {
+                            position: relative;
+                        }
+                        .svg-icon {
+                            position: absolute;
+                            top: 29%!important;
+                            left: 8%!important;
+                        }
                         
                     }
                 }
@@ -197,6 +203,11 @@
                                                 line-height: 16px;
                                             }
                                         }
+                                        .ant-progress-show-info {
+                                            .ant-progress-text {
+                                                display: none;
+                                            }
+                                        }
                                     }
                                 }
                     
@@ -214,7 +225,8 @@
                                             }
                                         }
                                         .body-header-right {
-                                            gap:12px
+                                            gap:12px;
+                                            margin-right: 0px;
                                         }
                                    }
                                    .body-content {
@@ -286,7 +298,7 @@
 
                         .card-announcement {
                             .ant-collapse-header {
-                                padding-bottom: 24px;
+                                padding-bottom: 23px;
                                 .ant-collapse-header-text {
                                     color: var(--neutral-shade-2, #403F3A);
                                     font-family: Be Vietnam Pro;
@@ -335,13 +347,9 @@
                                     }
                                     .post-body {
                                         .announcement__div-content {
-                                            .none-hidden {
+                                           .none-hidden {
                                                 min-height: 125px;
-                                            }
-                                            .hidden {
-                                                min-height: 100px!important;
-                                                max-height: 129px;
-                                            }
+                                           }
                                         }
                                         .post-body__announcement  {
                                             .announcement__div-title {
@@ -353,6 +361,9 @@
                                                 line-height: 20px;
                                             }
                                             .announcement__div-content {
+                                                .none-hidden {
+                                                    min-height: 125px;
+                                               }
                                                 .hide,.none-hidden {
                                                     color: var(--neutral-shade-2, #403F3A);
                                                     font-feature-settings: 'clig' off, 'liga' off;
@@ -465,6 +476,7 @@
                                                 font-weight: 400;
                                                 line-height: 25px;
                                                 letter-spacing: 0.1px;
+                                                min-height: auto!important;
                                             }
                                             .btn-see-more {
                                                 color: var(--neutral-shade-2, #403F3A);
@@ -518,6 +530,19 @@
                                             }
                                         }
                                     }
+                                    .post-footer-button {
+                                        .div-button-reaction{
+                                            border-bottom: 0px;
+                                            button  {
+                                                    color: var(--neutral-shade-2, #403F3A);
+                                                    font-family: Be Vietnam Pro;
+                                                    font-size: 14px;
+                                                    font-style: normal;
+                                                    font-weight: 400;
+                                                    line-height: 20px;
+                                            }
+                                        }
+                                    }
                                 }
                                 .post-comment {
                                     .post-comment__list {
@@ -545,6 +570,9 @@
                                                 height: 48px;
                                             }
                                         }
+                                        .post-comment-div-editor {
+                                            align-items: center;
+                                        }
                                     }
                                 }
                             }
@@ -571,5 +599,45 @@
                 line-height: 20px;
             }
         }
+    }
+}
+
+.modal-post-image-detail {
+    .modal-content {
+        .div-body {
+            .div-right {
+                .right-button {
+                    .div-button-reaction {
+                        button {
+                            color: var(--neutral-shade-2, #403F3A);
+                            font-family: Be Vietnam Pro;
+                            font-size: 14px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.modal-post-comment {
+    .modal-body {
+        .post-comment {
+            .comment__body {
+                .body__reaction {
+                    .reaction {
+                        color: var(--neutral-shade-2, #403F3A);
+                        font-family: Be Vietnam Pro;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px;
+                    }
+                }
+            }
+        }    
     }
 }
