@@ -22,7 +22,6 @@ const InfoWorkgroupModal = (props) => {
       <ModalBody>
         <AboutWorkgroup workspaceInfo={workspaceInfo} />
       </ModalBody>
-      <ModalFooter></ModalFooter>
     </Modal>
   )
 }

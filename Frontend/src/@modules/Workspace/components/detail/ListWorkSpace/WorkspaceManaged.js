@@ -97,10 +97,7 @@ const WorkspaceManaged = (props) => {
           <Row className="workspace-list workspace-manage-list">
             {data.map((item, index) => {
               return (
-                <Col
-                  sm="3"
-                  className="mb-1 mt-50 col"
-                  key={`workspace-item-${index}`}>
+                <Col sm="3" className="col" key={`workspace-item-${index}`}>
                   <WorkspaceItem
                     workspaceType={workspaceType}
                     infoWorkspace={item}
@@ -125,7 +122,10 @@ const WorkspaceManaged = (props) => {
           <Row className="workspace-list workspace-joined-list">
             {data.map((item, index) => {
               return (
-                <Col sm="6" className="mb-1" key={`workspace-item-${index}`}>
+                <Col
+                  sm="6"
+                  key={`workspace-item-${index}`}
+                  className="workspace-item-parent">
                   <WorkspaceItem
                     workspaceType={workspaceType}
                     infoWorkspace={item}
@@ -148,11 +148,11 @@ const WorkspaceManaged = (props) => {
     }
 
     return (
-      <h6
+      <span
         className="link text-color-link"
         onClick={() => navigate(`/workspace/${linkTo}`)}>
         {useFormatMessage("modules.workspace.buttons.see_all")}
-      </h6>
+      </span>
     )
   }
 
@@ -162,17 +162,18 @@ const WorkspaceManaged = (props) => {
     }
 
     return (
-      <h6
+      <span
         className="link text-color-link"
         onClick={() => navigate(`/workspace/list`)}>
         <i className="fas fa-long-arrow-left me-25" />
         {useFormatMessage("modules.workspace.buttons.back_to_workgroup")}
-      </h6>
+      </span>
     )
   }
 
   return (
-    <Card className="mt-2 p-1 pt-50 pb-50 card-workspace-managed">
+    <Card
+      className={`card-workspace-managed card-workspace-managed-${workspaceType}`}>
       <CardHeader>
         <div className="d-flex align-items-center justify-content-between w-100">
           <div>

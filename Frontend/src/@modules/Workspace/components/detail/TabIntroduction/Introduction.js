@@ -66,7 +66,9 @@ const Introduction = (props) => {
             className={` ${
               state.showSeeMore && state.seeMore === false ? "hide" : ""
             }`}>
-            <p className="introduction-text mt-75">{introduction}</p>
+            <p className="introduction-text mt-75 workspace-common-content">
+              {introduction}
+            </p>
           </div>
           {state.showSeeMore && (
             <a
@@ -122,46 +124,10 @@ const Introduction = (props) => {
       return ""
     }
 
-    let items = [
-      {
-        key: "1",
-        label: (
-          <Button.Ripple
-            size="sm"
-            color="flat-primary"
-            onClick={() => handleEdit()}>
-            {useFormatMessage("modules.workspace.buttons.add_description")}
-          </Button.Ripple>
-        )
-      }
-    ]
-
-    if (!_.isEmpty(introduction)) {
-      items = [
-        {
-          key: "1",
-          label: (
-            <Button.Ripple
-              size="sm"
-              color="flat-primary"
-              onClick={() => handleEdit()}>
-              {useFormatMessage("button.edit")}
-            </Button.Ripple>
-          )
-        }
-      ]
-    }
-
     return (
-      <Dropdown
-        placement="bottomRight"
-        menu={{ items }}
-        trigger="click"
-        overlayClassName="dropdown-workspace-about-group">
-        <Button.Ripple color="secondary" className="btn-icon btn-action-empty">
-          <i className="fas fa-ellipsis-h" />
-        </Button.Ripple>
-      </Dropdown>
+      <span className="workspace-text-link" onClick={() => handleEdit()}>
+        {useFormatMessage("button.edit")}
+      </span>
     )
   }
 
@@ -182,11 +148,11 @@ const Introduction = (props) => {
   }
 
   return (
-    <Card className="introduction-container mb-1">
+    <Card className="introduction-container">
       <CardBody>
         <div className="d-flex align-items-center justify-content-between">
           <div className="">
-            <h5 className="common-card-title">
+            <h5 className="common-card-title workspace-common-title">
               {useFormatMessage("modules.workspace.display.about_group")}
             </h5>
           </div>

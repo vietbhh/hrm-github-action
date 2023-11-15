@@ -103,30 +103,34 @@ export default function Sticker() {
 
     if (!state.search) {
       newTotal += stickersDefault.length
+
+      const isLastPage = Math.ceil(newTotal / state.perPage) === state.page
+
+      if (
+        !isLastPage &&
+        state.perPage - newStickers.length > 0 &&
+        !state.search
+      ) {
+        const getStickerDefaultCount = state.perPage - newStickers.length
+        newStickers = newStickers.concat(
+          stickersDefault.slice(0, getStickerDefaultCount)
+        )
+
+        markStickersDefault.default = getStickerDefaultCount
+      }
+
+      if (isLastPage && !state.search) {
+        newStickers = newStickers.concat(
+          stickersDefault.slice(
+            markStickersDefault.default,
+            stickersDefault.length
+          )
+        )
+      }
     } else {
       const stickersDefaultSearch = searchStickersDefault(state.search)
       newStickers = newStickers.concat(stickersDefaultSearch)
       newTotal += stickersDefaultSearch.length
-    }
-
-    const isLastPage = Math.ceil(newTotal / state.perPage) === state.page
-
-    if (!isLastPage && state.perPage - newStickers.length > 0) {
-      const getStickerDefaultCount = state.perPage - newStickers.length
-      newStickers = newStickers.concat(
-        stickersDefault.slice(0, getStickerDefaultCount)
-      )
-
-      markStickersDefault.default = getStickerDefaultCount
-    }
-
-    if (isLastPage && !state.search) {
-      newStickers = newStickers.concat(
-        stickersDefault.slice(
-          markStickersDefault.default,
-          stickersDefault.length
-        )
-      )
     }
 
     setState({

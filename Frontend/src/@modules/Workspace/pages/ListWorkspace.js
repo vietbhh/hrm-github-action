@@ -9,6 +9,7 @@ import WorkspaceFilter from "../components/detail/ListWorkSpace/WorkspaceFilter"
 import CreateWorkgroupModal from "../components/modals/CreateWorkgroupModal/CreateWorkgroupModal"
 import { useDispatch } from "react-redux"
 import { setAppTitle } from "../../../redux/app/app"
+import { ErpInput } from "@apps/components/common/ErpField"
 
 const ListWorkspace = (props) => {
   const [state, setState] = useMergedState({
@@ -87,22 +88,12 @@ const ListWorkspace = (props) => {
 
   return (
     <Fragment>
-      <div className="pt-0 pe-4 ps-4 pb-1 list-workspace-page">
-        <div className="d-flex align-items-center justify-content-between header">
-          <div>
-            <h1 className="title text-color-title">
-              {useFormatMessage("modules.workspace.title.workgroup")}
-              <span className="text-danger">.</span>
-            </h1>
-          </div>
-          <div>
-            <WorkspaceFilter
-              filter={state.filter}
-              setFilter={setFilter}
-              toggleModal={toggleModal}
-            />
-          </div>
-        </div>
+      <div className="pt-0 pb-1 list-workspace-page">
+        <WorkspaceFilter
+          filter={state.filter}
+          setFilter={setFilter}
+          toggleModal={toggleModal}
+        />
         <div className="body">
           <div>
             <WorkspaceManaged

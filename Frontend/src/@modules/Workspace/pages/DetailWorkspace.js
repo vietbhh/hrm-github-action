@@ -1,7 +1,7 @@
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { map } from "lodash-es"
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, useSearchParams } from "react-router-dom"
 import { TabContent, TabPane } from "reactstrap"
@@ -15,7 +15,6 @@ import TabMember from "../components/detail/TabMember/TabMember"
 import TabPinned from "../components/detail/TabPinned/TabPinned"
 import TabPrivate from "../components/detail/TabPrivate"
 import WorkspaceHeader from "../components/detail/WorkspaceHeader"
-import { Skeleton } from "antd"
 
 const DetailWorkspace = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -97,7 +96,7 @@ const DetailWorkspace = () => {
     workspaceApi
       .getDetailWorkspace(params.id)
       .then((res) => {
-        setState({ ...state,detailWorkspace: res.data })
+        setState({ ...state, detailWorkspace: res.data })
         dispatch(setAppTitle(res.data.name))
         setTimeout(() => {
           setState({
@@ -178,126 +177,94 @@ const DetailWorkspace = () => {
 
   return (
     <div className="workspace">
-      {state.loading ? (
-        <div className="loading-workspace">
-          <div className="load-header">
-            <Skeleton.Image active />
-            <div className="mt-1 ps-1">
-              <Skeleton
-                active
-                paragraph={{
-                  rows: 1
-                }}
-              />
-            </div>
-          </div>
-          <div className="mt-1">
-            <div className="tab-content py-50">
-              <div className="tab-pane active">
-                <div className="div-content">
-                  <div className="div-left">
-                    <Skeleton.Input active />
-                  </div>
-                  <div className="div-right">
-                    <Skeleton.Input active />
-                  </div>
-                </div>
+      <WorkspaceHeader
+        tabActive={state.tabActive}
+        data={state.detailWorkspace}
+        searchTextFeed={state.searchTextFeed}
+        tabToggle={tabToggle}
+        loadData={loadData}
+        setSearchTextFeed={setSearchTextFeed}
+      />
+      <div>
+        <TabContent activeTab={state.tabActive}>
+          <TabPane tabId={1}>
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
               </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <Fragment>
-          <WorkspaceHeader
-            tabActive={state.tabActive}
-            data={state.detailWorkspace}
-            searchTextFeed={state.searchTextFeed}
-            tabToggle={tabToggle}
-            loadData={loadData}
-            setSearchTextFeed={setSearchTextFeed}
-          />
-          <div className="mt-1">
-            <TabContent className="py-50" activeTab={state.tabActive}>
-              <TabPane tabId={1}>
-                {!state.isJoined && !state.workspacePublic && (
-                  <div>
-                    <TabPrivate data={state.detailWorkspace} />
-                  </div>
-                )}
-                {(state.isJoined || state.workspacePublic) && (
-                  <TabFeed
-                    searchTextFeed={state.searchTextFeed}
-                    detailWorkspace={state.detailWorkspace}
-                    tabActive={state.tabActive}
-                    handleUnPinPost={handleUnPinPost}
-                    setSearchTextFeed={setSearchTextFeed}
-                    tabToggle={tabToggle}
-                  />
-                )}
-              </TabPane>
-              <TabPane tabId={2}>
-                {!state.isJoined && !state.workspacePublic && (
-                  <div>
-                    <TabPrivate data={state.detailWorkspace} />
-                  </div>
-                )}
-                {(state.isJoined || state.workspacePublic) && (
-                  <TabPinned
-                    detailWorkspace={state.detailWorkspace}
-                    tabActive={state.tabActive}
-                    handleUnPinPost={handleUnPinPost}
-                    tabToggle={tabToggle}
-                  />
-                )}
-              </TabPane>
-              <TabPane tabId={3}>
-                {!state.isJoined && !state.workspacePublic && (
-                  <div>
-                    <TabPrivate data={state.detailWorkspace} />
-                  </div>
-                )}
-                {(state.isJoined || state.workspacePublic) && (
-                  <TabIntroduction
-                    detailWorkspace={state.detailWorkspace}
-                    tabActive={state.tabActive}
-                  />
-                )}
-              </TabPane>
-              <TabPane tabId={4}>
-                {!state.isJoined && !state.workspacePublic && (
-                  <div>
-                    <TabPrivate data={state.detailWorkspace} />
-                  </div>
-                )}
-                {(state.isJoined || state.workspacePublic) && (
-                  <TabMember
-                    loadingDetailWorkspace={state.loading}
-                    tabActive={state.tabActive}
-                    tabId={4}
-                    detailWorkspace={state.detailWorkspace}
-                    setDetailWorkspace={setDetailWorkspace}
-                  />
-                )}
-              </TabPane>
-              <TabPane tabId={5}>
-                {!state.isJoined && !state.workspacePublic && (
-                  <div>
-                    <TabPrivate data={state.detailWorkspace} />
-                  </div>
-                )}
-                {(state.isJoined || state.workspacePublic) && (
-                  <TabMedia
-                    tabActive={state.tabActive}
-                    tabId={5}
-                    userId={userId}
-                    detailWorkspace={state.detailWorkspace}
-                  />
-                )}
-              </TabPane>
-            </TabContent>
-          </div>
-        </Fragment>
-      )}
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabFeed
+                searchTextFeed={state.searchTextFeed}
+                detailWorkspace={state.detailWorkspace}
+                tabActive={state.tabActive}
+                handleUnPinPost={handleUnPinPost}
+                setSearchTextFeed={setSearchTextFeed}
+                tabToggle={tabToggle}
+              />
+            )}
+          </TabPane>
+          <TabPane tabId={2}>
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabPinned
+                detailWorkspace={state.detailWorkspace}
+                tabActive={state.tabActive}
+                handleUnPinPost={handleUnPinPost}
+                tabToggle={tabToggle}
+              />
+            )}
+          </TabPane>
+          <TabPane tabId={3}>
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabIntroduction
+                detailWorkspace={state.detailWorkspace}
+                tabActive={state.tabActive}
+              />
+            )}
+          </TabPane>
+          <TabPane tabId={4}>
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabMember
+                loadingDetailWorkspace={state.loading}
+                tabActive={state.tabActive}
+                tabId={4}
+                detailWorkspace={state.detailWorkspace}
+                setDetailWorkspace={setDetailWorkspace}
+              />
+            )}
+          </TabPane>
+          <TabPane tabId={5}>
+            {!state.isJoined && !state.workspacePublic && (
+              <div>
+                <TabPrivate data={state.detailWorkspace} />
+              </div>
+            )}
+            {(state.isJoined || state.workspacePublic) && (
+              <TabMedia
+                tabActive={state.tabActive}
+                tabId={5}
+                userId={userId}
+                detailWorkspace={state.detailWorkspace}
+              />
+            )}
+          </TabPane>
+        </TabContent>
+      </div>
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 // ** Styles
 import { Card, CardBody, Button, CardHeader } from "reactstrap"
 // ** Components
-import { getTabByNameOrId } from "../../../common/common"
+import { getTabByNameOrId, isMobileView } from "../../../common/common"
 import WorkspaceTypeInfo from "../TabIntroduction/WorkspaceTypeInfo"
 import WorkspaceModeInfo from "../TabIntroduction/WorkspaceModeInfo"
 
@@ -57,7 +57,7 @@ const AboutWorkgroup = (props) => {
       !_.isEmpty(introduction) &&
       state.isEditIntroduction === false
     ) {
-      return <p className="introduction-text mt-75 mb-0">{introduction}</p>
+      return <p className="introduction-text mb-0">{introduction}</p>
     }
 
     if (loading === false && workspaceInfo.is_admin_group) {
@@ -80,17 +80,20 @@ const AboutWorkgroup = (props) => {
   }
 
   return (
-    <Card className="about-group-container mb-1 p-25">
+    <Card className="about-group-container mb-1">
       <CardHeader className="pb-0">
         <h6 className="mb-0 info-title">
           <span className="text">
-            {useFormatMessage("modules.workspace.display.about_group")}
+            {!isMobileView()
+              ? useFormatMessage("modules.workspace.display.about_group")
+              : useFormatMessage("modules.workspace.display.about_group") +
+                " Group"}
           </span>
           <span className="text-danger">.</span>
         </h6>
       </CardHeader>
       <CardBody>
-        <div className="p-0 pt-25 mb-1">
+        <div className="p-0">
           <div className="mb-75 introduction-content">
             <div
               id="about-workgroup-body-content"
@@ -118,7 +121,11 @@ const AboutWorkgroup = (props) => {
           <WorkspaceModeInfo workspaceInfo={workspaceInfo} />
         </div>
         <div className="footer-about">
-          <Button.Ripple className="custom-secondary" onClick={() => handleClickLearnMore()}>Learn more</Button.Ripple>
+          <Button.Ripple
+            className="custom-secondary"
+            onClick={() => handleClickLearnMore()}>
+            Learn more
+          </Button.Ripple>
         </div>
       </CardBody>
     </Card>

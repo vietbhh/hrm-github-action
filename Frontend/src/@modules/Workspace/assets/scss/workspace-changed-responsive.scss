@@ -1,0 +1,123 @@
+%workspace-common-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #121210 !important;
+  line-height: 32px;
+  margin-bottom: 0;
+}
+%workspace-common-content {
+  color: $primary-new-text-color !important;
+  font-size: 15px !important;
+  font-weight: 400;
+  line-height: 20px;
+}
+%workspace-button {
+  border-radius: 8px;
+  background: #ffe658;
+  color: $primary-new-text-color !important;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  padding: 12px 10px 10px 10px;
+  line-height: 20px;
+  width: 160px;
+  height: 48px;
+  border-radius: 16px !important;
+  border: none;
+  &:hover {
+    box-shadow: unset !important;
+    background: #ffe658;
+  }
+  i {
+    margin-right: 14px !important;
+  }
+}
+%workspace-text-link {
+  color: #2f9bfa !important;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+}
+%workspace-modal-common-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+  color: #8c8a82;
+}
+%workspace-modal-common-placeholder {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #696760;
+}
+
+%workspace-about-dropdown-popup {
+  ul {
+    padding: 12px;
+    border-radius: 12px;
+    li {
+      padding: 0px !important;
+      border-radius: 8px;
+      .ant-dropdown-menu-title-content {
+        button {
+          padding: 0;
+          width: 100%;
+          padding: 8px;
+          text-align: start;
+          svg {
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+%workspace-erp-search-common {
+  margin-top: 8px;
+  margin-bottom: 0px;
+  display: block;
+  .form-group {
+    .input-group {
+      input,
+      span {
+        background-color: #f7f7f5;
+        padding: 0;
+        border-radius: 0;
+      }
+      span {
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+      input {
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+      input::placeholder {
+        padding-left: 8px;
+        color: #696760;
+      }
+    }
+  }
+  .input-group-text {
+    padding: 0 10px;
+  }
+  .input-group-text {
+    border-bottom-right-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+}
+
+%workspace-common-modal-title {
+  @extend %workspace-common-content;
+  font-weight: 500 !important;
+  line-height: 20px !important;
+}
+
+%workspace-common-modal-content {
+  @extend %workspace-common-content;
+  color: #696760 !important;
+  font-size: 12px !important;
+  line-height: 16px !important;
+}

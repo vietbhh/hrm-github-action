@@ -140,7 +140,7 @@ const WorkgroupAdmin = (props) => {
     }
 
     return (
-      <div className="w-100 d-flex align-items-center justify-content-start pt-25">
+      <div className="w-100 d-flex align-items-center justify-content-start">
         <ListMember
           id={id}
           userState={userState}
@@ -162,10 +162,10 @@ const WorkgroupAdmin = (props) => {
 
   return (
     <Card>
-      <CardBody className="pb-75 pt-75">
+      <CardBody>
         <div className="section">
           <div className="w-100 admin-section">
-            <h6 className="title mb-1">
+            <h6 className="title">
               {useFormatMessage("modules.workspace.text.admin_and_moderators")}
             </h6>
             <div>

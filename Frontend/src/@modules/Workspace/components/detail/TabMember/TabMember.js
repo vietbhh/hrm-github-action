@@ -38,7 +38,7 @@ const TabMember = (props) => {
   return (
     <div className="tab-member">
       <Row>
-        <Col md={8} lg={8} className="pe-0">
+        <Col md={8} lg={8} className="pe-0 workgroup-member">
           <WorkgroupMember
             id={id}
             userState={userState}
@@ -50,7 +50,7 @@ const TabMember = (props) => {
             setDetailWorkspace={setDetailWorkspace}
           />
         </Col>
-        <Col md={4} lg={4}>
+        <Col md={4} lg={4} className="ps-0">
           <WorkgroupAdmin
             id={id}
             userState={userState}

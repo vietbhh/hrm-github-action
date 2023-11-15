@@ -116,12 +116,9 @@ const GroupRule = (props) => {
       groupRule.length > 0
     ) {
       return (
-        <Button.Ripple
-          size="sm"
-          className="edit-group-rule-button"
-          onClick={() => handleClickEdit()}>
+        <span className="workspace-text-link" onClick={() => handleClickEdit()}>
           {useFormatMessage("button.create")}
-        </Button.Ripple>
+        </span>
       )
     }
 
@@ -131,9 +128,9 @@ const GroupRule = (props) => {
   return (
     <Card className="group-rule-container">
       <CardBody>
-        <div className="d-flex align-items-center justify-content-between mb-50">
+        <div className="d-flex align-items-center justify-content-between group-rule-container-title">
           <div>
-            <h5 className="mb-0 common-card-title">
+            <h5 className="mb-0 common-card-title workspace-common-title">
               {useFormatMessage("modules.workspace.display.group_rules")}
             </h5>
           </div>

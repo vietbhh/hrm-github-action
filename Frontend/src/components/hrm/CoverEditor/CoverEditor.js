@@ -95,14 +95,7 @@ const CoverEditor = (props) => {
           {!props.readOnly && (
             <Fragment>
               <Dropdown menu={{ items: items }} placement="bottomLeft">
-                <div
-                  className={`cameraBtn`}
-                  style={{
-                    backgroundColor: "rgba(229, 229, 229, 0.80)",
-                    borderRadius: "6px"
-                  }}>
-                  Edit Cover
-                </div>
+                <div className={`cameraBtn`}>Edit Cover</div>
               </Dropdown>
               <input
                 type="file"

@@ -72,15 +72,15 @@ const SetupNotificationModal = (props) => {
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
-          <Row className="mt-1">
+          <Row>
             <Col sm={12}>
               <div className="content-notification-setup d-flex align-items-center">
-                <div className="title">
+                <div className="title flex-fill">
                   All post
                   <div className="sub-title">Every post in the group</div>
                 </div>
                 <ErpRadio
-                  className="ms-auto"
+                  className="flex-fill text-end"
                   useForm={methods}
                   value={"all"}
                   defaultChecked={findNotifi(
@@ -94,12 +94,12 @@ const SetupNotificationModal = (props) => {
 
             <Col sm={12}>
               <div className="content-notification-setup d-flex align-items-center">
-                <div className="title">
+                <div className="title flex-fill">
                   Admin’s post
                   <div className="sub-title">Only admin’s posts</div>
                 </div>
                 <ErpRadio
-                  className="ms-auto"
+                  className="flex-fill text-end"
                   useForm={methods}
                   value={"admin"}
                   defaultChecked={findNotifi(
@@ -113,7 +113,7 @@ const SetupNotificationModal = (props) => {
 
             <Col sm={12}>
               <div className="content-notification-setup d-flex align-items-center">
-                <div className="title">
+                <div className="title flex-fill">
                   Off
                   <div className="sub-title">
                     Only mentions and important updates to group settings or
@@ -121,7 +121,7 @@ const SetupNotificationModal = (props) => {
                   </div>
                 </div>
                 <ErpRadio
-                  className="ms-auto"
+                  className="flex-fill text-end"
                   useForm={methods}
                   value={"off"}
                   defaultChecked={
@@ -140,7 +140,7 @@ const SetupNotificationModal = (props) => {
               disabled={state.loading}
               className="btn-save btn btn-primary">
               {state.loading && <Spinner size="sm" className="me-50" />}
-              {useFormatMessage("button.save")}
+              {useFormatMessage("modules.workspace.buttons.save_setting")}
             </Button>
           </ModalFooter>
         </form>

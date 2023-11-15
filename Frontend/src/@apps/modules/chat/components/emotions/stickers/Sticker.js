@@ -82,8 +82,6 @@ const Sticker = ({
       )
     }
 
-    console.log("stickerList: ", stickerList)
-
     const stickerTabs = stickerList.map((item, index) => {
       let stickerIconDefault = item.list.find((subItem) => subItem.default)
       let stickerIconList = item
