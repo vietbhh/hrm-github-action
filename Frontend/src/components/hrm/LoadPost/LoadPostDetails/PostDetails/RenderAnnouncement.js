@@ -17,7 +17,6 @@ const RenderAnnouncement = (props) => {
       const height = document.getElementById(
         `announcement__div-content-${dataLink?.id}`
       ).offsetHeight
-      console.log(height)
       if (height > 125) {
         setState({ showSeeMore: true })
       }

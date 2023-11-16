@@ -82,41 +82,11 @@ const Emoji = (props) => {
           </div>
         </div>
         <Tooltip title="Emoji">
-          <svg
-            ref={emotionIconRef}
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M13 26H19C24 26 26 24 26 19V13C26 8 24 6 19 6H13C8 6 6 8 6 13V19C6 24 8 26 13 26Z"
-              stroke="#696760"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M19.5 13.75C20.3284 13.75 21 13.0784 21 12.25C21 11.4216 20.3284 10.75 19.5 10.75C18.6716 10.75 18 11.4216 18 12.25C18 13.0784 18.6716 13.75 19.5 13.75Z"
-              stroke="#696760"
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12.5 13.75C13.3284 13.75 14 13.0784 14 12.25C14 11.4216 13.3284 10.75 12.5 10.75C11.6716 10.75 11 11.4216 11 12.25C11 13.0784 11.6716 13.75 12.5 13.75Z"
-              stroke="#696760"
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M19.5 19C18.3333 20 15.3 21.4 12.5 19"
-              stroke="#696760"
-              stroke-linecap="round"
-            />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#696760" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15.5 9.75C16.3284 9.75 17 9.07843 17 8.25C17 7.42157 16.3284 6.75 15.5 6.75C14.6716 6.75 14 7.42157 14 8.25C14 9.07843 14.6716 9.75 15.5 9.75Z" stroke="#696760" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.5 9.75C9.32843 9.75 10 9.07843 10 8.25C10 7.42157 9.32843 6.75 8.5 6.75C7.67157 6.75 7 7.42157 7 8.25C7 9.07843 7.67157 9.75 8.5 9.75Z" stroke="#696760" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15.5 15C14.3333 16 11.3 17.4 8.5 15" stroke="#696760" stroke-linecap="round"/>
           </svg>
         </Tooltip>
       </li>

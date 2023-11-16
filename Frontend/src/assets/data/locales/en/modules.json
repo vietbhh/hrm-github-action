@@ -3706,7 +3706,7 @@
           "anonymous": "Anonymous",
           "member_voted": "member voted",
           "members_voted": "members voted",
-          "list_member": "List member",
+          "list_member": "List members",
           "done": "Done",
           "no_member_selected_yet": "No member selected yet",
           "list_selected": "List selected",
@@ -3731,7 +3731,9 @@
           "action_important_text": "All member invited are required to attend this event",
           "no_employee_reaction_text": "There is no one has responded to the event invitation yet",
           "post_endorsement" : "Post Endorsement",
-          "post_poll" :"Post Poll"
+          "post_poll" :"Post Poll",
+          "save": "Save",
+          "you_thinking": "What are you thinking"
         },
         "endorsement": {
           "title": "Endorsement",
@@ -3801,7 +3803,6 @@
           "unsaved" : "Unsaved",
           "messenger" : "Messenger",
           "unpin_announcement" : "Unpin Announcements"
-
         },
         "react": {
           "like": "Like",
