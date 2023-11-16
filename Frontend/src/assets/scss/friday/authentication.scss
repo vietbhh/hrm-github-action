@@ -228,7 +228,7 @@ body {
             .title {
               font-size: 64px;
               font-weight: 700;
-              font-family: Be Vietnam Pro;
+              font-family: $font-family-sans-serif;
               color: #121210;
               margin-bottom: 8px !important;
             }
@@ -271,7 +271,7 @@ body {
                 }
 
                 input {
-                  font-family: Be Vietnam Pro !important;
+                  font-family: $font-family-sans-serif !important;
                   font-size: 15px !important;
                   border: none !important;
                   font-weight: 400;

@@ -43,6 +43,8 @@ const Emoji = (props) => {
         onClick={() => {
           if (state.showEmotion === false) {
             setShowEmotion(true)
+          } else {
+            setShowEmotion(false)
           }
         }}>
         <div

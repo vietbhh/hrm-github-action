@@ -1,3 +1,4 @@
+@import "@scss/friday";
 .separate-sidebar-layout {
     .main-menu {
         padding: 0 24px 24px 24px !important;
@@ -20,7 +21,7 @@
                         padding: 24px 15px 15px 15px!important;
                         span {
                             color: var(--neutral-shade-4, #8C8A82);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 600;
@@ -62,7 +63,7 @@
                     .user-nav {
                         .user-name {
                             color: var(--neutral-shade-2, #403F3A);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 18px;
                             font-style: normal;
                             font-weight: 500;
@@ -71,7 +72,7 @@
 
                         .user-status {
                             color: var(--neutral-shade-3, #696760);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 400;
@@ -110,7 +111,7 @@
 
                 .text {
                     color: var(--secondary-500, #C4C3BB);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -134,7 +135,7 @@
                 cursor: pointer;
                 .text {
                     color: var(--neutral-shade-6, #C4C3BB);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -173,7 +174,7 @@
                                     .card-title {
                                         .title{
                                             color: var(--neutral-shade-1, #121210)!important;
-                                            font-family: Be Vietnam Pro;
+                                            font-family: $font-family-sans-serif;
                                             font-size: 18px!important;
                                             font-style: normal;
                                             font-weight: 500;
@@ -188,7 +189,7 @@
                                             margin-left: 12px!important;
                                             h4 {
                                                 color: var(--neutral-shade-1, #121210);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 18px;
                                                 font-style: normal;
                                                 font-weight: 500;
@@ -196,7 +197,7 @@
                                             }
                                             small {
                                                 color: var(--neutral-shade-3, #696760);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 12px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -217,7 +218,7 @@
                                             gap: 12px;
                                             .text-my-note {
                                                 color: var(--neutral-shade-2, #403F3A);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 15px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -233,7 +234,7 @@
                                         .div-body-notepad {
                                             .text-title {
                                                 color: var(--neutral-shade-2, #403F3A);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 15px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -241,7 +242,7 @@
                                             }
                                             .text-time {
                                                 color: var(--neutral-shade-3, #696760);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 12px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -268,7 +269,7 @@
                                 .div-post-input {
                                     span {
                                         color: var(--neutral-shade-3, #696760);
-                                        font-family: Be Vietnam Pro;
+                                        font-family: $font-family-sans-serif;
                                         font-size: 15px;
                                         font-style: normal;
                                         font-weight: 400;
@@ -285,7 +286,7 @@
                                     li {
                                         span {
                                             color: var(--neutral-shade-2, #403F3A);
-                                            font-family: Be Vietnam Pro;
+                                            font-family: $font-family-sans-serif;
                                             font-size: 15px;
                                             font-style: normal;
                                             font-weight: 400;
@@ -301,7 +302,7 @@
                                 padding-bottom: 23px;
                                 .ant-collapse-header-text {
                                     color: var(--neutral-shade-2, #403F3A);
-                                    font-family: Be Vietnam Pro;
+                                    font-family: $font-family-sans-serif;
                                     font-size: 18px;
                                     font-style: normal;
                                     font-weight: 500;
@@ -320,7 +321,7 @@
                                             .div-name {
                                                 .name {
                                                     color: var(--neutral-shade-2, #403F3A);
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 15px;
                                                     font-style: normal;
                                                     font-weight: 600;
@@ -328,7 +329,7 @@
                                                 }
                                                 .after-name {
                                                     color: var(--neutral-shade-2, #403F3A);
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 14px;
                                                     font-style: normal;
                                                     font-weight: 400;
@@ -336,7 +337,7 @@
                                                 }
                                                 .after-name-bold {
                                                     color: var(--neutral-shade-2, #403F3A);
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 15px;
                                                     font-style: normal;
                                                     font-weight: 600;
@@ -354,7 +355,7 @@
                                         .post-body__announcement  {
                                             .announcement__div-title {
                                                 color: var(--neutral-shade-2, #403F3A);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 15px;
                                                 font-style: normal;
                                                 font-weight: 600;
@@ -367,7 +368,7 @@
                                                 .hide,.none-hidden {
                                                     color: var(--neutral-shade-2, #403F3A);
                                                     font-feature-settings: 'clig' off, 'liga' off;
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 14px;
                                                     font-style: normal;
                                                     font-weight: 400;
@@ -377,7 +378,7 @@
                                                 .btn-see-more {
                                                     color: var(--neutral-shade-2, #403F3A);
                                                     font-feature-settings: 'clig' off, 'liga' off;
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 14px;
                                                     font-style: normal;
                                                     font-weight: 600;
@@ -395,7 +396,7 @@
                                                     align-items: center;
                                                     gap: 4px;
                                                     justify-content: center;
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 12px;
                                                     font-weight: 400;
                                                     line-height: 16px;
@@ -423,7 +424,7 @@
                                         .div-name {
                                             .name {
                                                 color: var(--neutral-shade-2, #403F3A);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 15px;
                                                 font-style: normal;
                                                 font-weight: 600;
@@ -431,7 +432,7 @@
                                             }
                                             .after-name {
                                                 color: var(--neutral-shade-2, #403F3A);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 14px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -439,7 +440,7 @@
                                             }
                                             .after-name-bold {
                                                 color: var(--neutral-shade-2, #403F3A);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 15px;
                                                 font-style: normal;
                                                 font-weight: 600;
@@ -448,7 +449,7 @@
                                         }
                                         .time {
                                             color: var(--neutral-shade-3, #696760);
-                                            font-family: Be Vietnam Pro;
+                                            font-family: $font-family-sans-serif;
                                             font-size: 12px;
                                             font-style: normal;
                                             font-weight: 400;
@@ -460,7 +461,7 @@
                                     .post-body__announcement  {
                                         .announcement__div-title {
                                             color: var(--neutral-shade-2, #403F3A);
-                                            font-family: Be Vietnam Pro;
+                                            font-family: $font-family-sans-serif;
                                             font-size: 15px;
                                             font-style: normal;
                                             font-weight: 600;
@@ -470,7 +471,7 @@
                                             .hide,.none-hidden {
                                                 color: var(--neutral-shade-2, #403F3A);
                                                 font-feature-settings: 'clig' off, 'liga' off;
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 14px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -481,7 +482,7 @@
                                             .btn-see-more {
                                                 color: var(--neutral-shade-2, #403F3A);
                                                 font-feature-settings: 'clig' off, 'liga' off;
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 14px;
                                                 font-style: normal;
                                                 font-weight: 600;
@@ -492,7 +493,7 @@
                                     }
                                     .post-body-content {
                                         color: var(--neutral-shade-2, #403F3A);
-                                        font-family: Be Vietnam Pro;
+                                        font-family: $font-family-sans-serif;
                                         font-size: 15px;
                                         font-style: normal;
                                         font-weight: 400;
@@ -504,7 +505,7 @@
                                         .reaction-left {
                                             .div-text {
                                                 color: var(--neutral-shade-3, #696760);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 12px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -514,7 +515,7 @@
                                         .reaction-right {
                                             .div-comment {
                                                 color: var(--neutral-shade-3, #696760);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 12px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -522,7 +523,7 @@
                                             }
                                             .div-seen {
                                                 color: var(--neutral-shade-3, #696760);
-                                                font-family: Be Vietnam Pro;
+                                                font-family: $font-family-sans-serif;
                                                 font-size: 12px;
                                                 font-style: normal;
                                                 font-weight: 400;
@@ -535,7 +536,7 @@
                                             border-bottom: 0px;
                                             button  {
                                                     color: var(--neutral-shade-2, #403F3A);
-                                                    font-family: Be Vietnam Pro;
+                                                    font-family: $font-family-sans-serif;
                                                     font-size: 14px;
                                                     font-style: normal;
                                                     font-weight: 400;
@@ -551,7 +552,7 @@
                                                 .body__reaction{
                                                     .reaction {
                                                         color: var(--neutral-shade-2, #403F3A);
-                                                        font-family: Be Vietnam Pro;
+                                                        font-family: $font-family-sans-serif;
                                                         font-size: 12px;
                                                         font-style: normal;
                                                         font-weight: 400;
@@ -592,7 +593,7 @@
             }
             .div-text__title {
                 color: var(--neutral-shade-2, #403F3A)!important;
-                font-family: Be Vietnam Pro;
+                font-family: $font-family-sans-serif;
                 font-size: 15px!important;
                 font-style: normal;
                 font-weight: 400!important;
@@ -610,7 +611,7 @@
                     .div-button-reaction {
                         button {
                             color: var(--neutral-shade-2, #403F3A);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 400;
@@ -630,7 +631,7 @@
                 .body__reaction {
                     .reaction {
                         color: var(--neutral-shade-2, #403F3A);
-                        font-family: Be Vietnam Pro;
+                        font-family: $font-family-sans-serif;
                         font-size: 12px;
                         font-style: normal;
                         font-weight: 400;
@@ -647,6 +648,19 @@
         padding: 12px 24px 24px 24px!important;
         .modal-header {
             .modal-title {
+                .div-header-title {
+                    padding-bottom: 12px;
+                    margin-bottom: 24px;
+                    .text-title {
+                        color: var(--neutral-shade-1, #121210);
+                        text-align: center;
+                        font-family: $font-family-sans-serif;
+                        font-size: 20px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 32px;
+                    }
+                }
                 .div-header-avatar {
                     gap: 12px;
                     .avatar {
@@ -661,7 +675,7 @@
                         .modal-header-privacy-name {
                             color: var(--neutral-shade-2, #403F3A);
                             text-align: center;
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 15px;
                             font-style: normal;
                             font-weight: 500;
@@ -678,7 +692,7 @@
                                 .text-privacy {
                                     color: var(--other-azure-500, #4986FF);
                                     text-align: center;
-                                    font-family: Be Vietnam Pro;
+                                    font-family: $font-family-sans-serif;
                                     font-size: 12px;
                                     font-style: normal;
                                     font-weight: 400;
@@ -693,7 +707,7 @@
         .modal-body {
             .div-editor {
                 color: var(--neutral-shade-4, #8C8A82);
-                font-family: Be Vietnam Pro;
+                font-family: $font-family-sans-serif;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -715,9 +729,81 @@
                     box-shadow: 0px 7px 20px 0px rgba(0, 0, 0, 0.15);
                 }
             }
+            .modal-poll-vote {
+                margin-bottom: 4px;
+                .body-content {
+                    padding-top: 23px ;
+                    .div-btn-close-poll-vote {
+                        display: none;
+                    }
+                    .div-question {
+                        margin-bottom: 24px;
+                        gap: 8px;
+                        .div-btn-setting{
+                            width: 52px;
+                            height: 52px;
+                        }
+                        .form-group {
+                            max-width: 392px;
+                            
+                            input {
+                                color: var(--neutral-shade-3, #696760);
+                                font-family: $font-family-sans-serif;
+                                font-size: 15px!important;
+                                font-style: normal;
+                                font-weight: 400;
+                                line-height: 20px;
+                                padding: 14px 16px 18px 16px;
+                                height: 52px;
+                            }
+                        }
+                    }
+                    .form-label {
+                        color: var(--neutral-shade-4, #8C8A82);
+                        font-family: $font-family-sans-serif;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 16px;
+                        text-transform: uppercase;
+                        margin-bottom: 8px;
+                    }
+                    .div-add-options {
+                        margin-bottom: 8px;
+                        .form-group {
+                            input {
+                                color: var(--neutral-shade-3, #696760);
+                                font-family: $font-family-sans-serif;
+                                font-size: 15px!important;
+                                font-style: normal;
+                                font-weight: 400;
+                                line-height: 20px;
+                            }
+                        }
+                        .visibility-hidden {
+                            display: none;
+                        }
+                    }
+                    .btn-add-option {
+                        gap: 8px;
+                        padding: 8px 16px 12px 16px;
+                        border-radius: 12px;
+                        background: var(--neutral-shade-8, #E8E7E1);
+                        .text {
+                            color: var(--neutral-shade-2, #403F3A);
+                            font-family: $font-family-sans-serif;
+                            font-size: 15px!important;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: 20px;
+                        }
+                    }
+                }
+            }
+           
             .btn-post {
                 color: var(--neutral-shade-2, #403F3A)!important;
-                font-family: Be Vietnam Pro;
+                font-family: $font-family-sans-serif;
                 font-size: 15px;
                 font-style: normal;
                 font-weight: 500;
@@ -732,7 +818,7 @@
             .text-title {
                 color: var(--neutral-shade-1, #121210);
                 text-align: center;
-                font-family: Be Vietnam Pro;
+                font-family: $font-family-sans-serif;
                 font-size: 20px;
                 font-style: normal;
                 font-weight: 500;
@@ -745,7 +831,7 @@
                     .list-member__header {
                         .text-title {
                             color: var(--neutral-shade-4, #8C8A82);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 600;
@@ -756,7 +842,7 @@
                             .form-group {
                                 input {
                                     color: var(--neutral-shade-3, #696760);
-                                    font-family: Be Vietnam Pro;
+                                    font-family: $font-family-sans-serif;
                                     font-size: 15px!important;
                                     font-style: normal;
                                     font-weight: 400;
@@ -780,7 +866,7 @@
                             }
                             .name {
                                 color: var(--neutral-shade-2, #403F3A);
-                                font-family: Be Vietnam Pro;
+                                font-family: $font-family-sans-serif;
                                 font-size: 15px;
                                 font-style: normal;
                                 font-weight: 400;
@@ -803,7 +889,7 @@
                    .list-member__header {
                         .text-title {
                             color: var(--neutral-shade-4, #8C8A82);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 600;
@@ -812,7 +898,7 @@
                         }
                         .div-member-count {
                             color: var(--neutral-shade-3, #696760);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -830,7 +916,7 @@
                         }
                         .name {
                             color: var(--neutral-shade-2, #403F3A);
-                            font-family: Be Vietnam Pro;
+                            font-family: $font-family-sans-serif;
                             font-size: 15px;
                             font-style: normal;
                             font-weight: 600;
@@ -846,7 +932,7 @@
                     background: var(--primary-500, #FFE658)!important;
                     border: none!important;
                     color: var(--neutral-shade-2, #403F3A)!important;
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 500;
