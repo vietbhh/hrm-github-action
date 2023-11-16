@@ -19,15 +19,13 @@ const Emoji = (props) => {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      console.log(event)
-      console.log(state)
       if (
         emotionRef.current &&
         !emotionRef.current.contains(event.target) &&
         emotionIconRef.current &&
         !emotionIconRef.current.contains(event.target)
       ) {
-        setShowEmotion(true)
+        setShowEmotion(false)
       }
     }
 
