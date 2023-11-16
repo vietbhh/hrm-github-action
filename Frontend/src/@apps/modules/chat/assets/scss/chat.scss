@@ -32,7 +32,7 @@ $font-family: Helvetica;
 
     .chat-title {
       color: var(--neutral-shade-1, #121210);
-      font-family: Be Vietnam Pro;
+      font-family: $font-family-sans-serif;
       font-size: 48px;
       font-style: normal;
       font-weight: 600;
@@ -41,7 +41,7 @@ $font-family: Helvetica;
 
     .chat-dot {
       color: var(--other-chili-500, #E52717);
-      font-family: Be Vietnam Pro;
+      font-family: $font-family-sans-serif;
       font-size: 48px;
       font-style: normal;
       font-weight: 600;
@@ -228,7 +228,7 @@ $font-family: Helvetica;
         color: var(--neutral-shade-1, #121210);
         text-align: center;
 
-        font-family: Be Vietnam Pro;
+        font-family: $font-family-sans-serif;
         font-size: 20px!important;
         font-style: normal;
         font-weight: 500;
@@ -246,7 +246,7 @@ $font-family: Helvetica;
     .modal-body {
       .form-label {
         color: var(--neutral-shade-4, #8C8A82);
-        font-family: Be Vietnam Pro;
+        font-family: $font-family-sans-serif;
         font-size: 12px!important;
         font-style: normal;
         font-weight: 600;
@@ -256,7 +256,7 @@ $font-family: Helvetica;
       .form-control {
         background-color: #F7F7F5!important;
         color: var(--neutral-shade-3, #696760);
-        font-family: Be Vietnam Pro;
+        font-family: $font-family-sans-serif;
         font-size: 15px;
         font-style: normal;
         font-weight: 400;
@@ -264,7 +264,7 @@ $font-family: Helvetica;
       }
       .text-group-member {
         color: var(--neutral-shade-4, #8C8A82);
-        font-family: Be Vietnam Pro;
+        font-family: $font-family-sans-serif;
         font-size: 12px;
         font-style: normal;
         font-weight: 600;
@@ -282,7 +282,7 @@ $font-family: Helvetica;
           .search_invite {
             color: var(--neutral-shade-3, #696760);
             font-feature-settings: 'clig' off, 'liga' off;
-            font-family: Be Vietnam Pro;
+            font-family: $font-family-sans-serif;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
@@ -311,7 +311,7 @@ $font-family: Helvetica;
       .member_selected {
         .total_member_selected {
           color: var(--neutral-shade-3, #696760);
-          font-family: Be Vietnam Pro;
+          font-family: $font-family-sans-serif;
           font-size: 12px;
           font-style: normal;
           font-weight: 400;
@@ -329,7 +329,7 @@ $font-family: Helvetica;
           }
           .title {
             color: var(--neutral-shade-2, #403F3A);
-            font-family: Be Vietnam Pro;
+            font-family: $font-family-sans-serif;
             font-size: 15px;
             font-style: normal;
             font-weight: 600;
@@ -337,7 +337,7 @@ $font-family: Helvetica;
           }
           .sub-email {
             color: var(--neutral-shade-3, #696760);
-            font-family: Be Vietnam Pro;
+            font-family: $font-family-sans-serif;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -355,7 +355,7 @@ $font-family: Helvetica;
       .modal-add-member {
         .total_member_selected {
           color: var(--neutral-shade-3, #696760);
-          font-family: Be Vietnam Pro;
+          font-family: $font-family-sans-serif;
           font-size: 12px;
           font-style: normal;
           font-weight: 400;
@@ -375,7 +375,7 @@ $font-family: Helvetica;
             }
             .title {
               color: var(--neutral-shade-2, #403F3A);
-              font-family: Be Vietnam Pro;
+              font-family: $font-family-sans-serif;
               font-size: 15px;
               font-style: normal;
               font-weight: 600;
@@ -383,7 +383,7 @@ $font-family: Helvetica;
             }
             .sub-email {
               color: var(--neutral-shade-3, #696760);
-              font-family: Be Vietnam Pro;
+              font-family: $font-family-sans-serif;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -451,7 +451,7 @@ $font-family: Helvetica;
               border-color: #f9f9fb;
               background: #f9f9fb;
               height: auto;
-              font-family: Be Vietnam Pro;
+              font-family: $font-family-sans-serif;
               color: var(--neutral-shade-3, #696760);
               font-feature-settings: 'clig' off, 'liga' off;
               font-size: 14px!important;
@@ -572,7 +572,7 @@ $font-family: Helvetica;
 
                   h5 {
                     color: var(--neutral-shade-2, #403F3A);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 500;
@@ -581,7 +581,7 @@ $font-family: Helvetica;
 
                   p {
                     color: var(--neutral-shade-3, #696760);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
@@ -630,7 +630,7 @@ $font-family: Helvetica;
                     position: relative;
                     top: 7px;
                     color: var(--neutral-shade-3, #696760);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
@@ -663,7 +663,7 @@ $font-family: Helvetica;
 
           .chat-list-title {
             color: var(--neutral-shade-4, #8C8A82);
-            font-family: Be Vietnam Pro;
+            font-family: $font-family-sans-serif;
             font-size: 12px;
             font-style: normal;
             font-weight: 600;
@@ -757,7 +757,7 @@ $font-family: Helvetica;
 
                   h6 {
                     color: var(--neutral-shade-1, #121210);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 600;
@@ -765,7 +765,7 @@ $font-family: Helvetica;
                   }
 
                   .chat-header-name-status {
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
@@ -977,7 +977,7 @@ $font-family: Helvetica;
                         justify-content: space-between;
                         gap: 10px;
                         color: var(--neutral-shade-2, #403F3A);
-                        font-family: Be Vietnam Pro;
+                        font-family: $font-family-sans-serif;
                         font-size: 14px;
                         font-style: normal;
                         font-weight: 400;
@@ -1010,7 +1010,7 @@ $font-family: Helvetica;
                     input {
                       padding: 12px 24px 16px 24px;
                       color: var(--neutral-shade-3, #696760);
-                      font-family: Be Vietnam Pro;
+                      font-family: $font-family-sans-serif;
                       font-size: 15px;
                       font-style: normal;
                       font-weight: 400;
@@ -1135,7 +1135,7 @@ $font-family: Helvetica;
 
                       .text {
                         color: var(--neutral-shade-9, #F7F7F5);
-                        font-family: Be Vietnam Pro;
+                        font-family: $font-family-sans-serif;
                         font-size: 15px;
                         font-style: normal;
                         font-weight: 400;
@@ -1288,7 +1288,7 @@ $font-family: Helvetica;
                     p.text {
                       word-break: break-word;
                       color: var(--neutral-shade-2, #403F3A);
-                      font-family: Be Vietnam Pro;
+                      font-family: $font-family-sans-serif;
                       font-size: 15px;
                       font-style: normal;
                       font-weight: 400;
@@ -1896,14 +1896,14 @@ $font-family: Helvetica;
                       @media all and (max-width: 768px){
                           color: var(--neutral-shade-3, #696760);
                           font-feature-settings: 'clig' off, 'liga' off;
-                          font-family: Be Vietnam Pro;
+                          font-family: $font-family-sans-serif;
                           font-size: 14px;
                           font-style: normal;
                           font-weight: 400;
                           line-height: 29px;
                       }
                       color: var(--neutral-shade-3, #696760);
-                      font-family: Be Vietnam Pro;
+                      font-family: $font-family-sans-serif;
                       font-size: 15px;
                       font-style: normal;
                       font-weight: 400;
@@ -1958,14 +1958,14 @@ $font-family: Helvetica;
                   @media all and (max-width: 768px){
                     color: var(--neutral-shade-3, #696760);
                     font-feature-settings: 'clig' off, 'liga' off;
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 400;
                     line-height: 29px;
                 }
                   color: var(--neutral-shade-3, #696760);
-                  font-family: Be Vietnam Pro;
+                  font-family: $font-family-sans-serif;
                   font-size: 15px;
                   font-style: normal;
                   font-weight: 400;
@@ -2017,7 +2017,7 @@ $font-family: Helvetica;
                 .chat-user-name {
                   color: var(--171721-primary, #171721);
                   text-align: center;
-                  font-family: Be Vietnam Pro;
+                  font-family: $font-family-sans-serif;
                   font-size: 18px;
                   font-style: normal;
                   font-weight: 500;
@@ -2027,7 +2027,7 @@ $font-family: Helvetica;
                 .user-post {
                   color: var(--8083-a-3, #8083A3);
                   text-align: center;
-                  font-family: Be Vietnam Pro;
+                  font-family: $font-family-sans-serif;
                   font-size: 15px;
                   font-style: normal;
                   font-weight: 400;
@@ -2146,7 +2146,7 @@ $font-family: Helvetica;
 
                 .section-label {
                   color: var(--neutral-shade-3, #696760);
-                  font-family: Be Vietnam Pro;
+                  font-family: $font-family-sans-serif;
                   font-size: 12px;
                   font-style: normal;
                   font-weight: 600;
@@ -2162,7 +2162,7 @@ $font-family: Helvetica;
 
                 .section-text {
                   color: var(--neutral-shade-2, #403F3A);
-                  font-family: Be Vietnam Pro;
+                  font-family: $font-family-sans-serif;
                   font-size: 15px;
                   font-style: normal;
                   font-weight: 400;
@@ -2202,7 +2202,7 @@ $font-family: Helvetica;
 
                 .title {
                   color: var(--neutral-shade-2, #403F3A);
-                  font-family: Be Vietnam Pro;
+                  font-family: $font-family-sans-serif;
                   font-size: 14px;
                   font-style: normal;
                   font-weight: 400;
@@ -2259,7 +2259,7 @@ $font-family: Helvetica;
                   
                   .text-add-member {
                     color: var(--neutral-shade-2, #403F3A);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 600;
@@ -2409,7 +2409,7 @@ $font-family: Helvetica;
                     cursor: pointer;
                     padding: 7px;
                     color: var(--neutral-shade-2, #403F3A);
-                    font-family: Be Vietnam Pro;
+                    font-family: $font-family-sans-serif;
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 500;
@@ -3041,7 +3041,7 @@ $font-family: Helvetica;
   .ant-tabs-tab-btn {
     color: var(--neutral-shade-2, #403F3A);
     text-align: center;
-    font-family: Be Vietnam Pro;
+    font-family: $font-family-sans-serif;
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
