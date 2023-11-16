@@ -1023,7 +1023,7 @@
 
       .department {
         width: 50%;
-        font-family: "Be Vietnam Pro";
+        font-family:$font-family-sans-serif;
         font-style: normal;
         font-weight: 600;
         font-size: 14px;
@@ -1033,7 +1033,7 @@
         }
         .total-employees {
           width: 100%;
-          font-family: "Be Vietnam Pro";
+          font-family: $font-family-sans-serif;
           font-style: normal;
           font-weight: 300;
           font-size: 11px;
