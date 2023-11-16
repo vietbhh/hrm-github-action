@@ -157,7 +157,7 @@ const EditorComponent = (props) => {
         placeholder={
           placeholder === null
             ? useFormatMessage(
-                "modules.feed.create_post.text.placeholder_input"
+                "modules.feed.create_post.text.you_thinking"
               )
             : placeholder
         }

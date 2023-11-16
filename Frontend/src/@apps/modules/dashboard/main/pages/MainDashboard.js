@@ -245,7 +245,6 @@ const MainDashboard = ({
           dataLayout_[key_val] = val_layout
         }
       })
-
       setState({ layouts: dataLayout_ })
     }, 500)
   }

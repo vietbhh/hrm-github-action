@@ -138,7 +138,9 @@ const HeaderCreatePost = (props) => {
               />
             </svg>
           </span>
-          {useFormatMessage("modules.feed.create_post.text.workspace")}
+          <span className="text-privacy">
+            {useFormatMessage("modules.feed.create_post.text.workspace")}
+          </span>
         </>
       )
     }

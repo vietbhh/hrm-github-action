@@ -17,7 +17,7 @@ const RenderAnnouncement = (props) => {
       const height = document.getElementById(
         `announcement__div-content-${dataLink?.id}`
       ).offsetHeight
-      if (height >= 60) {
+      if (height > 125) {
         setState({ showSeeMore: true })
       }
     }
@@ -38,7 +38,7 @@ const RenderAnnouncement = (props) => {
         id={`announcement__div-content-${dataLink?.id}`}>
         <div
           className={`${
-            state.showSeeMore && state.seeMore === false ? "hide" : ""
+            state.showSeeMore && state.seeMore === false ? "hide" : "none-hidden"
           }`}>
           {ReactHtmlParser(dataLink?.content)}
         </div>
@@ -48,7 +48,9 @@ const RenderAnnouncement = (props) => {
             onClick={(e) => {
               e.preventDefault()
               setState({ seeMore: !state.seeMore })
-            }}>
+            }}
+            href={`#announcement__div-content-${dataLink?.id}`}
+          >
             <p className="mb-0">
               {state.seeMore === false
                 ? useFormatMessage("modules.feed.post.text.see_more")

@@ -542,9 +542,34 @@ const ModalCreatePost = (props) => {
                   <i className="fa-solid fa-chevron-up"></i>
                 </span>
               ) : (
-                <span className="icon toggle-background">
-                  <span>Aa</span>
-                </span>
+                <svg className="icon-background" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="vuesax/bold/bg-post">
+                    <g id="bg-post">
+                      <g id="Group 60" opacity="0.7" filter="url(#filter0_f_3460_11992)">
+                      <path id="Vector 102" d="M0 0L16 16H0V0Z" fill="#FF0000"/>
+                      <path id="Vector 104" d="M32 0L16 16L16 -6.99382e-07L32 0Z" fill="#FFF500"/>
+                      <path id="Vector 106" d="M32 32L16 16L32 16L32 32Z" fill="#00FF85"/>
+                      <path id="Vector 108" d="M0 32L16 16L16 32L0 32Z" fill="#0E7CF1"/>
+                      <path id="Vector 103" d="M16 16L-1.39876e-06 1.39876e-06L16 0L16 16Z" fill="#FF5C00"/>
+                      <path id="Vector 105" d="M16 16L32 2.54292e-07L32 16L16 16Z" fill="#52FF00"/>
+                      <path id="Vector 107" d="M16 16L32 32L16 32L16 16Z" fill="#00FFD1"/>
+                      <path id="Vector 109" d="M16 16L2.54292e-07 32L9.53674e-07 16L16 16Z" fill="#BD00FF"/>
+                      </g>
+                      <path id="Vector 100" d="M28 18.6667V26.6667" stroke="white"/>
+                      <path id="Vector 101" d="M28.0013 20.4849C27.8235 19.6768 25.868 18.6667 24.8013 18.6667C24.268 18.6667 22.668 18.6667 22.668 21.6971C22.668 22.3031 22.668 25.3334 24.8013 25.3334C25.3346 25.3334 28.0013 25.3334 28.0013 22.9092" stroke="white"/>
+                      <path id="Vector 98" d="M4 26.6667L12.0664 7.58889C12.7866 5.88559 15.2343 5.98821 15.8093 7.74582L22 26.6667" stroke="white"/>
+                      <path id="Vector 99" d="M6.66797 20H20.0013" stroke="white"/>
+                    </g>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_3460_11992" x="-6" y="-6" width="44" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                    <feGaussianBlur stdDeviation="3" result="effect1_foregroundBlur_3460_11992"/>
+                    </filter>
+                  </defs>
+                </svg>
+
               )}
             </li>
           </Tooltip>
