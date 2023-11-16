@@ -130,7 +130,8 @@ const PollVote = (props) => {
           <PerfectScrollbar options={{ wheelPropagation: false }}>
             {_.map(poll_vote_detail.options, (value, index) => {
               return (
-                <div key={index} className="div-add-options">
+                <div key={index} className="div-add-options"
+                >
                   <ErpInput
                     nolabel
                     required
@@ -146,7 +147,10 @@ const PollVote = (props) => {
                         : null
                     }
                   />
-                  <div className="div-btn-delete-options">
+                  <div className={classNames("div-btn-delete-options", {
+                      "visibility-hidden":
+                        poll_vote_detail.options.length <= 2
+                    })} >
                     <Button
                       color="flat"
                       className={classNames("btn-delete-options", {
@@ -177,9 +181,9 @@ const PollVote = (props) => {
             onClick={() => handleAddOptions()}
             disabled={poll_vote_detail.options.length >= 10}>
             <svg
-              width="25"
+              width="24"
               height="24"
-              viewBox="0 0 25 24"
+              viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg">
               <path
@@ -197,8 +201,9 @@ const PollVote = (props) => {
                 strokeLinejoin="round"
               />
             </svg>
-
-            {useFormatMessage("modules.feed.create_post.text.add_options")}
+            <span className="text">
+              {useFormatMessage("modules.feed.create_post.text.add_options")}
+            </span>
           </button>
         </div>
       </div>

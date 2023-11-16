@@ -19,13 +19,15 @@ const Emoji = (props) => {
 
   useEffect(() => {
     function handleClickOutside(event) {
+      console.log(event)
+      console.log(state)
       if (
         emotionRef.current &&
         !emotionRef.current.contains(event.target) &&
         emotionIconRef.current &&
         !emotionIconRef.current.contains(event.target)
       ) {
-        setShowEmotion(false)
+        setShowEmotion(true)
       }
     }
 
@@ -43,6 +45,8 @@ const Emoji = (props) => {
         onClick={() => {
           if (state.showEmotion === false) {
             setShowEmotion(true)
+          } else {
+            setShowEmotion(false)
           }
         }}>
         <div
