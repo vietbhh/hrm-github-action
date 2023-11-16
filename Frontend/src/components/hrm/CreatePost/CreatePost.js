@@ -110,6 +110,7 @@ const CreatePost = (props) => {
     }
     return false
   }
+
   return (
     <Fragment>
       <div className="div-create-post">

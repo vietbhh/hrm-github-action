@@ -27,6 +27,7 @@ import { Link } from "react-router-dom"
 import PerfectScrollbar from "react-perfect-scrollbar"
 const LoadPost = (props) => {
   const {
+    dataPost,
     restorationRef,
     data, // data post
     index, // index post
@@ -55,6 +56,7 @@ const LoadPost = (props) => {
     workspace,
     isLoadComment = false
   } = props
+
   const [state, setState] = useMergedState({
     comment_more_count_original: data.comment_more_count,
     focusCommentForm: false,
@@ -229,8 +231,8 @@ const LoadPost = (props) => {
     return ""
   }
 
-  const renderComponent = useMemo(() => {
-    return (
+  return (
+    <Fragment>
       <div
         className="load-post"
         id={`post_id_${data?._id}`}
@@ -319,13 +321,6 @@ const LoadPost = (props) => {
           </>
         )}
       </div>
-    )
-  }, [data])
-
-  return (
-    <Fragment>
-      <Fragment>{renderComponent}</Fragment>
-
       {/* render modal */}
       {!isViewEditHistory && (
         <Fragment>
@@ -335,7 +330,7 @@ const LoadPost = (props) => {
               toggleModal={toggleModalCreatePost}
               setModal={(value) => setState({ modalCreatePost: value })}
               dataMention={dataMention}
-              workspace={[]}
+              workspace={workspace ? workspace[0] : ""}
               avatar={data?.created_by?.avatar}
               fullName={data?.created_by?.full_name}
               userId={data?.created_by?.id}

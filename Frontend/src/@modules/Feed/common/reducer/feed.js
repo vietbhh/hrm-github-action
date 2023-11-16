@@ -10,6 +10,7 @@ const feedSlice = createSlice({
   reducers: {
     setFeedState: (state, action) => {
       const payload = action.payload
+
       if (payload.type === "init") {
         state.feedState = payload.data
       } else if (payload.type === "update") {
@@ -34,12 +35,72 @@ const feedSlice = createSlice({
         }
       }
     },
-    pushToTopDataFeedState: (state, action) => {
-      const newData = [action.payload.dataPost, ...state.feedState.dataPost]
-      state.feedState = {
-        ...state.feedState,
-        totalPost: state.feedState.totalPost + 1,
-        dataPost: newData
+    handleDataPostState: (state, action) => {
+      const payload = action.payload
+      if (payload.type === "push") {
+        const newData = [action.payload.dataPost, ...state.feedState.dataPost]
+        state.feedState = {
+          ...state.feedState,
+          dataPost: newData
+        }
+      } else if (payload.type === "remove") {
+        const newData = [...state.feedState.dataPost].filter((item, index) => {
+          return index !== payload.index
+        })
+
+        state.feedState = {
+          ...state.feedState,
+          dataPost: newData
+        }
+      } else if (payload.type === "update") {
+        const newData = [...state.feedState.dataPost].map((item, index) => {
+          if (item._id === payload.dataPost._id) {
+            return {
+              ...payload.dataPost
+            }
+          }
+
+          return item
+        })
+
+        state.feedState = {
+          ...state.feedState,
+          dataPost: newData
+        }
+      }
+    },
+    handleNewDataFeedState: (state, action) => {
+      const payload = action.payload
+      if (payload.type === "push") {
+        const newData = [action.payload.dataPost, ...state.feedState.newPosts]
+        state.feedState = {
+          ...state.feedState,
+          newPosts: newData
+        }
+      } else if (payload.type === "remove") {
+        const newData = [...state.feedState.newPosts].filter((item, index) => {
+          return index !== payload.index
+        })
+
+        state.feedState = {
+          ...state.feedState,
+          newPosts: newData
+        }
+      } else if (payload.type === "update") {
+        const newData = [...state.feedState.newPosts].map((item, index) => {
+          if (item._id === payload.dataPost._id) {
+            return {
+              ...payload.dataPost
+            }
+          }
+
+          return item
+        })
+
+        state.feedState = {
+          ...state.feedState,
+          newPosts: newData
+        }
       }
     },
     appendDataFeedState: (state, action) => {
@@ -78,19 +139,93 @@ const feedSlice = createSlice({
         }
       }
     },
-    pushToTopDataWorkspaceState: (state, action) => {
+    handleDataPostWorkspaceState: (state, action) => {
       const payload = action.payload
       const workspaceId = payload.workspaceId
-
       if (state.workspaceState[workspaceId] !== undefined) {
-        const newData = [
-          action.payload.dataPost,
-          ...state.workspaceState[workspaceId]["dataPost"]
-        ]
-        state.workspaceState[workspaceId] = {
-          ...state.workspaceState[workspaceId],
-          totalPost: state.workspaceState[workspaceId]["totalPost"] + 1,
-          dataPost: newData
+        if (payload.type === "push") {
+          const newData = [
+            action.payload.dataPost,
+            ...state.workspaceState[workspaceId]["dataPost"]
+          ]
+
+          state.workspaceState[workspaceId] = {
+            ...state.workspaceState[workspaceId],
+            dataPost: newData
+          }
+        } else if (payload.type === "remove") {
+          const newData = [
+            ...state.workspaceState[workspaceId]["dataPost"]
+          ].filter((item, index) => {
+            return index !== payload.index
+          })
+
+          state.workspaceState[workspaceId] = {
+            ...state.workspaceState[workspaceId],
+            dataPost: newData
+          }
+        } else if (payload.type === "update") {
+          const newData = [
+            ...state.workspaceState[workspaceId]["dataPost"]
+          ].map((item, index) => {
+            if (item._id === payload.dataPost._id) {
+              return {
+                ...payload.dataPost
+              }
+            }
+
+            return item
+          })
+
+          state.workspaceState[workspaceId] = {
+            ...state.workspaceState[workspaceId],
+            dataPost: newData
+          }
+        }
+      }
+    },
+    handleNewDataWorkspaceState: (state, action) => {
+      const payload = action.payload
+      const workspaceId = payload.workspaceId
+      if (state.workspaceState[workspaceId] !== undefined) {
+        if (payload.type === "push") {
+          const newData = [
+            action.payload.dataPost,
+            ...state.workspaceState[workspaceId]["newPosts"]
+          ]
+
+          state.workspaceState[workspaceId] = {
+            ...state.workspaceState[workspaceId],
+            newPosts: newData
+          }
+        } else if (payload.type === "remove") {
+          const newData = [
+            ...state.workspaceState[workspaceId]["newPosts"]
+          ].filter((item, index) => {
+            return index !== payload.index
+          })
+
+          state.workspaceState[workspaceId] = {
+            ...state.workspaceState[workspaceId],
+            newPosts: newData
+          }
+        } else if (payload.type === "update") {
+          const newData = [
+            ...state.workspaceState[workspaceId]["newPosts"]
+          ].map((item, index) => {
+            if (item._id === payload.dataPost._id) {
+              return {
+                ...payload.dataPost
+              }
+            }
+
+            return item
+          })
+
+          state.workspaceState[workspaceId] = {
+            ...state.workspaceState[workspaceId],
+            newPosts: newData
+          }
         }
       }
     },
@@ -114,10 +249,12 @@ const feedSlice = createSlice({
 
 export const {
   setFeedState,
-  pushToTopDataFeedState,
+  handleDataPostState,
+  handleNewDataFeedState,
   appendDataFeedState,
   setWorkspaceState,
-  pushToTopDataWorkspaceState,
+  handleDataPostWorkspaceState,
+  handleNewDataWorkspaceState,
   appendDataWorkspaceState
 } = feedSlice.actions
 

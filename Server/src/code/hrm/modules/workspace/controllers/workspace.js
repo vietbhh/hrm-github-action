@@ -1177,7 +1177,7 @@ const loadFeed = async (req, res) => {
     .skip(page * pageLength)
     .limit(pageLength)
     .sort({
-      _id: "desc"
+      order: -1
     })
   const feedCount = await feedMongoModel.find(filter).count()
   const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)

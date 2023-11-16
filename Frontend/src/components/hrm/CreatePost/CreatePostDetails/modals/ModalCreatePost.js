@@ -148,6 +148,11 @@ const ModalCreatePost = (props) => {
     setEmptyPollVote()
   }
   const submitPost = () => {
+    feedApi
+      .priority()
+      .then((res) => {})
+      .catch((err) => {})
+    return
     const check_can_submit = handleCheckContentBeforeSubmit()
     if (check_can_submit) {
       setState({ loadingSubmit: true })
@@ -162,7 +167,6 @@ const ModalCreatePost = (props) => {
       const __content = result_tag_user.content
       const mention = result_tag_user.tag_user
       const arrHashtag = detectHashtag(__content)
-
       const params = {
         content: __content,
         workspace: workspace,
@@ -182,12 +186,18 @@ const ModalCreatePost = (props) => {
         tag_your_colleagues: state.tag_your_colleagues,
         arrHashtag: arrHashtag
       }
+
       feedApi
         .postSubmitPost(params)
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             if (approveStatus !== "pending") {
-              setDataCreateNew(res.data)
+              const dataCrateNew = {
+                ...res.data,
+                is_edit: !_.isEmpty(dataPost?._id)
+              }
+              console.log(dataCrateNew)
+              setDataCreateNew(dataCrateNew)
             } else {
               SwAlert.showSuccess({
                 title: "",

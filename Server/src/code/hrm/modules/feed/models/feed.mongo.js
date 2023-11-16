@@ -8,6 +8,10 @@ export const feedSchema = baseSchema("m_feed", {
         auto: true,
         required: true
     },
+    order: {
+        type: Number,
+        default: 0
+    },
     permission_ids: {
         type: [String],
         default: []

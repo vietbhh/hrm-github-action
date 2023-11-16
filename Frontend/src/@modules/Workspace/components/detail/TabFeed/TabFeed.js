@@ -59,7 +59,7 @@ const TabFeed = (props) => {
   }
   useEffect(() => {
     loadData()
-    
+
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
       : []

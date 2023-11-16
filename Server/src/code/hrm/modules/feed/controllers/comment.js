@@ -22,6 +22,7 @@ import {
   sendNotificationTagInCommentPost
 } from "../../workspace/controllers/notification.js"
 import { getUser } from "#app/models/users.mysql.js"
+import dayjs from "dayjs"
 
 // ** comment
 const submitComment = async (req, res, next) => {
@@ -54,11 +55,15 @@ const submitComment = async (req, res, next) => {
 
       const commentModel = new commentMongoModel(dataInsert)
       const saveComment = await commentModel.save()
-      await feedMongoModel.updateOne(
-        { _id: id_post },
-        { $push: { comment_ids: saveComment._id } }
-      )
+      const estimateOrder = dayjs().unix() * 2
       const infoPost = await feedMongoModel.findById(id_post)
+      const updateData = { $push: { comment_ids: saveComment._id } }
+      if (estimateOrder > infoPost?.order) {
+        updateData["$set"] = { order: estimateOrder }
+      }
+      
+      await feedMongoModel.updateOne({ _id: id_post }, { ...updateData })
+
       const arrUserNotReceivedNotification = isEmpty(
         infoPost.turn_off_notification
       )

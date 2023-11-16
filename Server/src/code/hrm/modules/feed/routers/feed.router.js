@@ -37,7 +37,8 @@ import {
     updatePostReaction,
     updateSeenPost,
     uploadTempAttachmentController,
-    getPostPending
+    getPostPending,
+    calculateFeedPriority
 } from "../controllers/feed.js"
 import {getDataHashtag, loadFeedHashtag} from "../controllers/hashtag.js"
 import {getPostInteractiveMember} from "../controllers/management.js"
@@ -96,4 +97,8 @@ router.post("/save-saved", saveSaved)
 
 router.get("/pending-posts", getPostPending)
 router.get("/post-saved", listPostSaved)
+
+// ** for feed priority
+router.get("/calculate-priority", calculateFeedPriority)
+
 export default router

@@ -148,7 +148,9 @@ export const feedApi = {
     const strParams = object2QueryString(params)
     return await axiosNodeApi.get(`/feed/pending-posts?${strParams}`)
   },
-
+  async priority() {
+    return await axiosNodeApi.get("/feed/calculate-priority")
+  },
   async loadUserApprovePost(params) {
     const strParams = object2QueryString(params)
     return await axiosApi.get(`/employees/load-approve-post?${strParams}`)

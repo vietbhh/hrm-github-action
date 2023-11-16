@@ -47,6 +47,8 @@ import {
   sendNotificationUnseenPost
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
+import dayjs from "dayjs"
+import feedPriorityMongoModel from "../models/feed_priority.mongo.js"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -90,10 +92,10 @@ const submitPostController = async (req, res, next) => {
   }
 
   const workspace_type =
-    body.workspace.length === 0 && body.privacy_type === "workspace"
+    (body?.workspace === undefined || body?.workspace.length === 0)  && body.privacy_type === "workspace"
       ? "default"
       : body.privacy_type
-      console.log(workspace_type)
+
   const link = body.arrLink
 
   // ** check type feed parent
@@ -155,7 +157,8 @@ const submitPostController = async (req, res, next) => {
       background_image: body.backgroundImage,
       has_poll_vote: has_poll_vote,
       poll_vote_detail: save_poll_vote_detail,
-      hashtag: body.arrHashtag
+      hashtag: body.arrHashtag,
+      order: dayjs().unix() * 3
     }
 
     if (!is_edit) {
@@ -469,8 +472,9 @@ const loadFeedController = async (req, res, next) => {
       .skip(page * pageLength)
       .limit(pageLength)
       .sort({
-        _id: "desc"
+        order: -1
       })
+
     const feedCount = await feedMongoModel.find(filter).count()
 
     if (isFeaturedPost === "true") {
@@ -1538,7 +1542,7 @@ const getPostPending = async (req, res) => {
     const postList = await feedMongoModel
       .find(filter)
       .skip(skip)
-      .limit(pageLength)
+      .limit(pageLength)``
       .sort({
         _id: req.query.sort
       })
@@ -1552,6 +1556,16 @@ const getPostPending = async (req, res) => {
     return res.fail(err.message)
   }
 }
+
+const calculateFeedPriority = async (req, res) => {
+  try {
+    const listFeed = await feedMongoModel.find()
+    console.log(listFeed)
+  } catch (err) {
+
+  }
+}
+
 export {
   uploadTempAttachmentController,
   submitPostController,
@@ -1577,5 +1591,6 @@ export {
   turnOffCommenting,
   handleDataHistory,
   getDataEditHistory,
-  getPostPending
+  getPostPending,
+  calculateFeedPriority
 }

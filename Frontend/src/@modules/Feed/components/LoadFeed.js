@@ -22,13 +22,14 @@ import EventDetailsModal from "../../Calendar/components/modal/EventDetails/Even
 import { useSelector, useDispatch } from "react-redux"
 import {
   setFeedState,
-  pushToTopDataFeedState,
+  handleDataPostState,
+  handleNewDataFeedState,
   appendDataFeedState,
   setWorkspaceState,
-  pushToTopDataWorkspaceState,
+  handleDataPostWorkspaceState,
+  handleNewDataWorkspaceState,
   appendDataWorkspaceState
 } from "../common/reducer/feed"
-import scrollRestorer from "@mapbox/scroll-restorer"
 
 const LoadFeed = (props) => {
   const {
@@ -48,13 +49,12 @@ const LoadFeed = (props) => {
   } = props
 
   const [state, setState] = useMergedState({
+    text: "",
     scrollPosition: 0,
-    loading: true,
     hasMoreLazy: false,
     loadingPost: undefined,
     loadingPostCreateNew: false,
     idPostCreateNew: "",
-    dataCreateNewTemp: [],
     dataMention: [],
     arrPostIdSeen: [],
     currentWorkspace: workspace,
@@ -65,12 +65,15 @@ const LoadFeed = (props) => {
   const workspaceId = workspace[0]
 
   const handleSetStateRedux = isWorkspace ? setWorkspaceState : setFeedState
-  const handlePushDataRedux = isWorkspace
-    ? pushToTopDataWorkspaceState
-    : pushToTopDataFeedState
   const handleAppendDataRedux = isWorkspace
     ? appendDataWorkspaceState
     : appendDataFeedState
+  const handleDataPostRedux = isWorkspace
+    ? handleDataPostWorkspaceState
+    : handleDataPostState
+  const handleNewDataRedux = isWorkspace
+    ? handleNewDataWorkspaceState
+    : handleNewDataFeedState
 
   const userData = useSelector((state) => state.auth.userData)
   const userId = userData.id
@@ -81,7 +84,7 @@ const LoadFeed = (props) => {
   const feedRedux = useSelector((state) => state.feed)
   const { feedState, workspaceState } = feedRedux
 
-  const { dataPost, hasMore, totalPost, page, scrollPosition } = isWorkspace
+  const { dataPost, hasMore, totalPost, page, newPosts } = isWorkspace
     ? workspaceState[workspaceId] === undefined
       ? { dataPost: [], hasMore: false, totalPost: 0, page: 0 }
       : workspaceState[workspaceId]
@@ -92,23 +95,6 @@ const LoadFeed = (props) => {
   const dispatch = useDispatch()
 
   // ** function
-  const debounceSet = useRef(
-    _.debounce((nextValue) => {
-      dispatch(
-        handleSetStateRedux({
-          data: {
-            scrollPosition: nextValue
-          },
-          type: "update_state"
-        })
-      )
-    }, import.meta.env.VITE_APP_DEBOUNCE_INPUT_DELAY)
-  ).current
-
-  const handleScroll = () => {
-    debounceSet(window.scrollY)
-  }
-
   const loadData = () => {
     setState({
       loadingPost: true,
@@ -138,17 +124,16 @@ const LoadFeed = (props) => {
 
         if (dataPost.length === 0) {
           if (res.data.dataPost.length === 0) {
-            console.log(2)
             setState({
               arrPostIdSeen: arrPostIdSeen
             })
 
-            //console.log(1)
             dispatch(
               handleSetStateRedux({
                 type: "init",
                 data: {
                   dataPost: [],
+                  newPosts: [],
                   hasMore: false,
                   page: 0,
                   totalPost: 0
@@ -161,7 +146,7 @@ const LoadFeed = (props) => {
               setState({
                 loadingPost: false
               })
-            }, 500)
+            }, 200)
           } else {
             setState({
               arrPostIdSeen: arrPostIdSeen
@@ -172,6 +157,7 @@ const LoadFeed = (props) => {
                 type: "init",
                 data: {
                   dataPost: res.data.dataPost,
+                  newPosts: [],
                   hasMore: res.data.hasMore,
                   page: res.data.page,
                   totalPost: res.data.totalPost
@@ -182,8 +168,7 @@ const LoadFeed = (props) => {
           }
         } else {
           setState({
-            arrPostIdSeen: arrPostIdSeen,
-            loading: false
+            arrPostIdSeen: arrPostIdSeen
           })
 
           dispatch(
@@ -193,12 +178,6 @@ const LoadFeed = (props) => {
               hasMore: res.data.hasMore
             })
           )
-
-          //ref.current.scrollTop = 3500
-          /*const element = document.getElementById("post_id_6548900971a802fb8ac0132d")
-          console.log(element)
-          element.scrollIntoView()*/
-          window.scrollY = 400
         }
       })
       .catch((err) => {
@@ -280,7 +259,59 @@ const LoadFeed = (props) => {
           workspaceId: workspaceId
         })
       )
-    }, 1000)
+    }, 200)
+  }
+
+  // load data create new
+  const loadDataCreateNew = async () => {
+    // ** user data post
+    const isUpdatePost =
+      dataCreateNew?.is_edit === undefined ? false : dataCreateNew.is_edit
+
+    setState({ loadingPostCreateNew: !isUpdatePost })
+
+    // load media
+    const data_attachment = await handleLoadAttachmentThumb(
+      dataCreateNew,
+      cover
+    )
+    dataCreateNew["url_thumb"] = data_attachment["url_thumb"]
+    dataCreateNew["url_cover"] = data_attachment["url_cover"]
+    dataCreateNew["medias"] = data_attachment["medias"]
+
+    // check data link
+    const dataUrl = await loadUrlDataLink(dataCreateNew)
+    dataCreateNew["dataLink"].cover_url = dataUrl.cover_url
+    dataCreateNew["dataLink"].badge_url = dataUrl.badge_url
+
+    if (isUpdatePost) {
+      dispatch(
+        handleNewDataRedux({
+          type: "update",
+          dataPost: dataCreateNew,
+          workspaceId: workspaceId
+        })
+      )
+      
+      setState({
+        loadingPostCreateNew: false
+      })
+      return
+    }
+
+    dispatch(
+      handleNewDataRedux({
+        type: "push",
+        dataPost: dataCreateNew,
+        workspaceId: workspaceId
+      })
+    )
+
+    setState({
+      loadingPostCreateNew: false
+    })
+
+    setDataCreateNew({})
   }
 
   // detect element on screen
@@ -375,6 +406,8 @@ const LoadFeed = (props) => {
 
   useEffect(() => {
     if (!_.isEmpty(dataCreateNew)) {
+      loadDataCreateNew()
+
       const _arrPostIdSeen = [...state.arrPostIdSeen]
       _arrPostIdSeen.push({ id: dataCreateNew._id, seen: true })
       setState({ arrPostIdSeen: _arrPostIdSeen })
@@ -393,99 +426,186 @@ const LoadFeed = (props) => {
   }, [dataEmployee])
 
   // ** render
-  const renderComponent = () => {
+  const renderDataCreateNew = () => {
     return (
       <Fragment>
-        <div
-          className="load-feed"
-          ref={ref}
-          style={{ height: "auto", overflow: "hidden" }}>
-          <InfiniteScroll
-            dataLength={dataPost.length}
-            next={() => {
-              loadData()
-            }}
-            hasMore={state.hasMoreLazy}
-            onScroll={() => handleScroll()}>
-            {state.loadingPostCreateNew && (
-              <div className="div-loading">
-                <Skeleton avatar active paragraph={{ rows: 2 }} />
-              </div>
-            )}
+        {_.map(newPosts, (value, index) => {
+          return (
+            <LoadPost
+              key={index}
+              data={value}
+              dataLink={value.dataLink}
+              current_url={current_url}
+              dataMention={state.dataMention}
+              setData={(data, empty = false, dataCustom = {}) => {
+                if (empty) {
+                  dispatch(
+                    handleNewDataRedux({
+                      type: "remove",
+                      index: index,
+                      workspaceId: workspaceId
+                    })
+                  )
+                } else {
+                  const _data = [...newPosts]
+                  _data[index] = {
+                    ...data,
+                    url_thumb: _data[index].url_thumb,
+                    url_source: _data[index].url_source,
+                    medias: _data[index].medias,
+                    dataLink: {
+                      ...data.dataLink,
+                      cover_url: _data[index]["dataLink"].cover_url,
+                      badge_url: _data[index]["dataLink"].badge_url
+                    },
+                    ...dataCustom
+                  }
 
-            {_.map(dataPost, (value, index) => {
-              return (
-                <LazyLoadComponent
-                  key={index}
-                  beforeLoad={() => {
-                    handleAfterLoadLazyLoadComponent(value, index)
-                  }}>
-                  <LoadPost
-                    data={value}
-                    index={index}
-                    dataLink={value.dataLink}
-                    current_url={current_url}
-                    dataMention={state.dataMention}
-                    setData={(data, empty = false, dataCustom = {}) => {
-                      if (empty) {
-                        const _data = dataPost.filter(
-                          (item, key) => key !== index
-                        )
-                        setState({ dataPost: _data })
-                      } else {
-                        const _data = [...dataPost]
-                        _data[index] = {
-                          ...data,
-                          url_thumb: _data[index].url_thumb,
-                          url_source: _data[index].url_source,
-                          medias: _data[index].medias,
-                          dataLink: {
-                            ...data.dataLink,
-                            cover_url: _data[index]["dataLink"].cover_url,
-                            badge_url: _data[index]["dataLink"].badge_url
-                          },
-                          ...dataCustom
-                        }
-                        setState({ dataPost: _data })
-                      }
-                    }}
-                    setDataLink={(data) => {
-                      const _data = [...dataPost]
-                      _data[index]["dataLink"] = data
-                      setState({ dataPost: _data })
-                    }}
-                    customAction={customAction}
-                    options_employee_department={options_employee_department}
-                    optionsMeetingRoom={optionsMeetingRoom}
-                    isInWorkspace={!_.isEmpty(workspace)}
-                    workspace={workspace}
-                    setDataCreateNew={setDataCreateNew}
-                  />
-                </LazyLoadComponent>
-              )
-            })}
-
-            {state.loadingPost && (
-              <div className="div-loading">
-                <Skeleton avatar active paragraph={{ rows: 2 }} />
-              </div>
-            )}
-
-            {!state.loadingPost && dataPost.length === 0 && (
-              <div className="empty-pinned pt-1">
-                <div className="w-100 d-flex flex-column justify-content-center align-items-center mb-2"></div>
-              </div>
-            )}
-          </InfiniteScroll>
-        </div>
-        <EventDetailsModal
-          afterRemove={handleAfterRemove}
-          afterUpdateStatus={handleAfterUpdateStatus}
-        />
+                  dispatch(
+                    handleNewDataRedux({
+                      type: "update",
+                      dataPost: _data[index],
+                      workspaceId: workspaceId
+                    })
+                  )
+                }
+              }}
+              setDataLink={(data) => {
+                const _data = [...newPosts]
+                _data[index]["dataLink"] = data
+                dispatch(
+                  handleNewDataRedux({
+                    type: "update",
+                    dataPost: _data[index],
+                    workspaceId: workspaceId
+                  })
+                )
+              }}
+              customAction={customAction}
+              options_employee_department={options_employee_department}
+              optionsMeetingRoom={optionsMeetingRoom}
+              setDataCreateNew={setDataCreateNew}
+              isInWorkspace={!_.isEmpty(workspace)}
+              workspace={workspace}
+            />
+          )
+        })}
       </Fragment>
     )
   }
-  return <Fragment>{renderComponent()}</Fragment>
+
+  const renderDataPost = () => {
+    return (
+      <Fragment>
+        {_.map(dataPost, (value, index) => {
+          return (
+            <LazyLoadComponent
+              key={index}
+              beforeLoad={() => {
+                handleAfterLoadLazyLoadComponent(value, index)
+              }}>
+              <LoadPost
+                dataPost={dataPost}
+                data={value}
+                index={index}
+                dataLink={value.dataLink}
+                current_url={current_url}
+                dataMention={state.dataMention}
+                setData={(data, empty = false, dataCustom = {}) => {
+                  if (empty) {
+                    dispatch(
+                      handleDataPostRedux({
+                        type: "remove",
+                        index: index,
+                        workspaceId: workspaceId
+                      })
+                    )
+                  } else {
+                    const _data = [...dataPost]
+                    _data[index] = {
+                      ...data,
+                      url_thumb: _data[index].url_thumb,
+                      url_source: _data[index].url_source,
+                      medias: _data[index].medias,
+                      dataLink: {
+                        ...data.dataLink,
+                        cover_url: _data[index]["dataLink"].cover_url,
+                        badge_url: _data[index]["dataLink"].badge_url
+                      },
+                      ...dataCustom
+                    }
+
+                    dispatch(
+                      handleDataPostRedux({
+                        type: "update",
+                        dataPost: _data[index],
+                        workspaceId: workspaceId
+                      })
+                    )
+                  }
+                }}
+                setDataLink={(data) => {
+                  const _data = [...dataPost]
+                  _data[index]["dataLink"] = data
+                  dispatch(handleDataPostRedux({
+                    type: "update",
+                    dataPost: _data[index],
+                    workspaceId: workspaceId
+                  }))
+                }}
+                customAction={customAction}
+                options_employee_department={options_employee_department}
+                optionsMeetingRoom={optionsMeetingRoom}
+                isInWorkspace={!_.isEmpty(workspace)}
+                workspace={workspace}
+                setDataCreateNew={setDataCreateNew}
+              />
+            </LazyLoadComponent>
+          )
+        })}
+      </Fragment>
+    )
+  }
+
+  return (
+    <Fragment>
+      <div
+        className="load-feed"
+        ref={ref}
+        style={{ height: "auto", overflow: "hidden" }}>
+        <InfiniteScroll
+          dataLength={dataPost.length}
+          next={() => {
+            loadData()
+          }}
+          hasMore={state.hasMoreLazy}>
+          {state.loadingPostCreateNew && (
+            <div className="div-loading">
+              <Skeleton avatar active paragraph={{ rows: 2 }} />
+            </div>
+          )}
+
+          <Fragment>{renderDataCreateNew()}</Fragment>
+          <Fragment>{renderDataPost()}</Fragment>
+
+          {state.loadingPost && (
+            <div className="div-loading">
+              <Skeleton avatar active paragraph={{ rows: 2 }} />
+            </div>
+          )}
+          {!state.loadingPost && dataPost.length === 0 && (
+            <div className="empty-pinned pt-1">
+              <div className="w-100 d-flex flex-column justify-content-center align-items-center mb-2"></div>
+            </div>
+          )}
+        </InfiniteScroll>
+      </div>
+      <EventDetailsModal
+        afterRemove={handleAfterRemove}
+        afterUpdateStatus={handleAfterUpdateStatus}
+      />
+    </Fragment>
+  )
 }
 
 export default LoadFeed

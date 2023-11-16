@@ -591,6 +591,7 @@ const PostHeaderAction = (props) => {
             }
           })
           .catch((err) => {
+            console.log(err)
             setState({ loadingDelete: false })
             notification.showError({
               text: useFormatMessage("notification.something_went_wrong")
