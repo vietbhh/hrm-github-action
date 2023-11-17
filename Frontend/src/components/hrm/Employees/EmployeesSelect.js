@@ -92,7 +92,6 @@ const EmployeesSelect = (props) => {
   }
   const renderMember = (data = []) => {
     return data.map((item, key) => {
-      console.log("item: ", item)
       const checked = checkExistSelected(item.id) >= 0 ?? true
       return (
         <Col sm={12} key={key}>
