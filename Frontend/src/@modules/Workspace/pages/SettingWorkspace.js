@@ -32,18 +32,11 @@ const membership_approval = [
     value: "approver",
     label: "Admins & Moderators",
     icon: (
-      <svg
-        width={40}
-        height={40}
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <rect width={40} height={40} rx={20} fill="#DBFFFF" />
-        <path
-          d="M26.5408 12.1198L21.0408 10.0598C20.4708 9.84984 19.5408 9.84984 18.9708 10.0598L13.4708 12.1198C12.4108 12.5198 11.5508 13.7598 11.5508 14.8898V22.9898C11.5508 23.7998 12.0808 24.8698 12.7308 25.3498L18.2308 29.4598C19.2008 30.1898 20.7908 30.1898 21.7608 29.4598L27.2608 25.3498C27.9108 24.8598 28.4408 23.7998 28.4408 22.9898V14.8898C28.4508 13.7598 27.5908 12.5198 26.5408 12.1198ZM23.4808 17.7198L19.1808 22.0198C19.0308 22.1698 18.8408 22.2398 18.6508 22.2398C18.4608 22.2398 18.2708 22.1698 18.1208 22.0198L16.5208 20.3998C16.2308 20.1098 16.2308 19.6298 16.5208 19.3398C16.8108 19.0498 17.2908 19.0498 17.5808 19.3398L18.6608 20.4198L22.4308 16.6498C22.7208 16.3598 23.2008 16.3598 23.4908 16.6498C23.7808 16.9398 23.7808 17.4298 23.4808 17.7198Z"
-          fill="#00B3B3"
-        />
-      </svg>
+      <div className="prefix-icon-admin-moderator">
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.5408 4.11984L13.0408 2.05984C12.4708 1.84984 11.5408 1.84984 10.9708 2.05984L5.47078 4.11984C4.41078 4.51984 3.55078 5.75984 3.55078 6.88984V14.9898C3.55078 15.7998 4.08078 16.8698 4.73078 17.3498L10.2308 21.4598C11.2008 22.1898 12.7908 22.1898 13.7608 21.4598L19.2608 17.3498C19.9108 16.8598 20.4408 15.7998 20.4408 14.9898V6.88984C20.4508 5.75984 19.5908 4.51984 18.5408 4.11984ZM15.4808 9.71984L11.1808 14.0198C11.0308 14.1698 10.8408 14.2398 10.6508 14.2398C10.4608 14.2398 10.2708 14.1698 10.1208 14.0198L8.52078 12.3998C8.23078 12.1098 8.23078 11.6298 8.52078 11.3398C8.81078 11.0498 9.29078 11.0498 9.58078 11.3398L10.6608 12.4198L14.4308 8.64984C14.7208 8.35984 15.2008 8.35984 15.4908 8.64984C15.7808 8.93984 15.7808 9.42984 15.4808 9.71984Z" fill="#00B3B3" />
+        </svg>
+      </div>
     ),
     text: useFormatMessage(
       "modules.workspace.app_options.membership_approval.approver"
@@ -53,35 +46,13 @@ const membership_approval = [
     value: "auto",
     label: "Automatically approve",
     icon: (
-      <svg
-        width={40}
-        height={40}
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <rect width={40} height={40} rx={20} fill="#DBFFFF" />
-        <path
-          d="M25 30H15C11 30 10 29 10 25V23C10 19 11 18 15 18H25C29 18 30 19 30 23V25C30 29 29 30 25 30Z"
-          stroke="#00B3B3"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M14 18V16C14 12.69 15 10 20 10C24.5 10 26 12 26 15"
-          stroke="#00B3B3"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M20 26.5C21.3807 26.5 22.5 25.3807 22.5 24C22.5 22.6193 21.3807 21.5 20 21.5C18.6193 21.5 17.5 22.6193 17.5 24C17.5 25.3807 18.6193 26.5 20 26.5Z"
-          stroke="#00B3B3"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      <div className="prefix-icon-admin-moderator">
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 22H7C3 22 2 21 2 17V15C2 11 3 10 7 10H17C21 10 22 11 22 15V17C22 21 21 22 17 22Z" stroke="#00B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M6 10V8C6 4.69 7 2 12 2C16.5 2 18 4 18 7" stroke="#00B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 18.5C13.3807 18.5 14.5 17.3807 14.5 16C14.5 14.6193 13.3807 13.5 12 13.5C10.6193 13.5 9.5 14.6193 9.5 16C9.5 17.3807 10.6193 18.5 12 18.5Z" stroke="#00B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
     ),
     text: useFormatMessage(
       "modules.workspace.app_options.membership_approval.auto"
@@ -181,7 +152,9 @@ const SettingWorkspace = () => {
                 color="success"
                 className="btn-blue ms-auto btn-sm"
                 onClick={() => handleCopyUrl()}>
-                {useFormatMessage("modules.workspace.buttons.copy")}{" "}
+                <span>
+                  {useFormatMessage("modules.workspace.buttons.copy")}
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={24}
@@ -299,11 +272,11 @@ const SettingWorkspace = () => {
                         defaultValue={
                           state.detailWorkspace?.membership_approval
                             ? membership_approval[
-                                findKeyByValue(
-                                  membership_approval,
-                                  state.detailWorkspace?.membership_approval
-                                )
-                              ]
+                            findKeyByValue(
+                              membership_approval,
+                              state.detailWorkspace?.membership_approval
+                            )
+                            ]
                             : membership_approval[0]
                         }
                         isClearable={false}
@@ -327,36 +300,37 @@ const SettingWorkspace = () => {
               <CardBody>
                 <div>
                   <div className="d-flex align-items-center group-management">
-                    <svg
-                      width={40}
-                      height={40}
-                      className="icon-group-management"
-                      viewBox="0 0 40 40"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M13.0664 33.3662L15.7164 35.3495C18.0664 37.1162 21.9331 37.1162 24.2831 35.3495L31.4497 29.9995C33.0331 28.8162 34.3331 26.2329 34.3331 24.2662V11.8662"
-                        stroke="#696760"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M31.6336 7.23327C31.3836 7.08327 31.1169 6.94994 30.8503 6.83327L22.5336 3.7166C21.1503 3.19993 18.8836 3.19993 17.5003 3.7166L9.16693 6.84994C7.25026 7.5666 5.68359 9.83327 5.68359 11.8666V24.2499C5.68359 26.2166 6.98359 28.7999 8.56693 29.9833L8.90026 30.2333"
-                        stroke="#696760"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M36.6673 3.33301L3.33398 36.6663"
-                        stroke="#696760"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-
+                    <div>
+                      <svg
+                        width={40}
+                        height={40}
+                        className="icon-group-management"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M13.0664 33.3662L15.7164 35.3495C18.0664 37.1162 21.9331 37.1162 24.2831 35.3495L31.4497 29.9995C33.0331 28.8162 34.3331 26.2329 34.3331 24.2662V11.8662"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M31.6336 7.23327C31.3836 7.08327 31.1169 6.94994 30.8503 6.83327L22.5336 3.7166C21.1503 3.19993 18.8836 3.19993 17.5003 3.7166L9.16693 6.84994C7.25026 7.5666 5.68359 9.83327 5.68359 11.8666V24.2499C5.68359 26.2166 6.98359 28.7999 8.56693 29.9833L8.90026 30.2333"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M36.6673 3.33301L3.33398 36.6663"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
                     <div className="label-field">
                       Delete Group
                       <div className="sub-label">

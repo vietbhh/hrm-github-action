@@ -3,6 +3,8 @@ import { ErpSelect } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { isFunction } from "lodash"
 import { Fragment, useEffect } from "react"
+import { components } from "react-select"
+
 const findKey = (arr = [], name) => {
   if (!name) return 0
   const index = arr.findIndex((p) => p.value === name)
@@ -265,6 +267,7 @@ const WorkgroupPrivacy = (props) => {
               workspace_mode: e
             })
           }}
+          className="workspace_mode"
           formGroupClass="mb-0"
         />
       </div>

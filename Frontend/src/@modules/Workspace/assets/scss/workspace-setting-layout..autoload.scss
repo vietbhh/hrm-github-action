@@ -7,16 +7,23 @@
   .card {
     border-radius: 14px !important;
     margin: 16px 0 32px 0;
+
     .card-body {
       padding: 24px !important;
       border-radius: 12px !important;
     }
+
     .btn-blue {
-      padding: 8px 16px;
+      padding: 10px 16px;
       border-radius: 16px;
       background-color: #2f9bfa !important;
       border: none;
+
+      svg {
+        margin-left: 12px;
+      }
     }
+
     .body-title {
       padding: 12px !important;
     }
@@ -61,7 +68,7 @@
     }
 
     .item-nav-menu-container.active {
-      background-color: #fff194;
+      background-color: #ffe658;
     }
   }
 
@@ -84,6 +91,7 @@
 
         .btn-action-secondary {
           background: #f0f2f5 !important;
+
           &:hover {
             background: #f0f2f5 !important;
           }
@@ -98,9 +106,11 @@
 
         .filter-section {
           margin-top: 24px;
+
           .select-filter {
             .select__control {
               background: #f0f3f6;
+
               .text-label {
                 @extend .workspace-common-content;
               }
@@ -109,7 +119,9 @@
 
           .search-input-member {
             @extend .workspace-erp-search-common;
+
             .form-group {
+
               input,
               span {
                 background-color: #f0f3f6 !important;
@@ -127,6 +139,7 @@
         .request-to-join-item {
           .right {
             margin-bottom: 8px;
+
             .full-name {
               @extend .workspace-common-content;
               font-weight: 500 !important;
@@ -147,6 +160,7 @@
               }
             }
           }
+
           .btn-action-primary,
           .btn-action-secondary {
             width: 83px !important;
@@ -155,6 +169,7 @@
             line-height: 16px;
           }
         }
+
         img {
           width: 40px;
           height: 40px;
@@ -162,35 +177,59 @@
       }
     }
   }
+
   .erpSelect i {
     margin-left: 0px !important;
     margin-right: 0px !important;
     color: white;
   }
+
   .workspace-pending-post {
     .card-body {
       .row {
         margin-top: 24px;
+
         .form-group {
           margin-bottom: 0;
+
           input {
             @extend .workspace-common-content;
           }
         }
       }
     }
+
     .load-post {
       padding: 0;
     }
   }
+
   .create-workspace-form {
     .privacy-section {
+
       .form-group:first-child {
         margin-bottom: 12px;
+      }
+
+      .text-label p {
+        font-weight: 500 !important;
+      }
+
+      .text-label small {
+        color: #696760 !important;
+      }
+
+      .select__menu {
+
+        .select__menu-list,
+        .react-select__menu-list {
+          padding: 12px !important;
+        }
       }
     }
   }
 }
+
 .workspace-setting-select_bg-secondary {
   svg {
     width: 24px;

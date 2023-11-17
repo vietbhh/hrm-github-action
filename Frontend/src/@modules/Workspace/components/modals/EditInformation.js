@@ -50,6 +50,7 @@ export default function EditInformation({
           rows={4}
           name="description"
           useForm={methods}
+          className="form-group-last"
         />
         <div className="button-actions">
           <form onSubmit={handleSubmit(onSubmit)}>

@@ -81,7 +81,7 @@
                     padding: 30px;
                     flex-flow: wrap;
 
-                    p + p {
+                    p+p {
                         margin-top: 8px;
                     }
 
@@ -176,33 +176,40 @@
         }
     }
 }
-.post-setting{
-    .card{
+
+.post-setting {
+    .card {
         border-radius: 15px;
     }
-    .title-setting{
+
+    .title-setting {
         color: #32434F;
-font-size: 16px;
-font-style: normal;
-font-weight: 600;
-line-height: 40px; /* 250% */
-    }
-    .item-post-setting{
-        margin-bottom: 1rem;
-        .title{
-        color: #32434F;
-        font-size: 14px;
+        font-size: 16px;
         font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
+        font-weight: 600;
+        line-height: 40px;
+        /* 250% */
+    }
+
+    .item-post-setting {
+        margin-bottom: 1rem;
+
+        .title {
+            color: #32434F;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px;
+            /* 142.857% */
         }
 
-        .description{
+        .description {
             color: #32434F;
             font-size: 10px;
             font-style: normal;
             font-weight: 300;
-            line-height: 15px; /* 150% */
+            line-height: 15px;
+            /* 150% */
         }
     }
 }
