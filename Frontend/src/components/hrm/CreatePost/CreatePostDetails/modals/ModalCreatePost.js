@@ -148,11 +148,6 @@ const ModalCreatePost = (props) => {
     setEmptyPollVote()
   }
   const submitPost = () => {
-    feedApi
-      .priority()
-      .then((res) => {})
-      .catch((err) => {})
-    return
     const check_can_submit = handleCheckContentBeforeSubmit()
     if (check_can_submit) {
       setState({ loadingSubmit: true })

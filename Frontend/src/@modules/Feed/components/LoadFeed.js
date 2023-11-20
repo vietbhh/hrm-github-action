@@ -448,6 +448,7 @@ const LoadFeed = (props) => {
                   )
                 } else {
                   const _data = [...newPosts]
+                  console.log(data)
                   _data[index] = {
                     ...data,
                     url_thumb: _data[index].url_thumb,

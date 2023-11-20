@@ -7,30 +7,11 @@ export const feedPrioritySchema = baseSchema("m_feed_priorities", {
     auto: true,
     required: true
   },
-  user: {
-    type: String,
-    required: true
+  feed_id: {
+    type: String
   },
-  priority_detail: {
-    type: [
-      {
-        feed_id: {
-          type: String
-        },
-        rank: {
-          type: Number
-        },
-        created_time: {
-          type: Number
-        },
-        total_comment: {
-          type: Number
-        },
-        total_react: {
-          type: Number
-        }
-      }
-    ]
+  points: {
+    type: Number
   }
 })
 

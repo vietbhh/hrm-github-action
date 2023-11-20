@@ -61,7 +61,7 @@ const submitComment = async (req, res, next) => {
       if (estimateOrder > infoPost?.order) {
         updateData["$set"] = { order: estimateOrder }
       }
-      
+
       await feedMongoModel.updateOne({ _id: id_post }, { ...updateData })
 
       const arrUserNotReceivedNotification = isEmpty(
@@ -454,7 +454,7 @@ const handleUpImageComment = async (image, id_post) => {
   return result
 }
 
-const handleDataComment = async (feed, loadComment = -1) => {
+const handleDataComment = async (feed, loadComment = -1, hasDoc = true) => {
   const comment_ids = feed.comment_ids
   let comment_more_count = 0
   let comment_list = []
@@ -492,12 +492,24 @@ const handleDataComment = async (feed, loadComment = -1) => {
   forEach(comment_list, (item) => {
     sub_comment_count += item.sub_comment.length
   })
-  const _feed = { ...feed }
-  _feed["_doc"]["comment_more_count"] = comment_more_count
-  _feed["_doc"]["comment_count"] = comment_ids.length + sub_comment_count
-  _feed["_doc"]["comment_list"] = comment_list
 
-  return _feed["_doc"]
+  if (hasDoc) {
+    const newFeed = { ...feed["_doc"] }
+    newFeed["comment_more_count"] = comment_more_count
+    newFeed["comment_count"] = comment_ids.length + sub_comment_count
+    newFeed["comment_list"] = comment_list
+
+    return newFeed
+  } else {
+    const newFeed = {
+      ...feed,
+      comment_more_count: comment_more_count,
+      comment_count: comment_ids.length + sub_comment_count,
+      comment_list: comment_list
+    }
+
+    return newFeed
+  }
 }
 
 const handleDataSubComment = async (dataComment, multiData = false) => {

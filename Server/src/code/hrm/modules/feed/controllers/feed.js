@@ -3,7 +3,8 @@ import calendarMongoModel from "#code/hrm/modules/calendar/models/calendar.mongo
 import {
   getUser,
   getUserActivated,
-  getUserbyDepartment
+  getUserbyDepartment,
+  getUsersExceptResigned
 } from "#app/models/users.mysql.js"
 import { getSetting } from "#app/services/settings.js"
 import {
@@ -92,7 +93,8 @@ const submitPostController = async (req, res, next) => {
   }
 
   const workspace_type =
-    (body?.workspace === undefined || body?.workspace.length === 0)  && body.privacy_type === "workspace"
+    (body?.workspace === undefined || body?.workspace.length === 0) &&
+    body.privacy_type === "workspace"
       ? "default"
       : body.privacy_type
 
@@ -467,18 +469,142 @@ const loadFeedController = async (req, res, next) => {
   }
 
   try {
-    const feed = await feedMongoModel
-      .find(filter)
-      .skip(page * pageLength)
-      .limit(pageLength)
-      .sort({
-        order: -1
-      })
+    /*
+      formula:
+        ranking = (comment_ids * 0.001 + reaction * 0.0002) + 0.75
+                  --------------------------------------------
+          1 + (0.4 * (today - created_at) / 2h)^2  - (0.3 * (today - updated_at) / 2h)^2
+    */
+    const feedAggregate = await feedMongoModel.aggregate([
+      {
+        $match: filter
+      },
+      {
+        $addFields: {
+          ranking: {
+            $divide: [
+              {
+                $add: [
+                  {
+                    $multiply: [
+                      { $size: { $ifNull: ["$comment_ids", []] } },
+                      0.001
+                    ]
+                  },
+                  {
+                    $multiply: [{ $size: { $ifNull: ["$reaction", []] } }, 0.0002]
+                  },
+                  0.75
+                ]
+              },
+              {
+                $add: [
+                  1,
+                  {
+                    $subtract: [
+                      {
+                        $multiply: [
+                          {
+                            $multiply: [
+                              {
+                                $divide: [
+                                  { $subtract: [new Date(), "$created_at"] },
+                                  7200000
+                                ]
+                              },
+                              0.4
+                            ]
+                          },
+                          {
+                            $multiply: [
+                              {
+                                $divide: [
+                                  { $subtract: [new Date(), "$created_at"] },
+                                  7200000
+                                ]
+                              },
+                              0.4
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        $multiply: [
+                          {
+                            $multiply: [
+                              {
+                                $subtract: [
+                                  {
+                                    $divide: [
+                                      {
+                                        $subtract: [new Date(), "$created_at"]
+                                      },
+                                      7200000
+                                    ]
+                                  },
+                                  {
+                                    $divide: [
+                                      {
+                                        $subtract: [new Date(), "$updated_at"]
+                                      },
+                                      7200000
+                                    ]
+                                  }
+                                ]
+                              },
+                              0.3
+                            ]
+                          },
+                          {
+                            $multiply: [
+                              {
+                                $subtract: [
+                                  {
+                                    $divide: [
+                                      {
+                                        $subtract: [new Date(), "$created_at"]
+                                      },
+                                      7200000
+                                    ]
+                                  },
+                                  {
+                                    $divide: [
+                                      {
+                                        $subtract: [new Date(), "$updated_at"]
+                                      },
+                                      7200000
+                                    ]
+                                  }
+                                ]
+                              },
+                              0.3
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        $sort: { ranking: -1 }
+      },
+      {
+        $skip: page * pageLength
+      },
+      {
+        $limit: parseInt(pageLength)
+      }
+    ])
 
     const feedCount = await feedMongoModel.find(filter).count()
 
     if (isFeaturedPost === "true") {
-      const data = await handleDataBeforeReturn(feed, true)
+      const data = await handleDataBeforeReturn(feedAggregate, true)
 
       const workspaceId = []
 
@@ -510,7 +636,7 @@ const loadFeedController = async (req, res, next) => {
       })
     }
 
-    const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)
+    const result = await handleDataLoadFeed(page, pageLength, feedAggregate, feedCount, false)
     return res.respond(result)
   } catch (err) {
     return res.fail(err.message)
@@ -1214,11 +1340,11 @@ const handleSendNotification = async (
   return true
 }
 
-const handleDataLoadFeed = async (page, pageLength, feed, feedCount) => {
+const handleDataLoadFeed = async (page, pageLength, feed, feedCount, hasDoc = true) => {
   const promises = []
   forEach(feed, (value, key) => {
     const promise = new Promise(async (resolve, reject) => {
-      const _value = await handleDataComment(value)
+      const _value = await handleDataComment(value, -1, hasDoc)
 
       // check data link
       let dataLink = {}
@@ -1542,10 +1668,9 @@ const getPostPending = async (req, res) => {
     const postList = await feedMongoModel
       .find(filter)
       .skip(skip)
-      .limit(pageLength)``
-      .sort({
-        _id: req.query.sort
-      })
+      .limit(pageLength)``.sort({
+      _id: req.query.sort
+    })
     const beforeReturn = await handleDataBeforeReturn(postList, true)
     const feedCount = await feedMongoModel.find(filter).count()
     return res.respond({
@@ -1554,15 +1679,6 @@ const getPostPending = async (req, res) => {
     })
   } catch (err) {
     return res.fail(err.message)
-  }
-}
-
-const calculateFeedPriority = async (req, res) => {
-  try {
-    const listFeed = await feedMongoModel.find()
-    console.log(listFeed)
-  } catch (err) {
-
   }
 }
 
@@ -1591,6 +1707,5 @@ export {
   turnOffCommenting,
   handleDataHistory,
   getDataEditHistory,
-  getPostPending,
-  calculateFeedPriority
+  getPostPending
 }
