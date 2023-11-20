@@ -19,8 +19,8 @@ const SeparateSidebarLayout = (props) => {
     loading: false,
     menuYourWorkspace: [
       {
-        header: useFormatMessage("layout.your_workgroup"),
-        header_short: useFormatMessage("layout.your_workgroup"),
+        header: useFormatMessage("layout.your_group"),
+        header_short: useFormatMessage("layout.your_group"),
         action: "login",
         resource: "app"
       }

@@ -23,7 +23,8 @@ const PostHeader = (props) => {
     toggleModalAnnouncement,
     isViewEditHistory = false, // only view edit history
     isInWorkspace,
-    renderWithTag
+    renderWithTag,
+    handleUnPinPost
   } = props
 
   const userData = useSelector((state) => state.auth.userData)
@@ -276,6 +277,7 @@ const PostHeader = (props) => {
               toggleModalCreatePost={toggleModalCreatePost}
               toggleModalCreateEvent={toggleModalCreateEvent}
               toggleModalAnnouncement={toggleModalAnnouncement}
+              handleUnPinPost={handleUnPinPost}
             />
           </div>
         )}

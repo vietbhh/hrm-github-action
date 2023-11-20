@@ -87,6 +87,15 @@ $avatar-size: 45px;
       padding: 8px;
     }
   }
+  .load-post {
+    padding: 0 !important;
+    .post-comment{
+      display: none;
+    }
+    .post-footer{
+      display: none;
+    }
+  }
 }
 
 .div-right-post-saved {

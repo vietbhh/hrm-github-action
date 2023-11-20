@@ -140,8 +140,8 @@ const Sidebar = (props) => {
                 />
               </ul>
             </PerfectScrollbar>
-
             <div className="div-sidebar-bottom">
+
               {hideQuickAccess !== true && (
                 <>
                   <div className="div-hr">

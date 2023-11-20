@@ -40,11 +40,14 @@ const ChangePasswordModal = (props) => {
     checkPassword: false,
     checkRePassword: false,
     checkRePasswordMatch: false,
+    checkSameCurrentPassword: false,
     dataUser: {}
   })
+  const stringUpperRegExp =
+    /^(?=.*[A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴÝỶỸ])[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ!@#\$%\^\&*\)\(+=._-]{1,}$/
 
-  const stringUpperRegExp = /^(?=.*[A-Z])[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{1,}$/
-  const numberRegExp = /^(?=.*\d)[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]{1,}$/
+  const numberRegExp =
+    /^(?=.*\d)[a-z0-9A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ!@#\$%\^\&*\)\(+=._-]{1,}$/
 
   const validateSchema = yup.object().shape({
     password: yup
@@ -58,7 +61,11 @@ const ChangePasswordModal = (props) => {
         numberRegExp,
         useFormatMessage("auth.at_least_1_number_validate")
       )
-      .min(8, useFormatMessage("validate.min", { num: 8 })),
+      .min(8, useFormatMessage("validate.min", { num: 8 }))
+      .notOneOf(
+        [yup.ref("currentPassword"), null],
+        useFormatMessage("auth.password_same_currentPassword")
+      ),
     repassword: yup
       .string()
       .oneOf(
@@ -71,7 +78,8 @@ const ChangePasswordModal = (props) => {
     mode: "onChange",
     resolver: yupResolver(validateSchema)
   })
-  const { handleSubmit, reset, watch, formState, getValues } = methods
+  const { handleSubmit, reset, watch, formState, getValues, clearErrors } =
+    methods
 
   const onSubmit = (values) => {
     setState({
@@ -160,6 +168,12 @@ const ChangePasswordModal = (props) => {
     } else {
       setState({ checkCharacters: false })
     }
+    if (getValues("currentPassword") === values) {
+      setState({ checkSameCurrentPassword: true })
+    } else {
+      setState({ checkSameCurrentPassword: false })
+    }
+
     setState({ checkPassword: true })
   }
 
@@ -167,6 +181,12 @@ const ChangePasswordModal = (props) => {
     const subscription = watch((value, { name, type }) => {
       if (name === "password") {
         handleValidatePassword(value.password)
+      }
+      if (name === "currentPassword") {
+        handleValidatePassword(getValues("password"))
+      }
+      if (value.password === value.repassword) {
+        clearErrors("repassword")
       }
     })
     return () => subscription.unsubscribe()
@@ -198,6 +218,15 @@ const ChangePasswordModal = (props) => {
     }
   }, [formState])
 
+  useEffect(() => {
+    setState({
+      checkStringUpper: false,
+      checkCharacters: false,
+      checkNumber: false,
+      msg: "",
+      error: false
+    })
+  }, [modal])
   return (
     <React.Fragment>
       <Modal
@@ -230,7 +259,7 @@ const ChangePasswordModal = (props) => {
               validateRules={{
                 validate: {
                   checkCurrentPwd: async (v) =>
-                    (await validateCurrentPwd(v)) ||
+                    ((await validateCurrentPwd(v)) && modal) ||
                     useFormatMessage("validate.currentPwdIncorrect")
                 }
               }}
@@ -286,7 +315,11 @@ const ChangePasswordModal = (props) => {
             <Button
               type="submit"
               color="primary"
-              disabled={state.submitting || formState.isValidating}>
+              disabled={
+                state.submitting ||
+                formState.isValidating ||
+                state.checkSameCurrentPassword
+              }>
               {state.submitting && <Spinner size="sm" className="me-50" />}
               {useFormatMessage("auth.changePasswordModal")}
             </Button>

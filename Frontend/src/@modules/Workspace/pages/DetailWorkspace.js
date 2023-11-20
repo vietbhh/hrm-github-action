@@ -97,7 +97,7 @@ const DetailWorkspace = () => {
     workspaceApi
       .getDetailWorkspace(params.id)
       .then((res) => {
-        setState({ detailWorkspace: res.data })
+        setState({ ...state,detailWorkspace: res.data })
         dispatch(setAppTitle(res.data.name))
         setTimeout(() => {
           setState({

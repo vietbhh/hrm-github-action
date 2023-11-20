@@ -658,7 +658,10 @@ const ChatMessage = (props) => {
               <div key={index} className="chat-content-sender-name">
                 {renderSenderName(chat, index_message)}
                 <div className={`chat-content chat-content-gif`}>
-                  <img src={chat.msg} />
+                  <img
+                    src={chat.msg}
+                    width={chat.break_type !== "sticker" ? "" : 120}
+                  />
                   {renderHasReaction(chat)}
                 </div>
               </div>
@@ -987,7 +990,9 @@ const ChatMessage = (props) => {
                           unsent: 1
                         })
                         handleUpdateGroup(selectedUser.chat.id, {
-                          last_message: useFormatMessage("modules.chat.text.unsent_message")
+                          last_message: useFormatMessage(
+                            "modules.chat.text.unsent_message"
+                          )
                         })
                         const file_count = handleCountFile(
                           groups,
@@ -1055,8 +1060,8 @@ const ChatMessage = (props) => {
                 className="reaction"
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
-                height="21"
-                viewBox="0 0 20 21"
+                height="20"
+                viewBox="0 0 20 20"
                 fill="none">
                 <g clipPath={`url(#react_icon_${chat.time}`}>
                   <path

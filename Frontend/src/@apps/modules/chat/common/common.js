@@ -115,7 +115,7 @@ export const detectUrl = (txt, onlyGetLink = false) => {
   }
 }
 
-export const renderAvatar = (item, className, width = "50", height = "50") => {
+export const renderAvatar = (item, className, width = "40", height = "40") => {
   if (item.type && item.type === "group") {
     if (item.avatar) {
       return (
@@ -150,4 +150,12 @@ export const renderAvatar = (item, className, width = "50", height = "50") => {
       className={className}
     />
   )
+}
+
+export const removeAccents = (str) => {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
 }

@@ -9,6 +9,7 @@ import { requestPermission } from "./firebase"
 import Router from "./router/Router"
 import CacheBuster from "react-cache-buster"
 import { version } from "../package.json"
+import { useNavigate } from "react-router-dom"
 
 const App = () => {
   const appLoading = useSelector((state) => state.app.loading)
@@ -22,10 +23,19 @@ const App = () => {
   const defaultDashboardComponent = useSelector(
     (state) => state.auth.settings.dashboardComponent
   )
+  const navigate = useNavigate()
   const appTitle = useSelector((state) => state.app.title)
   // ** effect
   useEffect(() => {
     if (!_.isEmpty(userData)) requestPermission()
+    const customFields =
+      userData?.custom_fields === undefined || userData.custom_fields === null
+        ? {}
+        : JSON.parse(userData.custom_fields)
+
+    if (customFields?.onboard === "true" || customFields?.onboard === true) {
+      navigate("/onboard")
+    }
   }, [userData])
 
   const isProduction = import.meta.env.NODE_ENV === "production"

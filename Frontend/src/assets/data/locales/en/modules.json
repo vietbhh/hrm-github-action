@@ -52,6 +52,7 @@
         "file": "File",
         "image": "Image",
         "link": "Link",
+        "media": "Media",
         "load_more": "Load more",
         "change_background_image": "Change background image",
         "change_avatar_image": "Change avatar image",
@@ -83,7 +84,11 @@
         "warning_delete_conversation": {
           "title": "Delete conversation",
           "text": "This is administrator function - when deleting a conversation, the conversation will be deleted for all members in the chat group"
-        }
+        },
+        "user_selected" : "{number} user selected"
+      },
+      "button" : {
+        "new_group": "Create Group"
       },
       "notification": {
         "image_error": "Image type is not allow, (just {allowType})",
@@ -152,7 +157,14 @@
           "turn_over": "Turn Over",
           "since_last_month": "Since last month"
         }
-      }
+      },
+      "events": {
+        "title" : "Events",
+        "total_event": "You have {number} events today",
+        "birthday" : "{member} and {number} more have birthday",
+        "one_birthday": "{member} has birthday",
+        "no_event_today": "No event today"
+      } 
     },
     "users": {
       "buttons": {
@@ -2574,7 +2586,8 @@
         "paid_time": "Paid Time",
         "deficit": "Deficit",
         "overtime": "Overtime",
-        "clock_in_out": "Clock In/Out"
+        "clock_in_out": "Clock In/Out",
+        "working_time": "Working Time"
       },
       "modals": {
         "title": {
@@ -3658,7 +3671,7 @@
       "create_post": {
         "title": "Create post",
         "text": {
-          "placeholder_input": "What are you thinking?",
+          "placeholder_input": "Write something...",
           "task": "Task",
           "event": "Event",
           "poll": "Poll",
@@ -3676,7 +3689,7 @@
           "add_description": "Add description...",
           "choose_a_background": "Choose a background",
           "create_poll": "Create poll",
-          "question": "Question?",
+          "question": "Question",
           "enter_question": "Enter question",
           "add_options": "Add options",
           "option": "Option {number}",
@@ -3693,7 +3706,7 @@
           "anonymous": "Anonymous",
           "member_voted": "member voted",
           "members_voted": "members voted",
-          "list_member": "List member",
+          "list_member": "List members",
           "done": "Done",
           "no_member_selected_yet": "No member selected yet",
           "list_selected": "List selected",
@@ -3716,13 +3729,17 @@
           "important": "Important",
           "mandatory": "Mandatory",
           "action_important_text": "All member invited are required to attend this event",
-          "no_employee_reaction_text": "There is no one has responded to the event invitation yet"
+          "no_employee_reaction_text": "There is no one has responded to the event invitation yet",
+          "post_endorsement" : "Post Endorsement",
+          "post_poll" :"Post Poll",
+          "save": "Save",
+          "you_thinking": "What are you thinking"
         },
         "endorsement": {
           "title": "Endorsement",
           "appreciation": "Endorsement",
           "select_member_for_endorsing": "Select member for endorsing",
-          "add_cover_photo": "Add cover photo",
+          "add_cover_photo": "Edit cover",
           "list_badges": "List badges",
           "editor_placeholder": "Write something about this...",
           "empty_member": "Please chose members.",
@@ -3732,8 +3749,8 @@
       "post": {
         "text": {
           "like": "Like",
-          "comment": "comment",
-          "comments": "comments",
+          "comment": "Comment",
+          "comments": "Comments",
           "send": "Send",
           "people_seen": "people seen",
           "others": "others",
@@ -3781,7 +3798,11 @@
           "share_to_a_group": "Share to a group",
           "this_post_has_been_edited": "This post has been edited",
           "post_pending": "Your article has been posted and is in the review process, please wait for moderation!",
-          "approve_setting": "Post Approval Setting"
+          "approve_setting": "Post Approval Setting",
+          "successfully_copied" : "Successfully Copied",
+          "unsaved" : "Unsaved",
+          "messenger" : "Messenger",
+          "unpin_announcement" : "Unpin Announcements"
         },
         "react": {
           "like": "Like",
@@ -3941,7 +3962,8 @@
           "show_announcement": "Show announcements",
           "one_week": "One week",
           "send_to": "Send to",
-          "send_to_placeholder": "Enter workgroup, email or username"
+          "send_to_placeholder": "Enter workgroup, email or username",
+          "post_announcement" : "Post Announcement"
         }
       },
       "post_saved": {
@@ -4160,7 +4182,7 @@
         "work_space_description": {
           "type": {
             "public": {
-              "title": "Pulbic Workspace",
+              "title": "Public Workspace",
               "description": "Anyone can see who's in the group and what they post"
             },
             "private": {
@@ -4242,7 +4264,14 @@
           "has_joined_group": "has joined the group",
           "added_as_admin_group": "added you as admin of group",
           "remove_from_group": "has removed you from the group",
-          "by": "by"
+          "by": "by",
+          "add_you_to_group" : "You have been added to the group",
+          "join_group" : "has joined the group",
+          "many_join_group" : "others has joined the group",
+          "user_request_join_workspace" : "You have sent a request to join the group",
+          "wait_approval" : "Please wait for the administrator's approval",
+          "add_to_role_admin_workspace" : "added you as admin of group",
+          "remove_to_workspace" : "has removed you from the group"
         }
       },
       "app_options": {
@@ -4270,7 +4299,7 @@
             "description": "Workspaces include all member of the organization"
           },
           "public": {
-            "title": "Pulbic workspaces",
+            "title": "Public workspaces",
             "description": "Workspaces can be searched and viewed by all members of the organizaton"
           },
           "private": {
@@ -4340,7 +4369,21 @@
         "your_comment_post" : "your comment",
         "request_to_join": "There was a request to join group",
         "requests_to_join": "There was requests to join group",
-        "from": "from"
+        "from": "from",
+        "commented_on_your_image": "commented on your image",
+        "other_comment_on_your_image" : "of other people who have comment your image",
+        "commented_on_your_video": "commented on your video",
+        "other_comment_on_your_video" : "of other people who have comment your video",
+        "reaction_on_your_image" : "your image",
+        "reaction_on_your_video" : "your video",
+        "other_reaction_on_your_video" : "of other people who have reaction your video",
+        "other_reaction_on_your_image" : "of other people who have reaction your image",
+        "other_reaction_post" : "of other people who have interacted with your post",
+        "people_reaction_post_tag" : "of other people who have interacted post you're tagged",
+        "people_comment_in_the_post" : "of other people who have comment your post fdfs",
+        "people_comment_post_tagged" : "of other people who have comment post you're tagged",
+        "people_repplied_your_comment" : "of other people who have replied your comment",
+        "people_reaction_your_comment" : "of other people who have interacted with your comment"
       }
     },
     "timeline": {
@@ -4372,6 +4415,42 @@
     "hashtag": {
       "post": "post",
       "posts": "posts"
+    },
+    "sticker": {
+      "menu": {
+        "title": "Stickers Store"
+      },
+      "list": {
+        "button": {
+          "create": "Create"
+        },
+        "placeholder": {
+          "sticker_find": "Find stickers"
+        }
+      },
+      "modal": {
+        "title": {
+          "create": "Create Sticker",
+          "update": "Update Sticker",
+          "switch": {
+            "default": "Default",
+            "title": "Default for all user"
+          },
+          "upload": "Upload"
+        },
+        "messages": {
+          "error_type_file": "You can only upload JPG/PNG/GIF file!",
+          "error_empty_file": "You do not upload any image file!"
+        },
+        "placeholder": {
+          "name": "Enter sticker name"
+        },
+        "button": {
+          "create": "Create",
+          "update": "Update",
+          "delete": "Delete"
+        }
+      }
     }
   }
 }

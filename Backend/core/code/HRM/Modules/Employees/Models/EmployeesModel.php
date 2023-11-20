@@ -27,7 +27,8 @@ class EmployeesModel extends AppModel
 
 	public function exceptResigned()
 	{
-		return $this->where('status !=', 16);
+		helper('app_select_option');
+		return $this->where('status !=', getOptionValue('employees', 'status', 'resigned'));
 	}
 
 	public function exceptResignedEmployee()
@@ -60,7 +61,7 @@ class EmployeesModel extends AppModel
 		try {
 			helper('app_select_option');
 			$this->setAllowedFields(['account_status', 'status']);
-			$this->whereIn('id', $userIds)->set('account_status',  getOptionValue('employees', 'account_status', 'deactivated'))
+			$this->whereIn('id', $userIds)->set('account_status', getOptionValue('employees', 'account_status', 'deactivated'))
 				->set('status', getOptionValue('employees', 'status', 'resigned'))->update();
 
 			$userModel = new UserModel();

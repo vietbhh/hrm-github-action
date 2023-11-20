@@ -2,6 +2,8 @@ import WidgetPreview1 from "@apps/modules/dashboard/assets/images/WidgetPreview1
 import Notepad from "@apps/modules/dashboard/main/components/Notepad"
 import { useFormatMessage } from "@apps/utility/common"
 import ClockInOutWidget from "@modules/Dashboard/components/details/clock/ClockInOutWidget"
+import CardBirthday from "../../../@apps/modules/dashboard/main/components/CardBirthday"
+import CardEvent from "../../Dashboard/components/CardEvent"
 
 const BackgroundWidget = () => {
   return <img className="img" src={WidgetPreview1} />
@@ -12,7 +14,7 @@ export const ListSidebarWidget = (props) => {
     {
       id: "clock_in_out",
       title: useFormatMessage("modules.attendance.title.clock_in_out"),
-      component: <ClockInOutWidget {...props} noIcon progressWidth={50} />,
+      component: <ClockInOutWidget {...props} noIcon progressWidth={80} />,
       data_grid: {
         i: "clock_in_out",
         x: 8,
@@ -26,7 +28,7 @@ export const ListSidebarWidget = (props) => {
         isDraggable: true
       },
       background: <BackgroundWidget />,
-      show: true,
+      show: false,
       action: "login",
       resource: "app"
     },
@@ -47,16 +49,16 @@ export const ListSidebarWidget = (props) => {
         isDraggable: true
       },
       background: <BackgroundWidget />,
-      show: true,
+      show: false,
       action: "login",
       resource: "app"
-    }
-    /* {
-      id: "announcement",
-      title: useFormatMessage("modules.dashboard.announcement.title"),
-      component: <CardAnnouncements {...props} noIcon />,
+    },
+    {
+      id: "events",
+      title: useFormatMessage("modules.dashboard.events.title"),
+      component: <CardEvent {...props} noIcon />,
       data_grid: {
-        i: "announcement",
+        i: "events",
         x: 2,
         y: 25,
         w: 1,
@@ -71,6 +73,6 @@ export const ListSidebarWidget = (props) => {
       show: false,
       action: "login",
       resource: "app"
-    } */
+    }
   ]
 }

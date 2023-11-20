@@ -23,7 +23,7 @@ import {
   Spinner
 } from "reactstrap"
 import MemberSelect from "../../../MemberSelect/MemberSelect"
-
+import Photo from "@apps/modules/download/pages/Photo"
 const ModalAnnouncement = (props) => {
   const {
     modal,
@@ -74,7 +74,6 @@ const ModalAnnouncement = (props) => {
       file: state.arrAttachment,
       coverImage: state.coverImage
     }
-
     setState({ loadingSubmit: true })
     announcementApi
       .postSubmitAnnouncement(params)
@@ -251,7 +250,11 @@ const ModalAnnouncement = (props) => {
         })
     }
   }, [modal, idAnnouncement])
-
+  useEffect(() => {
+    setState({
+      coverImage: { src: "", image: null }
+    })
+  }, [toggleModal])
   // ** render
   const optionShowAnnouncement = [
     ..._.map(optionsShowAnnouncement, (item) => {
@@ -271,7 +274,6 @@ const ModalAnnouncement = (props) => {
       }
     })
   ]
-
   return (
     <Fragment>
       <Modal
@@ -364,6 +366,16 @@ const ModalAnnouncement = (props) => {
               />
             </Label>
           </div>
+          {state.coverImage.image && (
+            <div className="cover-announcment mb-1">
+              <Photo
+                src={[state.coverImage.image]}
+                width="100%"
+                style={{ borderRadius: "20px" }}
+              />
+            </div>
+          )}
+
           <div className="div-event-time">
             <div className="div-all-day">
               <div className="div-switch div-pin">
@@ -586,7 +598,7 @@ const ModalAnnouncement = (props) => {
                 )}
                 {useFormatMessage(
                   _.isEmpty(state.dataEdit)
-                    ? "modules.feed.announcement.text.create_announcement"
+                    ? "modules.feed.announcement.text.post_announcement"
                     : "modules.feed.announcement.text.update_announcement"
                 )}
               </Button.Ripple>

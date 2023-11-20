@@ -16,12 +16,21 @@ import htmlToDraft from "html-to-draftjs"
 import { Fragment, useCallback, useEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { Label, Spinner } from "reactstrap"
-import Emoji from "./Emoji"
+// import Emoji from "./Emoji"
 
-import GifBoxButton from "@apps/components/common/GifBoxButton"
+// import GifBoxButton from "@apps/components/common/GifBoxButton"
+import EmotionsComponent from "@apps/modules/chat/components/emotions/index"
 import "@draft-js-plugins/mention/lib/plugin.css"
 import "@styles/react/libs/editor/editor.scss"
 import { handleImageCommentUrl } from "./Comment"
+
+const focusInputMsg = () => {
+  if (msgRef.current) {
+    msgRef.current.focus()
+    localStorage.setItem("chatAppFocus", true)
+    localStorage.setItem("formChatFocus", true)
+  }
+}
 
 const MentionSuggestion = (props) => {
   const {
@@ -94,7 +103,10 @@ const PostCommentForm = (props) => {
     // mention
     open: false,
     mentions: dataMention,
-    suggestions: dataMention === undefined ? [] : dataMention
+    suggestions: dataMention === undefined ? [] : dataMention,
+    showEmotion: false,
+    selectedUser: {},
+    groups: []
   })
   const userData = useSelector((state) => state.auth.userData)
   const avatar = userData.avatar
@@ -168,6 +180,13 @@ const PostCommentForm = (props) => {
       )
       const _content = result_tag_user.content
       const tag_user = result_tag_user.tag_user
+
+      if (
+        Object.keys(dataEditComment).length !== 0 &&
+        !dataEditComment?.image
+      ) {
+        dataEditComment.image = state.image
+      }
 
       const params = {
         body: JSON.stringify({
@@ -278,10 +297,9 @@ const PostCommentForm = (props) => {
     return { plugins, MentionSuggestions }
   }, [])
   const onOpenChange = useCallback((_open) => {
-    setTimeout(() => {
-      setState({ open: _open })
-    }, 100)
+    setState({ open: _open })
   }, [])
+
   const onSearchChange = useCallback(
     (propsData) => {
       const { value } = propsData
@@ -296,13 +314,13 @@ const PostCommentForm = (props) => {
       setFocusCommentForm(false)
     }
   }, [focusCommentForm])
+
   return (
     <Fragment>
       <div className="post-comment__div-form">
         <div className="div-border-reply div-form"></div>
         <Avatar className="img" src={avatar} />
-        <div className="post-comment-div-editor">
-          <div className="d-flex">
+        <div className="post-comment-div-editor d-flex">
             <div className="div-editor">
               <Editor
                 editorKey={"editorPost"}
@@ -334,7 +352,7 @@ const PostCommentForm = (props) => {
                 <Spinner size="sm" />
               ) : (
                 <>
-                  <GifBoxButton
+                  {/* <GifBoxButton
                     onSelect={(item) => {
                       setState({ image: item.images.fixed_width.url })
                       if (
@@ -346,22 +364,47 @@ const PostCommentForm = (props) => {
                         setDataEditComment(_dataEditComment)
                       }
                     }}></GifBoxButton>
-                  <Emoji handleInsertEditorState={handleInsertEditorState} />
+                  <Emoji handleInsertEditorState={handleInsertEditorState} /> */}
+                  <EmotionsComponent
+                    selectedUser={state.selectedUser}
+                    focusInputMsg={focusInputMsg}
+                    setStatePostComment={setState}
+                    handleInsertEditorState={handleInsertEditorState}
+                    showEmotion={state.showEmotion}
+                    setShowEmotion={(value) => {
+                      setState({ showEmotion: value })
+                    }}
+                  />
                   <Label
                     className={`mb-0 cursor-pointer`}
                     for={`attach-image${currentTime}`}>
                     <div className="div-form__icon">
                       <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none">
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
                         <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M18.75 15.5416C18.75 17.0883 17.4395 18.3333 15.8333 18.3333H4.16667C2.56048 18.3333 1.25 17.0883 1.25 15.5416V4.45829C1.25 2.91158 2.56048 1.66663 4.16667 1.66663H15.8333C17.4395 1.66663 18.75 2.91158 18.75 4.45829V15.5416ZM17.9167 12.559L13.9888 8.9791L10.0604 12.5236L14.5503 17.5H15.8333C16.9886 17.5 17.9167 16.6183 17.9167 15.5416V12.559ZM17.9167 11.4315V4.45829C17.9167 3.38165 16.9886 2.49996 15.8333 2.49996H4.16667C3.01143 2.49996 2.08333 3.38165 2.08333 4.45829V14.5375L6.92796 9.70496C7.09669 9.53666 7.37194 9.5439 7.53158 9.72084L9.50216 11.9049L13.7111 8.10727C13.8702 7.96365 14.1124 7.96426 14.2709 8.10867L17.9167 11.4315ZM13.4279 17.5L7.20633 10.6043L2.0907 15.7072C2.18004 16.7072 3.07123 17.5 4.16667 17.5H13.4279ZM6.8254 7.24996C5.93803 7.24996 5.21825 6.53198 5.21825 5.64579C5.21825 4.7596 5.93803 4.04163 6.8254 4.04163C7.71276 4.04163 8.43254 4.7596 8.43254 5.64579C8.43254 6.53198 7.71276 7.24996 6.8254 7.24996ZM6.8254 6.41663C7.25299 6.41663 7.59921 6.07128 7.59921 5.64579C7.59921 5.22031 7.25299 4.87496 6.8254 4.87496C6.3978 4.87496 6.05159 5.22031 6.05159 5.64579C6.05159 6.07128 6.3978 6.41663 6.8254 6.41663Z"
-                          fill="#92929D"
+                          d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M9 10C10.1046 10 11 9.10457 11 8C11 6.89543 10.1046 6 9 6C7.89543 6 7 6.89543 7 8C7 9.10457 7.89543 10 9 10Z"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M2.66992 18.9501L7.59992 15.6401C8.38992 15.1101 9.52992 15.1701 10.2399 15.7801L10.5699 16.0701C11.3499 16.7401 12.6099 16.7401 13.3899 16.0701L17.5499 12.5001C18.3299 11.8301 19.5899 11.8301 20.3699 12.5001L21.9999 13.9001"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
 
@@ -379,7 +422,7 @@ const PostCommentForm = (props) => {
                 </>
               )}
             </div>
-          </div>
+          
           {state.image && (
             <div className="div-form__div-image">
               {handleImageCommentUrl(state.image)}
@@ -388,6 +431,10 @@ const PostCommentForm = (props) => {
                 className="btn-close-image"
                 onClick={() => {
                   setState({ image: null })
+                  if (_.isEmpty(dataEditComment._id_post)) {
+                    return
+                  }
+
                   if (_.isFunction(setDataEditComment)) {
                     const editorStateRaw = convertToRaw(
                       state.editorState.getCurrentContent()

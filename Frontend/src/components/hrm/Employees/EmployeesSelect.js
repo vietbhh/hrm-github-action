@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import "react-perfect-scrollbar/dist/css/styles.css"
 import { Col, Row } from "reactstrap"
+import { departmentApi } from "../../../@modules/Employees/common/api"
 
 const findKeyByID = (arr = [], id) => {
   const index = arr.findIndex((p) => p.id === id)
@@ -82,7 +83,7 @@ const EmployeesSelect = (props) => {
               <span className="sub-email">{item?.username}</span>
             </div>
             <div className="ms-auto">
-              <i class="fa-regular fa-xmark"></i>
+              <i className="fa-regular fa-xmark"></i>
             </div>
           </div>
         </Col>
@@ -121,8 +122,10 @@ const EmployeesSelect = (props) => {
 
   const renderDepartment = (data = []) => {
     return data.map((item, key) => {
-      const department_selected = [...state.department_selected]
-      const checked = department_selected.some((x) => x["id"] === item.id)
+      const uniqueUpdatedBy = [...new Set(state.dataSelected.map(item => item.department_id))];
+
+      const department_selected = uniqueUpdatedBy
+      const checked = department_selected.some((x) => x === item.id)
       return (
         <Col sm={12} key={key}>
           <div
@@ -205,8 +208,21 @@ const EmployeesSelect = (props) => {
       const concat = !props.search
         ? departments.concat(res.data.results)
         : res.data.results
+
+        const uniqueIds = {};
+
+        const uniqueArray = concat.filter((item) => {
+          if (!uniqueIds[item.id]) {
+            uniqueIds[item.id] = true;
+            return true;
+          }
+            return false;
+        });
+        
+        uniqueArray.sort((a, b) => b.id - a.id);
+
       setState({
-        departments: concat,
+        departments: uniqueArray,
         page: res.data.page,
         recordsTotal: res.data.recordsTotal,
         perPage: res.data.recordsFiltered,
@@ -219,7 +235,6 @@ const EmployeesSelect = (props) => {
     const idDepartment = item?.id
     const department_selected = [...state.department_selected]
     const arrDeparment_selected = department_selected.map((e) => e["id"])
-
     if (select_department) {
       if (arrDeparment_selected.includes(idDepartment)) {
         const index = department_selected.findIndex(
@@ -254,13 +269,22 @@ const EmployeesSelect = (props) => {
           dataSelected: dataSelected
         })
       } else {
-        defaultModuleApi
-          .getUsers({ perPage: 1000, filters: { department_id: idDepartment } })
+        departmentApi
+          .getUserByDepartmentId({ department: idDepartment })
           .then((res) => {
             const dataSelected = [...state.dataSelected]
-            const concat = dataSelected.concat(res.data.results)
+            const dataUniqueItem = [];
+            res.data.results.forEach(data => {
+                const hasDuplicate = dataSelected.some(dataSelect => dataSelect.id == data.id);
+                
+                if (!hasDuplicate) {
+                    dataUniqueItem.push(data);
+                }
+            });
+            dataUniqueItem.push(...dataSelected);
+            
             setState({
-              dataSelected: concat,
+              dataSelected: dataUniqueItem,
               department_selected: [
                 ...department_selected,
                 { id: idDepartment, users: res.data.results }
@@ -287,7 +311,12 @@ const EmployeesSelect = (props) => {
     const page = state.page + 1
     if (state.typeAdd === "departments") {
       if (state.recordsTotal > state.departments.length) {
-        loadDepartment({ page: page, search: state.search })
+        if(!state.search)
+        {
+          loadDepartment({ page: page, search: state.search })
+        }else{
+          loadDepartment({ page: page})
+        }
       }
     }
   }
@@ -300,7 +329,11 @@ const EmployeesSelect = (props) => {
     }
 
     typingTimeoutRef.current = setTimeout(() => {
-      loadData({ search: e, page: 1 })
+      if (state.typeAdd === "members") {
+        loadData({ search: e, page: 1 })
+      }else if (state.typeAdd === "departments") {
+        loadDepartment({ search: e, page: 1 })
+      }
     }, 500)
   }
 
@@ -470,7 +503,9 @@ const EmployeesSelect = (props) => {
                 <PerfectScrollbar
                   style={{
                     maxHeight: "440px",
-                    minHeight: "440px"
+                    minHeight: "440px",
+                    borderRadius: "12px",
+                    backgroundColor: "#F0F3F6"
                   }}>
                   <Row>
                     {renderMemberSelected(state.dataSelected)}

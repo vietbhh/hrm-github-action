@@ -2,6 +2,8 @@
 
 namespace HRM\Modules\HeaderAssistant\Controllers;
 
+use HRM\Modules\Employees\Models\EmployeesModel;
+
 class HeaderAssistant extends \App\Controllers\HeaderAssistant
 {
 	public function get_header_assistant_get()
@@ -17,9 +19,8 @@ class HeaderAssistant extends \App\Controllers\HeaderAssistant
 	{
 		$month = date('m');
 		$day = date('d');
-		$modules = \Config\Services::modules();
-		$modules->setModule('employees');
-		$model = $modules->model;
-		return $model->select("id,full_name,avatar")->where("Month(dob) = '$month'")->where("DAY(dob) = '$day'")->asArray()->findAll();
+
+		$model = new EmployeesModel();
+		return $model->select("id,full_name,avatar")->where("Month(dob) = '$month'")->where("DAY(dob) = '$day'")->exceptResigned()->asArray()->findAll();
 	}
 }

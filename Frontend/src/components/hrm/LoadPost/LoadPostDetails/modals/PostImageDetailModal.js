@@ -12,6 +12,7 @@ import PostHeader from "../PostDetails/PostHeader"
 import PostShowReaction from "../PostDetails/PostShowReaction"
 import RenderContentPost from "../PostDetails/RenderContentPost"
 import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 
 const PostImageDetailModal = (props) => {
   const {
@@ -25,7 +26,9 @@ const PostImageDetailModal = (props) => {
     current_url,
     dataMention,
     customAction = {}, // custom dropdown post header
-    setDataPost
+    setDataPost,
+    toggleModalWith,
+    setDataUserOtherWith
   } = props
   const [state, setState] = useMergedState({
     data: {},

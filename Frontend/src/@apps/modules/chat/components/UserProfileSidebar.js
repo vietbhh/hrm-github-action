@@ -2,7 +2,7 @@ import { ErpInput } from "@apps/components/common/ErpField"
 import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import classnames from "classnames"
-import { Fragment, useEffect, useRef } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { X } from "react-feather"
 import { FormProvider, useForm } from "react-hook-form"
 import PerfectScrollbar from "react-perfect-scrollbar"
@@ -19,6 +19,9 @@ import ProfileSidebarMoreOption from "./details/ProfileSidebarMoreOption"
 import ModalAddMember from "./modals/ModalAddMember"
 import ModalAvatarPreview from "./modals/ModalAvatarPreview"
 import ModalBackgroundPreview from "./modals/ModalBackgroundPreview"
+import { ErpSwitch } from "@apps/components/common/ErpField"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
+import { checkIsResponse } from "react-select-async-paginate"
 
 const UserProfileSidebar = (props) => {
   // ** Props
@@ -74,6 +77,9 @@ const UserProfileSidebar = (props) => {
     mode: "onSubmit"
   })
   const { handleSubmit, setValue } = methods
+
+  const windowWidth = window.innerWidth
+  const isMinWidth = windowWidth < 767.98;
 
   const submitEdit = (values) => {
     setState({ loadingEdit: true })
@@ -158,9 +164,9 @@ const UserProfileSidebar = (props) => {
         .then((res) => {
           document.getElementById("input-background").value = null
           handleUpdateGroup(selectedGroup.id, {
-            last_message: useFormatMessage(
-              "modules.chat.text.change_background_image"
-            ),
+            last_message: `${settingUser.full_name} ${useFormatMessage(
+              "modules.chat.text.change_group_cover"
+            )}`,
             last_user: userId,
             timestamp: Date.now(),
             background: res.data
@@ -216,9 +222,9 @@ const UserProfileSidebar = (props) => {
         .then((res) => {
           document.getElementById("input-avatar").value = null
           handleUpdateGroup(selectedGroup.id, {
-            last_message: useFormatMessage(
-              "modules.chat.text.change_avatar_image"
-            ),
+            last_message: `${settingUser.full_name} ${useFormatMessage(
+              "modules.chat.text.change_group_avatar"
+            )}`,
             last_user: userId,
             timestamp: Date.now(),
             avatar: res.data
@@ -252,6 +258,13 @@ const UserProfileSidebar = (props) => {
         <Photo
           tag="img"
           src={`/modules/chat/${selectedGroup.id}/background/${selectedGroup.background}`}
+        />
+      )
+    } else if (user.type && user.type === "employee" && selectedGroup.background) {
+      return (
+        <Photo
+          tag="img"
+          src={selectedGroup.background}
         />
       )
     }
@@ -367,28 +380,10 @@ const UserProfileSidebar = (props) => {
                     }}
                   />
                   <label id="label-background" htmlFor="input-background">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 18 18"
-                      fill="none">
-                      <path
-                        d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
-                        stroke="white"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle
-                        cx="9"
-                        cy="9.75"
-                        r="3"
-                        stroke="white"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M10.5 8H13.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </label>
                 </>
@@ -396,7 +391,7 @@ const UserProfileSidebar = (props) => {
             </div>
             <div className="header-profile-avatar">
               <div className="div-avatar">
-                {renderAvatar(selectedGroup, "", "70", "70")}
+                {renderAvatar(selectedGroup, "", "102", "102")}
                 {state.isAdminSystem && (
                   <>
                     <input
@@ -411,29 +406,11 @@ const UserProfileSidebar = (props) => {
                       }}
                     />
                     <label id="label-avatar" htmlFor="input-avatar">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none">
-                        <path
-                          d="M1.5 6.9427C1.5 5.59364 2.59364 4.5 3.9427 4.5V4.5C4.75943 4.5 5.52212 4.09182 5.97516 3.41226L6 3.375C6.46856 2.67216 7.25738 2.25 8.10208 2.25H9.89792C10.7426 2.25 11.5314 2.67216 12 3.375L12.0248 3.41226C12.4779 4.09182 13.2406 4.5 14.0573 4.5V4.5C15.4064 4.5 16.5 5.59364 16.5 6.9427V11.75C16.5 13.9591 14.7091 15.75 12.5 15.75H5.5C3.29086 15.75 1.5 13.9591 1.5 11.75V6.9427Z"
-                          stroke="white"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <circle
-                          cx="9"
-                          cy="9.75"
-                          r="3"
-                          stroke="white"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M10.5 8H13.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                     </label>
                   </>
                 )}
@@ -556,36 +533,108 @@ const UserProfileSidebar = (props) => {
             state.showFileView || state.showMoreOption ? "hide" : ""
           }`}
           options={{ wheelPropagation: false }}>
-          {user?.type === "employee" && <ProfileSidebarEmployee user={user} />}
+          {user?.type === "employee" && 
+              <Fragment>
+                <ProfileSidebarEmployee 
+                user={user}  
+                checkedNotification={state.checkedNotification}
+                setCheckedNotification={(value) =>
+                    setState({ checkedNotification: value })
+                }
+                handleUpdateGroup={handleUpdateGroup}
+                selectedGroup={selectedGroup}
+                userId={userId} />
 
-          <ProfileSidebarGeneral
-            checkedNotification={state.checkedNotification}
-            setCheckedNotification={(value) =>
-              setState({ checkedNotification: value })
-            }
-            handleUpdateGroup={handleUpdateGroup}
-            handleShowFileView={handleShowFileView}
-            selectedGroup={selectedGroup}
-            userId={userId}
-            handleShowMoreOption={handleShowMoreOption}
-          />
+                <ProfileSidebarGeneral
+                  checkedNotification={state.checkedNotification}
+                  setCheckedNotification={(value) =>
+                    setState({ checkedNotification: value })
+                  }
+                  handleUpdateGroup={handleUpdateGroup}
+                  handleShowFileView={handleShowFileView}
+                  selectedGroup={selectedGroup}
+                  userId={userId}
+                  handleShowMoreOption={handleShowMoreOption}
+                  active = {active}
+                />
+              </Fragment>
+          }
+
+          
 
           {user?.type === "group" && (
-            <ProfileSidebarGroup
-              setShowMember={() => setState({ showMember: !state.showMember })}
-              selectedGroup={selectedGroup}
-              toggleModalAddMember={toggleModalAddMember}
-              dataEmployees={dataEmployees}
-              groups={groups}
-              setActive={setActive}
-              setActiveFullName={setActiveFullName}
-              setDataUnseenDetail={setDataUnseenDetail}
-              handleUpdateGroup={handleUpdateGroup}
-              userId={userId}
-              settingUser={settingUser}
-              isAdminSystem={state.isAdminSystem}
-              sendMessage={sendMessage}
-            />
+            <Fragment>
+              {isMinWidth ? (<>
+                  <ProfileSidebarGeneral
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                      setState({ checkedNotification: value })
+                    }
+                    handleUpdateGroup={handleUpdateGroup}
+                    handleShowFileView={handleShowFileView}
+                    selectedGroup={selectedGroup}
+                    userId={userId}
+                    handleShowMoreOption={handleShowMoreOption}
+                    active = {active}
+                    type = {user?.type}
+                  />
+                  <ProfileSidebarGroup
+                    setShowMember={() => setState({ showMember: !state.showMember })}
+                    selectedGroup={selectedGroup}
+                    toggleModalAddMember={toggleModalAddMember}
+                    dataEmployees={dataEmployees}
+                    groups={groups}
+                    setActive={setActive}
+                    setActiveFullName={setActiveFullName}
+                    setDataUnseenDetail={setDataUnseenDetail}
+                    handleUpdateGroup={handleUpdateGroup}
+                    userId={userId}
+                    settingUser={settingUser}
+                    isAdminSystem={state.isAdminSystem}
+                    sendMessage={sendMessage}
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                        setState({ checkedNotification: value })
+                    }
+                  />
+                </>) : (
+                  <>
+                  <ProfileSidebarGroup
+                    setShowMember={() => setState({ showMember: !state.showMember })}
+                    selectedGroup={selectedGroup}
+                    toggleModalAddMember={toggleModalAddMember}
+                    dataEmployees={dataEmployees}
+                    groups={groups}
+                    setActive={setActive}
+                    setActiveFullName={setActiveFullName}
+                    setDataUnseenDetail={setDataUnseenDetail}
+                    handleUpdateGroup={handleUpdateGroup}
+                    userId={userId}
+                    settingUser={settingUser}
+                    isAdminSystem={state.isAdminSystem}
+                    sendMessage={sendMessage}
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                        setState({ checkedNotification: value })
+                    }
+                  />
+                  <ProfileSidebarGeneral
+                    checkedNotification={state.checkedNotification}
+                    setCheckedNotification={(value) =>
+                      setState({ checkedNotification: value })
+                    }
+                    handleUpdateGroup={handleUpdateGroup}
+                    handleShowFileView={handleShowFileView}
+                    selectedGroup={selectedGroup}
+                    userId={userId}
+                    handleShowMoreOption={handleShowMoreOption}
+                    active = {active}
+                  />
+                </>
+                )}
+
+             
+            </Fragment>
           )}
         </PerfectScrollbar>
 

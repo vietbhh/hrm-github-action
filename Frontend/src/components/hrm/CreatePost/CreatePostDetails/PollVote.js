@@ -8,7 +8,7 @@ import { Tooltip } from "antd"
 import classNames from "classnames"
 import React, { Fragment, useRef } from "react"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { Modal, ModalBody } from "reactstrap"
+import { Button, Modal, ModalBody } from "reactstrap"
 import dayjs from "dayjs"
 
 const PollVote = (props) => {
@@ -69,7 +69,6 @@ const PollVote = (props) => {
   return (
     <Fragment>
       <div className="feed modal-create-post modal-poll-vote">
-        <div className="body-header"></div>
         <div className="body-content">
           <Tooltip
             title={useFormatMessage(
@@ -95,20 +94,12 @@ const PollVote = (props) => {
             <div
               className="div-btn-setting"
               onClick={() => toggleModalPollVoteSetting()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="19"
-                viewBox="0 0 21 19"
-                fill="none">
-                <path
-                  d="M18.1 6.6589C16.29 6.6589 15.55 5.3789 16.45 3.8089C16.97 2.8989 16.66 1.7389 15.75 1.2189L14.02 0.228901C13.23 -0.241099 12.21 0.0389014 11.74 0.828901L11.63 1.0189C10.73 2.5889 9.25 2.5889 8.34 1.0189L8.23 0.828901C7.78 0.0389014 6.76 -0.241099 5.97 0.228901L4.24 1.2189C3.33 1.7389 3.02 2.9089 3.54 3.8189C4.45 5.3789 3.71 6.6589 1.9 6.6589C0.86 6.6589 0 7.5089 0 8.5589V10.3189C0 11.3589 0.85 12.2189 1.9 12.2189C3.71 12.2189 4.45 13.4989 3.54 15.0689C3.02 15.9789 3.33 17.1389 4.24 17.6589L5.97 18.6489C6.76 19.1189 7.78 18.8389 8.25 18.0489L8.36 17.8589C9.26 16.2889 10.74 16.2889 11.65 17.8589L11.76 18.0489C12.23 18.8389 13.25 19.1189 14.04 18.6489L15.77 17.6589C16.68 17.1389 16.99 15.9689 16.47 15.0689C15.56 13.4989 16.3 12.2189 18.11 12.2189C19.15 12.2189 20.01 11.3689 20.01 10.3189V8.5589C20 7.5189 19.15 6.6589 18.1 6.6589ZM10 12.6889C8.21 12.6889 6.75 11.2289 6.75 9.4389C6.75 7.6489 8.21 6.1889 10 6.1889C11.79 6.1889 13.25 7.6489 13.25 9.4389C13.25 11.2289 11.79 12.6889 10 12.6889Z"
-                  fill="#32434F"
-                />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#696760" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 12.8799V11.1199C2 10.0799 2.85 9.21994 3.9 9.21994C5.71 9.21994 6.45 7.93994 5.54 6.36994C5.02 5.46994 5.33 4.29994 6.24 3.77994L7.97 2.78994C8.76 2.31994 9.78 2.59994 10.25 3.38994L10.36 3.57994C11.26 5.14994 12.74 5.14994 13.65 3.57994L13.76 3.38994C14.23 2.59994 15.25 2.31994 16.04 2.78994L17.77 3.77994C18.68 4.29994 18.99 5.46994 18.47 6.36994C17.56 7.93994 18.3 9.21994 20.11 9.21994C21.15 9.21994 22.01 10.0699 22.01 11.1199V12.8799C22.01 13.9199 21.16 14.7799 20.11 14.7799C18.3 14.7799 17.56 16.0599 18.47 17.6299C18.99 18.5399 18.68 19.6999 17.77 20.2199L16.04 21.2099C15.25 21.6799 14.23 21.3999 13.76 20.6099L13.65 20.4199C12.75 18.8499 11.27 18.8499 10.36 20.4199L10.25 20.6099C9.78 21.3999 8.76 21.6799 7.97 21.2099L6.24 20.2199C5.33 19.6999 5.02 18.5299 5.54 17.6299C6.45 16.0599 5.71 14.7799 3.9 14.7799C2.85 14.7799 2 13.9199 2 12.8799Z" stroke="#696760" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
           </div>
-
           <label
             title={useFormatMessage(
               "modules.feed.create_post.text.add_options"
@@ -119,7 +110,8 @@ const PollVote = (props) => {
           <PerfectScrollbar options={{ wheelPropagation: false }}>
             {_.map(poll_vote_detail.options, (value, index) => {
               return (
-                <div key={index} className="div-add-options">
+                <div key={index} className="div-add-options"
+                >
                   <ErpInput
                     nolabel
                     required
@@ -135,58 +127,63 @@ const PollVote = (props) => {
                         : null
                     }
                   />
-
-                  <div className="div-btn-delete-options">
-                    <button
-                      color="danger"
+                  <div className={classNames("div-btn-delete-options", {
+                      "visibility-hidden":
+                        poll_vote_detail.options.length <= 2
+                    })} >
+                    <Button
+                      color="flat"
                       className={classNames("btn-delete-options", {
                         "visibility-hidden":
                           poll_vote_detail.options.length <= 2
                       })}
                       onClick={() => handleDeleteOptions(index)}>
-                      <i className="fa-solid fa-xmark"></i>
-                    </button>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM15.36 14.3C15.65 14.59 15.65 15.07 15.36 15.36C15.21 15.51 15.02 15.58 14.83 15.58C14.64 15.58 14.45 15.51 14.3 15.36L12 13.06L9.7 15.36C9.55 15.51 9.36 15.58 9.17 15.58C8.98 15.58 8.79 15.51 8.64 15.36C8.35 15.07 8.35 14.59 8.64 14.3L10.94 12L8.64 9.7C8.35 9.41 8.35 8.93 8.64 8.64C8.93 8.35 9.41 8.35 9.7 8.64L12 10.94L14.3 8.64C14.59 8.35 15.07 8.35 15.36 8.64C15.65 8.93 15.65 9.41 15.36 9.7L13.06 12L15.36 14.3Z"
+                          fill="#696760"
+                        />
+                      </svg>
+                    </Button>
                   </div>
                 </div>
               )
             })}
           </PerfectScrollbar>
-
           <button
             type="button"
             className="btn-add-option"
             onClick={() => handleAddOptions()}
             disabled={poll_vote_detail.options.length >= 10}>
             <svg
-              className="me-50"
-              xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              fill="none">
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
               <path
-                d="M8 12H16"
-                stroke="#292D32"
+                d="M6.5 12H18.5"
+                stroke="#696760"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
-                d="M12 16V8"
-                stroke="#292D32"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
-                stroke="#292D32"
+                d="M12.5 18V6"
+                stroke="#696760"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
-            {useFormatMessage("modules.feed.create_post.text.add_options")}
+            <span className="text">
+              {useFormatMessage("modules.feed.create_post.text.add_options")}
+            </span>
           </button>
         </div>
       </div>
@@ -212,42 +209,62 @@ const PollVote = (props) => {
           </div>
           <div className="body-content">
             <div className="div-setting">
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_multiple_selection"
-                )}
-                checked={poll_vote_detail.setting.multiple_selection}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "multiple_selection")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_adding_more_options"
-                )}
-                checked={poll_vote_detail.setting.adding_more_options}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "adding_more_options")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.allow_incognito"
-                )}
-                checked={poll_vote_detail.setting.incognito}
-                onChange={(e) =>
-                  handleChangeSetting(e.target.checked, "incognito")
-                }
-              />
-              <ErpCheckbox
-                label={useFormatMessage(
-                  "modules.feed.create_post.text.limit_time_for_poll"
-                )}
-                checked={poll_vote_detail.setting.limit_time}
-                onChange={(e) => {
-                  handleChangeSetting(e.target.checked, "limit_time")
-                }}
-              />
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_multiple_selection"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.multiple_selection}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "multiple_selection")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_adding_more_options"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.adding_more_options}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "adding_more_options")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.allow_incognito"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.incognito}
+                  onChange={(e) =>
+                    handleChangeSetting(e.target.checked, "incognito")
+                  }
+                />
+              </div>
+              <div className="d-flex">
+                <span className="div-setting-label me-auto">
+                  {useFormatMessage(
+                    "modules.feed.create_post.text.limit_time_for_poll"
+                  )}
+                </span>
+                <ErpCheckbox
+                  nolabel
+                  checked={poll_vote_detail.setting.limit_time}
+                  onChange={(e) => {
+                    handleChangeSetting(e.target.checked, "limit_time")
+                  }}
+                />
+              </div>
             </div>
 
             {poll_vote_detail.setting.limit_time && (

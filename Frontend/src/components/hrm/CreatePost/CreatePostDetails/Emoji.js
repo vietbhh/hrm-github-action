@@ -43,6 +43,8 @@ const Emoji = (props) => {
         onClick={() => {
           if (state.showEmotion === false) {
             setShowEmotion(true)
+          } else {
+            setShowEmotion(false)
           }
         }}>
         <div
@@ -82,31 +84,11 @@ const Emoji = (props) => {
           </div>
         </div>
         <Tooltip title="Emoji">
-          <svg
-            ref={emotionIconRef}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none">
-            <path
-              d="M7.70702 16.4196C7.48593 16.2541 7.44083 15.9408 7.60628 15.7197C7.77173 15.4986 8.08508 15.4535 8.30617 15.619C10.3073 17.1165 13.7545 17.1258 15.6977 15.6237C15.9162 15.4548 16.2302 15.495 16.3991 15.7135C16.568 15.932 16.5278 16.246 16.3093 16.4149C14.007 18.1945 10.0646 18.1839 7.70702 16.4196Z"
-              fill="#92929D"
-            />
-            <path
-              d="M9 11C9.55228 11 10 10.5523 10 10C10 9.44772 9.55228 9 9 9C8.44772 9 8 9.44772 8 10C8 10.5523 8.44772 11 9 11Z"
-              fill="#92929D"
-            />
-            <path
-              d="M15 11C15.5523 11 16 10.5523 16 10C16 9.44772 15.5523 9 15 9C14.4477 9 14 9.44772 14 10C14 10.5523 14.4477 11 15 11Z"
-              fill="#92929D"
-            />
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M1.5 12C1.5 17.799 6.20101 22.5 12 22.5C17.799 22.5 22.5 17.799 22.5 12C22.5 6.20101 17.799 1.5 12 1.5C6.20101 1.5 1.5 6.20101 1.5 12ZM21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C6.75329 21.5 2.5 17.2467 2.5 12C2.5 6.75329 6.75329 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12Z"
-              fill="#92929D"
-            />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#696760" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M15.5 9.75C16.3284 9.75 17 9.07843 17 8.25C17 7.42157 16.3284 6.75 15.5 6.75C14.6716 6.75 14 7.42157 14 8.25C14 9.07843 14.6716 9.75 15.5 9.75Z" stroke="#696760" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M8.5 9.75C9.32843 9.75 10 9.07843 10 8.25C10 7.42157 9.32843 6.75 8.5 6.75C7.67157 6.75 7 7.42157 7 8.25C7 9.07843 7.67157 9.75 8.5 9.75Z" stroke="#696760" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M15.5 15C14.3333 16 11.3 17.4 8.5 15" stroke="#696760" strokeLinecap="round"/>
           </svg>
         </Tooltip>
       </li>

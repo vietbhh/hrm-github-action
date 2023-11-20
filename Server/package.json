@@ -47,6 +47,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.0.0-rc.1",
     "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.7",
     "php-serialize": "^4.0.2",
     "sequelize": "^6.33.0",
     "sharp": "^0.31.3",

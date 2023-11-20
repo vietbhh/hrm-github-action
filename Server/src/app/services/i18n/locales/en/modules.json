@@ -3671,7 +3671,7 @@
           "add_description": "Add description...",
           "choose_a_background": "Choose a background",
           "create_poll": "Create poll",
-          "question": "Question?",
+          "question": "Question",
           "enter_question": "Enter question",
           "add_options": "Add options",
           "option": "Option {number}",
@@ -4317,7 +4317,10 @@
         "sent_request_join_workgroup" : "sent a request to join workgroup",
         "requested_approval_post" : "requested approval for his post on the shared wall",
         "reaction_post" : "your post",
-        "your_comment_post" : "your comment"
+        "your_comment_post" : "your comment",
+        "commented_on_your_image": "commented on your image",
+        "other_comment_on_your_image" : "of other people who have comment your image",
+        "reaction_on_your_image" : "your image"
       }
     },
     "timeline": {

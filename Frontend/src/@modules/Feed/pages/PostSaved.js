@@ -3,7 +3,11 @@ import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import Avatar from "@apps/modules/download/pages/Avatar"
 import Photo from "@apps/modules/download/pages/Photo"
 import SwAlert from "@apps/utility/SwAlert"
-import { formatDate, useFormatMessage, useMergedState } from "@apps/utility/common"
+import {
+  formatDate,
+  useFormatMessage,
+  useMergedState
+} from "@apps/utility/common"
 import notification from "@apps/utility/notification"
 import { arrImage } from "@modules/Feed/common/common"
 import { Dropdown } from "antd"
@@ -13,14 +17,16 @@ import * as Icon from "react-feather"
 import ReactHtmlParser from "react-html-parser"
 import InfiniteScroll from "react-infinite-scroll-component"
 import "react-perfect-scrollbar/dist/css/styles.css"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { Card, CardBody } from "reactstrap"
-import { Col, Row } from "rsuite"
+import { Card, CardBody, Col, Row } from "reactstrap"
+import {} from "rsuite"
 import { setAppTitle } from "../../../redux/app/app"
 import "../assets/scss/postSaved.scss"
 import { postSavedApi, savedApi } from "../common/api"
 import UnavailableData from "../components/UnavailableData"
+import LoadPost from "../../../components/hrm/LoadPost/LoadPost"
+import { handleDataMention } from "../common/common"
 
 export default function PostSaved() {
   const [state, setState] = useMergedState({
@@ -29,17 +35,29 @@ export default function PostSaved() {
     loading: false,
     postsSaved: [],
     isSearch: false,
-    hasMoreLoad: true
+    hasMoreLoad: true,
+    dataMention: []
   })
-
-  const getData = async () => {
+  const userData = useSelector((state) => state.auth.userData)
+  const userId = userData.id
+  const dataEmployee = useSelector((state) => state.users.list)
+  useEffect(() => {
+    const data_mention = handleDataMention(dataEmployee, userId)
+    setState({ dataMention: data_mention })
+  }, [dataEmployee])
+  const getData = async (reload = false) => {
     let postSavedList = []
     setState({ loading: true })
 
     if (!state.search) {
       postSavedList = await postSavedApi.list(state.page)
       setState({ loading: false })
-      if (state.isSearch) {
+      if (reload) {
+        setState({
+          postsSaved: postSavedList.data,
+          isSearch: false
+        })
+      } else if (state.isSearch) {
         setState({
           postsSaved: postSavedList.data,
           isSearch: false
@@ -157,13 +175,12 @@ export default function PostSaved() {
 
   useEffect(() => {
     getData()
-  }, [state.page, state.search])
+  }, [state.page, state.search, state.isSearch])
 
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(setAppTitle(useFormatMessage("menu:menu.posts_saved")))
   }, [])
-
   return (
     <Fragment>
       <div className="div-left">
@@ -181,10 +198,7 @@ export default function PostSaved() {
                         <i className="fa-regular fa-magnifying-glass"></i>
                       }
                       onChange={(e) => {
-                        setState({ search: e.target.value })
-                        setState({
-                          page: 1
-                        })
+                        setState({ search: e.target.value, page: 1 })
                       }}
                     />
                   </Col>
@@ -211,38 +225,12 @@ export default function PostSaved() {
                     loader={state.loading ? <DefaultSpinner /> : ""}>
                     {state?.postsSaved?.map((item) => (
                       <section className="card" key={item._id}>
-                        <Row>
-                          <Col md={12} xs={22}>
-                            <div className="info">
-                              <Avatar src={item.author.avatar} />
-                              <div className="info-detail">
-                                <p id="full-name">{item.author.full_name}</p>
-                                <p id="created_at">
-                                  {formatDate(item.created_at, "D MMM, YYYY")}
-                                </p>
-                              </div>
-                            </div>
-                          </Col>
-                          <Col md={12} mdPush={11} xs={2}>
-                            {renderDropdown(item._id)}
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col
-                            className={classNames("content", {
-                              "content-background-img": Boolean(
-                                item.background_image
-                              )
-                            })}
-                            style={
-                              item.background_image
-                                ? setBackgroundImage(item.background_image)
-                                : {}
-                            }>
-                            {ReactHtmlParser(item.content)}
-                            {item.source && <Photo src={item.source} />}
-                          </Col>
-                        </Row>
+                        <LoadPost
+                          data={item}
+                          dataMention={state.dataMention}
+                          dataLink={item?.dataLink}
+                          setData={() => getData(true)}
+                        />
                       </section>
                     ))}
                   </InfiniteScroll>

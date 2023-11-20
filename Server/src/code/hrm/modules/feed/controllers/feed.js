@@ -40,8 +40,11 @@ import { handleGetEventById } from "./event.js"
 import { handleGetEndorsementById } from "./endorsement.js"
 import hashtagMongoModel from "../models/hashtag.mongo.js"
 import {
+  deleteNotification,
+  sendNotificationCommentImagePost,
   sendNotificationPostPending,
   sendNotificationPostPendingFeed,
+  sendNotificationReactionImagePost,
   sendNotificationReactionPost,
   sendNotificationReactionPostTag,
   sendNotificationTagInPost,
@@ -49,7 +52,8 @@ import {
 } from "../../workspace/controllers/notification.js"
 import { getUserWorkspaceIds } from "../../workspace/controllers/workspace.js"
 import dayjs from "dayjs"
-import feedPriorityMongoModel from "../models/feed_priority.mongo.js"
+import { getOptionValue } from "#app/helpers/appOptionsHelper.js"
+import moment from "moment"
 
 FfmpegCommand.setFfmpegPath(ffmpegPath.path)
 FfmpegCommand.setFfprobePath(ffprobePath.path)
@@ -140,7 +144,6 @@ const submitPostController = async (req, res, next) => {
     let out = {}
     let _id_parent = ""
     let data_feed_old = {}
-
     const dataInsert = {
       __user: req.__user,
       permission_ids: body.workspace,
@@ -159,8 +162,7 @@ const submitPostController = async (req, res, next) => {
       background_image: body.backgroundImage,
       has_poll_vote: has_poll_vote,
       poll_vote_detail: save_poll_vote_detail,
-      hashtag: body.arrHashtag,
-      order: dayjs().unix() * 3
+      hashtag: body.arrHashtag
     }
 
     if (!is_edit) {
@@ -746,7 +748,7 @@ const updatePostReaction = async (req, res, next) => {
   const react_action = body.react_action
   const full_name = body.full_name
   const created_by = body.created_by
-  const infoPost = await feedMongoModel.findById(id)
+  let infoPost = await feedMongoModel.findById(id)
   const turn_off_notification = infoPost.turn_off_notification
   turn_off_notification.push(req.__user)
   const arrTag = infoPost.tag_user.tag
@@ -762,6 +764,30 @@ const updatePostReaction = async (req, res, next) => {
       { _id: id, "reaction.react_user": req.__user },
       { $pull: { "reaction.$.react_user": req.__user } }
     )
+    if (react_action === "remove") {
+      const postUpdate = await feedMongoModel.findById(id)
+      let reactionOld = ""
+      let idUser = 0
+      postUpdate.reaction.map((reaction) => {
+        if (reaction.react_user.length > 0) {
+          idUser = reaction.react_user[reaction.react_user.length - 1] * 1
+          reactionOld = reaction.react_type
+        }
+      })
+      if (idUser) {
+        const infoUserOld = await getUser(idUser)
+        const receivers = [created_by]
+        sendNotificationReactionPost(
+          postUpdate,
+          infoUserOld,
+          reactionOld,
+          receivers,
+          true
+        )
+      } else {
+        deleteNotification(id, "reaction_post")
+      }
+    }
     if (react_action === "add") {
       const update = await feedMongoModel.updateOne(
         { _id: id, "reaction.react_type": react_type },
@@ -777,6 +803,7 @@ const updatePostReaction = async (req, res, next) => {
           }
         )
       }
+      infoPost = await feedMongoModel.findById(id)
       if (allTagSend.length > 0) {
         sendNotificationReactionPostTag(
           infoPost,
@@ -796,12 +823,21 @@ const updatePostReaction = async (req, res, next) => {
         !arrUserNotReceivedNotification.includes(created_by)
       ) {
         const receivers = [created_by]
-        sendNotificationReactionPost(
-          infoPost,
-          { id: req.__user, full_name: full_name },
-          react_type,
-          receivers
-        )
+        if (infoPost.ref && (infoPost.type === "image" || "video")) {
+          sendNotificationReactionImagePost(
+            infoPost,
+            { id: req.__user, full_name: full_name },
+            react_type,
+            receivers
+          )
+        } else {
+          sendNotificationReactionPost(
+            infoPost,
+            { id: req.__user, full_name: full_name },
+            react_type,
+            receivers
+          )
+        }
       }
     }
 
@@ -1681,6 +1717,65 @@ const getPostPending = async (req, res) => {
     return res.fail(err.message)
   }
 }
+const loadAnnouncementPost = async (req, res) => {
+  try {
+    const filter = {
+      type: "announcement"
+    }
+    const postList = await feedMongoModel.find(filter).sort({
+      _id: req.query.sort
+    })
+    const beforeReturn = await handleDataBeforeReturn(postList, true)
+    let dataReturn = []
+    const promises = []
+    beforeReturn.map((value) => {
+      const promise = new Promise(async (resolve, reject) => {
+        const dataLink = await handleGetAnnouncementById(value.link_id)
+        value.dataLink = dataLink
+        resolve(value)
+      })
+
+      promises.push(promise)
+    })
+
+    const _data = await Promise.all(promises).then((res_promise) => {
+      return res_promise
+    })
+    const one_week = await getOptionValue(
+      "news",
+      "show_announcements",
+      "one_week"
+    )
+    const one_month = await getOptionValue(
+      "news",
+      "show_announcements",
+      "one_month"
+    )
+    _data.map((value) => {
+      if (value.dataLink?.pin === 1 || value.dataLink?.pin === "1") {
+        const createDdate = moment(value.dataLink.created_at)
+        const dateToday = moment()
+
+        let numberDate = 1
+        if (value.dataLink.show_announcements * 1 === one_week * 1) {
+          numberDate = 7
+        } else if (value.dataLink.show_announcements * 1 === one_month * 1) {
+          numberDate = 30
+        }
+        if (createDdate.add(numberDate, "days").isSameOrAfter(dateToday)) {
+          dataReturn.push(value)
+        }
+      }
+    })
+
+    return res.respond({
+      results: dataReturn,
+      recordsTotal: dataReturn.length
+    })
+  } catch (err) {
+    return res.fail(err.message)
+  }
+}
 
 export {
   uploadTempAttachmentController,
@@ -1707,5 +1802,6 @@ export {
   turnOffCommenting,
   handleDataHistory,
   getDataEditHistory,
-  getPostPending
+  getPostPending,
+  loadAnnouncementPost
 }

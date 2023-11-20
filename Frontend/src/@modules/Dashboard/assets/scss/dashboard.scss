@@ -650,7 +650,6 @@
       .clock-time {
         margin: auto;
         padding: 15px;
-        background-color: rgba(0, 0, 0, 0.03);
         border-radius: 12px;
         .int-out-info {
           display: flex;
@@ -1024,7 +1023,7 @@
 
       .department {
         width: 50%;
-        font-family: "Be Vietnam Pro";
+        font-family:$font-family-sans-serif;
         font-style: normal;
         font-weight: 600;
         font-size: 14px;
@@ -1034,7 +1033,7 @@
         }
         .total-employees {
           width: 100%;
-          font-family: "Be Vietnam Pro";
+          font-family: $font-family-sans-serif;
           font-style: normal;
           font-weight: 300;
           font-size: 11px;

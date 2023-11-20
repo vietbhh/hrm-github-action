@@ -1128,6 +1128,10 @@
   }
 
   .body {
+    .btn-container button {
+      border-radius: 16px!important;
+    }
+    
     .card-workspace-managed {
       border-radius: 12px;
       transition: all 100ms linear;
@@ -1138,6 +1142,22 @@
           font-size: 12px;
           text-transform: uppercase;
           cursor: pointer;
+        }
+        .text-color-title {
+          color: var(--neutral-shade-1, #121210);
+          // font-family: $font-family-sans-serif;
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 32px;
+        }
+        small {
+          color: #92929D;
+          // font-family: Be Vietnam;
+          font-size: 15px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 20px;
         }
       }
 
@@ -1852,6 +1872,7 @@
     color: #32434f;
     cursor: pointer;
     font-weight: 600;
+    
   }
 
   .workspace-item {
@@ -1859,9 +1880,20 @@
 
     .content-container {
       small {
+        color: var(--neutral-shade-3, #696760);
+        // font-family: Be Vietnam;
         font-size: 12px;
+        font-style: normal;
         font-weight: 400;
-        color: #92929d;
+        line-height: 16px;
+      }
+      .text-color-title {
+        color: var(--neutral-shade-2, #403F3A);
+        // font-family: Be Vietnam;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
       }
     }
     .image-container {

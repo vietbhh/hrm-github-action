@@ -145,7 +145,9 @@ $routes->get('task/detail/(:alphanum)', 'Task::detail_get/$1');
 $routes->get('task/list', 'Task::load_get/$1');
 
 $routes->get('notification/load', 'Notification::load_get');
-$routes->get('notification/read', 'Notification::read_get');
+$routes->get('notification/seen', 'Notification::seen_get');
+$routes->post('notification/read/(:any)', 'Notification::read_post/$1');
+$routes->post('notification/remove/(:any)', 'Notification::remove_post/$1');
 //$routes->post('notification/test/(:any)', 'Notification::test_post/$1');
 $routes->get('calendar/load', 'Calendar::load_get');
 $routes->get('calendar/detail/(:alphanum)', 'Calendar::detail_get/$1');

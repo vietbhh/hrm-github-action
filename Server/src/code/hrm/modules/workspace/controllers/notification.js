@@ -3,6 +3,7 @@ import { getUser } from "#app/models/users.mysql.js"
 import { Op, Sequelize } from "sequelize"
 import workspaceMongoModel from "../models/workspace.mongo.js"
 import { notificationsModelMysql } from "#app/models/notifications.mysql.js"
+import commentMongoModel from "../../feed/models/comment.mongo.js"
 
 const compactContent = (content = "") => {
   const contentPost = content
@@ -183,10 +184,14 @@ const sendNotificationNewPost = async (infoWorkspace, feed, receivers) => {
 
 const sendNotificationReactionPost = async (
   post,
-  userReaction,
+  user,
   reaction,
-  receivers
+  receivers,
+  isUpdate = false
 ) => {
+  let userReaction = user
+  let popup = true
+  if (isUpdate) popup = false
   let title =
     "<b>" +
     userReaction.full_name +
@@ -220,14 +225,17 @@ const sendNotificationReactionPost = async (
       const count = reaction.react_user.length
       numberReaction += count
     })
-    title =
-      "<b>" +
-      userReaction.full_name +
-      "</b> to " +
-      reaction +
-      " and " +
-      (numberReaction - 1) +
-      " of other people who have interacted with your post"
+
+    if (numberReaction > 1) {
+      title =
+        "<b>" +
+        userReaction.full_name +
+        "</b> to " +
+        reaction +
+        " and " +
+        (numberReaction - 1) +
+        " {{modules.network.notification.other_reaction_post}}"
+    }
   }
 
   await sendNotification(userReaction?.id, receivers, {
@@ -237,7 +245,8 @@ const sendNotificationReactionPost = async (
     icon: parseInt(userReaction?.id),
     custom_fields: { source_id: post._id, source_type: "reaction_post" },
     update_notification: update_notification,
-    idUpdate: infoNotification?.id
+    idUpdate: infoNotification?.id,
+    popup: popup
   })
 }
 
@@ -287,7 +296,7 @@ const sendNotificationReactionPostTag = async (
       reaction +
       " and " +
       (numberReaction - 1) +
-      " of other people who have interacted post you're tagged"
+      " {{modules.network.notification.people_reaction_post_tag}}"
   }
 
   await sendNotification(userReaction?.id, receivers, {
@@ -300,7 +309,15 @@ const sendNotificationReactionPostTag = async (
     idUpdate: infoNotification?.id
   })
 }
-const sendNotificationCommentPost = async (post, user, comment, receivers) => {
+const sendNotificationCommentPost = async (
+  post,
+  user,
+  comment,
+  receivers,
+  isUpdate = false
+) => {
+  let popup = true
+  if (isUpdate) popup = false
   let title =
     "<b>" +
     user.full_name +
@@ -322,21 +339,22 @@ const sendNotificationCommentPost = async (post, user, comment, receivers) => {
     }
   })
   if (infoNotification) {
-    update_notification = true
-    let reactionPost = post.reaction
-    let numberReaction = 0
-    reactionPost.map((reaction) => {
-      const count = reaction.react_user.length
-      numberReaction += count
+    const data_comment = await commentMongoModel.find({
+      post_id: { $in: post._id }
     })
-    title =
-      "<b>" +
-      user.full_name +
-      "</b> and " +
-      (numberReaction - 1) +
-      " of other people who have comment your post"
-  }
+    const arrCmt = data_comment.map((x) => x.created_by)
+    const checkExist = [...new Set(arrCmt)]
+    update_notification = true
 
+    if (checkExist.length > 1) {
+      title =
+        "<b>" +
+        user.full_name +
+        "</b> and " +
+        (checkExist.length - 1) +
+        " {{modules.network.notification.people_comment_in_the_post}}"
+    }
+  }
   await sendNotification(user?.id, receivers, {
     title: title,
     body: body,
@@ -344,7 +362,8 @@ const sendNotificationCommentPost = async (post, user, comment, receivers) => {
     icon: parseInt(user?.id),
     custom_fields: { source_id: post._id, source_type: "comment_post" },
     update_notification: update_notification,
-    idUpdate: infoNotification?.id
+    idUpdate: infoNotification?.id,
+    popup: popup
   })
 }
 
@@ -379,19 +398,21 @@ const sendNotificationCommentPostTag = async (
     }
   })
   if (infoNotification) {
-    update_notification = true
-    const reactionPost = post.reaction
-    let numberReaction = 0
-    reactionPost.map((reaction) => {
-      const count = reaction.react_user.length
-      numberReaction += count
+    const data_comment = await commentMongoModel.find({
+      post_id: { $in: post._id }
     })
-    title =
-      "<b>" +
-      userReaction.full_name +
-      "</b> and " +
-      (numberReaction - 1) +
-      " of other people who have comment post you're tagged"
+    const arrCmt = data_comment.map((x) => x.created_by)
+    const checkExist = [...new Set(arrCmt)]
+
+    update_notification = true
+    if (checkExist.length > 1) {
+      title =
+        "<b>" +
+        userReaction.full_name +
+        "</b> and " +
+        (checkExist.length - 1) +
+        "{{modules.network.notification.people_comment_post_tagged}}"
+    }
   }
 
   await sendNotification(userReaction?.id, receivers, {
@@ -540,7 +561,7 @@ const sendNotificationRepliedCommentPost = async (
       user.full_name +
       "</b> and " +
       (userComment.length - 1) +
-      " of other people who have replied your comment"
+      "{{modules.network.notification.people_repplied_your_comment}} "
   }
   await sendNotification(user?.id, receivers, {
     title: title,
@@ -601,8 +622,8 @@ const sendNotificationReactionCommentPost = async (
       "</b> to " +
       reaction +
       " and " +
-      (numberReaction - 1) +
-      " of other people who have interacted with your comment"
+      numberReaction +
+      " {{modules.network.notification.people_reaction_your_comment}}"
   }
   await sendNotification(userReaction?.id, receivers, {
     title: title,
@@ -671,7 +692,7 @@ const sendCommonWorkgroupNotification = async (
 
 const sendNotificationAddMember = async (workgroup, sender, receivers) => {
   const title =
-    "You have been added to the group <b>" +
+    "{{modules.workspace.text.notification.add_you_to_group}} <b>" +
     workgroup?.name +
     "</b> by <b>" +
     sender?.full_name +
@@ -698,7 +719,7 @@ const sendNotificationHasNewMember = async (
     title =
       "<b>" +
       memberFullname +
-      "</b> has joined the group <b>" +
+      "</b> {{modules.workspace.text.notification.join_group}} <b>" +
       workgroup?.name +
       "</b>"
   } else {
@@ -707,7 +728,7 @@ const sendNotificationHasNewMember = async (
       memberFullname +
       "</b> and " +
       (member.length - 1) +
-      " others has joined the group <b>" +
+      " {{modules.workspace.text.notification.many_join_group}} <b>" +
       workgroup?.name +
       "</b>"
   }
@@ -726,11 +747,9 @@ const sendNotificationAddMemberWaitApproval = async (
   receivers
 ) => {
   const title =
-    "<b>" +
-    sender?.full_name +
-    "</b> has added you to the group <b>" +
-    sender?.full_name +
-    "</b>. Please wait for the administrator's approval"
+    "</b> {{modules.workspace.text.notification.user_request_join_workspace}} <b>" +
+    workgroup?.name +
+    "</b>. {{modules.workspace.text.notification.wait_approval}}"
   const link = "workspace/" + workgroup.id
   await sendNotification(sender?.id, receivers, {
     title: "",
@@ -743,7 +762,7 @@ const sendNotificationAssignedAdmin = async (workgroup, sender, receivers) => {
   const title =
     "<b>" +
     sender.full_name +
-    "</b> added you as admin of group <b>" +
+    "</b> {{modules.workspace.text.notification.add_to_role_admin_workspace}} <b>" +
     workgroup?.name +
     "</b>"
   const link = "workspace/" + workgroup.id
@@ -759,7 +778,7 @@ const sendNotificationKickMember = async (workgroup, sender, receivers) => {
   const title =
     "<b>" +
     sender.full_name +
-    "</b> has removed you from the group <b>" +
+    "</b> {{modules.workspace.text.notification.remove_to_workspace}} <b>" +
     workgroup?.name +
     "</b>"
   const link = "workgroup/" + workgroup.id
@@ -771,6 +790,185 @@ const sendNotificationKickMember = async (workgroup, sender, receivers) => {
   })
 }
 
+const sendNotificationCommentImagePost = async (
+  post,
+  user,
+  comment,
+  receivers
+) => {
+  const type = post?.type
+  let typePost = "{{modules.network.notification.commented_on_your_image}}"
+  if (type === "video")
+    typePost = "{{modules.network.notification.commented_on_your_video}}"
+  let title = "<b>" + user.full_name + "</b> " + typePost
+  const link = "posts/" + post._id + "/" + post._id
+  const body = compactContent(comment)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "comment_post_" + type
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    const data_comment = await commentMongoModel.find({
+      post_id: { $in: post._id }
+    })
+    const arrCmt = data_comment.map((x) => x.created_by)
+    const checkExist = [...new Set(arrCmt)]
+    update_notification = true
+
+    if (checkExist.length > 1) {
+      let typePost =
+        " {{modules.network.notification.other_comment_on_your_image}}"
+      if (type === "video")
+        typePost =
+          " {{modules.network.notification.other_comment_on_your_video}}"
+      title =
+        "<b>" +
+        user.full_name +
+        "</b> and " +
+        (checkExist.length - 1) +
+        typePost
+    }
+  }
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id),
+    custom_fields: { source_id: post._id, source_type: "comment_post_" + type },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
+  })
+}
+
+const sendNotificationReactionImagePost = async (
+  post,
+  user,
+  reaction,
+  receivers
+) => {
+  const type = post?.type
+  let typePost = " {{modules.network.notification.reaction_on_your_image}}"
+  if (type === "video")
+    typePost = " {{modules.network.notification.reaction_on_your_video}}"
+  let title = "<b>" + user.full_name + "</b> " + reaction + typePost
+  const link = "posts/" + post._id + "/" + post._id
+  const body = compactContent(post.content)
+
+  let update_notification = false
+  const infoNotification = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", post._id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString(
+            "custom_fields",
+            "source_type",
+            "reaction_post_" + type
+          )
+        )
+      ]
+    }
+  })
+  if (infoNotification) {
+    const reactionPost = post.reaction
+    let numberReaction = 0
+    reactionPost.map((reaction) => {
+      const count = reaction.react_user.length
+      numberReaction += count
+    })
+
+    update_notification = true
+    if (numberReaction > 0) {
+      let typePost =
+        " {{modules.network.notification.other_reaction_on_your_image}}"
+      if (type === "video")
+        typePost =
+          " {{modules.network.notification.other_reaction_on_your_video}}"
+      title =
+        "<b>" +
+        user.full_name +
+        "</b> " +
+        reaction +
+        " and " +
+        numberReaction +
+        typePost
+    }
+  }
+  await sendNotification(user?.id, receivers, {
+    title: title,
+    body: body,
+    link: link,
+    icon: parseInt(user?.id),
+    custom_fields: {
+      source_id: post._id,
+      source_type: "reaction_post_" + type
+    },
+    update_notification: update_notification,
+    idUpdate: infoNotification?.id
+  })
+}
+const deleteNotification = async (source_id, source_type) => {
+  const deleteNoti = await notificationsModelMysql.destroy({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", source_id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_type", source_type)
+        )
+      ]
+    }
+  })
+}
+const updateNotification = async (source_id, source_type, title) => {
+  const infoNoti = await notificationsModelMysql.findOne({
+    where: {
+      [Op.and]: [
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_id", source_id)
+        ),
+        Sequelize.literal(
+          handleJsonQueryString("custom_fields", "source_type", source_type)
+        )
+      ]
+    }
+  })
+
+  await notificationsModelMysql.update(
+    {
+      title: title
+    },
+    {
+      where: {
+        [Op.and]: [
+          Sequelize.literal(
+            handleJsonQueryString("custom_fields", "source_id", source_id)
+          ),
+          Sequelize.literal(
+            handleJsonQueryString("custom_fields", "source_type", source_type)
+          )
+        ]
+      }
+    }
+  )
+}
 export {
   sendNotificationApproveJoin,
   sendNotificationApprovePost,
@@ -794,5 +992,9 @@ export {
   sendNotificationHasNewMember,
   sendNotificationAddMemberWaitApproval,
   sendNotificationAssignedAdmin,
-  sendNotificationKickMember
+  sendNotificationKickMember,
+  sendNotificationCommentImagePost,
+  sendNotificationReactionImagePost,
+  deleteNotification,
+  updateNotification
 }

@@ -18,6 +18,7 @@ import { useSelector } from "react-redux"
 import { Button, Spinner } from "reactstrap"
 import DownloadFileComponent from "./DownloadFile"
 import Photo from "./Photo"
+import Video from "./Video"
 
 const index = (props) => {
   const { handleShowFileView, handleShowTab, selectedGroup, tabView, active } =
@@ -77,8 +78,8 @@ const index = (props) => {
 
   const handleColumnQuery = (tabView) => {
     let columnQuery = "timestamp_file"
-    if (tabView === "image") {
-      columnQuery = "timestamp_image"
+    if (tabView === "media") {
+      columnQuery = "timestamp_media"
     }
     if (tabView === "link") {
       columnQuery = "timestamp_link"
@@ -142,9 +143,9 @@ const index = (props) => {
       })
     }
 
-    if (tabView === "image") {
+    if (tabView === "media") {
       setState({ loadingImage: true, loadMoreImage: false })
-      getDataFileMore("image", state.lastTimestampImage).then((res) => {
+      getDataFileMore("media", state.lastTimestampImage).then((res) => {
         let _data = []
         let dem = 0
         res.forEach((docData) => {
@@ -202,6 +203,7 @@ const index = (props) => {
   }
 
   useEffect(() => {
+    console.log(tabView)
     if (tabView === "file" && _.isEmpty(state.dataFile)) {
       setState({ loadingFile: true })
       getDataFile("file")
@@ -232,15 +234,16 @@ const index = (props) => {
         })
     }
 
-    if (tabView === "image" && _.isEmpty(state.dataImage)) {
+    if (tabView === "media" && _.isEmpty(state.dataImage)) {
       setState({ loadingImage: true })
-      getDataFile("image")
+      getDataFile("media")
         .then((res) => {
           let _data = []
           res.forEach((docData) => {
             const data = docData.data()
             _data = [..._data, data]
           })
+
           if (_data.length === queryLimit) {
             setState({ loadMoreImage: true })
           } else {
@@ -257,7 +260,6 @@ const index = (props) => {
           }
         })
         .catch((err) => {
-          console.log(err)
           setState({ loadingImage: false })
         })
     }
@@ -299,9 +301,7 @@ const index = (props) => {
     let _dataListenLink = []
     _.forEach(chats, (value) => {
       if (
-        (value.type === "file" ||
-          value.type === "video" ||
-          value.type === "audio") &&
+        (value.type === "file" || value.type === "audio") &&
         value.time > state.firstTimestampFile &&
         state.firstTimestampFile !== 0 &&
         value.unsent !== 1
@@ -313,7 +313,9 @@ const index = (props) => {
       }
 
       if (
-        (value.type === "image" || value.type === "image_gif") &&
+        (value.type === "image" ||
+          value.type === "image_gif" ||
+          value.type === "video") &&
         value.time > state.firstTimestampImage &&
         state.firstTimestampImage !== 0 &&
         value.unsent !== 1
@@ -362,9 +364,9 @@ const index = (props) => {
             {useFormatMessage("modules.chat.text.file")}
           </div>
           <div
-            className={`div-tab ${tabView === "image" ? "active" : ""}`}
-            onClick={() => handleShowTab("image")}>
-            {useFormatMessage("modules.chat.text.image")}
+            className={`div-tab ${tabView === "media" ? "active" : ""}`}
+            onClick={() => handleShowTab("media")}>
+            {useFormatMessage("modules.chat.text.media")}
           </div>
           <div
             className={`div-tab ${tabView === "link" ? "active" : ""}`}
@@ -753,7 +755,7 @@ const index = (props) => {
           </div>
           <div
             className={`div-content ${
-              tabView === "image" ? "show" : "hide"
+              tabView === "media" ? "show" : "hide"
             } mt-1`}>
             <PerfectScrollbar
               className={`div-content-perfect-scrollbar`}
@@ -1063,6 +1065,22 @@ const index = (props) => {
                   <Image.PreviewGroup>
                     {_.map(state.dataListenImage, (value, index) => {
                       return _.map(value.file, (item, key) => {
+                        if (item.type === "video") {
+                          return (
+                            <Video
+                              key={`${index}${key}`}
+                              width="70"
+                              height="70"
+                              controls={false}
+                              src={`/modules/chat/${
+                                value?.forward?.forward_id_from
+                                  ? value?.forward?.forward_id_from
+                                  : selectedGroup.id
+                              }/other/${item.file}`}
+                            />
+                          )
+                        }
+
                         return (
                           <Photo
                             key={`${index}${key}`}
@@ -1078,6 +1096,22 @@ const index = (props) => {
 
                     {_.map(state.dataImage, (value, index) => {
                       return _.map(value.file, (item, key) => {
+                        if (item.type === "video") {
+                          return (
+                            <Video
+                              key={`${index}${key}`}
+                              width="70"
+                              height="70"
+                              controls={false}
+                              src={`/modules/chat/${
+                                value?.forward?.forward_id_from
+                                  ? value?.forward?.forward_id_from
+                                  : selectedGroup.id
+                              }/other/${item.file}`}
+                            />
+                          )
+                        }
+
                         return (
                           <Photo
                             key={`${index}${key}`}
@@ -1107,7 +1141,7 @@ const index = (props) => {
                     color="primary"
                     size="sm"
                     className="btn-load-more"
-                    onClick={() => handleLoadMore("image")}>
+                    onClick={() => handleLoadMore("media")}>
                     {useFormatMessage("modules.chat.text.load_more")}
                   </Button>
                 </div>

@@ -15,6 +15,8 @@ import {
 import { sendNotification } from "#app/libraries/notifications/Notifications.js"
 import { isFile } from "#app/utility/handleData.js"
 import {
+  deleteNotification,
+  sendNotificationCommentImagePost,
   sendNotificationCommentPost,
   sendNotificationCommentPostTag,
   sendNotificationReactionCommentPost,
@@ -52,7 +54,6 @@ const submitComment = async (req, res, next) => {
       if (req.body?.image) {
         dataInsert["image_source"] = req.body?.image
       }
-
       const commentModel = new commentMongoModel(dataInsert)
       const saveComment = await commentModel.save()
       const estimateOrder = dayjs().unix() * 2
@@ -76,7 +77,17 @@ const submitComment = async (req, res, next) => {
         !arrUserNotReceivedNotification.includes(created_by)
       ) {
         const receivers = [created_by]
-        sendNotificationCommentPost(infoPost, data_user, content, receivers)
+
+        if (infoPost.ref && (infoPost.type === "image" || "video")) {
+          sendNotificationCommentImagePost(
+            infoPost,
+            data_user,
+            content,
+            receivers
+          )
+        } else {
+          sendNotificationCommentPost(infoPost, data_user, content, receivers)
+        }
       }
 
       // send notification tag
@@ -121,12 +132,14 @@ const submitComment = async (req, res, next) => {
       }
 
       const infoPost = { _id: id_post }
-      sendNotificationTagInCommentPost(
-        infoPost,
-        data_user,
-        content,
-        body.tag_user
-      )
+      if (body.tag_user.length > 0) {
+        sendNotificationTagInCommentPost(
+          infoPost,
+          data_user,
+          content,
+          body.tag_user
+        )
+      }
     }
 
     return res.respond(dataFeed)
@@ -345,29 +358,19 @@ const updateSubCommentReaction = async (req, res, next) => {
             }
           )
         }
-      }
 
-      // ** send notification
-      if (req.__user.toString() !== created_by.toString()) {
-        const userId = req.__user
-        const receivers = created_by
-        const body =
-          full_name + " {{modules.network.notification.liked_your_comment}}"
-        const link = `/posts/${_id_post}`
-        sendNotification(
-          userId,
-          receivers,
-          {
-            title: "",
-            body: body,
-            link: link
-            //icon: icon
-            //image: getPublicDownloadUrl("modules/chat/1_1658109624_avatar.webp")
-          },
-          {
-            skipUrls: ""
-          }
-        )
+        // ** send notification
+        if (req.__user.toString() !== created_by.toString()) {
+          const userId = req.__user
+          const receivers = created_by
+
+          sendNotificationReactionCommentPost(
+            data_sub_comment,
+            { id: userId, full_name: full_name },
+            react_type,
+            receivers
+          )
+        }
       }
     }
 
@@ -402,6 +405,33 @@ const deleteComment = async (req, res, next) => {
         { $pull: { sub_comment: { _id: _id_sub_comment } } }
       )
       // xoa file
+    }
+
+    // update notification
+    const infoPost = await feedMongoModel.findById(_id_post)
+    if (infoPost.comment_ids.length > 0) {
+      const data_comment = await commentMongoModel.find({
+        post_id: { $in: _id_post }
+      })
+      const arrCmt = data_comment.map((x) => x.created_by)
+      const checkExist = [...new Set(arrCmt)]
+      const resultOtherOwner = checkExist.filter((id) => id != infoPost?.owner)
+      const receivers = [infoPost?.owner]
+      const userOld = await getUser(
+        resultOtherOwner[parseInt(resultOtherOwner.length - 1)]
+      )
+      const comment_userOld = data_comment.filter(
+        (data) => parseInt(data.owner) === parseInt(userOld.id)
+      )
+      sendNotificationCommentPost(
+        infoPost,
+        userOld,
+        comment_userOld[0]["content"],
+        receivers,
+        true
+      )
+    } else {
+      deleteNotification(_id_post, "comment_post")
     }
     const data = await handleDataFeedById(_id_post, comment_more_count_original)
     return res.respond(data)
@@ -462,11 +492,14 @@ const handleDataComment = async (feed, loadComment = -1, hasDoc = true) => {
   if (!isEmpty(comment_ids)) {
     if (loadComment === -1) {
       const id_comment_last = comment_ids[comment_ids.length - 1]
-      const data_comment = await commentMongoModel.findById(id_comment_last)
-      const _data_comment = await handleDataBeforeReturn(data_comment)
-      const __data_comment = await handleDataSubComment(_data_comment)
+      //const data_comment = await commentMongoModel.findById(id_comment_last)
+      const data_comment = await commentMongoModel.find({
+        _id: { $in: comment_ids }
+      })
+      const _data_comment = await handleDataBeforeReturn(data_comment, true)
+      const __data_comment = await handleDataSubComment(_data_comment, true)
       comment_more_count = comment_ids.length - 1
-      comment_list.push(__data_comment)
+      comment_list = __data_comment
     } else if (loadComment === 0) {
       const data_comment = await commentMongoModel.find({
         _id: { $in: comment_ids }
@@ -497,7 +530,10 @@ const handleDataComment = async (feed, loadComment = -1, hasDoc = true) => {
     const newFeed = { ...feed["_doc"] }
     newFeed["comment_more_count"] = comment_more_count
     newFeed["comment_count"] = comment_ids.length + sub_comment_count
-    newFeed["comment_list"] = comment_list
+    newFeed["comment_list"] =
+      loadComment === -1 && comment_list.length > 0
+        ? [comment_list[comment_list.length - 1]]
+        : comment_list
 
     return newFeed
   } else {
@@ -505,7 +541,10 @@ const handleDataComment = async (feed, loadComment = -1, hasDoc = true) => {
       ...feed,
       comment_more_count: comment_more_count,
       comment_count: comment_ids.length + sub_comment_count,
-      comment_list: comment_list
+      comment_list:
+        loadComment === -1 && comment_list.length > 0
+          ? [comment_list[comment_list.length - 1]]
+          : comment_list
     }
 
     return newFeed
