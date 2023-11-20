@@ -17,6 +17,7 @@ const HeaderCreatePost = (props) => {
     toggleModalCreatePost,
     is_poll
   } = props
+
   // ** render
   const items = [
     {

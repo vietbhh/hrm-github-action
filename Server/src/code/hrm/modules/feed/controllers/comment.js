@@ -24,6 +24,7 @@ import {
   sendNotificationTagInCommentPost
 } from "../../workspace/controllers/notification.js"
 import { getUser } from "#app/models/users.mysql.js"
+import dayjs from "dayjs"
 
 // ** comment
 const submitComment = async (req, res, next) => {
@@ -55,11 +56,15 @@ const submitComment = async (req, res, next) => {
       }
       const commentModel = new commentMongoModel(dataInsert)
       const saveComment = await commentModel.save()
-      await feedMongoModel.updateOne(
-        { _id: id_post },
-        { $push: { comment_ids: saveComment._id } }
-      )
+      const estimateOrder = dayjs().unix() * 2
       const infoPost = await feedMongoModel.findById(id_post)
+      const updateData = { $push: { comment_ids: saveComment._id } }
+      if (estimateOrder > infoPost?.order) {
+        updateData["$set"] = { order: estimateOrder }
+      }
+
+      await feedMongoModel.updateOne({ _id: id_post }, { ...updateData })
+
       const arrUserNotReceivedNotification = isEmpty(
         infoPost.turn_off_notification
       )
@@ -479,7 +484,7 @@ const handleUpImageComment = async (image, id_post) => {
   return result
 }
 
-const handleDataComment = async (feed, loadComment = -1) => {
+const handleDataComment = async (feed, loadComment = -1, hasDoc = true) => {
   const comment_ids = feed.comment_ids
   let comment_more_count = 0
   let comment_list = []
@@ -520,15 +525,30 @@ const handleDataComment = async (feed, loadComment = -1) => {
   forEach(comment_list, (item) => {
     sub_comment_count += item.sub_comment.length
   })
-  const _feed = { ...feed }
 
-  _feed["_doc"]["comment_more_count"] = comment_more_count
-  _feed["_doc"]["comment_count"] = comment_ids.length + sub_comment_count
-  _feed["_doc"]["comment_list"] =
-    loadComment === -1 && comment_list.length > 0
-      ? [comment_list[comment_list.length - 1]]
-      : comment_list
-  return _feed["_doc"]
+  if (hasDoc) {
+    const newFeed = { ...feed["_doc"] }
+    newFeed["comment_more_count"] = comment_more_count
+    newFeed["comment_count"] = comment_ids.length + sub_comment_count
+    newFeed["comment_list"] =
+      loadComment === -1 && comment_list.length > 0
+        ? [comment_list[comment_list.length - 1]]
+        : comment_list
+
+    return newFeed
+  } else {
+    const newFeed = {
+      ...feed,
+      comment_more_count: comment_more_count,
+      comment_count: comment_ids.length + sub_comment_count,
+      comment_list:
+        loadComment === -1 && comment_list.length > 0
+          ? [comment_list[comment_list.length - 1]]
+          : comment_list
+    }
+
+    return newFeed
+  }
 }
 
 const handleDataSubComment = async (dataComment, multiData = false) => {

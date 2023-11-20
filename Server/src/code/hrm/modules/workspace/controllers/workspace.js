@@ -1175,7 +1175,6 @@ const loadFeed = async (req, res) => {
   const textFilter = request?.text === undefined ? "" : request.text
   const filter = {
     permission_ids: req.query.workspace,
-    permission: "workspace",
     approve_status: "approved",
     ref: null
   }
@@ -1189,7 +1188,7 @@ const loadFeed = async (req, res) => {
     .skip(page * pageLength)
     .limit(pageLength)
     .sort({
-      _id: "desc"
+      order: -1
     })
   const feedCount = await feedMongoModel.find(filter).count()
   const result = await handleDataLoadFeed(page, pageLength, feed, feedCount)

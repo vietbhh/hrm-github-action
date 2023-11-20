@@ -3,7 +3,7 @@ import { useFormatMessage, useMergedState } from "@apps/utility/common"
 import { eventApi } from "@modules/Feed/common/api"
 import { arrImage } from "@modules/Feed/common/common"
 import classNames from "classnames"
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect, useLayoutEffect, useMemo } from "react"
 import ModalAnnouncement from "../CreatePost/CreatePostDetails/modals/ModalAnnouncement"
 import ModalCreateEvent from "../CreatePost/CreatePostDetails/modals/ModalCreateEvent"
 import ModalCreatePost from "../CreatePost/CreatePostDetails/modals/ModalCreatePost"
@@ -27,6 +27,8 @@ import { Link } from "react-router-dom"
 import PerfectScrollbar from "react-perfect-scrollbar"
 const LoadPost = (props) => {
   const {
+    dataPost,
+    restorationRef,
     data, // data post
     index, // index post
     current_url, // current url (vd: /feed)
@@ -55,6 +57,7 @@ const LoadPost = (props) => {
     isLoadComment = false,
     handleUnPinPost
   } = props
+
   const [state, setState] = useMergedState({
     comment_more_count_original: data?.comment_more_count,
     focusCommentForm: false,
@@ -231,7 +234,10 @@ const LoadPost = (props) => {
 
   return (
     <Fragment>
-      <div className="load-post" id={`post_id_${data?._id}`}>
+      <div
+        className="load-post"
+        id={`post_id_${data?._id}`}
+        ref={restorationRef}>
         <PostHeader
           data={data}
           customAction={customAction}
@@ -317,7 +323,6 @@ const LoadPost = (props) => {
           </>
         )}
       </div>
-
       {/* render modal */}
       {!isViewEditHistory && (
         <Fragment>
@@ -327,7 +332,7 @@ const LoadPost = (props) => {
               toggleModal={toggleModalCreatePost}
               setModal={(value) => setState({ modalCreatePost: value })}
               dataMention={dataMention}
-              workspace={[]}
+              workspace={workspace ? workspace[0] : ""}
               avatar={data?.created_by?.avatar}
               fullName={data?.created_by?.full_name}
               userId={data?.created_by?.id}

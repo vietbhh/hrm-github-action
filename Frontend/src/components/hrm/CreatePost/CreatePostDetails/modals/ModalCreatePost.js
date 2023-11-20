@@ -47,6 +47,7 @@ const ModalCreatePost = (props) => {
     setOptionCreate,
     setDataLink
   } = props
+
   const [state, setState] = useMergedState({
     privacy_type: privacy_type,
     editorState: EditorState.createEmpty(),
@@ -164,7 +165,6 @@ const ModalCreatePost = (props) => {
 
       const mention = result_tag_user.tag_user
       const arrHashtag = detectHashtag(__content)
-
       const params = {
         content: ___content,
         workspace: workspace,
@@ -184,14 +184,18 @@ const ModalCreatePost = (props) => {
         tag_your_colleagues: state.tag_your_colleagues,
         arrHashtag: arrHashtag
       }
+
       feedApi
         .postSubmitPost(params)
         .then(async (res) => {
           if (_.isFunction(setDataCreateNew)) {
             if (approveStatus !== "pending") {
-              const dataCreatedNew = res.data
-              dataCreatedNew["is_edit"] = dataPost?._id ? true : false
-              setDataCreateNew(dataCreatedNew)
+              const dataCrateNew = {
+                ...res.data,
+                is_edit: !_.isEmpty(dataPost?._id)
+              }
+
+              setDataCreateNew(dataCrateNew)
             } else {
               SwAlert.showSuccess({
                 title: "",
@@ -391,12 +395,14 @@ const ModalCreatePost = (props) => {
         }
 
         // ** privacy
-        setState({
+        /*setState({
           privacy_type: dataPost.permission
-        })
+        })*/
       }
     } else {
-      //   setState({ privacy_type: "workspace"})
+      setState({
+        privacy_type: "workspace"
+      })
     }
   }, [dataPost, modal])
 
