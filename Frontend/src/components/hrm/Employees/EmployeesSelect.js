@@ -70,7 +70,7 @@ const EmployeesSelect = (props) => {
       return (
         <Col sm={12} key={item.id}>
           <div
-            className="box-member d-flex align-items-center ps-1 pe-1"
+            className="box-member d-flex align-items-center"
             onClick={() => handleUnSelected(key)}>
             <Avatar
               src={item.avatar}
@@ -122,7 +122,9 @@ const EmployeesSelect = (props) => {
 
   const renderDepartment = (data = []) => {
     return data.map((item, key) => {
-      const uniqueUpdatedBy = [...new Set(state.dataSelected.map(item => item.department_id))];
+      const uniqueUpdatedBy = [
+        ...new Set(state.dataSelected.map((item) => item.department_id))
+      ]
 
       const department_selected = uniqueUpdatedBy
       const checked = department_selected.some((x) => x === item.id)
@@ -209,17 +211,17 @@ const EmployeesSelect = (props) => {
         ? departments.concat(res.data.results)
         : res.data.results
 
-        const uniqueIds = {};
+      const uniqueIds = {}
 
-        const uniqueArray = concat.filter((item) => {
-          if (!uniqueIds[item.id]) {
-            uniqueIds[item.id] = true;
-            return true;
-          }
-            return false;
-        });
-        
-        uniqueArray.sort((a, b) => b.id - a.id);
+      const uniqueArray = concat.filter((item) => {
+        if (!uniqueIds[item.id]) {
+          uniqueIds[item.id] = true
+          return true
+        }
+        return false
+      })
+
+      uniqueArray.sort((a, b) => b.id - a.id)
 
       setState({
         departments: uniqueArray,
@@ -273,16 +275,18 @@ const EmployeesSelect = (props) => {
           .getUserByDepartmentId({ department: idDepartment })
           .then((res) => {
             const dataSelected = [...state.dataSelected]
-            const dataUniqueItem = [];
-            res.data.results.forEach(data => {
-                const hasDuplicate = dataSelected.some(dataSelect => dataSelect.id == data.id);
-                
-                if (!hasDuplicate) {
-                    dataUniqueItem.push(data);
-                }
-            });
-            dataUniqueItem.push(...dataSelected);
-            
+            const dataUniqueItem = []
+            res.data.results.forEach((data) => {
+              const hasDuplicate = dataSelected.some(
+                (dataSelect) => dataSelect.id == data.id
+              )
+
+              if (!hasDuplicate) {
+                dataUniqueItem.push(data)
+              }
+            })
+            dataUniqueItem.push(...dataSelected)
+
             setState({
               dataSelected: dataUniqueItem,
               department_selected: [
@@ -311,11 +315,10 @@ const EmployeesSelect = (props) => {
     const page = state.page + 1
     if (state.typeAdd === "departments") {
       if (state.recordsTotal > state.departments.length) {
-        if(!state.search)
-        {
+        if (!state.search) {
           loadDepartment({ page: page, search: state.search })
-        }else{
-          loadDepartment({ page: page})
+        } else {
+          loadDepartment({ page: page })
         }
       }
     }
@@ -331,7 +334,7 @@ const EmployeesSelect = (props) => {
     typingTimeoutRef.current = setTimeout(() => {
       if (state.typeAdd === "members") {
         loadData({ search: e, page: 1 })
-      }else if (state.typeAdd === "departments") {
+      } else if (state.typeAdd === "departments") {
         loadDepartment({ search: e, page: 1 })
       }
     }, 500)
@@ -361,7 +364,7 @@ const EmployeesSelect = (props) => {
   return (
     <>
       <Row>
-        <Col sm={12} className="mb-2 filter">
+        <Col sm={12} className="filter">
           <div className="d-flex">
             <span
               style={{ cursor: "pointer" }}
@@ -396,12 +399,33 @@ const EmployeesSelect = (props) => {
         {!state.viewSelected && (
           <div className="content-select">
             <Row>
-              <Col>
+              <Col className="search_invite">
                 <ErpInput
                   nolabel
-                  placeholder="Search"
-                  className="search_invite"
-                  prepend={<i className="fa-regular fa-magnifying-glass"></i>}
+                  placeholder="Find members"
+                  prepend={
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none">
+                      <path
+                        d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                        stroke="#696760"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M22 22L20 20"
+                        stroke="#696760"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  }
                   onChange={(e) => handleFilterText(e.target.value)}
                 />
               </Col>
@@ -480,7 +504,7 @@ const EmployeesSelect = (props) => {
             {(state.dataSelected.length > 0 ||
               state.department_selected.length > 0) && (
               <>
-                <div className="d-flex p-1 pb-0 mb-50 member-selected-text">
+                <div className="d-flex pb-0 mb-50 member-selected-text">
                   {useFormatMessage(
                     "modules.workspace.display.member_selected",
                     {

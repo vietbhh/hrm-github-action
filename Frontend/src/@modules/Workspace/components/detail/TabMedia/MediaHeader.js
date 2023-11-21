@@ -38,36 +38,42 @@ const MediaHeader = (props) => {
     if (isMember === false) {
       return ""
     }
-    
+
     if (strDisplay !== "group_link_posted") {
       return (
         <Button.Ripple
-          className="btn-icon custom-secondary d-flex align-items-center"
+          className="btn-icon custom-secondary align-items-center"
           onClick={() => handleClickUpload()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="Layer_1"
-            x="0px"
-            y="0px"
-            width="16px"
-            height="16px"
-            viewBox="0 0 16 16"
-            enableBackground="new 0 0 16 16"
-            xmlSpace="preserve"
-            className="me-50">
-            {" "}
-            <image
-              id="image0"
-              width="16"
-              height="16"
-              x="0"
-              y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAATlBMVEUAAAAwQEwwQk0wQ1Ew Qk4yQ08xQ04yQk8wQlAyQ08xQ08wRVAzQ04wQFAwRE4yQk4yQlAyQlAxQ08yQk4wRFAwSFAzQU40 RFAyQ0////8xNEbBAAAAGHRSTlMAQGBff++gn2CfzzCwEICAcIC/kEAgoEB5Nk/7AAAAAWJLR0QZ 7G61iAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBQkvB8HCO/kAAABaSURBVBjTdc/R DoAgCAVQyoSy0tIs/v9Ly61Qt7wPjHs2HgBopOvrrpiHumtdimJEGnkSMAhIMC8CKySoU4B1GSzJ uu3C5XUDfAYTnnGwoTeeY+IYzi/Xz9s3dpoDw+hcxhcAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMt MDctMDVUMDk6NDc6MDcrMDA6MDAVtMFyAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA3LTA1VDA5 OjQ3OjA3KzAwOjAwZOl5zgAAAABJRU5ErkJggg=="
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            style={{ marginRight: "12px" }}
+            fill="none">
+            <path
+              d="M16.4405 8.90039C20.0405 9.21039 21.5105 11.0604 21.5105 15.1104V15.2404C21.5105 19.7104 19.7205 21.5004 15.2505 21.5004H8.74047C4.27047 21.5004 2.48047 19.7104 2.48047 15.2404V15.1104C2.48047 11.0904 3.93047 9.24039 7.47047 8.91039"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12 15.0001V3.62012"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M15.3504 5.85L12.0004 2.5L8.65039 5.85"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
-          {useFormatMessage("modules.workspace.buttons.upload")}
+          <span>{useFormatMessage("modules.workspace.buttons.upload")}</span>
         </Button.Ripple>
       )
     }

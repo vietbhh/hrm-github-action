@@ -10,6 +10,7 @@ import Introduction from "./Introduction"
 import GroupRule from "./GroupRule"
 import WorkspaceInfo from "./WorkspaceInfo"
 import EditGroupRuleModal from "../../modals/EditGroupRuleModal/EditGroupRuleModal"
+import { isMobileView } from "../../../common/common"
 
 const TabIntroduction = (props) => {
   const {
@@ -101,7 +102,7 @@ const TabIntroduction = (props) => {
   return (
     <div className="tab-introduction">
       <Row>
-        <Col md={8} lg={8} className="pe-0">
+        <Col md={8} lg={8} className="pe-0 introduction-container-col">
           <div>
             <Introduction
               id={id}
@@ -124,9 +125,11 @@ const TabIntroduction = (props) => {
             />
           </div>
         </Col>
-        <Col md={4} lg={4} className="pe-0">
-          <WorkspaceInfo workspaceInfo={state.workspaceInfo} />
-        </Col>
+        {!isMobileView() && (
+          <Col md={4} lg={4} className="ps-0">
+            <WorkspaceInfo workspaceInfo={state.workspaceInfo} />
+          </Col>
+        )}
       </Row>
 
       <EditGroupRuleModal

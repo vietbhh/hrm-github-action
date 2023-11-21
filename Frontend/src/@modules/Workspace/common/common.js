@@ -69,7 +69,7 @@ const getTabByNameOrId = (param) => {
   }
 
   if (type === "name") {
-    return Object.keys(listTabName).find(key => listTabName[key] === value)
+    return Object.keys(listTabName).find((key) => listTabName[key] === value)
   } else if (type === "value") {
     return listTabName[value]
   }
@@ -77,4 +77,18 @@ const getTabByNameOrId = (param) => {
   return undefined
 }
 
-export { getFileTypeFromMime, formatByte, getTabIdFromFeedType, getTabByNameOrId }
+const isMobileView = () => {
+  if (!window.matchMedia("(max-width: 767.98px)").matches) {
+    return false
+  }
+
+  return true
+}
+
+export {
+  getFileTypeFromMime,
+  formatByte,
+  getTabIdFromFeedType,
+  getTabByNameOrId,
+  isMobileView
+}

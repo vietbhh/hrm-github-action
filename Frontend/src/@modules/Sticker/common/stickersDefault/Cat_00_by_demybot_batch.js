@@ -6,7 +6,7 @@ const images = import.meta.globEager(
 
 export default {
   name: "sticker_default",
-  label: "Cat 00 by demybot",
+  label: "cute cat",
   list: convertImageToStickerList(images),
   default: true
 }

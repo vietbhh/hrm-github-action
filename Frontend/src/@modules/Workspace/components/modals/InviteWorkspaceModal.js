@@ -15,6 +15,7 @@ import {
 } from "reactstrap"
 
 import notification from "@apps/utility/notification"
+import { isMobileView } from "../../common/common"
 const InviteWorkspaceModal = (props) => {
   const { modal, handleModal, handleDone, member_selected } = props
   const [state, setState] = useMergedState({
@@ -68,7 +69,7 @@ const InviteWorkspaceModal = (props) => {
   return (
     <Modal
       isOpen={modal}
-      style={{ top: "100px" }}
+      style={{ top: "50px" }}
       toggle={() => handleModal()}
       backdrop={"static"}
       className="invite-workspace-modal-off"
@@ -76,12 +77,16 @@ const InviteWorkspaceModal = (props) => {
       modalTransition={{ timeout: 100 }}
       backdropTransition={{ timeout: 100 }}>
       <ModalHeader toggle={() => handleModal()}>
-        {useFormatMessage("modules.workspace.display.invite_memvers_to_group")}
+        {!isMobileView()
+          ? useFormatMessage(
+              "modules.workspace.display.invite_memvers_to_group"
+            )
+          : "Invite member"}
       </ModalHeader>
       <FormProvider {...methods}>
         <ModalBody>
-          <Row className="mt-50">
-            <Col sm={12} className="mb-1">
+          <Row>
+            <Col sm={12}>
               <span className="filter-text">
                 {useFormatMessage(
                   "modules.workspace.display.filter_member_category"
@@ -97,7 +102,7 @@ const InviteWorkspaceModal = (props) => {
           </Row>
         </ModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalFooter className="mt-2">
+          <ModalFooter>
             <Button
               type="button"
               onClick={() => handleAdd()}
@@ -105,7 +110,9 @@ const InviteWorkspaceModal = (props) => {
               disabled={state.loading}
               className="btn-send-invite ms-auto me-auto w-100">
               {state.loading && <Spinner size="sm" className="mr-50 mr-1" />}
-              {useFormatMessage("modules.workspace.buttons.send_invites")}
+              {!isMobileView()
+                ? useFormatMessage("modules.workspace.buttons.send_invites")
+                : useFormatMessage("modules.users.display.inviteBtn")}
             </Button>
           </ModalFooter>
         </form>

@@ -7,14 +7,13 @@ import { FormProvider, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, CardBody, Alert } from "reactstrap"
-import AvatarBox from "../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../common/api"
 import WorkspaceSettingLayout from "../components/detail/WorkspaceSettingLayout/WorkspaceSettingLayout"
-import EditInformationModal from "../components/modals/EditInformationModal"
 import WorkgroupPrivacy from "../components/detail/CreateWorkspace/WorkGroupPrivacy"
 import { isEmpty } from "lodash"
-import { Dropdown, Space } from "antd"
 import MenuSettingWorkspace from "../components/detail/MenuSettingWorkspace"
+import { isMobileView } from "../common/common"
+import EditInformation from "../components/modals/EditInformation"
 
 const findKeyByValue = (arr = [], value) => {
   const index = arr.findIndex((p) => p.value === value)
@@ -31,19 +30,11 @@ const checkMediaWidth = (x) => {
 const membership_approval = [
   {
     value: "approver",
-    label: "Admin",
+    label: "Admins & Moderators",
     icon: (
-      <div className="vector-green me-50">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none">
-          <path
-            d="M18.54 4.11984L13.04 2.05984C12.47 1.84984 11.54 1.84984 10.97 2.05984L5.47005 4.11984C4.41005 4.51984 3.55005 5.75984 3.55005 6.88984V14.9898C3.55005 15.7998 4.08005 16.8698 4.73005 17.3498L10.23 21.4598C11.2 22.1898 12.79 22.1898 13.76 21.4598L19.26 17.3498C19.91 16.8598 20.4401 15.7998 20.4401 14.9898V6.88984C20.4501 5.75984 19.59 4.51984 18.54 4.11984ZM15.48 9.71984L11.18 14.0198C11.03 14.1698 10.84 14.2398 10.65 14.2398C10.46 14.2398 10.27 14.1698 10.12 14.0198L8.52005 12.3998C8.23005 12.1098 8.23005 11.6298 8.52005 11.3398C8.81005 11.0498 9.29005 11.0498 9.58005 11.3398L10.66 12.4198L14.43 8.64984C14.72 8.35984 15.2 8.35984 15.49 8.64984C15.78 8.93984 15.78 9.42984 15.48 9.71984Z"
-            fill="white"
-          />
+      <div className="prefix-icon-admin-moderator">
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.5408 4.11984L13.0408 2.05984C12.4708 1.84984 11.5408 1.84984 10.9708 2.05984L5.47078 4.11984C4.41078 4.51984 3.55078 5.75984 3.55078 6.88984V14.9898C3.55078 15.7998 4.08078 16.8698 4.73078 17.3498L10.2308 21.4598C11.2008 22.1898 12.7908 22.1898 13.7608 21.4598L19.2608 17.3498C19.9108 16.8598 20.4408 15.7998 20.4408 14.9898V6.88984C20.4508 5.75984 19.5908 4.51984 18.5408 4.11984ZM15.4808 9.71984L11.1808 14.0198C11.0308 14.1698 10.8408 14.2398 10.6508 14.2398C10.4608 14.2398 10.2708 14.1698 10.1208 14.0198L8.52078 12.3998C8.23078 12.1098 8.23078 11.6298 8.52078 11.3398C8.81078 11.0498 9.29078 11.0498 9.58078 11.3398L10.6608 12.4198L14.4308 8.64984C14.7208 8.35984 15.2008 8.35984 15.4908 8.64984C15.7808 8.93984 15.7808 9.42984 15.4808 9.71984Z" fill="#00B3B3" />
         </svg>
       </div>
     ),
@@ -55,8 +46,12 @@ const membership_approval = [
     value: "auto",
     label: "Automatically approve",
     icon: (
-      <div className="vector-green me-50">
-        <i className="fa-duotone fa-unlock"></i>
+      <div className="prefix-icon-admin-moderator">
+        <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 22H7C3 22 2 21 2 17V15C2 11 3 10 7 10H17C21 10 22 11 22 15V17C22 21 21 22 17 22Z" stroke="#00B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M6 10V8C6 4.69 7 2 12 2C16.5 2 18 4 18 7" stroke="#00B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 18.5C13.3807 18.5 14.5 17.3807 14.5 16C14.5 14.6193 13.3807 13.5 12 13.5C10.6193 13.5 9.5 14.6193 9.5 16C9.5 17.3807 10.6193 18.5 12 18.5Z" stroke="#00B3B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
     ),
     text: useFormatMessage(
@@ -71,7 +66,7 @@ const SettingWorkspace = () => {
     tabActive: 1,
     detailWorkspace: {},
     loading: true,
-    editModal: false
+    editMode: false
   })
   const checkMobile = checkMediaWidth(
     window.matchMedia("(max-width: 767.98px)")
@@ -104,7 +99,7 @@ const SettingWorkspace = () => {
     loadData()
   }, [])
   const handleEditInformation = () => {
-    setState({ editModal: !state.editModal })
+    setState({ editMode: !state.editMode })
   }
 
   const handleDeleteWS = () => {
@@ -151,26 +146,33 @@ const SettingWorkspace = () => {
 
         <div className="col-md-12 ">
           <Card>
-            <CardBody className="p-50 d-flex align-items-center w-100">
-              <span className="url_workspace">{Url_workspace}</span>
+            <CardBody className="d-flex align-items-center w-100 body-title">
+              <div className="url_workspace">{Url_workspace}</div>
               <Button
                 color="success"
                 className="btn-blue ms-auto btn-sm"
                 onClick={() => handleCopyUrl()}>
-                {useFormatMessage("modules.workspace.buttons.copy")}{" "}
+                <span>
+                  {useFormatMessage("modules.workspace.buttons.copy")}
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
                   fill="none">
                   <path
-                    d="M1.80005 3.54526C1.80005 2.58127 2.58152 1.7998 3.5455 1.7998H10.5273C11.4913 1.7998 12.2728 2.58127 12.2728 3.54526V10.5271C12.2728 11.4911 11.4913 12.2725 10.5273 12.2725H3.5455C2.58152 12.2725 1.80005 11.4911 1.80005 10.5271V3.54526Z"
-                    fill="white"
+                    d="M13.33 13.65H15.5C15.6382 13.65 15.75 13.7605 15.75 13.9V17.82C15.75 19.0373 15.3289 19.945 14.684 20.5505C14.0341 21.1606 13.1179 21.5 12.07 21.5H6.18C5.13209 21.5 4.21587 21.1606 3.56598 20.5505C2.92107 19.945 2.5 19.0373 2.5 17.82V11.18C2.5 9.96273 2.92107 9.055 3.56598 8.44952C4.21587 7.83938 5.13209 7.5 6.18 7.5H9.35C9.48952 7.5 9.6 7.61179 9.6 7.75V9.92C9.6 11.9872 11.2749 13.65 13.33 13.65Z"
+                    fill="#F7F7F5"
+                    stroke="#F7F7F5"
                   />
                   <path
-                    d="M6.60005 13.5816C6.35905 13.5816 6.16369 13.777 6.16369 14.018C6.16369 14.982 6.94515 16.1998 7.90914 16.1998H14.4546C15.4186 16.1998 16.2 15.4183 16.2 14.4544V7.03617C16.2 6.07218 15.4186 5.29071 14.4546 5.29071H14.0819C13.8057 5.29071 13.5819 5.51457 13.5819 5.79071V10.5271C13.5819 12.2141 12.2143 13.5816 10.5273 13.5816H6.60005Z"
-                    fill="white"
+                    d="M17.8198 2H15.8498H14.7598H11.9298C9.66977 2 7.83977 3.44 7.75977 6.01C7.81977 6.01 7.86977 6 7.92977 6H10.7598H11.8498H13.8198C16.1298 6 17.9998 7.5 17.9998 10.18V12.15V14.86V16.83C17.9998 16.89 17.9898 16.94 17.9898 16.99C20.2198 16.92 21.9998 15.44 21.9998 12.83V10.86V8.15V6.18C21.9998 3.5 20.1298 2 17.8198 2Z"
+                    fill="#F7F7F5"
+                  />
+                  <path
+                    d="M11.9806 7.14975C11.6706 6.83975 11.1406 7.04975 11.1406 7.47975V10.0998C11.1406 11.1998 12.0706 12.0998 13.2106 12.0998C13.9206 12.1098 14.9106 12.1098 15.7606 12.1098C16.1906 12.1098 16.4106 11.6098 16.1106 11.3098C15.0206 10.2198 13.0806 8.26975 11.9806 7.14975Z"
+                    fill="#F7F7F5"
                   />
                 </svg>
               </Button>
@@ -183,40 +185,33 @@ const SettingWorkspace = () => {
           <Card>
             <CardBody>
               <div className="workspace_infomation d-flex w-100">
-                <div className="rounded-circle" style={{ width: "100px " }}>
-                  <AvatarBox
-                    currentAvatar={state.detailWorkspace?.avatar}
-                    loading={state.loading}
-                    readOnly={true}
-                  />
-                </div>
-                <div className="d-flex ms-1 w-100">
-                  <div>
-                    <div className="workspace_name">
-                      {state.detailWorkspace?.name}
+                <div className="w-100">
+                  {state.editMode && (
+                    <EditInformation
+                      handleEditInformation={handleEditInformation}
+                      infoWorkspace={state.detailWorkspace}
+                      loadData={loadData}
+                    />
+                  )}
+                  {!state.editMode && (
+                    <div className="d-flex w-100 align-items-start">
+                      <div>
+                        <div className="workspace_name">
+                          {state.detailWorkspace?.name}
+                        </div>
+                        <div className="workspace_introduction">
+                          {state.detailWorkspace?.description}
+                        </div>
+                      </div>
+                      <div className="ms-auto">
+                        <span
+                          className="workspace-text-link"
+                          onClick={() => handleEditInformation()}>
+                          Edit
+                        </span>
+                      </div>
                     </div>
-                    <div className="workspace_introduction">
-                      {state.detailWorkspace?.description}
-                    </div>
-                  </div>
-                  <div
-                    className="ms-auto vector"
-                    onClick={() => handleEditInformation()}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none">
-                      <path
-                        d="M12.3278 6.37223L15.6278 9.67223M4.07788 17.9222L8.08003 17.1158C8.2925 17.073 8.48758 16.9684 8.64079 16.8151L17.6 7.85098C18.0295 7.42119 18.0292 6.72454 17.5993 6.29512L15.7015 4.39938C15.2717 3.97013 14.5754 3.97043 14.146 4.40003L5.18591 13.3651C5.033 13.5181 4.92859 13.7128 4.88574 13.9248L4.07788 17.9222Z"
-                        stroke="#32434F"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
+                  )}
                 </div>
               </div>
             </CardBody>
@@ -226,7 +221,7 @@ const SettingWorkspace = () => {
           <div className="create-workspace-form">
             <Card>
               <CardBody>
-                <div className="pt-25 mb-1 ps-1 pe-1">
+                <div>
                   <WorkgroupPrivacy
                     methods={methods}
                     onChange={changeTypeMode}
@@ -240,7 +235,7 @@ const SettingWorkspace = () => {
             <div className="title-setting">Manage membership</div>
             <Card className="manage_membership">
               <CardBody>
-                <div className="ps-1 pe-1">
+                <div>
                   <FormProvider {...methods}>
                     <div className="field_switch">
                       <div>
@@ -266,27 +261,35 @@ const SettingWorkspace = () => {
                         }
                       />
                     </div>
-                    <ErpSelect
-                      name="membership_approval"
-                      loading={state.loading}
-                      label={useFormatMessage(
-                        "modules.workspace.fields.membership_approval"
-                      )}
-                      options={membership_approval}
-                      defaultValue={
-                        state.detailWorkspace?.membership_approval
-                          ? membership_approval[
-                              findKeyByValue(
-                                membership_approval,
-                                state.detailWorkspace?.membership_approval
-                              )
+                    <div className="field_select">
+                      <ErpSelect
+                        name="membership_approval"
+                        loading={state.loading}
+                        label={useFormatMessage(
+                          "modules.workspace.fields.membership_approval"
+                        )}
+                        options={membership_approval}
+                        defaultValue={
+                          state.detailWorkspace?.membership_approval
+                            ? membership_approval[
+                            findKeyByValue(
+                              membership_approval,
+                              state.detailWorkspace?.membership_approval
+                            )
                             ]
-                          : membership_approval[0]
-                      }
-                      isClearable={false}
-                      isSearchable={false}
-                      onChange={(e) => onSubmit({ membership_approval: e })}
-                    />
+                            : membership_approval[0]
+                        }
+                        isClearable={false}
+                        isSearchable={false}
+                        onChange={(e) => onSubmit({ membership_approval: e })}
+                        styles={{
+                          option: (styles, state) => ({
+                            ...styles,
+                            backgroundColor: state.isFocused ? "red" : ""
+                          })
+                        }}
+                      />
+                    </div>
                   </FormProvider>
                 </div>
               </CardBody>
@@ -295,38 +298,41 @@ const SettingWorkspace = () => {
             <div className="title-setting">Group management</div>
             <Card>
               <CardBody>
-                <div className="ps-1 pe-1">
-                  <div className="d-flex align-items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none">
-                      <path
-                        d="M7.83997 20.0201L9.42997 21.2101C10.84 22.2701 13.16 22.2701 14.57 21.2101L18.87 18.0001C19.82 17.2901 20.6 15.7401 20.6 14.5601V7.12012"
-                        stroke="#32434F"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M18.98 4.34006C18.83 4.25006 18.67 4.17006 18.51 4.10006L13.52 2.23006C12.69 1.92006 11.33 1.92006 10.5 2.23006L5.50003 4.11006C4.35003 4.54006 3.41003 5.90006 3.41003 7.12006V14.5501C3.41003 15.7301 4.19003 17.2801 5.14003 17.9901L5.34003 18.1401"
-                        stroke="#32434F"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M22 2L2 22"
-                        stroke="#32434F"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <div className="label-field ms-1">
-                      Deleting the group
+                <div>
+                  <div className="d-flex align-items-center group-management">
+                    <div>
+                      <svg
+                        width={40}
+                        height={40}
+                        className="icon-group-management"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M13.0664 33.3662L15.7164 35.3495C18.0664 37.1162 21.9331 37.1162 24.2831 35.3495L31.4497 29.9995C33.0331 28.8162 34.3331 26.2329 34.3331 24.2662V11.8662"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M31.6336 7.23327C31.3836 7.08327 31.1169 6.94994 30.8503 6.83327L22.5336 3.7166C21.1503 3.19993 18.8836 3.19993 17.5003 3.7166L9.16693 6.84994C7.25026 7.5666 5.68359 9.83327 5.68359 11.8666V24.2499C5.68359 26.2166 6.98359 28.7999 8.56693 29.9833L8.90026 30.2333"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M36.6673 3.33301L3.33398 36.6663"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div className="label-field">
+                      Delete Group
                       <div className="sub-label">
                         By deleting your group, you will delete all information
                         in this group: post, photos, videos,...
@@ -343,13 +349,61 @@ const SettingWorkspace = () => {
                         )}
                       </div>
                     </div>
-                    <Button
-                      color="secondary"
-                      className="btn-secondary ms-auto"
-                      disabled={state.detailWorkspace.is_system === true}
-                      onClick={() => handleDeleteWS()}>
-                      Delete
-                    </Button>
+                    {!isMobileView() ? (
+                      <Button
+                        color="danger"
+                        outline
+                        className="ms-auto"
+                        disabled={state.detailWorkspace.is_system === true}
+                        onClick={() => handleDeleteWS()}>
+                        Delete
+                      </Button>
+                    ) : (
+                      <svg
+                        width={80}
+                        height={40}
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        style={{ marginLeft: "5px" }}
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width={40} height={40} rx={12} fill="#FFE7E5" />
+                        <path
+                          d="M29 13.9805C25.67 13.6505 22.32 13.4805 18.98 13.4805C17 13.4805 15.02 13.5805 13.04 13.7805L11 13.9805"
+                          stroke="#E52717"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M16.5 12.97L16.72 11.66C16.88 10.71 17 10 18.69 10H21.31C23 10 23.13 10.75 23.28 11.67L23.5 12.97"
+                          stroke="#E52717"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M26.8499 17.1396L26.1999 27.2096C26.0899 28.7796 25.9999 29.9996 23.2099 29.9996H16.7899C13.9999 29.9996 13.9099 28.7796 13.7999 27.2096L13.1499 17.1396"
+                          stroke="#E52717"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M18.3301 24.5H21.6601"
+                          stroke="#E52717"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M17.5 20.5H22.5"
+                          stroke="#E52717"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
                   </div>
                 </div>
               </CardBody>
@@ -357,12 +411,6 @@ const SettingWorkspace = () => {
           </div>
         </div>
       </div>
-      <EditInformationModal
-        modal={state.editModal}
-        infoWorkspace={state.detailWorkspace}
-        handleModal={handleEditInformation}
-        loadData={loadData}
-      />
     </WorkspaceSettingLayout>
   )
 }

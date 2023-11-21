@@ -208,7 +208,7 @@ const WorkgroupMember = (props) => {
   return (
     <Card>
       <CardBody>
-        <div className="pt-0 section border-bot">
+        <div className="pt-0 section">
           <HeaderSection
             totalMember={state.totalMember}
             filter={state.filter}

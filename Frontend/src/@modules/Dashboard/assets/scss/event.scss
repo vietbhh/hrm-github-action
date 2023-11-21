@@ -1,12 +1,12 @@
+@import "@scss/friday";
 
 .sidebar-widget {
     .widget-events {
-
         .card-header {
             .card-title {
                 .title {
                     color: var(--neutral-shade-1, #121210);
-                    font-family: $font-family-sans-serif;
+                    //font-family: $font-family-sans-serif;
                     font-size: 18px;
                     font-style: normal;
                     font-weight: 500;
@@ -25,16 +25,17 @@
                 gap: 16px;
                 align-self: stretch;
                 border-radius: 12px;
-                background: var(--other-azure-100, #DBE7FF);
+                background: var(--other-azure-100, #dbe7ff);
                 margin-bottom: 16px;
                 cursor: pointer;
+
                 .icon-event {
                     display: flex;
                     padding: 8px;
                     align-items: flex-start;
                     gap: 4px;
                     border-radius: 50px;
-                    background: #E1ECFB;
+                    background: #e1ecfb;
                 }
             }
 
@@ -45,7 +46,7 @@
                 gap: 16px;
                 align-self: stretch;
                 border-radius: 12px;
-                background: var(--other-atomic-100, #FFEDE1);
+                background: var(--other-atomic-100, #ffede1);
 
                 .icon-birthday {
                     display: flex;
@@ -53,11 +54,12 @@
                     align-items: flex-start;
                     gap: 4px;
                     border-radius: 50px;
-                    background: #FCDCC6;
+                    background: #fcdcc6;
                 }
+
                 .birthday {
-                    color: var(--neutral-shade-2, #403F3A);
-                    font-family: $font-family-sans-serif;
+                    color: var(--neutral-shade-2, #403f3a);
+                    //font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -66,7 +68,7 @@
             }
 
             .div-birthday:hover {
-                cursor: pointer
+                cursor: pointer;
             }
 
             .no-total-event {
@@ -75,12 +77,13 @@
                     justify-content: center;
                     align-items: center;
                 }
+
                 .text {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    color: var(--neutral-shade-2, #403F3A);
-                    font-family: $font-family-sans-serif;
+                    color: var(--neutral-shade-2, #403f3a);
+                    //font-family: $font-family-sans-serif;
                     font-size: 15px;
                     font-style: normal;
                     font-weight: 400;
@@ -93,15 +96,15 @@
 }
 
 .modal-events {
-    max-width: 448px!important;
+    max-width: 448px !important;
 
     .modal-content {
-        padding: 24px!important;
+        padding: 24px !important;
 
         .modal-header {
             display: block;
             padding: 12px;
-            border-bottom: 0.5px solid #D9D7D0!important;
+            border-bottom: 0.5px solid #d9d7d0 !important;
 
             .image-birthday {
                 position: absolute;
@@ -115,24 +118,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             .title {
                 color: var(--neutral-shade-1, #121210);
                 text-align: center;
-                font-family: $font-family-sans-serif;
+                //font-family: $font-family-sans-serif;
                 font-size: 20px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: 32px;
                 margin-left: 30%;
             }
-            
-            .close-modal-events{
+
+            .close-modal-events {
                 cursor: pointer;
             }
         }
 
         .modal-body {
-            padding-top: 24px!important;
+            padding-top: 24px !important;
 
             .list-member {
                 display: flex;
@@ -148,12 +152,12 @@
                     align-items: center;
                     gap: 10px;
                     border-radius: 12px;
-                    background: var(--primary-500, #FFE658);
+                    background: var(--primary-500, #ffe658);
                     cursor: pointer;
 
                     .title {
-                        color: var(--neutral-shade-2, #403F3A);
-                        font-family: $font-family-sans-serif;
+                        color: var(--neutral-shade-2, #403f3a);
+                        //font-family: $font-family-sans-serif;
                         font-size: 12px;
                         font-style: normal;
                         font-weight: 500;
@@ -163,9 +167,10 @@
 
                 .info {
                     cursor: pointer;
+
                     .title {
-                        color: var(--neutral-shade-2, #403F3A);
-                        font-family: $font-family-sans-serif;
+                        color: var(--neutral-shade-2, #403f3a);
+                        //font-family: $font-family-sans-serif;
                         font-size: 15px;
                         font-style: normal;
                         font-weight: 500;
@@ -176,6 +181,3 @@
         }
     }
 }
-
-
-        

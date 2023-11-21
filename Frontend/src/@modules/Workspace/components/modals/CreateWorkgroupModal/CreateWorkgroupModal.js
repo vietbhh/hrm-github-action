@@ -89,7 +89,7 @@ const CreateWorkgroupModal = (props) => {
       </ModalHeader>
       <ModalBody>
         <FormProvider {...methods}>
-          <div className="mb-25 mt-75">
+          <div>
             <WorkspaceCover
               src=""
               dataSave={{}}
@@ -98,12 +98,12 @@ const CreateWorkgroupModal = (props) => {
               setImage={setImage}
             />
           </div>
-          <div className="p-1">
+          <div className="workspace-form">
             <WorkspaceForm methods={methods} />
           </div>
         </FormProvider>
       </ModalBody>
-      <ModalFooter className="p-1 pb-50 pt-0">
+      <ModalFooter className="p-0">
         <form onSubmit={handleSubmit(onSubmit)} className="w-100 m-0">
           <Button.Ripple
             type="submit"
@@ -111,7 +111,7 @@ const CreateWorkgroupModal = (props) => {
             block
             disabled={state.submitting}>
             {state.submitting && <Spinner size="sm" className="me-50" />}
-            {useFormatMessage("app.create")}
+            {useFormatMessage("app.create") + " Group"}
           </Button.Ripple>
         </form>
       </ModalFooter>

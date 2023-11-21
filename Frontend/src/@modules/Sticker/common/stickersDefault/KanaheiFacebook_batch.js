@@ -6,7 +6,7 @@ const images = import.meta.globEager(
 
 export default {
   name: "sticker_default",
-  label: "KanaheiFacebook",
+  label: "kanahei",
   list: convertImageToStickerList(images),
   default: true
 }

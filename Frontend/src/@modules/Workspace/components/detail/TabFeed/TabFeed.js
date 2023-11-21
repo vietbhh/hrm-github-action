@@ -11,12 +11,21 @@ import { stripHTML } from "layouts/_components/vertical/common/common"
 import { map } from "lodash-es"
 import moment from "moment"
 import { Fragment, useEffect } from "react"
+import { useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader, Col } from "reactstrap"
+import { Button, Card, CardBody, CardHeader, Col, CardTitle } from "reactstrap"
 import { getTabByNameOrId } from "../../../common/common"
 import AboutWorkgroup from "./AboutWorkgroup"
-// ** redux
-import { useSelector } from "react-redux"
+import { Swiper, SwiperSlide } from "swiper/react"
+import SwiperCore, {
+  Autoplay,
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y
+} from "swiper"
+import { Collapse } from "antd"
+import LoadPost from "@src/components/hrm/LoadPost/LoadPost"
 
 const TabFeed = (props) => {
   const {
@@ -27,7 +36,6 @@ const TabFeed = (props) => {
     setSearchTextFeed,
     tabToggle
   } = props
-
   const [state, setState] = useMergedState({
     prevScrollY: 0,
     dataCreateNew: {},
@@ -59,7 +67,6 @@ const TabFeed = (props) => {
   }
   useEffect(() => {
     loadData()
-
     const arrAdmin = detailWorkspace?.administrators
       ? detailWorkspace?.administrators
       : []
@@ -150,133 +157,104 @@ const TabFeed = (props) => {
     )
     tabToggle(parseInt(tabId))
   }
+  // added
+  const renderPostPined = (data = []) => {
+    return data.map((item, key) => {
+      const customAction = {
+        un_pin_post: {
+          label: (
+            <div className="d-flex">
+              <PushpinOutlined style={{ fontSize: "18px" }} />
+              <span>
+                {useFormatMessage("modules.workspace.text.unpin_post")}
+              </span>
+            </div>
+          ),
+          onClick: () => handleUnPinPost(item?._id),
+          condition: true
+        }
+      }
 
-  const renderPinned = (data = []) => {
-    let count = 0
-    return (
-      <Card className="mb-1 div-pinned-post">
-        <CardHeader>
-          <h2 className="card-title">
-            <i className="fa-regular fa-thumbtack me-50"></i>
-            {useFormatMessage(
-              "modules.workspace.display.workspace_pinned_post"
-            )}
-          </h2>
-        </CardHeader>
-        <CardBody>
-          {data.map((item, key) => {
-            count += 1
-            if (count >= 4) return
-            const items = [
-              {
-                label: (
-                  <div className="d-flex">
-                    <PushpinOutlined
-                      style={{ fontSize: "18px" }}
-                      className="me-50"
-                    />
-                    <span>
-                      {useFormatMessage("modules.workspace.text.unpin_post")}
-                    </span>
-                  </div>
-                ),
-                key: "0",
-                onClick: () => handleUnPinPost(item?._id)
-              },
-              {
-                label: (
-                  <div>
-                    <i className="fa-regular fa-arrow-up me-50"></i>
-                    <span>
-                      {useFormatMessage("modules.workspace.text.move_to_top")}
-                    </span>
-                  </div>
-                ),
-                key: "1",
-                onClick: () => handlePinTop(item?._id)
-              },
-              {
-                label: (
-                  <div className="d-flex">
-                    <i className="fa-regular fa-arrow-right me-50"></i>
-                    <span>
-                      {useFormatMessage(
-                        "modules.posts.post_details.buttons.go_to_post"
-                      )}
-                    </span>
-                  </div>
-                ),
-                key: "2",
-                onClick: () => {
-                  navigate(`/posts/${item._id}`)
-                }
-              }
-            ]
-
-            return (
-              <Col sm={12} key={`item-pinned-${key}`}>
-                <div className="post-pinned">
-                  <div className="content-post d-flex align-items-center mb-50">
-                    <div className="ellipsis">
-                      <Link
-                        className="text-primary-color text-truncate"
-                        to={`/posts/${item._id}`}>
-                        {stripHTML(item?.content)} 
-                      </Link>
-                      <div
-                        className="post-info d-flex align-items-center mt-50"
-                        style={{ fontSize: "12px" }}>
-                        <div className="me-50 d-flex align-items-center">
-                          <Avatar src={item.created_by?.avatar} size="sm" />{" "}
-                          <div className="ms-50">
-                            {item.created_by?.full_name}
-                          </div>
-                        </div>
-                        <div className="me-50">
-                          <i className="fa-duotone fa-calendar-days me-50"></i>{" "}
-                          {moment(item?.created_at).format("DD MMM, YYYY")}
-                        </div>
-                        <div>
-                          <i className="fa-regular fa-eye me-50"></i>{" "}
-                          {item.seen.length}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="ms-auto">
-                      {item?.thumb && (
-                        <Photo src={item?.thumb} width={"60px"} />
-                      )}
-                    </div>
-                    <Dropdown
-                      menu={{
-                        items
-                      }}
-                      trigger={["click"]}>
-                      <Button className="ms-1" color="flat-secondary" size="sm">
-                        <i className="fa-solid fa-ellipsis-vertical"></i>
-                      </Button>
-                    </Dropdown>
-                  </div>
-                  <hr className="pd-0"></hr>
-                </div>
-              </Col>
-            )
-          })}
-          <div>
-            {data.length > 3 && (
-              <Button.Ripple
-                size="sm"
-                className="load-more-pinned custom-secondary"
-                onClick={() => handleClickLoadMorePinned()}>
-                <i className="far fa-arrow-to-right me-50"></i>
-                {useFormatMessage("modules.workspace.buttons.load_more")}
-              </Button.Ripple>
-            )}
+      return (
+        <SwiperSlide key={key}>
+          <div className="announcement-item workspace-post-pined">
+            <LoadPost
+              data={item}
+              dataMention={state.dataMention}
+              dataLink={item.dataLink}
+              customAction={customAction}
+            />
           </div>
-        </CardBody>
-      </Card>
-    )
+        </SwiperSlide>
+      )
+    })
   }
+  const items = [
+    {
+      key: "1",
+      label: (
+        <>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12 8V13"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M11.9941 16H12.0031"
+              stroke="#696760"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {"  "}
+          Post Were Pinned
+        </>
+      ),
+      children: (
+        <>
+          <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            slidesPerView={3}
+            spaceBetween={10}
+            autoplay
+            navigation={true}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20
+              },
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 40
+              },
+              1024: {
+                slidesPerView: 2,
+                spaceBetween: 22
+              }
+            }}
+            className="announcements">
+            {renderPostPined(state.dataPinned)}
+          </Swiper>
+        </>
+      )
+    }
+  ]
 
   const checkPinPost = (_id) => {
     const arr = [...detailWorkspace.pinPosts].map((v) => v.post)
@@ -327,7 +305,6 @@ const TabFeed = (props) => {
 
     return ""
   }
-
   return (
     <div className="div-content tab-feed">
       <div className="div-left feed">
@@ -341,12 +318,60 @@ const TabFeed = (props) => {
           />
         )}
         <Fragment>
-          {!_.isEmpty(state.dataPinned) && renderPinned(state.dataPinned)}
+          <div className="workspace">
+            {state.dataPinned.length !== 0 && (
+              <div className="workspace-pined">
+                <Card className="card-announcement mb-1 rounded">
+                  <CardTitle className="mb-0">
+                    <Collapse
+                      defaultActiveKey={["1"]}
+                      ghost
+                      items={items}
+                      expandIconPosition={"end"}
+                      expandIcon={(panelProps) => {
+                        return panelProps.isActive ? (
+                          <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 40 40"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
+                              stroke="#696760"
+                              strokeWidth="1.5"
+                              strokeMiterlimit="10"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 40 40"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M27.9201 16.95L21.4001 23.47C20.6301 24.24 19.3701 24.24 18.6001 23.47L12.0801 16.95"
+                              stroke="#696760"
+                              strokeWidth="1.5"
+                              strokeMiterlimit="10"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )
+                      }}
+                    />
+                  </CardTitle>
+                </Card>
+              </div>
+            )}
+          </div>
         </Fragment>
         <Fragment>{renderSearchText()}</Fragment>
         <LoadFeed
-          isWorkspace={true}
-          maxPostQuantity={30}
           searchTextFeed={searchTextFeed}
           dataCreateNew={state.dataCreateNew}
           setDataCreateNew={setDataCreateNew}
@@ -354,7 +379,7 @@ const TabFeed = (props) => {
           apiLoadFeed={apiLoadFeed}
           customAction={customActionPost}
           setSearchTextFeed={setSearchTextFeed}
-          handleUnPinPost = {handleUnPinPost}
+          handleUnPinPost={handleUnPinPost}
         />
       </div>
       <div className="div-right">

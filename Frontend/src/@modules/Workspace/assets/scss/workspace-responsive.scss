@@ -1,285 +1,587 @@
 @media (max-width: 767.98px) {
-.list-workspace-page  {
+  @import "workspace-changed-responsive.scss";
+  .modal-body {
+    padding: 0;
+    .p-1 {
+      padding: 0 !important;
+    }
+  }
+  .create-workspace-form {
+    .row-area {
+      margin-bottom: 0 !important;
+    }
+    .field-label {
+      font-size: 12px;
+      color: #696760;
+      font-weight: 400;
+      line-height: 16px;
+      margin-top: 24px;
+      margin-bottom: 8px !important;
+    }
+    .chat-title {
+      margin-top: 16px;
+    }
+    input::placeholder,
+    textarea::placeholder {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #696760;
+    }
+    .chat-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #121210;
+      margin-bottom: 4px !important;
+    }
+    .field-title {
+      margin-bottom: 4px !important;
+    }
+    .field-description {
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 16px;
+      color: #696760;
+    }
+    .text-label {
+      // position: absolute;
+      // padding-left: 45px;
+    }
+  }
+
+  .create-workgroup-modal {
+    .modal-content {
+      .modal-header {
+        border-bottom: none !important;
+        height: 10px;
+        .modal-title {
+          font-size: 20px !important;
+          font-weight: 500 !important;
+          line-height: 32px;
+          color: #121210 !important;
+        }
+      }
+    }
+    .create-workspace-form {
+      .input-group-text-custom {
+        background-color: #fff !important;
+      }
+    }
+    .modal-footer {
+      margin-top: 24px;
+    }
+  }
+
+  .list-workspace-page {
     padding-left: 0px !important;
     padding-right: 0px !important;
-    .text-color-title{
-        font-size: 24px !important;
-        font-style: normal;
-        font-weight: 600;
+    .text-color-title {
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 600;
     }
-    .body{
-        .card-workspace-managed{
-            padding: 0;
-            background-color : transparent !important;
-            padding-left: 0px !important;
-            padding-right: 0px !important;
-            .card-header{
-                padding: 0px;
-                .text-color-title{
-                    font-size: 18px !important;
-                    font-weight: 500;
-                }
-            }
-            .card-body{
-                padding: 0px;
-                .workspace-manage-list{
-                    .workspace-item{
-                        border-radius: 16px;
-                        background: var(--other-white, #FFF);
-                        display: flex;
-                        align-items: center!important;
-                        .image-container{
-                            margin-bottom: 0px !important;
-                            padding: 8px;
-                            height: auto !important;
-                            width: auto !important;
-                            img{
-                                border-radius: 12px;
-                                width: 76px !important;
-                                height: 76px !important;
-                            }
-                            .ant-image{
-                                border-radius: 12px;
-                                width: 76px !important;
-                                height: 76px !important;
-                            }
-                        }
-                        .content-container{
-                            display: flex;
-                            align-items: center!important;
-                            width: 100%;
-                            .text-color-title {
-                                font-size: 15px !important;
-                                font-style: normal;
-                                font-weight: 400;
-                            }
-                            .btn-container{
-                                margin-left: auto;
-                                button{
-                                    border-radius: 12px !important;
-                                }
-                            }
-                        }
-                    }
-                    .col {
-                        width: 100% !important;
-                        flex: none;
-                    }
-                }
-
-                .workspace-joined-list{
-                    margin-top: 1rem;
-                    .workspace-item{
-                        border-radius: 16px;
-                        background: var(--other-white, #FFF);
-                        display: flex;
-                        align-items: center!important;
-                        justify-content: normal !important;
-                        .image-container{
-                            
-                            border : none !important;
-                            margin-bottom: 0px !important;
-                            padding: 8px;
-                            height: auto !important;
-                            width: auto !important;
-                            img{
-                                border-radius: 12px;
-                                width: 64px !important;
-                                height: 64px !important;
-                            }
-                        }
-                        .content-container{
-                            border : none !important;
-                            display: flex;
-                            align-items: center!important;
-                            width: 100% !important;
-                            .text-color-title {
-                                font-size: 15px !important;
-                                font-style: normal;
-                                font-weight: 400;
-                            
-                            }
-                            .btn-container{
-                                margin-left: auto;
-                            }
-                        }
-                    }
-                    .col-sm-6 {
-                        width: 100% !important;
-                        flex: none;
-                    }
-                }
-
-            }
-
+    .header {
+      .workspace-search-desktop {
+        display: none;
+      }
+      .btn-create-workgroup {
+        padding: 5px 5px;
+        font-size: 13px;
+        border-radius: 12px !important;
+        width: 138px;
+        span {
+          line-height: 26px;
         }
+      }
+      p {
+        &.title {
+          font-size: 24px;
+        }
+      }
+      svg {
+        margin: 2px !important;
+      }
     }
+    .body {
+      .card-workspace-managed {
+        padding: 0;
+        background-color: transparent !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        .card-header {
+          padding: 0px;
+          margin-bottom: 10px;
+          .text-color-title {
+            font-size: 24px;
+            font-weight: 600;
+          }
+          small {
+            font-size: 12px;
+          }
+          h5 {
+            &.text-color-title {
+              font-size: 18px;
+              line-height: 28px;
+            }
+          }
+          .link {
+            font-size: 14px;
+          }
+        }
+        .card-body {
+          padding: 0px;
+          .workspace-manage-list {
+            .workspace-item {
+              border-radius: 16px;
+              background: var(--other-white, #fff);
+              display: flex;
+              align-items: center !important;
+              .image-container {
+                margin-bottom: 0px !important;
+                padding: 8px;
+                height: auto !important;
+                width: auto !important;
+                img {
+                  border-radius: 12px;
+                  width: 76px !important;
+                  height: 76px !important;
+                }
+                .ant-image {
+                  border-radius: 12px;
+                  width: 76px !important;
+                  height: 76px !important;
+                }
+              }
+              .content-container {
+                display: flex;
+                align-items: center !important;
+                width: 100%;
+                .text-color-title {
+                  font-size: 15px !important;
+                  font-style: normal;
+                  font-weight: 400;
+                }
+                .btn-container {
+                  margin-left: auto;
+                  button {
+                    border-radius: 12px !important;
+                  }
+                }
+              }
+            }
+            .col {
+              width: 100% !important;
+              flex: none;
+            }
+          }
 
-}
-.invite-workspace-modal-off{
+          .workspace-joined-list {
+            margin-top: 1rem;
+            .workspace-item {
+              border-radius: 16px;
+              background: var(--other-white, #fff);
+              display: flex;
+              align-items: center !important;
+              justify-content: normal !important;
+              .image-container {
+                border: none !important;
+                margin-bottom: 0px !important;
+                padding: 8px;
+                height: auto !important;
+                width: auto !important;
+                img {
+                  border-radius: 12px;
+                  width: 64px !important;
+                  height: 64px !important;
+                }
+              }
+              .content-container {
+                border: none !important;
+                display: flex;
+                align-items: center !important;
+                width: 100% !important;
+                .text-color-title {
+                  font-size: 15px !important;
+                  font-style: normal;
+                  font-weight: 400;
+                }
+                .btn-container {
+                  margin-left: auto;
+                }
+              }
+            }
+            .col-sm-6 {
+              width: 100% !important;
+              flex: none;
+            }
+          }
+        }
+      }
+    }
+    .workspace-search-mobile {
+      margin-top: 14px;
+      margin-bottom: 14px;
+      display: block;
+      .input-group-text {
+        padding: 0 10px;
+      }
+      input[name="search"] {
+        border-radius: 16px;
+      }
+      .input-group-text {
+        border-bottom-right-radius: 16px;
+        border-top-right-radius: 16px;
+      }
+    }
+  }
+  .invite-workspace-modal-off {
     width: auto !important;
-    .modal-body{
-     padding: 0 !important;
-     .content-select{
+    .modal-body {
+      padding: 0 !important;
+      .content-select {
         width: 100%;
-     }
-     .content-selected{
+      }
+      .content-selected {
         margin-left: 0;
         width: 100%;
         justify-content: center;
-     }
+      }
     }
-}
-.separate-sidebar-layout{
-    .wrapper__menu-content{
-        padding : 0 24px !important;
-        .app-content{
-            margin-left : 0px !important;
-        }
-    }
-    .app-content{
-        .content-wrapper{
-            .tab-pane{
-            .div-content{
-                .div-left{
-                    width: 100% !important;
-                    margin-right: 0px !important;
-                }
-            }
-        }
-
-    }
-}
-
-
-}
-.workspace{
-    .work-space-header{
-        height: 262px !important;
-        .card-body{
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            .name-and-action{
-                .workspaceAction{
-                    padding-right: 0.25rem !important;
-                }
-            }
-            .nav-tab-custom{
-                padding-top: 5px !important;
-                padding-left: 0.25rem !important;
-            }
-        }
-        .image-cover{
-            height : 120px !important;
-            .ant-image{
-                height: 120px !important;
-            }
-            .cameraBtn{
-                left: 78% !important;
-                padding: 3px 10px !important;
-            }
-            .coverPhoto{
-                height: 120px !important;
-                min-height : 120px !important;
-            }
-        }
-    }
-    .tab-content{
-        .tab-pane{
-            .tab-introduction{
-                .row{
-                    margin-right: 0px !important;
-                }
-            }
-        }
-    }
-}
-.modal {
-        background: rgba(19, 19, 38, 0.10);
-        backdrop-filter: blur(11px);
-}
-
-.workspace-setting-layout-page {
-    .nav-container{
-        display: none !important;
-    }
-    .content-container{
-        margin-left: 0px !important;
-    }
-}
-.preview-workspace-media-modal{
     .modal-content {
-        .modal-body{
-            .preview-image{
-                img{
-                    height : auto !important
-                }
+      .modal-header .modal-title {
+        font-size: 20px !important;
+      }
+      .modal-footer {
+        padding: 0;
+      }
+    }
+  }
+  .separate-sidebar-layout {
+    .wrapper__menu-content {
+      padding: 0 24px !important;
+      .app-content {
+        margin-left: 0px !important;
+      }
+    }
+    .app-content {
+      .content-wrapper {
+        .tab-pane {
+          .div-content {
+            .div-left {
+              width: 100% !important;
+              margin-right: 0px !important;
             }
+          }
         }
+      }
     }
-}   
+  }
+  .workspace {
+    .work-space-header {
+      height: auto !important;
+      padding-bottom: 5px !important;
+      .card-body {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        .name-and-action {
+          .workspaceAction {
+            padding-right: 0.25rem !important;
+            .btn-chat {
+              height: 32px;
+              width: 36px !important;
+            }
+            button {
+              font-size: 14px !important;
+              font-weight: 600;
+              line-height: 20px;
+              text-transform: capitalize;
+              width: 91px;
+              padding: 0 !important;
+              height: 38px;
+            }
+          }
+          .workspaceOverviewInfo {
+            width: 200%;
+          }
+        }
+        .nav-tab-custom {
+          margin-top: 20px !important;
+          padding-top: 8px;
+        }
+      }
+      .image-cover {
+        height: 120px !important;
+        .ant-image {
+          height: 120px !important;
+        }
+        .cameraBtn {
+          left: 78% !important;
+          padding: 3px 10px !important;
+          height: 36px;
+          margin-left: -12px;
+          padding-top: 7px !important;
+        }
+        .coverPhoto {
+          height: 120px !important;
+          min-height: 120px !important;
+        }
+      }
+      .action-nav {
+        .ant-space-item {
+          button {
+            padding: 4px !important;
+            border-radius: 8px !important;
+            background-color: #f2f1ed !important;
+            height: 40px;
+            width: 32px !important;
+            height: 32px;
+          }
+          .form-group {
+            width: 180px;
+          }
+          .select__control {
+            background-color: #f2f1ed;
+          }
+        }
+      }
+    }
+    .tab-content {
+      .tab-pane {
+        .tab-introduction {
+          .row {
+            margin-right: 0px !important;
+          }
+          .common-card-title {
+            font-size: 15px;
+          }
+          .introduction-text {
+            margin-top: 2px !important;
+          }
+        }
+        .introduction-container,
+        .group-rule-container {
+          .card-body {
+            padding: 16px;
+          }
+        }
+        .group-rule-container {
+          .empty-title {
+            color: #000 !important;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 32px;
+          }
+          .empty-text {
+            width: 342px;
+            padding-left: 138px;
+          }
+          .btn-primary {
+            @extend %workspace-button;
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #ffe658 !important;
+            height: 36px;
+          }
+        }
+      }
+      .tab-member {
+        // .row {
+        //   div:first-child {
+        //     order: 1;
+        //   }
+        // }
+      }
+      .tab-media {
+        .title {
+          font-size: 15px !important;
+        }
+        .custom-secondary {
+          width: 115px;
+          background-color: #dbe7ff !important;
+          color: #4986ff !important;
+          svg path {
+            stroke: #4986ff;
+          }
+        }
+        .empty-member {
+          overflow: hidden;
+        }
+      }
+    }
+  }
+  .modal {
+    background: rgba(19, 19, 38, 0.1);
+    backdrop-filter: blur(11px);
+  }
 
-.workspace-pending-post {
-    .num_of_pending{
-        font-size: 15px !important;
+  .workspace-setting-layout-page {
+    .nav-container {
+      display: none !important;
     }
-}
-.workspace-setting-layout-page {
     .content-container {
-        .request-to-join-container {
-            .header {
-                .title{
-                    font-size: 15px;
-                }
-            }
-        }
+      margin-left: 0px !important;
     }
-}
-.info-workgroup-modal{
-    .about-group-container{
-        box-shadow : none !important;
-            .card-header{
-                padding: 0px !important;
+  }
+  .preview-workspace-media-modal {
+    .modal-content {
+      .modal-body {
+        .preview-image {
+          img {
+            height: auto !important;
+          }
+        }
+        .ant-space-item {
+          button {
+            background-color: #eaeded !important;
+            border: none;
+            height: 40px;
+            width: 40px;
+            svg {
+              position: absolute;
+              top: 8px;
+              left: 10px;
             }
-            .card-body{
-                padding: 0px !important;
-                .workspace-info-item{
-                    .icon-section{
-                        margin-right: 0.5rem ;
-                    }
-                    
-                }
-                .footer-about{
-                    button{
-                        width: 100%;
-                        border-radius: 12px;
-                        background: var(--neutral-shade-9, #F2F1ED) !important;
-                        border-color: var(--neutral-shade-9, #F2F1ED) !important;
-                        color: var(--neutral-shade-2, #403F3A) !important;
-                        font-size: 14px;
-                        font-weight: 600;
+          }
+        }
+      }
+    }
+  }
 
-                    }
-                }
-            }
+  .workspace-pending-post {
+    .num_of_pending {
+      font-size: 15px !important;
+      font-weight: 400 !important;
+      margin-right: 15px;
     }
-}
-.select-option-menu-workgroup{
-    .select__control{
-        border: none !important;
-        .select__single-value{
-            font-size: 18px !important;
+    .btn-action-primary,
+    .btn-action-secondary {
+      width: 118px;
+      height: 36px;
+      padding: 8px 16px !important;
+      padding-bottom: 30px !important;
+    }
+    .btn-action-primary {
+      margin-right: 7px !important;
+    }
+    .card-body {
+      padding: 16px;
+    }
+  }
+  .workspace-setting-layout-page {
+    .content-container {
+      .card-body {
+        padding: 16px;
+      }
+      .request-to-join-container {
+        .header {
+          .title {
+            font-size: 15px;
+            width: 90px;
+            font-weight: 400;
+          }
         }
-    } 
-}
+        .button-section {
+          height: 36px;
+          .btn {
+            padding: 8px 16px;
+            height: 36px !important;
+          }
+        }
+      }
+    }
+  }
+  .info-workgroup-modal {
+    .about-group-container {
+      box-shadow: none !important;
+      .card-header {
+        padding: 0px !important;
+        border-bottom: none !important;
+        .info-title {
+          @extend %workspace-common-title;
+        }
+      }
+      .card-body {
+        padding: 0px !important;
+        border: none;
+        .workspace-info-item {
+          .icon-section {
+            margin-right: 0.5rem;
+          }
+          .text-section {
+            margin-left: 3px;
+            .title {
+              margin-bottom: 2px !important;
+            }
+          }
+          margin-bottom: 14px;
+        }
+        .footer-about {
+          button {
+            width: 100%;
+            border-radius: 12px;
+            background: var(--neutral-shade-9, #f2f1ed) !important;
+            border-color: var(--neutral-shade-9, #f2f1ed) !important;
+            color: var(--neutral-shade-2, #403f3a) !important;
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+      }
+      .introduction-content {
+        .introduction-text {
+          margin-top: 0 !important;
+        }
+      }
+    }
+  }
+  .select-option-menu-workgroup {
+    .select__control {
+      border: none !important;
+      .select__single-value {
+        font-size: 18px !important;
+      }
+    }
+  }
+  .setup-notification-workspace-modal {
+    width: 380px;
+    .modal-content {
+      .modal-header {
+        .modal-title {
+          padding: 0 !important;
+        }
+      }
+      .modal-body {
+        margin: 24px 0;
+      }
+    }
+  }
+  .workspace-setting {
+    // .card {
+    //   width: 120px;
+    // }
+    .url_workspace {
+      width: 200px;
+    }
+    .title-setting {
+      color: #8c8a82 !important;
+      font-size: 14px;
+    }
+    .card {
+      margin-top: 16px !important;
+      margin-bottom: 16px !important;
+    }
+    .icon-group-management {
+      width: 65px;
+    }
+  }
 }
 @media (max-width: 1199px) {
-    .separate-sidebar-layout{
-        .wrapper__menu-content{
-            .app-content{
-                margin-left : 0px !important;
-            }
-        }
+  .separate-sidebar-layout {
+    .wrapper__menu-content {
+      .app-content {
+        margin-left: 0px !important;
+      }
     }
+  }
 }
-

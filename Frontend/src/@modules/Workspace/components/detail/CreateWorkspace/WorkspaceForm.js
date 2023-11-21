@@ -20,8 +20,8 @@ const WorkspaceForm = (props) => {
   // ** render
   return (
     <div className="create-workspace-form">
-      <div className="mb-1">
-        <p className="mb-25 field-label">
+      <div className="row-area-name">
+        <p className="field-label">
           {useFormatMessage("modules.workspace.fields.workgroup_name")}*
         </p>
         <ErpInput
@@ -36,8 +36,8 @@ const WorkspaceForm = (props) => {
           )}
         />
       </div>
-      <div className="mb-1">
-        <p className="mb-25 field-label">
+      <div className="row-area-description">
+        <p className="field-label">
           {useFormatMessage("modules.workspace.fields.description")}*
         </p>
         <ErpInput
@@ -54,9 +54,9 @@ const WorkspaceForm = (props) => {
           )}
         />
       </div>
-      <div className="d-flex align-items-center justify-content-between mb-1 pt-25">
+      <div className="d-flex align-items-center justify-content-between chat-title">
         <div>
-          <p className="mb-0 field-label">
+          <p className="field-title">
             {useFormatMessage("modules.workspace.display.group_chat")}
           </p>
           <small className="field-description">
@@ -74,7 +74,7 @@ const WorkspaceForm = (props) => {
           />
         </div>
       </div>
-      <div className="pt-25">
+      <div className="workgroup-privacy">
         <WorkgroupPrivacy methods={methods} />
       </div>
     </div>

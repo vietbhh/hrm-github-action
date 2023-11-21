@@ -8,7 +8,6 @@ import { Button } from "reactstrap"
 import defaultWorkSpaceCover from "@modules/Workspace/assets/images/default_workspace_cover.webp"
 import ListMember from "./ListMember"
 import Photo from "@apps/modules/download/pages/Photo"
-import { Tooltip } from "antd"
 
 const WorkspaceItem = (props) => {
   const {
@@ -61,21 +60,21 @@ const WorkspaceItem = (props) => {
             onClick={() => handleClickViewGroup()}>
             <Fragment>{renderCoverImage()}</Fragment>
           </div>
-          <div className="p-1 content-container">
-            <div className="mb-1">
-              <Tooltip placement="top" title={infoWorkspace.name} style={{backgroundColor:"yellow"}}>
-                  <p className="mb-0 text-color-title" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} onClick={() => handleClickViewGroup()}>
-                    {infoWorkspace.name}
-                  </p>
-              </Tooltip>
+          <div className="content-container">
+            <div className="item-title">
+              <p
+                className="text-color-title"
+                onClick={() => handleClickViewGroup()}>
+                {infoWorkspace.name}
+              </p>
               <small>
-                {infoWorkspace.type} • {addComma(infoWorkspace.total_member)}{" "}
+                {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
                 {infoWorkspace.total_member === 1
                   ? useFormatMessage("modules.workspace.display.member")
                   : useFormatMessage("modules.workspace.display.members")}
               </small>
             </div>
-            <div className="btn-container">
+            <div className="btn-container text-center">
               <Button.Ripple
                 color="secondary"
                 className="custom-secondary common-border"
@@ -92,17 +91,13 @@ const WorkspaceItem = (props) => {
           <div className="me-50 image-container common-border">
             <Fragment>{renderCoverImage()}</Fragment>
           </div>
-          <div className="p-75 d-flex align-items-center justify-content-between gap-1 content-container common-border">
-            <div style={{ flex: "3", overflow: "hidden" }}>
+          <div className="d-flex align-items-center justify-content-between gap-1 content-container common-border">
+            <div>
               <div className="mb-25">
-                <Tooltip placement="top" title={infoWorkspace.name} style={{backgroundColor:"yellow"}}>
-                  <p className="mb-0 text-color-title" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {infoWorkspace.name}
-                  </p>
-                </Tooltip>
+                <p className="mb-0 text-color-title">{infoWorkspace.name}</p>
                 <small>
-                  {infoWorkspace.type} • {addComma(infoWorkspace.total_member)}{" "}
-                  {infoWorkspace.total_member === 1
+                  {infoWorkspace.type} • {addComma(infoWorkspace.member_number)}{" "}
+                  {infoWorkspace.member_number === 1
                     ? useFormatMessage("modules.workspace.display.member")
                     : useFormatMessage("modules.workspace.display.members")}
                 </small>
@@ -124,8 +119,7 @@ const WorkspaceItem = (props) => {
               <Button.Ripple
                 color="secondary"
                 className="custom-secondary common-border"
-                onClick={() => handleClickViewGroup()}
-              >
+                onClick={() => handleClickViewGroup()}>
                 {useFormatMessage("modules.workspace.buttons.view_group")}
               </Button.Ripple>
             </div>

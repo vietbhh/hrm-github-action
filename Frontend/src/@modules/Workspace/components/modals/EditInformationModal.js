@@ -4,13 +4,7 @@ import notification from "@apps/utility/notification"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import "react-perfect-scrollbar/dist/css/styles.css"
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  Spinner
-} from "reactstrap"
+import { Button, Modal, ModalBody, ModalFooter, Spinner } from "reactstrap"
 import AvatarBox from "../../../../@apps/components/common/AvatarBox"
 import { workspaceApi } from "../../common/api"
 const EditInformationModal = (props) => {

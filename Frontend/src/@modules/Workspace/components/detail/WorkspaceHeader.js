@@ -83,28 +83,41 @@ const WorkspaceHeader = (props) => {
           <div className="d-flex justify-content-center align-items-center">
             <div className="w-85">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                id="Layer_1"
-                x="0px"
-                y="0px"
-                width="22px"
-                height="22px"
-                viewBox="0 0 22 22"
-                enableBackground="new 0 0 22 22"
-                xmlSpace="preserve"
-                className="me-1">
-                {" "}
-                <image
-                  id="image0"
-                  width="22"
-                  height="22"
-                  x="0"
-                  y="0"
-                  href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAhFBMVEUAAAAwQEwyQk8xQ08x Q08wQk0wQ0wxQ08wQFAyQ08zQ04zQU4wRVAwQk0yQk4yQ08yRFAxQk8zQ08wQFAyQlAyQk0xQ04y Qk8xQU4yQlAyQ08yRFA4QFAwQ04wSFAxQ04yQk0zRE8zQ1AyQ08wRFAwQlAxQ08yQ08yQk40RFAy Q0//////aiRPAAAAKnRSTlMAQJ/P33BQvyDvsKAwYMDfcN/PEGBwoN+gcOCAIG8gsGDPUJ9AcO+v 0EBakqoBAAAAAWJLR0QrJLnkCAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMLCL+3 7fYAAAC5SURBVBjTjZHrEoIgEIVXUJEUvJWVlZmV2b7/AwaEDjbldH6cZT7YXRYAfssj1DcKIGQ+ iwyMGPJVbJQIlHGKnsaUZ1NeXgCUnKlViOuJlrhRXm2V7VKnCyc6Reoa0sF7JIKZ9Jq4lzqk+G41 xwBHSE5fsG25gCM74wduzIzZn0UgGjVhetYPMKpVhF30HlfWtValHv6q7IbBvLTATgfGhUvvfWFi QzFnxOrRo2zsga4aaqshfi787gu9fg4uXSkkyQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0w NlQwMzoxMTowOCswMDowMIwiv0oAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTE6 MDgrMDA6MDD9fwf2AAAAAElFTkSuQmCC"
+                width={24}
+                height={24}
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M7 13H12"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M7 17H16"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V10"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
+
               <span>
                 {useFormatMessage(
                   "modules.workspace.display.manage_notification"
@@ -121,30 +134,48 @@ const WorkspaceHeader = (props) => {
           <Link to={`/workspace/${params.id}/pending-posts`}>
             <div className="d-flex align-items-center justify-content-center">
               <div className="w-85 d-flex align-items-center">
-                <div className="me-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    version="1.1"
-                    id="Layer_1"
-                    x="0px"
-                    y="0px"
-                    width="22px"
-                    height="23px"
-                    viewBox="0 0 22 23"
-                    enableBackground="new 0 0 22 23"
-                    xmlSpace="preserve">
-                    {" "}
-                    <image
-                      id="image0"
-                      width="22"
-                      height="23"
-                      x="0"
-                      y="0"
-                      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAkFBMVEUAAAAwQFAwQ0wwQk0w QEwxQ08xQ08wQlAyQ08yQlA1RVA4QFA0RFAyQlAwQk0yQ08wQFAyQ08wSFAyQk4yQk4xQ04yQ08w Q08zQ1AxQ04yQk8yQk8xQ08wQlAyQk0wQ1EwRVAyQk4zQ08yQk4wRFAxQU4zRE8yRFAyQk0xQk8w QEoyRFAwQ1AyQk4yQ0////8IfIaBAAAALnRSTlMAIFBgQL/PcN9wMCBAYHCvEO8ggMCw4J9QoN+f 72BgXzCQz49AsM+AcN8wcFDQnlu1HAAAAAFiS0dELyPUIBEAAAAJcEhZcwAACxMAAAsTAQCanBgA AAAHdElNRQfnBwYDDCzM9Z/gAAAAvElEQVQoz52R2w6CMAxAN2BcBGFcVLyhqKh46f9/ni1bZIsJ D56HJj1Nu61jbALuuBqHf6UnwMB3lA0gjGaxJpmHkA4DIJPWRJFTHkFhH1RAScVqSNKxxV9gWGKQ bAU14wRW1xvSW6zvsNFRFzH0nsbJhkgMbfO3PsDxVwctnCTPBHI2tEDLLhXRMtaR7q54t9Jcy/Du G3D7RA53jDIXlpWZ2l0EvetxzSPt4anqr7f5O1UyrrhuNHU89ecfWr0URvyo3IIAAAAldEVYdGRh dGU6Y3JlYXRlADIwMjMtMDctMDZUMDM6MTI6NDQrMDA6MDAk/2DHAAAAJXRFWHRkYXRlOm1vZGlm eQAyMDIzLTA3LTA2VDAzOjEyOjQ0KzAwOjAwVaLYewAAAABJRU5ErkJggg=="
-                    />
-                  </svg>
-                </div>
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12.3701 8.87988H17.6201"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.37988 8.87988L7.12988 9.62988L9.37988 7.37988"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12.3701 15.8799H17.6201"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.37988 15.8799L7.12988 16.6299L9.37988 14.3799"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
                 <div>
                   <span>
                     {useFormatMessage(
@@ -170,30 +201,34 @@ const WorkspaceHeader = (props) => {
           <Link to={`/workspace/${params.id}/request-join`}>
             <div className="d-flex align-items-center justify-content-center">
               <div className="w-85 d-flex align-items-center">
-                <div className="me-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    version="1.1"
-                    id="Layer_1"
-                    x="0px"
-                    y="0px"
-                    width="22px"
-                    height="23px"
-                    viewBox="0 0 22 23"
-                    enableBackground="new 0 0 22 23"
-                    xmlSpace="preserve">
-                    {" "}
-                    <image
-                      id="image0"
-                      width="22"
-                      height="23"
-                      x="0"
-                      y="0"
-                      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAMAAAA4Nk+sAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQFAwQ0wwQk0w QFAwQEwxQ08zQ08yRFA1RVA4QFA0RFAyQlAyQ08xQk8yQ08yRFAyQlAwSFAyQk4wQk4wRVAwRFAw Qk4wRFAyQ08yQk4yQ04xQU4yQ08xQ04yQk0zRE8yQk4xQ08xQ04yQk8yQk8xQ08zQ04wQFAyQk4w Q1EyQk0xQU4wQk0wQlAwQEozQ1AyQ0////+y0vlVAAAAMXRSTlMAEFBgIEC/z4AwIEBw39/vcGAg gI8wf39An5CQsOCwcM/Az6Dfn++wMI9fYKBwcDBQvIqwRgAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYDDg4ro7yGAAAA90lEQVQoz32RbVeDMAyFWygdjrV1xYki bpa9KqK7///P2YSBO/uwfAjpc9KbSyrE/ZBJmibqBmYaHDq9gkpjlj/M58XCQE83lHWPY7109sKl NZ50yjKLH2+sZPyEVczPJF3F4gUlS+A15hS1lDmo/81JBiTRGGp5X8e0wiZm/UGg4awD5XY9doic BijUVG93hPdsx7h9fWBL11j4rXNHpqLZTapkafy/liYscIoalR5WomjCklTdp/g6INRdVwbYRHyz 42iiwqwY7vsW/WAnmoCR09r/D964fsQ/F5PMNWyfKfVbtQgTpTWH4XVCcfNs/tx1Zynuxx9fxBWu ChBtawAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMy0wNy0wNlQwMzoxNDoxNCswMDowMGEBHuQAAAAl dEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDctMDZUMDM6MTQ6MTQrMDA6MDAQXKZYAAAAAElFTkSuQmCC"
-                    />
-                  </svg>
-                </div>
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12.12 12.7805C12.05 12.7705 11.96 12.7705 11.88 12.7805C10.12 12.7205 8.71997 11.2805 8.71997 9.51047C8.71997 7.70047 10.18 6.23047 12 6.23047C13.81 6.23047 15.28 7.70047 15.28 9.51047C15.27 11.2805 13.88 12.7205 12.12 12.7805Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M18.74 19.3796C16.96 21.0096 14.6 21.9996 12 21.9996C9.40001 21.9996 7.04001 21.0096 5.26001 19.3796C5.36001 18.4396 5.96001 17.5196 7.03001 16.7996C9.77001 14.9796 14.25 14.9796 16.97 16.7996C18.04 17.5196 18.64 18.4396 18.74 19.3796Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
                 <div>
                   <span>
                     {useFormatMessage(
@@ -220,28 +255,27 @@ const WorkspaceHeader = (props) => {
             <div className="d-flex align-items-center justify-content-center">
               <div className="w-85">
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                  version="1.1"
-                  id="Layer_1"
-                  x="0px"
-                  y="0px"
-                  width="22px"
-                  height="22px"
-                  viewBox="0 0 22 22"
-                  enableBackground="new 0 0 22 22"
-                  xmlSpace="preserve"
-                  className="me-1">
-                  {" "}
-                  <image
-                    id="image0"
-                    width="22"
-                    height="22"
-                    x="0"
-                    y="0"
-                    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAaVBMVEUAAAAwQFAwQk4xQ08x Q08wQ04wQk0xQ08yQk4xQk8wQEw0RFAwSFAyQ08wQFAxQU4yQlAyQk8wRVAyQ08yRFAyQk4wQk0w RFAxQ04yQlAyQk0wRFAyQ08wQ08zQ08zRE8yQk4yQ0////8FKOj4AAAAIXRSTlMAEH/Pv29g78Df QEAg3yCgYJ8w74CAcH+gcHBAn5/Pz9CRnKBHAAAAAWJLR0QiXWVcrAAAAAlwSFlzAAALEwAACxMB AJqcGAAAAAd0SU1FB+cHBgMPDNy27OsAAACwSURBVBjTfVHtDoMgEANkCgrOKTrZ3Eff/yUnQhQh Wf9wKen1rkfIf1BW8AtN2bKCEJDliaw5REOI0pDtob9Cd77sNG7ho5eD2ZtSA9lvVaFV3FDpYnsx +v7T5OUjIvqOFSylW8xUzagT2mI1oHhkNHWSlH5iaenLSc6WxlmO2SREWdvEA76jHNxM8uOX12DH 8qzSfVh33hMtJZYj9JBoyDfCmijnGLrsaFZ8TXa0BD9/TQz6DmhQmwAAACV0RVh0ZGF0ZTpjcmVh dGUAMjAyMy0wNy0wNlQwMzoxNToxMiswMDowMO0TQOAAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMt MDctMDZUMDM6MTU6MTIrMDA6MDCcTvhcAAAAAElFTkSuQmCC"
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 9.11035V14.8804C3 17.0004 3 17.0004 5 18.3504L10.5 21.5304C11.33 22.0104 12.68 22.0104 13.5 21.5304L19 18.3504C21 17.0004 21 17.0004 21 14.8904V9.11035C21 7.00035 21 7.00035 19 5.65035L13.5 2.47035C12.68 1.99035 11.33 1.99035 10.5 2.47035L5 5.65035C3 7.00035 3 7.00035 3 9.11035Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
+
                 <span>
                   {useFormatMessage(
                     "modules.workspace.display.workgroup_setting"
@@ -259,27 +293,33 @@ const WorkspaceHeader = (props) => {
             <div className="w-85">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                id="Layer_1"
-                x="0px"
-                y="0px"
-                width="22px"
-                height="22px"
-                viewBox="0 0 22 22"
-                enableBackground="new 0 0 22 22"
-                xmlSpace="preserve"
-                className="me-1">
-                {" "}
-                <image
-                  id="image0"
-                  width="22"
-                  height="22"
-                  x="0"
-                  y="0"
-                  href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAclBMVEUAAAAwQEowQk0yQk4w QEwxQk8wQ0wzQ08yQk04QFAzQ1AxQ08wQk0yQ08wQFAyQ08yQ08wQFAyQlAwRFAwRVAyQk4yRE4w Q1ExQ08yQk40QFAyQlAwQlAyQk4wQFAxQU4wSFAwQ1AyRFA0RFAyQ0////9RoEO5AAAAJHRSTlMA MGCAQN9Qz2AgUL9w3xCv7zBgQDCQgF/PwEBwcNAgoCBQcEBQNPwxAAAAAWJLR0QlwwHJDwAAAAlw SFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cHBgMaEYgFZiYAAAChSURBVBjThZHbEoIwEEMXWqBQ KVelioJK/v8bdYReBjuap8x5yE42RD8UxYzFfAd5go+S2KcpMpET5YXEwcNJqTZX1crSBq2xHYSX 0VtfH61lcHmnQlXDNyZSGkMAW77iVBppgFvcn40y4BIMaQPZG6URrtq1V7etnMAUqtO4xt4fiEpt UmbcHe7ej46IJi7B/OOPcp2hfu72WQRj46Lon15KVwxFLklQ8AAAACV0RVh0ZGF0ZTpjcmVhdGUA MjAyMy0wNy0wNlQwMzoyNjoxNyswMDowMM3+skUAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjMtMDct MDZUMDM6MjY6MTcrMDA6MDC8owr5AAAAAElFTkSuQmCC"
+                width={24}
+                height={24}
+                viewBox="0 0 24 24"
+                fill="none">
+                <path
+                  d="M15.1001 7.56023C14.7901 3.96023 12.9401 2.49023 8.8901 2.49023H8.7601C4.2901 2.49023 2.5001 4.28023 2.5001 8.75023V15.2702C2.5001 19.7402 4.2901 21.5302 8.7601 21.5302H8.8901C12.9101 21.5302 14.7601 20.0802 15.0901 16.5402"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8.99988 12H20.3799"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M18.15 8.65039L21.5 12.0004L18.15 15.3504"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
+
               {useFormatMessage("modules.workspace.display.leave_workspace")}
             </div>
           </div>
@@ -456,7 +496,7 @@ const WorkspaceHeader = (props) => {
     const infoWorkspace = { ...data }
     if (data?.membership_approval === "auto") {
       const members = [...infoWorkspace.members]
-      members.push( { "id_user": userId } )
+      members.push({ id_user: userId })
       infoWorkspace.members = JSON.stringify(unique(members))
       workspaceApi.update(infoWorkspace._id, infoWorkspace).then((res) => {
         if (res.statusText) {
@@ -607,24 +647,39 @@ const WorkspaceHeader = (props) => {
           onClick={() => handleClickChat()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="Layer_1"
-            x="0px"
-            y="0px"
-            width="22px"
-            height="22px"
+            width={22}
+            height={22}
             viewBox="0 0 22 22"
-            enableBackground="new 0 0 22 22"
-            xmlSpace="preserve">
-            {" "}
-            <image
-              id="image0"
-              width="22"
-              height="22"
-              x="0"
-              y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAmVBMVEUAAAAwQEwyQk4xQ08x Q08yQk8xQ08yQ08zQ04zQU4yQk4xQk8wRFAyQ08zQ0wwQFAyQlAwQk4yQ04wRFAzQ1AxQU4xQU4z RE8yQ08wQlAwQk0wQFAwRVAxQ04yQk80QEwyQk0xQ04wSFAyQ08wQ0wyQk0wQFAwQk40RFAyQk4w QEowQk0wQEwxQ08yQ081RVAyQk4yQ0////8LlwR4AAAAMXRSTlMAQJDP35+/77CgwN9/31AQYH+Q QFCgsM/gcGAgMKDfQGCwIJ9QcDCPQIAwcFDvrzDQU6dMlAAAAAFiS0dEMkDSTMgAAAAJcEhZcwAA CxMAAAsTAQCanBgAAAAHdElNRQfnBwYLMg5WQ5TBAAAAz0lEQVQY032P2wKCIBBEEUVSM8xIzTTN LO1itf//cwFmiQ/uAyyHZZhBaLYMbFqWSQwd2kAXjuNS8EYXS/BXTHWBD+s/xew3Eg7cADwWDKHX 8XztH+bbcttAoJvianxLJ14ZlaKmO80QxWJJiFQSXnYp2pNMHPLDgCMoEMSoVKYUNo9iqVYIZWKS ywC2lMWUTbTpSRmsdZoKQeEHzjru412Aa7SBtk9ZjLM0cFVNCcatvqc9fHhfKrKCrM4m5NmB2w7v Ks5frM3dJHnjFs3WB8bQDz/Gz+U2AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTA3LTA2VDA5OjUw OjE0KzAyOjAwSGVjsQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wNy0wNlQwOTo1MDoxNCswMjow MDk42w0AAAAASUVORK5CYII="
+            fill="none">
+            <path
+              d="M14.9393 11.4131H14.9483"
+              stroke="#696760"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M10.9306 11.4131H10.9396"
+              stroke="#696760"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M6.92128 11.4131H6.93028"
+              stroke="#696760"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M18.071 18.0698C15.0159 21.1263 10.4896 21.7867 6.78631 20.074C6.23961 19.8539 2.70113 20.8339 1.93334 20.067C1.16555 19.2991 2.14639 15.7601 1.92631 15.2134C0.212846 11.5106 0.874111 6.9826 3.9302 3.9271C7.83147 0.0243002 14.1698 0.0243002 18.071 3.9271C21.9803 7.83593 21.9723 14.168 18.071 18.0698Z"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -641,7 +696,7 @@ const WorkspaceHeader = (props) => {
 
     return (
       <Fragment>
-        <Card className="work-space-header pb-0 mb-50">
+        <Card className="work-space-header pb-0">
           <CoverImage
             src={data.cover_image}
             dataSave={{ ...data, id: data?._id }}
@@ -650,8 +705,8 @@ const WorkspaceHeader = (props) => {
             loadData={loadData}
           />
 
-          <CardBody className="pb-0 pt-50">
-            <div className="d-flex justify-content-between align-items-center m-50 ms-0 me-0 name-and-action">
+          <CardBody className="workspace-information-card">
+            <div className="d-flex justify-content-between align-items-center name-and-action">
               <div className="ps-25 workspaceInformation">
                 <h2 className="mb-25 workspaceName">{data?.name}</h2>
                 <p className="mb-0 workspaceOverviewInfo">
@@ -661,13 +716,24 @@ const WorkspaceHeader = (props) => {
                     }}>
                     {data?.type}
                   </span>{" "}
-                  · {data?.total_member ? data?.total_member : 0}{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={6}
+                    height={6}
+                    viewBox="0 0 6 6"
+                    style={{ margin: "0px 2px" }}
+                    fill="none">
+                    <circle cx={3} cy={3} r={3} fill="#8C8A82" />
+                  </svg>
+                  {"  "}
+                  {data?.total_member ? data?.total_member : 0}
+                  {"  "}
                   {useFormatMessage("modules.workspace.display.members")}
                   {/*{data?.pinPosts && data?.pinPosts.length}{" "}
                 {useFormatMessage("modules.workspace.text.posts")}*/}
                 </p>
               </div>
-              <div className="pe-1 d-flex align-items-center workspaceAction">
+              <div className="d-flex align-items-center workspaceAction">
                 {state.joined && (
                   <Fragment>
                     <Fragment>{renderChatButton()}</Fragment>
@@ -675,7 +741,9 @@ const WorkspaceHeader = (props) => {
                       className="btn btn-primary custom-primary"
                       onClick={() => onClickInvite()}>
                       <i className="fa-regular fa-plus me-50"></i>
-                      {useFormatMessage("modules.workspace.buttons.invite")}
+                      {!checkMobile
+                        ? useFormatMessage("modules.workspace.buttons.invite")
+                        : "invite"}
                     </Button>
                   </Fragment>
                 )}
@@ -758,7 +826,7 @@ const WorkspaceHeader = (props) => {
               )}
               {checkMobile && (
                 <div className="action-nav">
-                  <Space className="pe-1">
+                  <Space>
                     <ErpSelect
                       options={optionTab}
                       defaultValue={optionTab[0]}
@@ -776,30 +844,29 @@ const WorkspaceHeader = (props) => {
 
               {state.joined && (
                 <div className="action-nav ms-auto">
-                  <Space className="pe-1">
+                  <Space>
                     <Button
                       className="btn-sm custom-secondary animate__animated animate__zoomIn"
                       onClick={() => handleClickSearchButton()}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        xmlnsXlink="http://www.w3.org/1999/xlink"
-                        version="1.1"
-                        id="Layer_1"
-                        x="0px"
-                        y="0px"
-                        width="18px"
-                        height="18px"
-                        viewBox="0 0 18 18"
-                        enableBackground="new 0 0 18 18"
-                        xmlSpace="preserve">
-                        {" "}
-                        <image
-                          id="image0"
-                          width="18"
-                          height="18"
-                          x="0"
-                          y="0"
-                          href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAh1BMVEUAAAA0REwyRE4xRE4y Q04yQk4yQ002PFEyQ04yQ08yQ08zPVIxO04zQ080Qk02Q1EyRlAyQk8yQlA7O04zRE4yQVAxQ04y Q00xQ04vQ1EyRE4xQk0yQk40RFAnO04xQ08yRFAyRE8yQUsyQU0yRFAyQ08zQ08xRU4yRE8yRE8z Q04yRE7///8P1xM9AAAALHRSTlMAQH+mmX9MJrPMshkav1kmM02ADaYzjGZzJoBZgEANxeqOM2bw 8KsanriMmZdfS2QAAAABYktHRCy63XGrAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5wcG AyYyWZFuqwAAAJFJREFUGNN1kOsWgiAQhEnUGIqQNLtTqV19//eLcLFO1v4ZzrfLMCxjf2oU8ThJ P8BYwJecBDJVkDOdGfFmAnOveYG4IwaSernCwh9K9L5LrLwWWPcPoxyizmyDbUA7uriHtJRGkL0L kXi1h+OJxrWLmlZVrZrzhebZlT50u4MHxsyjbaPs1ePfG3HMDpj+ubwnhdEHvyCJ/DMAAAAldEVY dGRhdGU6Y3JlYXRlADIwMjMtMDctMDZUMDM6Mzg6NTArMDA6MDBTVG1CAAAAJXRFWHRkYXRlOm1v ZGlmeQAyMDIzLTA3LTA2VDAzOjM4OjUwKzAwOjAwIgnV/gAAAABJRU5ErkJggg=="
+                        width={24}
+                        height={24}
+                        // viewBox="0 0 24 24"
+                        fill="none">
+                        <path
+                          d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M22 22L20 20"
+                          stroke="#696760"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     </Button>
@@ -808,37 +875,37 @@ const WorkspaceHeader = (props) => {
                         className="btn-sm custom-secondary animate__animated animate__zoomIn"
                         onClick={() => handleClickInfoButton()}>
                         <svg
-                          width="24"
-                          height="25"
+                          width={24}
+                          height={25}
                           viewBox="0 0 24 25"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg">
                           <path
                             d="M12 22.1812C17.5 22.1812 22 17.6812 22 12.1812C22 6.68115 17.5 2.18115 12 2.18115C6.5 2.18115 2 6.68115 2 12.1812C2 17.6812 6.5 22.1812 12 22.1812Z"
                             stroke="#696760"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M12 8.18115V13.1812"
                             stroke="#696760"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M11.9945 16.1812H12.0035H11.9945Z"
                             fill="#696760"
                           />
                           <path
                             d="M11.9945 16.1812H12.0035"
                             stroke="#696760"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                         </svg>
                       </Button>
@@ -849,7 +916,27 @@ const WorkspaceHeader = (props) => {
                       trigger={["click"]}
                       overlayClassName="workspace-dropdown-common workspace-header-dropdown">
                       <Button className="btn-sm custom-secondary">
-                        <i className="fas fa-ellipsis"></i>
+                        <svg
+                          width={24}
+                          height={24}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M5.5 12C5.5 12.8284 4.82843 13.5 4 13.5C3.17157 13.5 2.5 12.8284 2.5 12C2.5 11.1716 3.17157 10.5 4 10.5C4.82843 10.5 5.5 11.1716 5.5 12Z"
+                            fill="#696760"
+                            stroke="#696760"
+                          />
+                          <path
+                            d="M13.5 12C13.5 12.8284 12.8284 13.5 12 13.5C11.1716 13.5 10.5 12.8284 10.5 12C10.5 11.1716 11.1716 10.5 12 10.5C12.8284 10.5 13.5 11.1716 13.5 12Z"
+                            fill="#696760"
+                            stroke="#696760"
+                          />
+                          <path
+                            d="M20 14C21.1046 14 22 13.1046 22 12C22 10.8954 21.1046 10 20 10C18.8954 10 18 10.8954 18 12C18 13.1046 18.8954 14 20 14Z"
+                            fill="#696760"
+                          />
+                        </svg>
                       </Button>
                     </Dropdown>
                   </Space>

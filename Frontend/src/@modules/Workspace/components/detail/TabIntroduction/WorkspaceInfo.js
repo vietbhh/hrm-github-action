@@ -14,43 +14,47 @@ const WorkspaceInfo = (props) => {
     workspaceInfo
     // ** methods
   } = props
-
   // ** render
   return (
     <Card className="workspace-info-container">
-      <CardHeader className="pb-1">
+      <CardHeader className="pb-0">
         <h6 className="mb-0 info-title">
-          <span className="text">{useFormatMessage("common.information")}</span>
+          <span className="text">
+            {useFormatMessage("modules.workspace.display.about_group")}
+          </span>
           <span className="text-danger">.</span>
         </h6>
       </CardHeader>
       <CardBody>
-        <div className="p-0 pt-25">
+        <div className="p-0">
+          <div className="about-info p-0">
+            <div className="text-section ps-0 mb-75">
+              <p className="description mb-0">{workspaceInfo?.description}</p>
+            </div>
+          </div>
           <WorkspaceTypeInfo workspaceInfo={workspaceInfo} />
           <WorkspaceModeInfo workspaceInfo={workspaceInfo} />
-
           <div className="workspace-info-item d-flex align-items-start">
             <div className="icon-section">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                id="Layer_1"
-                x="0px"
-                y="0px"
-                width="19px"
-                height="19px"
-                viewBox="0 0 19 19"
-                enableBackground="new 0 0 19 19"
-                xmlSpace="preserve">
-                {" "}
-                <image
-                  id="image0"
-                  width="19"
-                  height="19"
-                  x="0"
-                  y="0"
-                  href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAMAAABFjsb+AAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAbFBMVEUAAACPl5ePlZ2PlpyP lZqPk5uTlp+Slp+SlZ2Slp+SlJ+SlZ+Ulp+Tlp6Tk5+Ul5+Pl5uPlZ+TlpyPj5+TlZ+Pj5+Xl5+T lp+Tk5yPl5+SlJ2Slp+VlZ+Tl5+Tl5+TlZ6Slp6Tlp+Tlp////+CosnSAAAAInRSTlMAIGBQMEC/ 32CPj2DfoECfQDBQEO8gIM9QIHBwML9AkMBQcssH7QAAAAFiS0dEIypibDoAAAAJcEhZcwAACxMA AAsTAQCanBgAAAAHdElNRQfnBwQGFCt8SJh6AAAAgUlEQVQY033Q6RKCIBAAYCQTCpNOrxR03/8h Yxclicn9w/Ixwx6M/Y+M80MeybEADCG/dII1zikFVHQpLx4rMkG5vnorkG4QGWTO7j8mw3egH6k9 X3VDSeusW95Fz954DlhkhKDYE/ViYBvLeHZDdh3OpuRqlySTibY1zErVO/v9AMSiGLgjupsSAAAA JXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTA3LTA0VDA0OjIwOjQzKzAyOjAwLJUDxQAAACV0RVh0ZGF0 ZTptb2RpZnkAMjAyMy0wNy0wNFQwNDoyMDo0MyswMjowMF3Iu3kAAAAASUVORK5CYII="
+                width={20}
+                height={20}
+                viewBox="0 0 20 20"
+                fill="none">
+                <path
+                  d="M18.3337 10.0003C18.3337 14.6003 14.6003 18.3337 10.0003 18.3337C5.40033 18.3337 1.66699 14.6003 1.66699 10.0003C1.66699 5.40033 5.40033 1.66699 10.0003 1.66699C14.6003 1.66699 18.3337 5.40033 18.3337 10.0003Z"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M13.0914 12.6505L10.5081 11.1088C10.0581 10.8421 9.69141 10.2005 9.69141 9.67546V6.25879"
+                  stroke="#696760"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>

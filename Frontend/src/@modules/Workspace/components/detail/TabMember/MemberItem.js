@@ -311,7 +311,27 @@ const MemberItem = (props) => {
           <Button.Ripple
             color="secondary"
             className="btn-icon btn-action-secondary">
-            <i className="fas fa-ellipsis-h" />
+            <svg
+              width={20}
+              height={20}
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M3.5 10C3.5 10.8284 2.82843 11.5 2 11.5C1.17157 11.5 0.5 10.8284 0.5 10C0.5 9.17157 1.17157 8.5 2 8.5C2.82843 8.5 3.5 9.17157 3.5 10Z"
+                fill="#696760"
+                stroke="#696760"
+              />
+              <path
+                d="M11.5 10C11.5 10.8284 10.8284 11.5 10 11.5C9.17157 11.5 8.5 10.8284 8.5 10C8.5 9.17157 9.17157 8.5 10 8.5C10.8284 8.5 11.5 9.17157 11.5 10Z"
+                fill="#696760"
+                stroke="#696760"
+              />
+              <path
+                d="M18 12C19.1046 12 20 11.1046 20 10C20 8.89543 19.1046 8 18 8C16.8954 8 16 8.89543 16 10C16 11.1046 16.8954 12 18 12Z"
+                fill="#696760"
+              />
+            </svg>
           </Button.Ripple>
         </Dropdown>
       )
@@ -334,7 +354,19 @@ const MemberItem = (props) => {
         className=" d-flex align-items-center custom-button custom-primary"
         disabled={loading}
         onClick={() => handleClickMessenge()}>
-        <i className="fab fa-facebook-messenger me-50" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={20}
+          height={20}
+          viewBox="0 0 20 20"
+          style={{ marginRight: "4px" }}
+          fill="none">
+          <path
+            d="M9.99984 1.66699C5.39984 1.66699 1.6665 5.12533 1.6665 9.38367C1.6665 11.8003 2.8665 13.9503 4.73316 15.367V16.9087C4.73316 17.5503 5.41649 17.9503 5.97482 17.6337L7.52486 16.7586C8.3082 16.9836 9.13316 17.1003 9.9915 17.1003C14.5915 17.1003 18.3248 13.642 18.3248 9.38367C18.3332 5.12533 14.5998 1.66699 9.99984 1.66699ZM12.9248 8.70033L10.8415 11.192C10.7082 11.3503 10.4915 11.3837 10.3165 11.2837L9.47483 10.792C9.38317 10.742 9.27484 10.7253 9.1665 10.7503L7.4915 11.1587C7.09983 11.2503 6.8165 10.792 7.07483 10.4836L9.19153 7.96699C9.31653 7.81699 9.53319 7.77533 9.70819 7.86699L10.6915 8.38366C10.7832 8.43366 10.8915 8.442 10.9915 8.417L12.5082 8.02533C12.8915 7.92533 13.1832 8.39199 12.9248 8.70033Z"
+            fill="#4986FF"
+          />
+        </svg>
+
         {useFormatMessage("modules.workspace.buttons.messenge")}
       </Button.Ripple>
     )

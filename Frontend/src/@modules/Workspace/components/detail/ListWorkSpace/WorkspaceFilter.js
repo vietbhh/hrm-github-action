@@ -56,28 +56,27 @@ const WorkspaceFilter = (props) => {
     if (state.showInput === false) {
       return (
         <span
-          className="me-75 cursor-pointer animate__animated animate__fadeInUp"
+          className="search cursor-pointer animate__animated animate__fadeInUp"
           onClick={() => handleClickSearchButton()}>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="Layer_1"
-            x="0px"
-            y="0px"
-            width="21px"
-            height="22px"
-            viewBox="0 0 21 22"
-            enableBackground="new 0 0 21 22"
-            xmlSpace="preserve">
-            {" "}
-            <image
-              id="image0"
-              width="21"
-              height="22"
-              x="0"
-              y="0"
-              href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAWCAMAAAAYXScKAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAflBMVEUAAAAwQFAwQk0yQk8y Q08wQFAwQk4xQ08xQk8yQk4yQlAzQ1AyQk0xQ04yQ08wRVAwSFAyQ08wQk0xQ08zQ0wwQFAyQk0w Q0wxQ04wRFAzRE8yQk4yQk40QEwwRFAyQk4wQlAwQEowQEwyQlAzQ04yRFAwQlAwQ1AyQ0/////J pM/cAAAAKHRSTlMAEHCfryB/79/AcFBgoN8wIO9gv1AwcFCwQM+QgEB/j3AwQGCwgGBQV9iPlwAA AAFiS0dEKcq3hSQAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfnBhoLJCcvxnjtAAAAnklE QVQY05WQ2xKCIBRFQdAwFTla2d0uVvv/vzBHhGCmF/fLgcVi9sxhbHF4IqRI0phlK0wRAU8VkK+L stJQtacK2l6MBDm7gTZOkGi9uvk1EKy8hQ6KK+ym2WEf0BIimjE94BjQE85xwVx9cc+th1dfPcr9 fLwBhRNqgmrujD/acRWZ/2e0XQ6oCjF7DgTKX5y9I+zzIXR/cD0YtiRfWXgM4kQkNZcAAAAldEVY dGRhdGU6Y3JlYXRlADIwMjMtMDYtMjZUMDk6MzY6MzkrMDI6MDCN4q+XAAAAJXRFWHRkYXRlOm1v ZGlmeQAyMDIzLTA2LTI2VDA5OjM2OjM5KzAyOjAw/L8XKwAAAABJRU5ErkJggg=="
+            width={40}
+            height={40}
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19.5 29C24.7467 29 29 24.7467 29 19.5C29 14.2533 24.7467 10 19.5 10C14.2533 10 10 14.2533 10 19.5C10 24.7467 14.2533 29 19.5 29Z"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M30 30L28 28"
+              stroke="#696760"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </span>
@@ -85,7 +84,7 @@ const WorkspaceFilter = (props) => {
     }
 
     return (
-      <div className="animate__animated animate__fadeInUp">
+      <div className="animate__animated animate__fadeInUp me-1">
         <ErpInput
           name="search"
           nolabel={true}
@@ -105,18 +104,87 @@ const WorkspaceFilter = (props) => {
   }
 
   return (
-    <div className="d-flex align-items-center">
-      <Fragment>{renderSearch()}</Fragment>
-      {createWorkgroup && (
-        <Button.Ripple
-          color="primary"
-          className="ms-2 common-border"
-          onClick={() => handleClickCreate()}>
-          <i className="fas fa-plus me-50" />
-          {useFormatMessage("modules.workspace.buttons.create_group")}
-        </Button.Ripple>
-      )}
-    </div>
+    <>
+      <div className="d-flex align-items-center justify-content-between header">
+        <div>
+          <p className="title text-color-title">
+            {useFormatMessage("modules.workspace.title.workgroup")}
+            <span>.</span>
+          </p>
+        </div>
+        <div>
+          <div className="d-flex align-items-center">
+            <div className="workspace-search-desktop">
+              <Fragment>{renderSearch()}</Fragment>
+            </div>
+            {createWorkgroup && (
+              <Button.Ripple
+                className="common-border btn-create-workgroup"
+                onClick={() => handleClickCreate()}>
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M6 12H18"
+                    stroke="#696760"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 18V6"
+                    stroke="#292D32"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+
+                <span>
+                  {useFormatMessage("modules.workspace.buttons.create_group")}
+                </span>
+              </Button.Ripple>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="workspace-search-mobile">
+        <ErpInput
+          name="search"
+          nolabel={true}
+          formGroupClass="mb-0"
+          append={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={24}
+              height={24}
+              viewBox="0 0 24 24"
+              fill="none">
+              <path
+                d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                stroke="#696760"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M22 22L20 20"
+                stroke="#696760"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          }
+          autoFocus
+          placeholder="Search Group"
+          onChange={(e) => handleSearchVal(e)}
+        />
+      </div>
+    </>
   )
 }
 

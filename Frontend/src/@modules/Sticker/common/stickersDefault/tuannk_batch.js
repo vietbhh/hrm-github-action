@@ -4,7 +4,7 @@ const images = import.meta.globEager("../../assets/images/tuannk_batch/*.webp")
 
 export default {
   name: "sticker_default",
-  label: "tuannk_batch",
+  label: "ami cat",
   list: convertImageToStickerList(images),
   default: true
 }
