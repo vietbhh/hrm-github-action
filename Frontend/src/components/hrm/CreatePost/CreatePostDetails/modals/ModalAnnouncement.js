@@ -185,12 +185,6 @@ const ModalAnnouncement = (props) => {
     setState({ arrAttachment: arrAttachment })
   }
 
-  const handleRemoveCover = () => {
-    setState({
-      coverImage: { src: "", image: null }
-    })
-  }
-
   // ** useEffect
   useEffect(() => {
     if (modal && idAnnouncement) {
@@ -256,13 +250,11 @@ const ModalAnnouncement = (props) => {
         })
     }
   }, [modal, idAnnouncement])
-
   useEffect(() => {
     setState({
       coverImage: { src: "", image: null }
     })
   }, [toggleModal])
-
   // ** render
   const optionShowAnnouncement = [
     ..._.map(optionsShowAnnouncement, (item) => {
@@ -283,344 +275,338 @@ const ModalAnnouncement = (props) => {
     })
   ]
   return (
-    <Modal
-      isOpen={modal}
-      toggle={() => toggleModal()}
-      className="modal-dialog-centered feed modal-create-post modal-create-event modal-announcement"
-      modalTransition={{ timeout: 100 }}
-      backdropTransition={{ timeout: 100 }}>
-      <ModalHeader>
-        <span className="text-title">
-          {useFormatMessage("modules.feed.announcement.title")}
-        </span>
-        <div className="div-btn-close" onClick={() => toggleModal()}>
-          <i className="fa-regular fa-xmark"></i>
-        </div>
-      </ModalHeader>
-      <ModalBody>
-        <div className="div-event div-event-name">
-          <ErpInput
-            label={useFormatMessage(
-              "modules.feed.announcement.text.announcement_title"
-            )}
-            placeholder={useFormatMessage(
-              "modules.feed.announcement.text.announcement_title_placeholder"
-            )}
-            className="input"
-            name="announcement_title"
-            defaultValue={state.dataEdit?.title || ""}
-            loading={state.loadingEdit}
-            useForm={methods}
-            required
-          />
+    <Fragment>
+      <Modal
+        isOpen={modal}
+        toggle={() => toggleModal()}
+        className="modal-dialog-centered feed modal-create-post modal-create-event modal-announcement"
+        modalTransition={{ timeout: 100 }}
+        backdropTransition={{ timeout: 100 }}>
+        <ModalHeader>
+          <span className="text-title">
+            {useFormatMessage("modules.feed.announcement.title")}
+          </span>
+          <div className="div-btn-close" onClick={() => toggleModal()}>
+            <i className="fa-regular fa-xmark"></i>
+          </div>
+        </ModalHeader>
+        <ModalBody>
+          <div className="div-event-name">
+            <ErpInput
+              label={useFormatMessage(
+                "modules.feed.announcement.text.announcement_title"
+              )}
+              placeholder={useFormatMessage(
+                "modules.feed.announcement.text.announcement_title_placeholder"
+              )}
+              className="input"
+              name="announcement_title"
+              defaultValue={state.dataEdit?.title || ""}
+              loading={state.loadingEdit}
+              useForm={methods}
+              required
+            />
 
-          <Label
-            for="announcement-cover-image"
-            className="mb-0 label-announcement-cover-image">
-            <div
-              className="div-announcement-cover-image"
-              onClick={() =>
-                setState({
-                  coverImage: { src: "", image: null }
-                })
-              }>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 28 28"
-                fill="none">
-                <path
-                  d="M10.5002 25.6667H17.5002C23.3335 25.6667 25.6668 23.3333 25.6668 17.5V10.5C25.6668 4.66668 23.3335 2.33334 17.5002 2.33334H10.5002C4.66683 2.33334 2.3335 4.66668 2.3335 10.5V17.5C2.3335 23.3333 4.66683 25.6667 10.5002 25.6667Z"
-                  stroke="#737B81"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10.4998 11.6667C11.7885 11.6667 12.8332 10.622 12.8332 9.33333C12.8332 8.04467 11.7885 7 10.4998 7C9.21117 7 8.1665 8.04467 8.1665 9.33333C8.1665 10.622 9.21117 11.6667 10.4998 11.6667Z"
-                  stroke="#737B81"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M3.11523 22.1083L8.8669 18.2467C9.78857 17.6283 11.1186 17.6983 11.9469 18.41L12.3319 18.7483C13.2419 19.53 14.7119 19.53 15.6219 18.7483L20.4752 14.5833C21.3852 13.8017 22.8552 13.8017 23.7652 14.5833L25.6669 16.2167"
-                  stroke="#737B81"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-
-            <input
-              type="file"
-              id="announcement-cover-image"
-              hidden
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files[0]) {
-                  setState({
-                    coverImage: { src: "", image: e.target.files[0] }
-                  })
-                } else {
+            <Label
+              for="announcement-cover-image"
+              className="mb-0 label-announcement-cover-image">
+              <div
+                className="div-announcement-cover-image"
+                onClick={() =>
                   setState({
                     coverImage: { src: "", image: null }
                   })
-                }
-              }}
-            />
-          </Label>
-        </div>
-        {state.coverImage.image && (
-          <div className="cover-announcment mb-1">
-            <Photo
-              src={[state.coverImage.image]}
-              width="100%"
-              style={{ borderRadius: "20px" }}
-            />
-            <Button.Ripple
-              className="btn-remove-cover"
-              onClick={() => handleRemoveCover()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M9.8 4.7561H14.2C14.2 3.57071 13.215 2.60976 12 2.60976C10.785 2.60976 9.8 3.57071 9.8 4.7561ZM8.15 4.7561C8.15 2.68166 9.8737 1 12 1C14.1263 1 15.85 2.68166 15.85 4.7561H22.175C22.6306 4.7561 23 5.11645 23 5.56098C23 6.0055 22.6306 6.36585 22.175 6.36585H20.724L19.4348 19.3633C19.2301 21.4261 17.4532 23 15.3289 23H8.67106C6.54679 23 4.76986 21.4261 4.56524 19.3633L3.27598 6.36585H1.825C1.36937 6.36585 1 6.0055 1 5.56098C1 5.11645 1.36937 4.7561 1.825 4.7561H8.15ZM10.35 9.85366C10.35 9.40914 9.98063 9.04878 9.525 9.04878C9.06937 9.04878 8.7 9.40914 8.7 9.85366V17.9024C8.7 18.347 9.06937 18.7073 9.525 18.7073C9.98063 18.7073 10.35 18.347 10.35 17.9024V9.85366ZM14.475 9.04878C14.9306 9.04878 15.3 9.40914 15.3 9.85366V17.9024C15.3 18.347 14.9306 18.7073 14.475 18.7073C14.0194 18.7073 13.65 18.347 13.65 17.9024V9.85366C13.65 9.40914 14.0194 9.04878 14.475 9.04878ZM6.20757 19.2082C6.33034 20.4459 7.3965 21.3902 8.67106 21.3902H15.3289C16.6035 21.3902 17.6697 20.4459 17.7924 19.2082L19.0663 6.36585H4.93369L6.20757 19.2082Z"
-                  fill="#8C8A82"
-                />
-              </svg>
-            </Button.Ripple>
-          </div>
-        )}
+                }>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  viewBox="0 0 28 28"
+                  fill="none">
+                  <path
+                    d="M10.5002 25.6667H17.5002C23.3335 25.6667 25.6668 23.3333 25.6668 17.5V10.5C25.6668 4.66668 23.3335 2.33334 17.5002 2.33334H10.5002C4.66683 2.33334 2.3335 4.66668 2.3335 10.5V17.5C2.3335 23.3333 4.66683 25.6667 10.5002 25.6667Z"
+                    stroke="#737B81"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.4998 11.6667C11.7885 11.6667 12.8332 10.622 12.8332 9.33333C12.8332 8.04467 11.7885 7 10.4998 7C9.21117 7 8.1665 8.04467 8.1665 9.33333C8.1665 10.622 9.21117 11.6667 10.4998 11.6667Z"
+                    stroke="#737B81"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M3.11523 22.1083L8.8669 18.2467C9.78857 17.6283 11.1186 17.6983 11.9469 18.41L12.3319 18.7483C13.2419 19.53 14.7119 19.53 15.6219 18.7483L20.4752 14.5833C21.3852 13.8017 22.8552 13.8017 23.7652 14.5833L25.6669 16.2167"
+                    stroke="#737B81"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
 
-        <div className="div-event div-event-time">
-          <div className="div-all-day">
-            <div className="div-switch div-pin">
-              <ErpCheckbox
-                name="pin_to_top"
-                useForm={methods}
-                defaultValue={false}
-              />
-              <span className="text">
-                {useFormatMessage("modules.feed.announcement.text.pin_to_top")}
-              </span>
-            </div>
-
-            <div className="div-show-announcement">
-              <span className="text-show">
-                {useFormatMessage(
-                  "modules.feed.announcement.text.show_announcement"
-                )}
-                :
-              </span>
-              <Dropdown
-                menu={{ items: optionShowAnnouncement }}
-                placement="bottom"
-                trigger={["click"]}
-                overlayClassName="feed dropdown-div-repeat dropdown-show-announcement"
-                suffixIcon="sadf">
-                <div className="div-repeat">
-                  <span className="text-repeat">
-                    {useFormatMessage(
-                      `modules.news.app_options.show_announcements.${state.nameOptionShowAnnouncement}`
-                    )}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="25"
-                    viewBox="0 0 24 25"
-                    fill="none">
-                    <path
-                      d="M19.9181 9.44995L13.3981 15.97C12.6281 16.74 11.3681 16.74 10.5981 15.97L4.07812 9.44995"
-                      stroke="#696760"
-                      strokeWidth="1.5"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </Dropdown>
-            </div>
-          </div>
-        </div>
-
-        <div className="div-event div-attendees">
-          <div className="div-attendees-input div-input-btn">
-            <label title="Attendees" className="form-label">
-              {useFormatMessage("modules.feed.announcement.text.send_to")}
-            </label>
-            <div className="div-input-btn-select">
-              <MemberSelect
-                noLabel={true}
-                placeholder={useFormatMessage(
-                  "modules.feed.create_event.text.attendees_placeholder"
-                )}
-                classNameProps="select-attendees"
-                isMulti={true}
-                options={options_employee_department}
-                value={state.valueAttendees}
-                selectDepartment={true}
-                selectAll={true}
-                renderHeader={true}
-                handleOnchange={(e) => {
-                  setState({ valueAttendees: e })
+              <input
+                type="file"
+                id="announcement-cover-image"
+                hidden
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files[0]) {
+                    setState({
+                      coverImage: { src: "", image: e.target.files[0] }
+                    })
+                  } else {
+                    setState({
+                      coverImage: { src: "", image: null }
+                    })
+                  }
                 }}
               />
-              <button
-                type="button"
-                className="btn-input"
-                onClick={() => handleAddAttendees()}>
-                {useFormatMessage("button.add")}
-              </button>
-            </div>
+            </Label>
           </div>
-          <div className="div-attendees-show">
-            {_.map(state.dataAttendees, (item, index) => {
-              return (
-                <div key={index} className="div-attendees-show__item">
-                  <Avatar src={item.avatar} />
-                  <span className="item__text">{item.label}</span>
-                  <div
-                    className="item__div-remove"
-                    onClick={() => handleRemoveAttendees(index)}>
-                    <i className="fa-solid fa-xmark"></i>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        <div className="div-event div-details">
-          <ErpInput
-            type="textarea"
-            label={useFormatMessage("modules.feed.create_event.text.details")}
-            placeholder={useFormatMessage(
-              "modules.feed.create_event.text.details_placeholder"
-            )}
-            className="input"
-            useForm={methods}
-            name="details"
-            defaultValue={state.dataEdit?.content || ""}
-            loading={state.loadingEdit}
-          />
-        </div>
-
-        <div className="div-event div-add-attachment">
-          <Label for="attach-doc">
-            <div className="div-add-attachment__choose">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none">
-                <path
-                  d="M6 12.5H18"
-                  stroke="#2F9BFA"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 18.5V6.5"
-                  stroke="#2F9BFA"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text">
-                {useFormatMessage(
-                  "modules.feed.create_event.text.add_attachment_files"
-                )}
-              </span>
+          {state.coverImage.image && (
+            <div className="cover-announcment mb-1">
+              <Photo
+                src={[state.coverImage.image]}
+                width="100%"
+                style={{ borderRadius: "20px" }}
+              />
             </div>
+          )}
 
-            <input
-              type="file"
-              id="attach-doc"
-              multiple
-              hidden
-              onChange={handleChangeFile}
-            />
-          </Label>
-
-          <div className="div-attachment__div-show">
-            {state.loadingAttachment && (
-              <div className="w-100">
-                <DefaultSpinner />
+          <div className="div-event-time">
+            <div className="div-all-day">
+              <div className="div-switch div-pin">
+                <ErpCheckbox
+                  name="pin_to_top"
+                  useForm={methods}
+                  defaultValue={false}
+                />
+                <span className="text">
+                  {useFormatMessage(
+                    "modules.feed.announcement.text.pin_to_top"
+                  )}
+                </span>
               </div>
-            )}
 
-            {_.map(state.arrAttachment, (item, index) => {
-              let size = 0
-              let name = ""
-              if (item.new) {
-                const file = item.file
-                size = file.size
-                name = file.name
-              } else {
-                size = item.size
-                name = item.name
-              }
+              <div className="div-show-announcement">
+                <span className="text-show">
+                  {useFormatMessage(
+                    "modules.feed.announcement.text.show_announcement"
+                  )}
+                  :
+                </span>
+                <Dropdown
+                  menu={{ items: optionShowAnnouncement }}
+                  placement="bottom"
+                  trigger={["click"]}
+                  overlayClassName="feed dropdown-div-repeat">
+                  <div className="div-repeat">
+                    <span className="text-repeat">
+                      {useFormatMessage(
+                        `modules.news.app_options.show_announcements.${state.nameOptionShowAnnouncement}`
+                      )}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10"
+                      height="6"
+                      viewBox="0 0 10 6"
+                      fill="none">
+                      <path
+                        d="M8.61251 0H4.45918H0.719181C0.0791811 0 -0.240819 0.773333 0.212515 1.22667L3.66585 4.68C4.21918 5.23333 5.11918 5.23333 5.67251 4.68L6.98585 3.36667L9.12585 1.22667C9.57251 0.773333 9.25251 0 8.61251 0Z"
+                        fill="#9399A2"
+                      />
+                    </svg>
+                  </div>
+                </Dropdown>
+              </div>
+            </div>
+          </div>
 
-              size = size / 1024
-              let size_type = "KB"
-              if (size > 1024) {
-                size = size / 1024
-                size_type = "MB"
-              }
-              size = Math.round(size)
-
-              return (
-                <div key={index} className="div-attachment__div-items">
-                  <div className="div-attachment__item">
-                    <div className="div-icon">{renderIconAttachment(item)}</div>
-                    <div className="div-body">
-                      <span className="title">{name}</span>
-                      <span className="size">
-                        <i className="fa-regular fa-circle-info"></i> {size}{" "}
-                        {size_type}
-                      </span>
-                    </div>
+          <div className="div-attendees">
+            <div className="div-attendees-input div-input-btn">
+              <label title="Attendees" className="form-label">
+                {useFormatMessage("modules.feed.announcement.text.send_to")}
+              </label>
+              <div className="div-input-btn-select">
+                <MemberSelect
+                  noLabel={true}
+                  placeholder={useFormatMessage(
+                    "modules.feed.create_event.text.attendees_placeholder"
+                  )}
+                  classNameProps="select-attendees"
+                  isMulti={true}
+                  options={options_employee_department}
+                  value={state.valueAttendees}
+                  selectDepartment={true}
+                  selectAll={true}
+                  handleOnchange={(e) => {
+                    setState({ valueAttendees: e })
+                  }}
+                />
+                <button
+                  type="button"
+                  className="btn-input"
+                  onClick={() => handleAddAttendees()}>
+                  {useFormatMessage("button.add")}
+                </button>
+              </div>
+            </div>
+            <div className="div-attendees-show">
+              {_.map(state.dataAttendees, (item, index) => {
+                return (
+                  <div key={index} className="div-attendees-show__item">
+                    <Avatar src={item.avatar} />
+                    <span className="item__text">{item.label}</span>
                     <div
-                      className="div-close"
-                      onClick={() => handleRemoveAttachment(index)}>
+                      className="item__div-remove"
+                      onClick={() => handleRemoveAttendees(index)}>
                       <i className="fa-solid fa-xmark"></i>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
-        </div>
 
-        <div className="div-event text-center">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Button.Ripple
-              color="primary"
-              type="submit"
-              className="btn-post"
-              disabled={state.loadingSubmit}>
-              {state.loadingSubmit && <Spinner size={"sm"} className="me-50" />}
-              {useFormatMessage(
-                _.isEmpty(state.dataEdit)
-                  ? "modules.feed.announcement.text.post_announcement"
-                  : "modules.feed.announcement.text.update_announcement"
+          <div className="div-details">
+            <ErpInput
+              type="textarea"
+              label={useFormatMessage("modules.feed.create_event.text.details")}
+              placeholder={useFormatMessage(
+                "modules.feed.create_event.text.details_placeholder"
               )}
-            </Button.Ripple>
-          </form>
-        </div>
-      </ModalBody>
-    </Modal>
+              className="input"
+              useForm={methods}
+              name="details"
+              defaultValue={state.dataEdit?.content || ""}
+              loading={state.loadingEdit}
+            />
+          </div>
+
+          <div className="div-add-attachment">
+            <Label for="attach-doc">
+              <div className="div-add-attachment__choose">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none">
+                  <path
+                    d="M9.99984 18.3333C14.5832 18.3333 18.3332 14.5833 18.3332 9.99999C18.3332 5.41666 14.5832 1.66666 9.99984 1.66666C5.4165 1.66666 1.6665 5.41666 1.6665 9.99999C1.6665 14.5833 5.4165 18.3333 9.99984 18.3333Z"
+                    stroke="#139FF8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.6665 10H13.3332"
+                    stroke="#139FF8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10 13.3333V6.66666"
+                    stroke="#139FF8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text">
+                  {useFormatMessage(
+                    "modules.feed.create_event.text.add_attachment_files"
+                  )}
+                </span>
+              </div>
+
+              <input
+                type="file"
+                id="attach-doc"
+                multiple
+                hidden
+                onChange={handleChangeFile}
+              />
+            </Label>
+
+            <div className="div-attachment__div-show">
+              {state.loadingAttachment && (
+                <div className="w-100">
+                  <DefaultSpinner />
+                </div>
+              )}
+
+              {_.map(state.arrAttachment, (item, index) => {
+                let size = 0
+                let name = ""
+                if (item.new) {
+                  const file = item.file
+                  size = file.size
+                  name = file.name
+                } else {
+                  size = item.size
+                  name = item.name
+                }
+
+                size = size / 1024
+                let size_type = "KB"
+                if (size > 1024) {
+                  size = size / 1024
+                  size_type = "MB"
+                }
+                size = Math.round(size)
+
+                return (
+                  <div key={index} className="div-attachment__div-items">
+                    <div className="div-attachment__item">
+                      <div className="div-icon">
+                        {renderIconAttachment(item)}
+                      </div>
+                      <div className="div-body">
+                        <span className="title">{name}</span>
+                        <span className="size">
+                          <i className="fa-regular fa-circle-info"></i> {size}{" "}
+                          {size_type}
+                        </span>
+                      </div>
+                      <div
+                        className="div-close"
+                        onClick={() => handleRemoveAttachment(index)}>
+                        <i className="fa-solid fa-xmark"></i>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="text-center">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Button.Ripple
+                color="primary"
+                type="submit"
+                className="btn-post"
+                disabled={state.loadingSubmit}>
+                {state.loadingSubmit && (
+                  <Spinner size={"sm"} className="me-50" />
+                )}
+                {useFormatMessage(
+                  _.isEmpty(state.dataEdit)
+                    ? "modules.feed.announcement.text.post_announcement"
+                    : "modules.feed.announcement.text.update_announcement"
+                )}
+              </Button.Ripple>
+            </form>
+          </div>
+        </ModalBody>
+      </Modal>
+    </Fragment>
   )
 }
 

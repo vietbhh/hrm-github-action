@@ -144,8 +144,8 @@ const NotificationDropdown = () => {
             viewBox="0 0 24 25"
             fill="none">
             <path
-              fillRule="evenodd"
-              clipRule="evenodd"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
               d="M12.5 19.5C18.8027 19.5 21.7184 18.6783 22 15.3802C22 12.0844 19.9672 12.2964 19.9672 8.25255C19.9672 5.09388 17.0211 1.5 12.5 1.5C7.97886 1.5 5.03283 5.09388 5.03283 8.25255C5.03283 12.2964 3 12.0844 3 15.3802C3.28271 18.6908 6.19845 19.5 12.5 19.5Z"
               stroke="#696760"
               strokeWidth="1.5"
