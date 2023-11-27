@@ -54,90 +54,80 @@ export const getKeyNumberCoverEndorsementByKeyCover = (keyCover) => {
 export const iconDateEndorsement = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="33"
-    height="33"
-    viewBox="0 0 33 33"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
     fill="none">
     <path
-      d="M11 2.75V6.875"
-      stroke="#32434F"
-      strokeOpacity="0.8"
-      strokeWidth="2"
+      d="M8 2V5"
+      stroke="#696760"
+      strokeWidth="1.5"
       strokeMiterlimit="10"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M22 2.75V6.875"
-      stroke="#32434F"
-      strokeOpacity="0.8"
-      strokeWidth="2"
+      d="M16 2V5"
+      stroke="#696760"
+      strokeWidth="1.5"
       strokeMiterlimit="10"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M4.8125 12.4987H28.1875"
-      stroke="#32434F"
-      strokeOpacity="0.8"
-      strokeWidth="2"
+      d="M3.5 9.09009H20.5"
+      stroke="#696760"
+      strokeWidth="1.5"
       strokeMiterlimit="10"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M28.875 11.6875V23.375C28.875 27.5 26.8125 30.25 22 30.25H11C6.1875 30.25 4.125 27.5 4.125 23.375V11.6875C4.125 7.5625 6.1875 4.8125 11 4.8125H22C26.8125 4.8125 28.875 7.5625 28.875 11.6875Z"
-      stroke="#32434F"
-      strokeOpacity="0.8"
-      strokeWidth="2"
+      d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
+      stroke="#696760"
+      strokeWidth="1.5"
       strokeMiterlimit="10"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M21.5803 18.8375H21.5927"
-      stroke="#32434F"
-      strokeOpacity="0.8"
+      d="M15.6937 13.7H15.7027"
+      stroke="#696760"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M21.5803 22.9625H21.5927"
-      stroke="#32434F"
-      strokeOpacity="0.8"
+      d="M15.6937 16.7H15.7027"
+      stroke="#696760"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M16.4934 18.8375H16.5058"
-      stroke="#32434F"
-      strokeOpacity="0.8"
+      d="M11.9945 13.7H12.0035"
+      stroke="#696760"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M16.4934 22.9625H16.5058"
-      stroke="#32434F"
-      strokeOpacity="0.8"
+      d="M11.9945 16.7H12.0035"
+      stroke="#696760"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M11.4046 18.8375H11.4169"
-      stroke="#32434F"
-      strokeOpacity="0.8"
+      d="M8.29529 13.7H8.30427"
+      stroke="#696760"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M11.4046 22.9625H11.4169"
-      stroke="#32434F"
-      strokeOpacity="0.8"
+      d="M8.29529 16.7H8.30427"
+      stroke="#696760"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

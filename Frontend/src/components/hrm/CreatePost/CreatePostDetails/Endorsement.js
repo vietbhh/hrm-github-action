@@ -39,6 +39,7 @@ import htmlToDraft from "html-to-draftjs"
 import DefaultSpinner from "@apps/components/spinner/DefaultSpinner"
 import moment from "moment"
 import MemberSelect from "../../MemberSelect/MemberSelect"
+import ModalChooseBadge from "./modals/ModalChooseBadge"
 
 const Endorsement = (props) => {
   const {
@@ -411,20 +412,23 @@ const Endorsement = (props) => {
         <ModalBody>
           {state.loadingEdit && <DefaultSpinner />}
 
-          <div className="div-select div-attendees mt-1">
+          <div className="div-select div-attendees">
             <div className="select-attendees">
               <label title="Attendees" className="form-label">
                 {useFormatMessage(
                   "modules.feed.create_post.endorsement.select_member_for_endorsing"
                 )}
               </label>
-              <MemberSelect
-                noLabel={true}
-                //options={state.optionSelectMember}
-                isMulti={true}
-                //value={state.valueSelectMember}
-                handleOnchange={(e) => handleSetValueSelectMember(e)}
-              />
+              <div className="div-input-btn-select">
+                <MemberSelect
+                  noLabel={true}
+                  options={state.optionSelectMember}
+                  isMulti={true}
+                  value={state.valueSelectMember}
+                  renderHeader={true}
+                  handleOnchange={(e) => handleSetValueSelectMember(e)}
+                />
+              </div>
               {/*<ErpSelect nolabel options={state.optionSelectMember}
                 isMulti={true}
                 value={state.valueSelectMember}
@@ -477,14 +481,14 @@ const Endorsement = (props) => {
               }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
                 fill="none">
                 <path
-                  d="M11.3174 14.94L6.42738 10.05C5.84988 9.4725 5.84988 8.5275 6.42738 7.95L11.3174 3.06"
-                  stroke="white"
-                  strokeWidth="2"
+                  d="M12.5005 16.5999L7.06719 11.1666C6.42552 10.5249 6.42552 9.4749 7.06719 8.83324L12.5005 3.3999"
+                  stroke="#696760"
+                  strokeWidth="1.5"
                   strokeMiterlimit="10"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -514,14 +518,14 @@ const Endorsement = (props) => {
               }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
                 fill="none">
                 <path
-                  d="M6.68262 14.94L11.5726 10.05C12.1501 9.4725 12.1501 8.5275 11.5726 7.95L6.68262 3.06"
-                  stroke="white"
-                  strokeWidth="2"
+                  d="M7.42578 16.5999L12.8591 11.1666C13.5008 10.5249 13.5008 9.4749 12.8591 8.83324L7.42578 3.3999"
+                  stroke="#696760"
+                  strokeWidth="1.5"
                   strokeMiterlimit="10"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -643,88 +647,12 @@ const Endorsement = (props) => {
         </ModalBody>
       </Modal>
 
-      <Modal
-        isOpen={state.modalChooseBadge}
-        toggle={() => toggleModalChooseBadge()}
-        className="feed modal-dialog-centered modal-create-post modal-create-event modal-choose-badge"
-        modalTransition={{ timeout: 100 }}
-        backdropTransition={{ timeout: 100 }}>
-        <ModalHeader>
-          <button className="btn-icon-header">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none">
-              <path
-                d="M12.5249 14.235H5.47491C5.15991 14.235 4.8074 13.9875 4.7024 13.6875L1.59741 5.00249C1.15491 3.75749 1.67241 3.37499 2.73741 4.13999L5.66241 6.23249C6.14991 6.56999 6.70491 6.39749 6.91491 5.84999L8.23491 2.33249C8.65491 1.20749 9.35241 1.20749 9.77241 2.33249L11.0924 5.84999C11.3024 6.39749 11.8574 6.56999 12.3374 6.23249L15.0824 4.27499C16.2524 3.43499 16.8149 3.86249 16.3349 5.21999L13.3049 13.7025C13.1924 13.9875 12.8399 14.235 12.5249 14.235Z"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M4.875 16.5H13.125"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7.125 10.5H10.875"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <span className="text-title">
-            {useFormatMessage(
-              "modules.feed.create_post.endorsement.list_badges"
-            )}
-          </span>
-          <div
-            className="div-btn-close"
-            onClick={() => toggleModalChooseBadge()}>
-            <i className="fa-solid fa-xmark"></i>
-          </div>
-        </ModalHeader>
-        <ModalBody>
-          <div className="div-list-badge">
-            {_.map(state.listBadge, (item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="div-item-badge"
-                  onClick={() => {
-                    setState({
-                      valueBadge: {
-                        name: item.name,
-                        badge: item.badge,
-                        url: item.url ? item.url : "",
-                        badge_type: item.badge_type
-                      },
-                      modalChooseBadge: false
-                    })
-                  }}>
-                  <div className="div-img">
-                    <img
-                      src={
-                        item.badge_type === "local"
-                          ? getBadgeFromKey(item.badge)
-                          : item.url
-                      }
-                    />
-                  </div>
-                  <div className="div-text">“{item.name}”</div>
-                </div>
-              )
-            })}
-          </div>
-        </ModalBody>
-      </Modal>
+      <ModalChooseBadge
+        listBadge={state.listBadge}
+        modalChooseBadge={state.modalChooseBadge}
+        toggleModalChooseBadge={toggleModalChooseBadge}
+        setState={setState}
+      />
     </Fragment>
   )
 }
