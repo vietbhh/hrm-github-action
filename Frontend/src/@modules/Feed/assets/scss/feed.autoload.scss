@@ -2409,6 +2409,7 @@ $background-color-checkbox: #139ff8;
       box-sizing: border-box;
       margin: 0 0rem 0.5rem 0rem;
       border-radius: 12px;
+      color: #8C8A82 !important;
 
       .DraftEditor-root {
         padding-bottom: 0.5rem;
@@ -5579,11 +5580,12 @@ $background-color-checkbox: #139ff8;
 }
 
 .modal-choose-badge {
-  max-width: 500px;
+  max-width: 400px;
 
   .modal-title {
     align-items: center;
     justify-content: flex-start !important;
+    padding-bottom: 12px;
   }
 
   .btn-icon-header {
@@ -6163,7 +6165,7 @@ $background-color-checkbox: #139ff8;
   }
 
   .modal-choose-badge {
-    max-width: 402px;
+    max-width: 330px;
 
     .modal-header .text-title {
       font-size: 14px;

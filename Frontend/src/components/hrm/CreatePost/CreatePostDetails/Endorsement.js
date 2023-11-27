@@ -422,6 +422,9 @@ const Endorsement = (props) => {
               <div className="div-input-btn-select">
                 <MemberSelect
                   noLabel={true}
+                  placeholder={useFormatMessage(
+                    "modules.feed.create_post.endorsement.select_member"
+                  )}
                   options={state.optionSelectMember}
                   isMulti={true}
                   value={state.valueSelectMember}

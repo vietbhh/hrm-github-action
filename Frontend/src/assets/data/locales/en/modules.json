@@ -3739,6 +3739,7 @@
           "title": "Endorsement",
           "appreciation": "Endorsement",
           "select_member_for_endorsing": "Select member for endorsing",
+          "select_member": "Select member",
           "add_cover_photo": "Edit cover",
           "list_badges": "List badges",
           "editor_placeholder": "Write something about this...",
