@@ -51,15 +51,13 @@ const LoadFeed = (props) => {
 
   const [state, setState] = useMergedState({
     text: "",
-    scrollPosition: 0,
     hasMoreLazy: false,
     loadingPost: undefined,
     loadingPostCreateNew: false,
     idPostCreateNew: "",
     dataMention: [],
     arrPostIdSeen: [],
-    currentWorkspace: workspace,
-    scrollPosition: 0
+    currentWorkspace: workspace
   })
 
   const pageLength = 7
