@@ -16,23 +16,26 @@
 
 #CI_ENVIRONMENT = production
 
-database.default.hostname = ''
-database.default.database = ''
-database.default.username = ''
-database.default.password = ''
+database.default.hostname = 123.24.142.175
+database.default.database = hrm
+database.default.username = friday
+database.default.password = 'Friday@2023!'
 #default database port is 3306
-#database.default.port = ''
+database.default.port = 3369
 
-MONGODB_URI=""
+db.mongodb.hostname = 123.24.142.175
+db.mongodb.port = 27055
+db.mongodb.database = hrm
+db.mongodb.username = friday
+db.mongodb.password = 'Friday@2023!'
 
 #port for running by php spark - if not set - app will run in port 80
-#sparkRunningPort = 8083
-#sparkRunningHost = localhost
+sparkRunningPort = 8080
 
-app.baseURL = 'http://localhost'
+app.baseURL = 'http://123.24.142.175'
 app.siteURL = 'http://localhost:3000';
 app.nodeApiUrl = 'http://localhost:6969';
-app.dataURL = 'http://localhost';
+app.dataURL = 'http://123.24.142.175';
 
 # firebase messaging
 firebase_server_key="AAAAuvA35qk:APA91bHePnwFMmMOfc0MWVLAqB51CJs_mznuVZV_zFoazjSL6E9tQr4aqjnY20J5YtoL3usGT-FYuptPGnpDBEuPkQUXj4ZyKgU3OMtC3fpc_ALL63CsO-QRp5OpIXJMU7dUaVvg4m8_"
@@ -40,3 +43,4 @@ firebase_server_key="AAAAuvA35qk:APA91bHePnwFMmMOfc0MWVLAqB51CJs_mznuVZV_zFoazjS
 # google cloud storage
 gcs_project_id = 'friday-351410'
 gcs_bucket_name = 'friday-storage'
+MONGODB_URI="mongodb://friday:Friday@2023!@123.24.142.175:27017/hrm?authSource=admin"

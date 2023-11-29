@@ -107,3 +107,4 @@ data_folder_public = 'setting,default,modules/chat,modules/stickers';
 default_cache_time = 300
 homeRoute = Auth::login
 homeNameSpace = App\Controllers
+MONGODB_URI="mongodb://friday:Friday%402023!@123.24.142.175:27055/hrm?authSource=admin"
