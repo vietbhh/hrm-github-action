@@ -1,25 +1,22 @@
 name: Build Deploy hrm site
-on: 
+on:
   push:
     branches: ["main"]
 jobs:
   build:
-    runs-on: 
-    - self-hosted
-    - hrm
+    runs-on: self-hosted # or specify the runner you want to use for the build job
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: build-app
-        run: yarn install
-        run: yarn install-all-dep-win
+      - name: Install Dependencies
+        run: |
+          yarn install
+          yarn install-all-dep-win
   deploy:
-    runs-on: 
-      - self-hosted
-      - hrm
-    needs: build
+    runs-on: self-hosted # or specify the runner you want to use for the deploy job
+    needs: build # Ensure the deploy job needs the 'build' job
     steps:
-      - name: init env
+      - name: Init env
         run: |
           cp Backend/core/env Backend/core/.env
           cp Backend/applications/default/env Backend/applications/default/.env
@@ -29,8 +26,9 @@ jobs:
           cp Server/env Server/.env
           cp Server/env.development Server/.env.development
           cp Server/env.production Server/.env.production
-      - name: deploy-app
-        run: yarn run build-app-win
-        run: yarn start-production
-      - name: success
-        run: echo " This job is done"
+      - name: Build and Start Production
+        run: |
+          yarn run build-app-win
+          yarn start-production
+      - name: Success
+        run: echo "This job is done"
