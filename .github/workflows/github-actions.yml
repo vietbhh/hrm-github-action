@@ -30,5 +30,3 @@ jobs:
         run: |
           yarn run build-app-win
           yarn start-production
-      - name: Success
-        run: echo "This job is done"
