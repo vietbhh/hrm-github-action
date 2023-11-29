@@ -148,8 +148,8 @@
   },
   "scripts": {
     "generate-meta-tag": "node ./node_modules/react-cache-buster/dist/generate-meta-tag.js",
-    "build-css": "sh ./style.sh&&echo 'Compile style completed!'",
-    "build-modules": "sh ./build_modules.sh",
+    "build-css": "./style.sh&&echo 'Compile style completed!'",
+    "build-modules": "./build_modules.sh",
     "start": "yarn run build-css&&vite",
     "build": "yarn generate-meta-tag&&yarn run build-css&&yarn run build-modules&&vite build",
     "preview": "yarn run vite preview",
