@@ -4,7 +4,7 @@ on:
     branches: ["main"]
 jobs:
   build:
-    runs-on: self-hosted # or specify the runner you want to use for the build job
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -13,8 +13,8 @@ jobs:
           yarn install
           yarn install-all-dep-win
   deploy:
-    runs-on: self-hosted # or specify the runner you want to use for the deploy job
-    needs: build # Ensure the deploy job needs the 'build' job
+    runs-on: self-hosted
+    needs: build
     steps:
       - name: Init env
         run: |
@@ -29,4 +29,4 @@ jobs:
       - name: Build and Start Production
         run: |
           yarn run build-app-win
-          yarn start-production
+          pm2 start "yarn run start-production" --name hrm

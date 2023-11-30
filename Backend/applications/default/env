@@ -33,7 +33,7 @@ db.mongodb.password = 'Friday@2023!'
 sparkRunningPort = 8080
 
 app.baseURL = 'http://123.24.142.175'
-app.siteURL = 'http://localhost:3000';
+app.siteURL = 'http://localhost:3009';
 app.nodeApiUrl = 'http://localhost:6969';
 app.dataURL = 'http://123.24.142.175';
 
