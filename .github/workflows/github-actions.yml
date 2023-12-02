@@ -29,4 +29,4 @@ jobs:
       - name: Build and Start Production
         run: |
           yarn run build-app-win
-          pm2 start "yarn run start-production" --name hrm
+          yarn run start-production
